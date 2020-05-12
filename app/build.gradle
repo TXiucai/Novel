@@ -1,0 +1,297 @@
+import com.android.build.gradle.internal.dsl.ProductFlavor
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.google.gms.google-services'
+
+apply from: 'configs/configpumpkin.gradle'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+    flavorDimensions "default"
+
+    defaultConfig {
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+        minSdkVersion 21
+        targetSdkVersion 28
+        multiDexEnabled true
+        applicationId gradle.ext.APPLICATION_ID
+        versionCode gradle.ext.VERSION_CODE
+        versionName gradle.ext.VERSION_NAME
+        manifestPlaceholders = gradle.ext.MANIFESTPLACEHOLDERS
+        buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
+        buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
+        buildConfigField "String", "app_wx_id", gradle.ext.APP_WX_ID
+        buildConfigField "String", "app_wx_secret", gradle.ext.APP_WX_SECRET
+        buildConfigField "String", "app_qq_id", gradle.ext.APP_QQ_ID
+        buildConfigField "String", "app_qq_secret", gradle.ext.APP_QQ_SECRET
+        buildConfigField "String", "domain_host", gradle.ext.DOMAIN_HOSTS
+        buildConfigField "String", "api_host", gradle.ext.API_HOSTS
+        buildConfigField "String", "api_host_uat", gradle.ext.API_HOSTS_UAT
+        buildConfigField "String", "api_key", gradle.ext.API_KEY
+        buildConfigField "String", "api_key_uat", gradle.ext.API_KEY_UAT
+        buildConfigField "String", "api_secret_key", gradle.ext.API_SECRET_KEY
+        buildConfigField "String", "api_secret_key_uat", gradle.ext.API_SECRET_KEY_UAT
+        buildConfigField "String", "app_id", gradle.ext.APP_ID
+        buildConfigField "boolean", "free_charge", gradle.ext.FREE_CHARGE
+        buildConfigField "String", "domain_host_reserve", gradle.ext.DOMAIN_HOSTS_RESERVE
+        resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库。为了兼容cpu，查看官网SDK的libs多添加几个
+            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'x86', 'x86_64'
+        }
+
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('configs/sign/debug.jks')
+            storePassword "debug123"
+            keyAlias "debug"
+            keyPassword "debug123"
+        }
+
+        release {
+            keyAlias
+            keyPassword
+            storeFile
+            storePassword
+        }
+
+        pumpkinRelease { // 南瓜阅读
+            getProductConfig(pumpkin)
+            keyAlias gradle.ext.KEY_ALIAS
+            keyPassword gradle.ext.STORE_PASSWORD
+            storeFile file(gradle.ext.STORE_FILE)
+            storePassword gradle.ext.KEY_PASSWORD
+        }
+    }
+
+    getSigningProperties()
+
+    productFlavors {
+        //南瓜阅读
+        pumpkin getProductConfig(pumpkin)
+        getSigningConfig(pumpkin)
+    }
+
+    buildTypes {
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            getAppConfig()
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def apkName = variant.flavorName + "_v${variant.versionName}"
+            if (variant.flavorName.isEmpty()) {
+                apkName += "App"
+            }
+            if (variant.buildType.name == 'release') {
+                outputFileName = apkName + "_${releaseTime()}_Release.apk"
+            } else {
+                outputFileName = apkName + "_${releaseTime()}_Debug.apk"
+            }
+        }
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+static def releaseTime() {
+    return new Date().format("yyyy_MM_dd_HH-mm", TimeZone.getTimeZone("GMT+8"))
+}
+/**
+ * 重置App配置
+ * @return
+ */
+def getAppConfig() {
+    return {
+        applicationId gradle.ext.APPLICATION_ID
+        versionCode gradle.ext.VERSION_CODE
+        versionName gradle.ext.VERSION_NAME
+        manifestPlaceholders = gradle.ext.MANIFESTPLACEHOLDERS
+        buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
+        buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
+        buildConfigField "String", "app_wx_id", gradle.ext.APP_WX_ID
+        buildConfigField "String", "app_wx_secret", gradle.ext.APP_WX_SECRET
+        buildConfigField "String", "app_qq_id", gradle.ext.APP_QQ_ID
+        buildConfigField "String", "app_qq_secret", gradle.ext.APP_QQ_SECRET
+        buildConfigField "String", "domain_host", gradle.ext.DOMAIN_HOSTS
+        buildConfigField "String", "api_host", gradle.ext.API_HOSTS
+        buildConfigField "String", "api_host_uat", gradle.ext.API_HOSTS_UAT
+        buildConfigField "String", "api_key", gradle.ext.API_KEY
+        buildConfigField "String", "api_key_uat", gradle.ext.API_KEY_UAT
+        buildConfigField "String", "api_secret_key", gradle.ext.API_SECRET_KEY
+        buildConfigField "String", "api_secret_key_uat", gradle.ext.API_SECRET_KEY_UAT
+        buildConfigField "String", "app_id", gradle.ext.APP_ID
+        buildConfigField "Boolean", "free_charge", gradle.ext.FREE_CHARGE
+        buildConfigField "String", "domain_host_reserve", gradle.ext.DOMAIN_HOSTS_RESERVE
+        resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
+    }
+}
+
+/**
+ * 根据Flavor 配置签名文件 多渠道多签名时使用
+ * @param productFlavors
+ * @return
+ */
+ProductFlavor getSigningConfig(ProductFlavor productFlavors) {
+    print(productFlavors.name.toLowerCase())
+    switch (productFlavors.name) {
+        case pumpkin.toLowerCase(): // 南瓜阅读
+            productFlavors.signingConfig android.signingConfigs.pumpkinRelease
+            break
+        default:
+            productFlavors.signingConfig android.signingConfigs.pumpkinRelease
+            break
+    }
+    return productFlavors
+}
+
+/**
+ * 根据flavor获取配置文件
+ * @param flavorName
+ * @return
+ */
+def getProductConfig(String flavorName) {
+    apply from: "configs/config" + flavorName + ".gradle"
+    getSigningProperties()
+    return getAppConfig()
+}
+
+/**
+ * 获取默认签名
+ * @return
+ */
+def getSigningProperties() {
+    android.signingConfigs.release.storeFile = file(gradle.ext.STORE_FILE)
+    android.signingConfigs.release.storePassword = gradle.ext.STORE_PASSWORD
+    android.signingConfigs.release.keyAlias = gradle.ext.KEY_ALIAS
+    android.signingConfigs.release.keyPassword = gradle.ext.KEY_PASSWORD
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'junit:junit:4.12'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    //进度条
+    implementation 'com.crystal:crystalrangeseekbar:1.1.3'
+    // 注解工具
+    implementation 'com.jakewharton:butterknife:9.0.0-rc2'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
+    //数据库
+    implementation 'org.litepal.android:java:3.0.0'
+    //组件通信工具
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    //滑动开关
+    implementation 'com.zcw:togglebutton-library:1.0.0'
+    //微信支付
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:1.3.4'
+    //腾讯bug统计
+    implementation files('libs/bugly_crash_release.jar')
+    //支付宝支付
+    implementation files('libs/alipaySdk-20170725.jar')
+    //阿里云推送
+    implementation 'com.aliyun.ams:alicloud-android-push:3.1.6@aar'
+    //本地偏好存储
+    implementation 'net.grandcentrix.tray:tray:0.12.0'
+    //权限管理
+    implementation 'com.github.dfqin:grantor:2.5'
+    //友盟系列
+    implementation 'com.umeng.umsdk:analytics:8.0.0'
+    implementation 'com.umeng.umsdk:common:2.0.0'
+    implementation files('libs/umeng-share-core-6.9.8.jar')
+    implementation files('libs/umeng-share-QQ-simplify-6.9.8.jar')
+    implementation files('libs/umeng-share-wechat-simplify-6.9.8.jar')
+    implementation files('libs/umeng-sharetool-6.9.8.jar')
+    //gson 解析工具
+    implementation files('libs/gson-2.1.jar')
+    //处理编码
+    implementation files('libs/juniversalchardet-2.3.0.jar')
+    //OK网络库/
+    implementation files('libs/okhttp-3.5.0.jar')
+    implementation files('libs/okio-1.11.0.jar')
+    //图片加载库
+    implementation files('libs/universal-image-loader-1.9.4.jar')
+    //glide网络框架
+    implementation 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
+    //处理各种版本沉侵状态栏
+    implementation 'com.jaeger.statusbaruitl:library:1.5.0'
+    //处理各种机型改变状态栏文字颜色
+    implementation 'com.githang:status-bar-compat:0.7'
+    //图片压缩  拍摄头像后压缩 在上传服务端
+    implementation 'top.zibin:Luban:1.1.8'
+    //网络请求lording
+    implementation 'com.wang.avi:library:2.1.3'
+    implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+    implementation 'cn.jiguang.sdk:jpush:3.3.2'  // 此处以JPush 3.3.2 版本为例。
+    implementation 'cn.jiguang.sdk:jcore:2.1.2'  // 此处以JCore 2.1.0 版本为例。
+    implementation 'cn.jiguang.sdk:jmessage:2.9.0'  // 此处以JMessage 2.9.0 版本为例。
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.3.2'//此版本插件仅支持JPushSDK3.3.2及以上
+    implementation 'cn.jiguang.sdk.plugin:meizu:3.3.2'//此版本插件仅支持JPushSDK3.3.2及以上版本
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'cn.jiguang.sdk.plugin:oppo:3.3.2'
+    //fastJson解析json
+    implementation 'com.alibaba:fastjson:1.1.60.android'
+}
+
+String SDK_DIR = System.getenv("ANDROID_SDK_HOME")
+if (SDK_DIR == null) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(project.rootProject.file("local.properties")))
+    SDK_DIR = props.get('sdk.dir')
+}
+
+dependencies {
+    compileOnly files("${SDK_DIR}/platforms/android-20/data/layoutlib.jar")
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="book" />
+
+    <version value="17" />
+
+    <list>
+        <mapping class="com.heiheilianzai.app.book.been.BaseBook"/>
+        <mapping class="com.heiheilianzai.app.comic.been.BaseComic"/>
+        <mapping class="com.heiheilianzai.app.bean.Downoption"/>
+        <mapping class="com.heiheilianzai.app.comic.been.ComicChapter"/>
+        <mapping class="com.heiheilianzai.app.bean.ChapterItem"/>
+        <mapping class="com.heiheilianzai.app.localapp.bean.Book"/>
+    </list>
+</litepal>
