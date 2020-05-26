@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.config;
 
 
+import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -52,6 +53,7 @@ public class ReaderApplication extends LitePalApplication {
         super.onCreate();
         try {
             context = getContext();
+            initOpenInstall();
             preparedDomain = new PreparedDomain(context);
             UMConfigure.setLogEnabled(false);
             String getChannelName = UpdateApp.getChannelName(this);
@@ -65,9 +67,9 @@ public class ReaderApplication extends LitePalApplication {
             initImageLoader(this);
             ReadingConfig.createConfig(this);
             Bugly.init(this, "75adbf1bdc", false);
-            initCloudChannel(this);
-            initOpenInstall(this);
             JPushUtil.init(this);
+            // 阿里云推送初始化会报错，导致其他插件初始化失败。由于暂时没有用到阿里云，放最下面了。
+            initCloudChannel(this);
         } catch (Exception E) {
         } catch (Error e) {
         }
@@ -97,8 +99,6 @@ public class ReaderApplication extends LitePalApplication {
     /**
      * 初始化云推送通道
      */
-
-
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -123,19 +123,21 @@ public class ReaderApplication extends LitePalApplication {
         }
     }
 
+    public void initOpenInstall() {
+        if (isMainProcess()) {
+            OpenInstall.init(this);
+        }
+    }
 
-    public void initOpenInstall(Context applicationContext) {
-        OpenInstall.getInstall(new AppInstallAdapter() {
-            @Override
-            public void onInstall(AppData appData) {
-                String channel = appData.getChannel();
-                if (channel == null || channel.length() <= 0) {
-                    channel = BuildConfig.umeng_name;
-                }
-                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+    public boolean isMainProcess() {
+        int pid = android.os.Process.myPid();
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
+            if (appProcess.pid == pid) {
+                return getApplicationInfo().packageName.equals(appProcess.processName);
             }
-        });
-        OpenInstall.init(this);
+        }
+        return false;
     }
 
     /**
@@ -191,4 +193,11 @@ public class ReaderApplication extends LitePalApplication {
         preparedDomain.putString("base_url", url);
     }
 
+    public static boolean getNeedInstall() {
+        return preparedDomain.getBoolean("needInstall", true);
+    }
+
+    public static void setNeedInstall(boolean needInstall) {
+        preparedDomain.putBoolean("needInstall", needInstall);
+    }
 }

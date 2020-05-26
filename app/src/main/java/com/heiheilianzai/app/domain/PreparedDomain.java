@@ -16,9 +16,6 @@ public class PreparedDomain {
 
     public PreparedDomain(Context context) {
         sharedPreferences = context.getSharedPreferences("domains", Context.MODE_PRIVATE);
-        //TODO test only start
-        //saveDomain(getDefDomains());
-        //TODO test only end
     }
 
     public void putString(String key, String value) {
@@ -27,6 +24,14 @@ public class PreparedDomain {
 
     public String getString(String key, String def) {
         return sharedPreferences.getString(key, def);
+    }
+
+    public void putBoolean(String key, boolean value) {
+        sharedPreferences.edit().putBoolean(key, value).commit();
+    }
+
+    public boolean getBoolean(String key, boolean def) {
+        return sharedPreferences.getBoolean(key, def);
     }
 
     public void putLong(String key, long value) {
@@ -54,7 +59,6 @@ public class PreparedDomain {
             return getDefDomains();
         } else {
         }
-
         return domains;
     }
 
@@ -65,11 +69,8 @@ public class PreparedDomain {
 
     private List<String> getDefDomains() {
         List<String> set = new ArrayList<>();
-
-
         set.add("https://www.boshanguan.cn");
         set.add("https://www.tcsygnlw.com");
-
         return set;
     }
 

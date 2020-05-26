@@ -10,15 +10,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fm.openinstall.OpenInstall;
+import com.fm.openinstall.listener.AppInstallAdapter;
+import com.fm.openinstall.listener.AppWakeUpAdapter;
+import com.fm.openinstall.listener.AppWakeUpListener;
+import com.fm.openinstall.model.AppData;
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
@@ -35,6 +42,7 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +54,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.USE_AD_FINAL;
  * 闪屏页
  */
 public class SplashActivity extends Activity {
-
+    private AppWakeUpAdapter mWakeUpAdapter;
     public static Activity activity;
     String isfirst;
     UpdateApp updateApp;
@@ -75,6 +83,8 @@ public class SplashActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        OpenInstall.getWakeUp(getIntent(), getmWakeUpAdapter());
+        initOpenInstall();
         activity_home_viewpager_sex_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,5 +244,54 @@ public class SplashActivity extends Activity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this); // 基础指标统计，不能遗漏
+    }
+
+    private void initOpenInstall() {
+        if (ReaderApplication.getNeedInstall()) {  //是否是第一次启动
+            //获取OpenInstall数据，推荐每次需要的时候调用，而不是自己保存数据
+            OpenInstall.getInstall(new AppInstallAdapter() {
+                @Override
+                public void onInstall(AppData appData) {
+                    String channel = appData.getChannel();
+                    if (channel == null || channel.length() <= 0) {
+                        channel = BuildConfig.umeng_name;
+                    }
+                    UMConfigure.init(getApplicationContext(), BuildConfig.umeng_key, channel, UMConfigure.DEVICE_TYPE_PHONE, null);
+                    MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+                    ReaderApplication.setNeedInstall(false);
+                }
+            });
+
+        }
+    }
+
+    public AppWakeUpListener getmWakeUpAdapter() {
+        if (mWakeUpAdapter == null) {
+            mWakeUpAdapter = new AppWakeUpAdapter() {
+                @Override
+                public void onWakeUp(AppData appData) {
+                    // 获取渠道数据
+                    String channelCode = appData.getChannel();
+                    UMConfigure.init(SplashActivity.this, BuildConfig.umeng_key,
+                            TextUtils.isEmpty(channelCode) ? BuildConfig.umeng_name : channelCode,
+                            UMConfigure.DEVICE_TYPE_PHONE,
+                            null);
+                }
+            };
+        }
+        return mWakeUpAdapter;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mWakeUpAdapter = null;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 此处要调用，否则App在后台运行时，会无法截获
+        OpenInstall.getWakeUp(intent, getmWakeUpAdapter());
     }
 }

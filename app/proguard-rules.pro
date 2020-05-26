@@ -52,6 +52,11 @@
 # OPPO通道
 -keep public class * extends android.app.Service
 
+#openinstall
+-dontwarn com.fm.openinstall.**
+-keep public class com.fm.openinstall.* {*; }
+-keep public interface com.fm.openinstall.* {*; }
+
 -ignorewarnings
 -dontshrink
 -dontoptimize
