@@ -218,11 +218,7 @@ public class UpdateApp {
         });
         popupWindow.setContentView(view);
         popupWindow.setCancelable(false);
-        if (mAppUpdate.getUpdate() == 2) {
-            popupWindow.setCanceledOnTouchOutside(false);
-        } else {
-            popupWindow.setCanceledOnTouchOutside(true);
-        }
+        popupWindow.setCanceledOnTouchOutside(false);
         popupWindow.show();
         return popupWindow;
     }
