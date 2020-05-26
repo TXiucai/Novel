@@ -301,7 +301,7 @@ public class ChapterManager {
                     querychapterItem.setChapter_path(path);
                     ContentValues values = new ContentValues();
                     values.put("chapter_path", path);
-                    LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                    LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                     return;
                 }
                 ReaderParams params = new ReaderParams(mContext);
@@ -324,7 +324,7 @@ public class ChapterManager {
                                 values.put("chapter_path", filepath);
                                 values.put("update_time", chapterContent.getUpdate_time());
                                 values.put("is_preview", chapterContent.getIs_preview());
-                                LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                                 if (download != null)
                                     download.finish();
                                 addDownloadTask2(false, chapterContent.getNext_chapter(), null);
@@ -358,7 +358,7 @@ public class ChapterManager {
                     querychapterItem.setChapter_path(path);
                     ContentValues values = new ContentValues();
                     values.put("chapter_path", path);
-                    LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                    LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                     return;
                 }
                 ReaderParams params = new ReaderParams(mContext);
@@ -380,7 +380,7 @@ public class ChapterManager {
                         values.put("chapter_path", filepath);
                         values.put("update_time", chapterContent.getUpdate_time());
                         values.put("is_preview", chapterContent.getIs_preview());
-                        LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                        LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                         if (!onretiation) {
                             if (!chapterContent.getNext_chapter().equals("0") && Next_chapter < 3) {
                                 Next_chapter++;
@@ -414,7 +414,7 @@ public class ChapterManager {
             querychapterItem.setChapter_path(path);
             ContentValues values = new ContentValues();
             values.put("chapter_path", path);
-            LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+            LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
             if (download != null) {
                 download.finish();
             }
@@ -440,7 +440,7 @@ public class ChapterManager {
                         values.put("chapteritem_begin", 0);
                         values.put("chapter_path", filepath);
                         values.put("is_preview", chapterContent.getIs_preview());
-                        LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                        LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                         if (download != null)
                             download.finish();
                         if (!chapterContent.getNext_chapter().equals("0")) {
@@ -759,7 +759,7 @@ public class ChapterManager {
                         values.put("chapteritem_begin", 0);
                         values.put("chapter_path", filepath);
                         values.put("is_preview", chapterContent.getIs_preview());
-                        LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                        LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                         querychapterItem.setChapter_path(filepath);
                         download.finish();
                         ReaderConfig.REFREASH_USERCENTER = true;
