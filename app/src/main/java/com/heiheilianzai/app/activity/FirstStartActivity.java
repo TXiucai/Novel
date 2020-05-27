@@ -4,32 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.bean.OptionBeen;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.bean.Recommend;
+import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.comic.been.BaseComic;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.WaitDialog;
 import com.heiheilianzai.app.http.ReaderParams;
@@ -40,14 +31,6 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
-import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.view.GridViewForScrollView;
-import com.heiheilianzai.app.view.NoLeftRightViewPager;
-
-//.http.RequestParams;
-//.view.annotation.ContentView;
-//.view.annotation.ViewInject;
-//.x;
 
 import org.litepal.LitePal;
 import org.litepal.crud.callback.SaveCallback;
@@ -59,36 +42,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-//Updated upstream:app/src/main/java/com.heiheilianzai.app/activity/FirstStartActivity.java
-///src/main/java/com/haozan/novelapp/activity/FirstStartActivity.java
 
 /**
+ * 首次开启推荐漫画，小说页面
  * Created by abc on 2016/11/4.
  */
-
 public class FirstStartActivity extends BaseButterKnifeActivity {
-    @Override
-    public int initContentView() {
-        return R.layout.activity_firststart;
-    }
-
-    /*    @BindView(R2.id.activity_home_book_layout)
-        public LinearLayout activity_home_viewpager_book_ScrollView;
-        @BindView(R2.id.activity_home_sex_layout)
-        public LinearLayout activity_home_sex_layout;
-        @BindView(R2.id.activity_home_viewpager_sex_next)
-        public TextView activity_home_viewpager_sex_next;
-        @BindView(R2.id.activity_home_viewpager_sex_boy)
-        public ImageView activity_home_viewpager_sex_boy;
-        @BindView(R2.id.activity_home_viewpager_sex_gril)
-        public ImageView activity_home_viewpager_sex_gril;
-        @BindView(R2.id.activity_home_viewpager_sex_gril_choose)
-        public ImageView activity_home_viewpager_sex_gril_choose;
-        @BindView(R2.id.activity_home_viewpager_sex_boy_choose)
-        public ImageView activity_home_viewpager_sex_boy_choose;
-
-        @BindView(R2.id.activity_home_viewpager_sex_ok)
-        public Button activity_home_viewpager_sex_ok;*/
     @BindView(R2.id.activity_home_viewpager_book_next)
     public TextView activity_home_viewpager_book_next;
     @BindView(R2.id.activity_home_viewpager_book_ok)
@@ -98,11 +57,16 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
     int WIDTH, HEIGHT;
     private WaitDialog waitDialog;
     boolean bookadd = false, comicadd = false;
+    Recommend recommend;
+    List<Recommend.RecommendProduc> recommendProducs = new ArrayList<>();
+    List<Recommend.RecommendProduc> addrecommendProducs = new ArrayList<>();
 
-    @OnClick(value = {
-            R.id.activity_home_viewpager_book_next,
-            R.id.activity_home_viewpager_book_ok
-    })
+    @Override
+    public int initContentView() {
+        return R.layout.activity_firststart;
+    }
+
+    @OnClick(value = {R.id.activity_home_viewpager_book_next, R.id.activity_home_viewpager_book_ok})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.activity_home_viewpager_book_next:
@@ -118,7 +82,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                     List<BaseBook> list = new ArrayList<>();
                     List<BaseComic> comics = new ArrayList<>();
                     for (Recommend.RecommendProduc addrecommendProducs : addrecommendProducs) {
-
                         if (addrecommendProducs.book_id != null) {
                             BaseBook mBaseBook = new BaseBook();
                             mBaseBook.setBook_id(addrecommendProducs.book_id);
@@ -128,7 +91,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                             mBaseBook.setTotal_Chapter(addrecommendProducs.total_chapter);
                             mBaseBook.setDescription(addrecommendProducs.description);
                             mBaseBook.setName(addrecommendProducs.name);
-                            // mBaseBook.setUid(Utils.getUID(activity));
                             mBaseBook.setAddBookSelf(1);
                             mBaseBook.saveIsexist(1);
                             list.add(mBaseBook);
@@ -140,13 +102,11 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                             baseComic.setRecentChapter(addrecommendProducs.total_chapter);
                             baseComic.setTotal_chapters(addrecommendProducs.total_chapter);
                             baseComic.setDescription(addrecommendProducs.description);
-                            // baseComic.setUid(Utils.getUID(activity));
                             baseComic.setAddBookSelf(true);
                             baseComic.saveIsexist(true);
                             comics.add(baseComic);
                         }
                     }
-
                     LitePal.saveAllAsync(list).listen(new SaveCallback() {
                         @Override
                         public void onFinish(boolean success) {
@@ -158,7 +118,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                                 intent.putExtra("mBaseComics", (ArrayList<? extends Serializable>) comics);
                                 startActivity(intent);
                                 waitDialog.dismissDialog();
-                                finish();
                             }
                         }
                     });
@@ -173,7 +132,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                                 intent.putExtra("mBaseComics", (ArrayList<? extends Serializable>) comics);
                                 startActivity(intent);
                                 waitDialog.dismissDialog();
-                                finish();
                             }
                         }
                     });
@@ -181,10 +139,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                 }
         }
     }
-
-    Recommend recommend;
-    List<Recommend.RecommendProduc> recommendProducs = new ArrayList<>();
-    List<Recommend.RecommendProduc> addrecommendProducs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,13 +149,9 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
         waitDialog = new WaitDialog(activity);
         waitDialog.setCancleable(true);
         getRecommend(1);
-        ;
-
     }
 
     private void setViewPager() {
-
-
         activity_home_viewpager_book_GridView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
@@ -210,9 +160,7 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
 
             @Override
             public Recommend.RecommendProduc getItem(int i) {
-
                 return recommendProducs.get(i);
-
             }
 
             @Override
@@ -225,20 +173,15 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                 if (view == null) {
                     view = LayoutInflater.from(activity).inflate(R.layout.activity_home_viewpager_classfy_gridview_item, null);
                 }
-
                 ImageView activity_home_viewpager_classfy_GridView_img = view.findViewById(R.id.activity_home_viewpager_classfy_GridView_img);
                 TextView activity_home_flag = view.findViewById(R.id.activity_home_flag);
                 RelativeLayout activity_home_viewpager_classfy_GridView_laiout = view.findViewById(R.id.activity_home_viewpager_classfy_GridView_laiout);
-
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) activity_home_viewpager_classfy_GridView_laiout.getLayoutParams();
                 layoutParams.width = WIDTH;
                 layoutParams.height = HEIGHT;
                 activity_home_viewpager_classfy_GridView_laiout.setLayoutParams(layoutParams);
-
                 final CheckBox activity_home_viewpager_classfy_GridView_box = view.findViewById(R.id.activity_home_viewpager_classfy_GridView_box);
-
                 final Recommend.RecommendProduc recommendProduc = getItem(i);
-                // MyPicasso.IoadImage(activity, classfyBook.cover, R.mipmap.book_def, activity_home_viewpager_classfy_GridView_img);
                 int def = R.mipmap.book_def_v;
                 if (recommendProduc.book_id != null) {
                     activity_home_flag.setVisibility(View.GONE);
@@ -251,12 +194,10 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                 activity_home_viewpager_classfy_GridView_laiout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         if (recommendProduc.isChoose) {
                             recommendProduc.isChoose = false;
                             activity_home_viewpager_classfy_GridView_box.setChecked(false);
                             addrecommendProducs.remove(recommendProduc);
-
                             if (addrecommendProducs.isEmpty()) {
                                 activity_home_viewpager_book_ok.setBackgroundResource(R.drawable.shape_login_bg);
                                 activity_home_viewpager_book_ok.setTextColor(Color.parseColor("#8b8b8c"));
@@ -272,14 +213,12 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                         }
                     }
                 });
-
                 return view;
             }
         });
     }
 
     private void getRecommend(int flag) {
-
         ReaderParams readerParams = new ReaderParams(activity);
         readerParams.putExtraParams("channel_id", flag + "");
         String json = readerParams.generateParamsJson();
@@ -295,7 +234,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                         } else {
                             startMainActivity(activity);
                         }
-
                     }
 
                     @Override
@@ -303,66 +241,23 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                         startMainActivity(activity);
                     }
                 }
-
         );
-
     }
 
     public void startMainActivity(Activity activity) {
-
         startActivity(new Intent(activity, MainActivity.class));
-        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-    /*    save_recommend(activity, new Save_recommend() {
-            @Override
-            public void saveSuccess() {
-
-            }
-        });*/
     }
 
     public interface Save_recommend {
         void saveSuccess();
     }
 
-    public static void save_recommend(final Activity activity,
-                                      final Save_recommend save_recommend) {
-
-     /*   if (Utils.isLogin(activity)) {
-            String gender = ShareUitls.getString(activity, "sextemp", "");
-
-            if (gender.length() == 0) {
-                save_recommend.saveSuccess();
-                return;
-            } else {
-                ReaderParams params = new ReaderParams(activity);
-                if (gender.equals("boy")) {
-                    params.putExtraParams("channel_id", "2");
-                } else if (gender.equals("gender")) {
-                    params.putExtraParams("gender", "1");
-                }
-                String json = params.generateParamsJson();
-                HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.save_recommend, json, true, new HttpUtils.ResponseListener() {
-                            @Override
-                            public void onResponse(String result) {
-                                ShareUitls.putString(activity, "sextemp", "");
-                                save_recommend.saveSuccess();
-                            }
-
-                            @Override
-                            public void onErrorResponse(String ex) {
-                                save_recommend.saveSuccess();
-                            }
-                        }
-
-                );
-
-
-            }
-        }*/
+    public static void save_recommend(final Activity activity, final Save_recommend save_recommend) {
     }
 }
