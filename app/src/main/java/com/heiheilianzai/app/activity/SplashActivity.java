@@ -2,6 +2,8 @@ package com.heiheilianzai.app.activity;
 
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -154,14 +156,16 @@ public class SplashActivity extends Activity {
                     into = true;
                     if (InternetUtils.internett(activity) && isfirst.equals("yes")) {
                         startActivity(new Intent(activity, FirstStartActivity.class));
-                    } else startActivity(new Intent(activity, MainActivity.class));
+                    } else{
+                        startActivity(new Intent(activity, MainActivity.class));
+                    }
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
             } else {
                 if (time == 0) {
-                    activity_home_viewpager_sex_next.setText(splashactivity_skip + (0) + " ");
-                    handler.sendEmptyMessageDelayed(0, 0);
+                    activity_home_viewpager_sex_next.setText(splashactivity_skip);
                 } else {
-                    activity_home_viewpager_sex_next.setText(splashactivity_skip + (time--) + " ");
+                    activity_home_viewpager_sex_next.setText(LanguageUtil.getString(activity, R.string.splashactivity_surplus) + " " + (time--) + " ");
                     handler.sendEmptyMessageDelayed(1, 1000);
                 }
             }
@@ -186,9 +190,19 @@ public class SplashActivity extends Activity {
                         if (!isfirst.equals("yes")) {
                             startpage = dataBean.start_page;
                             if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
+                                activity_splash_im.setAlpha(0f);
+                                activity_splash_im.setVisibility(View.VISIBLE);
                                 ImageLoader.getInstance().displayImage(startpage.image, activity_splash_im, ReaderApplication.getOptions());
-                                activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                                handler.sendEmptyMessageDelayed(1, 0);
+                                activity_splash_im.animate()
+                                        .alpha(1f)
+                                        .setDuration(600)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationEnd(Animator animation) {
+                                                activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                                                handler.sendEmptyMessageDelayed(1, 0);
+                                            }
+                                        });
                                 activity_splash_im.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

@@ -7,6 +7,7 @@
 
     <!--启动页-->
     <string name="splashactivity_skip"> 跳过 </string>
+    <string name="splashactivity_surplus"> 剩余 </string>
     <string name="splashactivity_nonet">当前无网络连接</string>
     <string name="splashactivity_cancle"> 取消 </string>
     <string name="splashactivity_set"> 设置 </string>
