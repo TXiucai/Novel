@@ -107,12 +107,13 @@
     <string name="SettingsActivity_nomark">在手机上没有找到应用市场哦！</string>
     <string name="SettingsActivity_clear">清除缓存</string>
     <string name="SettingsActivity_clearSeccess">清除缓存成功</string>
-
-
-
     <string name="SettingsActivity_market">好评支持</string>
     <string name="SettingsActivity_friend">推荐给朋友</string>
     <string name="SettingsActivity_language">语言切换</string>
+    <string name="SettingsActivity_version">版本检测</string>
+    <string name="SettingsActivity_version_new">发现新版本</string>
+    <string name="SettingsActivity_version_now">您的版本已是最新！</string>
+    <string name="SettingsActivity_v">V</string>
     <string name="SettingsActivity_adout">关于</string>
     <string name="SettingsActivity_tongbu">使用3G/4G同步书架</string>
     <string name="SettingsActivity_antobuy">自动购买下一章</string>

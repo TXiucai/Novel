@@ -3,28 +3,22 @@ package com.heiheilianzai.app.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
+import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.book.been.BaseBook;
+import com.heiheilianzai.app.R2;
+import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.RefreshBookSelf;
-import com.heiheilianzai.app.eventbus.RefreshDiscoveryFragment;
 import com.heiheilianzai.app.eventbus.RefreshMine;
-import com.heiheilianzai.app.book.fragment.NovelFragmentNew;
-import com.heiheilianzai.app.eventbus.RefreshReadHistory;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.ClearCacheManager;
@@ -34,7 +28,10 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
+import com.umeng.socialize.UMShareAPI;
 import com.zcw.togglebutton.ToggleButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,21 +39,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.LitePal;
-//.http.RequestParams;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 
-import com.heiheilianzai.app.R2;
 
 /**
- * 作品详情
+ * 设置详情
  */
 public class SettingsActivity extends BaseActivity implements View.OnClickListener, ShowTitle {
-    private final String TAG = SettingsActivity.class.getSimpleName();
-
     @BindView(R2.id.activity_settings_same)
     ToggleButton activity_settings_same;
     @BindView(R2.id.activity_settings_wifi)
@@ -67,7 +59,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     View activity_settings_switch_container;
     @BindView(R2.id.activity_settings_logout)
     View activity_settings_logout;
-
     @BindView(R2.id.activity_settings_clear_cache)
     View activity_settings_clear_cache;
     @BindView(R2.id.activity_settings_support)
@@ -80,10 +71,14 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     View automation_buy_next;
     @BindView(R2.id.automation_buy_next_lv)
     View automation_buy_next_lv;
-
-
+    @BindView(R2.id.activity_settings_version)
+    View activity_settings_version;
+    @BindView(R2.id.activity_settings_version_test)
+    TextView activity_settings_version_test;
     Activity activity;
     public static boolean chengeLangaupage;
+    private AppUpdate mAppUpdate;
+    private Dialog popupWindow;
 
     @Override
     public int initContentView() {
@@ -93,37 +88,30 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void initView() {
         activity = this;
-
-        //initTitleBarView("设置");
         initTitleBarView(LanguageUtil.getString(this, R.string.MineNewFragment_set));
+        setVersionView();
         if (ReaderConfig.USE_PAY) {
             activity_settings_switch_container.setVisibility(Utils.isLogin(this) ? View.VISIBLE : View.GONE);
             activity_settings_logout.setVisibility(Utils.isLogin(this) ? View.VISIBLE : View.GONE);
-
             if (AppPrefs.getSharedBoolean(this, ReaderConfig.IS3G4G, true)) {
                 activity_settings_same.setToggleOn();
             } else {
                 activity_settings_same.setToggleOff();
             }
-
             if (AppPrefs.getSharedBoolean(this, ReaderConfig.WIFIDOWNLOAD, true)) {
                 activity_settings_wifi.setToggleOn();
             } else {
                 activity_settings_wifi.setToggleOff();
             }
-
             if (AppPrefs.getSharedBoolean(this, ReaderConfig.AUTOBUY, true)) {
                 activity_settings_auto.setToggleOn();
             } else {
                 activity_settings_auto.setToggleOff();
             }
-
             activity_settings_same.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
                 @Override
                 public void onToggle(boolean on) {
                     AppPrefs.putSharedBoolean(activity, ReaderConfig.IS3G4G, on);
-
-
                 }
             });
             activity_settings_wifi.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
@@ -154,15 +142,13 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         activity_settings_logout.setOnClickListener(this);
         findViewById(R.id.activity_settings_share).setOnClickListener(this);
         activity_settings_language.setOnClickListener(this);
+        activity_settings_version.setOnClickListener(this);
         uiFreeCharge();
     }
 
     @Override
     public void initData() {
-
-
     }
-
 
     @Override
     public void onClick(View v) {
@@ -188,11 +174,11 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.activity_settings_language:
                 //所有登录用户置为none用户
-
                 ChengeLangaupage();
                 break;
-
-
+            case R.id.activity_settings_version://版本更新
+                showVersionDialog();
+                break;
         }
     }
 
@@ -203,7 +189,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, "");
         AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
         ReaderConfig.REFREASH_USERCENTER = true;
-
     }
 
 
@@ -217,9 +202,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-
             MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.SettingsActivity_nomark));
-
         }
     }
 
@@ -290,7 +273,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
 
     public interface Auto_subSuccess {
         void success(boolean open);
-
     }
 
     public static void Auto_sub(final Activity activity, final Auto_subSuccess auto_subSuccess) {
@@ -313,30 +295,21 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
-
     private void ChengeLangaupage() {
-
         final Dialog dialog = new Dialog(this, R.style.userInfo_avatar);
         View view = View.inflate(this, R.layout.user_img_dialog, null);
-
-
         TextView checkImgGallery = view.findViewById(R.id.checkimg_gallery);
         TextView checkImgCamera = view.findViewById(R.id.checkimg_camera);
         View checkImgCancel = view.findViewById(R.id.checkimg_cancel);
-
         View checkimg_3_view = view.findViewById(R.id.checkimg_3_view);
         TextView checkimg_3 = view.findViewById(R.id.checkimg_3);
         checkimg_3_view.setVisibility(View.VISIBLE);
@@ -358,13 +331,11 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 dialog.dismiss();
                 LanguageUtil.reFreshLanguage(Locale.SIMPLIFIED_CHINESE, activity, SettingsActivity.class);
-
             }
         });
         checkimg_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 LanguageUtil.reFreshLanguage(Locale.UK, activity, SettingsActivity.class);
             }
@@ -373,11 +344,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-
             }
         });
         dialog.show();
-
     }
 
     /**
@@ -385,5 +354,52 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
      */
     private void uiFreeCharge() {
         uiFreeCharge(automation_buy_next, automation_buy_next_lv);
+    }
+
+    /**
+     * 版本相关ui初始化
+     */
+    private void setVersionView() {
+        String str = ShareUitls.getString(activity, "Update", "");
+        if (str.length() > 0) {
+            mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
+            if (mAppUpdate != null && (mAppUpdate.getUpdate() == 1 || mAppUpdate.getUpdate() == 2)) {
+                activity_settings_version_test.setText(getString(R.string.SettingsActivity_version_new));
+            } else {
+                activity_settings_version_test.setText(getString(R.string.SettingsActivity_v) + BuildConfig.VERSION_NAME);
+            }
+        }
+    }
+
+    /**
+     * 版本更新弹框
+     */
+    private void showVersionDialog() {
+        if (mAppUpdate != null) {//从本地
+            showVersionDialog(mAppUpdate);
+        } else {//从网络
+            new UpdateApp(SettingsActivity.this).getRequestData(new UpdateApp.UpdateAppInterface() {
+                @Override
+                public void Next(String response) {
+                    try {
+                        if (response.length() != 0) {
+                            mAppUpdate = new Gson().fromJson(response, AppUpdate.class);
+                            showVersionDialog(mAppUpdate);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            });
+        }
+    }
+
+    private void showVersionDialog(AppUpdate mAppUpdate) {
+        if (mAppUpdate != null) {
+            if(mAppUpdate.getUpdate() == 1 || mAppUpdate.getUpdate() == 2){
+                popupWindow = new UpdateApp().getAppUpdatePop(SettingsActivity.this, mAppUpdate);
+            }else {
+                MyToash.ToashSuccess(getApplicationContext(),getString(R.string.SettingsActivity_version_now));
+            }
+        }
     }
 }
