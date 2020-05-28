@@ -91,32 +91,23 @@ import butterknife.OnClick;
 /**
  * 作品详情
  */
-
-/*@ContentView(R.layout.activity_comicinfo)*/
 public class ComicInfoActivity extends FragmentActivity {
-
     @BindView(R2.id.fragment_comicinfo_viewpage)
     public ViewPager fragment_comicinfo_viewpage;
     @BindView(R2.id.activity_comic_info_topbar_downlayout)
     public RelativeLayout activity_comic_info_topbar_downlayout;
     @BindView(R2.id.activity_comic_info_topbar_sharelayout)
     public RelativeLayout activity_comic_info_topbar_sharelayout;
-
-
     @BindView(R2.id.fragment_comicinfo_current_chaptername)
     public TextView fragment_comicinfo_current_chaptername;
     @BindView(R2.id.fragment_comicinfo_current_goonread)
     public TextView fragment_comicinfo_current_goonread;
-
     @BindView(R2.id.activity_book_info_content_xiangqing_text)
     public TextView activity_book_info_content_xiangqing_text;
     @BindView(R2.id.activity_book_info_content_mulu_text)
     public TextView activity_book_info_content_mulu_text;
-
-
     @BindView(R2.id.activity_comic_info_top_bookname)
     public TextView activity_comic_info_top_bookname;
-
     @BindView(R2.id.activity_book_info_content_cover)
     public ImageView activity_book_info_content_cover;
     @BindView(R2.id.activity_book_info_content_name)
@@ -129,8 +120,6 @@ public class ComicInfoActivity extends FragmentActivity {
     public TextView activity_book_info_content_shoucang;
     @BindView(R2.id.activity_book_info_content_shoucannum)
     public TextView activity_book_info_content_shoucannum;
-
-
     @BindView(R2.id.activity_book_info_content_tag)
     public LinearLayout activity_book_info_content_tag;
     @BindView(R2.id.activity_book_info_content_xiangqing)
@@ -141,33 +130,24 @@ public class ComicInfoActivity extends FragmentActivity {
     public View activity_book_info_content_xiangqing_view;
     @BindView(R2.id.activity_book_info_content_mulu_view)
     public View activity_book_info_content_mulu_view;
-
     @BindView(R2.id.channel_bar_indicator)
     public UnderlinePageIndicatorHalf channel_bar_indicator;
-
-
     @BindView(R2.id.activity_book_info_content_cover_bg)
     public ImageView activity_book_info_content_cover_bg;
-
     @BindView(R2.id.activity_comic_info_AppBarLayout)
     public AppBarLayout activity_comic_info_AppBarLayout;
-
     @BindView(R2.id.activity_comic_info_CollapsingToolbarLayout)
     public CollapsingToolbarLayout activity_comic_info_CollapsingToolbarLayout;
     @BindView(R2.id.fragment_comicinfo_mulu_dangqian)
     public LinearLayout fragment_comicinfo_mulu_dangqian;
     @BindView(R2.id.fragment_comicinfo_mulu_zhiding)
     public LinearLayout fragment_comicinfo_mulu_zhiding;
-
     @BindView(R2.id.fragment_comicinfo_mulu_zhiding_img)
     public ImageView fragment_comicinfo_mulu_zhiding_img;
     @BindView(R2.id.fragment_comicinfo_mulu_zhiding_text)
     public TextView fragment_comicinfo_mulu_zhiding_text;
-
-
     @BindView(R2.id.fragment_comicinfo_mulu_dangqian_layout)
     public RelativeLayout fragment_comicinfo_mulu_dangqian_layout;
-
     @BindView(R2.id.activity_comic_info_comment_layout)
     public LinearLayout activity_comic_info_comment_layout;
     @BindView(R2.id.activity_comic_info_topbar)
@@ -185,13 +165,15 @@ public class ComicInfoActivity extends FragmentActivity {
     StroreComicLable.Comic comic;
     BaseAd baseAd;
     List<ComicChapter> comicChapter;
+    ComicinfoCommentFragment comicFragment;
+    ComicinfoMuluFragment muluFragment;
+    Drawable activity_comic_info_topbarD;
     MuluLorded muluLorded = new MuluLorded() {
         @Override
         public void getReadChapterItem(List<ComicChapter> comicChapter1) {
             if (comicChapter1 != null && !comicChapter1.isEmpty()) {
                 comicChapter = comicChapter1;
                 baseComic.setTotal_chapters(comicChapter1.size());
-
                 if (baseComic.getCurrent_chapter_name() == null) {
                     fragment_comicinfo_current_chaptername.setText(comicChapter.get(0).chapter_title);
                 }
@@ -240,7 +222,6 @@ public class ComicInfoActivity extends FragmentActivity {
                 if (chooseWho) {
                     fragment_comicinfo_viewpage.setCurrentItem(0);
                     chooseWho = false;
-
                 }
                 break;
             case R.id.activity_book_info_content_mulu:
@@ -248,7 +229,6 @@ public class ComicInfoActivity extends FragmentActivity {
                 if (!chooseWho) {
                     fragment_comicinfo_viewpage.setCurrentItem(1);
                     chooseWho = true;
-
                 }
                 break;
 
@@ -257,9 +237,6 @@ public class ComicInfoActivity extends FragmentActivity {
                     baseComic.saveIsexist(true);
                     activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
-                    //   activity_book_info_content_shoucang.setTextColor(Color.parseColor("#7F22b48d"));
-                    //    activity_book_info_content_shoucang.setEnabled(false);
-
                     EventBus.getDefault().post(new RefreshComic(baseComic, 1));
 
                 } else {
@@ -268,7 +245,6 @@ public class ComicInfoActivity extends FragmentActivity {
                     LitePal.delete(BaseComic.class, baseComic.getId());
                     baseComic.setAddBookSelf(false);
                     EventBus.getDefault().post(new RefreshComic(baseComic, 0));
-
                 }
                 break;
             case R.id.activity_comic_info_topbar_downlayout:
@@ -276,12 +252,10 @@ public class ComicInfoActivity extends FragmentActivity {
                     baseComic.saveIsexist(false);
                     Intent intent = new Intent(activity, ComicDownActivity.class);
                     intent.putExtra("baseComic", baseComic);
-                    //intent.putExtra("comicChapter", (Serializable) comicChapter);
                     startActivity(intent);
                 } else {
                     MyToash.ToashError(activity, "漫画正在更新中~");
                 }
-
                 break;
             case R.id.fragment_comicinfo_mulu_dangqian://baseComic.getCurrent_chapter_displayOrder()
                 muluFragment.OnclickDangqian(true);
@@ -297,7 +271,6 @@ public class ComicInfoActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -312,70 +285,46 @@ public class ComicInfoActivity extends FragmentActivity {
         EventBus.getDefault().register(this);
         resources = getResources();
         init();
-
     }
-
-    ComicinfoCommentFragment comicFragment;
-    ComicinfoMuluFragment muluFragment;
-    Drawable activity_comic_info_topbarD;
-    // boolean lookTohera;
 
     public void init() {
         if (!ReaderConfig.USE_SHARE) {
             activity_comic_info_topbar_sharelayout.setVisibility(View.GONE);
         }
-
-    /*    baseComic = (BaseComic) intent.getSerializableExtra("baseComic");
-        if (baseComic != null) {
-            comic_id = baseComic.getComic_id();
-            lookTohera = true;
-        } else {
-            comic_id = getIntent().getStringExtra("comic_id");
-        }*/
         muluFragment = new <Fragment>ComicinfoMuluFragment(muluLorded, fragment_comicinfo_mulu_zhiding_img, fragment_comicinfo_mulu_zhiding_text);
         comicFragment = new <Fragment>ComicinfoCommentFragment();
         fragmentList = new ArrayList<>();
         fragmentList.add(comicFragment);
         fragmentList.add(muluFragment);
-
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         fragment_comicinfo_viewpage.setAdapter(myFragmentPagerAdapter);
-
         channel_bar_indicator.setViewPager(fragment_comicinfo_viewpage);
         channel_bar_indicator.setFades(false);
         bookInfoComment = new ArrayList<>();
         activity_comic_info_AppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
-
                 MyToash.Log("appBarLayout", state + "");
                 if (state == State.EXPANDED) {
                     activity_comic_info_top_bookname.setVisibility(View.GONE);
-                    //展开状态
-                    //  toolbar.setNavigationIcon(R.drawable.bt_title_back_selector);
                     activity_comic_info_topbar.setBackground(null);
                 } else if (state == State.COLLAPSED) {
                     activity_comic_info_top_bookname.setVisibility(View.VISIBLE);
                     activity_comic_info_topbar.setVisibility(View.VISIBLE);
                     if (activity_comic_info_topbar != null) {
                         activity_comic_info_topbar.setBackground(activity_comic_info_topbarD);
-
                         Drawable drawable = new Drawable() {
                             @Override
                             public void draw(Canvas canvas) {
-
                             }
 
                             @Override
                             public void setAlpha(int i) {
-
                             }
 
                             @Override
                             public void setColorFilter(ColorFilter colorFilter) {
-
                             }
-
                             @SuppressLint("WrongConstant")
                             @Override
                             public int getOpacity() {
@@ -385,14 +334,9 @@ public class ComicInfoActivity extends FragmentActivity {
                         drawable.setAlpha(0);
                         activity_comic_info_CollapsingToolbarLayout.setContentScrim(drawable);
                     }
-                    //折叠状态
-                    //  toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
                 } else {
                     activity_comic_info_top_bookname.setVisibility(View.GONE);
                     activity_comic_info_topbar.setBackground(null);
-                    //中间状态
-                    // toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
-
                 }
             }
         });
@@ -401,7 +345,6 @@ public class ComicInfoActivity extends FragmentActivity {
         fragment_comicinfo_viewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -414,15 +357,12 @@ public class ComicInfoActivity extends FragmentActivity {
                 } else {
                     activity_book_info_content_xiangqing_text.setTextColor(Color.BLACK);
                     activity_book_info_content_mulu_text.setTextColor(ContextCompat.getColor(activity, R.color.mainColor));
-
                     fragment_comicinfo_mulu_dangqian_layout.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
         httpData();
@@ -431,7 +371,6 @@ public class ComicInfoActivity extends FragmentActivity {
     public void handdata() {
         if (!refreshComment) {
             MyPicasso.GlideImageRoundedCorners(12, activity, comic.vertical_cover, activity_book_info_content_cover, ImageUtil.dp2px(activity, 135), ImageUtil.dp2px(activity, 180),R.mipmap.comic_def_v);
-            // MyPicasso.GlideImageRoundedCorners(activity, comic.horizontal_cover, activity_comic_info_catlog_img, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 250));
             if (comic.horizontal_cover.length() > 0) {
                 MyPicasso.GlideImage(activity, comic.horizontal_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205),R.mipmap.comic_def_cross);
             } else {
@@ -442,17 +381,12 @@ public class ComicInfoActivity extends FragmentActivity {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
-                        //  activity_comic_info_topbarD = BlurImageview.BlurImages(resource, activity);
-                        // activity_comic_info_CollapsingToolbarLayout.setContentScrim(BlurImageview.BlurImages(resource, activity));
                     }
                 });
             } catch (Exception e) {
             }
-
-
             activity_book_info_content_name.setText(comic.name);
             fragment_comicinfo_current_chaptername.setText(baseComic.getCurrent_chapter_name() == null ? "" : baseComic.getCurrent_chapter_name());
-            //  activity_book_info_content_name2.setText(comic.name);
             activity_book_info_content_author.setText(comic.author);
             activity_book_info_content_total_hot.setText(comic.hot_num);
             activity_book_info_content_shoucannum.setText(comic.total_favors);
@@ -476,7 +410,6 @@ public class ComicInfoActivity extends FragmentActivity {
                 layoutParams.gravity = Gravity.CENTER_VERTICAL;
                 activity_book_info_content_tag.addView(textView, layoutParams);
             }
-
             baseComic.setVertical_cover(comic.vertical_cover);
             baseComic.setHorizontal_cover(comic.horizontal_cover);
             baseComic.setName(comic.name);
@@ -491,7 +424,6 @@ public class ComicInfoActivity extends FragmentActivity {
 
         }
         comicFragment.senddata(comic, bookInfoComment, stroreComicLable, baseAd);
-
     }
 
     public void httpData() {
@@ -521,12 +453,8 @@ public class ComicInfoActivity extends FragmentActivity {
                 baseComic.setAddBookSelf(false);
             }
         }
-
         if (baseComic.isAddBookSelf()) {
-
             activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
-            // activity_book_info_content_shoucang.setTextColor(Color.parseColor("#7F22b48d"));
-            //  activity_book_info_content_shoucang.setEnabled(false);
         }
         httpData2(false);
     }
@@ -552,8 +480,6 @@ public class ComicInfoActivity extends FragmentActivity {
                             handdata();
                         } catch (Exception e) {
                         }
-
-
                     }
 
                     @Override
@@ -563,7 +489,6 @@ public class ComicInfoActivity extends FragmentActivity {
                         }
                     }
                 }
-
         );
     }
 
@@ -572,27 +497,19 @@ public class ComicInfoActivity extends FragmentActivity {
         if (refreshBookInfo.isSave) {
             baseComic.setAddBookSelf(true);
             activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
-            activity_book_info_content_shoucang.setTextColor(Color.parseColor("#7F22b48d"));
-            activity_book_info_content_shoucang.setEnabled(false);
         } else {
             httpData2(true);
         }
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshComicChapterList(ComicChapterEventbus comicChapterte) {//更新当前目录集合的 最近阅读图片记录
         ComicChapter comicChaptert = comicChapterte.comicChapter;
-        //  MyToash.Log("CurrentComicChapter--CC", comicChaptert.display_order + "   " + comicChaptert.current_read_img_order + " " + comicChaptert.current_read_img_image_id + "  " + comicChaptert.chapter_id);
-
         ComicChapter c = comicChapter.get(comicChaptert.display_order);
 
         switch (comicChapterte.Flag) {
             case 0://更新最近阅读章节图片
                 c.current_read_img_order = comicChaptert.current_read_img_order;
-                // c.current_read_img_image_id = comicChaptert.getCurrent_read_img_image_id();
-
-                // MyToash.Log("CurrentComicChapter--DD", c.display_order + "   " + c.current_read_img_order + " " + c.current_read_img_image_id + "  " + c.chapter_id);
                 break;
 
             case 1://更新下载数据
@@ -602,9 +519,6 @@ public class ComicInfoActivity extends FragmentActivity {
                 values.put("ImagesText", comicChaptert.ImagesText);
                 values.put("ISDown", "1");
                 int i = LitePal.update(ComicChapter.class, values, c.getId());
-                //  MyToash.Log("ISDown", comicChaptert.chapter_title + "   " + c.chapter_id + "  " + i);
-
-                //  MyToash.Log("CurrentComicChapter", c.toString());
                 break;
         }
     }
@@ -615,7 +529,6 @@ public class ComicInfoActivity extends FragmentActivity {
         baseComic.setCurrent_chapter_id(baseComic1.getCurrent_chapter_id());
         baseComic.setCurrent_chapter_name(baseComic1.getCurrent_chapter_name());
         fragment_comicinfo_current_chaptername.setText(baseComic1.getCurrent_chapter_name());
-
         if (muluFragment.comicChapterCatalogAdapter != null) {
             muluFragment.comicChapterCatalogAdapter.setCurrentChapterId(baseComic1.getCurrent_chapter_id());
             if (baseComic1.getCurrent_display_order() < muluFragment.comicChapterCatalogAdapter.comicChapterCatalogList.size()) {
@@ -626,21 +539,8 @@ public class ComicInfoActivity extends FragmentActivity {
         if (!baseComic.isAddBookSelf() && baseComic1.isAddBookSelf()) {
             baseComic.setAddBookSelf(true);
             activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
-
-            //  activity_book_info_content_shoucang.setTextColor(Color.parseColor("#7F22b48d"));
-            //  activity_book_info_content_shoucang.setEnabled(false);
         }
     }
-
-  /*  @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == 222) {
-            if (resultCode == 222) {
-               // comicChapter = (List<ComicChapter>) (intent.getSerializableExtra("comicChapter"));
-            }
-        }
-    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.comic.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,11 +13,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -38,6 +42,7 @@ import com.heiheilianzai.app.comic.been.BaseComicImage;
 import com.heiheilianzai.app.comic.been.ComicChapter;
 import com.heiheilianzai.app.comic.been.ComicChapterItem;
 import com.heiheilianzai.app.comic.been.ComicReadHistory;
+import com.heiheilianzai.app.comic.been.RefreashComicInfoActivity;
 import com.heiheilianzai.app.comic.config.ComicConfig;
 import com.heiheilianzai.app.comic.dialog.LookComicSetDialog;
 import com.heiheilianzai.app.comic.dialog.PurchaseDialog;
@@ -86,9 +91,9 @@ import static com.heiheilianzai.app.comic.config.ComicConfig.SET_OPEN_DANMU;
 import static com.heiheilianzai.app.config.ReaderConfig.MANHAU;
 
 /**
+ * 阅读漫画页面
  * Created by abc on 2016/11/4.
  */
-
 public class ComicLookActivity extends BaseButterKnifeActivity {
     @BindView(R2.id.activity_comiclook_lording)
     public RelativeLayout activity_comiclook_lording;
@@ -236,7 +241,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     }
                 } catch (Exception e) {
                 }
-                finish();
+                askIsNeedToAddShelf();
             case R.id.activity_comiclook_foot:
                 break;
             case R.id.activity_comiclook_shoucang:
@@ -244,6 +249,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 activity_comiclook_shoucang.setVisibility(View.GONE);
                 MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                 EventBus.getDefault().post(new RefreshComic(baseComic, 1));
+                EventBus.getDefault().post(new RefreashComicInfoActivity(true));
                 break;
             case R.id.activity_comiclook_dingbu:
                 activity_comiclook_RecyclerView.smoothScrollToPosition(0);
@@ -795,7 +801,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
             } catch (Exception e) {
             }
-            finish();
+            askIsNeedToAddShelf();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -888,5 +894,48 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * 询问是否加入书架
+     */
+    private void askIsNeedToAddShelf() {
+        if (baseComic.isAddBookSelf()){
+            finish();
+            return;
+        }
+        final Dialog dialog = new Dialog(this, R.style.NormalDialogStyle);
+        View view = View.inflate(this, R.layout.dialog_add_shelf, null);
+        TextView cancel = view.findViewById(R.id.cancel);
+        TextView confirm = view.findViewById(R.id.confirm);
+        dialog.setContentView(view);
+        dialog.setCanceledOnTouchOutside(true);
+        //设置对话框的大小
+        view.setMinimumHeight((int) (ScreenSizeUtils.getInstance(this).getScreenHeight() * 0.2f));
+        Window dialogWindow = dialog.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = (int) (ScreenSizeUtils.getInstance(this).getScreenWidth() * 0.75f);
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.CENTER;
+        dialogWindow.setAttributes(lp);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                baseComic.saveIsexist(true);
+                MyToash.ToashSuccess(activity, LanguageUtil.getString(getApplicationContext(), R.string.fragment_comic_info_yishoucang));
+                EventBus.getDefault().post(new RefreshComic(baseComic, 1));
+                EventBus.getDefault().post(new RefreashComicInfoActivity(true));
+                finish();
+            }
+        });
+        dialog.show();
     }
 }
