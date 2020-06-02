@@ -55,4 +55,8 @@ gradle.ext {
     API_KEY_UAT = "\"x\""
     API_SECRET_KEY = "\"x\""
     API_SECRET_KEY_UAT = "\"x\""
+    // 图片解密密钥
+    PICTURE_KEY = "\"x\""
+    // 图片解密偏移量
+    PICTURE_VIPARA = "\"x\""
 }

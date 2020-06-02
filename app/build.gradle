@@ -36,6 +36,8 @@ android {
         buildConfigField "String", "app_id", gradle.ext.APP_ID
         buildConfigField "boolean", "free_charge", gradle.ext.FREE_CHARGE
         buildConfigField "String", "domain_host_reserve", gradle.ext.DOMAIN_HOSTS_RESERVE
+        buildConfigField "String", "picture_key", gradle.ext.PICTURE_KEY
+        buildConfigField "String", "picture_vipara", gradle.ext.PICTURE_VIPARA
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -170,6 +172,8 @@ def getAppConfig() {
         buildConfigField "String", "app_id", gradle.ext.APP_ID
         buildConfigField "Boolean", "free_charge", gradle.ext.FREE_CHARGE
         buildConfigField "String", "domain_host_reserve", gradle.ext.DOMAIN_HOSTS_RESERVE
+        buildConfigField "String", "picture_key", gradle.ext.PICTURE_KEY
+        buildConfigField "String", "picture_vipara", gradle.ext.PICTURE_VIPARA
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
     }
 }
@@ -262,7 +266,8 @@ dependencies {
     //图片加载库
     implementation files('libs/universal-image-loader-1.9.4.jar')
     //glide网络框架
-    implementation 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     //处理各种版本沉侵状态栏
@@ -283,6 +288,9 @@ dependencies {
     implementation 'cn.jiguang.sdk.plugin:oppo:3.3.2'
     //fastJson解析json
     implementation 'com.alibaba:fastjson:1.1.60.android'
+    //rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 }
 
 String SDK_DIR = System.getenv("ANDROID_SDK_HOME")

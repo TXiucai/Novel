@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -54,6 +55,7 @@ import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
@@ -69,6 +71,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,20 +80,11 @@ import butterknife.OnClick;
 
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
-//.TodayOneAD;
-
 /**
  * 作品详情
  */
 public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public final String TAG = BookInfoActivity.class.getSimpleName();
-
-    @Override
-    public int initContentView() {
-        return R.layout.activity_book_info;
-    }
-
-    public String mBookId;
     @BindView(R2.id.book_info_titlebar_container)
     public RelativeLayout book_info_titlebar_container;
     @BindView(R2.id.book_info_titlebar_container_shadow)
@@ -117,8 +111,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public TextView activity_book_info_content_total_comment;
     @BindView(R2.id.activity_book_info_content_total_shoucanshu)
     public TextView activity_book_info_content_total_shoucanshu;
-
-
     @BindView(R2.id.activity_book_info_content_cover)
     public ImageView activity_book_info_content_cover;
     @BindView(R2.id.activity_book_info_content_description)
@@ -144,6 +136,20 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     @BindView(R2.id.list_ad_view_img)
     ImageView list_ad_view_img;
 
+    public String mBookId;
+    public BaseBook mBaseBook;
+    public int WIDTH, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20;
+    LayoutInflater layoutInflater;
+    Activity activity;
+    Gson gson = new Gson();
+    boolean falseDialg;
+    BaseBook basebooks;
+    boolean onclickTwo = false;
+
+    @Override
+    public int initContentView() {
+        return R.layout.activity_book_info;
+    }
 
     @OnClick(value = {R.id.titlebar_back, R.id.activity_book_info_content_category_layout,
             R.id.activity_book_info_add_shelf, R.id.activity_book_info_start_read,
@@ -160,7 +166,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             case R.id.activity_book_info_content_category_layout:
                 if (!onclickTwo) {
                     onclickTwo = true;
-
                     Intent intent = new Intent(this, CatalogActivity.class);
                     intent.putExtra("book_id", mBookId);
                     intent.putExtra("book", mBaseBook);
@@ -176,13 +181,11 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     onclickTwo = true;
                     mBaseBook.saveIsexist(0);
                     ChapterManager.getInstance(BookInfoActivity.this).openBook(mBaseBook, mBookId);
-
                     onclickTwo = false;
                     ReaderConfig.integerList.add(1);
                 }
                 break;
             case R.id.activity_book_info_down:
-                // mBaseBook.saveIsexist();
                 DownDialog downDialog = new DownDialog();
                 downDialog.getDownoption(BookInfoActivity.this, mBaseBook, null);
                 DownDialog.showOpen = true;
@@ -198,25 +201,14 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         }
     }
 
-
-    public BaseBook mBaseBook;
-
-
-    public int WIDTH, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20;
-    LayoutInflater layoutInflater;
-
-
-    Activity activity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
         setStatusTextColor(false, activity);
-        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {                                  //适配华为手机虚拟键遮挡tab的问题
-            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {//适配华为手机虚拟键遮挡tab的问题
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
-        //StatusBarUtil.setTransparent(this);
         EventBus.getDefault().register(this);
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         layoutInflater = LayoutInflater.from(activity);
@@ -230,7 +222,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         H20 = ImageUtil.dp2px(activity, 12);
         initView();
     }
-
 
     public void initView() {
         if (!ReaderConfig.USE_SHARE) {
@@ -256,8 +247,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         initData();
     }
 
-    Gson gson = new Gson();
-
     public void initInfo(String json) {
         try {
             InfoBookItem infoBookItem = gson.fromJson(json, InfoBookItem.class);
@@ -270,8 +259,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             mBaseBook.setRecentChapter(infoBook.total_chapter);
             mBaseBook.setName(infoBook.name);
             mBaseBook.setUid(Utils.getUID(activity));
-
-
             activity_book_info_content_name.setText(infoBook.name);
             activity_book_info_content_author.setText(infoBook.author);
             activity_book_info_content_display_label.setText(infoBook.display_label);
@@ -284,24 +271,41 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             titlebar_text.setText(infoBook.name);
             titlebar_text.setAlpha(0);
             book_info_titlebar_container_shadow.setAlpha(0);
-
             try {
-                Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        try {
-                            activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, BookInfoActivity.this));
-                        } catch (Exception e) {
-                        } catch (Error r) {
-                        }
-                    }
+                Glide.with(this).asFile().load(infoBook.cover)
+                        .into(new SimpleTarget<File>() {
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                super.onLoadFailed(errorDrawable);
+                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
+                                activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
+                            }
 
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
-                        activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
-                    }
-                });
+                            @Override
+                            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                                AESUtil.getDecideFile(resource, infoBook.cover, new AESUtil.OnFileResourceListener() {
+                                    @Override
+                                    public void onFileResource(File f) {
+                                        Glide.with(BookInfoActivity.this).asBitmap().load(f).into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                                try {
+                                                    activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, BookInfoActivity.this));
+                                                } catch (Exception e) {
+                                                } catch (Error r) {
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
+                                                activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
             } catch (Exception e) {
                 MyToash.Log("", e.getMessage());
             } catch (Error r) {
@@ -309,7 +313,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             }
             int dp6 = ImageUtil.dp2px(activity, 6);
             int dp3 = ImageUtil.dp2px(activity, 3);
-
             for (BaseTag tag : infoBook.tag) {
                 TextView textView = new TextView(activity);
                 textView.setText(tag.getTab());
@@ -329,17 +332,13 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             }
             if (!infoBookItem.comment.isEmpty()) {
                 for (BookInfoComment bookInfoComment : infoBookItem.comment) {
-
                     LinearLayout commentView = (LinearLayout) layoutInflater.inflate(R.layout.activity_book_info_content_comment_item, null, false);
                     CircleImageView activity_book_info_content_comment_item_avatar = commentView.findViewById(R.id.activity_book_info_content_comment_item_avatar);
                     TextView activity_book_info_content_comment_item_nickname = commentView.findViewById(R.id.activity_book_info_content_comment_item_nickname);
                     TextView activity_book_info_content_comment_item_content = commentView.findViewById(R.id.activity_book_info_content_comment_item_content);
                     TextView activity_book_info_content_comment_item_reply = commentView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
                     TextView activity_book_info_content_comment_item_time = commentView.findViewById(R.id.activity_book_info_content_comment_item_time);
-
                     MyPicasso.IoadImage(this, bookInfoComment.getAvatar(), R.mipmap.icon_def_head, activity_book_info_content_comment_item_avatar);
-
-
                     activity_book_info_content_comment_item_nickname.setText(bookInfoComment.getNickname());
                     activity_book_info_content_comment_item_content.setText(bookInfoComment.getContent());
                     activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
@@ -358,9 +357,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                             startActivity(intent);
                         }
                     });
-
                     activity_book_info_content_comment_container.addView(commentView);
-
                 }
             }
             String moreText;
@@ -400,20 +397,15 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                 values.put("author", infoBook.author);
                 values.put("description", infoBook.description);
                 LitePal.updateAsync(BaseBook.class, values, basebooks.getId());
-
             }
-
-
             if (ReaderConfig.USE_AD && infoBookItem.advert != null) {
                 BaseAd baseAd = infoBookItem.advert;
                 activity_book_info_ad.setVisibility(View.VISIBLE);
-
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
                 layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
                 layoutParams.height = layoutParams.width / 3;
                 list_ad_view_img.setLayoutParams(layoutParams);
                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-
                 activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -423,12 +415,9 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                         intent.putExtra("title", baseAd.ad_title);
                         intent.putExtra("advert_id", baseAd.advert_id);
                         intent.putExtra("ad_url_type", baseAd.ad_url_type);
-
                         activity.startActivity(intent);
                     }
                 });
-
-
             } else {
                 activity_book_info_ad.setVisibility(View.GONE);
             }
@@ -436,10 +425,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             MyToash.Log("", e.getMessage());
         }
     }
-
-    boolean falseDialg;
-    BaseBook basebooks;
-
 
     public void initData() {
         if (mBookId == null) {
@@ -457,16 +442,12 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         }
         mBaseBook = new BaseBook();
         mBaseBook.setBook_id(mBookId);
-
-
         basebooks = LitePal.where("book_id = ?", mBookId).findFirst(BaseBook.class);
-
         if (basebooks != null) {
             mBaseBook.setAddBookSelf(basebooks.isAddBookSelf());
             mBaseBook.setCurrent_chapter_id(basebooks.getCurrent_chapter_id());
             mBaseBook.setChapter_text(basebooks.getChapter_text());
             mBaseBook.setId(basebooks.getId());
-
         } else {
             mBaseBook.setAddBookSelf(0);
         }
@@ -479,7 +460,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.mainColor));
             activity_book_info_add_shelf.setEnabled(true);
         }
-
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("book_id", mBookId);
         String json = params.generateParamsJson();
@@ -495,16 +475,10 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
-
-
     }
-
-    boolean onclickTwo = false;
 
     public void addBookToLocalShelf() {
         if (mBaseBook.isAddBookSelf() == 0) {
@@ -513,7 +487,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             activity_book_info_add_shelf.setText(LanguageUtil.getString(this, R.string.BookInfoActivity_jiarushujias));
             activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.yijianrushujia));
             activity_book_info_add_shelf.setEnabled(false);
-
             List<BaseBook> list = new ArrayList<>();
             list.add(mBaseBook);
             EventBus.getDefault().post(new RefreshBookSelf(list));
@@ -573,7 +546,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
 
     public void initWaterfall(List<StroreBookcLable> stroreBookcLables) {
         activity_book_info_content_label_container.removeAllViews();
-
         for (StroreBookcLable stroreComicLable : stroreBookcLables) {
             int Size = stroreComicLable.list.size();
             if (Size == 0) {
@@ -613,8 +585,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             params.height = ItemHeigth + H20;
             activity_book_info_content_label_container.addView(type3, params);
         }
-
-
     }
 
     @Override

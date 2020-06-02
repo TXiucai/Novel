@@ -24,6 +24,7 @@
   **[] $VALUES;
   public *;
 }
+-keep class com.bumptech.glide.GeneratedAppGlideModuleImpl {*;}
 -keepattributes *Annotation*
 -keepclassmembers class ** {
     @org.greenrobot.eventbus.Subscribe <methods>;

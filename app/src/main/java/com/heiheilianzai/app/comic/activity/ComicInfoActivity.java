@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -35,18 +36,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
-import com.jaeger.library.StatusBarUtil;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.BookInfoActivity;
 import com.heiheilianzai.app.activity.MainActivity;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.bean.BaseAd;
 import com.heiheilianzai.app.bean.BaseTag;
 import com.heiheilianzai.app.bean.BookInfoComment;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.comic.been.AppBarStateChangeListener;
 import com.heiheilianzai.app.comic.been.BaseComic;
 import com.heiheilianzai.app.comic.been.ComicChapter;
@@ -59,8 +55,6 @@ import com.heiheilianzai.app.comic.eventbus.RefreshComic;
 import com.heiheilianzai.app.comic.fragment.ComicinfoCommentFragment;
 import com.heiheilianzai.app.comic.fragment.ComicinfoMuluFragment;
 import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.RefreshBookInfo;
-import com.heiheilianzai.app.eventbus.RefreshBookSelf;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -70,23 +64,28 @@ import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
 import com.heiheilianzai.app.view.UnderlinePageIndicatorHalf;
+import com.jaeger.library.StatusBarUtil;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
-//.http.RequestParams;
 
-import java.io.Serializable;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+//.http.RequestParams;
 
 /**
  * 作品详情
@@ -325,6 +324,7 @@ public class ComicInfoActivity extends FragmentActivity {
                             @Override
                             public void setColorFilter(ColorFilter colorFilter) {
                             }
+
                             @SuppressLint("WrongConstant")
                             @Override
                             public int getOpacity() {
@@ -370,19 +370,34 @@ public class ComicInfoActivity extends FragmentActivity {
 
     public void handdata() {
         if (!refreshComment) {
-            MyPicasso.GlideImageRoundedCorners(12, activity, comic.vertical_cover, activity_book_info_content_cover, ImageUtil.dp2px(activity, 135), ImageUtil.dp2px(activity, 180),R.mipmap.comic_def_v);
+            MyPicasso.GlideImageRoundedCorners(12, activity, comic.vertical_cover, activity_book_info_content_cover, ImageUtil.dp2px(activity, 135), ImageUtil.dp2px(activity, 180), R.mipmap.comic_def_v);
             if (comic.horizontal_cover.length() > 0) {
-                MyPicasso.GlideImage(activity, comic.horizontal_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205),R.mipmap.comic_def_cross);
+                MyPicasso.GlideImage(activity, comic.horizontal_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
             } else {
-                MyPicasso.GlideImageRoundedGasoMohu(activity, comic.vertical_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205),R.mipmap.comic_def_cross);
+                MyPicasso.GlideImageRoundedGasoMohu(activity, comic.vertical_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
             }
             try {
-                Glide.with(this).asBitmap().load(comic.horizontal_cover).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
-                    }
-                });
+                Glide.with(this).asFile().load(comic.horizontal_cover)
+                        .into(new SimpleTarget<File>() {
+                            @Override
+                            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                                AESUtil.getDecideFile(resource, comic.horizontal_cover, new AESUtil.OnFileResourceListener() {
+                                    @Override
+                                    public void onFileResource(File f) {
+                                        Glide.with(ComicInfoActivity.this).asBitmap().load(f).into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                                try {
+                                                    activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
+                                                } catch (Exception e) {
+                                                } catch (Error r) {
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
             } catch (Exception e) {
             }
             activity_book_info_content_name.setText(comic.name);

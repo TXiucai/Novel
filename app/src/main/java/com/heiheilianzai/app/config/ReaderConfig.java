@@ -28,7 +28,6 @@ public class ReaderConfig {
     public static final String mAppSecretKey = RabbitConfig.mAppSecretKey;
     //本应用的IP域名
     public static String BASE_URL = RabbitConfig.BASE_URL;
-
     //appid 微信分配的APPID
     public static final String WEIXIN_PAY_APPID = BuildConfig.app_wx_id;
     //appid 微信分配的SECRET
@@ -65,7 +64,6 @@ public class ReaderConfig {
     public static final int BAOYUE = 4;//包月
     public static final int BAOYUE_SEARCH = 5;//包月赛选列表
 
-
     public static final int DOWN = 6;//下载频道
     public static final int READHISTORY = 7;//阅读历史频道
     public static final int LIUSHUIJIELU = 8;//流水记录
@@ -76,7 +74,6 @@ public class ReaderConfig {
     public static final int MANHAU = 2;//只有漫画
     public static final int XIAOSHUOMAHUA = 3;//小说漫画
     public static final int MANHAUXIAOSHUO = 4;//漫画小说
-
 
     public static final int fragment_store_xiaoshuo_dp = 23;
     public static final int fragment_store_manhau_dp = 15;
@@ -100,37 +97,27 @@ public class ReaderConfig {
     public static boolean USE_SHARE = false;
     //是否使用广告
     public static boolean USE_AD = true;
-
     public static final boolean USE_AD_FINAL = true;
     public static final int READBUTTOM_HEIGHT = 55;//yeudulibu AD
-
     public static final String BASE_PAY = "";
-    /**
-     * 书城urlf
-     */
+    public static final String IMG_CRYPTOGRAPHIC_POSTFIX = "?c";
 
     /**
      * 分享成功增加金币
      */
-
     public static final String ShareAddGold = "/user/share-reward";
-
 
     public static final String APP_SHARE = "/user/app-share";
 
-
     public static final String task_read = "/user/task-read";
 
-
     public static final String mBookStoreUrl = "/book/store";
-
 
     public static final String privacy = "/site/privacy";
     /**
      * 作品详情url
      */
     public static final String mBookInfoUrl = "/book/info";
-
 
     /**
      * 关于我们
@@ -151,12 +138,10 @@ public class ReaderConfig {
      */
     public static final String sIgninhttp = "/user/sign";
 
-
     /**
      * 完本作品列表
      */
     public static final String mFinishUrl = "/book/finish";
-
 
     public static final String check_switch = "/service/check-data";
 
@@ -185,7 +170,6 @@ public class ReaderConfig {
      */
     public static final String mUserCenterUrl = "/user/center";
 
-
     /**
      * 提交意见反馈
      */
@@ -206,7 +190,6 @@ public class ReaderConfig {
      */
     public static final String mUsernameLoginUrl = "/user/account-login";
 
-
     /**
      * 添加书架作品
      */
@@ -223,7 +206,6 @@ public class ReaderConfig {
     public static final String mChapterDownUrl = "/chapter/down";
 
     public static final String auto_sub = "/user/auto-sub";
-
 
     public static final String chapter_text = "/chapter/text";
 
@@ -256,7 +238,6 @@ public class ReaderConfig {
      */
     public static final String mUserBindPhoneUrl = "/user/bind-mobile";
 
-
     /**
      * 充值页面
      */
@@ -267,9 +248,7 @@ public class ReaderConfig {
      */
     public static final String mPayChannelList = "/pay/channel-list";
 
-
     public static final String payUrl = "/pay/common-pay";
-
 
     /**
      * 更新deviceId接口
@@ -290,7 +269,6 @@ public class ReaderConfig {
      * 检测更新
      */
     public static final String mAppUpdateUrl = "/service/checkver";
-
 
     public static final String bind_wechat = "/user/bind-wechat";
 
@@ -333,12 +311,9 @@ public class ReaderConfig {
      */
     public static final String AUTOBUY = "autobuy";
 
-
     public static String PUSH_TOKEN = "";
 
-
     private static ReaderConfig mReaderConfig = null;
-
 
     public static List<Integer> integerList = new ArrayList<>();
 
@@ -413,15 +388,12 @@ public class ReaderConfig {
     public static int ad_switch;
     //个人中心界面是否需要刷新 （章节阅读发生过购买充值 导致个人账户 书币变化 需要刷新个人中心界面）
     public static boolean REFREASH_USERCENTER = false;
-
-
     //版本控制接口
     public static String AppUpdate;
     //一级单位
     public static String currencyUnit;
     //二级单位
     public static String subUnit;
-
 
     public static String getCurrencyUnit(Activity activity) {
         if (currencyUnit != null) {
@@ -450,7 +422,6 @@ public class ReaderConfig {
             return;
         }
         final ReaderParams params = new ReaderParams(activity);
-
         params.putExtraParams("device_id", device_id);
         String json = params.generateParamsJson();
         OkHttpEngine.getInstance(activity).postAsyncHttp(ReaderConfig.getBaseUrl() + ReaderConfig.mSyncDeviceIdUrl, json, new ResultCallback() {
@@ -460,7 +431,6 @@ public class ReaderConfig {
 
             @Override
             public void onResponse(final String result) {
-
             }
         });
     }

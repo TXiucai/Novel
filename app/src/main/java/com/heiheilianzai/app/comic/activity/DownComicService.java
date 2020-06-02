@@ -15,15 +15,19 @@ import com.heiheilianzai.app.comic.been.BaseComicImage;
 import com.heiheilianzai.app.comic.been.ComicChapter;
 import com.heiheilianzai.app.comic.been.ComicChapterItem;
 import com.heiheilianzai.app.comic.eventbus.DownComicEvenbus;
+import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.decode.AESUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static com.heiheilianzai.app.comic.fragment.DownMangerComicFragment.DownMangerComicFragment;
@@ -118,6 +122,10 @@ public class DownComicService extends IntentService {
                                         .load(baseComicImage.image)
                                         .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                         .get();
+                                if( baseComicImage.image.substring(baseComicImage.image.length() -2,baseComicImage.image.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)){//是否解密文件
+                                    InputStream inputStream = new FileInputStream(filee);
+                                    filee = AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + filee.getName());
+                                }
                                 GlideCopy(filee, file);
                                 process++;
                                 if (process == lengthTemp) {
