@@ -111,6 +111,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public LinearLayout activity_comiclook_foot;
     @BindView(R2.id.activity_comiclook_shoucang)
     public ImageView activity_comiclook_shoucang;
+    @BindView(R2.id.activity_comiclook_refresh)
+    public ImageView activity_comiclook_refresh;
     @BindView(R2.id.activity_comiclook_dingbu)
     public ImageView activity_comiclook_dingbu;
     @BindView(R2.id.activity_comiclook_danmu_layout)
@@ -224,7 +226,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         purchaseDialog.show();
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.activity_comiclook_shoucang, R.id.activity_comiclook_dingbu, R.id.activity_comiclook_danmu_layout,
+    @OnClick(value = {R.id.titlebar_back, R.id.activity_comiclook_shoucang, R.id.activity_comiclook_refresh, R.id.activity_comiclook_dingbu, R.id.activity_comiclook_danmu_layout,
             R.id.activity_comiclook_danmu_fashe, R.id.activity_comiclook_xiayihua_layout, R.id.activity_comiclook_shangyihua_layout, R.id.activity_comiclook_set,
             R.id.activity_comiclook_tucao_layout, R.id.activity_comiclook_share, R.id.activity_comiclook_xiazai, R.id.activity_comiclook_quanji,
             R.id.activity_comiclook_danmu_img2, R.id.activity_comiclook_foot})
@@ -243,6 +245,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 askIsNeedToAddShelf();
             case R.id.activity_comiclook_foot:
+                break;
+            case R.id.activity_comiclook_refresh: //刷新页面
+                initData();
                 break;
             case R.id.activity_comiclook_shoucang:
                 baseComic.saveIsexist(true);
@@ -322,7 +327,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         }
                     });
                 }
-
                 activity_comiclook_danmu_edit.setText("");
                 //键盘收起
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -853,6 +857,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         super.onDestroy();
         map.clear();
     }
+
     class MyViewHolder {
         @BindView(R2.id.activity_comic_look_foot_shangyihua)
         public LinearLayout activity_comic_look_foot_shangyihua;
@@ -900,7 +905,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
      * 询问是否加入书架
      */
     private void askIsNeedToAddShelf() {
-        if (baseComic.isAddBookSelf()){
+        if (baseComic.isAddBookSelf()) {
             finish();
             return;
         }
