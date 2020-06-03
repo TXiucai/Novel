@@ -4,22 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.*;
-
+import com.heiheilianzai.app.activity.AboutActivity;
+import com.heiheilianzai.app.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.activity.BaseOptionActivity;
+import com.heiheilianzai.app.activity.FeedBackActivity;
+import com.heiheilianzai.app.activity.RechargeActivity;
+import com.heiheilianzai.app.activity.SettingsActivity;
+import com.heiheilianzai.app.activity.TaskCenterActivity;
+import com.heiheilianzai.app.activity.UserInfoActivity;
 import com.heiheilianzai.app.bean.UserInfoItem;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
-
 import com.heiheilianzai.app.dialog.GetDialog;
 import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.http.ReaderParams;
@@ -29,19 +32,17 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
-import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import static com.heiheilianzai.app.config.ReaderConfig.DOWN;
 import static com.heiheilianzai.app.config.ReaderConfig.LIUSHUIJIELU;
@@ -54,29 +55,18 @@ import static com.heiheilianzai.app.config.ReaderConfig.getSubUnit;
 /**
  * 我的
  */
-
 public class MineNewFragment extends BaseButterKnifeFragment {
-    @Override
-    public int initContentView() {
-        return R.layout.fragment_mine_new;
-    }
-
     public String TAG = MineNewFragment.class.getSimpleName();
-    public UserInfoItem mUserInfo;
-
     @BindView(R2.id.fragment_mine_user_info_avatar)
     public CircleImageView fragment_mine_user_info_avatar;
     @BindView(R2.id.fragment_mine_user_info_sex)
     public ImageView fragment_mine_user_info_sex;
-
     @BindView(R2.id.fragment_mine_user_info_nickname)
     public TextView fragment_mine_user_info_nickname;
     @BindView(R2.id.fragment_mine_user_info_id)
     public TextView fragment_mine_user_info_id;
     @BindView(R2.id.fragment_mine_user_info_nologin)
     public LinearLayout fragment_mine_user_info_nologin;
-
-
     @BindView(R2.id.fragment_mine_user_info_gold_unit)
     public TextView fragment_mine_user_info_gold_unit;
     @BindView(R2.id.fragment_mine_user_info_shuquan_unit)
@@ -87,19 +77,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public TextView fragment_mine_user_info_friends_song;
     @BindView(R2.id.fragment_mine_user_info_recharge_text)
     public TextView fragment_mine_user_info_recharge_text;
-
-
-
-/*   @BindView(R2.id.//fragment_mine_user_info_sign)
-    public ImageView //fragment_mine_user_info_sign;*/
-
     @BindView(R2.id.fragment_mine_user_info_money_layout)
     public LinearLayout fragment_mine_user_info_money_layout;
     @BindView(R2.id.fragment_mine_user_info_paylayout_history)
     public LinearLayout fragment_mine_user_info_paylayout_history;
     @BindView(R2.id.fragment_mine_user_info_paylayout_downmanager)
     public LinearLayout fragment_mine_user_info_paylayout_downmanager;
-
     @BindView(R2.id.fragment_mine_user_info_gold)
     public TextView fragment_mine_user_info_gold;
     @BindView(R2.id.fragment_mine_user_info_shuquan)
@@ -110,12 +93,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public ImageView fragment_mine_user_info_isvip;
     @BindView(R2.id.fragment_mine_user_info_paylayout)
     public LinearLayout fragment_mine_user_info_paylayout;
-
     @BindView(R2.id.fragment_mine_user_info_paylayout_view)
     public View fragment_mine_user_info_paylayout_view;
     @BindView(R2.id.fragment_mine_user_info_gold_layout)
     public View fragment_mine_user_info_gold_layout;
-
     @BindView(R2.id.fragment_mine_user_info_paylayout_recharge)
     public View fragment_mine_user_info_paylayout_recharge;
     @BindView(R2.id.fragment_mine_user_info_paylayout_recharge_lv)
@@ -125,8 +106,13 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     @BindView(R2.id.fragment_mine_user_info_paylayout_vip_lv)
     public View fragment_mine_user_info_paylayout_vip_lv;
 
-
+    String connect_us;
     Gson gson = new Gson();
+    public UserInfoItem mUserInfo;
+    @Override
+    public int initContentView() {
+        return R.layout.fragment_mine_new;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,12 +135,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         fragment_mine_user_info_friends_song.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_song), getSubUnit(activity)));
         fragment_mine_user_info_recharge_text.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_chongzhi), getCurrencyUnit(activity)));
         if (!ReaderConfig.USE_PAY) {
-            //fragment_mine_user_info_sign.setVisibility(View.GONE);
             fragment_mine_user_info_money_layout.setVisibility(View.GONE);
             fragment_mine_user_info_paylayout.setVisibility(View.GONE);
             fragment_mine_user_info_paylayout_view.setVisibility(View.GONE);
         }
-
         MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
@@ -162,7 +146,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             }
         });
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_mine_user_info_isvip.getLayoutParams();
-
         layoutParams.height = ImageUtil.dp2px(activity, 14);
         layoutParams.width = layoutParams.height * 138 / 48;
         fragment_mine_user_info_isvip.setLayoutParams(layoutParams);
@@ -176,11 +159,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             refreshData();
             ReaderConfig.REFREASH_USERCENTER = false;
         }
-
     }
 
     public void initInfo(final String info, UserInfoItem userInfoItem) {
-        if (!Utils.isLogin(activity)) {//
+        if (!Utils.isLogin(activity)) {
             fragment_mine_user_info_nologin.setVisibility(View.GONE);
             return;
         } else {
@@ -207,28 +189,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             } else {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, true);
             }
-            //   ImageLoader.getInstance().displayImage(mUserInfo.getAvatar(), fragment_mine_user_info_avatar, ReaderApplication.getOptions());
             MyPicasso.IoadImage(activity, mUserInfo.getAvatar(), R.mipmap.icon_def_head, fragment_mine_user_info_avatar);
-
             fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
-
-            //  fragment_mine_user_info_gold_unit.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_yue), mUserInfo.getUnit()));
-            //  fragment_mine_user_info_shuquan_unit.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_yue), mUserInfo.getSubUnit()));
-
             fragment_mine_user_info_tasklayout_task.setText(mUserInfo.getTask_list().getFinish_num() + "/" + mUserInfo.getTask_list().getMission_num());
             fragment_mine_user_info_gold.setText(mUserInfo.getGoldRemain() + " ");
             fragment_mine_user_info_shuquan.setText(mUserInfo.getSilverRemain() + " ");
-            //fragment_mine_user_info_sign.setImageResource(mUserInfo.getSign_status() == 1 ? R.mipmap.ic_signed : R.mipmap.ic_sign);
-         /*   if (mUserInfo.getGender() == 0) {
-                fragment_mine_user_info_sex.setImageResource(R.mipmap.ic_sex_unknow_selected);
-            } else if (mUserInfo.getGender() == 1) {
-                fragment_mine_user_info_sex.setImageResource(R.mipmap.ic_boy);
-            } else {
-                fragment_mine_user_info_sex.setImageResource(R.mipmap.ic_girl);
-            }*/
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -247,31 +213,23 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_nologin.setVisibility(View.GONE);
             return;
         } else {
-
             fragment_mine_user_info_nologin.setVisibility(View.VISIBLE);
         }
-
-
         ReaderParams params = new ReaderParams(activity);
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         initInfo(result, null);
-
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
-    String connect_us;
 
     @OnClick(value = {R.id.fragment_mine_user_info_avatar,
             R.id.fragment_mine_user_info_paylayout_recharge, R.id.fragment_mine_user_info_paylayout_vip,// R.id.fragment_mine_user_info_paylayout_rechargenotes,
@@ -300,16 +258,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-
-
                                 }
 
                                 @Override
                                 public void onErrorResponse(String ex) {
-
                                 }
                             }
-
                     );
                 } else {
                     startActivity(new Intent(activity, AboutActivity.class).
@@ -346,7 +300,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 break;
             case R.id.fragment_mine_user_info_tasklayout_feedback:
                 if (!Utils.isLogin(activity)) {
-
                     GetDialog.IsOperation(activity, "登录后才可以进行反馈哦~", "", new GetDialog.IsOperationInterface() {
                         @Override
                         public void isOperation() {
@@ -360,24 +313,17 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 SettingsActivity.chengeLangaupage = false;
                 startActivity(new Intent(activity, SettingsActivity.class));
                 break;
-
             case R.id.fragment_mine_user_info_tasklayout_friends:
-
                 MyShare.ShareAPP(activity);
                 break;
-
             case R.id.fragment_mine_user_info_paylayout_history:
-
                 startActivity(new Intent(activity, BaseOptionActivity.class)
                         .putExtra("OPTION", READHISTORY)
                         .putExtra("title", LanguageUtil.getString(activity, R.string.noverfragment_yuedulishi)));
                 break;
             case R.id.fragment_mine_user_info_paylayout_downmanager:
-
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
-
                 break;
-
         }
     }
 
@@ -414,20 +360,17 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_tasklayout_layout":
-
                     if (Utils.isLogin(activity)) {
                         intent.setClass(activity, TaskCenterActivity.class);
                         startActivity(intent);
                     } else {
                         MainHttpTask.getInstance().Gotologin(activity);
                     }
-
                     break;
                 case "fragment_mine_user_info_tasklayout_mybookcomment":
                     startActivity(new Intent(activity, BaseOptionActivity.class)
                             .putExtra("OPTION", MYCOMMENT)
                             .putExtra("title", LanguageUtil.getString(activity, R.string.MineNewFragment_shuping)));
-
                     break;
                 case "fragment_mine_user_info_tasklayout_feedback":
                     intent.setClass(activity, FeedBackActivity.class);
@@ -437,37 +380,16 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     intent.setClass(activity, SettingsActivity.class);
                     startActivity(intent);
                     break;
-
             }
-
-
-        } /*else {//跳登录
-            LoginDialog.LoginDialog(activity, v, new .LoginSuccess() {
-                @Override
-                public void success() {
-                    EventBus.getDefault().post(new RefreshReadHistory());
-                    EventBus.getDefault().post(new LoginRefreshShelf());
-                    //ShareUitls.putString(activity, "add_read_log", "islogin");
-                    refreshData();
-                }
-
-                @Override
-                public void cancle() {
-
-                }
-            });
-            //activity.startActivity(new Intent(activity, .class));
-        }*/
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshMine refreshMine) {
-        // MyToash.Log("RefreshMine",(refreshMine.userInfoItem==null)?"":refreshMine.userInfoItem.toString());
         if (refreshMine.userInfoItem == null) {
             refreshData();
         } else {
             initInfo(null, refreshMine.userInfoItem);
-
         }
     }
 

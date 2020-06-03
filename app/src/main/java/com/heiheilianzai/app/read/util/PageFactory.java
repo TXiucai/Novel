@@ -14,7 +14,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.heiheilianzai.app.config.RabbitConfig;
-import com.heiheilianzai.app.read.dialog.PurchaseDialog;
-import com.heiheilianzai.app.utils.MyPicasso;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.bean.BaseAd;
@@ -36,19 +31,19 @@ import com.heiheilianzai.app.bean.ChapterItem;
 import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.book.been.ReadHistory;
 import com.heiheilianzai.app.config.MainHttpTask;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.RefreshTopbook;
 import com.heiheilianzai.app.http.ReaderParams;
-
 import com.heiheilianzai.app.read.ReadActivity;
 import com.heiheilianzai.app.read.ReadingConfig;
+import com.heiheilianzai.app.read.dialog.PurchaseDialog;
 import com.heiheilianzai.app.read.manager.ChapterManager;
 import com.heiheilianzai.app.read.view.PageWidget;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
@@ -73,9 +68,6 @@ import static com.heiheilianzai.app.config.ReaderConfig.READBUTTOM_HEIGHT;
 import static com.heiheilianzai.app.config.ReaderConfig.USE_AD;
 import static com.heiheilianzai.app.config.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.read.ReadActivity.USE_BUTTOM_AD;
-
-//.TodayOneAD;
-//.ViewToBitmapUtil;
 
 /**
  * Created by Administrator on 2016/7/20 0020.

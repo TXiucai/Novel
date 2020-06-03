@@ -488,7 +488,6 @@ public class ComicshelfFragment extends Fragment {
     private void setBanner(JSONObject obj) throws JSONException {
         JSONArray recomment = obj.getJSONArray("recommend_list");
         List<BaseComic> mBannerItemListMale = new ArrayList<>();
-
         for (int i = 0; i < recomment.length(); i++) {
             final JSONObject labelObj = recomment.getJSONObject(i);
             BaseComic BaseComic = new BaseComic();
@@ -498,12 +497,11 @@ public class ComicshelfFragment extends Fragment {
             BaseComic.setDescription(labelObj.getString("description"));
             mBannerItemListMale.add(BaseComic);
         }
-
         if (!mBannerItemListMale.isEmpty()) {
             fragment_discovery_banner_male.setPages(new CBViewHolderCreator<ComicShelfBannerHolderView>() {
                 @Override
                 public ComicShelfBannerHolderView createHolder() {
-                    return new ComicShelfBannerHolderView();
+                    return new ComicShelfBannerHolderView(activity);
                 }
             }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.ic_shelf_yes, R.mipmap.ic_shelf_no})
                     .setOnItemClickListener(new OnItemClickListener() {

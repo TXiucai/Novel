@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -556,7 +555,7 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
                 fragment_discovery_banner_male.setPages(new CBViewHolderCreator<BookShelfBannerHolderView>() {
                     @Override
                     public BookShelfBannerHolderView createHolder() {
-                        return new BookShelfBannerHolderView();
+                        return new BookShelfBannerHolderView(activity);
                     }
                 }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.ic_shelf_yes, R.mipmap.ic_shelf_no})
                         .setOnItemClickListener(new OnItemClickListener() {

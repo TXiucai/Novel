@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.bean.CommentItem;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.List;
  * 作品评论列表的adapter
  */
 public class CommentAdapter extends ReaderBaseAdapter<CommentItem> {
-
 
     public CommentAdapter(Context context, List<CommentItem> list, int count) {
         super(context, list, count);
@@ -46,10 +43,7 @@ public class CommentAdapter extends ReaderBaseAdapter<CommentItem> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-       // ImageLoader.getInstance().displayImage(mList.get(position).getAvatar(), viewHolder.imageView, ReaderApplication.getOptions());
-        MyPicasso.IoadImage((Activity) mContext,mList.get(position).getAvatar(), R.mipmap.icon_def_head,viewHolder.imageView);
-
+        MyPicasso.IoadImage((Activity) mContext, mList.get(position).getAvatar(), R.mipmap.icon_def_head, viewHolder.imageView);
         viewHolder.content.setText(mList.get(position).getContent());
         viewHolder.replay.setText(mList.get(position).getReply_info());
         viewHolder.replay.setVisibility(TextUtils.isEmpty(mList.get(position).getReply_info()) ? View.GONE : View.VISIBLE);
@@ -65,5 +59,4 @@ public class CommentAdapter extends ReaderBaseAdapter<CommentItem> {
         TextView nickname;
         TextView time;
     }
-
 }

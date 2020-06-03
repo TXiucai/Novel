@@ -1,28 +1,20 @@
 package com.heiheilianzai.app.comic.fragment;
 
-import android.app.Activity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.AddCommentActivity;
-import com.heiheilianzai.app.activity.CommentListActivity;
 import com.heiheilianzai.app.activity.ReplyCommentActivity;
 import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
@@ -30,10 +22,7 @@ import com.heiheilianzai.app.bean.BaseAd;
 import com.heiheilianzai.app.bean.BookInfoComment;
 import com.heiheilianzai.app.comic.activity.ComicCommentActivity;
 import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
-
 import com.heiheilianzai.app.comic.been.StroreComicLable;
-
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.fragment.BaseButterKnifeFragment;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -50,9 +39,9 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
+ *漫画详情评论
  * Created by scb on 2018/6/9.
  */
-
 public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
     @Override
     public int initContentView() {
@@ -83,27 +72,19 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
     public TextView activity_book_info_content_add_comment;
     public int WIDTH, HEIGHT;
 
-    //  List<BookInfoComment> bookInfoComment;
     StroreComicLable.Comic baseComic;
 
-
-    // List<StroreComicLable.Comic> comicList;
-    public void senddata(StroreComicLable.Comic baseComic, List<BookInfoComment> bookInfoComments, StroreComicLable stroreComicLable,   BaseAd baseAd) {
+    public void senddata(StroreComicLable.Comic baseComic, List<BookInfoComment> bookInfoComments, StroreComicLable stroreComicLable, BaseAd baseAd) {
         MyToash.Log("http_utaa", bookInfoComments.toString());
-
         this.baseComic = baseComic;
         activity_book_info_content_comment_des.setText(baseComic.description);
-
-
         if (ReaderConfig.USE_AD && baseAd != null) {
             activity_book_info_ad.setVisibility(View.VISIBLE);
-            ViewGroup.LayoutParams layoutParams =list_ad_view_img.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
             layoutParams.height = layoutParams.width / 3;
             list_ad_view_img.setLayoutParams(layoutParams);
             MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-
-
             activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -113,7 +94,6 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                     intent.putExtra("title", baseAd.ad_title);
                     intent.putExtra("advert_id", baseAd.advert_id);
                     intent.putExtra("ad_url_type", baseAd.ad_url_type);
-
                     activity.startActivity(intent);
                 }
             });
@@ -121,13 +101,11 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
         } else {
             activity_book_info_ad.setVisibility(View.GONE);
         }
-
         activity_book_info_content_label_container.removeAllViews();
         activity_book_info_content_comment_container.removeAllViews();
         try {
             if (bookInfoComments != null || !bookInfoComments.isEmpty()) {
                 for (BookInfoComment bookInfoComment : bookInfoComments) {
-
                     LinearLayout commentView = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.activity_book_info_content_comment_item, null, false);
                     CircleImageView activity_book_info_content_comment_item_avatar = commentView.findViewById(R.id.activity_book_info_content_comment_item_avatar);
                     TextView activity_book_info_content_comment_item_nickname = commentView.findViewById(R.id.activity_book_info_content_comment_item_nickname);
@@ -135,11 +113,6 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                     TextView activity_book_info_content_comment_item_reply = commentView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
                     TextView activity_book_info_content_comment_item_time = commentView.findViewById(R.id.activity_book_info_content_comment_item_time);
                     MyPicasso.IoadImage(activity, bookInfoComment.getAvatar(), R.mipmap.icon_def_head, activity_book_info_content_comment_item_avatar);
-
-
-                    //  ImageLoader.getInstance().displayImage(bookInfoComment.getAvatar(), activity_book_info_content_comment_item_avatar, ReaderApplication.getOptions());
-
-
                     activity_book_info_content_comment_item_nickname.setText(bookInfoComment.getNickname());
                     activity_book_info_content_comment_item_content.setText(bookInfoComment.getContent());
                     activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
@@ -158,14 +131,9 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                             startActivity(intent);
                         }
                     });
-
-
                     activity_book_info_content_comment_container.addView(commentView);
-
-
                 }
             }
-
             //"查看全部评论"
             String moreText;
             if (baseComic.total_comment > 0) {
@@ -175,9 +143,7 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
             }
             LinearLayout commentMoreView = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.activity_book_info_content_comment_more, null, false);
             TextView activity_book_info_content_comment_more_text = commentMoreView.findViewById(R.id.activity_book_info_content_comment_more_text);
-
             activity_book_info_content_comment_more_text.setText(String.format(moreText, baseComic.total_comment + ""));
-
             activity_book_info_content_add_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,30 +151,20 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                             new Intent(activity, ComicCommentActivity.class).
                                     putExtra("comic_id", baseComic.comic_id).
                                     putExtra("IsBook", false), 11);
-
                 }
             });
             commentMoreView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivityForResult(new Intent(activity, ComicCommentActivity.class).putExtra("comic_id", baseComic.comic_id).putExtra("IsBook", false), 11);
-
                 }
             });
             activity_book_info_content_comment_container.addView(commentMoreView);
-
-            //3 推荐数据的处理
-            //   JSONArray labelArr = jsonObject.getJSONObject("data").getJSONArray("label");
             if (stroreComicLable != null && !stroreComicLable.list.isEmpty()) {
                 List<StroreComicLable.Comic> comicList = stroreComicLable.list;
                 View type1 = LayoutInflater.from(activity).inflate(R.layout.fragment_store_comic_layout, null, false);
                 TextView lable = type1.findViewById(R.id.fragment_store_gridview1_text);
                 lable.setText(stroreComicLable.label);
-
-                //  TextView fragment_store_gridview1_more = type1.findViewById(R.id.fragment_store_gridview1_more);
-                //  View right_arrow = type1.findViewById(R.id.right_arrow);
-                // fragment_store_gridview1_more.setVisibility(View.GONE);
-                //   right_arrow.setVisibility(View.GONE);
                 LinearLayout fragment_store_gridview1_huanmore = type1.findViewById(R.id.fragment_store_gridview1_huanmore);
                 fragment_store_gridview1_huanmore.setVisibility(View.GONE);
                 AdaptionGridViewNoMargin fragment_store_gridview1_gridview = type1.findViewById(R.id.fragment_store_gridview1_gridview);
@@ -216,7 +172,6 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                 fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                         Intent intent = new Intent(activity, ComicInfoActivity.class);
                         intent.putExtra("comic_id", comicList.get(position).comic_id);
                         activity.startActivity(intent);
@@ -233,21 +188,14 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                 params.height = height * (int) (Math.ceil(size / 3d)) + ImageUtil.dp2px(activity, 170);
                 activity_book_info_content_label_container.addView(type1, params);
             }
-
-
         } catch (Exception e) {
         }
-
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         HEIGHT = ScreenSizeUtils.getInstance(activity).getScreenHeight();
     }
-
-
 }

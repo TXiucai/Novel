@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -16,27 +15,23 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.bean.ChapterItem;
-import com.heiheilianzai.app.comic.adapter.ComicAdapterNew;
-import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
-import com.heiheilianzai.app.book.fragment.NovelFragmentNew;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
-//.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,29 +40,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- *
+ * 书架编辑Adapter
  */
 public class ShelfAdapterNew extends BaseAdapter {
-
-
     public int WIDTH, HEIGHT;
     public ImageView shelfitem_img_first;
     private List<BaseBook> mBookList;
     private Activity mActivity;
     private TextView mDeleteBtn;
     int ListSize = 0;
-    /**
-     * 是否是处于编辑状态，可删除
-     */
-    private boolean mIsDeletable = false;
-
+    private boolean mIsDeletable = false;//是否是处于编辑状态，可删除
     public List<BaseBook> checkedBookList = new ArrayList<>();
-
+    int mPosition;
 
     public ShelfAdapterNew(int WIDTH, int HEIGHT, List<BaseBook> mBookList, Activity mActivity) {
         MyToash.Log("ShelfAdapterNew1", WIDTH + "   " + HEIGHT + "  " + mBookList.size());
-
-
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
         this.mBookList = mBookList;
@@ -77,27 +64,21 @@ public class ShelfAdapterNew extends BaseAdapter {
 
     @Override
     public int getCount() {
-
         return ListSize + 1;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         if (position < ListSize) {
             return mBookList.get(position);
         }
         return null;
-
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
-
-    int mPosition;
 
     public void setDeletable(final boolean deletable, TextView btn, int position, final BookshelfFragment.DeleteBook delete) {
         checkedBookList.clear();
@@ -120,7 +101,6 @@ public class ShelfAdapterNew extends BaseAdapter {
                         String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(baseBook.getBook_id() + "/");
                         FileManager.deleteFile(filepath);
                     }
-
                     String str = builder.toString();
                     String bookIdArr = str.substring(1);
                     mBookList.removeAll(checkedBookList);
@@ -136,7 +116,6 @@ public class ShelfAdapterNew extends BaseAdapter {
         refreshBtn();
     }
 
-
     public void selectAll(boolean selectAll) {
         checkedBookList.clear();
         if (selectAll) {
@@ -145,14 +124,12 @@ public class ShelfAdapterNew extends BaseAdapter {
         refreshBtn();
     }
 
-
     public void refreshBtn() {
         int size = checkedBookList.size();
         if (size == 0) {
             mDeleteBtn.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.lightgray2));
             mDeleteBtn.setTextColor(Color.GRAY);
             mDeleteBtn.setText(String.format(LanguageUtil.getString(mActivity, R.string.noverfragment_shanchushuji2), 0));
-
         } else {
             mDeleteBtn.setText(String.format(LanguageUtil.getString(mActivity, R.string.noverfragment_shanchushuji2), size));
             mDeleteBtn.setTextColor(Color.WHITE);
@@ -170,7 +147,6 @@ public class ShelfAdapterNew extends BaseAdapter {
         try {
             ViewHolder viewHolder = null;
             ViewHolder2 viewHolder2 = null;
-
             if (contentView == null) {
                 if (position < ListSize) {
                     contentView = LayoutInflater.from(mActivity).inflate(R.layout.shelfitem, null);
@@ -180,13 +156,10 @@ public class ShelfAdapterNew extends BaseAdapter {
                     layoutParams2.height = HEIGHT;
                     viewHolder.shelfitem_img.setLayoutParams(layoutParams2);
                     contentView.setTag(viewHolder);
-
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewHolder.shelfitem_check_container.getLayoutParams();
                     layoutParams.width = WIDTH;
                     layoutParams.height = HEIGHT;
                     viewHolder.shelfitem_check_container.setLayoutParams(layoutParams);
-
-
                 } else {
                     contentView = LayoutInflater.from(mActivity).inflate(R.layout.nover_add, null);
                     viewHolder2 = new ViewHolder2(contentView);
@@ -194,7 +167,6 @@ public class ShelfAdapterNew extends BaseAdapter {
                     layoutParams.width = WIDTH;
                     layoutParams.height = HEIGHT;
                     viewHolder2.listview_item_nover_add_layout.setLayoutParams(layoutParams);
-
                     contentView.setTag(viewHolder2);
                 }
             } else {
@@ -208,7 +180,6 @@ public class ShelfAdapterNew extends BaseAdapter {
                     shelfitem_img_first = viewHolder.shelfitem_img;
                 } else {
                     shelfitem_img_first = viewHolder2.listview_item_nover_add_image;
-
                 }
             }
             if (position < ListSize) {
@@ -227,13 +198,10 @@ public class ShelfAdapterNew extends BaseAdapter {
                             if (checkedBookList.contains(baseBook)) {
                                 checkedBookList.remove(baseBook);
                             }
-
                         }
                         refreshBtn();
                     }
                 });
-
-
                 viewHolder.shelfitem_title.setText(baseBook.getName());
                 viewHolder.shelfitem_img.setImageResource(R.mipmap.book_def_v);
                 if (baseBook.getRecentChapter() != 0 && (baseBook.getRecentChapter() != baseBook.getTotal_Chapter())) {
@@ -242,9 +210,7 @@ public class ShelfAdapterNew extends BaseAdapter {
                 } else {
                     viewHolder.shelfitem_top_newchapter.setVisibility(View.GONE);
                 }
-                MyToash.Log("getCover", baseBook.getCover());
-                ImageLoader.getInstance().displayImage(baseBook.getCover(), viewHolder.shelfitem_img, ReaderApplication.getOptions());
-
+                MyPicasso.GlideImageNoSize(mActivity, baseBook.getCover(), viewHolder.shelfitem_img, R.mipmap.book_def_v);
                 if (mIsDeletable) {
                     viewHolder.shelfitem_check.setVisibility(View.VISIBLE);
                     viewHolder.shelfitem_check_container.setVisibility(View.VISIBLE);
@@ -260,8 +226,6 @@ public class ShelfAdapterNew extends BaseAdapter {
                     } else {
                         viewHolder.shelfitem_check.setChecked(false);
                     }
-
-
                 } else {
                     viewHolder.shelfitem_check.setVisibility(View.GONE);
                     viewHolder.shelfitem_check_container.setVisibility(View.GONE);
@@ -276,54 +240,41 @@ public class ShelfAdapterNew extends BaseAdapter {
                     }
                 });
                 if (mIsDeletable) {
-
-
                     viewHolder2.listview_item_nover_add_image.setImageResource(0);
                     viewHolder2.listview_item_nover_add_layout.setBackgroundColor(0);
                 } else {
                     viewHolder2.listview_item_nover_add_image.setImageResource(R.mipmap.icon_addbook);
                     viewHolder2.listview_item_nover_add_layout.setBackgroundColor(-526087);
                 }
-
             }
         } catch (Exception e) {
         }
         return contentView;
     }
 
-
     /**
      * 删除书架书籍
      */
     public void deleteBook(final String bookIdArr) {
-
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("book_id", bookIdArr);
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl()+ReaderConfig.mBookDelCollectUrl, json, false, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBookDelCollectUrl, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        // deleteLocalBook(bookIdArr, deleteBook);
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        //  Toast.makeText(mActivity, " 删除失败", Toast.LENGTH_LONG).show();
-                        //deleteLocalBook(bookIdArr, deleteBook);
-
                     }
                 }
-
         );
-
-
     }
 
 
     public void setDeletable(boolean deletable) {
         checkedBookList.clear();
         refreshBtn();
-
         mIsDeletable = deletable;
     }
 
@@ -349,7 +300,6 @@ public class ShelfAdapterNew extends BaseAdapter {
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
-
     }
 
     public class ViewHolder2 {
@@ -362,6 +312,4 @@ public class ShelfAdapterNew extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
-
-
 }

@@ -1,16 +1,15 @@
 package com.heiheilianzai.app.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.bean.RankItem;
-import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;
 
@@ -19,13 +18,15 @@ import java.util.List;
  */
 public class RankAdapter extends ReaderBaseAdapter<RankItem> {
     boolean PRODUCT;
+    Activity mActivity;
 
-    public RankAdapter(Context context, List<RankItem> list, int count) {
-        super(context, list, count);
+    public RankAdapter(Activity activity, List<RankItem> list, int count) {
+        super(activity, list, count);
     }
 
-    public RankAdapter(Context context, List<RankItem> list, int count, boolean PRODUCT) {
-        super(context, list, count);
+    public RankAdapter(Activity activity, List<RankItem> list, int count, boolean PRODUCT) {
+        super(activity, list, count);
+        mActivity = activity;
         this.PRODUCT = PRODUCT;
     }
 
@@ -47,18 +48,16 @@ public class RankAdapter extends ReaderBaseAdapter<RankItem> {
         TextView name = contentView.findViewById(R.id.item_store_rank_male_text);
         TextView description = contentView.findViewById(R.id.item_store_rank_male_description);
         if (mList.get(position).getIcon().size() > 0) {
-            ImageLoader.getInstance().displayImage(mList.get(position).getIcon().get(0), img1, ReaderApplication.getOptions());
+            MyPicasso.GlideImageNoSize(mActivity, mList.get(position).getIcon().get(0), img1, defaultImgr);
         }
         if (mList.get(position).getIcon().size() > 1) {
-            ImageLoader.getInstance().displayImage(mList.get(position).getIcon().get(1), img2, ReaderApplication.getOptions());
+            MyPicasso.GlideImageNoSize(mActivity, mList.get(position).getIcon().get(1), img2, defaultImgr);
         }
         if (mList.get(position).getIcon().size() > 2) {
-            ImageLoader.getInstance().displayImage(mList.get(position).getIcon().get(2), img3, ReaderApplication.getOptions());
+            MyPicasso.GlideImageNoSize(mActivity, mList.get(position).getIcon().get(2), img3, defaultImgr);
         }
-
         name.setText(mList.get(position).getList_name());
         description.setText(mList.get(position).getDescription());
         return contentView;
     }
-
 }

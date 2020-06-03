@@ -1,13 +1,11 @@
 package com.heiheilianzai.app.book.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,51 +21,30 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.AboutActivity;
 import com.heiheilianzai.app.activity.BaseOptionActivity;
 import com.heiheilianzai.app.activity.BookInfoActivity;
-import com.heiheilianzai.app.activity.FeedBackActivity;
-import com.heiheilianzai.app.activity.LoginActivity;
-import com.heiheilianzai.app.activity.RechargeActivity;
-import com.heiheilianzai.app.activity.SettingsActivity;
-import com.heiheilianzai.app.activity.TaskCenterActivity;
 import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.banner.ConvenientBanner;
-import com.heiheilianzai.app.banner.holder.CBViewHolderCreator;
-import com.heiheilianzai.app.banner.listener.OnItemClickListener;
-import com.heiheilianzai.app.bean.BannerItemStore;
-import com.heiheilianzai.app.book.adapter.DiscoverBannerHolderViewBook;
 import com.heiheilianzai.app.book.been.StroreBookcLable;
-import com.heiheilianzai.app.comic.been.StroreComicLable;
-import com.heiheilianzai.app.comic.config.ComicConfig;
 import com.heiheilianzai.app.config.MainHttpTask;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.RefreshDiscoveryFragment;
 import com.heiheilianzai.app.fragment.BaseButterKnifeFragment;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
-import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.PullToRefreshLayout;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -75,31 +52,32 @@ import java.util.TimerTask;
 import butterknife.BindView;
 
 import static com.heiheilianzai.app.book.config.BookConfig.book_refresh;
-import static com.heiheilianzai.app.config.ReaderConfig.BAOYUE;
 import static com.heiheilianzai.app.config.ReaderConfig.LOOKMORE;
 
 /**
  * 发现小说
  */
 public class DiscoveryBookFragment extends BaseButterKnifeFragment {
-
     @Override
     public int initContentView() {
         return R.layout.fragment_discovery;
     }
 
-
     @BindView(R2.id.fragment_discovery_container)
     public LinearLayout fragment_discovery_container;
-
     @BindView(R2.id.fragment_discovery_banner_male)
     public ConvenientBanner mStoreBannerMale;
-
     @BindView(R2.id.refreshLayoutMale)
     public PullToRefreshLayout pullToRefreshLayout;
     public int WIDTH, WIDTHH, WIDTH_MAIN_AD, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20, H30;
     LayoutInflater layoutInflater;
     Gson gson = new Gson();
+    TimerTask timerTask;
+    public Timer timer = new Timer();
+    LinearLayout Fragment_discovery_daojishi_layout;
+    RelativeLayout Fragment_discovery_daojishi_end;
+    TextView fragment_discovery_daojishi_hh, fragment_discovery_daojishi_mm, fragment_discovery_daojishi_ss;
+    int Expire_time;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -145,7 +123,6 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                 handler.sendEmptyMessage(0);
             }
         };
-
         MainHttpTask.getInstance().getResultString(activity, "DiscoverBook", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
@@ -157,16 +134,12 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
     public void initInfo(String info) {
         try {
             JSONObject jsonObject = new JSONObject(info);
-
-            //1.初始化男频banner控件数据
-            //  initBanner(jsonObject.getString("banner"));
+            //1.初始化banner控件数据
             ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 2000, 2);
             initWaterfall(jsonObject.getString("label"));
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     public void initWaterfall(String jsonObject) {
@@ -182,10 +155,7 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                 layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
                 layoutParams.height = layoutParams.width / 3;
                 list_ad_view_img.setLayoutParams(layoutParams);
-
                 MyPicasso.GlideImageNoSize(activity, stroreComicLable.ad_image, list_ad_view_img);
-
-
                 list_ad_view_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -195,23 +165,18 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                         intent.putExtra("title", stroreComicLable.ad_title);
                         intent.putExtra("advert_id", stroreComicLable.advert_id);
                         intent.putExtra("ad_url_type", stroreComicLable.ad_url_type);
-
                         activity.startActivity(intent);
                     }
                 });
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                // params.height = WIDTH_MAIN_AD/3;
                 params.setMargins(0, 10, 0, 0);
                 fragment_discovery_container.addView(list_ad_view, params);
                 continue;
             }
-
             int Size = stroreComicLable.list.size();
             if (Size == 0) {
                 continue;
             }
-            // View type3 = layoutInflater.inflate(R.layout.fragment_discovery_book_layout, null, false);
-
             View type3 = layoutInflater.inflate(R.layout.fragment_store_book_layout, null, false);
             TextView fragment_store_gridview3_text = type3.findViewById(R.id.fragment_store_gridview3_text);
             fragment_store_gridview3_text.setText(stroreComicLable.label);
@@ -224,12 +189,10 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
             View fragment_store_gridview1_view3 = type3.findViewById(R.id.fragment_store_gridview1_view3);
             int expire_time = stroreComicLable.expire_time;
             LinearLayout fragment_store_gridview1_more = type3.findViewById(R.id.fragment_store_gridview1_more);
-
             if (stroreComicLable.can_more) {
                 fragment_store_gridview1_more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         try {
                             Intent intent = new Intent(activity, BaseOptionActivity.class)
                                     .putExtra("OPTION", LOOKMORE)
@@ -240,7 +203,6 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                                 intent.putExtra("recommend_id", stroreComicLable.recommend_id);
                             }
                             startActivity(intent);
-
                         } catch (Exception E) {
                         }
                     }
@@ -277,31 +239,23 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                 }
                 fragment_discovery_daojishi_layout.setVisibility(View.INVISIBLE);
                 fragment_discovery_daojishi_end.setVisibility(View.GONE);
-
                 Fragment_discovery_daojishi_end = fragment_discovery_daojishi_end;
                 Fragment_discovery_daojishi_layout = fragment_discovery_daojishi_layout;
-
             }
             int ItemHeigth = Huanyihuan(stroreComicLable.style, stroreComicLable.list, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.height = ItemHeigth;
-
             if (!stroreComicLable.can_more && !stroreComicLable.can_refresh) {
                 params.height = ItemHeigth - H50;
             } else if (!(stroreComicLable.can_more && stroreComicLable.can_refresh)) {
                 buttomonlyOne(fragment_store_gridview1_view1, fragment_store_gridview1_view2, fragment_store_gridview1_view3);
-
             }
             fragment_discovery_container.addView(type3, params);
-
         }
-
-
     }
 
     private void buttomonlyOne(View fragment_store_gridview1_view1, View fragment_store_gridview1_view2, View fragment_store_gridview1_view3) {
         fragment_store_gridview1_view2.setVisibility(View.GONE);
-
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_view1.getLayoutParams();
         layoutParams.width = H30;
         fragment_store_gridview1_view1.setLayoutParams(layoutParams);
@@ -321,18 +275,6 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
         }
     }
 
-    TimerTask timerTask;
-    public Timer timer = new Timer();
-    LinearLayout Fragment_discovery_daojishi_layout;
-    RelativeLayout Fragment_discovery_daojishi_end;
-
-    TextView fragment_discovery_daojishi_hh, fragment_discovery_daojishi_mm, fragment_discovery_daojishi_ss;
-
-    int Expire_time;
-
-    // SimpleDateFormat aDate = new SimpleDateFormat("HH:mm:ss");
-
-
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -346,15 +288,12 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                     MyToash.Log("Expire_time", Expire_time);
                     String formatStr = DateUtils.secToTime(Expire_time);
                     String[] date = formatStr.split(":");
-                    //  TextView fragment_discovery_daojishi_day = Fragment_discovery_daojishi_layout.findViewById(R.id.fragment_discovery_daojishi_day);
-
                     fragment_discovery_daojishi_hh = null;
                     fragment_discovery_daojishi_mm = null;
                     fragment_discovery_daojishi_ss = null;
                     fragment_discovery_daojishi_hh = Fragment_discovery_daojishi_layout.findViewById(R.id.fragment_discovery_daojishi_hh);
                     fragment_discovery_daojishi_mm = Fragment_discovery_daojishi_layout.findViewById(R.id.fragment_discovery_daojishi_mm);
                     fragment_discovery_daojishi_ss = Fragment_discovery_daojishi_layout.findViewById(R.id.fragment_discovery_daojishi_ss);
-
                     fragment_discovery_daojishi_hh.setText(date[0]);
                     fragment_discovery_daojishi_mm.setText(date[1]);
                     fragment_discovery_daojishi_ss.setText(date[2]);
@@ -363,9 +302,7 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                     }
                 }
             } else {
-
             }
-
         }
     };
 
@@ -403,17 +340,14 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                     }
                 });
             }
-
         } else if (style == 4) {
             start = 1;
             minSize = Math.min(size, 4);
             ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing);
             fragment_store_gridview3_gridview_fore.setVisibility(View.VISIBLE);
-
             final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
             VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
             fragment_store_gridview3_gridview_fore.setAdapter(horizontalAdapter);
-
             fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -423,11 +357,9 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                 }
             });
         }
-
         List<StroreBookcLable.Book> firstList = bookList.subList(start, minSize);
         VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
         fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
-
         fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -440,7 +372,6 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
     }
 
     public void postHuanyihuan(String recommend_id, int style, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore) {
-
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id);
         String json = params.generateParamsJson();
@@ -456,18 +387,12 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
-
-
     }
 }

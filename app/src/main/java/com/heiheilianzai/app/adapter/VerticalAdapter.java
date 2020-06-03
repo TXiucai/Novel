@@ -1,11 +1,8 @@
 package com.heiheilianzai.app.adapter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
 import android.text.Html;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.bean.LabelListItem;
 import com.heiheilianzai.app.book.been.StroreBookcLable;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
@@ -45,7 +39,7 @@ public class VerticalAdapter extends BaseAdapter {
         this.HEIGHT = HEIGHT;
         this.orientation = orientation;
         height = ImageUtil.dp2px(activity, 50);
-        MyToash.Log("VerticalAdapter",WIDTH+"  "+HEIGHT+"  "+height+"  "+orientation);
+        MyToash.Log("VerticalAdapter", WIDTH + "  " + HEIGHT + "  " + height + "  " + orientation);
     }
 
     @Override
@@ -73,60 +67,45 @@ public class VerticalAdapter extends BaseAdapter {
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
             TextView name = contentView.findViewById(R.id.item_store_label_male_vertical_text);
             TextView item_store_label_male_vertical_text2 = contentView.findViewById(R.id.item_store_label_male_vertical_text2);
-
-            if( !book.tag.isEmpty()) {
+            if (!book.tag.isEmpty()) {
                 String tagString = "";
                 for (BaseTag tag : book.tag) {
                     tagString += " " + tag.getTab();
                 }
                 item_store_label_male_vertical_text2.setText(tagString.substring(1));
                 item_store_label_male_vertical_text2.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 item_store_label_male_vertical_text2.setVisibility(View.GONE);
             }
             name.setText(book.getName());
             LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
             layoutParamsIm.height = HEIGHT;
-
             imageView.setLayoutParams(layoutParamsIm);
-
-            ViewGroup.LayoutParams layoutParams11=imageView.getLayoutParams();
-            layoutParams11.height=HEIGHT;
-            layoutParams11.width=WIDTH;
+            ViewGroup.LayoutParams layoutParams11 = imageView.getLayoutParams();
+            layoutParams11.height = HEIGHT;
+            layoutParams11.width = WIDTH;
             imageView.setLayoutParams(layoutParams11);
-            MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView,R.mipmap.book_def_v);
-
-
-
-
+            MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
             layoutParams.height = HEIGHT + height;
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
-
-
         } else {
-
             contentView = layoutInflater.inflate(R.layout.item_store_label_male_horizontal2, null, false);
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
-
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
             layoutParams.height = HEIGHT;
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
-
             ImageView imageView = contentView.findViewById(R.id.item_store_label_male_horizontal_img);
             TextView name = contentView.findViewById(R.id.item_store_label_male_horizontal_name);
             TextView flag = contentView.findViewById(R.id.item_store_label_male_horizontal_flag);
             TextView description = contentView.findViewById(R.id.item_store_label_male_horizontal_description);
             TextView author = contentView.findViewById(R.id.item_store_label_male_horizontal_author);
             TextView item_store_label_male_horizontal_tag = contentView.findViewById(R.id.item_store_label_male_horizontal_tag);
-
             LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
             layoutParamsIm.height = HEIGHT;
             layoutParamsIm.width = WIDTH;
             imageView.setLayoutParams(layoutParamsIm);
-            MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView,R.mipmap.book_def_v);
-
-
+            MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
             name.setText(book.getName());
             if (TextUtils.isEmpty(book.getFlag())) {
                 flag.setVisibility(View.GONE);
@@ -134,16 +113,13 @@ public class VerticalAdapter extends BaseAdapter {
                 flag.setVisibility(View.VISIBLE);
             }
             flag.setText(book.getFlag());
-
             description.setText(book.getDescription());
             author.setText(book.getAuthor());
-            String str="";
+            String str = "";
             for (BaseTag tag : book.tag) {
-                 str+="&nbsp&nbsp<font color='"+tag.color+"'>"+tag.tab+"</font>";
+                str += "&nbsp&nbsp<font color='" + tag.color + "'>" + tag.tab + "</font>";
             }
             item_store_label_male_horizontal_tag.setText(Html.fromHtml(str));
-
-
         }
         return contentView;
     }

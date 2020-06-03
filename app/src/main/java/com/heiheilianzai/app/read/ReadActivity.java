@@ -42,7 +42,6 @@ import com.heiheilianzai.app.bean.ChapterItem;
 import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.book.config.BookConfig;
 import com.heiheilianzai.app.config.MainHttpTask;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.DownDialog;
 import com.heiheilianzai.app.eventbus.CloseAnimation;
@@ -61,6 +60,7 @@ import com.heiheilianzai.app.read.view.PageWidget;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
@@ -69,7 +69,6 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
@@ -91,6 +90,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.USE_AD;
 import static com.heiheilianzai.app.config.ReaderConfig.XIAOSHUO;
 
 /**
+ * 小说阅读 Activity
  * Created by Administrator on 2016/7/15 0015.
  */
 public class ReadActivity extends BaseReadActivity {
@@ -519,7 +519,6 @@ public class ReadActivity extends BaseReadActivity {
                     return true;
                 }
             }
-
             if (isShow) {
                 hideReadSetting();
                 return true;
@@ -730,7 +729,6 @@ public class ReadActivity extends BaseReadActivity {
         }
     }
 
-
     //每日阅读两本书 就上传接口  完成阅读任务
     public void ReadTwoBook() {
         if (!ReaderConfig.USE_PAY) {
@@ -766,7 +764,6 @@ public class ReadActivity extends BaseReadActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
         );
@@ -859,7 +856,7 @@ public class ReadActivity extends BaseReadActivity {
                                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ImageUtil.dp2px(activity, READBUTTOM_HEIGHT));
                                         activity_read_buttom_ad_layout.addView(list_ad_view_img, params);
                                     }
-                                    ImageLoader.getInstance().displayImage(baseAd.ad_image, list_ad_view_img, ReaderApplication.getOptions());
+                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
                                 } else {
                                     ReadActivity.USE_BUTTOM_AD = false;
                                 }
@@ -893,7 +890,7 @@ public class ReadActivity extends BaseReadActivity {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ImageUtil.dp2px(activity, READBUTTOM_HEIGHT));
                     insert_todayone2.addView(list_ad_view_img, params);
                 }
-                ImageLoader.getInstance().displayImage(baseAd.ad_image, list_ad_view_img, ReaderApplication.getOptions());
+                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
             }
         }
     }

@@ -6,20 +6,15 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.banner.holder.Holder;
-import com.heiheilianzai.app.bean.BannerItem;
 import com.heiheilianzai.app.bean.BannerItemStore;
 import com.heiheilianzai.app.comic.been.MyGlide;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
-
 
 /**
  * 轮播图Holder
@@ -37,7 +32,6 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
     @Override
     public View createView(Context context, int size) {
         activity = (Activity) context;
-
         View contentView = LayoutInflater.from(activity).inflate(R.layout.item_store_entrance_comic, null, false);
         width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         width2=width- ImageUtil.dp2px(activity, 20);
@@ -45,21 +39,11 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
         item_store_entrance_comic_img = contentView.findViewById(R.id.item_store_entrance_comic_img);
         item_store_entrance_comic_bg = contentView.findViewById(R.id.item_store_entrance_comic_bg);
         item_store_entrance_comic_bgVIEW = contentView.findViewById(R.id.item_store_entrance_comic_bgVIEW);
-
-
-
-
-   /*     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) item_store_entrance_comic_img.getLayoutParams();
-        layoutParams.height = height;
-        item_store_entrance_comic_img.setLayoutParams(layoutParams);
-*/
-
         return contentView;
     }
 
     @Override
     public void UpdateUI(Context context, int position, BannerItemStore data) {//- ImageUtil.dp2px(activity, 20)
-//"#4D"+
         int[] colors = {0xE6FFFFFF, Color.parseColor(data.color)};
         GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
         item_store_entrance_comic_bgVIEW.setBackground(g);

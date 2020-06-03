@@ -10,20 +10,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.bean.Downoption;
-import com.heiheilianzai.app.config.ReaderApplication;
-import com.heiheilianzai.app.dialog.DownDialog;
+import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.read.manager.ChapterManager;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 
 import org.litepal.LitePal;
-//.view.annotation.ViewInject;
-//.x;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,10 +28,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 public class DownMangerAdapter extends BaseAdapter {
     List<Downoption> list;
     Activity activity;
     LinearLayout fragment_bookshelf_noresult;
+    List<String> stringList;
 
     public DownMangerAdapter(Activity activity, List<Downoption> list, LinearLayout fragment_bookshelf_noresult) {
         this.list = list;
@@ -59,54 +57,36 @@ public class DownMangerAdapter extends BaseAdapter {
         return i;
     }
 
-    List<String> stringList;
-
     @Override
     public View getView(int i, View contentView, ViewGroup viewGroup) {
         ViewHolder viewHolder;
-
-
-        /// if (contentView == null) {
-
         contentView = LayoutInflater.from(activity).inflate(R.layout.item_downmanger, null, false);
         viewHolder = new ViewHolder(contentView);
         contentView.setTag(viewHolder);
-     /*   } else {
-            viewHolder = (ViewHolder) contentView.getTag();
-        }*/
         final Downoption downoption = getItem(i);
-
         if (!downoption.showHead) {
             viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.GONE);
-
         } else {
             viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.VISIBLE);
-            //stringList.add(downoption.book_id);
         }
         viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = ScreenSizeUtils.getInstance(activity).getScreenWidth(); /*+ holder.rl_left.getLayoutParams().width*/
         ;
         viewHolder.item_dowmmanger_LinearLayout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 BaseBook basebooks = LitePal.where("book_id = ?", downoption.book_id).findFirst(BaseBook.class);
-
-                if(basebooks!=null){
-                 //   MyToash.Log("basebooks",basebooks.isAddBookSelf()+"");
-                    ChapterManager.getInstance(activity).openBook(basebooks, downoption.book_id,basebooks.getCurrent_chapter_id());
-                }else {
+                if (basebooks != null) {
+                    ChapterManager.getInstance(activity).openBook(basebooks, downoption.book_id, basebooks.getCurrent_chapter_id());
+                } else {
                     BaseBook baseBook;
                     baseBook = new BaseBook();
                     baseBook.setBook_id(downoption.book_id);
                     baseBook.setName(downoption.bookname);
                     baseBook.setCover(downoption.cover);
-
                     baseBook.setDescription(downoption.description);
                     baseBook.setAddBookSelf(0);
                     baseBook.saveIsexist(0);
-                    ChapterManager.getInstance(activity).openBook(baseBook, downoption.book_id,null);
-
+                    ChapterManager.getInstance(activity).openBook(baseBook, downoption.book_id, null);
                 }
             }
         });
@@ -129,7 +109,7 @@ public class DownMangerAdapter extends BaseAdapter {
             }
         });
         viewHolder.item_dowmmanger_cover.setImageResource(R.mipmap.book_def_v);
-        ImageLoader.getInstance().displayImage(downoption.cover, viewHolder.item_dowmmanger_cover, ReaderApplication.getOptions());
+        MyPicasso.GlideImageNoSize(activity, downoption.cover, viewHolder.item_dowmmanger_cover, R.mipmap.book_def_v);
         viewHolder.item_dowmmanger_name.setText(downoption.bookname);
         viewHolder.item_dowmmanger_Downoption_title.setText(downoption.start_order + "-" + downoption.end_order + "章");
         viewHolder.item_dowmmanger_Downoption_date.setText(downoption.downoption_date);
@@ -143,7 +123,6 @@ public class DownMangerAdapter extends BaseAdapter {
         viewHolder.item_dowmmanger_open.setVisibility(View.VISIBLE);
         return contentView;
     }
-
 
     class ViewHolder {
         @BindView(R2.id.item_dowmmanger_HorizontalScrollView)
@@ -168,9 +147,9 @@ public class DownMangerAdapter extends BaseAdapter {
         public TextView item_dowmmanger_Downoption_size;
         @BindView(R2.id.item_dowmmanger_Downoption_yixizai)
         public TextView item_dowmmanger_Downoption_yixizai;
+
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
-
     }
 }

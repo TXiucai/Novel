@@ -34,7 +34,6 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.UserInfoItem;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.RefreshBookSelf;
 import com.heiheilianzai.app.eventbus.RefreshMine;
@@ -42,10 +41,10 @@ import com.heiheilianzai.app.eventbus.RefreshUserInfo;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.view.CircleImageView;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -70,53 +69,46 @@ import top.zibin.luban.OnCompressListener;
 
 import static com.heiheilianzai.app.config.ReaderConfig.USE_WEIXIN;
 
-//import com.squareup.okhttp.Request;
-//import com.squareup.okhttp.Response;
-//.http.RequestParams;
-
 /**
  * 用户个人资料页
  */
 public class UserInfoActivity extends BaseActivity implements View.OnClickListener, ShowTitle {
-    private final String TAG = UserInfoActivity.class.getSimpleName();
     @BindView(R2.id.user_info_avatar_container)
     View user_info_avatar_container;
     @BindView(R2.id.user_info_avatar)
     CircleImageView user_info_avatar;
-
     @BindView(R2.id.user_info_nickname_container)
     View user_info_nickname_container;
     @BindView(R2.id.user_info_nickname)
     TextView user_info_nickname;
-
     @BindView(R2.id.user_info_uid)
     TextView user_info_uid;
-
     @BindView(R2.id.user_info_phone_container)
     View user_info_phone_container;
     @BindView(R2.id.user_info_phone)
     TextView user_info_phone;
-
     @BindView(R2.id.user_info_weixin_container)
     View user_info_weixin_container;
     @BindView(R2.id.user_info_weixin)
     TextView user_info_weixin;
     @BindView(R2.id.user_info_phone_jiantou)
     ImageView user_info_phone_jiantou;
-
-
     @BindView(R2.id.user_info_sex)
     TextView user_info_sex;
     @BindView(R2.id.user_info_nickname_sex)
     RelativeLayout user_info_nickname_sex;
-
-
     private EditText mEdit;
     private UserInfoItem mUserInfo;
+    Gson gson = new Gson();
+    Activity activity;
+    /**
+     * 从照相机中获取图片
+     */
+    private File cameraSavePath;//拍照照片路径
+    private Uri uri;//照片uri
     /**
      * 图片文件名字
      */
-
     private final int GALLERY = 1000000;
     private final int CAMERA = 1000001;
 
@@ -125,17 +117,12 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         return R.layout.activity_user_info;
     }
 
-    Gson gson = new Gson();
-
     @Override
     public void initView() {
         activity = this;
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         }
-
-
         initTitleBarView(LanguageUtil.getString(activity, R.string.UserInfoActivity_title));
         if (!USE_WEIXIN) {
             user_info_weixin_container.setVisibility(View.GONE);
@@ -160,7 +147,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             mUserInfo = gson.fromJson(json, UserInfoItem.class);
             //头像
             if (mUserInfo.getAvatar() != null) {
-                ImageLoader.getInstance().displayImage(mUserInfo.getAvatar(), user_info_avatar, ReaderApplication.getOptions());
+                MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), user_info_avatar);
             }
             //昵称
             user_info_nickname.setText(mUserInfo.getNickname());
@@ -176,14 +163,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 user_info_phone_jiantou.setVisibility(View.GONE);
                 user_info_phone.setText(mUserInfo.getBind_list().get(0).getDisplay());
             }
-
-            // user_info_weixin.setText(mUserInfo.getBind_list().size() > 1 ? mUserInfo.getBind_list().get(1).getDisplay() : "");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     public void initData(final boolean flag) {
         ReaderParams params = new ReaderParams(this);
@@ -199,35 +182,26 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
-
     }
 
-
     private void checkUserImg(final boolean flag) {
-
         final Dialog dialog = new Dialog(this, R.style.userInfo_avatar);
         View view = View.inflate(this, R.layout.user_img_dialog, null);
-
         /** 从相册选择 */
         TextView checkImgGallery = view.findViewById(R.id.checkimg_gallery);
         /** 照相机照相 */
         TextView checkImgCamera = view.findViewById(R.id.checkimg_camera);
         /** 取消 */
         View checkImgCancel = view.findViewById(R.id.checkimg_cancel);
-
         if (!flag) {
             checkImgGallery.setText(LanguageUtil.getString(activity, R.string.UserInfoActivity_gril));
             checkImgCamera.setText(LanguageUtil.getString(activity, R.string.UserInfoActivity_boy));
         }
         dialog.setContentView(view);
         dialog.setCanceledOnTouchOutside(true);
-
-
         checkImgGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,9 +234,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             }
         });
         dialog.show();
-
     }
-
 
     /**
      * 从相册中获取图片
@@ -273,13 +245,6 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         startActivityForResult(intent, GALLERY);
     }
-
-    /**
-     * 从照相机中获取图片
-     */
-
-    private File cameraSavePath;//拍照照片路径
-    private Uri uri;//照片uri
 
     //激活相机操作
     private void checkFromCamera() {
@@ -315,17 +280,14 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 if (user_info_phone.getText().length() == 0) {
                     bindPhone();
                 }
-
                 break;
             case R.id.user_info_weixin_container:
                 if (user_info_weixin.getText().length() == 0) {
                     UMShareAPI.get(activity).getPlatformInfo(activity, SHARE_MEDIA.WEIXIN, authListener);
                 }
                 break;
-
         }
     }
-
 
     @Override
     public void initTitleBarView(String text) {
@@ -358,16 +320,11 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         }
-
     }
-
 
     private void Handle(String uri) {
         try {
             Glide.with(activity).load(uri).into(user_info_avatar);
-
-            // MyToash.Log("onActivityResult", uri);
-
             Luban.with(this)
                     .load(uri)
                     .ignoreBy(100)
@@ -397,11 +354,9 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                     }).launch();
         } catch (Exception e) {
         }
-
     }
 
     private String getImagePath(Uri uri) {
-
         if (null == uri) {
             MyToash.Log("getImagePath", "uri return null");
             return null;
@@ -410,41 +365,21 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         String path = null;
 
         final String scheme = uri.getScheme();
-
         if (null == scheme) {
-
             path = uri.getPath();
-
         } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-
             path = uri.getPath();
-
         } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-
             String[] proj = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(uri, proj, null, null,
-
-                    null);
-
-            int nPhotoColumn = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
+            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+            int nPhotoColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             if (null != cursor) {
-
                 cursor.moveToFirst();
-
                 path = cursor.getString(nPhotoColumn);
-
             }
-
             cursor.close();
-
         }
-
-
         return path;
-
     }
 
     private String getPath() {
@@ -484,36 +419,28 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-
         }
         return result;
     }
 
-
     /**
      * 上传图片
      */
-
     public void uploadImg(File file) {
         String info = "data:image/jpeg;base64," + imageToBase64(file);
-
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("avatar", info);
         String json = params.generateParamsJson();
-        ;
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUserSetAvatarUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        //  initData(true);
                         EventBus.getDefault().post(new RefreshMine(null));
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
@@ -545,14 +472,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (TextUtils.isEmpty(mEdit.getText().toString())) {
-
                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.UserInfoActivity_namenonull));
-
                     return;
                 }
-
                 modifyNickname(0);
                 dialog.dismiss();
             }
@@ -577,22 +500,16 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             params.putExtraParams("gender", flag + "");
         }
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(this).sendRequestRequestParams3(requestParams, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         initData(true);
-                       /* if(flag==0) {
-                            EventBus.getDefault().post(new RefreshMine());
-                        }*/
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
@@ -606,9 +523,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     /**
      * 绑定微信，跳微信登录
      */
-
     public IWXAPI iwxapi;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -628,41 +543,32 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 iwxapi = WXAPIFactory.createWXAPI(activity, ReaderConfig.WEIXIN_PAY_APPID, true);
             }
             if (!iwxapi.isWXAppInstalled()) {
-                //  ToastUtils.toast("您手机尚未安装微信，请安装后再登录");
                 return;
             }
             iwxapi.registerApp(ReaderConfig.WEIXIN_PAY_APPID);
             SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
             req.state = "wechat_sdk_xb_live_state";//官方说明：用于保持请求和回调的状态，授权请求后原样带回给第三方。该参数可用于防止csrf攻击（跨站请求伪造攻击），建议第三方带上该参数，可设置为简单的随机数加session进行校验
-
             iwxapi.sendReq(req);
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            //  Toast.makeText(LoginActivity.this, "失败：" + t.getMessage(), Toast.LENGTH_LONG).show();
             MyToash.Log("SHARE_MEDIA 2   " + t.getMessage());
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            //   Toast.makeText(LoginActivity.this, "取消了", Toast.LENGTH_LONG).show();
         }
     };
-
-    Activity activity;
 
     public void getWeiXinAppUserInfo(final String str) {
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("info", str);
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.bind_wechat, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
-                        // MyToash.Log("bind_wechat",result);
                         initInfo(result);
                         MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.UserInfoActivity_bangdingyes));
                         EventBus.getDefault().post(new RefreshBookSelf(null));
@@ -671,10 +577,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
@@ -684,11 +588,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         new UpdateData().invoke();
     }
 
-
     private class UpdateData {
         public void invoke() {
             if (mUserInfo.getAvatar() != null) {
-                ImageLoader.getInstance().displayImage(mUserInfo.getAvatar(), user_info_avatar, ReaderApplication.getOptions());
+                MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), user_info_avatar);
             }
             //昵称
             user_info_nickname.setText(mUserInfo.getNickname());
@@ -724,5 +627,4 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             }
         }
     }
-
 }

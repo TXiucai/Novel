@@ -9,7 +9,6 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.PageTransformer;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +17,6 @@ import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -35,7 +33,6 @@ import com.heiheilianzai.app.activity.SettingsActivity;
 import com.heiheilianzai.app.activity.TaskCenterActivity;
 import com.heiheilianzai.app.banner.adapter.CBPageAdapter;
 import com.heiheilianzai.app.banner.holder.CBViewHolderCreator;
-import com.heiheilianzai.app.banner.holder.Holder;
 import com.heiheilianzai.app.banner.listener.CBPageChangeListener;
 import com.heiheilianzai.app.banner.listener.OnItemClickListener;
 import com.heiheilianzai.app.banner.view.CBLoopViewPager;
@@ -102,15 +99,6 @@ public class ConvenientBanner<T> extends LinearLayout {
         init(context);
     }
 
-    //	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    //	public ConvenientBanner(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    //		super(context, attrs, defStyleAttr, defStyleRes);
-    //		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ConvenientBanner);
-    //		canLoop = a.getBoolean(R.styleable.ConvenientBanner_canLoop, true);
-    //		a.recycle();
-    //		init(context);
-    //	}
-
     private void init(Context context) {
         View hView = LayoutInflater.from(context).inflate(R.layout.include_viewpager, this, true);
         viewPager = hView.findViewById(R.id.cbLoopViewPager);
@@ -119,7 +107,6 @@ public class ConvenientBanner<T> extends LinearLayout {
             field = ViewPager.class.getDeclaredField("mTouchSlop");
             field.setAccessible(true); // 设置Java不检查权限。
             field.setInt(viewPager, 1); // 设置字段的值，此处应该使用ViewPager实例。设置只有滑动长度大于1px的时候，ViewPager才进行滑动
-
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -127,12 +114,10 @@ public class ConvenientBanner<T> extends LinearLayout {
         }
         loPageTurningPoint = hView.findViewById(R.id.loPageTurningPoint);
         initViewPagerScroll();
-
         adSwitchTask = new AdSwitchTask(this);
     }
 
     static class AdSwitchTask implements Runnable {
-
         private final WeakReference<ConvenientBanner> reference;
 
         AdSwitchTask(ConvenientBanner convenientBanner) {
@@ -157,7 +142,6 @@ public class ConvenientBanner<T> extends LinearLayout {
         this.mDatas = datas;
         pageAdapter = new CBPageAdapter(holderCreator, mDatas);
         viewPager.setAdapter(pageAdapter, canLoop);
-
         if (page_indicatorId != null)
             setPageIndicator(page_indicatorId);
         return this;
@@ -209,7 +193,6 @@ public class ConvenientBanner<T> extends LinearLayout {
         pageChangeListener.onPageSelected(viewPager.getRealItem());
         if (onPageChangeListener != null)
             pageChangeListener.setOnPageChangeListener(onPageChangeListener);
-
         return this;
     }
 
@@ -284,7 +267,6 @@ public class ConvenientBanner<T> extends LinearLayout {
             mScroller.setAccessible(true);
             scroller = new ViewPagerScroller(viewPager.getContext());
             mScroller.set(viewPager, scroller);
-
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
@@ -315,7 +297,6 @@ public class ConvenientBanner<T> extends LinearLayout {
         } else if (action == MotionEvent.ACTION_DOWN) {
             mLastMotionX = ev.getX();
             mLastMotionY = ev.getY();
-
             // 停止翻页
             if (canTurn)
                 stopTurning();
@@ -325,7 +306,6 @@ public class ConvenientBanner<T> extends LinearLayout {
             final float xDiff = Math.abs(dx);
             final float y = ev.getY();
             final float yDiff = Math.abs(y - mLastMotionY);
-
             if (xDiff > yDiff) {
                 PullToRefreshLayout.REFRESH_FLAG = false;
                 mLastMotionX = x;
@@ -416,7 +396,6 @@ public class ConvenientBanner<T> extends LinearLayout {
 
 
     public static void initbanner(Activity activity, Gson gson, String jsonObject, ConvenientBanner<BannerItemStore> mStoreBannerMale, int time, int flag) {
-
         final List<BannerItemStore> mBannerItemListMale = new ArrayList<>();
         JsonParser jsonParser = new JsonParser();
         JsonArray jsonElements = jsonParser.parse(jsonObject).getAsJsonArray();//获取JsonArray对象
@@ -438,7 +417,6 @@ public class ConvenientBanner<T> extends LinearLayout {
                             Onclick(mBannerItemListMale.get(position), activity, flag);
                         }
                     });
-
         } else {
             if (!mBannerItemListMale.isEmpty()) {
                 final int WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
@@ -449,12 +427,10 @@ public class ConvenientBanner<T> extends LinearLayout {
                     mStoreBannerMale.setLayoutParams(layoutParams);
                 }
                 if (flag == 2) {
-
                     mStoreBannerMale.setPages(new CBViewHolderCreator<DiscoverBannerHolderViewBook>() {
                         @Override
                         public DiscoverBannerHolderViewBook createHolder() {
-                            return new DiscoverBannerHolderViewBook();
-
+                            return new DiscoverBannerHolderViewBook(activity);
                         }
                     }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
                             .setOnItemClickListener(new OnItemClickListener() {
@@ -469,7 +445,6 @@ public class ConvenientBanner<T> extends LinearLayout {
                         @Override
                         public DiscoveryBannerHolderViewComic createHolder() {
                             return new DiscoveryBannerHolderViewComic(activity, WIDTH);
-
                         }
                     }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
                             .setOnItemClickListener(new OnItemClickListener() {
@@ -485,13 +460,10 @@ public class ConvenientBanner<T> extends LinearLayout {
                 mStoreBannerMale.setVisibility(View.GONE);
             }
         }
-
         mStoreBannerMale.startTurning(time);
-
     }
 
     private static void Onclick(BannerItemStore bannerItemStore, Activity activity, int flag) {
-
         switch (bannerItemStore.getAction()) {
             case 1:
                 Intent intent;
@@ -526,29 +498,22 @@ public class ConvenientBanner<T> extends LinearLayout {
                         scheme.setClass(activity, BaseOptionActivity.class);
                         scheme.putExtra("OPTION", BAOYUE);
                         scheme.putExtra("title", LanguageUtil.getString(activity, R.string.BaoyueActivity_title));
-
                         break;
                     case "login":  //     => '''',
                         scheme.setClass(activity, LoginActivity.class);
                         break;
-
                 }
                 activity.startActivity(scheme);
                 break;
             case 3:
                 activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", bannerItemStore.getContent()));
-
                 break;
-
             case 4:
                 activity.startActivity(new Intent(activity, AboutActivity.class).
                         putExtra("url", bannerItemStore.getContent())
                         .putExtra("style", "4")
                 );
-
-
                 break;
         }
-
     }
 }

@@ -1,7 +1,6 @@
 package com.heiheilianzai.app.comic.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -16,15 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.heiheilianzai.app.utils.ScreenSizeUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.book.been.ReadHistory;
 import com.heiheilianzai.app.comic.been.DiscoveryComic;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 
@@ -50,9 +44,7 @@ public class ComicDiscoveryAdapter extends BaseAdapter {
         this.comicList = comicList;
         this.width = width - ImageUtil.dp2px(activity, 2);
         this.height = height - ImageUtil.dp2px(activity, 2);
-        ;
         DP10 = ImageUtil.dp2px(activity, 15);
-        ;
     }
 
     @Override
@@ -71,12 +63,8 @@ public class ComicDiscoveryAdapter extends BaseAdapter {
     }
 
     public int getCurrentPosition() {
-
-
         return CurrentPosition;
     }
-
-    ;
 
     @Override
     public View getView(int i, View contentView, ViewGroup viewGroup) {
@@ -92,11 +80,11 @@ public class ComicDiscoveryAdapter extends BaseAdapter {
         if (comic.ad_type == 0) {
             viewHolder.list_ad_view_noAD.setVisibility(View.VISIBLE);
             viewHolder.list_ad_view_layout.setVisibility(View.GONE);
-            MyPicasso.GlideImageRoundedCorners(8, activity, comic.cover, viewHolder.item_discovery_comic_img, width, height,R.mipmap.comic_def_cross);
+            MyPicasso.GlideImageRoundedCorners(8, activity, comic.cover, viewHolder.item_discovery_comic_img, width, height, R.mipmap.comic_def_cross);
             viewHolder.item_discovery_comic_title.setText(comic.title);
             viewHolder.item_discovery_comic_flag.setText(comic.flag);
             viewHolder.item_discovery_comic_tag.removeAllViews();
-            if(comic.tag!=null&&comic.tag.size()>0){
+            if (comic.tag != null && comic.tag.size() > 0) {
                 for (BaseTag tag : comic.tag) {
                     try {
                         TextView textView = new TextView(activity);
@@ -140,7 +128,6 @@ public class ComicDiscoveryAdapter extends BaseAdapter {
         ImageView list_ad_view_img;
         @BindView(R2.id.list_ad_view_noAD)
         public LinearLayout list_ad_view_noAD;
-
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

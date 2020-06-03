@@ -40,9 +40,9 @@ import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.UpdateApp;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
@@ -164,6 +164,7 @@ public class SplashActivity extends Activity {
             } else {
                 if (time == 0) {
                     activity_home_viewpager_sex_next.setText(splashactivity_skip);
+                    activity_home_viewpager_sex_next.setClickable(true);
                 } else {
                     activity_home_viewpager_sex_next.setText(LanguageUtil.getString(activity, R.string.splashactivity_surplus) + " " + (time--) + " ");
                     handler.sendEmptyMessageDelayed(1, 1000);
@@ -192,7 +193,7 @@ public class SplashActivity extends Activity {
                             if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
                                 activity_splash_im.setAlpha(0f);
                                 activity_splash_im.setVisibility(View.VISIBLE);
-                                ImageLoader.getInstance().displayImage(startpage.image, activity_splash_im, ReaderApplication.getOptions());
+                                MyPicasso.GlideImageNoSize(activity, startpage.image, activity_splash_im);
                                 activity_splash_im.animate()
                                         .alpha(1f)
                                         .setDuration(600)
@@ -200,6 +201,7 @@ public class SplashActivity extends Activity {
                                             @Override
                                             public void onAnimationEnd(Animator animation) {
                                                 activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                                                activity_home_viewpager_sex_next.setClickable(false);
                                                 handler.sendEmptyMessageDelayed(1, 0);
                                             }
                                         });

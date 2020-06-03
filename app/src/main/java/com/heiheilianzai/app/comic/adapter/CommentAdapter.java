@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.ReaderBaseAdapter;
-
 import com.heiheilianzai.app.comic.been.ComicComment;
 import com.heiheilianzai.app.utils.MyPicasso;
 
@@ -41,10 +40,7 @@ public class CommentAdapter extends ReaderBaseAdapter<ComicComment.Comment> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-        // ImageLoader.getInstance().displayImage(mList.get(position).getAvatar(), viewHolder.imageView, ReaderApplication.getOptions());
         MyPicasso.IoadImage((Activity) mContext, mList.get(position).getAvatar(), R.mipmap.icon_def_head, viewHolder.imageView);
-
         viewHolder.content.setText(mList.get(position).getContent());
         viewHolder.replay.setText(mList.get(position).getReply_info());
         viewHolder.replay.setVisibility(TextUtils.isEmpty(mList.get(position).getReply_info()) ? View.GONE : View.VISIBLE);
@@ -60,5 +56,4 @@ public class CommentAdapter extends ReaderBaseAdapter<ComicComment.Comment> {
         TextView nickname;
         TextView time;
     }
-
 }

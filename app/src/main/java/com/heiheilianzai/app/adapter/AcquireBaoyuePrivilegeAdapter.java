@@ -1,29 +1,31 @@
 package com.heiheilianzai.app.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.bean.AcquirePrivilegeItem;
-import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;
 
 /**
+ *包月特权
  * Created by scb on 2018/8/12.
  */
 public class AcquireBaoyuePrivilegeAdapter extends ReaderBaseAdapter<AcquirePrivilegeItem> {
-    public AcquireBaoyuePrivilegeAdapter(Context context, List<AcquirePrivilegeItem> list, int count) {
+    Activity mActivity;
+    public AcquireBaoyuePrivilegeAdapter(Activity context, List<AcquirePrivilegeItem> list, int count) {
         super(context, list, count);
     }
 
-    public AcquireBaoyuePrivilegeAdapter(Context context, List<AcquirePrivilegeItem> list, int count, boolean close) {
+    public AcquireBaoyuePrivilegeAdapter(Activity context, List<AcquirePrivilegeItem> list, int count, boolean close) {
         super(context, list, count, close);
+        mActivity=context;
     }
 
     @Override
@@ -38,10 +40,8 @@ public class AcquireBaoyuePrivilegeAdapter extends ReaderBaseAdapter<AcquirePriv
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-        ImageLoader.getInstance().displayImage(mList.get(position).getIcon(),viewHolder.item_acquire_privilege_img, ReaderApplication.getOptions());
+        MyPicasso.GlideImageNoSize(mActivity, mList.get(position).getIcon(), viewHolder.item_acquire_privilege_img);
         viewHolder.item_acquire_privilege_title.setText(mList.get(position).getLabel());
-
         return convertView;
     }
 

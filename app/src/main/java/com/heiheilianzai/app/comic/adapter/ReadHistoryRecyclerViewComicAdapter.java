@@ -14,18 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.heiheilianzai.app.utils.ImageUtil;
-import com.heiheilianzai.app.utils.MyPicasso;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-
 import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.comic.been.ComicReadHistory;
 import com.heiheilianzai.app.comic.fragment.ReadHistoryComicFragment;
-import com.heiheilianzai.app.config.ReaderApplication;
-//.TodayOneAD;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 
 import java.util.List;
@@ -34,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * 漫画阅读历史记录
  * Created by abc on 2017/4/28.
  */
 public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<ReadHistoryRecyclerViewComicAdapter.MyViewHolder> {
@@ -43,14 +40,12 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
 
     public ReadHistoryRecyclerViewComicAdapter(Activity activity, List<ComicReadHistory.ReadHistoryComic> list, ReadHistoryComicFragment.GetPosition getPosition) {
         this.list = list;
-        //listPosition.clear();
         this.activity = activity;
         this.getPosition = getPosition;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_readhistory, parent, false);
         return new MyViewHolder(rootView);
     }
@@ -58,10 +53,6 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final ComicReadHistory.ReadHistoryComic readHistoryBook = list.get(position);
-        //判断是否设置了监听器
-
-        //为ItemView设置监听器
-
         if (readHistoryBook.ad_type == 0) {
             holder.recyclerview_item_readhistory_HorizontalScrollView.scrollTo(0, 0);
             holder.recyclerview_item_readhistory_HorizontalScrollView.setVisibility(View.VISIBLE);
@@ -70,9 +61,7 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
             holder.recyclerview_item_readhistory_des.setText(readHistoryBook.chapter_title);
             holder.recyclerview_item_readhistory_time.setText(readHistoryBook.getLast_chapter_time() + "  " + String.format(LanguageUtil.getString(activity, R.string.ReadHistoryFragment_total_chapter), readHistoryBook.getTotal_chapters()));
             holder.recyclerview_item_readhistory_img.setImageResource(R.mipmap.comic_def_v);
-            ImageLoader.getInstance().displayImage(readHistoryBook.getVertical_cover(), holder.recyclerview_item_readhistory_img, ReaderApplication.getOptions());
-
-
+            MyPicasso.GlideImageNoSize(activity,readHistoryBook.getVertical_cover(), holder.recyclerview_item_readhistory_img,R.mipmap.comic_def_v);
             holder.recyclerview_item_readhistory_book.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -91,7 +80,6 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
                     getPosition.getPosition(2, readHistoryBook, position);
                 }
             });
-
         } else {
             holder.recyclerview_item_readhistory_HorizontalScrollView.setVisibility(View.GONE);
             holder.list_ad_view_layout.setVisibility(View.VISIBLE);
@@ -100,7 +88,6 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
             layoutParams.height = layoutParams.width / 3;
             holder.list_ad_view_img.setLayoutParams(layoutParams);
             MyPicasso.GlideImageNoSize(activity, readHistoryBook.ad_image, holder.list_ad_view_img);
-
             holder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,23 +99,13 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
                     activity.startActivity(intent);
                 }
             });
-
-
-
-        /*    //  listPosition.add(position);
-            TodayOneAD getQQBannerAD = new TodayOneAD(activity);
-            getQQBannerAD.getTodayOneBanner(holder.recyclerview_item_readhistory_ad, null, 0);*/
         }
     }
-
-    //  List<Integer> listPosition = new ArrayList<>();
-
 
     @Override
     public int getItemCount() {
         return list.size();
     }
-
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R2.id.recyclerview_item_readhistory_img)
@@ -145,15 +122,12 @@ public class ReadHistoryRecyclerViewComicAdapter extends RecyclerView.Adapter<Re
         FrameLayout list_ad_view_layout;
         @BindView(R2.id.list_ad_view_img)
         ImageView list_ad_view_img;
-
-
         @BindView(R2.id.recyclerview_item_readhistory_book)
         LinearLayout recyclerview_item_readhistory_book;
         @BindView(R2.id.recyclerview_item_readhistory_del)
         TextView recyclerview_item_readhistory_del;
         @BindView(R2.id.recyclerview_item_readhistory_HorizontalScrollView)
         HorizontalScrollView recyclerview_item_readhistory_HorizontalScrollView;
-
 
         public MyViewHolder(View view) {
             super(view);

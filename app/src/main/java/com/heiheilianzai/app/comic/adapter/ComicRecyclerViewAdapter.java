@@ -1,7 +1,6 @@
 package com.heiheilianzai.app.comic.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
@@ -17,20 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-import com.heiheilianzai.app.comic.view.DanmuRelativeLayout;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.comic.activity.ComicLookActivity;
 import com.heiheilianzai.app.comic.been.BaseComicImage;
 import com.heiheilianzai.app.comic.been.MyGlide;
-import com.heiheilianzai.app.comic.view.LargeImageView;
-import com.heiheilianzai.app.config.ReaderApplication;
-import com.heiheilianzai.app.utils.ImageUtil;
-import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.comic.view.DanmuRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,28 +39,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     int WIDTH;
     int HEIGHT;
     int MAXheigth;
- /*   public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public interface OnItemLongClickListener {
-        void onItemLongClick(View view, int position);
-    }
-
-    private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
-    }
-
-    public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
-        this.mOnItemLongClickListener = mOnItemLongClickListener;
-    }*/
-
-
     private List<BaseComicImage> list;
-    // private ComicLookActivity.GetPossition getPossition;
     private Activity activity;
     int tocao_bgcolor;
     int size;
@@ -87,8 +57,6 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.HEIGHT = HEIGHT;
         MAXheigth = getMAXheigth();
         tocao_bgcolor = Color.parseColor("#4d000000");
-
-
     }
 
     public void NotifyDataSetChanged(int Size) {
@@ -112,9 +80,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             return new MyViewHolderFoot(activity_comic_look_foot);
         }
         View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_recyclerview_, parent, false);
-
         return new MyViewHolder(rootView);
-
     }
 
 
@@ -122,10 +88,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(final RecyclerView.ViewHolder holderr, final int position) {
         try {
             if (position < size) {
-
                 MyViewHolder holder = (MyViewHolder) holderr;
                 final BaseComicImage baseComicImage = list.get(position);
-
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.item_comic_recyclerview_layout.getLayoutParams();
                int trueHeigth=Math.min(MAXheigth,WIDTH * baseComicImage.height / baseComicImage.width);
                 layoutParams.height = trueHeigth;//默认
@@ -134,14 +98,11 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     public void onClick(View v) {
                         itemOnclick.onClick(position, baseComicImage);
                     }
-                });//
-
+                });
                 MyGlide.getMyGlide(activity, WIDTH, HEIGHT).GlideImage(activity, baseComicImage, holder.recyclerview_img, baseComicImage.width,layoutParams.height);
-
                 holder.item_comic_recyclerview_layout.setLayoutParams(layoutParams);
                 holder.item_comic_recyclerview_danmu.setPosition(position);
                 relativeLayoutsDanmu.add(holder.item_comic_recyclerview_danmu);
-
                 if (IS_OPEN_DANMU(activity)&&holder.item_comic_recyclerview_danmu.getPosition()==position) {
                     holder.item_comic_recyclerview_danmu.removeAllViews();
                     holder.item_comic_recyclerview_danmu.setVisibility(View.VISIBLE);
@@ -195,20 +156,10 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         DanmuRelativeLayout item_comic_recyclerview_danmu;
         @BindView(R2.id.item_comic_recyclerview_layout)
         FrameLayout item_comic_recyclerview_layout;
-       // @BindView(R2.id.item_comic_recyclerview_photoview2)
-      //  LargeImageView item_comic_recyclerview_LargeImageView;
-     /*   @BindView(R2.id.list_ad_view_layout)
-        FrameLayout list_ad_view_layout;
-        @BindView(R2.id.list_ad_view_img)
-        ImageView list_ad_view_img;*/
-
-        // SubsamplingScaleImageView item_comic_recyclerview_SubsamplingScaleImageView;
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
-
     }
 }
 

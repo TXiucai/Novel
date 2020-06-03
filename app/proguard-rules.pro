@@ -222,10 +222,6 @@ public static final int *;
 -dontwarn com.j256.ormlite.**
 -keep class com.j256.ormlite.** { *; }
 
--dontwarn com.nostra13.universalimageloader.**
--keep class com.nostra13.universalimageloader.** { *; }
-
-
 ###如果代码中使用了js与webview的交互,则添加如下配置,否则webview不能点击###
 -keepattributes *Annotation*
 -keepattributes *JavascriptInterface*

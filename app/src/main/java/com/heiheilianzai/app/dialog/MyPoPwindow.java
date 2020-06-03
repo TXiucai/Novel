@@ -21,11 +21,10 @@ import com.heiheilianzai.app.bean.SigninSuccess;
 import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.comic.been.BaseComic;
 import com.heiheilianzai.app.comic.eventbus.RefreshComic;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.eventbus.RefreshBookSelf;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -36,12 +35,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * 首页弹框推荐小说
  * Created by scb on 2018/10/31.
  */
-
 public class MyPoPwindow {
-
-
     public void getSignPop(final Activity activity) {
         try {
             final String result = ShareUitls.getString(activity, "sign_pop", "");
@@ -58,13 +55,11 @@ public class MyPoPwindow {
             }
             int size = signBookList.size();
             View view = LayoutInflater.from(activity).inflate(R.layout.dialog_sign, null);
-
             final PopupWindow popupWindow;
             HolderSign holderSign = new HolderSign(view);
             popupWindow = new PopupWindow(view);
             popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
             popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-
             if (size == 0) {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holderSign.popwindow_sign_layout.getLayoutParams();
                 layoutParams.height = ImageUtil.dp2px(activity, 223);
@@ -78,9 +73,7 @@ public class MyPoPwindow {
             }
             holderSign.popwindow_sign_golds.setText(signinSuccess.getAward());
             holderSign.popwindow_sign_golds_tomorrow.setText(signinSuccess.getTomorrow_award());
-
             if (signBookList != null) {
-
                 if (size == 0) {
                     holderSign.popwindow_sign_book_havebook.setVisibility(View.GONE);
                     holderSign.popwindow_sign_nobook.setVisibility(View.VISIBLE);
@@ -97,29 +90,26 @@ public class MyPoPwindow {
                             holderSign.popwindow_sign_book_layout3.setVisibility(View.GONE);
                             holderSign.popwindow_sign_view2.setVisibility(View.GONE);
                             holderSign.popwindow_sign_view3.setVisibility(View.GONE);
-                            ImageLoader.getInstance().displayImage(signBookList.get(0).cover, holderSign.popwindow_sign_book1, ReaderApplication.getOptions());
+                            MyPicasso.GlideImageNoSize(activity, signBookList.get(0).cover, holderSign.popwindow_sign_book1, R.mipmap.book_def_v);
                             holderSign.popwindow_sign_bookname1.setText(signBookList.get(0).name);
                             break;
                         case 2:
                             holderSign.popwindow_sign_book_layout3.setVisibility(View.GONE);
                             holderSign.popwindow_sign_view3.setVisibility(View.GONE);
-                            ImageLoader.getInstance().displayImage(signBookList.get(0).cover, holderSign.popwindow_sign_book1, ReaderApplication.getOptions());
+                            MyPicasso.GlideImageNoSize(activity, signBookList.get(0).cover, holderSign.popwindow_sign_book1, R.mipmap.book_def_v);
                             holderSign.popwindow_sign_bookname1.setText(signBookList.get(0).name);
-                            ImageLoader.getInstance().displayImage(signBookList.get(1).cover, holderSign.popwindow_sign_book2, ReaderApplication.getOptions());
+                            MyPicasso.GlideImageNoSize(activity, signBookList.get(1).cover, holderSign.popwindow_sign_book2, R.mipmap.book_def_v);
                             holderSign.popwindow_sign_bookname2.setText(signBookList.get(1).name);
-
                             break;
                         case 3:
                         default:
-                            ImageLoader.getInstance().displayImage(signBookList.get(0).cover, holderSign.popwindow_sign_book1, ReaderApplication.getOptions());
+                            MyPicasso.GlideImageNoSize(activity, signBookList.get(0).cover, holderSign.popwindow_sign_book1, R.mipmap.book_def_v);
                             holderSign.popwindow_sign_bookname1.setText(signBookList.get(0).name);
-                            ImageLoader.getInstance().displayImage(signBookList.get(1).cover, holderSign.popwindow_sign_book2, ReaderApplication.getOptions());
+                            MyPicasso.GlideImageNoSize(activity, signBookList.get(1).cover, holderSign.popwindow_sign_book2, R.mipmap.book_def_v);
                             holderSign.popwindow_sign_bookname2.setText(signBookList.get(1).name);
-                            ImageLoader.getInstance().displayImage(signBookList.get(2).cover, holderSign.popwindow_sign_book3, ReaderApplication.getOptions());
+                            MyPicasso.GlideImageNoSize(activity, signBookList.get(2).cover, holderSign.popwindow_sign_book3, R.mipmap.book_def_v);
                             holderSign.popwindow_sign_bookname3.setText(signBookList.get(2).name);
                             break;
-
-
                     }
                     holderSign.popwindow_sign_no.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -164,27 +154,19 @@ public class MyPoPwindow {
                             if (!comics.isEmpty()) {
                                 EventBus.getDefault().post(new RefreshComic(comics));
                             }
-
                             popupWindow.dismiss();
                         }
                     });
-
-
                 }
-
             }
-
-
             popupWindow.setFocusable(true);
             popupWindow.setOutsideTouchable(false);
             popupWindow.setAnimationStyle(R.style.sign_pop_anim);
             popupWindow.showAtLocation(activity.getWindow().getDecorView(), Gravity.CENTER, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         } catch (Exception e) {
-            //    Log.i("RequestParams22--", "签到弹窗异常");
         }
         ShareUitls.putString(activity, "sign_pop", "");
     }
-
 
     class HolderSign {
         @BindView(R2.id.popwindow_sign_golds)
@@ -193,15 +175,12 @@ public class MyPoPwindow {
         public TextView popwindow_sign_golds_tomorrow;
         @BindView(R2.id.popwindow_sign_layout)
         public FrameLayout popwindow_sign_layout;
-
         @BindView(R2.id.popwindow_sign_bookname1)
         public TextView popwindow_sign_bookname1;
         @BindView(R2.id.popwindow_sign_bookname2)
         public TextView popwindow_sign_bookname2;
         @BindView(R2.id.popwindow_sign_bookname3)
         public TextView popwindow_sign_bookname3;
-
-
         @BindView(R2.id.popwindow_sign_book_layout)
         public LinearLayout popwindow_sign_book_layout;
         @BindView(R2.id.popwindow_sign_book_layout1)
@@ -216,16 +195,12 @@ public class MyPoPwindow {
         public View popwindow_sign_view2;
         @BindView(R2.id.popwindow_sign_view3)
         public View popwindow_sign_view3;
-
-
         @BindView(R2.id.popwindow_sign_book1)
         public ImageView popwindow_sign_book1;
         @BindView(R2.id.popwindow_sign_book2)
         public ImageView popwindow_sign_book2;
         @BindView(R2.id.popwindow_sign_book3)
         public ImageView popwindow_sign_book3;
-
-
         @BindView(R2.id.popwindow_sign_no)
         public Button popwindow_sign_no;
         @BindView(R2.id.popwindow_sign_alladd)
@@ -236,8 +211,5 @@ public class MyPoPwindow {
         public HolderSign(View view) {
             ButterKnife.bind(this, view);
         }
-
     }
-
-
 }

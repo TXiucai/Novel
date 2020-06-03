@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -16,32 +15,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.heiheilianzai.app.comic.been.ComicChapter;
-import com.heiheilianzai.app.config.ReaderConfig;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.comic.been.BaseComic;
-import com.heiheilianzai.app.bean.ChapterItem;
-
+import com.heiheilianzai.app.comic.been.ComicChapter;
 import com.heiheilianzai.app.comic.config.ComicConfig;
-import com.heiheilianzai.app.config.ReaderApplication;
-
+import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
-import com.heiheilianzai.app.comic.fragment.ComicshelfFragment;
-import com.heiheilianzai.app.book.fragment.NovelFragmentNew;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
-//.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,27 +41,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- *
+ * 书架编辑漫画
  */
 public class ComicAdapterNew extends BaseAdapter {
-
-
     public ImageView shelfitem_img_first;
     private List<BaseComic> mBookList;
     private Activity mActivity;
     private TextView mDeleteBtn;
     int ListSize = 0;
-    /**
-     * 是否是处于编辑状态，可删除
-     */
-    private boolean mIsDeletable = false;
-
+    private boolean mIsDeletable = false;//是否是处于编辑状态，可删除
     public List<BaseComic> checkedBookList = new ArrayList<>();
     public int WIDTH, HEIGHT;
+    int mPosition;
 
     public ComicAdapterNew(int WIDTH, int HEIGHT, List<BaseComic> mBookList, Activity mActivity) {
         MyToash.Log("ShelfAdapterNew2", WIDTH + "   " + HEIGHT + "  " + mBookList.size());
-
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
         this.mBookList = mBookList;
@@ -80,27 +65,21 @@ public class ComicAdapterNew extends BaseAdapter {
 
     @Override
     public int getCount() {
-
         return ListSize + 1;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         if (position < ListSize) {
             return mBookList.get(position);
         }
         return null;
-
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
-
-    int mPosition;
 
     public void setDeletable(final boolean deletable, TextView btn, int position, final BookshelfFragment.DeleteBook delete) {
         MyToash.Log("refreshBtn q", (mDeleteBtn == null) + "");
@@ -136,8 +115,6 @@ public class ComicAdapterNew extends BaseAdapter {
             }
         });
         notifyDataSetChanged();
-
-
         refreshBtn();
     }
 
@@ -146,9 +123,7 @@ public class ComicAdapterNew extends BaseAdapter {
         if (selectAll) {
             checkedBookList.addAll(mBookList);
         }
-
         refreshBtn();
-
     }
 
     public void refreshBtn() {
@@ -157,7 +132,6 @@ public class ComicAdapterNew extends BaseAdapter {
             return;
         }
         int size = checkedBookList.size();
-
         if (size == 0) {
             mDeleteBtn.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.lightgray2));
             mDeleteBtn.setTextColor(Color.GRAY);
@@ -176,31 +150,22 @@ public class ComicAdapterNew extends BaseAdapter {
 
     @Override
     public View getView(final int position, View contentView, ViewGroup arg2) {
-
-        // TODO Auto-generated method stub
         try {
             ViewHolder viewHolder = null;
             ViewHolder2 viewHolder2 = null;
-
             if (contentView == null) {
                 if (position < ListSize) {
                     contentView = LayoutInflater.from(mActivity).inflate(R.layout.shelfitem, null);
                     viewHolder = new ViewHolder(contentView);
-
-
                     FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) viewHolder.shelfitem_img.getLayoutParams();
                     layoutParams2.width = WIDTH;
                     layoutParams2.height = HEIGHT;
                     viewHolder.shelfitem_img.setLayoutParams(layoutParams2);
-
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewHolder.shelfitem_check_container.getLayoutParams();
                     layoutParams.width = WIDTH;
                     layoutParams.height = HEIGHT;
                     viewHolder.shelfitem_check_container.setLayoutParams(layoutParams);
-
                     contentView.setTag(viewHolder);
-
-
                 } else {
                     contentView = LayoutInflater.from(mActivity).inflate(R.layout.nover_add, null);
                     viewHolder2 = new ViewHolder2(contentView);
@@ -208,7 +173,6 @@ public class ComicAdapterNew extends BaseAdapter {
                     layoutParams.width = WIDTH;
                     layoutParams.height = HEIGHT;
                     viewHolder2.listview_item_nover_add_layout.setLayoutParams(layoutParams);
-
                     contentView.setTag(viewHolder2);
                 }
             } else {
@@ -222,7 +186,6 @@ public class ComicAdapterNew extends BaseAdapter {
                     shelfitem_img_first = viewHolder.shelfitem_img;
                 } else {
                     shelfitem_img_first = viewHolder2.listview_item_nover_add_image;
-
                 }
             }
             if (position < ListSize) {
@@ -241,13 +204,10 @@ public class ComicAdapterNew extends BaseAdapter {
                             if (checkedBookList.contains(BaseComic)) {
                                 checkedBookList.remove(BaseComic);
                             }
-
                         }
                         refreshBtn();
                     }
                 });
-
-
                 viewHolder.shelfitem_title.setText(BaseComic.getName());
                 viewHolder.shelfitem_img.setImageResource(R.mipmap.comic_def_v);
                 if (BaseComic.getRecentChapter() != 0 && (BaseComic.getRecentChapter() != BaseComic.getTotal_chapters())) {
@@ -256,7 +216,7 @@ public class ComicAdapterNew extends BaseAdapter {
                 } else {
                     viewHolder.shelfitem_top_newchapter.setVisibility(View.GONE);
                 }
-                ImageLoader.getInstance().displayImage(BaseComic.getVertical_cover(), viewHolder.shelfitem_img, ReaderApplication.getOptions());
+                MyPicasso.GlideImageNoSize(mActivity, BaseComic.getVertical_cover(), viewHolder.shelfitem_img, R.mipmap.comic_def_v);
                 if (mIsDeletable) {
                     viewHolder.shelfitem_check.setVisibility(View.VISIBLE);
                     viewHolder.shelfitem_check_container.setVisibility(View.VISIBLE);
@@ -272,8 +232,6 @@ public class ComicAdapterNew extends BaseAdapter {
                     } else {
                         viewHolder.shelfitem_check.setChecked(false);
                     }
-
-
                 } else {
                     viewHolder.shelfitem_check.setVisibility(View.GONE);
                     viewHolder.shelfitem_check_container.setVisibility(View.GONE);
@@ -288,21 +246,17 @@ public class ComicAdapterNew extends BaseAdapter {
                     }
                 });
                 if (mIsDeletable) {
-
-
                     viewHolder2.listview_item_nover_add_image.setImageResource(0);
                     viewHolder2.listview_item_nover_add_layout.setBackgroundColor(0);
                 } else {
                     viewHolder2.listview_item_nover_add_image.setImageResource(R.mipmap.icon_addbook);
                     viewHolder2.listview_item_nover_add_layout.setBackgroundColor(-526087);
                 }
-
             }
         } catch (Exception e) {
         }
         return contentView;
     }
-
 
     /**
      * 删除书架书籍
@@ -314,28 +268,19 @@ public class ComicAdapterNew extends BaseAdapter {
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_SHELF_DEL, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        // deleteLocalBook(bookIdArr, deleteBook);
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        //  Toast.makeText(mActivity, " 删除失败", Toast.LENGTH_LONG).show();
-                        //deleteLocalBook(bookIdArr, deleteBook);
-
                     }
                 }
-
         );
-
-
     }
-
 
     public void setDeletable(boolean deletable) {
         checkedBookList.clear();
         mIsDeletable = deletable;
     }
-
 
     public boolean isDeletable() {
         return mIsDeletable;
@@ -371,6 +316,4 @@ public class ComicAdapterNew extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
-
-
 }
