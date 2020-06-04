@@ -4,6 +4,20 @@ package com.heiheilianzai.app.bean;
  * apk更新
  */
 public class AppUpdate {
+    public int update;
+    public String msg;
+    public String url;
+    public SettingBean setting;
+    public Startpage start_page;
+    public String magic_state;
+    public int ad_switch;
+    public Unit_tag unit_tag;
+    public String share_icon;
+    public String share_read_url;
+    public int cipher_api;
+    public int cipher_img;
+    public int  hot_start_time;
+
     public Startpage getStart_page() {
         return start_page;
     }
@@ -44,87 +58,6 @@ public class AppUpdate {
         this.share_read_url = share_read_url;
     }
 
-    public int update;
-    public String msg;
-    public String url;
-    public SettingBean setting;
-    public Startpage start_page;
-    public String magic_state;
-    public int ad_switch;
-    public Unit_tag unit_tag;
-
-    public Unit_tag getUnit_tag() {
-        return unit_tag;
-    }
-
-    public void setUnit_tag(Unit_tag unit_tag) {
-        this.unit_tag = unit_tag;
-    }
-
-    public  class Unit_tag {
-        @Override
-        public String toString() {
-            return "Unit_tag{" +
-                    "currencyUnit='" + currencyUnit + '\'' +
-                    ", subUnit='" + subUnit + '\'' +
-                    '}';
-        }
-
-        private String currencyUnit;
-        private String subUnit;
-
-        public String getCurrencyUnit() {
-            return currencyUnit;
-        }
-
-        public void setCurrencyUnit(String currencyUnit) {
-            this.currencyUnit = currencyUnit;
-        }
-
-        public String getSubUnit() {
-            return subUnit;
-        }
-
-        public void setSubUnit(String subUnit) {
-            this.subUnit = subUnit;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "DataBean{" +
-                "update=" + update +
-                ", msg='" + msg + '\'' +
-                ", url='" + url + '\'' +
-                ", setting=" + setting +
-                ", start_tpage=" + start_page +
-                ", magic_state='" + magic_state + '\'' +
-                ", is_ad=" + ad_switch +
-                ", share_icon='" + share_icon + '\'' +
-                ", share_read_url='" + share_read_url + '\'' +
-                '}';
-    }
-
-    public String share_icon;
-    public String share_read_url;
-
-
-    public  class Startpage {
-
-        public String image;
-        public String content;
-        public int skip_type;
-        public String title;
-
-        @Override
-        public String toString() {
-            return "Startpage{" +
-                    "skip_type=" + skip_type +
-                    ", image='" + image + '\'' +
-                    '}';
-        }
-    }
-
     public int getUpdate() {
         return update;
     }
@@ -157,7 +90,67 @@ public class AppUpdate {
         this.setting = setting;
     }
 
-    public  class SettingBean {
+    public int getCipher_api() {
+        return cipher_api;
+    }
+
+    public void setCipher_api(int cipher_api) {
+        this.cipher_api = cipher_api;
+    }
+
+    public int getCipher_img() {
+        return cipher_img;
+    }
+
+    public void setCipher_img(int cipher_img) {
+        this.cipher_img = cipher_img;
+    }
+
+    public Unit_tag getUnit_tag() {
+        return unit_tag;
+    }
+
+    public void setUnit_tag(Unit_tag unit_tag) {
+        this.unit_tag = unit_tag;
+    }
+
+    public int getHot_start_time() {
+        return hot_start_time;
+    }
+
+    public void setHot_start_time(int hot_start_time) {
+        this.hot_start_time = hot_start_time;
+    }
+
+    public class Unit_tag {
+        private String currencyUnit;
+        private String subUnit;
+
+        public String getCurrencyUnit() {
+            return currencyUnit;
+        }
+
+        public void setCurrencyUnit(String currencyUnit) {
+            this.currencyUnit = currencyUnit;
+        }
+
+        public String getSubUnit() {
+            return subUnit;
+        }
+
+        public void setSubUnit(String subUnit) {
+            this.subUnit = subUnit;
+        }
+    }
+
+    public class Startpage {
+        public String image;
+        public String content;
+        public int skip_type;
+        public String title;
+    }
+
+    public class SettingBean {
         /**
          * "money_unit": "金币" //资产单位：例：书豆、阅读币等
          * "is_ad": 0,     // 去掉广告(1-去掉，0-未去掉)
@@ -165,7 +158,6 @@ public class AppUpdate {
          * <p>
          * money_unit : 金币
          */
-
         private String money_unit;
 
         public String getMoney_unit() {

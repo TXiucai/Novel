@@ -12,7 +12,9 @@ import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.fm.openinstall.OpenInstall;
+import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
+import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.domain.PreparedDomain;
 import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.read.ReadingConfig;
@@ -174,10 +176,13 @@ public class ReaderApplication extends LitePalApplication {
 
     //切换时后台多少秒开启可以开启广告
     public static int getValidBackgroundTime() {
-        return preparedDomain.getInt("valid_background_time", 0);
-    }
-
-    public static void setValidBackgroundTime(int time) {
-        preparedDomain.putInt("valid_background_time", time);
+        String str = ShareUitls.getString(context, "Update", "");
+        if (str.length() > 0) {
+            AppUpdate mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
+            if(mAppUpdate.getHot_start_time()>0){
+                return mAppUpdate.getHot_start_time();
+            }
+        }
+        return -1;
     }
 }

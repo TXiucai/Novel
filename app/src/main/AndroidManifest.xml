@@ -65,9 +65,8 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme"
-        tools:targetApi="p"
         tools:replace="android:allowBackup"
-        >
+        tools:targetApi="p">
 
         <activity
             android:name="com.heiheilianzai.app.activity.SplashActivity"
@@ -78,8 +77,10 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="${APP_KEY_OPEN_INSTALL}" />
             </intent-filter>
         </activity>
@@ -88,73 +89,72 @@
             android:name="com.heiheilianzai.app.activity.BookInfoActivity"
             android:exported="true"
             android:launchMode="standard"
-            android:theme="@style/ColorTranslucentTheme"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/ColorTranslucentTheme" />
 
-        <activity android:name="com.heiheilianzai.app.activity.CatalogActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.CatalogActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.CommentListActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.CommentListActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.AddCommentActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.AddCommentActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.FeedBackActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.FeedBackActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.LoginActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.LoginActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.AboutActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.AboutActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.UserInfoActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.UserInfoActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.BindPhoneActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.BindPhoneActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.CatalogInnerActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.CatalogInnerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.RechargeActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.RechargeActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.AcquireBaoyueActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.AcquireBaoyueActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.ListAddCommentActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.ListAddCommentActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.ReplyCommentActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.ReplyCommentActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.AnnounceActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.AnnounceActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.AboutUsActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.AboutUsActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.TaskCenterActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.TaskCenterActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.heiheilianzai.app.activity.MainActivity"
@@ -163,70 +163,70 @@
             android:theme="@style/ColorTranslucentTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-        <activity android:name="com.heiheilianzai.app.activity.PayActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.PayActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.heiheilianzai.app.activity.SearchActivity"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            />
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="com.heiheilianzai.app.read.ReadActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
-            />
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
-        <activity android:name="com.heiheilianzai.app.comic.activity.ComicLookActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.comic.activity.ComicLookActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.SettingsActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.SettingsActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.FirstStartActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.FirstStartActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.BootPageActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.BootPageActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.WebViewActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.WebViewActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.DayShareActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.DayShareActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.DownMangerActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.DownMangerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.activity.TaskExplainActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.activity.TaskExplainActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.heiheilianzai.app.comic.activity.ComicCommentActivity"
             android:theme="@style/ActivityEntryAnimation"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
-        <activity android:name="com.heiheilianzai.app.comic.activity.ComicinfoMuluActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.comic.activity.ComicinfoMuluActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.heiheilianzai.app.comic.activity.ComicDownActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <activity android:name="com.heiheilianzai.app.activity.BaseOptionActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.comic.activity.ComicDownActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.heiheilianzai.app.activity.AdvertisementActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.heiheilianzai.app.activity.BaseOptionActivity"
+            android:screenOrientation="portrait" />
 
         <!--微信支付-->
         <activity
@@ -267,9 +267,9 @@
             android:process=":channel"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
-        <activity android:name="com.heiheilianzai.app.comic.activity.ComicInfoActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.heiheilianzai.app.comic.activity.ComicInfoActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"

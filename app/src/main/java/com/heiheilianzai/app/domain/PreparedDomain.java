@@ -42,6 +42,13 @@ public class PreparedDomain {
         return sharedPreferences.getLong(key, def);
     }
 
+    public void putInt(String key, int value) {
+        sharedPreferences.edit().putInt(key, value).commit();
+    }
+
+    public int getInt(String key, int def) {
+        return sharedPreferences.getInt(key, def);
+    }
 
     public void setDefaultDomain(String domain) {
         sharedPreferences.edit().putString("defdomain", domain).commit();

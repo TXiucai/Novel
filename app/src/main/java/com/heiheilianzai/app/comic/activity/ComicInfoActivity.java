@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.activity.MainActivity;
+import com.heiheilianzai.app.activity.BaseWarmStartActivity;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.bean.BaseAd;
 import com.heiheilianzai.app.bean.BaseTag;
@@ -85,12 +86,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//.http.RequestParams;
-
 /**
  * 作品详情
  */
-public class ComicInfoActivity extends FragmentActivity {
+public class ComicInfoActivity extends BaseWarmStartActivity {
     @BindView(R2.id.fragment_comicinfo_viewpage)
     public ViewPager fragment_comicinfo_viewpage;
     @BindView(R2.id.activity_comic_info_topbar_downlayout)
@@ -167,6 +166,7 @@ public class ComicInfoActivity extends FragmentActivity {
     ComicinfoCommentFragment comicFragment;
     ComicinfoMuluFragment muluFragment;
     Drawable activity_comic_info_topbarD;
+    boolean refreshComment;
     MuluLorded muluLorded = new MuluLorded() {
         @Override
         public void getReadChapterItem(List<ComicChapter> comicChapter1) {
@@ -204,7 +204,6 @@ public class ComicInfoActivity extends FragmentActivity {
                     MyToash.ToashError(activity, "漫画正在更新中~");
                 }
                 break;
-
             case R.id.titlebar_back:
                 finish();
                 break;
@@ -230,14 +229,12 @@ public class ComicInfoActivity extends FragmentActivity {
                     chooseWho = true;
                 }
                 break;
-
             case R.id.activity_book_info_content_shoucang:
                 if (!baseComic.isAddBookSelf()) {
                     baseComic.saveIsexist(true);
                     activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     EventBus.getDefault().post(new RefreshComic(baseComic, 1));
-
                 } else {
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_delshoucang));
                     activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
@@ -264,7 +261,6 @@ public class ComicInfoActivity extends FragmentActivity {
                 break;
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -340,8 +336,6 @@ public class ComicInfoActivity extends FragmentActivity {
                 }
             }
         });
-
-
         fragment_comicinfo_viewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -436,7 +430,6 @@ public class ComicInfoActivity extends FragmentActivity {
             baseComic.setFlag(comic.flag);
             baseComic.setTotal_chapters(comic.total_chapters);
             muluFragment.senddata(baseComic, comic);
-
         }
         comicFragment.senddata(comic, bookInfoComment, stroreComicLable, baseAd);
     }
@@ -473,8 +466,6 @@ public class ComicInfoActivity extends FragmentActivity {
         }
         httpData2(false);
     }
-
-    boolean refreshComment;
 
     private void httpData2(boolean refreshComment) {
         this.refreshComment = refreshComment;
@@ -521,12 +512,10 @@ public class ComicInfoActivity extends FragmentActivity {
     public void refreshComicChapterList(ComicChapterEventbus comicChapterte) {//更新当前目录集合的 最近阅读图片记录
         ComicChapter comicChaptert = comicChapterte.comicChapter;
         ComicChapter c = comicChapter.get(comicChaptert.display_order);
-
         switch (comicChapterte.Flag) {
             case 0://更新最近阅读章节图片
                 c.current_read_img_order = comicChaptert.current_read_img_order;
                 break;
-
             case 1://更新下载数据
                 c.setISDown(1);
                 c.setImagesText(comicChaptert.ImagesText);

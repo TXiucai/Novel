@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -8,14 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.umeng.analytics.MobclickAgent;
 import com.heiheilianzai.app.bean.FloatImageViewShow;
 import com.heiheilianzai.app.utils.StatusBarUtil;
 
@@ -28,8 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by scb on 2018/5/26.
  */
-public abstract class BaseActivity extends Activity {
-   private boolean flag;//判断是否支持自定义状态栏
+public abstract class BaseActivity extends BaseWarmStartActivity {
     public final int SUCCESS = 0x00;
     public final int FAILURE = 0x01;
     public Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -42,7 +36,6 @@ public abstract class BaseActivity extends Activity {
                 case FAILURE:
                     break;
             }
-
         }
     };
 
@@ -53,7 +46,6 @@ public abstract class BaseActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         setContentView(initContentView());
-
         // 初始化View注入
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
@@ -62,11 +54,10 @@ public abstract class BaseActivity extends Activity {
         initData();
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
-        StatusBarUtil.transparencyBar2(this,R.color.white,true);
+        StatusBarUtil.transparencyBar2(this, R.color.white, true);
     }
 
     public static int getStatusBarHeight(Context context) {
@@ -77,6 +68,7 @@ public abstract class BaseActivity extends Activity {
         }
         return result;
     }
+
     /**
      * 配置布局文件
      *
@@ -108,30 +100,10 @@ public abstract class BaseActivity extends Activity {
         msg.what = SUCCESS;
         msg.obj = result;
         mHandler.sendMessage(msg);
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this); // 基础指标统计，不能遗漏
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this); // 基础指标统计，不能遗漏
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void test(String entity) {
-
     }
 
     protected void uiFreeCharge(View... views) {

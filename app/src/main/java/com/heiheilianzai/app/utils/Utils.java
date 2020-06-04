@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.utils;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -717,5 +718,35 @@ public class Utils {
             return new boolean[]{false, true};
         }
         return new boolean[]{false, false};
+    }
+
+
+    /**
+     * APP是否处于前台唤醒状态
+     * @param context
+     * @return
+     */
+    public static  boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = context.getPackageName();
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * 传入时间和当期时间的时间差
+     * @param time 毫秒级
+     * @return 秒级
+     */
+    public static int getTimeDifference(long time){
+        return (int) ((System.currentTimeMillis()-time)/1000);
     }
 }
