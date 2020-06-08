@@ -3,8 +3,11 @@ package com.heiheilianzai.app.http;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.decode.AESUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,15 +30,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-//import com.squareup.okhttp.Cache;
-//import com.squareup.okhttp.Call;
-//import com.squareup.okhttp.Callback;
-//import com.squareup.okhttp.MediaType;
-//import com.squareup.okhttp.OkHttpClient;
-//import com.squareup.okhttp.Request;
-//import com.squareup.okhttp.RequestBody;
-//import com.squareup.okhttp.Response;
 
 /**
  * Created by Administrator on 2016/4/16.
@@ -69,12 +63,6 @@ public class OkHttpEngine {
     private OkHttpEngine(Context context) {
         mContext = context;
         mGson = new Gson();
-//        mOkHttpClient = new OkHttpClient();
-////        mOkHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
-////        mOkHttpClient.setWriteTimeout(20, TimeUnit.SECONDS);
-////        mOkHttpClient.setReadTimeout(20, TimeUnit.SECONDS);
-//        mOkHttpClient.newBuilder().connectTimeout(15, TimeUnit.SECONDS).writeTimeout(20, TimeUnit.SECONDS).readTimeout(20, TimeUnit.SECONDS);
-
         mBuilder = new OkHttpClient.Builder();
         mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager).hostnameVerifier(new TrustAllHostnameVerifier());
         mOkHttpClient = mBuilder.build();
@@ -120,6 +108,12 @@ public class OkHttpEngine {
      */
     public void postAsyncHttp(String url, String json, ResultCallback callback, boolean keepGoing) {
         if (InternetUtils.internet(mContext)) {
+            if (ReaderConfig.API_CRYPTOGRAPHY.equals(ReaderApplication.getCipherApi())) {
+                ReaderNameValuePair readerNameValuePair = new ReaderNameValuePair();
+                readerNameValuePair.put("c", AESUtil.encrypt(json, AESUtil.API_ASE_KEY, AESUtil.API_IV));
+                json = readerNameValuePair.toJson();
+                MyToash.Log("encryptPost:" + json);
+            }
             final Request request = new Request.Builder()
                     .url(url)
                     .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json))
@@ -158,7 +152,6 @@ public class OkHttpEngine {
                     callback.onError(null, null);
                 }
             }
-
         });
     }
 
@@ -186,12 +179,10 @@ public class OkHttpEngine {
             }
 
             private void sendFailedCallback(final Request request, final Exception e, final ResultCallback callback) {
-//                Utils.hideLoadingDialog();
                 if (callback != null) {
                     callback.onError(request, e);
                 }
             }
-
         });
     }
 
@@ -241,7 +232,6 @@ public class OkHttpEngine {
             return true;
         }
     }
-
 }
 
 

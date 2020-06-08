@@ -6,16 +6,20 @@ import android.content.Intent;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.activity.RechargeActivity;
 import com.heiheilianzai.app.config.RabbitConfig;
+import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.WaitDialog;
 import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.http.OkHttpEngine;
 import com.heiheilianzai.app.http.ResultCallback;
+import com.heiheilianzai.app.utils.decode.AESUtil;
+import com.heiheilianzai.app.BuildConfig;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.jmessage.support.qiniu.android.utils.StringUtils;
 import okhttp3.Request;
 
 /**
@@ -105,9 +109,13 @@ public class HttpUtils {
                                 JSONObject jsonObj = new JSONObject(result);
                                 int code = jsonObj.getInt("code");
                                 String msg = jsonObj.getString("msg");
+                                String capi =  getResultCapi(result);
                                 switch (code) {
                                     case 0:
-                                        responseListener.onResponse(jsonObj.getString("data"));
+                                        if (!RabbitConfig.ONLINE) {
+                                            MyToash.LogJson("http_utils  " + url, ReaderConfig.API_CRYPTOGRAPHY.equals(capi) ? AESUtil.decrypt(jsonObj.getString("data"), AESUtil.API_ASE_KEY ,AESUtil.API_IV) : jsonObj.getString("data"));
+                                        }
+                                        responseListener.onResponse(ReaderConfig.API_CRYPTOGRAPHY.equals(capi) ? AESUtil.decrypt(jsonObj.getString("data"), AESUtil.API_ASE_KEY ,AESUtil.API_IV) : jsonObj.getString("data"));
                                         break;
                                     case 315:
                                         MyToash.ToashSuccess(context, msg);
@@ -192,9 +200,10 @@ public class HttpUtils {
                                 JSONObject jsonObj = new JSONObject(result);
                                 code = jsonObj.getInt("code");
                                 String msg = jsonObj.getString("msg");
+                                String capi =  getResultCapi(result);
                                 switch (code) {
                                     case 0:
-                                        responseListener.onResponse(jsonObj.getString("data"), waitDialog);
+                                        responseListener.onResponse(ReaderConfig.API_CRYPTOGRAPHY.equals(capi) ? AESUtil.decrypt(jsonObj.getString("data"), AESUtil.API_ASE_KEY ,AESUtil.API_IV) : jsonObj.getString("data"), waitDialog);
                                         break;
                                     case 301://登录已过期
                                         if (Utils.isLogin(context)) {
@@ -223,6 +232,7 @@ public class HttpUtils {
                                         break;
                                 }
                             } catch (JSONException j) {
+                            } catch (Exception j) {
                             }
                             if (code != 0) {
                                 if (waitDialog != null) {
@@ -237,6 +247,16 @@ public class HttpUtils {
             MyToash.Log("getCurrentComicChapter", "  sss");
             responseListener.onErrorResponse("nonet");
         }
+    }
+
+    private  String getResultCapi(String result) throws JSONException {
+        String capi=null;
+        JSONObject jsonObj = new JSONObject(result);
+        if(result.contains("capi")){
+            capi = jsonObj.getString("capi");
+        }
+        ReaderApplication.setCipherApi(StringUtils.isNullOrEmpty(capi) ? "0" : capi);
+        return  capi;
     }
 }
 

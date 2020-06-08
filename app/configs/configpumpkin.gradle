@@ -59,4 +59,10 @@ gradle.ext {
     PICTURE_KEY = "\"x\""
     // 图片解密偏移量
     PICTURE_VIPARA = "\"x\""
+    //API解密IV AES
+    API_DECODE_IV = "\"x\""
+    API_DECODE_IV_UAT = "\"x\""
+    //API解密KEY AES
+    API_DECODE_KEY = "\"x\""
+    API_DECODE_KEY_UAT = "\"x\""
 }

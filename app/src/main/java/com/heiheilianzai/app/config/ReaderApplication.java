@@ -126,8 +126,6 @@ public class ReaderApplication extends LitePalApplication {
         return false;
     }
 
-
-
     public static Context getAppContext() {
         return context;
     }
@@ -157,12 +155,12 @@ public class ReaderApplication extends LitePalApplication {
     }
 
     //接口加密
-    public static int getCipherApi() {
-        return preparedDomain.getInt("cipher_api", 0);
+    public static String getCipherApi() {
+        return preparedDomain.getString("cipher_api", "0");
     }
 
-    public static void setCipherApi(int cipher) {
-        preparedDomain.putInt("cipher_api", cipher);
+    public static void setCipherApi(String cipher) {
+        preparedDomain.putString("cipher_api", cipher);
     }
 
     //app切换到后台的时间

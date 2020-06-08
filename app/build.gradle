@@ -38,6 +38,10 @@ android {
         buildConfigField "String", "domain_host_reserve", gradle.ext.DOMAIN_HOSTS_RESERVE
         buildConfigField "String", "picture_key", gradle.ext.PICTURE_KEY
         buildConfigField "String", "picture_vipara", gradle.ext.PICTURE_VIPARA
+        buildConfigField "String", "api_decode_iv_uat", gradle.ext.API_DECODE_IV_UAT
+        buildConfigField "String", "api_decode_key_uat", gradle.ext.API_DECODE_KEY_UAT
+        buildConfigField "String", "api_decode_iv", gradle.ext.API_DECODE_IV
+        buildConfigField "String", "api_decode_key", gradle.ext.API_DECODE_KEY
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -174,6 +178,10 @@ def getAppConfig() {
         buildConfigField "String", "domain_host_reserve", gradle.ext.DOMAIN_HOSTS_RESERVE
         buildConfigField "String", "picture_key", gradle.ext.PICTURE_KEY
         buildConfigField "String", "picture_vipara", gradle.ext.PICTURE_VIPARA
+        buildConfigField "String", "api_decode_iv_uat", gradle.ext.API_DECODE_IV_UAT
+        buildConfigField "String", "api_decode_key_uat", gradle.ext.API_DECODE_KEY_UAT
+        buildConfigField "String", "api_decode_iv", gradle.ext.API_DECODE_IV
+        buildConfigField "String", "api_decode_key", gradle.ext.API_DECODE_KEY
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
     }
 }
@@ -289,6 +297,8 @@ dependencies {
     //rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    //commons-codec
+    implementation 'commons-codec:commons-codec:1.3'
 }
 
 String SDK_DIR = System.getenv("ANDROID_SDK_HOME")

@@ -1,12 +1,12 @@
 package com.heiheilianzai.app.utils.decode;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.MainThread;
-import android.support.annotation.UiThread;
 
 import com.heiheilianzai.app.BuildConfig;
+import com.heiheilianzai.app.config.RabbitConfig;
 import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.utils.MyToash;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,11 +29,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -46,6 +43,11 @@ public class AESUtil {
     private static final String VIPARA = BuildConfig.picture_vipara;//偏移量
     public static final String key = BuildConfig.picture_key;//加密秘钥
     public static final String desFile = ReaderApplication.getAppContext().getFilesDir().getAbsolutePath() + File.separator;
+
+    //API初始向量（偏移）
+    public static final String API_IV = RabbitConfig.ONLINE ? BuildConfig.api_decode_iv : BuildConfig.api_decode_iv_uat;
+    //API私钥（密钥）
+    public static final String API_ASE_KEY = RabbitConfig.ONLINE ? BuildConfig.api_decode_key : BuildConfig.api_decode_key_uat;
 
     /**
      * 初始化 AES Cipher
@@ -317,25 +319,68 @@ public class AESUtil {
     }
 
     @SuppressLint("CheckResult")
-    public static void getDecideFile(File resource, String url, OnFileResourceListener onFileResourceListener){
-        if( !url.substring(url.length() -2,url.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)){//是否使用了加密后缀
-                 onFileResourceListener.onFileResource(resource);
-             }else {
-                 Observable.create((ObservableOnSubscribe<File>) emitter -> emitter.onNext(resource)).map(new Function<File, File>() {
-                     @Override
-                     public File apply(File file) throws Exception {
-                         InputStream inputStream = new FileInputStream(file);
-                         return AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + resource.getName());
-                     }
-                 }).subscribeOn(Schedulers.io())
-                         .observeOn(AndroidSchedulers.mainThread())
-                         .subscribe((Consumer<File>) file -> {
-                             onFileResourceListener.onFileResource(file);
-                         });
-             }
+    public static void getDecideFile(File resource, String url, OnFileResourceListener onFileResourceListener) {
+        if (!url.substring(url.length() - 2, url.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)) {//是否使用了加密后缀
+            onFileResourceListener.onFileResource(resource);
+        } else {
+            Observable.create((ObservableOnSubscribe<File>) emitter -> emitter.onNext(resource)).map(new Function<File, File>() {
+                @Override
+                public File apply(File file) throws Exception {
+                    InputStream inputStream = new FileInputStream(file);
+                    return AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + resource.getName());
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((Consumer<File>) file -> {
+                        onFileResourceListener.onFileResource(file);
+                    });
+        }
     }
 
     public interface OnFileResourceListener {
         void onFileResource(File f);
+    }
+
+    /**
+     * 加密
+     *
+     * @param cleartext 加密前的字符串
+     * @return 加密后的字符串
+     */
+    public static String encrypt(String cleartext, String key, String iv) {
+        try {
+            //加密后的字节数组
+            byte[] encryptedData = getCipher(Cipher.ENCRYPT_MODE, key, iv).doFinal(cleartext.getBytes("UTF-8"));
+            //对加密后的字节数组进行base64编码
+            byte[] base64Data = org.apache.commons.codec.binary.Base64.encodeBase64(encryptedData);
+            //将base64编码后的字节数组转化为字符串并返回
+            return new String(base64Data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    //AES解密
+    public static String decrypt(String content, String key, String iv) {
+        try {
+            byte[] encrypted1 = Base64Utils.decode(content);
+            byte[] original = getCipher(Cipher.DECRYPT_MODE, key, iv).doFinal(encrypted1);
+            String originalString = new String(original);
+            return originalString;
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
+            return null;
+        }
+    }
+
+    public static Cipher getCipher(int mode, String key, String iv) throws Exception {
+        byte[] raw = key.getBytes();
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        byte[] ivs = iv.getBytes();
+        IvParameterSpec ips = new IvParameterSpec(ivs);
+        cipher.init(mode, skeySpec, ips);
+        return cipher;
     }
 }
