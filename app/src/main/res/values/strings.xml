@@ -355,18 +355,19 @@
     <string name="ComicDownActivity_yixiazai">已下载%s话</string>
     <string name="ComicDownActivity_downprocess">下载完成%s</string>
 
-
     <string name="StoreFragment_toman">已切换至男频</string>
     <string name="StoreFragment_towoman">已切换至女频</string>
     <string name="StoreFragment_xianshimianfei">限时免费</string>
 
-    <string name="chapterupdateing">章节正在更新中~</string>
-
     <string name="MineNewFragment_fulitask">福利任务</string>
     <string name="MineNewFragment_fulitaskjiangli">完成任务有奖励</string>
-    <string name="nologin">还没有登录哦~</string>
+    <string name="MineNewFragment_gold_coins">微信客服</string>
+
     <string name="AboutActivity_weixin">微信客服</string>
 
-    <string name="MineNewFragment_gold_coins">微信客服</string>
+    <string name="chapterupdateing">章节正在更新中~</string>
+    <string name="nologin">还没有登录哦~</string>
+    <string name="load_more">加载更多中...</string>
+    <string name="load_over">已加载所有内容！</string>
 </resources>
 

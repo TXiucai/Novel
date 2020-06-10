@@ -33,6 +33,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
+import com.heiheilianzai.app.view.OnRcvScrollListener;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,7 +46,6 @@ import org.litepal.crud.callback.FindMultiCallback;
 import org.litepal.crud.callback.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -83,6 +83,10 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
     boolean orentation;//fasle 滑动方向向下
     int H96;
     Gson gson = new Gson();
+    boolean isLoadingData = false;//是否在加载数据
+    private int mPageNum = 1;//页数
+    private int orderby = 1;//1 正序 2 倒序
+    boolean isLoadOverHintShow = false;//是否显示了数据加载完成
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshMine refreshMine) {
@@ -191,18 +195,18 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
                 if (!shunxu) {
                     fragment_comicinfo_mulu_xu.setText(LanguageUtil.getString(activity, R.string.fragment_comic_info_zhengxu));
                     fragment_comicinfo_mulu_xu_img.setImageResource(R.mipmap.positive_order);
+                    orderby = 1;
                 } else {
                     fragment_comicinfo_mulu_xu.setText(LanguageUtil.getString(activity, R.string.fragment_comic_info_daoxu));
                     fragment_comicinfo_mulu_xu_img.setImageResource(R.mipmap.reverse_order);
+                    orderby = 2;
                 }
-                Collections.reverse(comicChapterCatalogs);
                 comicChapterCatalogAdapter.setShunxu(shunxu);
-                comicChapterCatalogAdapter.notifyDataSetChanged();
+                mPageNum = 1;
+                httpData();
             }
         });
-
-        //添加滑动监听
-        fragment_comicinfo_mulu_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        fragment_comicinfo_mulu_list.addOnScrollListener(new OnRcvScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -221,6 +225,22 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
                         fragment_comicinfo_mulu_zhiding_text.setText(LanguageUtil.getString(activity, R.string.fragment_comic_info_daodi));
                     }
                 }
+            }
+
+            @Override
+            public void onBottom() {
+                MyToash.toashSuccessLoadMore(getContext(), isLoadingData, isLoadOverHintShow, new MyToash.MyToashLoadMoreListener() {
+                    @Override
+                    public void onLoadingData() {
+                        httpData();
+                    }
+
+                    @Override
+                    public void onState(boolean isLoadingData, boolean isLoadOver) {
+                        ComicinfoMuluFragment.this.isLoadingData = isLoadingData;
+                        isLoadOverHintShow = isLoadOver;
+                    }
+                });
             }
         });
     }
@@ -250,21 +270,30 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
     public void httpData() {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("comic_id", comic_id);
+        params.putExtraParams("page", "" + mPageNum);
+        params.putExtraParams("orderby", "" + orderby);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_catalog, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
+                            if (mPageNum == 1) {
+                                comicChapterCatalogs.clear();
+                            }
+                            if (isLoadingData) {
+                                mPageNum += 1;
+                            }
                             JSONObject jsonObject = new JSONObject(result);
                             JsonParser jsonParser = new JsonParser();
                             JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
-                            comicChapterCatalogs.clear();
+
                             for (JsonElement jsonElement : jsonElements) {
                                 ComicChapter comicChapter = gson.fromJson(jsonElement, ComicChapter.class);
                                 comicChapter.comic_id = comic_id;
                                 comicChapterCatalogs.add(comicChapter);
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {
+                                isLoadingData = comicChapterCatalogs.size() == jsonObject.getInt("total_chapter");
                                 comicChapterCatalogAdapter.notifyDataSetChanged();
                             }
                             muluLorded.getReadChapterItem(comicChapterCatalogs);

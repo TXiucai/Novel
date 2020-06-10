@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.activity;
 
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -9,11 +10,13 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.ChapterAdapter;
 import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.bean.ChapterItem;
+import com.heiheilianzai.app.book.been.BaseBook;
+import com.heiheilianzai.app.book.been.BookChapterItemInfo;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.read.manager.ChapterManager;
@@ -21,13 +24,13 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.MyToash;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import cn.jmessage.support.qiniu.android.utils.StringUtils;
 
 /**
  * 作品章节目录
@@ -39,11 +42,18 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
     public LinearLayout mBack;
     public TextView mTitle;
     public String mBookId;
-    public List<ChapterItem> mItemList;
+    public List<ChapterItem> mItemList = new ArrayList<>();
+    public List<BookChapterItemInfo> jsonChapterItemList = new ArrayList<>();//跳入阅读详情需要的章节数据
     public ChapterAdapter mAdapter;
     BaseBook baseBook;
-    private int mDisplayOrder;
-    private String current_chapter_id;
+    private int mDisplayOrder;//位置
+    private String current_chapter_id = "-1";//已选择的章节ID
+    private String mJson;//跳转阅读详情需要传入的数据
+    private int mPageNum = 1;//请求页数
+    private boolean isButtom;//是否滑动触底
+    private boolean isLoadingData = true;//是否正在加载数据
+    private boolean isLoadOverHintShow = false;//是否以显示过完成加载提示
+    private int orderby = 1;// 1正序 2倒序
 
     @Override
     public int initContentView() {
@@ -53,16 +63,61 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
     @Override
     public void initView() {
         mListView = findViewById(R.id.activity_chapter_catalog_listview);
+        mAdapter = new ChapterAdapter(this, mItemList, mItemList.size(), false);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                baseBook.saveIsexist(0);
+                String chapter_id = mItemList.get(position).getChapter_id();
+                ChapterManager.getInstance(CatalogActivity.this).openBook(baseBook, mBookId, chapter_id, mJson);
+                ReaderConfig.integerList.add(1);
+                mAdapter.mDisplayOrder = position;
+                mAdapter.current_chapter_id = chapter_id;
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    if (isButtom) {
+                        MyToash.toashSuccessLoadMore(CatalogActivity.this,isLoadingData, isLoadOverHintShow, new MyToash.MyToashLoadMoreListener() {
+                            @Override
+                            public void onLoadingData() {
+                                getDataCatalogInfo();
+                            }
+
+                            @Override
+                            public void onState(boolean isLoadingData, boolean isLoadOver) {
+                                CatalogActivity.this.isLoadingData = isLoadingData;
+                                isLoadOverHintShow = isLoadOver;
+                            }
+                        });
+
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem + visibleItemCount == totalItemCount) {
+                    isButtom = true;
+                } else {
+                    isButtom = false;
+                }
+            }
+        });
     }
 
     @Override
     public void initData() {
+        initDatA();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        initDatA();
         initTitleBack();
     }
 
@@ -77,59 +132,33 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
             baseBook.setCurrent_chapter_id(current_chapter_id);
         } catch (Exception e) {
         }
-        if (mBookId.contains("/")) {
-            List<ChapterItem> chapterList = LitePal.where("book_id = ?", mBookId).find(ChapterItem.class);
-            if (!chapterList.isEmpty()) {
-                mItemList = chapterList;
-                try {
-                    initTitleBarView(mItemList.get(0).getBook_name());
-                } catch (Exception e) {
-                }
-                mAdapter = new ChapterAdapter(this, mItemList, mItemList.size());
-                mAdapter.current_chapter_id = current_chapter_id;
-                mAdapter.mDisplayOrder = mDisplayOrder;
-                mListView.setAdapter(mAdapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        baseBook.saveIsexist(1);
-                        String book_id = mItemList.get(position).getBook_id();
-                        ChapterManager.getInstance(CatalogActivity.this).openBook(baseBook, book_id, mItemList.get(position).getChapter_id());
-                        ReaderConfig.integerList.add(1);
-                    }
-                });
-                if (mDisplayOrder < mItemList.size()) {
-                    mListView.setSelection(mDisplayOrder);
-                }
-                return;
+        if ("-1".equals(current_chapter_id)) {
+            if (mItemList.size() > 0) {
+                mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
             }
+        } else {
+            mAdapter.current_chapter_id = current_chapter_id;
         }
-        ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("book_id", mBookId);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterCatalogUrl, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-                        initInfo(result);
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
+        mAdapter.mDisplayOrder = mDisplayOrder;
+        getDataCatalogInfo();
     }
 
     @Override
     public void initInfo(final String json) {
         super.initInfo(json);
         Gson gson = new Gson();
-        mItemList = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray chapterListArr = jsonObject.getJSONArray("chapter_list");
             initTitleBarView(jsonObject.getString("name"));
             int size = chapterListArr.length();
+            if (mPageNum == 1) {
+                mItemList.clear();
+                jsonChapterItemList.clear();
+            }
+            if (isLoadingData) {
+                mPageNum += 1;
+            }
             for (int i = 0; i < size; i++) {
                 JSONObject jsonObject1 = chapterListArr.getJSONObject(i);
                 ChapterItem chapterItem1 = new ChapterItem();
@@ -139,25 +168,23 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 mItemList.add(chapterItem1);
+                jsonChapterItemList.add(gson.fromJson(jsonObject1.toString(), new TypeToken<BookChapterItemInfo>() {}.getType()));
             }
+            isLoadingData = mItemList.size() == jsonObject.getInt("total_chapter");
+            String listdString = chapterListArr.toString();
+            mJson = jsonObject.toString().replace(listdString, gson.toJson(jsonChapterItemList));
             if (!mItemList.isEmpty()) {
-                mAdapter = new ChapterAdapter(this, mItemList, mItemList.size());
-                mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
-                mAdapter.mDisplayOrder = 0;
-                mListView.setAdapter(mAdapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        baseBook.saveIsexist(0);
-                        ChapterManager.getInstance(CatalogActivity.this).openBook(baseBook, mBookId, mItemList.get(position).getChapter_id(), json);
-                        ReaderConfig.integerList.add(1);
+                if ("-1".equals(current_chapter_id) || StringUtils.isNullOrEmpty(current_chapter_id)) {
+                    mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
+                }
+                mAdapter.notifyDataSetChanged();
+                if (mPageNum == 2) {
+                    if (mDisplayOrder < mItemList.size()) {
+                        mListView.setSelection(mDisplayOrder);
                     }
-                });
-                if (mDisplayOrder < mItemList.size()) {
-                    mListView.setSelection(mDisplayOrder);
                 }
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             MyToash.ToashError(getBaseContext(), getString(R.string.load_fail));
             MyToash.LogE("CatalogActivity", e.getMessage());
         }
@@ -174,12 +201,13 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     buttonView.setBackgroundResource(R.mipmap.asc);
-                    Collections.reverse(mItemList);
+                    orderby = 2;
                 } else {
                     buttonView.setBackgroundResource(R.mipmap.dsc);
-                    Collections.reverse(mItemList);
+                    orderby = 1;
                 }
-                mAdapter.notifyDataSetChanged();
+                mPageNum = 1;
+                getDataCatalogInfo();
             }
         });
         mTitle.setText(text);
@@ -194,5 +222,24 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
                 finish();
             }
         });
+    }
+
+    void getDataCatalogInfo() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("book_id", mBookId);
+        params.putExtraParams("page", "" + mPageNum);
+        params.putExtraParams("orderby", "" + orderby);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterCatalogUrl, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        initInfo(result);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 }

@@ -26,6 +26,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 漫画详情目录列表Adapter
+ */
 public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapterCatalogAdapter.ViewHolder> {
     Activity activity;
     public List<ComicChapter> comicChapterCatalogList;
@@ -48,13 +51,14 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
         width = ImageUtil.dp2px(activity, 133);
         height = ImageUtil.dp2px(activity, 80);
         this.H96 = H96;
-        if (size > 0) {
-            if (currentChapterId != null) {
-                this.currentChapterId = currentChapterId;
-            } else {
+        if (currentChapterId != null) {
+            this.currentChapterId = currentChapterId;
+        } else {
+            if (size > 0) {
                 this.currentChapterId = comicChapterCatalogList.get(0).chapter_id;
             }
         }
+
     }
 
     @NonNull

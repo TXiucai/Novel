@@ -9,16 +9,15 @@ import java.util.List;
 
 /**
  * 书城多个gridview的adapter基类
- *
  * @param <T>
  */
 public abstract class ReaderBaseAdapter<T> extends BaseAdapter {
-
     public Context mContext;
     public List<T> mList;
     private int mCount;
     private boolean mClose = true;
     int size;
+
     public ReaderBaseAdapter(Context context, List<T> list, int count) {
         mContext = context;
         mList = list;
@@ -36,8 +35,7 @@ public abstract class ReaderBaseAdapter<T> extends BaseAdapter {
 
     @Override
     public void notifyDataSetChanged() {
-
-        size = mList.size();;
+        size = mList.size();
         super.notifyDataSetChanged();
 
     }
@@ -49,7 +47,6 @@ public abstract class ReaderBaseAdapter<T> extends BaseAdapter {
         } else {
             return size;
         }
-
     }
 
     @Override
@@ -68,5 +65,4 @@ public abstract class ReaderBaseAdapter<T> extends BaseAdapter {
     }
 
     public abstract View getOwnView(int position, View convertView, ViewGroup parent);
-
 }
