@@ -323,17 +323,23 @@ public class AESUtil {
         if (!url.substring(url.length() - 2, url.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)) {//是否使用了加密后缀
             onFileResourceListener.onFileResource(resource);
         } else {
-            Observable.create((ObservableOnSubscribe<File>) emitter -> emitter.onNext(resource)).map(new Function<File, File>() {
-                @Override
-                public File apply(File file) throws Exception {
-                    InputStream inputStream = new FileInputStream(file);
-                    return AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + resource.getName());
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe((Consumer<File>) file -> {
-                        onFileResourceListener.onFileResource(file);
-                    });
+            try {
+                Observable.create((ObservableOnSubscribe<File>) emitter -> emitter.onNext(resource)).map(new Function<File, File>() {
+                    @Override
+                    public File apply(File file) throws Exception {
+                        InputStream inputStream = new FileInputStream(file);
+                        return AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + resource.getName());
+                    }
+                }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe((Consumer<File>) file -> {
+                            onFileResourceListener.onFileResource(file);
+                        });
+            }catch (Error e){
+                MyToash.LogE("DecideFile",e.toString());
+            }catch (Exception e){
+                MyToash.LogE("DecideFile",e.toString());
+            }
         }
     }
 
