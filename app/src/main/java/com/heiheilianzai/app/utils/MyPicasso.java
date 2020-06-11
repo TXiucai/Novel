@@ -37,6 +37,7 @@ public class MyPicasso {
         if (url == null || url.length() == 0) {
             return;
         } else {
+            imageView.setImageResource(def);
             RequestOptions options = new RequestOptions()
                     .placeholder(def)    //加载成功之前占位图
                     .error(def)    //加载错误之后的错误图
@@ -71,6 +72,7 @@ public class MyPicasso {
         if (url == null || url.length() == 0) {
             return;
         } else {
+            imageView.setImageResource(def);
             RequestOptions options = new RequestOptions()
                     .placeholder(def)    //加载成功之前占位图
                     .error(def)    //加载错误之后的错误图
@@ -108,6 +110,7 @@ public class MyPicasso {
         if (url == null || url.length() == 0) {
             return;
         } else {
+            imageView.setImageResource(def);
             RequestOptions options = new RequestOptions()
                     .error(def)    //加载错误之后的错误图
                     .override(width, height)
@@ -143,6 +146,7 @@ public class MyPicasso {
         if (url == null || url.length() == 0) {
             return;
         } else {
+            imageView.setImageResource(def);
             RequestOptions options = new RequestOptions()
                     .placeholder(def)    //加载成功之前占位图
                     .error(def)    //加载错误之后的错误图
