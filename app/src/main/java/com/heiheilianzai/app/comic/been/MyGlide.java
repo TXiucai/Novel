@@ -19,6 +19,7 @@ import com.heiheilianzai.app.Task.TaskManager;
 import com.heiheilianzai.app.comic.view.LargeImageView;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.decode.AESUtil;
 
 import java.io.File;
@@ -157,6 +158,10 @@ public class MyGlide {
                             .centerCrop()//
                             .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
                     try {
+                        if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
+                            Glide.with(activity).load(url).apply(options).into(imageView);
+                            return;
+                        }
                         Glide.with(activity).asFile().load(url)
                                 .into(new SimpleTarget<File>() {
                                     @Override
@@ -202,6 +207,10 @@ public class MyGlide {
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE);    //缓存所有版本的图像
             try {
+                if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
+                    Glide.with(activity).load(url).apply(options).into(imageView);
+                    return;
+                }
                 Glide.with(activity).asFile().load(url)
                         .into(new SimpleTarget<File>() {
                             @Override

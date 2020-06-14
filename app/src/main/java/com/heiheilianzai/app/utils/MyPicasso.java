@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.utils.decode.AESUtil;
 
 import java.io.File;
@@ -43,6 +44,10 @@ public class MyPicasso {
                     .error(def)    //加载错误之后的错误图
                     .skipMemoryCache(true)        //
                     .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
+            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
+                Glide.with(activity).load(url).apply(options).into(imageView);
+                return;
+            }
             Glide.with(activity).asFile().load(url)
                     .into(new SimpleTarget<File>() {
                         @Override
@@ -81,6 +86,10 @@ public class MyPicasso {
                     .centerCrop()
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
+            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
+                Glide.with(activity).load(url).apply(options).into(imageView);
+                return;
+            }
             Glide.with(activity).asFile().load(url)
                     .into(new SimpleTarget<File>() {
                         @Override
@@ -117,6 +126,10 @@ public class MyPicasso {
                     .skipMemoryCache(false)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)        //缓存所有版本的图像
                     .transforms(new CenterCrop(), new RoundedCornersTransformation(ImageUtil.dp2px(activity, radius), 0));
+            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
+                Glide.with(activity).load(url).apply(options).into(imageView);
+                return;
+            }
             Glide.with(activity).asFile().load(url)
                     .into(new SimpleTarget<File>() {
                         @Override
@@ -155,6 +168,10 @@ public class MyPicasso {
                     .transform(new BlurTransformation())
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
+            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
+                Glide.with(activity).load(url).apply(options).into(imageView);
+                return;
+            }
             Glide.with(activity).asFile().load(url)
                     .into(new SimpleTarget<File>() {
                         @Override
