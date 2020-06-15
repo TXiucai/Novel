@@ -1,5 +1,8 @@
 package com.heiheilianzai.app.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DateUtils {
     public static String secToTime(int time) {
         String timeStr = null;
@@ -30,5 +33,26 @@ public class DateUtils {
         else
             retStr = "" + i;
         return retStr;
+    }
+
+    /**
+     * 获取添加后缀的当前时间
+     *
+     * @param flavour 自定义后缀
+     * @return
+     */
+    public static String getFlavourTodayTime(String flavour) {
+        return new StringBuffer().append(getTodayTime()).append(flavour).toString();
+    }
+
+    /**
+     * 获取当天时间
+     *
+     * @return
+     */
+    public static String getTodayTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis());
+        return simpleDateFormat.format(date);
     }
 }

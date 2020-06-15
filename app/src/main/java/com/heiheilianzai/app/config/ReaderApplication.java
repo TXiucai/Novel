@@ -172,12 +172,30 @@ public class ReaderApplication extends LitePalApplication {
         preparedDomain.putLong("background_time", time);
     }
 
+    public static void putDailyStartPageMax(int mix) {
+        preparedDomain.putInt("daily_max_start_page", mix);
+    }
+
+    public static int getDailyStartPageMax() {
+        return preparedDomain.getInt("daily_max_start_page", 0);
+    }
+
+    //记录当天广告热启动次数
+    public static void putDailyStartPage() {
+        PreparedDomain.putDailyStartPage(preparedDomain);
+    }
+
+    //获取当天广告热启动次数
+    public static int getDailyStartPage() {
+       return  PreparedDomain.getDailyStartPage(preparedDomain);
+    }
+
     //切换时后台多少秒开启可以开启广告
     public static int getValidBackgroundTime() {
         String str = ShareUitls.getString(context, "Update", "");
         if (str.length() > 0) {
             AppUpdate mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
-            if(mAppUpdate.getHot_start_time()>0){
+            if (mAppUpdate.getHot_start_time() > 0) {
                 return mAppUpdate.getHot_start_time();
             }
         }

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.heiheilianzai.app.config.RabbitConfig;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.MyToash;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import cn.jmessage.support.qiniu.android.utils.StringUtils;
 
 public class PreparedDomain {
 
@@ -108,5 +111,35 @@ public class PreparedDomain {
             }
         }
         return values;
+    }
+
+    /**
+     * 储存每天广告启动次数
+     * @param preparedDomain
+     */
+    public static void putDailyStartPage(PreparedDomain preparedDomain) {
+        int nowStartPage=0;
+        String todayTime = DateUtils.getFlavourTodayTime("StartPage");
+        String time = preparedDomain.getString("start_page_time", "");
+        if (StringUtils.isNullOrEmpty(time)) {
+            time = todayTime;
+            preparedDomain.putString("start_page_time", time);
+        }
+        if (todayTime.equals(time)){
+            nowStartPage = getDailyStartPage(preparedDomain)+1;
+            preparedDomain.putInt(time, nowStartPage);
+        }else {
+            preparedDomain.sharedPreferences.edit().remove(time);
+            preparedDomain.putInt(time, nowStartPage);
+        }
+    }
+
+    /**
+     * 获取广告每天启动次数
+     * @param preparedDomain
+     * @return
+     */
+    public  static int getDailyStartPage(PreparedDomain preparedDomain){
+       return preparedDomain.getInt(DateUtils.getFlavourTodayTime("StartPage"),0);
     }
 }

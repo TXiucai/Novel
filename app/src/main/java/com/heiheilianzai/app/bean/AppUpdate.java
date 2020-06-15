@@ -1,7 +1,7 @@
 package com.heiheilianzai.app.bean;
 
 /**
- * apk更新
+ * apk更新及系统参数
  */
 public class AppUpdate {
     public int update;
@@ -16,7 +16,16 @@ public class AppUpdate {
     public String share_read_url;
     public int cipher_api;
     public int cipher_img;
-    public int  hot_start_time;
+    public int hot_start_time;
+    public int daily_max_start_page;
+
+    public int getDaily_max_start_page() {
+        return daily_max_start_page;
+    }
+
+    public void setDaily_max_start_page(int daily_max_start_page) {
+        this.daily_max_start_page = daily_max_start_page;
+    }
 
     public Startpage getStart_page() {
         return start_page;

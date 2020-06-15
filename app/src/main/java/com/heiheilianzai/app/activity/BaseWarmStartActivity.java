@@ -21,8 +21,10 @@ public class BaseWarmStartActivity extends FragmentActivity {
         MobclickAgent.onResume(this); // 基础指标统计，不能遗漏
         if (!isActive && ReaderApplication.getValidBackgroundTime() > 0) {
             if (Utils.getTimeDifference(ReaderApplication.getBackgroundTime()) >= ReaderApplication.getValidBackgroundTime()) {
-                startActivity(new Intent(this, AdvertisementActivity.class));
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                if (ReaderApplication.getDailyStartPageMax() == 0 || ReaderApplication.getDailyStartPage() <= ReaderApplication.getDailyStartPageMax()) {
+                    startActivity(new Intent(this, AdvertisementActivity.class));
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
             }
             ReaderApplication.setBackgroundTime(0);
         }

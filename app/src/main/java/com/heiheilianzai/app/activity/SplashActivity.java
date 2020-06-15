@@ -156,7 +156,7 @@ public class SplashActivity extends Activity {
                     into = true;
                     if (InternetUtils.internett(activity) && isfirst.equals("yes")) {
                         startActivity(new Intent(activity, FirstStartActivity.class));
-                    } else{
+                    } else {
                         startActivity(new Intent(activity, MainActivity.class));
                     }
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -178,7 +178,7 @@ public class SplashActivity extends Activity {
             @Override
             public void Next(String response) {
                 try {
-                    if (response.length() != 0) {//
+                    if (response.length() != 0) {
                         AppUpdate dataBean = new Gson().fromJson(response, AppUpdate.class);
                         if (dataBean.getUnit_tag() != null) {
                             ReaderConfig.currencyUnit = dataBean.getUnit_tag().getCurrencyUnit();
@@ -188,46 +188,23 @@ public class SplashActivity extends Activity {
                             ReaderConfig.ad_switch = dataBean.ad_switch;
                             ReaderConfig.USE_AD = dataBean.ad_switch == 1;
                         }
+                        ReaderApplication.putDailyStartPageMax(dataBean.daily_max_start_page);
                         if (!isfirst.equals("yes")) {
                             startpage = dataBean.start_page;
                             if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
-                                activity_splash_im.setAlpha(0f);
-                                activity_splash_im.setVisibility(View.VISIBLE);
-                                MyPicasso.GlideImageNoSize(activity, startpage.image, activity_splash_im);
-                                activity_splash_im.animate()
-                                        .alpha(1f)
-                                        .setDuration(600)
-                                        .setListener(new AnimatorListenerAdapter() {
-                                            @Override
-                                            public void onAnimationEnd(Animator animation) {
-                                                activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                                                activity_home_viewpager_sex_next.setClickable(false);
-                                                handler.sendEmptyMessageDelayed(1, 0);
-                                            }
-                                        });
-                                activity_splash_im.setOnClickListener(new View.OnClickListener() {
+                                AdvertisementActivity.setAdImageView(activity_splash_im, startpage, activity, new AdvertisementActivity.OnAdImageListener() {
                                     @Override
-                                    public void onClick(View view) {
+                                    public void onAnimationEnd() {
+                                        activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                                        handler.sendEmptyMessageDelayed(1, 0);
+                                    }
+                                    @Override
+                                    public void onClick() {
                                         skip = false;
                                         if (!skip) {
                                             handler.removeMessages(1);
                                             handler.removeMessages(0);
-                                            if (startpage.skip_type == 1) {
-                                                startActivity(new Intent(activity, BookInfoActivity.class).putExtra("book_id", startpage.content));
-                                            } else if (startpage.skip_type == 2) {
-                                                startActivity(new Intent(activity, AboutActivity.class)
-                                                        .putExtra("title", startpage.title)
-                                                        .putExtra("url", startpage.content)
-                                                        .putExtra("flag", "splash"));
-                                            } else if (startpage.skip_type == 3) {
-                                                startActivity(new Intent(activity, ComicInfoActivity.class).putExtra("comic_id", startpage.content));
-                                            } else {
-                                                startActivity(new Intent(activity, AboutActivity.class)
-                                                        .putExtra("url", startpage.content)
-                                                        .putExtra("flag", "splash")
-                                                        .putExtra("style", "4")
-                                                );
-                                            }
+                                            AdvertisementActivity.adSkip(startpage, activity);
                                         }
                                     }
                                 });
