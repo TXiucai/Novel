@@ -52,19 +52,42 @@ public class UpdateApp {
     }
 
     public void getRequestData(final UpdateAppInterface updateAppInterface) {
+        getRequestData(updateAppInterface, false);
+    }
+
+    /**
+     * 请求 系统版本更新及初始化参数。（是否使用缓存，并更新缓存）
+     *
+     * @param updateAppInterface
+     * @param useCache           true 有缓存时使用缓存  false不是使用缓存
+     */
+    public void getRequestData(final UpdateAppInterface updateAppInterface, boolean useCache) {
+        String responseCache;
+        if (useCache) {
+            responseCache = ShareUitls.getString(activity, "Update", "");
+            if (!StringUtils.isEmpty(responseCache)) {
+                updateAppInterface.Next(responseCache);
+            }
+        } else {
+            responseCache = "";
+        }
         ReaderParams readerParams = new ReaderParams(activity);
         String json = readerParams.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mAppUpdateUrl, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         ShareUitls.putString(activity, "Update", response);
-                        updateAppInterface.Next(response);
+                        if (!useCache || StringUtils.isEmpty(responseCache)) {
+                            updateAppInterface.Next(response);
+                        }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
                         String response = ShareUitls.getString(activity, "Update", "");
-                        updateAppInterface.Next(response);
+                        if (!useCache || StringUtils.isEmpty(responseCache)) {
+                            updateAppInterface.Next(response);
+                        }
                     }
                 }
         );
