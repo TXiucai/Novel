@@ -44,6 +44,7 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.ObservableScrollView;
@@ -62,40 +63,22 @@ import static com.heiheilianzai.app.config.ReaderConfig.BAOYUE;
 import static com.heiheilianzai.app.config.ReaderConfig.LOOKMORE;
 import static com.heiheilianzai.app.config.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.config.ReaderConfig.PAIHANGINSEX;
+import static com.heiheilianzai.app.config.ReaderConfig.REFRESH_HEIGHT;
 import static com.heiheilianzai.app.config.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.config.ReaderConfig.WANBEN;
 
 
 /**
+ * 首页漫画
  * Created by scb on 2018/6/9.
  */
-
-
 public class StoreComicFragment extends BaseButterKnifeFragment {
-
-    @Override
-    public int initContentView() {
-        return R.layout.fragment_comic_store;
-    }
-
     public RelativeLayout fragment_newbookself_top;
     public static boolean postAsyncHttpEngine_ing;//正在刷新数据
     LayoutInflater layoutInflater;
     public int WIDTH, WIDTHH, WIDTH_MAIN_AD, HEIGHT, H55, H30;
     int currentSex = 1;
     StroeNewFragmentComic.Hot_word hot_word;
-
-    @SuppressLint("ValidFragment")
-    public StoreComicFragment(RelativeLayout fragment_newbookself_top, StroeNewFragmentComic.Hot_word hot_word) {
-        this.fragment_newbookself_top = fragment_newbookself_top;
-
-        this.hot_word = hot_word;
-    }
-
-    public StoreComicFragment() {
-
-    }
-
     Gson gson = new Gson();
     /**
      * 最外层布局
@@ -107,8 +90,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
      */
     @BindView(R2.id.store_banner_male)
     public ConvenientBanner<BannerItemStore> mStoreBannerMale;
-    //   @BindView(R2.id.store_banner_line)
-    // public ImageView store_banner_line;
 
     /**
      * 男频banner下方的gridview
@@ -123,13 +104,25 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
     @BindView(R2.id.refreshLayoutMale)
     PullToRefreshLayout malePullLayout;
 
+    @Override
+    public int initContentView() {
+        return R.layout.fragment_comic_store;
+    }
+
+    @SuppressLint("ValidFragment")
+    public StoreComicFragment(RelativeLayout fragment_newbookself_top, StroeNewFragmentComic.Hot_word hot_word) {
+        this.fragment_newbookself_top = fragment_newbookself_top;
+        this.hot_word = hot_word;
+    }
+
+    public StoreComicFragment() {
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //  EventBus.getDefault().register(this);
         initViews();
-        postAsyncHttpEngine(currentSex);
+        getData(null);
     }
 
     public void initViews() {
@@ -145,78 +138,40 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
         layoutParams.leftMargin = dp10;
         layoutParams.rightMargin = dp10;
         mContainerMale.setLayoutParams(layoutParams);
-
         HEIGHT = ScreenSizeUtils.getInstance(activity).getScreenHeight();
         malePullLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-                String StoreBoo = (currentSex == 1) ? "StoreComicMan" : "StoreComicWoMan";
-                MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_stock, StoreBoo, new MainHttpTask.GetHttpData() {
-                    @Override
-                    public void getHttpData(String result) {
-                        if (result != null) {
-                            initInfo(result);
-                        }
-
-                        if (pullToRefreshLayout != null) {
-                            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                        }
-                    }
-                });
+                getData(pullToRefreshLayout);
             }
 
             @Override
             public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-
             }
         });
-
-        //男频下拉监听,改变channelbar的整体透明度
+        //下拉监听,改变 头部搜索整体透明度
         malePullLayout.setOnPullListener(new PullToRefreshLayout.OnPullListener() {
             @Override
             public void onPulling(float y) {
-/*                float ratio = Math.min(Math.max(y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
-                fragment_newbookself_top.setAlpha(1 - ratio);*/
+                try {
+               float ratio = Math.min(Math.max(y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
+                fragment_newbookself_top.setAlpha(1 - ratio);
+                } catch (Exception e) {
+                }
             }
-
         });
-
         mScrollViewMale.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
             public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
                 EventBus.getDefault().post(new StoreEventbus(true, y));
             }
         });
-
-
-    }
-
-
-    public void postAsyncHttpEngine(int flag) {
-        if (flag == 1) {
-            MainHttpTask.getInstance().getResultString(activity, "StoreComicMan", new MainHttpTask.GetHttpData() {
-                @Override
-                public void getHttpData(String result) {
-                    initInfo(result);
-                }
-            });
-        } else {
-            MainHttpTask.getInstance().getResultString(activity, "StoreComicWoMan", new MainHttpTask.GetHttpData() {
-                @Override
-                public void getHttpData(String result) {
-                    initInfo(result);
-                }
-            });
-        }
     }
 
     public void initInfo(String json) {
         initEntranceGrid();
         try {
             JSONObject jsonObject = new JSONObject(json);
-
-            //1.初始化男频banner控件数据
-            ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 5000, 1);
             initWaterfall(jsonObject.getString("label"));
             if (hot_word != null) {
                 hot_word.hot_word(gson.fromJson(jsonObject.getString("hot_word"), String[].class));
@@ -229,33 +184,24 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
         }
     }
 
-
-    /**
-     *
-     */
     public void initEntranceGrid() {
         List<EntranceItem> mEntranceItemListMale = new ArrayList<>();
         if (ReaderConfig.USE_PAY) {
             EntranceItem entranceItem1 = new EntranceItem();
             entranceItem1.setName(LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
             entranceItem1.setResId(R.mipmap.comic_classification);
-
             EntranceItem entranceItem2 = new EntranceItem();
             entranceItem2.setName(LanguageUtil.getString(activity, R.string.storeFragment_paihang));
             entranceItem2.setResId(R.mipmap.comic_ranking);
-
             EntranceItem entranceItem3 = new EntranceItem();
             entranceItem3.setName(LanguageUtil.getString(activity, R.string.storeFragment_baoyue));
             entranceItem3.setResId(R.mipmap.comic_member);
-
             EntranceItem entranceItem4 = new EntranceItem();
             entranceItem4.setName(LanguageUtil.getString(activity, R.string.storeFragment_wanben));
             entranceItem4.setResId(R.mipmap.comic_finished);
-
             EntranceItem entranceItem5 = new EntranceItem();
             entranceItem5.setName(LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
             entranceItem5.setResId(R.mipmap.comic_limitfree);
-
             mEntranceItemListMale.add(entranceItem5);
             mEntranceItemListMale.add(entranceItem4);
             mEntranceItemListMale.add(entranceItem1);
@@ -269,14 +215,10 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
             EntranceItem entranceItem5 = new EntranceItem();
             entranceItem5.setName(LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
             entranceItem5.setResId(R.mipmap.comic_limitfree);
-
             mEntranceItemListMale.add(entranceItem5);
-
-
             EntranceItem entranceItem1 = new EntranceItem();
             entranceItem1.setName(LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
             entranceItem1.setResId(R.mipmap.entrance1);
-
             EntranceItem entranceItem2 = new EntranceItem();
             entranceItem2.setName(LanguageUtil.getString(activity, R.string.storeFragment_paihang));
             entranceItem2.setResId(R.mipmap.entrance2);
@@ -290,14 +232,11 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
         }
         ReaderBaseAdapter entranceAdapter = new EntranceAdapter(activity, mEntranceItemListMale, mEntranceItemListMale.size());
         mEntranceGridMale.setAdapter(entranceAdapter);
-
         mEntranceGridMale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
                 intent.putExtra("PRODUCT", false);
-
-
                 if (!ReaderConfig.USE_PAY) {
                     if (position == 0) {
                         intent.putExtra("OPTION", MIANFEI);
@@ -333,7 +272,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                         intent.putExtra("title", LanguageUtil.getString(activity, R.string.BaoyueActivity_title));
                     }
                 }
-
                 startActivity(intent);
             }
         });
@@ -354,10 +292,7 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                 layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
                 layoutParams.height = layoutParams.width / 3;
                 list_ad_view_img.setLayoutParams(layoutParams);
-
                 MyPicasso.GlideImageNoSize(activity, stroreComicLable.ad_image, list_ad_view_img);
-
-
                 list_ad_view_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -367,7 +302,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                         intent.putExtra("title", stroreComicLable.ad_title);
                         intent.putExtra("advert_id", stroreComicLable.advert_id);
                         intent.putExtra("ad_url_type", stroreComicLable.ad_url_type);
-
                         activity.startActivity(intent);
                     }
                 });
@@ -377,11 +311,8 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                 mContainerMale.addView(list_ad_view, params);
                 continue;
             }
-
             List<StroreComicLable.Comic> comicList = stroreComicLable.list;
-
             LinearLayout type1 = (LinearLayout) layoutInflater.inflate(R.layout.fragment_store_comic_layout, null, false);
-
             TextView lable = type1.findViewById(R.id.fragment_store_gridview1_text);
             lable.setText(stroreComicLable.label);
             LinearLayout fragment_store_gridview1_more = type1.findViewById(R.id.fragment_store_gridview1_more);
@@ -390,9 +321,7 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
             View fragment_store_gridview1_view2 = type1.findViewById(R.id.fragment_store_gridview1_view2);
             View fragment_store_gridview1_view3 = type1.findViewById(R.id.fragment_store_gridview1_view3);
             AdaptionGridViewNoMargin fragment_store_gridview1_gridview = type1.findViewById(R.id.fragment_store_gridview1_gridview);
-
             AdaptionGridViewNoMargin liem_store_comic_style1_style3 = type1.findViewById(R.id.liem_store_comic_style1_style3);
-
             if (stroreComicLable.can_refresh.equals("true")) {
                 fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -419,7 +348,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
 
                     }
                 });
-
             } else {
                 fragment_store_gridview1_more.setVisibility(View.GONE);
             }
@@ -427,7 +355,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                 fragment_store_gridview1_gridview.setVisibility(View.GONE);
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
             int ItemHeigth = setItemData(stroreComicLable.style, comicList, fragment_store_gridview1_gridview, liem_store_comic_style1_style3);
             if (comicList.isEmpty()) {
                 ItemHeigth = 0;
@@ -439,27 +366,19 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                     params.height += H55 + WIDTH * 5 / 9;
                 }
             }
-            //params.setMargins(0, 20, 0, 0);
-
             if (!stroreComicLable.can_more.equals("true") && !stroreComicLable.can_refresh.equals("true")) {
                 params.height -= H55;
             } else if (!(stroreComicLable.can_more.equals("true") && stroreComicLable.can_refresh.equals("true"))) {
                 buttomonlyOne(fragment_store_gridview1_view1, fragment_store_gridview1_view2, fragment_store_gridview1_view3);
             }
-
             mContainerMale.addView(type1, params);
-
         }
-
     }
 
-
     private int setItemData(int style, List<StroreComicLable.Comic> comicList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
-
         fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Intent intent = new Intent(activity, ComicInfoActivity.class);
                 if (style != 3) {
                     intent.putExtra("comic_id", comicList.get(position).comic_id);
@@ -469,19 +388,16 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                 activity.startActivity(intent);
             }
         });
-
         int width, height = 80, raw = 2;
         StoreComicAdapter storeComicAdapter = null;
         switch (style) {
             case 1:
-
                 width = WIDTH / 2;
                 height = width * 2 / 3;
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size1 = Math.min(4, comicList.size());
                 raw = (int) (Math.ceil(size1 / 2d));
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size1), activity, style, width, height);
-                // params.height = height * raw + height1 * raw + height1;
                 break;
             case 2:
                 double size = Math.min(6, comicList.size());
@@ -490,7 +406,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                 height = width * 4 / 3;
                 fragment_store_gridview1_gridview.setNumColumns(3);
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size), activity, style, width, height);
-                //  params.height = height * raw + height1 * raw + height1;
                 break;
             case 3:
                 if (!comicList.isEmpty()) {
@@ -512,27 +427,17 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                     storeComicAdapter = new StoreComicAdapter(comicList.subList(1, Math.min(4, comicList.size())), activity, 2, width, height);
                 }
                 break;
-
-
         }
-
-
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_gridview.getLayoutParams();
         fragment_store_gridview1_gridview.setAdapter(storeComicAdapter);
-
         layoutParams.height = (height + H55) * raw;
-
-
         layoutParams.height = (height + H55) * raw;
         fragment_store_gridview1_gridview.setLayoutParams(layoutParams);
-
-
         return layoutParams.height;
     }
 
     private void buttomonlyOne(View fragment_store_gridview1_view1, View fragment_store_gridview1_view2, View fragment_store_gridview1_view3) {
         fragment_store_gridview1_view2.setVisibility(View.GONE);
-
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_view1.getLayoutParams();
         layoutParams.width = H30;
         fragment_store_gridview1_view1.setLayoutParams(layoutParams);
@@ -542,7 +447,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
     }
 
     public void postHuanyihuan(String recommend_id, int style, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin type1) {
-
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id + "");
         String json = params.generateParamsJson();
@@ -556,8 +460,6 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        // List<StroreComicLable.Comic> comicList = (gson.fromJson(result, Huanyihuan.class)).list;
                         if (comicList != null && !comicList.isEmpty()) {
                             setItemData(style, comicList, fragment_store_gridview1_gridview, type1);
                         }
@@ -565,12 +467,41 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
+    }
 
+    private void getData(PullToRefreshLayout pullToRefreshLayout) {
+        getBannerData();
+        getStockData(pullToRefreshLayout);
+    }
 
+    /**
+     * 获取头部Banner数据
+     */
+    private void getBannerData() {
+        MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_STORE_BANNER, "StoreComicMan", new MainHttpTask.GetHttpData() {
+            @Override
+            public void getHttpData(String result) {
+                if (!StringUtils.isEmpty(result)) {
+                    ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, 1);
+                }
+            }
+        });
+    }
+
+    private void getStockData(PullToRefreshLayout pullToRefreshLayout) {
+        MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_stock, "StoreComicMan", new MainHttpTask.GetHttpData() {
+            @Override
+            public void getHttpData(String result) {
+                if (result != null) {
+                    initInfo(result);
+                }
+                if (pullToRefreshLayout != null) {
+                    pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                }
+            }
+        });
     }
 }

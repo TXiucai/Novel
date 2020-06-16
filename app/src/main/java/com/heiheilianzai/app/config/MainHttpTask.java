@@ -2,12 +2,9 @@ package com.heiheilianzai.app.config;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Path;
-import android.widget.Switch;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.Task.TaskManager;
 import com.heiheilianzai.app.activity.LoginActivity;
 import com.heiheilianzai.app.bean.UserInfoItem;
 import com.heiheilianzai.app.book.config.BookConfig;
@@ -27,19 +24,12 @@ import static com.heiheilianzai.app.config.ReaderConfig.XIAOSHUO;
 //主界面接口数据缓存
 public class MainHttpTask {
 
-    //   private static TaskManager taskManager;
-
     private MainHttpTask() {
     }
 
-    ;
-    private static MainHttpTask mainHttpTask;
-
+    private static final MainHttpTask mainHttpTask = new MainHttpTask();
 
     public static MainHttpTask getInstance() {
-        if (mainHttpTask == null) {
-            mainHttpTask = new MainHttpTask();
-        }
         return mainHttpTask;
     }
 
@@ -57,7 +47,6 @@ public class MainHttpTask {
 
     private String Mine;
 
-
     public void InitHttpData(Activity activity) {
         if (GETPRODUCT_TYPE(activity) != MANHAU) {
             httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mBookStoreUrl, "StoreBookMan", null);
@@ -74,28 +63,33 @@ public class MainHttpTask {
         if (Utils.isLogin(activity)) {
             httpSend(activity, ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, "Mine", null);
         }
-
     }
 
     public interface GetHttpData {
         void getHttpData(String result);
     }
 
+    /**
+     * 根据不同参数 对涉及到小说和漫画的 请求 url body参数封装
+     * 现在服务器只返回男频小说漫画，不排除以后要加的可能 未删除女频相关代码
+     *
+     * @param activity
+     * @param url
+     * @param Option      小说漫画 男频 女频
+     * @param getHttpData
+     */
     public void httpSend(Activity activity, String url, String Option, GetHttpData getHttpData) {
         ReaderParams params = new ReaderParams(activity);//StoreBookWoMan
-        if (Option.equals("StoreBookMan") || Option.equals("StoreComicMan")) {
+        if (Option.equals("StoreBookMan") || Option.equals("StoreComicMan")) {//小说漫画男频
             params.putExtraParams("channel_id", "1");
-        } else if (Option.equals("StoreBookWoMan") || Option.equals("StoreComicWoMan")) {
+        } else if (Option.equals("StoreBookWoMan") || Option.equals("StoreComicWoMan")) {//小说漫画女频
             params.putExtraParams("channel_id", "2");
         }
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
-
-
                             switch (Option) {
                                 case "ShelfBook":
                                     ShelfBook = result;
@@ -257,7 +251,6 @@ public class MainHttpTask {
         } catch (Exception e) {
         } catch (Error e) {
         }
-
     }
 
     public boolean Gotologin(Activity activity) {

@@ -115,6 +115,11 @@ public class ReaderConfig {
 
     public static final String mBookStoreUrl = "/book/store";
 
+    /**
+     * 首页小说 banner
+     */
+    public static final String BOOK_STORE_BANNER = "/book/index-banner";
+
     public static final String privacy = "/site/privacy";
     /**
      * 作品详情url
