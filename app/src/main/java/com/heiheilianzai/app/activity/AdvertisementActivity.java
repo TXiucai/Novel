@@ -22,15 +22,12 @@ import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
 import com.heiheilianzai.app.config.ReaderApplication;
-import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.UpdateApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.heiheilianzai.app.config.ReaderConfig.USE_AD_FINAL;
 
 /**
  * 热启动广告
@@ -58,16 +55,17 @@ public class AdvertisementActivity extends Activity {
         ButterKnife.bind(this);
         activity = AdvertisementActivity.this;
         updateApp = new UpdateApp(AdvertisementActivity.this);
-        activity_home_viewpager_sex_next.setClickable(false);
         next();
         activity_home_viewpager_sex_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                skip = true;
-                handler.sendEmptyMessageDelayed(0, 0);
+                if (getString(R.string.splashactivity_skip).equals(activity_home_viewpager_sex_next.getText().toString())) {
+                    skip = true;
+                    handler.sendEmptyMessageDelayed(0, 0);
+                }
             }
         });
-        if(ReaderApplication.getDailyStartPageMax() < 0){//后台设置了每天最多广告开启广告次数
+        if (ReaderApplication.getDailyStartPageMax() > 0) {//后台设置了每天最多广告开启广告次数
             ReaderApplication.putDailyStartPage();//记录每天广告开启次数
         }
     }
@@ -86,7 +84,6 @@ public class AdvertisementActivity extends Activity {
             } else {
                 if (time == 0) {
                     activity_home_viewpager_sex_next.setText(LanguageUtil.getString(getApplicationContext(), R.string.splashactivity_skip));
-                    activity_home_viewpager_sex_next.setClickable(true);
                 } else {
                     activity_home_viewpager_sex_next.setText(LanguageUtil.getString(getApplicationContext(), R.string.splashactivity_surplus) + " " + (time--) + " ");
                     handler.sendEmptyMessageDelayed(1, 1000);
@@ -137,6 +134,7 @@ public class AdvertisementActivity extends Activity {
 
     /**
      * 广告图片加载
+     *
      * @param imageView
      * @param startpage
      * @param activity
@@ -165,6 +163,7 @@ public class AdvertisementActivity extends Activity {
 
     /**
      * 广告根据参数进行跳转
+     *
      * @param startpage
      * @param context
      */

@@ -2,8 +2,6 @@ package com.heiheilianzai.app.activity;
 
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -31,7 +29,6 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
-import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
@@ -40,7 +37,6 @@ import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.umeng.analytics.MobclickAgent;
@@ -66,7 +62,6 @@ public class SplashActivity extends Activity {
     public TextView activity_home_viewpager_sex_next;
     AppUpdate.Startpage startpage;
     boolean skip = false;
-    String splashactivity_skip;
     int time = 5;
     boolean into;
 
@@ -87,16 +82,17 @@ public class SplashActivity extends Activity {
         ButterKnife.bind(this);
         OpenInstall.getWakeUp(getIntent(), getmWakeUpAdapter());
         initOpenInstall();
+        activity = SplashActivity.this;
+        updateApp = new UpdateApp(activity);
         activity_home_viewpager_sex_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                skip = true;
-                handler.sendEmptyMessageDelayed(0, 0);
+                if (getString(R.string.splashactivity_skip).equals(activity_home_viewpager_sex_next.getText().toString())) {//只有跳过才跳转，其他状态点击无响应（不跳广告）
+                    skip = true;
+                    handler.sendEmptyMessageDelayed(0, 0);
+                }
             }
         });
-        activity = SplashActivity.this;
-        splashactivity_skip = LanguageUtil.getString(activity, R.string.splashactivity_skip);
-        updateApp = new UpdateApp(activity);
         //首次启动 flag
         isfirst = ShareUitls.getString(activity, "isfirst", "yes");
         if (isfirst.equals("yes")) {//首次使用删除文件
@@ -163,8 +159,7 @@ public class SplashActivity extends Activity {
                 }
             } else {
                 if (time == 0) {
-                    activity_home_viewpager_sex_next.setText(splashactivity_skip);
-                    activity_home_viewpager_sex_next.setClickable(true);
+                    activity_home_viewpager_sex_next.setText(getString(R.string.splashactivity_skip));
                 } else {
                     activity_home_viewpager_sex_next.setText(LanguageUtil.getString(activity, R.string.splashactivity_surplus) + " " + (time--) + " ");
                     handler.sendEmptyMessageDelayed(1, 1000);
@@ -190,24 +185,32 @@ public class SplashActivity extends Activity {
                         }
                         ReaderApplication.putDailyStartPageMax(dataBean.daily_max_start_page);
                         if (!isfirst.equals("yes")) {
-                            startpage = dataBean.start_page;
-                            if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
-                                AdvertisementActivity.setAdImageView(activity_splash_im, startpage, activity, new AdvertisementActivity.OnAdImageListener() {
-                                    @Override
-                                    public void onAnimationEnd() {
-                                        activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                                        handler.sendEmptyMessageDelayed(1, 0);
-                                    }
-                                    @Override
-                                    public void onClick() {
-                                        skip = false;
-                                        if (!skip) {
-                                            handler.removeMessages(1);
-                                            handler.removeMessages(0);
-                                            AdvertisementActivity.adSkip(startpage, activity);
+                            if (ReaderApplication.getDailyStartPageMax() == 0 || ReaderApplication.getDailyStartPage() < ReaderApplication.getDailyStartPageMax()) {//是否超过后台设置的每天启动次数
+                                startpage = dataBean.start_page;
+                                if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
+                                    AdvertisementActivity.setAdImageView(activity_splash_im, startpage, activity, new AdvertisementActivity.OnAdImageListener() {
+                                        @Override
+                                        public void onAnimationEnd() {
+                                            activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                                            handler.sendEmptyMessageDelayed(1, 0);
+                                            if (ReaderApplication.getDailyStartPageMax() > 0) {//后台设置了每天最多广告开启广告次数
+                                                ReaderApplication.putDailyStartPage();//记录每天广告开启次数
+                                            }
                                         }
-                                    }
-                                });
+
+                                        @Override
+                                        public void onClick() {
+                                            skip = false;
+                                            if (!skip) {
+                                                handler.removeMessages(1);
+                                                handler.removeMessages(0);
+                                                AdvertisementActivity.adSkip(startpage, activity);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    handler.sendEmptyMessageDelayed(0, 500);
+                                }
                             } else {
                                 handler.sendEmptyMessageDelayed(0, 500);
                             }
