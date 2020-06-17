@@ -36,6 +36,7 @@ import com.heiheilianzai.app.book.been.StoreEventbusBook;
 import com.heiheilianzai.app.book.been.StroreBookcLable;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.eventbus.BuyLoginSuccess;
 import com.heiheilianzai.app.fragment.BaseButterKnifeFragment;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -50,6 +51,8 @@ import com.heiheilianzai.app.view.ObservableScrollView;
 import com.heiheilianzai.app.view.PullToRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -123,6 +126,7 @@ public class StoreBookFragment extends BaseButterKnifeFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         WIDTHH = WIDTH;
         WIDTH_MAIN_AD = WIDTH - ImageUtil.dp2px(activity, 24);
@@ -509,5 +513,10 @@ public class StoreBookFragment extends BaseButterKnifeFragment {
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshComicChapterList(BuyLoginSuccess buyLoginSuccess) {
+        getBannerData();
     }
 }

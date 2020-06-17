@@ -36,6 +36,7 @@ import com.heiheilianzai.app.comic.config.ComicConfig;
 import com.heiheilianzai.app.comic.eventbus.StoreEventbus;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.eventbus.BuyLoginSuccess;
 import com.heiheilianzai.app.fragment.BaseButterKnifeFragment;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -51,6 +52,8 @@ import com.heiheilianzai.app.view.ObservableScrollView;
 import com.heiheilianzai.app.view.PullToRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -121,6 +124,7 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         initViews();
         getData(null);
     }
@@ -154,8 +158,8 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
             @Override
             public void onPulling(float y) {
                 try {
-               float ratio = Math.min(Math.max(y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
-                fragment_newbookself_top.setAlpha(1 - ratio);
+                    float ratio = Math.min(Math.max(y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
+                    fragment_newbookself_top.setAlpha(1 - ratio);
                 } catch (Exception e) {
                 }
             }
@@ -503,5 +507,10 @@ public class StoreComicFragment extends BaseButterKnifeFragment {
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshComicChapterList(BuyLoginSuccess buyLoginSuccess) {//
+        getBannerData();
     }
 }
