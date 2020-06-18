@@ -398,7 +398,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             if(mAppUpdate.getUpdate() == 1 || mAppUpdate.getUpdate() == 2){
                 popupWindow = new UpdateApp().getAppUpdatePop(SettingsActivity.this, mAppUpdate);
             }else {
-                MyToash.ToashSuccess(getApplicationContext(),getString(R.string.SettingsActivity_version_now));
+                MyToash.ToashSuccess(this,getString(R.string.SettingsActivity_version_now));
             }
         }
     }

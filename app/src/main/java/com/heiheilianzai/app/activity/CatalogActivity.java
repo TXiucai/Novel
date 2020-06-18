@@ -10,13 +10,11 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.ChapterAdapter;
 import com.heiheilianzai.app.bean.BaseTag;
 import com.heiheilianzai.app.bean.ChapterItem;
 import com.heiheilianzai.app.book.been.BaseBook;
-import com.heiheilianzai.app.book.been.BookChapterItemInfo;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.read.manager.ChapterManager;
@@ -28,6 +26,7 @@ import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cn.jmessage.support.qiniu.android.utils.StringUtils;
@@ -43,7 +42,6 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
     public TextView mTitle;
     public String mBookId;
     public List<ChapterItem> mItemList = new ArrayList<>();
-    public List<BookChapterItemInfo> jsonChapterItemList = new ArrayList<>();//跳入阅读详情需要的章节数据
     public ChapterAdapter mAdapter;
     BaseBook baseBook;
     private int mDisplayOrder;//位置
@@ -82,7 +80,7 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                     if (isButtom) {
-                        MyToash.toashSuccessLoadMore(CatalogActivity.this,isLoadingData, isLoadOverHintShow, new MyToash.MyToashLoadMoreListener() {
+                        MyToash.toashSuccessLoadMore(CatalogActivity.this, isLoadingData, isLoadOverHintShow, new MyToash.MyToashLoadMoreListener() {
                             @Override
                             public void onLoadingData() {
                                 getDataCatalogInfo();
@@ -154,7 +152,6 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
             int size = chapterListArr.length();
             if (mPageNum == 1) {
                 mItemList.clear();
-                jsonChapterItemList.clear();
             }
             if (isLoadingData) {
                 mPageNum += 1;
@@ -168,11 +165,8 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 mItemList.add(chapterItem1);
-                jsonChapterItemList.add(gson.fromJson(jsonObject1.toString(), new TypeToken<BookChapterItemInfo>() {}.getType()));
             }
-            isLoadingData = mItemList.size() == jsonObject.getInt("total_chapter");
-            String listdString = chapterListArr.toString();
-            mJson = jsonObject.toString().replace(listdString, gson.toJson(jsonChapterItemList));
+            mJson = json;
             if (!mItemList.isEmpty()) {
                 if ("-1".equals(current_chapter_id) || StringUtils.isNullOrEmpty(current_chapter_id)) {
                     mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
@@ -201,13 +195,12 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     buttonView.setBackgroundResource(R.mipmap.asc);
-                    orderby = 2;
+                    Collections.reverse(mItemList);
                 } else {
                     buttonView.setBackgroundResource(R.mipmap.dsc);
-                    orderby = 1;
+                    Collections.reverse(mItemList);
                 }
-                mPageNum = 1;
-                getDataCatalogInfo();
+                mAdapter.notifyDataSetChanged();
             }
         });
         mTitle.setText(text);
@@ -227,8 +220,6 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
     void getDataCatalogInfo() {
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("book_id", mBookId);
-        params.putExtraParams("page", "" + mPageNum);
-        params.putExtraParams("orderby", "" + orderby);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterCatalogUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override

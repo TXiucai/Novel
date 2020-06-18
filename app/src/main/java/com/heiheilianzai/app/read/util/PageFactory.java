@@ -323,7 +323,7 @@ public class PageFactory {
             if (mPageEvent != null) {
                 mPageEvent.changeProgress(fPercent);
             }
-            float myfPercent = (float) ((mBookUtil.getBookLen() * (chapterItem.getDisplay_order()) + currentPage.getBegin()) * 1.0 / (mBookUtil.getBookLen() * ChapterManager.getInstance(mActivity).mChapterList.size()));//进度
+            float myfPercent = (float) ((mBookUtil.getBookLen() * (chapterItem.getDisplay_order()) + currentPage.getEnd()) * 1.0 / (mBookUtil.getBookLen() * ChapterManager.getInstance(mActivity).mChapterList.size()));//进度
             // 画白分例
             String strPercent = df.format(myfPercent * 100);//进度文字
             c.drawText(strPercent + "%", mWidth - PercentWidth, mHeight - statusMarginBottom, mBatteryPaint);//x y为坐标值

@@ -257,7 +257,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 EventBus.getDefault().post(new RefreashComicInfoActivity(true));
                 break;
             case R.id.activity_comiclook_dingbu:
-                activity_comiclook_RecyclerView.smoothScrollToPosition(0);
+                activity_comiclook_RecyclerView.scrollToPosition(0);
                 break;
             case R.id.activity_comiclook_danmu_layout:
                 if (IS_OPEN_DANMU(activity)) {
