@@ -234,6 +234,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     baseComic.saveIsexist(true);
                     activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+                    addSelfCollect();
                     EventBus.getDefault().post(new RefreshComic(baseComic, 1));
                 } else {
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_delshoucang));
@@ -503,6 +504,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         if (refreshBookInfo.isSave) {
             baseComic.setAddBookSelf(true);
             activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            addSelfCollect();
         } else {
             httpData2(true);
         }
@@ -543,6 +545,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         if (!baseComic.isAddBookSelf() && baseComic1.isAddBookSelf()) {
             baseComic.setAddBookSelf(true);
             activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            addSelfCollect();
         }
     }
 
@@ -556,5 +559,11 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void addSelfCollect() {
+        ContentValues values = new ContentValues();
+        values.put("isAddBookSelf", baseComic.isAddBookSelf());
+        LitePal.update(BaseComic.class, values, baseComic.getId());
     }
 }

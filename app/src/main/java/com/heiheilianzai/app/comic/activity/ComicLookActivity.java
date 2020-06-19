@@ -118,7 +118,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @BindView(R2.id.activity_comiclook_danmu_layout)
     public LinearLayout activity_comiclook_danmu_layout;
     @BindView(R2.id.fragment_comicinfo_mulu_dangqian_layout)
-    public RelativeLayout fragment_comicinfo_mulu_dangqian_layout;
+    public View fragment_comicinfo_mulu_dangqian_layout;
     @BindView(R2.id.activity_comiclook_danmu_img)
     public ImageView activity_comiclook_danmu_img;
     @BindView(R2.id.activity_comiclook_danmu_text)
