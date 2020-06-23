@@ -187,8 +187,12 @@ public class AdvertisementActivity extends Activity {
         }
     }
 
-    public static void setReaderConfig() {
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (time != 5) {
+            next();
+        }
     }
 
     public interface OnAdImageListener {
