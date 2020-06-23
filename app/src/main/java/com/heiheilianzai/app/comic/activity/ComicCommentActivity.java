@@ -158,6 +158,9 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                                 @Override
                                 public void handleMessage(Message msg) {
                                     super.handleMessage(msg);
+                                    Intent intent = new Intent();
+                                    intent.putExtra("total_count", total_count);
+                                    setResult(112, intent);
                                     finish();
                                 }
                             }.sendEmptyMessageDelayed(0, 1500);
