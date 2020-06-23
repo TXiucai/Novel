@@ -39,33 +39,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = new RequestOptions()
-                    .placeholder(def)    //加载成功之前占位图
-                    .error(def)    //加载错误之后的错误图
-                    .skipMemoryCache(true)        //
-                    .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
-            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
-                Glide.with(activity).load(url).apply(options).into(imageView);
-                return;
-            }
-            Glide.with(activity).asFile().load(url)
-                    .into(new SimpleTarget<File>() {
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            Glide.with(activity).load("").apply(options).into(imageView);
-                        }
-
-                        @Override
-                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                            AESUtil.getDecideFile(resource, url, new AESUtil.OnFileResourceListener() {
-                                @Override
-                                public void onFileResource(File f) {
-                                    Glide.with(activity).load(f).apply(options).into(imageView);
-                                }
-                            });
-                        }
-                    });
+            Glide.with(activity).load(url).apply(getRequestOptions(def)).into(imageView);
         }
     }
 
@@ -78,36 +52,8 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = new RequestOptions()
-                    .placeholder(def)    //加载成功之前占位图
-                    .error(def)    //加载错误之后的错误图
-                    //指定图片的尺寸
-                    .override(width, height)
-                    .centerCrop()
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
-            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
-                Glide.with(activity).load(url).apply(options).into(imageView);
-                return;
-            }
-            Glide.with(activity).asFile().load(url)
-                    .into(new SimpleTarget<File>() {
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            Glide.with(activity).load("").apply(options).into(imageView);
-                        }
-
-                        @Override
-                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                            AESUtil.getDecideFile(resource, url, new AESUtil.OnFileResourceListener() {
-                                @Override
-                                public void onFileResource(File f) {
-                                    Glide.with(activity).load(f).apply(options).into(imageView);
-                                }
-                            });
-                        }
-                    });
+            RequestOptions options = getRequestOptions(width, height, def, true, false);
+            Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
 
@@ -120,34 +66,8 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = new RequestOptions()
-                    .error(def)    //加载错误之后的错误图
-                    .override(width, height)
-                    .skipMemoryCache(false)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)        //缓存所有版本的图像
-                    .transforms(new CenterCrop(), new RoundedCornersTransformation(ImageUtil.dp2px(activity, radius), 0));
-            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
-                Glide.with(activity).load(url).apply(options).into(imageView);
-                return;
-            }
-            Glide.with(activity).asFile().load(url)
-                    .into(new SimpleTarget<File>() {
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            Glide.with(activity).load("").apply(options).into(imageView);
-                        }
-
-                        @Override
-                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                            AESUtil.getDecideFile(resource, url, new AESUtil.OnFileResourceListener() {
-                                @Override
-                                public void onFileResource(File f) {
-                                    Glide.with(activity).load(f).apply(options).into(imageView);
-                                }
-                            });
-                        }
-                    });
+            RequestOptions options = getRequestOptions(width, height, def, radius, activity);
+            Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
 
@@ -160,37 +80,41 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = new RequestOptions()
-                    .placeholder(def)    //加载成功之前占位图
-                    .error(def)    //加载错误之后的错误图
-                    .override(width, height) //指定图片的尺寸
-                    .centerCrop()
-                    .transform(new BlurTransformation())
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL);
-            if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
-                Glide.with(activity).load(url).apply(options).into(imageView);
-                return;
-            }
-            Glide.with(activity).asFile().load(url)
-                    .into(new SimpleTarget<File>() {
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            Glide.with(activity).load("").apply(options).into(imageView);
-                        }
-
-                        @Override
-                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                            AESUtil.getDecideFile(resource, url, new AESUtil.OnFileResourceListener() {
-                                @Override
-                                public void onFileResource(File f) {
-                                    Glide.with(activity).load(f).apply(options).into(imageView);
-                                }
-                            });
-                        }
-                    });
+            RequestOptions options = getRequestOptions(width, height, def, true, true);
+            Glide.with(activity).load(url).apply(options).into(imageView);
         }
+    }
+
+    public static RequestOptions getRequestOptions(int def) {
+        return getRequestOptions(0, 0, def, 0, null, false, false);
+    }
+
+    public static RequestOptions getRequestOptions(int width, int height, int def, boolean centerCrop, boolean transform) {
+        return getRequestOptions(width, height, def, 0, null, centerCrop, transform);
+    }
+
+    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity) {
+        return getRequestOptions(width, height, def, radius, activity, false, false);
+    }
+
+    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean centerCrop, boolean transform) {
+        RequestOptions options = new RequestOptions()
+                .placeholder(def)    //加载成功之前占位图
+                .error(def)    //加载错误之后的错误图
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        if (width > 0 && height > 0) {
+            options = options.override(width, height);
+        }
+        if (radius > 0 && activity != null) {
+            options = options.transforms(new CenterCrop(), new RoundedCornersTransformation(ImageUtil.dp2px(activity, radius), 0));
+        }
+        if (centerCrop) {
+            options = options.centerCrop();
+        }
+        if (transform) {
+            options = options.transform(new BlurTransformation());
+        }
+        return options;
     }
 }
 

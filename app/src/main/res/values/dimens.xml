@@ -137,5 +137,5 @@
     <dimen name="dimens_265dp">265dp</dimen>
     <dimen name="dimens_300dp">300dp</dimen>
     <dimen name="dimens_302dp">302dp</dimen>
-    <dimen name="dimens_17dp">17dp</dimen>
+    <dimen name="dimens_minus_30dp">-30dp</dimen>
 </resources>

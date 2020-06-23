@@ -357,12 +357,14 @@
         android:layout_height="match_parent"
         android:visibility="visible">
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/activity_comiclook_lording_img"
             android:layout_width="@dimen/dimens_120dp"
             android:layout_height="@dimen/dimens_120dp"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/dimens_ne_150dp"
-            android:scaleType="centerCrop" />
+            android:translationX="@dimen/dimens_minus_30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bianfu"
+            />
     </RelativeLayout>
 </FrameLayout>

@@ -1,26 +1,18 @@
 package com.heiheilianzai.app.comic.been;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.Task.InstructTask;
 import com.heiheilianzai.app.Task.TaskManager;
 import com.heiheilianzai.app.comic.view.LargeImageView;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.StringUtils;
-import com.heiheilianzai.app.utils.decode.AESUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,7 +76,6 @@ public class MyGlide {
                 } catch (Error e) {
                 }
             } else {
-
                 localPathFile.mkdirs();
                 MyToash.Log("baseComicIBB", localPathFile.getAbsolutePath());
                 if (mTaskManager == null) {
@@ -114,8 +105,6 @@ public class MyGlide {
                         } catch (Exception e) {
                         } catch (Error e) {
                         }
-
-
                         return null;
                     }
                 });
@@ -129,7 +118,6 @@ public class MyGlide {
         try {
             MyToash.Log("baseComicImagea", baseComicImage.toString());
             File localPathFile = FileManager.getManhuaSDCardRootImg(baseComicImage);
-
             if (localPathFile != null) {
                 MyToash.Log("baseComicImage--", localPathFile.getAbsolutePath());
                 RequestOptions options = new RequestOptions()
@@ -144,7 +132,6 @@ public class MyGlide {
                     Glide.with(activity).load(localPathFile).apply(options).into(imageView);
                 } catch (Exception e) {
                 }
-
             } else {
                 String url = baseComicImage.image;
                 if (url == null || url.length() == 0) {
@@ -158,28 +145,7 @@ public class MyGlide {
                             .centerCrop()//
                             .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
                     try {
-                        if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
-                            Glide.with(activity).load(url).apply(options).into(imageView);
-                            return;
-                        }
-                        Glide.with(activity).asFile().load(url)
-                                .into(new SimpleTarget<File>() {
-                                    @Override
-                                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                        super.onLoadFailed(errorDrawable);
-                                        Glide.with(activity).load("").apply(options).into(imageView);
-                                    }
-
-                                    @Override
-                                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                                        AESUtil.getDecideFile(resource, url, new AESUtil.OnFileResourceListener() {
-                                            @Override
-                                            public void onFileResource(File f) {
-                                                Glide.with(activity).load(f).apply(options).into(imageView);
-                                            }
-                                        });
-                                    }
-                                });
+                        Glide.with(activity).load(url).apply(options).into(imageView);
                     } catch (Exception e) {
                     } catch (Error e) {
                     }
@@ -207,49 +173,10 @@ public class MyGlide {
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE);    //缓存所有版本的图像
             try {
-                if (!StringUtils.isImgeUrlEncryptPostfix(url)) {//是否使用了加密后缀
-                    Glide.with(activity).load(url).apply(options).into(imageView);
-                    return;
-                }
-                Glide.with(activity).asFile().load(url)
-                        .into(new SimpleTarget<File>() {
-                            @Override
-                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                super.onLoadFailed(errorDrawable);
-                                Glide.with(activity).load("").apply(options).into(imageView);
-                            }
-
-                            @Override
-                            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                                AESUtil.getDecideFile(resource, url, new AESUtil.OnFileResourceListener() {
-                                    @Override
-                                    public void onFileResource(File f) {
-                                        Glide.with(activity).load(f).apply(options).into(imageView);
-                                    }
-                                });
-
-                            }
-                        });
+                Glide.with(activity).load(url).apply(options).into(imageView);
             } catch (Exception e) {
             }
         }
-    }
-
-    public static String toHexEncoding(int color) {
-        String R, G, B;
-        StringBuffer sb = new StringBuffer();
-        R = Integer.toHexString(Color.red(color));
-        G = Integer.toHexString(Color.green(color));
-        B = Integer.toHexString(Color.blue(color));
-        //判断获取到的R,G,B值的长度 如果长度等于1 给R,G,B值的前边添0
-        R = R.length() == 1 ? "0" + R : R;
-        G = G.length() == 1 ? "0" + G : G;
-        B = B.length() == 1 ? "0" + B : B;
-        sb.append("0x");
-        sb.append(R);
-        sb.append(G);
-        sb.append(B);
-        return sb.toString();
     }
 }
 

@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -54,7 +53,6 @@ import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
@@ -69,7 +67,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -269,40 +266,22 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             titlebar_text.setAlpha(0);
             book_info_titlebar_container_shadow.setAlpha(0);
             try {
-                Glide.with(this).asFile().load(infoBook.cover)
-                        .into(new SimpleTarget<File>() {
-                            @Override
-                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                super.onLoadFailed(errorDrawable);
-                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
-                                activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
-                            }
+                Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        try {
+                            activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, BookInfoActivity.this));
+                        } catch (Exception e) {
+                        } catch (Error r) {
+                        }
+                    }
 
-                            @Override
-                            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-                                AESUtil.getDecideFile(resource, infoBook.cover, new AESUtil.OnFileResourceListener() {
-                                    @Override
-                                    public void onFileResource(File f) {
-                                        Glide.with(BookInfoActivity.this).asBitmap().load(f).into(new SimpleTarget<Bitmap>() {
-                                            @Override
-                                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                                try {
-                                                    activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, BookInfoActivity.this));
-                                                } catch (Exception e) {
-                                                } catch (Error r) {
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
-                                                activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
+                        activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
+                    }
+                });
             } catch (Exception e) {
                 MyToash.Log("", e.getMessage());
             } catch (Error r) {

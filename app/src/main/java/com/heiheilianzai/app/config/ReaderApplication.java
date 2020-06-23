@@ -1,7 +1,6 @@
 package com.heiheilianzai.app.config;
 
 
-import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.os.Build;
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
-import com.fm.openinstall.OpenInstall;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.bean.AppUpdate;
@@ -40,7 +38,6 @@ public class ReaderApplication extends LitePalApplication {
         super.onCreate();
         try {
             context = getContext();
-            initOpenInstall();
             preparedDomain = new PreparedDomain(context);
             UMConfigure.setLogEnabled(false);
             String getChannelName = UpdateApp.getChannelName(this);
@@ -109,22 +106,6 @@ public class ReaderApplication extends LitePalApplication {
         }
     }
 
-    public void initOpenInstall() {
-        if (isMainProcess()) {
-            OpenInstall.init(this);
-        }
-    }
-
-    public boolean isMainProcess() {
-        int pid = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
-            if (appProcess.pid == pid) {
-                return getApplicationInfo().packageName.equals(appProcess.processName);
-            }
-        }
-        return false;
-    }
 
     public static Context getAppContext() {
         return context;
@@ -187,7 +168,7 @@ public class ReaderApplication extends LitePalApplication {
 
     //获取当天广告热启动次数
     public static int getDailyStartPage() {
-       return  PreparedDomain.getDailyStartPage(preparedDomain);
+        return PreparedDomain.getDailyStartPage(preparedDomain);
     }
 
     //切换时后台多少秒开启可以开启广告

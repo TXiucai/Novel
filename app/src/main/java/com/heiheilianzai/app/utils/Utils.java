@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
@@ -723,10 +724,11 @@ public class Utils {
 
     /**
      * APP是否处于前台唤醒状态
+     *
      * @param context
      * @return
      */
-    public static  boolean isAppOnForeground(Context context) {
+    public static boolean isAppOnForeground(Context context) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         String packageName = context.getPackageName();
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
@@ -741,12 +743,26 @@ public class Utils {
         }
         return false;
     }
+
     /**
      * 传入时间和当期时间的时间差
+     *
      * @param time 毫秒级
      * @return 秒级
      */
-    public static int getTimeDifference(long time){
-        return (int) ((System.currentTimeMillis()-time)/1000);
+    public static int getTimeDifference(long time) {
+        return (int) ((System.currentTimeMillis() - time) / 1000);
+    }
+
+    /**
+     * 判断 activity 是非被销毁
+     * @param activity
+     * @return
+     */
+    public static boolean nonDestroyedActivity(Activity activity) {
+        if (activity != null && !activity.isDestroyed()) {
+            return true;
+        }
+        return false;
     }
 }

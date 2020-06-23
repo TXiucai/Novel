@@ -139,6 +139,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 }
             }
         });
+        startAdvertisementActivity();
     }
 
     private AppUpdate mAppUpdate;
@@ -463,6 +464,18 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             View view = this.getWindow().getDecorView();
             if (view != null) {
                 HomeNoticeDialog.showDialog(MainActivity.this, view, homeNotice);
+            }
+        }
+    }
+
+    /**
+     * 启动广告页
+     */
+    public void  startAdvertisementActivity(){
+        Bundle bundle =  getIntent().getExtras();
+        if(bundle!=null){
+            if(bundle.getBoolean("advertisement")){
+                startActivity(new Intent(this, AdvertisementActivity.class));
             }
         }
     }

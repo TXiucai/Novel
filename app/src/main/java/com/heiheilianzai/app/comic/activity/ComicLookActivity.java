@@ -85,6 +85,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifImageView;
 
 import static com.heiheilianzai.app.comic.config.ComicConfig.IS_OPEN_DANMU;
 import static com.heiheilianzai.app.comic.config.ComicConfig.SET_OPEN_DANMU;
@@ -98,7 +99,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @BindView(R2.id.activity_comiclook_lording)
     public RelativeLayout activity_comiclook_lording;
     @BindView(R2.id.activity_comiclook_lording_img)
-    public ImageView activity_comiclook_lording_img;
+    public GifImageView activity_comiclook_lording_img;
     @BindView(R2.id.titlebar_back)
     public LinearLayout titlebar_back;
     @BindView(R2.id.titlebar_text)
@@ -515,7 +516,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     public void initViews() {
-        Glide.with(activity).load(R.drawable.bianfu).into(activity_comiclook_lording_img);
         HEIGHT = ScreenSizeUtils.getInstance(activity).getScreenHeight();
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         initRecyclerview();
