@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONException;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.config.RabbitConfig;
 import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.utils.MyToash;
 
 import java.io.IOException;
@@ -104,10 +105,20 @@ public class DynamicDomainManager {
         });
     }
 
+    /**
+     * 如果服务器需要全部替换Api为新域名 赋予 {@link SharedPreferencesConstant#DYNAMIC_DOMAIN_KAY} 一个新值
+     */
     private void runmyrun() {
         String text = "";
         try {
-            text = getPublicDomainJson();
+            if (expiredNow() || "".equals(preparedDomain.getString(SharedPreferencesConstant.DYNAMIC_DOMAIN_KAY, ""))) {
+                text = getPublicDomainJson();
+                preparedDomain.putString(SharedPreferencesConstant.DYNAMIC_DOMAIN_KAY, text);
+                markTimeNow();
+            } else {
+                text = preparedDomain.getString(SharedPreferencesConstant.DYNAMIC_DOMAIN_KAY, "");
+                htttpCachePublicDomain();
+            }
             if (stop) {
                 return;
             }
@@ -162,6 +173,18 @@ public class DynamicDomainManager {
             return;
         }
         onCompleteUI(preparedDomain.getDefaultDomain());
+    }
+
+    /**
+     * 有缓存情况下，异步替换缓存数据
+     */
+    private  void htttpCachePublicDomain(){
+        new Thread() {
+            @Override
+            public void run() {
+                preparedDomain.putString(SharedPreferencesConstant.DYNAMIC_DOMAIN_KAY, getPublicDomainJson());
+            }
+        }.start();
     }
 
     private void postRecord(boolean success, String domain) {
