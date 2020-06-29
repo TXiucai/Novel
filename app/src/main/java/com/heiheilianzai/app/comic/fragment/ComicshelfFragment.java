@@ -3,76 +3,48 @@ package com.heiheilianzai.app.comic.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.widget.AbsoluteLayout;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.heiheilianzai.app.activity.AddCommentActivity;
-import com.heiheilianzai.app.eventbus.RefreshMine;
-import com.heiheilianzai.app.utils.ShareUitls;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.commonsdk.debug.E;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.activity.AnnounceActivity;
-import com.heiheilianzai.app.activity.LoginActivity;
 import com.heiheilianzai.app.activity.MainActivity;
 import com.heiheilianzai.app.activity.TaskCenterActivity;
+import com.heiheilianzai.app.banner.ConvenientBannerBookShelf;
 import com.heiheilianzai.app.banner.holder.CBViewHolderCreator;
 import com.heiheilianzai.app.banner.listener.OnItemClickListener;
 import com.heiheilianzai.app.bean.Announce;
 import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
 import com.heiheilianzai.app.comic.activity.ComicLookActivity;
 import com.heiheilianzai.app.comic.adapter.ComicAdapterNew;
-import com.heiheilianzai.app.banner.ConvenientBannerBookShelf;
 import com.heiheilianzai.app.comic.been.BaseComic;
-
 import com.heiheilianzai.app.comic.config.ComicConfig;
-
-import com.heiheilianzai.app.comic.eventbus.CloseComicAnimation;
+import com.heiheilianzai.app.comic.eventbus.RefreshComic;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.CloseAnimation;
-import com.heiheilianzai.app.eventbus.RefreshBookSelf;
-import com.heiheilianzai.app.comic.eventbus.RefreshComic;
+import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
 import com.heiheilianzai.app.http.ReaderParams;
-import com.heiheilianzai.app.read.animation.ContentScaleAnimation;
-import com.heiheilianzai.app.read.animation.Rotate3DAnimation;
-import com.heiheilianzai.app.read.util.DisplayUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.InternetUtils;
-import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.ComicShelfBannerHolderView;
 import com.heiheilianzai.app.view.MarqueeTextView;
@@ -85,7 +57,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
-//.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,8 +78,6 @@ public class ComicshelfFragment extends Fragment {
     public ConvenientBannerBookShelf fragment_discovery_banner_male;
     @BindView(R2.id.fragment_shelf_banner_layout)
     public LinearLayout fragment_shelf_banner_layout;
-
-
     @BindView(R2.id.fragment_bookshelf_noresult)
     public LinearLayout fragment_bookshelf_noresult;
     @BindView(R2.id.fragment_bookshelf_marquee_layout)
@@ -117,29 +86,8 @@ public class ComicshelfFragment extends Fragment {
     public MarqueeTextView fragment_bookshelf_marquee;
     @BindView(R2.id.fragment_comicshelf_AdaptionGridViewNoMargin)
     public AdaptionGridViewNoMargin bookShelf;
-
-    @OnClick(value = {R.id.fragment_bookshelf_go_shelf, R.id.fragment_bookshelf_sign})
-    public void getEvent(View view) {
-        switch (view.getId()) {
-            case R.id.fragment_bookshelf_go_shelf:
-                //去书城逛逛
-                EventBus.getDefault().post(new ToStore(2));
-                break;
-            case R.id.fragment_bookshelf_sign:
-                if (Utils.isLogin(activity)) {
-                    startActivity(new Intent(activity, TaskCenterActivity.class));
-                } else {
-                    MainHttpTask.getInstance().Gotologin(activity);
-
-                }
-                break;
-        }
-    }
-
-
     public List<BaseComic> bookLists;
     public int WIDTH, HEIGHT, HorizontalSpacing, H40;
-
     public ComicAdapterNew adapter;
     private TextView mDeleteBtn;
     LinearLayout shelf_book_delete_btn;
@@ -149,6 +97,7 @@ public class ComicshelfFragment extends Fragment {
     public TextView fragment_novel_cancle;
     boolean showGuangbo;
     Gson gson = new Gson();
+    long time1;
 
     @SuppressLint("ValidFragment")
     public ComicshelfFragment(List<BaseComic> bookLists, LinearLayout shelf_book_delete_btn) {
@@ -172,8 +121,6 @@ public class ComicshelfFragment extends Fragment {
             }
             adapter.notifyDataSetChanged();
         } else {
-            //ibility(View.GONE);
-            //sibility(View.GONE);
             if (adapter != null && adapter.isDeletable()) {
                 adapter.setDeletable(false);
                 adapter.notifyDataSetChanged();
@@ -203,13 +150,11 @@ public class ComicshelfFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_comicshelf, null);
         ButterKnife.bind(this, view);
         bookShelf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 if (position < bookLists.size()) {
                     if (!adapter.isDeletable()) {
                         BaseComic baseComic = bookLists.get(position);
@@ -221,7 +166,6 @@ public class ComicshelfFragment extends Fragment {
                             openBaseComic = baseComic;
                             openPosition = position;
                             handler.sendEmptyMessageDelayed(3, 2000);
-
                         }
                     }
                 }
@@ -255,7 +199,7 @@ public class ComicshelfFragment extends Fragment {
             fragment_bookshelf_noresult.setVisibility(View.GONE);
             bookShelf.setVisibility(View.VISIBLE);
         }
-        MainHttpTask.getInstance().getResultString(activity, "ShelfComic", new MainHttpTask.GetHttpData() {
+        MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_SHELF, "ShelfComic", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
                 handleResult(result);
@@ -263,19 +207,33 @@ public class ComicshelfFragment extends Fragment {
         });
     }
 
+    @OnClick(value = {R.id.fragment_bookshelf_go_shelf, R.id.fragment_bookshelf_sign})
+    public void getEvent(View view) {
+        switch (view.getId()) {
+            case R.id.fragment_bookshelf_go_shelf:
+                //去书城逛逛
+                EventBus.getDefault().post(new ToStore(2));
+                break;
+            case R.id.fragment_bookshelf_sign:
+                if (Utils.isLogin(activity)) {
+                    startActivity(new Intent(activity, TaskCenterActivity.class));
+                } else {
+                    MainHttpTask.getInstance().Gotologin(activity);
+                }
+                break;
+        }
+    }
+
     private void setAdapter() {
         adapter = new ComicAdapterNew(WIDTH, HEIGHT, bookLists, activity);
         bookShelf.setAdapter(adapter);
     }
 
-
     public void exchangePosition(BaseComic onclickbook, int position) {
-
         BaseComic mTopBook = bookLists.get(0);
         ContentValues values2 = new ContentValues();
         onclickbook.setBookselfPosition(10000);
         values2.put("bookselfPosition", 10000);
-
         if (onclickbook.getId() == 0) {
             LitePal.updateAll(BaseComic.class, values2, "comic_id = ?", onclickbook.getComic_id());
         } else {
@@ -292,10 +250,6 @@ public class ComicshelfFragment extends Fragment {
         bookLists.add(0, onclickbook);
         bookLists.remove(position + 1);
     }
-
-    RefreshBookSelf S;
-
-    long time1;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshBookSelf(RefreshComic s) {
@@ -314,7 +268,6 @@ public class ComicshelfFragment extends Fragment {
                     MyToash.Log("BaseComic", BaseComic.vertical_cover);
                     if (!bookLists.contains(BaseComic)) {
                         bookLists.add(BaseComic);
-                        //secondBookLists.add(BaseComic);
                     }
                 }
                 String bookid = "";
@@ -323,8 +276,6 @@ public class ComicshelfFragment extends Fragment {
                 }
                 bookid = bookid.substring(1);
                 addHttpBookself(bookid);
-
-
             } else if (s.ADD == 0) {//删除
                 if (bookLists.contains(s.baseComic)) {
                     bookLists.remove(s.baseComic);
@@ -341,23 +292,17 @@ public class ComicshelfFragment extends Fragment {
                 fragment_bookshelf_noresult.setVisibility(View.GONE);
                 bookShelf.setVisibility(View.VISIBLE);
             }
-
         }
-
-
     }
 
     public void setDataBaseData(boolean IsSncyWebBookShelf) {
         if (bookLists != null && bookLists.isEmpty()) {
             fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
             bookShelf.setVisibility(View.GONE);
-
         } else {
             fragment_bookshelf_noresult.setVisibility(View.GONE);
             bookShelf.setVisibility(View.VISIBLE);
-
             setBookSelfBooks();
-
             if (IsSncyWebBookShelf) {
                 addHttpBookself(null);
             }
@@ -373,15 +318,12 @@ public class ComicshelfFragment extends Fragment {
             if (bookid == null) {
                 for (BaseComic BaseComic : bookLists) {
                     bookid += "," + BaseComic.getComic_id();
-
                 }
                 bookid = bookid.substring(1);
             }
-
             addBookToShelf(bookid, activity, new AddBookToShelf() {
                 @Override
                 public void addSuccess() {
-
                 }
 
                 @Override
@@ -392,7 +334,6 @@ public class ComicshelfFragment extends Fragment {
     }
 
     public void handleResult(String result) {
-
         try {
             JSONObject obj = new JSONObject(result);
             setBanner(obj);
@@ -411,16 +352,7 @@ public class ComicshelfFragment extends Fragment {
                                     BaseComic.setName(jsonObject.getString("name"));
                                     BaseComic.setComic_id(jsonObject.getString("comic_id"));
                                     BaseComic.setVertical_cover(jsonObject.getString("vertical_cover"));
-                                    //    BaseComic.setFinished(jsonObject.getInt("finished"));
-                                    //    BaseComic.setFlag(jsonObject.getString("flag"));
-                                    //   BaseComic.setLast_chapter(jsonObject.getString("last_chapter"));
-                                    //   BaseComic.setLast_chapter_id(jsonObject.getString("last_chapter_id"));
-                                    //    BaseComic.setLast_update_time(jsonObject.getString("last_update_time"));
-                                    //     BaseComic.setFav_time(jsonObject.getString("fav_time"));
-                                    //    BaseComic.setIssue_time(jsonObject.getString("issue_time"));
-                                    //    BaseComic.setSort_id(jsonObject.getString("sort_id"));
                                     int total_chapter = jsonObject.getInt("total_chapters");
-                                    //  BaseComic.setDescription(jsonObject.getString("description"));
                                     BaseComic.setRecentChapter(total_chapter);
                                     BaseComic.setTotal_chapters(total_chapter);
                                     BaseComic.setUid(uid);
@@ -436,7 +368,6 @@ public class ComicshelfFragment extends Fragment {
                                             }
                                             BaseComict.setName(BaseComic.getName());
                                             BaseComict.setVertical_cover(BaseComic.getVertical_cover());
-                                            // BaseComict.setDescription(BaseComic.getDescription());
                                             break FALG;
                                         }
                                     }
@@ -446,9 +377,7 @@ public class ComicshelfFragment extends Fragment {
                                         bookLists.add(BaseComic);
                                     }
                                 }
-
                                 for (BaseComic BaseComict : bookLists) {
-
                                     if (!BaseComict.isAddBookSelf()) {
                                         BaseComict.setAddBookSelf(true);
                                     } else {
@@ -471,14 +400,9 @@ public class ComicshelfFragment extends Fragment {
                                 handler.sendEmptyMessage(0);
                             } catch (Exception e) {
                                 MyToash.Log("QQhandleResultfff", e.getMessage());
-
-
                             }
-
-
                         }
                     }).start();
-
                 }
             }
         } catch (JSONException E) {
@@ -517,15 +441,12 @@ public class ComicshelfFragment extends Fragment {
         } else {
             fragment_shelf_banner_layout.setVisibility(View.GONE);
         }
-
         JSONArray announceArr = obj.getJSONArray("announcement");
         if (announceArr.length() > 0) {
             final List<Announce> announceList = new ArrayList<>();
-
             for (int i = 0; i < announceArr.length(); i++) {
                 announceList.add(gson.fromJson(announceArr.getJSONObject(i).toString(), Announce.class));
             }
-
             fragment_bookshelf_marquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
                 @Override
                 public void onClick(View view, int position) {
@@ -534,7 +455,6 @@ public class ComicshelfFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
             showGuangbo = true;
         } else {
             showGuangbo = false;
@@ -555,7 +475,6 @@ public class ComicshelfFragment extends Fragment {
                 exchangePosition(openBaseComic, openPosition);
                 setBookSelfBooks();
                 fragment_comicshelf_scrollview.scrollTo(0, 0);
-
             }
         }
     };
@@ -582,13 +501,11 @@ public class ComicshelfFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onDestroy() {
         fragment_bookshelf_marquee.releaseResources();
         super.onDestroy();
     }
-
 
     private void setLongClickListener(int position) {
         fragment_bookshelf_head.setVisibility(View.GONE);
@@ -612,29 +529,21 @@ public class ComicshelfFragment extends Fragment {
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
                 MainActivityNavigationView.setVisibility(View.VISIBLE);
                 shelf_book_delete_btn.setVisibility(View.GONE);
-
                 if (showGuangbo) {
                     fragment_bookshelf_marquee_layout.setVisibility(View.VISIBLE);
                 }
-                //ibility(View.GONE);
-                //sibility(View.GONE);
-
                 if (adapter != null && adapter.isDeletable()) {
                     adapter.setDeletable(false);
                 }
-
                 if (bookLists.isEmpty()) {
                     setDataBaseData(false);
                 } else {
-
                     setBookSelfBooks();
                 }
-
             }
 
             @Override
             public void fail() {
-
             }
         });
     }
@@ -649,7 +558,6 @@ public class ComicshelfFragment extends Fragment {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("comic_id", Book_id);
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_SHELF_ADD, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
@@ -663,13 +571,9 @@ public class ComicshelfFragment extends Fragment {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                         addBookToShelf.addFail();
                     }
                 }
-
         );
-
-
     }
 }

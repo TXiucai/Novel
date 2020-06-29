@@ -223,7 +223,7 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
             fragment_bookshelf_noresult.setVisibility(View.GONE);
             adaptionGridViewNoMargin.setVisibility(View.VISIBLE);
         }
-        MainHttpTask.getInstance().getResultString(activity, "ShelfBook", new MainHttpTask.GetHttpData() {
+        MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mBookCollectUrl, "ShelfBook", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
                 try {

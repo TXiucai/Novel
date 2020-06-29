@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.LoginActivity;
 import com.heiheilianzai.app.activity.SearchActivity;
 import com.heiheilianzai.app.activity.TaskCenterActivity;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
@@ -26,10 +25,7 @@ import com.heiheilianzai.app.comic.eventbus.StoreEventbus;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.fragment.BaseButterKnifeFragment;
 import com.heiheilianzai.app.utils.ImageUtil;
-import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
-import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,65 +43,53 @@ import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 /**
  * Created by scb on 2018/12/21.
  */
-
-
 public class StroeNewFragmentComic extends BaseButterKnifeFragment {
-    @Override
-    public int initContentView() {
-        return R.layout.fragment_storenew;
-    }
-
     @BindView(R2.id.fragment_store_viewpage)
     public ViewPager fragment_store_viewpage;
-
     @BindView(R2.id.fragment_store_top)
     public RelativeLayout fragment_newbookself_top;
-
-
-
-
     @BindView(R2.id.fragment_store_search_bookname)
     public TextView fragment_store_search_bookname;
-
-
     @BindView(R2.id.fragment_store_search_img)
     public ImageView fragment_store_search_img;
-
     @BindView(R2.id.fragment_store_search)
     public RelativeLayout fragment_store_search;
- 
     FragmentManager fragmentManager;
-    
-    public String  hot_word_comic[];
+    public String hot_word_comic[];
+    int hot_word_comicSize, hot_word_comicPosition;
+    List<Fragment> fragmentList;
+    MyFragmentPagerAdapter myFragmentPagerAdapter;
+    public static boolean IS_NOTOP_COMIC;
+    Fragment fragment1;
 
-    int  hot_word_comicSize, hot_word_comicPosition;
     public interface Hot_word {
         void hot_word(String[] hot_word);
     }
+
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-                ++hot_word_comicPosition;
-                if (hot_word_comicPosition == hot_word_comicSize) {
-                    hot_word_comicPosition = 0;
-                }
-                fragment_store_search_bookname.setText(hot_word_comic[hot_word_comicPosition]);
-                handler.sendEmptyMessageDelayed(1, 10000);
-       
-
-
+            ++hot_word_comicPosition;
+            if (hot_word_comicPosition == hot_word_comicSize) {
+                hot_word_comicPosition = 0;
+            }
+            fragment_store_search_bookname.setText(hot_word_comic[hot_word_comicPosition]);
+            handler.sendEmptyMessageDelayed(1, 10000);
         }
     };
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        handler.removeMessages(1);
+    public int initContentView() {
+        return R.layout.fragment_storenew;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeMessages(1);
+    }
 
     public class Hot_word_Comic implements Hot_word {
         @Override
@@ -122,12 +106,12 @@ public class StroeNewFragmentComic extends BaseButterKnifeFragment {
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.fragment_store_fili:
-                if(!MainHttpTask.getInstance().Gotologin(activity)){
+                if (!MainHttpTask.getInstance().Gotologin(activity)) {
                     return;
-                };
+                }
+                ;
                 startActivity(new Intent(activity, TaskCenterActivity.class));
                 break;
-
             case R.id.fragment_store_search:
                 boolean PRODUCT;
                 String name;
@@ -136,27 +120,17 @@ public class StroeNewFragmentComic extends BaseButterKnifeFragment {
                 Intent intent = new Intent(activity, SearchActivity.class).putExtra("PRODUCT", PRODUCT).putExtra("mKeyWord", name);
                 startActivity(intent);
                 break;
-
         }
     }
 
-    List<Fragment> fragmentList;
-    MyFragmentPagerAdapter myFragmentPagerAdapter;
-
-
-    public static boolean IS_NOTOP_COMIC;
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void StoreEventbus(StoreEventbus storeEventbus) {
-
         float ratio = Math.min(Math.max(storeEventbus.Y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
         float alpha = (int) (ratio * 255);
         fragment_newbookself_top.setBackgroundColor(Color.argb((int) alpha, 255, 255, 255));
         if (storeEventbus.Y > REFRESH_HEIGHT) {
             setBgBlack();
-
         } else if (storeEventbus.Y <= REFRESH_HEIGHT) {
-     
             setBgWhite();
         }
     }
@@ -168,7 +142,6 @@ public class StroeNewFragmentComic extends BaseButterKnifeFragment {
             fragment_store_search_img.setImageResource(R.mipmap.main_search_white);
             setStatusTextColor(false, activity);
             fragment_store_search.setBackgroundResource(R.drawable.shape_comic_store_search);
-
         }
     }
 
@@ -181,9 +154,6 @@ public class StroeNewFragmentComic extends BaseButterKnifeFragment {
             fragment_store_search.setBackgroundResource(R.drawable.shape_comic_store_search_dark);
         }
     }
-
-
-    Fragment fragment1;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -203,11 +173,9 @@ public class StroeNewFragmentComic extends BaseButterKnifeFragment {
 
     private void initOption() {
         fragmentList = new ArrayList<>();
-        fragment1 = new <Fragment>StoreComicFragment( fragment_newbookself_top, new Hot_word_Comic());
+        fragment1 = new <Fragment>StoreComicFragment(fragment_newbookself_top, new Hot_word_Comic());
         fragmentList.add(fragment1);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         fragment_store_viewpage.setAdapter(myFragmentPagerAdapter);
-
     }
-
 }
