@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,27 +19,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.heiheilianzai.app.comic.been.ComicChapter;
-import com.heiheilianzai.app.comic.eventbus.ComicinfoMuluBuy;
-import com.heiheilianzai.app.config.MainHttpTask;
-import com.heiheilianzai.app.eventbus.RefreshMine;
-//import com.squareup.okhttp.internal.Util;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.LoginActivity;
 import com.heiheilianzai.app.activity.SettingsActivity;
-import com.heiheilianzai.app.bean.ChapterContent;
-import com.heiheilianzai.app.bean.ChapterItem;
-import com.heiheilianzai.app.bean.Downoption;
 import com.heiheilianzai.app.bean.PurchaseItem;
+import com.heiheilianzai.app.comic.been.ComicChapter;
 import com.heiheilianzai.app.comic.config.ComicConfig;
+import com.heiheilianzai.app.comic.eventbus.ComicinfoMuluBuy;
+import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.dialog.DownDialog;
 import com.heiheilianzai.app.http.ReaderParams;
-import com.heiheilianzai.app.read.ReadingConfig;
-import com.heiheilianzai.app.read.manager.ChapterManager;
-import com.heiheilianzai.app.utils.AppPrefs;
-import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -64,11 +51,13 @@ import butterknife.ButterKnife;
 import static com.heiheilianzai.app.comic.config.ComicConfig.COMIC_buy_buy;
 import static com.heiheilianzai.app.config.ReaderConfig.getCurrencyUnit;
 
+//import com.squareup.okhttp.internal.Util;
+
 /**
+ * 漫画章节购买弹框
  * Created by scb on 2018/8/16
  */
 public class PurchaseDialog extends Dialog {
-
     @BindView(R2.id.dialog_purchase_some_select_rgs)
     RadioGroup dialog_purchase_some_select_rgs;
     @BindView(R2.id.dialog_purchase_some_remain)
@@ -88,7 +77,6 @@ public class PurchaseDialog extends Dialog {
     @BindView(R2.id.dialog_purchase_HorizontalScrollView)
     HorizontalScrollView dialog_purchase_HorizontalScrollView;
 
-
     /**
      * 用以标识是去充值还是去购买
      */
@@ -97,12 +85,12 @@ public class PurchaseDialog extends Dialog {
     private int mNum;
     boolean isdown;
     BuySuccess buySuccess;
+    Gson gson = new Gson();
+    boolean CanceledOnTouchOutside;
 
     public interface BuySuccess {
         void buySuccess(String[] ids, int num);
     }
-
-    boolean CanceledOnTouchOutside;
 
     public PurchaseDialog(Activity context, boolean isdown, BuySuccess buySuccess, boolean CanceledOnTouchOutside) {
         this(context, R.style.BottomDialog);
@@ -114,10 +102,7 @@ public class PurchaseDialog extends Dialog {
 
     public PurchaseDialog(Context context, int themeResId) {
         super(context, themeResId);
-
     }
-
-    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +125,6 @@ public class PurchaseDialog extends Dialog {
         dialog_purchase_some_remain.setText("0" + getCurrencyUnit(mContext));
     }
 
-    //  Downoption downoption;
-
     public void initData(final String comic_id, final String chapterId) {
         String requestParams = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_buy_index;
         ReaderParams params = new ReaderParams(mContext);
@@ -153,17 +136,12 @@ public class PurchaseDialog extends Dialog {
         params.putExtraParams("comic_id", comic_id);
         params.putExtraParams("chapter_id", chapterId);
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(mContext).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
-
-
                             JSONObject dataObjJ = new JSONObject(result);
                             JSONObject dataObj = dataObjJ.getJSONObject("base_info");
-
-
                             final int remainNum = dataObj.getInt("remain");
                             final int remainNum0 = dataObj.getInt("gold_remain");
                             final String remainNum1 = dataObj.getString("unit");
@@ -176,15 +154,12 @@ public class PurchaseDialog extends Dialog {
                             } else if (remainNum3 != 0) {
                                 dialog_purchase_some_remain.setText(remainNum3 + remainNum2);
                             }
-
-
                             final List<PurchaseItem> list = new ArrayList<PurchaseItem>();
                             JSONArray optionArr = dataObjJ.getJSONArray("buy_option");
                             for (int i = 0; i < optionArr.length(); i++) {
                                 PurchaseItem item = gson.fromJson(optionArr.getString(i), PurchaseItem.class);
                                 list.add(item);
                             }
-
                             dialog_purchase_some_select_rgs.removeAllViews();
                             dialog_purchase_some_select_rgs.setOrientation(RadioGroup.HORIZONTAL);
                             if (!isdown) {
@@ -200,13 +175,9 @@ public class PurchaseDialog extends Dialog {
                                     radioButton.setText(list.get(k).getLabel());
                                     dialog_purchase_some_select_rgs.addView(radioButton, params);
                                 }
-
                             } else {
                                 dialog_purchase_some_tite.setText(list.get(0).getLabel());
-
                             }
-
-
                             PurchaseItem moren = null;
                             moren = list.get(0);
                             if (moren != null) {
@@ -222,13 +193,11 @@ public class PurchaseDialog extends Dialog {
                                     mFlag = 1;
                                 }
                             }
-
                             dialog_purchase_some_select_rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                                     dialog_purchase_some_total_price.setText(list.get(checkedId).actual_cost.gold_cost + remainNum1 + "+" + list.get(checkedId).actual_cost.silver_cost + remainNum2);
                                     dialog_purchase_some_original_price.setText(list.get(checkedId).original_cost.gold_cost + remainNum1 + "+" + list.get(checkedId).original_cost.silver_cost + remainNum2);
-
                                     mNum = list.get(checkedId).getBuy_num();
 
                                     if (remainNum < list.get(checkedId).getTotal_price()) {
@@ -240,13 +209,11 @@ public class PurchaseDialog extends Dialog {
                                     }
                                 }
                             });
-
                             if (dataObj.getInt("auto_sub") == 1) {
                                 dialog_purchase_some_auto_buy.setToggleOn();
                             } else {
                                 dialog_purchase_some_auto_buy.setToggleOff();
                             }
-
                             dialog_purchase_some_auto_buy.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
                                 @Override
                                 public void onToggle(boolean on) {
@@ -260,7 +227,6 @@ public class PurchaseDialog extends Dialog {
                                             }
                                         }
                                     });
-
                                 }
                             });
                             dialog_purchase_some_buy.setOnClickListener(new View.OnClickListener() {
@@ -273,25 +239,20 @@ public class PurchaseDialog extends Dialog {
                                     }
                                 }
                             });
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
     /**
-     *
+     * 漫画章节购买
      */
     public void purchaseSingleChapter(final String comic_id, final String chapter_id, final int num) {
         ReaderParams params = new ReaderParams(mContext);
@@ -302,7 +263,6 @@ public class PurchaseDialog extends Dialog {
         HttpUtils.getInstance(mContext).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + COMIC_buy_buy, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
                         try {
                             JSONObject object = new JSONObject(result);
                             String[] strings = gson.fromJson(object.getString("chapter_ids"), String[].class);
@@ -311,30 +271,22 @@ public class PurchaseDialog extends Dialog {
                                 for (String id : strings) {
                                     ContentValues values = new ContentValues();
                                     values.put("is_preview", 0);
-                                    LitePal.updateAll(ComicChapter.class, values, "chapter_id = ?", id);
+                                    LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?", comic_id, id);
                                 }
-
                             }
-
                             buySuccess.buySuccess(strings, num);
                             EventBus.getDefault().post(new ComicinfoMuluBuy(num, strings));
-
                             dismiss();
                         } catch (
                                 JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
-
 }

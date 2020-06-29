@@ -267,7 +267,7 @@ public class PurchaseDialog extends Dialog {
                             for (String chapter_id : strings) {
                                 ContentValues values = new ContentValues();
                                 values.put("is_preview", "0");
-                                LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id,chapter_id);
                                 if (DownDialog.isreaderbook || !isdown) {
                                     ChapterManager.getInstance(mContext).getChapter(chapter_id, new ChapterManager.QuerychapterItemInterface() {
 
@@ -328,7 +328,7 @@ public class PurchaseDialog extends Dialog {
                             values.put("is_preview", "0");
                             ChapterManager.getInstance(mContext).getCurrentChapter().setIs_preview("0");
                             ChapterManager.getInstance(mContext).getCurrentChapter().setChapter_path(filepath);
-                            LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                            LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id,chapter_id);
                             ChapterManager.getInstance(mContext).openCurrentChapter(chapter_id);
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -70,6 +70,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.read.ReadActivity.USE_BUTTOM_AD;
 
 /**
+ * 小说翻页核心类。 重绘与监听都在这里实现
  * Created by Administrator on 2016/7/20 0020.
  */
 public class PageFactory {
@@ -107,10 +108,6 @@ public class PageFactory {
     private float statusMarginBottom;
     //行间距
     private float lineSpace;
-    //段间距
-    // private float paragraphSpace;
-    //字高度
-    // private float fontHeight;
     //字体
     private Typeface typeface;
     //文字画笔
@@ -179,13 +176,9 @@ public class PageFactory {
     int Chapter_height;
     float reading_shangxia_textsize;
     Resources resources;
-
-    public enum Status {
-        OPENING,
-        FINISH,
-        FAIL,
-    }
-
+    long aapo = 0;
+    BaseAd baseAd;
+    ImageView list_ad_view_img;
     private Activity mActivity;
     private PurchaseDialog mPurchaseDialog;
     TextView bookpage_scroll_text;
@@ -194,6 +187,14 @@ public class PageFactory {
     BaseBook baseBook;
     FrameLayout insert_todayone_button;
     int button_ad_heigth, bg_color, color;
+    public boolean IS_CHAPTERLast = true;
+    public boolean IS_CHAPTERFirst = true;
+
+    public enum Status {
+        OPENING,
+        FINISH,
+        FAIL,
+    }
 
     public PageFactory(BaseBook baseBook, MScrollView bookpage_scroll, TextView bookpage_scroll_text, FrameLayout insert_todayone2, Context context) {
         mActivity = (Activity) context;
@@ -223,13 +224,11 @@ public class PageFactory {
             statusMarginBottom = resources.getDimension(R.dimen.reading_status_margin_bottom_hasNotchScreen);
             marginHeight = resources.getDimension(R.dimen.readingMarginHeight);
             BookNameTop = ImageUtil.dp2px(mActivity, 12);
-
         } else {
             statusMarginBottom = resources.getDimension(R.dimen.reading_status_margin_bottom);
             marginHeight = resources.getDimension(R.dimen.readingMarginHeightNotchScreen);
             BookNameTop = ImageUtil.dp2px(mActivity, 15);
         }
-
         reading_shangxia_textsize = 0;
         chapterRight = ImageUtil.dp2px(mActivity, 15);
         mVisibleWidth = mWidth - marginWidth * 2;
@@ -338,7 +337,7 @@ public class PageFactory {
                 ChapterManager.getInstance(mActivity).getCurrentChapter().setChapteritem_begin(currentPage.getBegin());
                 ContentValues values1 = new ContentValues();
                 values1.put("chapteritem_begin", currentPage.getBegin());
-                LitePal.updateAll(ChapterItem.class, values1, "chapter_id = ?", chapter_id);
+                LitePal.updateAll(ChapterItem.class, values1, "book_id = ? and chapter_id = ?", book_id, chapter_id);
             }
             // 画时间
             drawBatteryAndDate(c);
@@ -439,7 +438,7 @@ public class PageFactory {
                 ContentValues values = new ContentValues();
                 values.put("chapteritem_begin", currentPage.getBegin());
                 ChapterManager.getInstance(mActivity).getCurrentChapter().setChapteritem_begin(currentPage.getBegin());
-                LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
             }
             Canvas c = new Canvas(bitmap);
             try {
@@ -564,7 +563,7 @@ public class PageFactory {
                 ContentValues values = new ContentValues();
                 values.put("chapteritem_begin", currentPage.getBegin());
                 ChapterManager.getInstance(mActivity).getCurrentChapter().setChapteritem_begin(currentPage.getBegin());
-                LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
             }
             Canvas c = new Canvas(bitmap);
             try {
@@ -703,7 +702,7 @@ public class PageFactory {
                             if (FileManager.isExist(path)) {
                                 ContentValues values = new ContentValues();
                                 values.put("chapter_path", path);
-                                LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", preChapterId);
+                                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, preChapterId);
                                 querychapterItem.setChapter_path(path);
                             } else {
                                 ChapterManager.notfindChapter(querychapterItem, book_id, preChapterId, new ChapterManager.ChapterDownload() {
@@ -783,7 +782,7 @@ public class PageFactory {
                                 if (FileManager.isExist(path)) {
                                     ContentValues values = new ContentValues();
                                     values.put("chapter_path", path);
-                                    LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", nextChapterId);
+                                    LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, nextChapterId);
                                     querychapterItem.setChapter_path(path);
                                 } else {
                                     ChapterManager.notfindChapter(querychapterItem, book_id, nextChapterId, new ChapterManager.ChapterDownload() {
@@ -952,7 +951,7 @@ public class PageFactory {
                             ChapterManager.getInstance(mActivity).getCurrentChapter().setIs_preview("0");
                             ChapterManager.getInstance(mActivity).getCurrentChapter().setChapter_path(filepath);
                             ChapterManager.getInstance(mActivity).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
-                            LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                            LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                             if (config.getPageMode() != 4) {
                                 ChapterManager.getInstance(mActivity).openCurrentChapter(chapter_id);
                             } else {
@@ -1172,12 +1171,6 @@ public class PageFactory {
     boolean jianfan;
 
     public String changeJIanfan(String s) {
-    /*    if (!jianfan) {
-            if (zhConverter == null) {
-                zhConverter = ZHConverter.getInstance(ZHConverter.TRADITIONAL);
-            }
-           return zhConverter.convert(s);
-        }*/
         return s;
     }
 
@@ -1421,8 +1414,6 @@ public class PageFactory {
         void changeProgress(float progress);
     }
 
-    long aapo = 0;
-
     private void drawLastChapter(ChapterItem querychapterItem, String preChapterId) {
         final ChapterItem preChapter = querychapterItem;
         BookUtil bookUtiltemp = getBookUtil(querychapterItem, preChapterId);
@@ -1448,7 +1439,6 @@ public class PageFactory {
             page.setLines(bookUtil.getNextLines(PageFactory.this));
             page.setEnd(bookUtil.getBookLen());
         }
-
         mBookPageWidget.setOnSwitchPreListener(new PageWidget.OnSwitchPreListener() {
             @Override
             public void switchPreChapter() {
@@ -1456,7 +1446,7 @@ public class PageFactory {
                     //打开上一章节之前，更新当前章节的begin为0
                     ContentValues values = new ContentValues();
                     values.put("chapteritem_begin", 0);
-                    LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", chapter_id);
+                    LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                     chapterItem.setChapteritem_begin(0);
                     openBook(1, preChapter, bookUtil);
                     IS_CHAPTERFirst = true;
@@ -1517,7 +1507,7 @@ public class PageFactory {
                 //打开下一章节之前，更新当前章节的begin为0
                 ContentValues values = new ContentValues();
                 values.put("chapteritem_begin", 0);
-                LitePal.updateAll(ChapterItem.class, values, "chapter_id = ?", nextChapter.getChapter_id());
+                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", nextChapter.getBook_id(), nextChapter.getChapter_id());
                 nextChapter.setChapteritem_begin(0);
                 openBook(2, nextChapter, bookUtil);
                 ChapterManager.getInstance(mActivity).setCurrentChapter(nextChapter);
@@ -1539,9 +1529,6 @@ public class PageFactory {
             }
         });
     }
-
-    BaseAd baseAd;
-    ImageView list_ad_view_img;
 
     //加载webview 广告
     public void getWebViewAD(Activity activity) {
@@ -1617,9 +1604,6 @@ public class PageFactory {
             }
         }
     }
-
-    public boolean IS_CHAPTERLast = true;
-    public boolean IS_CHAPTERFirst = true;
 
     private void drawAD(Bitmap bitmap) {
         Canvas c = new Canvas(bitmap);

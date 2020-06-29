@@ -73,9 +73,7 @@ public class DownComicService extends IntentService {
         id = baseComic.getId();
         down_chapters = baseComic.getDown_chapters();
         TotalChapter = 0;
-        List<ComicChapterItem> comicChapterItemList = gson.fromJson(result, new TypeToken<List<ComicChapterItem>>() {
-        }.getType());
-
+        List<ComicChapterItem> comicChapterItemList = gson.fromJson(result, new TypeToken<List<ComicChapterItem>>() {}.getType());
         for (ComicChapterItem comicChapterItem : comicChapterItemList) {
             ++TotalChapter;
             String s = gson.toJson(comicChapterItem);
@@ -160,7 +158,7 @@ public class DownComicService extends IntentService {
             long chapterid = comicChapterCatalogs.get(comicChapterItem.display_order).getId();
             int i;
             if (id == 0) {
-                i = LitePal.updateAll(ComicChapter.class, values, "chapter_id = ?", chapter_id);
+                i = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?",comicChapterItem.getComic_id(), chapter_id);
             } else {
                 i = LitePal.update(ComicChapter.class, values, chapterid);
             }
