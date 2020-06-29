@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.comic.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -69,18 +70,14 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ComicChapterCatalogAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ComicChapterCatalogAdapter.ViewHolder viewHolder, @SuppressLint("RecyclerView") int i) {
         final ComicChapter comicChapterCatalog = comicChapterCatalogList.get(i);
         viewHolder.item_comicchaptercatalog_current_bg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (comicChapterCatalog != null) {
                     if (flag) {
-                        int current_display_order = i;
-                        if (shunxu) {
-                            current_display_order = (comicChapterCatalogList.size() - 1) - i;
-                        }
-                        baseComic.setCurrent_display_order(current_display_order);
+                        baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
                         baseComic.saveIsexist(false);
                         Intent intent = new Intent(activity, ComicLookActivity.class);
                         intent.putExtra("baseComic", baseComic);
