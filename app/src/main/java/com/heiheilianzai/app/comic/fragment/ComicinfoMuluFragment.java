@@ -255,9 +255,9 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
             if (comic != null) {
                 this.comic = comic;
                 if (comic.is_finish == 1) {
-                    fragment_comicinfo_mulu_zhuangtai.setText(LanguageUtil.getString(activity, R.string.fragment_comic_info_wanjie) + " (" + comic.flag + ")");
+                    fragment_comicinfo_mulu_zhuangtai.setText(comic.flag);
                 } else {
-                    fragment_comicinfo_mulu_zhuangtai.setText(LanguageUtil.getString(activity, R.string.fragment_comic_info_wanjie) + " (" + comic.flag + ")");
+                    fragment_comicinfo_mulu_zhuangtai.setText(comic.flag);
                 }
             }
             comicChapterCatalogAdapter = new ComicChapterCatalogAdapter(true, baseComic, activity, baseComic.getCurrent_chapter_id(), comicChapterCatalogs, H96);

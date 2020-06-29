@@ -109,8 +109,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     /**
      * 图片文件名字
      */
-    private final int GALLERY = 1000000;
-    private final int CAMERA = 1000001;
+    private final int GALLERY = 1111;
+    private final int CAMERA = 1112;
 
     @Override
     public int initContentView() {
@@ -303,7 +303,6 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         });
         mTitle.setText(text);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -524,6 +523,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
      * 绑定微信，跳微信登录
      */
     public IWXAPI iwxapi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

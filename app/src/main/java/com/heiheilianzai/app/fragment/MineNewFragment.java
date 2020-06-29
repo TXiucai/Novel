@@ -189,7 +189,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             } else {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, true);
             }
-            MyPicasso.IoadImage(activity, mUserInfo.getAvatar(), R.mipmap.icon_def_head, fragment_mine_user_info_avatar);
+            MyPicasso. GlideImageNoSize(activity, mUserInfo.getAvatar(),fragment_mine_user_info_avatar,R.mipmap.icon_def_head);
             fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
             fragment_mine_user_info_tasklayout_task.setText(mUserInfo.getTask_list().getFinish_num() + "/" + mUserInfo.getTask_list().getMission_num());
