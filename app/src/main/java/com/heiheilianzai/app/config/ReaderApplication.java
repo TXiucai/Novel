@@ -32,6 +32,7 @@ import org.litepal.LitePalApplication;
 public class ReaderApplication extends LitePalApplication {
     public static Context context;
     public static PreparedDomain preparedDomain;
+    public static boolean isAppUpdateLoadOver = false;
 
     @Override
     public void onCreate() {

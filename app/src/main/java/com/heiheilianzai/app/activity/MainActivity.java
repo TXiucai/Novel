@@ -35,9 +35,11 @@ import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.book.fragment.StroeNewFragmentBook;
 import com.heiheilianzai.app.comic.been.BaseComic;
 import com.heiheilianzai.app.comic.fragment.StroeNewFragmentComic;
+import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.dialog.MyPoPwindow;
+import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
 import com.heiheilianzai.app.fragment.DiscoveryNewFragment;
@@ -353,6 +355,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
 
     public void ShowPOP() {
+        if (!ReaderApplication.isAppUpdateLoadOver) {
+            return;
+        }
         String str = ShareUitls.getString(activity, "Update", "");
         if (str.length() > 0) {
             mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
@@ -471,12 +476,24 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     /**
      * 启动广告页
      */
-    public void  startAdvertisementActivity(){
-        Bundle bundle =  getIntent().getExtras();
-        if(bundle!=null){
-            if(bundle.getBoolean("advertisement")){
+    public void startAdvertisementActivity() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            if (bundle.getBoolean("advertisement")) {
                 startActivity(new Intent(this, AdvertisementActivity.class));
             }
+        }
+    }
+
+    /**
+     * 防止未加载开屏广告，先跳入首页而初始化参数信息还未刷新缓存
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventAppUpdateLoadOver(AppUpdateLoadOverEvent event) {
+        if (event != null) {
+            ShowPOP();
         }
     }
 }

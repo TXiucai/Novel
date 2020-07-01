@@ -18,12 +18,15 @@ import android.widget.TextView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
+import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.GetDialog;
+import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.http.DownloadUtil;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.view.ProgressBarView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -62,6 +65,17 @@ public class UpdateApp {
      * @param useCache           true 有缓存时使用缓存  false不是使用缓存
      */
     public void getRequestData(final UpdateAppInterface updateAppInterface, boolean useCache) {
+        getRequestData(updateAppInterface, useCache, false);
+    }
+
+    /**
+     * 请求 系统版本更新及初始化参数。（是否使用缓存，并更新缓存）
+     *
+     * @param updateAppInterface
+     * @param useCache           true 有缓存时使用缓存  false不是使用缓存
+     * @param isSplashActivity   是否从SplashActivity请求
+     */
+    public void getRequestData(final UpdateAppInterface updateAppInterface, boolean useCache, boolean isSplashActivity) {
         String responseCache;
         if (useCache) {
             responseCache = ShareUitls.getString(activity, "Update", "");
@@ -77,6 +91,10 @@ public class UpdateApp {
                     @Override
                     public void onResponse(String response) {
                         ShareUitls.putString(activity, "Update", response);
+                        if (isSplashActivity) {
+                            ReaderApplication.isAppUpdateLoadOver = true;
+                            EventBus.getDefault().post(new AppUpdateLoadOverEvent(response));
+                        }
                         if (!useCache || StringUtils.isEmpty(responseCache)) {
                             updateAppInterface.Next(response);
                         }

@@ -40,6 +40,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
 
     @Override
     public void onCreateView() {
+        ReaderApplication.isAppUpdateLoadOver = false;
         JPushUtil.setAlias(getApplicationContext());
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
@@ -146,7 +147,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
                     handler.sendEmptyMessageDelayed(0, 500);
                 }
             }
-        }, true);
+        }, true, true);
     }
 
     @Override
