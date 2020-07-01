@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
@@ -85,7 +86,6 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.droidsonroids.gif.GifImageView;
 
 import static com.heiheilianzai.app.comic.config.ComicConfig.IS_OPEN_DANMU;
 import static com.heiheilianzai.app.comic.config.ComicConfig.SET_OPEN_DANMU;
@@ -99,7 +99,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @BindView(R2.id.activity_comiclook_lording)
     public RelativeLayout activity_comiclook_lording;
     @BindView(R2.id.activity_comiclook_lording_img)
-    public GifImageView activity_comiclook_lording_img;
+    public ImageView activity_comiclook_lording_img;
     @BindView(R2.id.titlebar_back)
     public LinearLayout titlebar_back;
     @BindView(R2.id.titlebar_text)
@@ -504,7 +504,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void initData() {
-        ComicChapterSize = comicChapter.size();
+        if (comicChapter != null) {
+            ComicChapterSize = comicChapter.size();
+        }
         CurrentComicChapter = getCurrentComicChapter(current_display_order);
         Chapter_id = CurrentComicChapter.getChapter_id();
         current_read_img_order = CurrentComicChapter.current_read_img_order;//本章最近阅读图片
@@ -516,6 +518,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     public void initViews() {
+        Glide.with(activity).load(R.drawable.bianfu).format(DecodeFormat.PREFER_ARGB_8888).into(activity_comiclook_lording_img);
         HEIGHT = ScreenSizeUtils.getInstance(activity).getScreenHeight();
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         initRecyclerview();
