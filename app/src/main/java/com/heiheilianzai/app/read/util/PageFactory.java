@@ -48,6 +48,7 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ViewToBitmapUtil;
+import com.heiheilianzai.app.utils.ViewUtils;
 import com.heiheilianzai.app.view.BorderTextView;
 import com.heiheilianzai.app.view.MScrollView;
 
@@ -860,17 +861,18 @@ public class PageFactory {
             EventBus.getDefault().post(new RefreshTopbook(book_id, chapter_id, true));
         }
         if (isfirst != 4) {
+            ViewUtils.setVisibility(mBookPageWidget,View.VISIBLE);
             mBookPageWidget.setVisibility(View.VISIBLE);
-            bookpage_scroll.setVisibility(View.GONE);
+            ViewUtils.setVisibility( bookpage_scroll,View.GONE);
             mStatus = Status.OPENING;
             MyToash.Log("getPageForBegin0", "");
             if (bookUtil == null) {
                 try {
                     mBookUtil.openBook(mActivity, chapterItem, book_id, chapter_id);
                     if (mIsPreview.equals("1")) {
-                        mPurchaseLayout.setVisibility(View.VISIBLE);
+                        ViewUtils.setVisibility(mPurchaseLayout,View.VISIBLE);
                     } else if (mIsPreview.equals("0")) {
-                        mPurchaseLayout.setVisibility(View.GONE);
+                        ViewUtils.setVisibility(mPurchaseLayout,View.GONE);
                     }
                     PageFactory.mStatus = PageFactory.Status.FINISH;
                     if (chapterItem.getBegin() == 0) {
@@ -886,9 +888,9 @@ public class PageFactory {
             } else {
                 mBookUtil = bookUtil;
                 if (mIsPreview.equals("1")) {
-                    mPurchaseLayout.setVisibility(View.VISIBLE);
+                    ViewUtils.setVisibility(mPurchaseLayout,View.VISIBLE);
                 } else if (mIsPreview.equals("0")) {
-                    mPurchaseLayout.setVisibility(View.GONE);
+                    ViewUtils.setVisibility(mPurchaseLayout,View.GONE);
                 }
                 PageFactory.mStatus = PageFactory.Status.FINISH;
                 currentPage = getPageForBegin(chapterItem.getBegin());
@@ -936,7 +938,6 @@ public class PageFactory {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            MyToash.ToashSuccess(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_buysuccess));
                             JSONArray jsonArray = new JSONArray(result);
                             ChapterContent chapterContent = new Gson().fromJson(jsonArray.getString(0), ChapterContent.class);
                             chapterItem.setIs_preview(chapterContent.getIs_preview());
@@ -948,14 +949,17 @@ public class PageFactory {
                             values.put("chapter_path", filepath);
                             values.put("is_preview", "0");
                             values.put("update_time", chapterContent.getUpdate_time());
-                            ChapterManager.getInstance(mActivity).getCurrentChapter().setIs_preview("0");
-                            ChapterManager.getInstance(mActivity).getCurrentChapter().setChapter_path(filepath);
-                            ChapterManager.getInstance(mActivity).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
                             LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
-                            if (config.getPageMode() != 4) {
-                                ChapterManager.getInstance(mActivity).openCurrentChapter(chapter_id);
-                            } else {
-                                openBook(4, ChapterManager.getInstance(mActivity).getCurrentChapter(), null);
+                            if(mActivity!=null){
+                                MyToash.ToashSuccess(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_buysuccess));
+                                ChapterManager.getInstance(mActivity).getCurrentChapter().setIs_preview("0");
+                                ChapterManager.getInstance(mActivity).getCurrentChapter().setChapter_path(filepath);
+                                ChapterManager.getInstance(mActivity).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
+                                if (config.getPageMode() != 4) {
+                                    ChapterManager.getInstance(mActivity).openCurrentChapter(chapter_id);
+                                } else {
+                                    openBook(4, ChapterManager.getInstance(mActivity).getCurrentChapter(), null);
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1509,11 +1513,13 @@ public class PageFactory {
                 values.put("chapteritem_begin", 0);
                 LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", nextChapter.getBook_id(), nextChapter.getChapter_id());
                 nextChapter.setChapteritem_begin(0);
-                openBook(2, nextChapter, bookUtil);
-                ChapterManager.getInstance(mActivity).setCurrentChapter(nextChapter);
-                IS_CHAPTERLast = true;
-                if (ReaderConfig.USE_AD && !close_AD) {
-                    getWebViewAD(mActivity);//获取广告
+                if(mActivity!=null){
+                    openBook(2, nextChapter, bookUtil);
+                    ChapterManager.getInstance(mActivity).setCurrentChapter(nextChapter);
+                    IS_CHAPTERLast = true;
+                    if (ReaderConfig.USE_AD && !close_AD) {
+                        getWebViewAD(mActivity);//获取广告
+                    }
                 }
             }
         });
