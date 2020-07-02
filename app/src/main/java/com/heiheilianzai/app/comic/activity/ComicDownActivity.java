@@ -171,6 +171,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
         id = baseComic.getId();
         MyToash.Log("baseComicid", id + "");
         comicDownOptionList = new ArrayList<>();
+        activity_comicdown_down.setClickable(false);
         ComicinfoMuluFragment.GetCOMIC_catalog(activity, comic_id, new ComicinfoMuluFragment.GetCOMIC_catalogList() {
             @Override
             public void GetCOMIC_catalogList(List<ComicChapter> comicChapterList) {
@@ -217,6 +218,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
     }
 
     public void httpData() {
+        activity_comicdown_down.setClickable(true);
         if (Flag) {//下载缓存
             fragment_comicinfo_mulu_layout.setVisibility(View.GONE);
             comicDownOptionList = LitePal.where("comic_id = ? and ISDown=?", comic_id, "1").find(ComicChapter.class);

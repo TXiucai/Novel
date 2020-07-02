@@ -155,12 +155,14 @@ public class DownComicService extends IntentService {
             ContentValues values = new ContentValues();
             values.put("ImagesText", s);
             values.put("ISDown", "1");
-            long chapterid = comicChapterCatalogs.get(comicChapterItem.display_order).getId();
-            int i;
-            if (id == 0) {
-                i = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?",comicChapterItem.getComic_id(), chapter_id);
-            } else {
-                i = LitePal.update(ComicChapter.class, values, chapterid);
+            if(comicChapterItem.display_order<comicChapterCatalogs.size()){//如果服务器display_order参数有问题会导致Bounds
+                long chapterid = comicChapterCatalogs.get(comicChapterItem.display_order).getId();
+                int i;
+                if (id == 0) {
+                    i = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?",comicChapterItem.getComic_id(), chapter_id);
+                } else {
+                    i = LitePal.update(ComicChapter.class, values, chapterid);
+                }
             }
         }
         downComicEvenbus.flag = true;
