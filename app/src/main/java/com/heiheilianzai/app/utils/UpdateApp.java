@@ -90,9 +90,8 @@ public class UpdateApp {
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mAppUpdateUrl, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        ShareUitls.putString(activity, "Update", response);
+                        ReaderConfig.newInstance().AppUpdate=response;
                         if (isSplashActivity) {
-                            ReaderApplication.isAppUpdateLoadOver = true;
                             EventBus.getDefault().post(new AppUpdateLoadOverEvent(response));
                         }
                         if (!useCache || StringUtils.isEmpty(responseCache)) {

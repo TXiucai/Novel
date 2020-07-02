@@ -6,7 +6,10 @@ package com.heiheilianzai.app.constants;
 public class SharedPreferencesConstant {
 
     //------------------ ShareUitls -------------------------
+    /**{@link com.heiheilianzai.app.bean.AppUpdate} 初始化应用配置参数基本参数，版本更新数据，开屏广告 */
+    public  static  final  String UPDATE_JSON_KAY="Update";
 
+    public  static  final  String SIGN_POP_KAY= "sign_pop";
     //---------------------- END -----------------------------
 
     //------------------ PreparedDomain -------------------------

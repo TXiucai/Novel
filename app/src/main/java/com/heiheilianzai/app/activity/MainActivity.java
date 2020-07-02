@@ -37,6 +37,7 @@ import com.heiheilianzai.app.comic.been.BaseComic;
 import com.heiheilianzai.app.comic.fragment.StroeNewFragmentComic;
 import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.dialog.MyPoPwindow;
 import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
@@ -52,6 +53,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
@@ -95,63 +97,72 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     @BindView(R2.id.shelf_book_delete_btn)
     public LinearLayout shelf_book_delete_btn;
     private List<android.support.v4.app.Fragment> mFragmentList;
-
-    @Override
-    public int initContentView() {
-        return R.layout.activity_main;
-    }
-
-    public static Activity activity;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activity = this;
-        Drawable drawable_novel = getResources().getDrawable(R.drawable.selector_home_novel);
-        drawable_novel.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
-        home_novel_layout.setCompoundDrawables(null, drawable_novel, null, null);
-        Drawable drawable_store = getResources().getDrawable(R.drawable.selector_home_store);
-        drawable_store.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
-        home_store_layout.setCompoundDrawables(null, drawable_store, null, null);
-        Drawable drawable_comic = getResources().getDrawable(R.drawable.selector_home_store_comic);
-        drawable_comic.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
-        home_store_layout_comic.setCompoundDrawables(null, drawable_comic, null, null);
-        Drawable drawable_discovery = getResources().getDrawable(R.drawable.selector_home_discovery);
-        drawable_discovery.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
-        home_discovery_layout.setCompoundDrawables(null, drawable_discovery, null, null);
-        Drawable drawable_mine = getResources().getDrawable(R.drawable.selector_home_mine);
-        drawable_mine.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
-        home_mine_layout.setCompoundDrawables(null, drawable_mine, null, null);
-        EventBus.getDefault().register(this);
-        permission(activity);
-        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {                                  //适配华为手机虚拟键遮挡tab的问题
-            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
-        }
-        initData();
-        syncDevice(activity);
-        mRadioGroup.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    getNotice(activity);
-                    ShowPOP();
-                    getReadButtomWebViewAD(activity);
-                } catch (Exception e) {
-                }
-            }
-        });
-        startAdvertisementActivity();
-    }
-
     private AppUpdate mAppUpdate;
     List<BaseBook> bookLists;
     List<BaseComic> comicList;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
     private int possition = 5;
     BookshelfFragment bookshelfFragment;
+    public static Activity activity;
 
-    public void initData() {
+    private Dialog popupWindow;
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {//版本更新
+                popupWindow = new UpdateApp().getAppUpdatePop(MainActivity.this, mAppUpdate);
+                ReaderConfig.AppUpdate = null;
+            } else {//签到弹框
+                new MyPoPwindow().getSignPop(activity);
+            }
+        }
+    };
+
+    @Override
+    public int initContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {    //适配华为手机虚拟键遮挡tab的问题
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));  //需要在setContentView()方法后面执行
+        }
+        EventBus.getDefault().register(this);
+        activity = this;
+        permission(activity);
+        initView();
+        initData();
+    }
+
+    private void initView() {
+        setBottomButtonImgs();
+        initFragmentView();
+        ShowPOP();
+    }
+
+    /**
+     * 设置底部按钮图片
+     */
+    private void setBottomButtonImgs() {
+        setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
+        setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
+        setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
+        setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_discovery);
+        setBottomButtonImg(home_mine_layout, R.drawable.selector_home_mine);
+    }
+
+    private void setBottomButtonImg(RadioButton button, int drawable) {
+        Drawable drawable_novel = getResources().getDrawable(drawable);
+        drawable_novel.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
+        button.setCompoundDrawables(null, drawable_novel, null, null);
+    }
+
+    public void initFragmentView() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         //判断本地书架是否有数据
         Intent intent = getIntent();
@@ -172,12 +183,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         mFragmentList.add(mineFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, mFragmentList);
         customScrollViewPage.setAdapter(myFragmentPagerAdapter);
-        customScrollViewPage.post(new Runnable() {
-            @Override
-            public void run() {
-                customScrollViewPage.setOffscreenPageLimit(5);
-            }
-        });
+        customScrollViewPage.setOffscreenPageLimit(5);
         setOption();
     }
 
@@ -248,166 +254,56 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         });
     }
 
+    /**
+     * 记录退出前选择的位置再次进入还原
+     * @param i
+     */
     private void IntentFragment(int i) {
         customScrollViewPage.setCurrentItem(i);
         ShareUitls.putTab(activity, "LastFragment", i);
-        MyToash.Log("LastFragment t", i);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Utils.mDialog = null;
-        OkHttpEngine.mInstance = null;
-    }
-
-    public View getNavigationView() {
-        return mNavigationView;
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (popupWindow != null && popupWindow.isShowing()) {
-                return true;
-            }
-            if ((System.currentTimeMillis() - mExitTime) > 2000) {
-                MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.MainActivity_exit));
-                mExitTime = System.currentTimeMillis();
-            } else {
-                exitAPP();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-
-    private void exitAPP() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.AppTask> appTaskList = null;
-            appTaskList = activityManager.getAppTasks();
-            for (ActivityManager.AppTask appTask : appTaskList) {
-                appTask.finishAndRemoveTask();
-            }
-        } else {
-            if (SplashActivity.activity != null) {
-                SplashActivity.activity.finish();
-            }
-            Intent startMain = new Intent(Intent.ACTION_MAIN);
-            startMain.addCategory(Intent.CATEGORY_HOME);
-            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(startMain);
-            System.exit(0);
-        }
-    }
-
-    //为了解决弹出PopupWindow后外部的事件不会分发,既外部的界面不可以点击
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (popupWindow != null && popupWindow.isShowing()) {
-            return false;
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
-    //权限管理
-    public static void permission(Activity activity) {
-        List<String> permissionLists = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            permissionLists.add(Manifest.permission.READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.REQUEST_INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                permissionLists.add(Manifest.permission.REQUEST_INSTALL_PACKAGES);
-            }
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
-            permissionLists.add(Manifest.permission.INSTALL_PACKAGES);
-        }
-        if (!permissionLists.isEmpty()) {//说明肯定有拒绝的权限
-            ActivityCompat.requestPermissions(activity, permissionLists.toArray(new String[permissionLists.size()]), 1);
-        }
-    }
-
-    private Dialog popupWindow;
-    @SuppressLint("HandlerLeak")
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 0) {
-                popupWindow = new UpdateApp().getAppUpdatePop(MainActivity.this, mAppUpdate);
-                ReaderConfig.AppUpdate = null;
-            } else {
-                new MyPoPwindow().getSignPop(activity);
-            }
-        }
-    };
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-    }
-
-
+    /**
+     * 版本更新或签到弹框
+     */
     public void ShowPOP() {
-        if (!ReaderApplication.isAppUpdateLoadOver) {
+        String str = ReaderConfig.newInstance().AppUpdate;
+        if(StringUtils.isEmpty(str)){
             return;
         }
-        String str = ShareUitls.getString(activity, "Update", "");
         if (str.length() > 0) {
             mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
             if (mAppUpdate != null && (mAppUpdate.getUpdate() == 1 || mAppUpdate.getUpdate() == 2)) {
-                mRadioGroup.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        handler.sendEmptyMessage(0);
-                    }
-                });
+                handler.sendEmptyMessage(0);
             } else {
-                final String result = ShareUitls.getString(activity, "sign_pop", "");//签到弹框
-                if (result.length() != 0) {
-                    mRadioGroup.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            handler.sendEmptyMessageDelayed(1, 1000);
-                        }
-                    });
-                }
-            }
-        } else {
-            final String result = ShareUitls.getString(activity, "sign_pop", "");//签到弹框
-            if (result.length() != 0) {
-                mRadioGroup.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        handler.sendEmptyMessageDelayed(1, 1000);
-                    }
-                });
+                signPop();
             }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void ToStore(ToStore toStore) {
-        if (toStore.PRODUCT == 1) {
-            home_store_layout.setChecked(true);
-        } else {
-            home_store_layout_comic.setChecked(true);
+    private void signPop(){
+        final String result = ShareUitls.getString(activity, SharedPreferencesConstant.SIGN_POP_KAY, "");
+        if (result.length() != 0) {
+            handler.sendEmptyMessageDelayed(1, 1000);
         }
     }
 
+    private void initData() {
+        syncDevice(activity);
+        getNotice(activity);
+        getReadButtomWebViewAD(activity);
+    }
+
+    /**
+     * 更新小说广告
+     * @param activity
+     */
     public void getReadButtomWebViewAD(Activity activity) {
         ReaderParams params = new ReaderParams(activity);
-        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
         params.putExtraParams("type", XIAOSHUO + "");
         params.putExtraParams("position", "12");
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mAdvert, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
@@ -473,16 +369,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         }
     }
 
-    /**
-     * 启动广告页
-     */
-    public void startAdvertisementActivity() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            if (bundle.getBoolean("advertisement")) {
-                startActivity(new Intent(this, AdvertisementActivity.class));
-            }
-        }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -494,6 +384,94 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public void eventAppUpdateLoadOver(AppUpdateLoadOverEvent event) {
         if (event != null) {
             ShowPOP();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void ToStore(ToStore toStore) {
+        if (toStore.PRODUCT == 1) {
+            home_store_layout.setChecked(true);
+        } else {
+            home_store_layout_comic.setChecked(true);
+        }
+    }
+
+    //为了解决弹出PopupWindow后外部的事件不会分发,既外部的界面不可以点击
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (popupWindow != null && popupWindow.isShowing()) {
+            return false;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (popupWindow != null && popupWindow.isShowing()) {
+                return true;
+            }
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.MainActivity_exit));
+                mExitTime = System.currentTimeMillis();
+            } else {
+                exitAPP();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void exitAPP() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.AppTask> appTaskList = null;
+            appTaskList = activityManager.getAppTasks();
+            for (ActivityManager.AppTask appTask : appTaskList) {
+                appTask.finishAndRemoveTask();
+            }
+        } else {
+            if (SplashActivity.activity != null) {
+                SplashActivity.activity.finish();
+            }
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
+            System.exit(0);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Utils.mDialog = null;
+        OkHttpEngine.mInstance = null;
+    }
+
+    public View getNavigationView() {
+        return mNavigationView;
+    }
+
+    /**
+     * 权限管理申请
+     * @param activity
+     */
+    public static void permission(Activity activity) {
+        List<String> permissionLists = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionLists.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.REQUEST_INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                permissionLists.add(Manifest.permission.REQUEST_INSTALL_PACKAGES);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
+            permissionLists.add(Manifest.permission.INSTALL_PACKAGES);
+        }
+        if (!permissionLists.isEmpty()) {//说明肯定有拒绝的权限
+            ActivityCompat.requestPermissions(activity, permissionLists.toArray(new String[permissionLists.size()]), 1);
         }
     }
 }

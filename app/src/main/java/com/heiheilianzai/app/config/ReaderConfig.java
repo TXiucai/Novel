@@ -15,12 +15,10 @@ import java.util.List;
 
 import okhttp3.Request;
 
-//import com.squareup.okhttp.Request;
 
 /**
  * Created by scb on 2018/5/27.
  */
-
 public class ReaderConfig {
     //本应用的appkey
     public static final String mAppkey = RabbitConfig.mAppkey;
@@ -285,6 +283,11 @@ public class ReaderConfig {
      * 首页公告
      */
     public static final String mHomeNotice = "/site/notice";
+
+    /**
+     * 广告
+     */
+    public static final String  mAdvert= "/advert/info";
 
     public static final String mWebviewCacheDir = "webviewCache";
 
