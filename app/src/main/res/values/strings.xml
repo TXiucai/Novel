@@ -354,6 +354,7 @@
     <string name="ComicDownActivity_local">本地</string>
     <string name="ComicDownActivity_yixiazai">已下载%s话</string>
     <string name="ComicDownActivity_downprocess">下载完成%s</string>
+    <string name="ComicDownActivity_choose">请选择下载章节</string>
 
     <string name="StoreFragment_toman">已切换至男频</string>
     <string name="StoreFragment_towoman">已切换至女频</string>

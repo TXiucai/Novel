@@ -4,36 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="310dp"
-     >
+        android:layout_height="@dimen/dimens_310dp">
 
         <com.heiheilianzai.app.banner.ConvenientBanner
             android:id="@+id/store_banner_male"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="@dimen/dimens_2dp"
             app:canLoop="true" />
 
         <ImageView
             android:id="@+id/store_banner_line"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="@dimen/dimens_25dp"
             android:layout_gravity="bottom"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@mipmap/banner_bottom_line" />
-<!--
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="bottom"
-            android:background="@color/white" />-->
     </FrameLayout>
-
 
     <com.heiheilianzai.app.view.AdaptionGridView
         android:id="@+id/store_entrance_grid_male"
@@ -41,15 +34,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center"
-        android:horizontalSpacing="3dp"
-        android:numColumns="5"
-
-        />
-
-    <LinearLayout
-        android:id="@+id/fragment_store_comic_content_commend"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical" />
+        android:horizontalSpacing="@dimen/dimens_3dp"
+        android:numColumns="5" />
 </LinearLayout>

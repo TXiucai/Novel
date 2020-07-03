@@ -34,7 +34,7 @@
     <declare-styleable name="CustomLayout">
         <attr name="backgroundColor" format="reference" />
     </declare-styleable>
-    
+
     <declare-styleable name="ZoomRecyclerView">
         <attr name="min_scale" format="float" />
         <attr name="max_scale" format="float" />

@@ -148,9 +148,6 @@ public class StroeNewFragmentBook extends BaseButterKnifeFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void StoreEventbus(StoreEventbusBook storeEventbus) {
-        float ratio = Math.min(Math.max(storeEventbus.Y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
-        float alpha = (int) (ratio * 255);
-        fragment_newbookself_top.setBackgroundColor(Color.argb((int) alpha, 255, 255, 255));
         if (storeEventbus.Y > REFRESH_HEIGHT) {
             setBgBlack();
         } else if (storeEventbus.Y <= REFRESH_HEIGHT) {
@@ -200,7 +197,7 @@ public class StroeNewFragmentBook extends BaseButterKnifeFragment {
 
     private void initOption() {
         fragmentList = new ArrayList<>();
-        fragment1 = new <Fragment>StoreBookFragment( fragment_newbookself_top, new Hot_word_Book());
+        fragment1 = new <Fragment>NewStoreBookFragment( fragment_newbookself_top, new Hot_word_Book());
         fragmentList.add(fragment1);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         fragment_store_viewpage.setAdapter(myFragmentPagerAdapter);
