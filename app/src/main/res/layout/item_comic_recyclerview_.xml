@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,23 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.github.piasy.biv.view.BigImageView
             android:id="@+id/item_comic_recyclerview_photoview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    <!--    <com.heiheilianzai.app.comic.view.LargeImageView
-            android:id="@+id/item_comic_recyclerview_photoview2"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="wrap_content" />-->
-
-
-        <!--        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-                    android:id="@+id/item_comic_recyclerview_SubsamplingScaleImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />-->
-
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            app:failureImage="@mipmap/icon_comic_def" />
 
         <com.heiheilianzai.app.comic.view.DanmuRelativeLayout
             android:id="@+id/item_comic_recyclerview_danmu"
@@ -33,6 +23,11 @@
             android:layout_height="match_parent"
             android:clickable="false"
             android:visibility="gone" />
-    </FrameLayout>
 
+        <View
+            android:id="@+id/ban_touch_float"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent" />
+    </FrameLayout>
 </RelativeLayout>

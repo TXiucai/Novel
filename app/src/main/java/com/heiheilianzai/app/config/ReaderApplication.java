@@ -10,6 +10,8 @@ import android.os.Build;
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.github.piasy.biv.BigImageViewer;
+import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.bean.AppUpdate;
@@ -48,6 +50,8 @@ public class ReaderApplication extends LitePalApplication {
             if (ReaderConfig.USE_QQ) {
                 PlatformConfig.setQQZone(ReaderConfig.QQ_APPID, ReaderConfig.QQ_SECRET);
             }
+            //初始化BigImageViewer图片加载方式为Glide
+            BigImageViewer.initialize(GlideImageLoader.with(getAppContext()));
             ReadingConfig.createConfig(this);
             Bugly.init(this, "75adbf1bdc", false);
             JPushUtil.init(this);

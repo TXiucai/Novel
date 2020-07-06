@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
+import com.github.piasy.biv.BigImageViewer;
+import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
@@ -53,6 +55,7 @@ import com.heiheilianzai.app.comic.fragment.ComicinfoMuluFragment;
 import com.heiheilianzai.app.comic.view.DanmuRelativeLayout;
 import com.heiheilianzai.app.comic.view.ZoomRecyclerView;
 import com.heiheilianzai.app.config.MainHttpTask;
+import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.BuyLoginSuccess;
 import com.heiheilianzai.app.http.ReaderParams;
@@ -65,7 +68,9 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.utils.decode.GlideEncypeImageLoader;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -81,11 +86,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.OkHttpClient;
 
 import static com.heiheilianzai.app.comic.config.ComicConfig.IS_OPEN_DANMU;
 import static com.heiheilianzai.app.comic.config.ComicConfig.SET_OPEN_DANMU;
@@ -653,6 +660,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         try {
             this.comicChapterItem = comicChapterItem;
             if (comicChapterItem != null && !comicChapterItem.image_list.isEmpty()) {
+                setBigImageImageLoader(comicChapterItem.image_list.get(0));
                 titlebar_text.setText(comicChapterItem.chapter_title);
                 Chapter_title = comicChapterItem.chapter_title;
                 current_display_order = comicChapterItem.display_order;
@@ -945,5 +953,27 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             }
         });
         dialog.show();
+    }
+
+    /**
+     * 拿到数据后 据数据判断图片地址是否需要解密。(只在ComicLookActivity使用)
+     * @param bigImageImageLoader
+     */
+    void setBigImageImageLoader(BaseComicImage bigImageImageLoader){
+        String imageStr = bigImageImageLoader.getImage();
+        setBigImageImageLoader(StringUtils.isImgeUrlEncryptPostfix(imageStr));
+    }
+
+    void setBigImageImageLoader(boolean isEncrype){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .build();
+        if (isEncrype) {
+            BigImageViewer.initialize(GlideEncypeImageLoader.with(ReaderApplication.getAppContext(), okHttpClient));
+        } else {
+            BigImageViewer.initialize(GlideImageLoader.with(ReaderApplication.getAppContext(), okHttpClient));
+        }
     }
 }
