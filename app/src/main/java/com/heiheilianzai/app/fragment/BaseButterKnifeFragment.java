@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.heiheilianzai.app.BuildConfig;
+import com.heiheilianzai.app.utils.MyToash;
 import com.umeng.analytics.MobclickAgent;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.utils.StatusBarUtil;
@@ -21,8 +22,17 @@ import java.lang.reflect.Field;
 
 import butterknife.ButterKnife;
 
+/**
+ * 懒加载 因为项目重构原因 为不影响以前的代码 没有使用 abstract方法
+ * 想用懒加载子类重写 {@link #initView()}{@link #initData()}
+ *
+ */
 public abstract class BaseButterKnifeFragment extends Fragment {
     public FragmentActivity activity;
+    //Fragment的View加载完毕的标记
+    private boolean isViewCreated;
+    //Fragment对用户可见的标记
+    private boolean isUIVisible;
 
     public abstract int initContentView();
 
@@ -32,7 +42,34 @@ public abstract class BaseButterKnifeFragment extends Fragment {
         activity = getActivity();
         View view = inflater.inflate(initContentView(), container, false);
         ButterKnife.bind(this, view);
+        initView();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            isUIVisible = true;
+            lazyLoad();
+        } else {
+            isUIVisible = false;
+        }
+    }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        isViewCreated = true;
+        lazyLoad();
+    }
+
+    private void lazyLoad() {
+        if (isViewCreated && isUIVisible) {
+            initData();
+            //数据加载完毕,恢复标记,防止重复加载
+            isViewCreated = false;
+            isUIVisible = false;
+        }
     }
 
     @Override
@@ -47,29 +84,19 @@ public abstract class BaseButterKnifeFragment extends Fragment {
         MobclickAgent.onPageEnd(getClass().getSimpleName());
     }
 
-
     @Override
     public void onDetach() {
-
         super.onDetach();
-
+        activity = null;
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-
             childFragmentManager.setAccessible(true);
-
             childFragmentManager.set(this, null);
-
         } catch (NoSuchFieldException e) {
-
             throw new RuntimeException(e);
-
         } catch (IllegalAccessException e) {
-
             throw new RuntimeException(e);
-
         }
-
     }
 
     /**
@@ -81,4 +108,9 @@ public abstract class BaseButterKnifeFragment extends Fragment {
         }
     }
 
+    protected void initView() {
+    }
+
+    protected void initData() {
+    }
 }
