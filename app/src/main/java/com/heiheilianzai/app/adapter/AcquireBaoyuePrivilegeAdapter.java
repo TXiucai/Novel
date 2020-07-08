@@ -20,7 +20,7 @@ import java.util.List;
 public class AcquireBaoyuePrivilegeAdapter extends ReaderBaseAdapter<AcquirePrivilegeItem> {
     Activity mActivity;
     public AcquireBaoyuePrivilegeAdapter(Activity context, List<AcquirePrivilegeItem> list, int count) {
-        super(context, list, count);
+        this(context, list, count,true);
     }
 
     public AcquireBaoyuePrivilegeAdapter(Activity context, List<AcquirePrivilegeItem> list, int count, boolean close) {
