@@ -174,7 +174,7 @@ public abstract class BaseAdvertisementActivity extends Activity {
 
     public interface OnAdImageListener {
         void onAnimationEnd();
-
+        void onFailed();
         void onClick();
     }
 

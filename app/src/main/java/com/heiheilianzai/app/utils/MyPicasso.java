@@ -140,6 +140,7 @@ public class MyPicasso {
         Glide.with(activity).load(startpage.image).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                listener.onFailed();
                 return false;
             }
             @Override

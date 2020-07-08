@@ -65,6 +65,11 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
                                 }
 
                                 @Override
+                                public void onFailed() {
+                                    handler.sendEmptyMessageDelayed(0, 500);
+                                }
+
+                                @Override
                                 public void onClick() {
                                     skip = false;
                                     if (!skip) {
