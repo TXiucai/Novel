@@ -1,40 +1,24 @@
 package com.heiheilianzai.app.comic.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
-import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.activity.BaseOptionActivity;
-import com.heiheilianzai.app.adapter.EntranceAdapter;
-import com.heiheilianzai.app.adapter.ReaderBaseAdapter;
-import com.heiheilianzai.app.bean.EntranceItem;
-import com.heiheilianzai.app.book.been.StoreEventbusBook;
 import com.heiheilianzai.app.comic.adapter.HomeStoreComicAdapter;
 import com.heiheilianzai.app.comic.been.StroreComicLable;
 import com.heiheilianzai.app.comic.config.ComicConfig;
-import com.heiheilianzai.app.comic.eventbus.StoreEventbus;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.eventbus.StoreComicEvent;
 import com.heiheilianzai.app.fragment.BaseHomeStoreFragment;
-import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.view.AdaptionGridView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.heiheilianzai.app.config.ReaderConfig.BAOYUE;
-import static com.heiheilianzai.app.config.ReaderConfig.MIANFEI;
-import static com.heiheilianzai.app.config.ReaderConfig.PAIHANGINSEX;
-import static com.heiheilianzai.app.config.ReaderConfig.SHUKU;
-import static com.heiheilianzai.app.config.ReaderConfig.WANBEN;
 
 
 /**
@@ -43,7 +27,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.WANBEN;
  */
 public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLable> {
 
-    StroeNewFragmentComic.Hot_word hot_word;
+    StroeNewFragment.MyHotWord hot_word;
 
     @Override
     public int initContentView() {
@@ -51,7 +35,7 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     }
 
     @SuppressLint("ValidFragment")
-    public NewStoreComicFragment(RelativeLayout fragment_newbookself_top, StroeNewFragmentComic.Hot_word hot_word) {
+    public NewStoreComicFragment(RelativeLayout fragment_newbookself_top, StroeNewFragment.MyHotWord hot_word) {
         this.fragment_newbookself_top = fragment_newbookself_top;
         this.hot_word = hot_word;
     }
@@ -88,9 +72,9 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     @Override
     protected void postEvent(float alpha) {
         if (alpha == 0.0) {
-            EventBus.getDefault().post(new StoreEventbus(true,  0));
+            EventBus.getDefault().post(new StoreComicEvent(true, 0));
         } else if (alpha == 255) {
-            EventBus.getDefault().post(new StoreEventbus(true, ReaderConfig.REFRESH_HEIGHT + 1));
+            EventBus.getDefault().post(new StoreComicEvent(true, ReaderConfig.REFRESH_HEIGHT + 1));
         }
     }
 
@@ -124,6 +108,6 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
      */
     @Override
     public void initEntranceGrid(AdaptionGridView mEntranceGridMale) {
-        initEntranceGrid(mEntranceGridMale,false,R.mipmap.comic_classification,R.mipmap.comic_ranking,R.mipmap.comic_member,R.mipmap.comic_finished,R.mipmap.comic_limitfree);
+        initEntranceGrid(mEntranceGridMale, false, R.mipmap.comic_classification, R.mipmap.comic_ranking, R.mipmap.comic_member, R.mipmap.comic_finished, R.mipmap.comic_limitfree);
     }
 }

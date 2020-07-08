@@ -35,7 +35,6 @@ import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.book.fragment.StroeNewFragmentBook;
 import com.heiheilianzai.app.comic.been.BaseComic;
 import com.heiheilianzai.app.comic.fragment.StroeNewFragmentComic;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
@@ -70,8 +69,6 @@ import java.util.List;
 
 import butterknife.BindView;
 
-import static com.heiheilianzai.app.book.fragment.StroeNewFragmentBook.IS_NOTOP_BOOK;
-import static com.heiheilianzai.app.comic.fragment.StroeNewFragmentComic.IS_NOTOP_COMIC;
 import static com.heiheilianzai.app.config.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.config.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
@@ -104,6 +101,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private int possition = 5;
     BookshelfFragment bookshelfFragment;
     public static Activity activity;
+    StroeNewFragmentBook stroeNewFragmentBook;//首页漫画
+    StroeNewFragmentComic stroeNewFragmentComic;//首页小说
 
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
@@ -173,9 +172,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         mFragmentList = new ArrayList<>();
         bookshelfFragment = new BookshelfFragment(bookLists, comicList, shelf_book_delete_btn);
         mFragmentList.add(bookshelfFragment);
-        StroeNewFragmentBook stroeNewFragmentBook = new StroeNewFragmentBook();
+        stroeNewFragmentBook = new StroeNewFragmentBook();
         mFragmentList.add(stroeNewFragmentBook);
-        StroeNewFragmentComic stroeNewFragmentComic = new StroeNewFragmentComic();
+        stroeNewFragmentComic = new StroeNewFragmentComic();
         mFragmentList.add(stroeNewFragmentComic);
         DiscoveryNewFragment discoveryFragment = new DiscoveryNewFragment();
         mFragmentList.add(discoveryFragment);
@@ -189,29 +188,21 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     private void setOption() {
         int LastFragment = ShareUitls.getTab(activity, "LastFragment", 1);
-        MyToash.Log("LastFragment", LastFragment);
         switch (LastFragment) {
             case 0:
-                home_novel_layout.setChecked(true);
-                customScrollViewPage.setCurrentItem(0, false);
+                initViewPageChecked(home_novel_layout,0,true);
                 break;
             case 1:
-                setStatusTextColor(IS_NOTOP_BOOK, activity);
-                home_store_layout.setChecked(true);
-                customScrollViewPage.setCurrentItem(1, false);
+                initViewPageChecked(home_store_layout,1,false);
                 break;
             case 2:
-                setStatusTextColor(IS_NOTOP_COMIC, activity);
-                home_store_layout_comic.setChecked(true);
-                customScrollViewPage.setCurrentItem(2, false);
+                initViewPageChecked(home_store_layout_comic,2,false);
                 break;
             case 3:
-                home_discovery_layout.setChecked(true);
-                customScrollViewPage.setCurrentItem(3, false);
+                initViewPageChecked(home_discovery_layout,3,true);
                 break;
             case 4:
-                home_mine_layout.setChecked(true);
-                customScrollViewPage.setCurrentItem(4, false);
+                initViewPageChecked(home_mine_layout,4,true);
                 break;
         }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -220,38 +211,43 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 switch (checkedId) {
                     case R.id.home_novel_layout:
                         if (possition != 0) {
-                            setStatusTextColor(true, activity);
-                            IntentFragment(0);
+                            setChangedView(0, true);
                         }
                         break;
                     case R.id.home_store_layout:
                         if (possition != 1) {
-                            IntentFragment(1);
-                            setStatusTextColor(IS_NOTOP_BOOK, activity);
+                            setChangedView(1, stroeNewFragmentBook.IS_NOTOP);
                         }
                         break;
                     case R.id.home_store_layout_comic:
                         if (possition != 2) {
-                            IntentFragment(2);
-                            setStatusTextColor(IS_NOTOP_COMIC, activity);
+                            setChangedView(2, stroeNewFragmentComic.IS_NOTOP);
                         }
                         break;
                     case R.id.home_discovery_layout:
                         if (possition != 3) {
-                            setStatusTextColor(true, activity);
-                            IntentFragment(3);
+                            setChangedView(3, true);
                         }
                         break;
                     case R.id.home_mine_layout:
                         if (possition != 4) {
-                            setStatusTextColor(true, activity);
-                            IntentFragment(4);
-                            setStatusTextColor(true, activity);
+                            setChangedView(4, true);
                         }
                         break;
                 }
             }
         });
+    }
+
+    void initViewPageChecked(RadioButton radioButton, int item,boolean useDart) {
+        setStatusTextColor(useDart, activity);
+        radioButton.setChecked(true);
+        customScrollViewPage.setCurrentItem(item, false);
+    }
+
+    void setChangedView(int possition, boolean useDart) {
+        setStatusTextColor(useDart, activity);
+        IntentFragment(possition);
     }
 
     /**

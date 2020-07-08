@@ -1,11 +1,14 @@
-package com.heiheilianzai.app.book.been;
+package com.heiheilianzai.app.eventbus;
 
-public class StoreEventbusBook {
-    public  boolean chooseWho;
+/**
+ * 滑动改变头部搜索框样式(首页漫画，首页小说)专用
+ */
+public class StoreEvent {
+    public boolean chooseWho;
 
-    public  int Y;
+    public int Y;
 
-    public StoreEventbusBook(boolean chooseWho, int y) {
+    public StoreEvent(boolean chooseWho, int y) {
         this.chooseWho = chooseWho;
         Y = y;
     }

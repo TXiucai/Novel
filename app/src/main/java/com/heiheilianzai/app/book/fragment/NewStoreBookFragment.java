@@ -1,40 +1,23 @@
 package com.heiheilianzai.app.book.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
-import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.activity.BaseOptionActivity;
-import com.heiheilianzai.app.adapter.EntranceAdapter;
-import com.heiheilianzai.app.adapter.ReaderBaseAdapter;
-import com.heiheilianzai.app.bean.EntranceItem;
 import com.heiheilianzai.app.book.adapter.HomeStoreBookAdapter;
-import com.heiheilianzai.app.book.been.StoreEventbusBook;
 import com.heiheilianzai.app.book.been.StroreBookcLable;
-import com.heiheilianzai.app.comic.been.StroreComicLable;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.eventbus.StoreBookEvent;
 import com.heiheilianzai.app.fragment.BaseHomeStoreFragment;
-import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.fragment.StroeNewFragment;
 import com.heiheilianzai.app.view.AdaptionGridView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.heiheilianzai.app.config.ReaderConfig.BAOYUE;
-import static com.heiheilianzai.app.config.ReaderConfig.MIANFEI;
-import static com.heiheilianzai.app.config.ReaderConfig.PAIHANGINSEX;
-import static com.heiheilianzai.app.config.ReaderConfig.SHUKU;
-import static com.heiheilianzai.app.config.ReaderConfig.WANBEN;
 
 
 /**
@@ -43,7 +26,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.WANBEN;
  */
 public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable> {
 
-    StroeNewFragmentBook.Hot_word_Book hot_word;
+    StroeNewFragment.MyHotWord hot_word;
 
     @Override
     public int initContentView() {
@@ -51,7 +34,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
     }
 
     @SuppressLint("ValidFragment")
-    public NewStoreBookFragment(RelativeLayout fragment_newbookself_top, StroeNewFragmentBook.Hot_word_Book hot_word) {
+    public NewStoreBookFragment(RelativeLayout fragment_newbookself_top, StroeNewFragment.MyHotWord hot_word) {
         this.fragment_newbookself_top = fragment_newbookself_top;
         this.hot_word = hot_word;
     }
@@ -82,15 +65,16 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     protected void initWaterfall(String jsonObject) {
-        initWaterfall(jsonObject,new TypeToken<List<StroreBookcLable>>() { }.getType());
+        initWaterfall(jsonObject, new TypeToken<List<StroreBookcLable>>() {
+        }.getType());
     }
 
     @Override
     protected void postEvent(float alpha) {
         if (alpha == 0.0) {
-            EventBus.getDefault().post(new StoreEventbusBook(true, (int) 0));
+            EventBus.getDefault().post(new StoreBookEvent(true, (int) 0));
         } else if (alpha == 255) {
-            EventBus.getDefault().post(new StoreEventbusBook(true, (int) ReaderConfig.REFRESH_HEIGHT+1));
+            EventBus.getDefault().post(new StoreBookEvent(true, (int) ReaderConfig.REFRESH_HEIGHT + 1));
         }
     }
 
@@ -123,7 +107,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
      * @param mEntranceGridMale
      */
     public void initEntranceGrid(AdaptionGridView mEntranceGridMale) {
-        initEntranceGrid(mEntranceGridMale,true,R.mipmap.entrance1,R.mipmap.entrance2,R.mipmap.entrance3,R.mipmap.entrance4,R.mipmap.entrance5);
+        initEntranceGrid(mEntranceGridMale, true, R.mipmap.entrance1, R.mipmap.entrance2, R.mipmap.entrance3, R.mipmap.entrance4, R.mipmap.entrance5);
     }
 }
 
