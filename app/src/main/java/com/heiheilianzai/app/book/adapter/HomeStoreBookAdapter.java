@@ -48,6 +48,10 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Activity activity;
     List<StroreBookcLable> listData;
     public int WIDTH, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20, H30;
+    public static final int BOOK_UI_STYLE_1 = 1;//风格1
+    public static final int BOOK_UI_STYLE_2 = 2;//风格2
+    public static final int BOOK_UI_STYLE_3 = 3;//风格3
+    public static final int BOOK_UI_STYLE_4 = 4;//风格4
 
     public HomeStoreBookAdapter(Activity activity, List<StroreBookcLable> listData) {
         this.activity = activity;
@@ -66,9 +70,20 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if (listData.get(position).ad_type != 0) {
+        StroreBookcLable stroreBookcLable = listData.get(position);
+        if (stroreBookcLable.ad_type != 0) {
             return 1;
         } else {
+            switch (stroreBookcLable.style) {//小说展示风格有4种 防止不同风格UI复用用ViewType区分。
+                case BOOK_UI_STYLE_1:
+                    return 2;
+                case BOOK_UI_STYLE_2:
+                    return 3;
+                case BOOK_UI_STYLE_3:
+                    return 4;
+                case BOOK_UI_STYLE_4:
+                    return 5;
+            }
             return 2;
         }
     }
@@ -87,7 +102,11 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_ad_view, parent, false);
                 viewHolder = new HomeStoreBookAdapter.AdViewHolder(view);
                 return viewHolder;
-            case 2:
+            case 2://防止不同风格UI复用
+            case 3:
+            case 4:
+            case 5:
+            case 6:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_store_book_layout, parent, false);
                 viewHolder = new HomeStoreBookAdapter.BookViewHolder(view);
                 return viewHolder;
@@ -219,10 +238,10 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         int size = bookList.size();
         int minSize = 0;
         int ItemHeigth = 0, raw = 0, start = 0;
-        if (style == 1) {
+        if (style == BOOK_UI_STYLE_1) {
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
-        } else if (style == 2) {
+        } else if (style == BOOK_UI_STYLE_2) {
             minSize = Math.min(size, 6);
             if (minSize > 3) {
                 raw = 2;
@@ -231,7 +250,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 raw = 1;
                 ItemHeigth = H100 + HEIGHT + H50;
             }
-        } else if (style == 3) {
+        } else if (style == BOOK_UI_STYLE_3) {
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
             if (size > 3) {
@@ -249,7 +268,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
             }
-        } else if (style == 4) {
+        } else if (style == BOOK_UI_STYLE_4) {
             start = 1;
             minSize = Math.min(size, 4);
             ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing);

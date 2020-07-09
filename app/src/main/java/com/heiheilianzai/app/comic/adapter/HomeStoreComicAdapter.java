@@ -19,7 +19,6 @@ import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.activity.BaseOptionActivity;
 import com.heiheilianzai.app.activity.WebViewActivity;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
-import com.heiheilianzai.app.bean.CommentItem;
 import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
 import com.heiheilianzai.app.comic.been.StroreComicLable;
 import com.heiheilianzai.app.comic.config.ComicConfig;
@@ -49,6 +48,9 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Activity activity;
     List<StroreComicLable> listData;
     public int WIDTH, WIDTHH, WIDTH_MAIN_AD, HEIGHT, H55, H30;
+    public static final int COMIC_UI_STYLE_1 = 1;//风格1
+    public static final int COMIC_UI_STYLE_2 = 2;//风格2
+    public static final int COMIC_UI_STYLE_3 = 3;//风格3
 
     public HomeStoreComicAdapter(Activity activity, List<StroreComicLable> listData) {
         this.activity = activity;
@@ -62,9 +64,18 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        if (listData.get(position).ad_type != 0) {
+        StroreComicLable stroreComicLable = listData.get(position);
+        if (stroreComicLable.ad_type != 0) {
             return 1;
         } else {
+            switch (stroreComicLable.style) {//小说展示风格有4种 防止不同风格UI复用用ViewType区分。
+                case COMIC_UI_STYLE_1:
+                    return 2;
+                case COMIC_UI_STYLE_2:
+                    return 3;
+                case COMIC_UI_STYLE_3:
+                    return 4;
+            }
             return 2;
         }
     }
@@ -84,6 +95,8 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder = new AdViewHolder(view);
                 return viewHolder;
             case 2:
+            case 3:
+            case 4:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_store_comic_layout, parent, false);
                 viewHolder = new ComicViewHolder(view);
                 return viewHolder;
@@ -135,7 +148,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private void setComicViewHolder(ComicViewHolder holder, final int position, StroreComicLable stroreComicLable){
+    private void setComicViewHolder(ComicViewHolder holder, final int position, StroreComicLable stroreComicLable) {
         List<StroreComicLable.Comic> comicList = stroreComicLable.list;
         holder.lable.setText(stroreComicLable.label);
         if (stroreComicLable.can_refresh.equals("true")) {
@@ -177,7 +190,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
         params.height = ItemHeigth + H55 + ImageUtil.dp2px(activity, 40);
         if (!comicList.isEmpty()) {
-            if (stroreComicLable.style == 3) {
+            if (stroreComicLable.style == COMIC_UI_STYLE_3) {
                 params.height += H55 + WIDTH * 5 / 9;
             }
         }
@@ -187,7 +200,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             buttomonlyOne(holder.fragment_store_gridview1_view1, holder.fragment_store_gridview1_view2, holder.fragment_store_gridview1_view3);
         }
         int dp10 = ImageUtil.dp2px(activity, 10);
-        params.setMargins(dp10,0,dp10,0);
+        params.setMargins(dp10, 0, dp10, 0);
         holder.itemView.setLayoutParams(params);
     }
 
@@ -220,7 +233,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(activity, ComicInfoActivity.class);
-                if (style != 3) {
+                if (style != COMIC_UI_STYLE_3) {
                     intent.putExtra("comic_id", comicList.get(position).comic_id);
                 } else {
                     intent.putExtra("comic_id", comicList.get(position + 1).comic_id);
@@ -231,7 +244,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         int width, height = 80, raw = 2;
         StoreComicAdapter storeComicAdapter = null;
         switch (style) {
-            case 1:
+            case COMIC_UI_STYLE_1:
                 width = WIDTH / 2;
                 height = width * 2 / 3;
                 fragment_store_gridview1_gridview.setNumColumns(2);
@@ -239,7 +252,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 raw = (int) (Math.ceil(size1 / 2d));
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size1), activity, style, width, height);
                 break;
-            case 2:
+            case COMIC_UI_STYLE_2:
                 double size = Math.min(6, comicList.size());
                 raw = (int) (Math.ceil(size / 3d));
                 width = WIDTH / 3;
@@ -247,7 +260,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 fragment_store_gridview1_gridview.setNumColumns(3);
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size), activity, style, width, height);
                 break;
-            case 3:
+            case COMIC_UI_STYLE_3:
                 if (!comicList.isEmpty()) {
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
                     StoreComicAdapter storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, 1), activity, style, WIDTH, WIDTH * 5 / 9);
