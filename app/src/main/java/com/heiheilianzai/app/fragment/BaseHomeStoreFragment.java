@@ -36,6 +36,7 @@ import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -49,9 +50,17 @@ import static com.heiheilianzai.app.config.ReaderConfig.PAIHANGINSEX;
 import static com.heiheilianzai.app.config.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.config.ReaderConfig.WANBEN;
 
+/**
+ * 首页小说，首页漫画内容基类。
+ * max_edit_time说明：后台会改变数据位置。加载更多的时候根据第一页加载的max_edit_time 与服务器返回的时间戳比较。
+ * 如果相等数据没有改变，如果不相等设置page=1刷新数据，清空原有数据。
+ * label_total说明：推荐位总条数，根据page=1时为准。
+ *
+ * @param <T>
+ */
 public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     @BindView(R2.id.store_comic_refresh_layout)
-    public SHSwipeRefreshLayout store_comic_refresh_layout;
+    public SHSwipeRefreshLayout store_comic_refresh_layout;//该控件支持自定义动画但不支持自动刷新，待替换。
     @BindView(R2.id.fragment_store_comic_content_commend)
     public RecyclerView recyclerView;
 
@@ -64,6 +73,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     protected LinearLayoutManager layoutManager;
     protected View headerView;
     boolean isScollYspill = false;
+    int page = 1;//分页页数
+    int label_total;//推荐位总数
+    String max_edit_time;//推荐位最后编辑时间
+    boolean isEdit = false;//后台是否修改了推荐列表数据
 
     @Override
     protected void initView() {
@@ -132,15 +145,22 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 }
             }
         });
-        store_comic_refresh_layout.setLoadmoreEnable(false);
         store_comic_refresh_layout.setOnRefreshListener(new SHSwipeRefreshLayout.SHSOnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData();
+                page = 1;
+                store_comic_refresh_layout.setLoadmoreEnable(true);
+                getData();//刷新banner、推荐列表
             }
 
             @Override
             public void onLoading() {
+                if (isLoadMore()) {
+                    page += 1;
+                    getStockData();//推荐列表
+                } else {
+                    finishLoadmore();
+                }
             }
 
             @Override
@@ -161,6 +181,17 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
             @Override
             public void onLoadmorePullStateChange(float percent, int state) {
+                switch (state) {
+                    case SHSwipeRefreshLayout.NOT_OVER_TRIGGER_POINT:
+                        store_comic_refresh_layout.setLoaderViewText(getString(isLoadMore() ? R.string.pullup_to_load : R.string.no_load));
+                        break;
+                    case SHSwipeRefreshLayout.OVER_TRIGGER_POINT:
+                        store_comic_refresh_layout.setLoaderViewText(getString(isLoadMore() ? R.string.release_to_load : R.string.no_load));
+                        break;
+                    case SHSwipeRefreshLayout.START:
+                        store_comic_refresh_layout.setLoaderViewText(getString(isLoadMore() ? R.string.loading : R.string.no_load));
+                        break;
+                }
             }
         });
     }
@@ -178,8 +209,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     public void initWaterfall(String jsonObject, Type typeOfT) {
         if (!StringUtils.isEmpty(jsonObject)) {
-            listData.clear();
-            listData.addAll(gson.fromJson(jsonObject, typeOfT));//
+            if (page == 1) {
+                listData.clear();
+            }
+            listData.addAll(gson.fromJson(jsonObject, typeOfT));
+            adapter.notifyDataSetChanged();
             smartRecyclerAdapter.notifyDataSetChanged();
         }
     }
@@ -211,16 +245,15 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     protected abstract void initEntranceGrid(AdaptionGridView mEntranceGridMale);
 
     /**
-     *
      * @param mEntranceGridMale
-     * @param  isProduct 参考 {@link BaseOptionActivity.PRODUCT } isProduct false 漫画  true  小说
+     * @param isProduct         参考 {@link BaseOptionActivity.PRODUCT } isProduct false 漫画  true  小说
      * @param resId1
      * @param resId2
      * @param resId3
      * @param resId4
      * @param resId5
      */
-    protected void initEntranceGrid(AdaptionGridView mEntranceGridMale,boolean isProduct,int resId1,int resId2,int resId3,int resId4,int resId5){
+    protected void initEntranceGrid(AdaptionGridView mEntranceGridMale, boolean isProduct, int resId1, int resId2, int resId3, int resId4, int resId5) {
         List<EntranceItem> mEntranceItemListMale = new ArrayList<>();
         if (ReaderConfig.USE_PAY) {
             EntranceItem entranceItem1 = new EntranceItem();
@@ -313,11 +346,15 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         });
     }
 
-    protected void finishRefresh() {
+    protected void finishRefresh(boolean isResponse) {
         if (store_comic_refresh_layout.isRefreshing()) {
-            store_comic_refresh_layout.setRefreshViewText(getString(R.string.refresh_succeed));
+            store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.refresh_succeed : R.string.refresh_fail));
             store_comic_refresh_layout.finishRefresh();
             fragment_newbookself_top.setAlpha(1);
+        } else {
+            if (isEdit) {
+                MyToash.ToashError(activity, getString(R.string.home_store_edit_data_refresh));
+            }
         }
     }
 
@@ -336,28 +373,57 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         return 0;
     }
 
+    /**
+     * 加载推荐位列表数据，缓存第一页数据
+     */
     protected void getStockData(String kayCache, String url) {
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("channel_id", "1");
+        params.putExtraParams("channel_id", "1");//男频
+        params.putExtraParams("page", "" + page);
+        params.putExtraParams("limit", "4"); //返回4条（已协商）
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
             @Override
             public void onResponse(final String result) {
                 if (!StringUtils.isEmpty(result)) {
-                    ShareUitls.putMainHttpTaskString(activity, kayCache, result);
-                    initInfo(result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String edit_time = jsonObject.getString("max_edit_time");//获取服务器修改时间戳
+                        if (page == 1) {//第一页保存修改时间戳，保存列表总条数
+                            label_total = Integer.valueOf(jsonObject.getString("label_total"));
+                            max_edit_time = edit_time;
+                            ShareUitls.putMainHttpTaskString(activity, kayCache, result);
+                            finishRefresh(true);
+                        } else {
+                            boolean isEdit = !edit_time.equals(max_edit_time);
+                            finishLoadmore(isEdit);
+                            if (isEdit) {//编辑了推荐位
+                                getEditData();
+                                return;
+                            }
+                        }
+                        initInfo(result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                finishRefresh();
             }
 
             @Override
             public void onErrorResponse(String ex) {
-                getCacheStockData();
-                finishRefresh();
+                if (page == 1) {
+                    getCacheStockData();
+                    finishRefresh(false);
+                } else {
+                    finishLoadmore(false);
+                }
             }
         });
     }
 
+    /**
+     * 加载推荐位列表缓存数据（第一页缓存）
+     */
     protected void getCacheStockData(String kay) {
         String cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
         if (!StringUtils.isEmpty(cacheData)) {
@@ -365,6 +431,19 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         }
     }
 
+    /**
+     * 加载编辑数据 如果后台编辑了数据，返回顶部加载第一页
+     */
+    void getEditData() {
+        recyclerView.scrollToPosition(0);
+        page = 1;
+        getData();
+        MyToash.ToashError(activity, getString(R.string.home_store_edit_data));
+    }
+
+    /**
+     * 加载Banner数据并写入缓存
+     */
     protected void getBannerData(String kayCache, String url) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("channel_id", "1");
@@ -376,22 +455,48 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
                             getHeaderView(result);
                         }
-                        finishRefresh();
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
                         getCacheBannerData();
-                        finishRefresh();
                     }
                 }
         );
     }
 
+    /**
+     * 加载Banner 缓存数据
+     */
     protected void getCacheBannerData(String kay) {
         String cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
         if (!StringUtils.isEmpty(cacheData)) {
             getHeaderView(cacheData);
         }
+    }
+
+    /**
+     * 是否可以加载更多数据
+     */
+    private boolean isLoadMore() {
+        return listData.size() != label_total;
+    }
+
+    /**
+     * 关闭加更多loading
+     */
+    private void finishLoadmore() {
+        store_comic_refresh_layout.finishRefresh();
+        store_comic_refresh_layout.finishLoadmore();
+    }
+
+    /**
+     * 关闭加更多loading
+     *
+     * @param isResponse 是否有数据返回
+     */
+    protected void finishLoadmore(boolean isResponse) {
+        store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.load_succeed : R.string.load_fail));
+        finishLoadmore();
     }
 }
