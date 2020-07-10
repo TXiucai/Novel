@@ -40,6 +40,7 @@ import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.dialog.MyPoPwindow;
 import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
+import com.heiheilianzai.app.eventbus.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
 import com.heiheilianzai.app.fragment.DiscoveryNewFragment;
@@ -212,6 +213,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     case R.id.home_novel_layout:
                         if (possition != 0) {
                             setChangedView(0, true);
+                            EventBus.getDefault().post(new HomeShelfRefreshEvent());
                         }
                         break;
                     case R.id.home_store_layout:

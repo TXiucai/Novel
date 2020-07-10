@@ -55,4 +55,33 @@ public class DateUtils {
         Date date = new Date(System.currentTimeMillis());
         return simpleDateFormat.format(date);
     }
+
+    /**
+     * 获取系统时间戳
+     *
+     * @return 毫秒级
+     */
+    public static long currentTime() {
+        return System.currentTimeMillis();
+    }
+
+    /**
+     * 获取时间戳与当前时间差
+     *
+     * @param timeMillis 毫秒级
+     * @return 毫秒级
+     */
+    public static long getCurrentTimeDifference(long timeMillis) {
+        return currentTime() - timeMillis;
+    }
+
+    /**
+     * 获取时间戳与当前时间差 返回秒级
+     *
+     * @param timeMillis 毫秒级
+     * @return 秒级
+     */
+    public static long getCurrentTimeDifferenceSecond(long timeMillis) {
+        return getCurrentTimeDifference(timeMillis) / 1000;
+    }
 }
