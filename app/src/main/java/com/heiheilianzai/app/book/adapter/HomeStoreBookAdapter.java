@@ -273,34 +273,38 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             minSize = Math.min(size, 4);
             ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing);
             fragment_store_gridview3_gridview_fore.setVisibility(View.VISIBLE);
-            final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
-            VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
-            fragment_store_gridview3_gridview_fore.setAdapter(horizontalAdapter);
-            fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            if( bookList.size()>0){
+                final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
+                VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
+                fragment_store_gridview3_gridview_fore.setAdapter(horizontalAdapter);
+                fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(activity, BookInfoActivity.class);
+                        intent.putExtra("book_id", secondList.get(position).getBook_id());
+                        activity.startActivity(intent);
+                    }
+                });
+            }
+        }
+        if(bookList.size()>0){
+            List<StroreBookcLable.Book> firstList = bookList.subList(start, minSize);
+            VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
+            fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
+            fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(activity, BookInfoActivity.class);
-                    intent.putExtra("book_id", secondList.get(position).getBook_id());
-                    activity.startActivity(intent);
+                    try {
+                        Intent intent = new Intent(activity, BookInfoActivity.class);
+                        if (style < 4) {
+                            intent.putExtra("book_id", bookList.get(position).getBook_id());
+                        } else intent.putExtra("book_id", bookList.get(position + 1).getBook_id());
+                        activity.startActivity(intent);
+                    } catch (Exception e) {
+                    }
                 }
             });
         }
-        List<StroreBookcLable.Book> firstList = bookList.subList(start, minSize);
-        VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
-        fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
-        fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    Intent intent = new Intent(activity, BookInfoActivity.class);
-                    if (style < 4) {
-                        intent.putExtra("book_id", bookList.get(position).getBook_id());
-                    } else intent.putExtra("book_id", bookList.get(position + 1).getBook_id());
-                    activity.startActivity(intent);
-                } catch (Exception e) {
-                }
-            }
-        });
         return ItemHeigth;
     }
 
