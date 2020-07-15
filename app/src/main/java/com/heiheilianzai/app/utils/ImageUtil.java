@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.opengl.GLES10;
 import android.os.Build;
+import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 
@@ -274,5 +275,18 @@ public class ImageUtil {
         if (ratio <= 0)
             ratio = 1;
         return ratio;
+    }
+
+    /**
+     * view转换itmap
+     * @param v
+     * @return
+     */
+    public static Bitmap viewToBitmap(View v) {
+        Bitmap screenshot;
+        screenshot = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(screenshot);
+        v.draw(canvas);
+        return screenshot;
     }
 }
