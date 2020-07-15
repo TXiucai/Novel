@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shape_sol_22ffd04f_cor_50_str_1_ffd04f" android:state_pressed="true" />
+    <item android:drawable="@drawable/shape_sol_00fff_cor_50_str_1_ffd04f" />
+</selector>

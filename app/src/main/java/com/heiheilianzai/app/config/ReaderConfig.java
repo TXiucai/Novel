@@ -114,6 +114,11 @@ public class ReaderConfig {
     public static final String mBookStoreUrl = "/book/store";
 
     /**
+     * 获取分享APP接口
+     */
+    public static final String mQrcodeIndex = "/qrcode/index";
+
+    /**
      * 首页小说 banner
      */
     public static final String BOOK_STORE_BANNER = "/book/index-banner";
@@ -287,7 +292,7 @@ public class ReaderConfig {
     /**
      * 广告
      */
-    public static final String  mAdvert= "/advert/info";
+    public static final String mAdvert = "/advert/info";
 
     public static final String mWebviewCacheDir = "webviewCache";
 

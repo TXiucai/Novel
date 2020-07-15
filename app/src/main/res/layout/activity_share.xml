@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/share_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_share_bg" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_marginTop="@dimen/dimens_20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/ShareActivity_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_18dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/share_title_t"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/dimens_20dp"
+            android:layout_marginTop="@dimen/dimens_200dp"
+            android:layout_marginRight="@dimen/dimens_20dp"
+            android:background="@drawable/shape_gradient_share_t_bg"
+            android:gravity="center"
+            android:minWidth="@dimen/dimens_200dp"
+            android:paddingLeft="@dimen/dimens_18dp"
+            android:paddingRight="@dimen/dimens_18dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimens_20dp" />
+
+        <RelativeLayout
+            android:id="@+id/qr_code_layout"
+            android:layout_width="@dimen/dimens_205dp"
+            android:layout_height="@dimen/dimens_223dp"
+            android:layout_below="@+id/share_title_t"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimens_32dp"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/qr_code_img"
+                android:layout_width="@dimen/dimens_205dp"
+                android:layout_height="@dimen/dimens_205dp"
+                android:layout_centerHorizontal="true"
+                android:padding="@dimen/dimens_4dp"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/share_url_t"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/dimens_9dp"
+                android:text="http://www.heihei3.app"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dimens_16dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/share_back"
+        android:layout_width="@dimen/dimens_50dp"
+        android:layout_height="@dimen/dimens_50dp"
+        android:layout_marginTop="@dimen/dimens_20dp"
+        android:padding="@dimen/dimens_15dp"
+        android:src="@mipmap/back_white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_42dp"
+        android:layout_marginLeft="@dimen/dimens_30dp"
+        android:layout_marginTop="555dp"
+        android:layout_marginRight="@dimen/dimens_30dp">
+
+        <TextView
+            android:id="@+id/share_save_qr_code"
+            android:layout_width="@dimen/dimens_140dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_shape_save_qr"
+            android:gravity="center"
+            android:text="@string/ShareActivity_save_qr_code"
+            android:textColor="@color/color_f7b500"
+            android:textSize="@dimen/dimens_16dp" />
+
+        <TextView
+            android:id="@+id/share_save"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/selector_shape_save"
+            android:gravity="center"
+            android:text="@string/ShareActivity_save"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dimens_16dp" />
+    </RelativeLayout>
+</RelativeLayout>

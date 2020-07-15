@@ -95,6 +95,7 @@
     <string name="MineNewFragment_song">送%s</string>
     <string name="MineNewFragment_kaitongVIP">我的VIP</string>
     <string name="MineNewFragment_shuping">我的评论</string>
+    <string name="MineNewFragment_share">我要分享</string>
     <string name="MineNewFragment_friend">邀请好友</string>
     <string name="MineNewFragment_fankui">意见反馈</string>
     <string name="MineNewFragment_lianxikefu">联系客服</string>
@@ -165,7 +166,13 @@
     <!--我的评论-->
     <string name="MineCommentListActivity_title">我的评论</string>
 
-
+    <!--我要分享-->
+    <string name="ShareActivity_title">我的分享</string>
+    <string name="ShareActivity_save_qr_code">保存二维码</string>
+    <string name="ShareActivity_qr_code_file_name">heiheilianzai_share.jpg</string>
+    <string name="ShareActivity_save_qr_toast">已保存二维码到相册</string>
+    <string name="ShareActivity_save">分享</string>
+    <string name="ShareActivity_save_toast">已保存分享地址到粘贴板</string>
 
     <!--搜索-->
     <string name="SearchActivity_hotsearch">热门搜索</string>

@@ -312,6 +312,8 @@ dependencies {
     implementation 'com.github.piasy:BigImageViewer:1.5.7'
     implementation 'com.github.piasy:GlideImageLoader:1.5.7'
     implementation 'com.github.piasy:ProgressPieIndicator:1.5.7'
+    //二维码
+    implementation 'com.google.zxing:core:3.3.3'
 }
 
 String SDK_DIR = System.getenv("ANDROID_SDK_HOME")
