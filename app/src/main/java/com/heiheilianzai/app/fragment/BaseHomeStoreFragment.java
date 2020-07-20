@@ -36,6 +36,8 @@ import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -74,9 +76,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     protected View headerView;
     boolean isScollYspill = false;
     int page = 1;//分页页数
-    int label_total;//推荐位总数
     String max_edit_time;//推荐位最后编辑时间
     boolean isEdit = false;//后台是否修改了推荐列表数据
+    boolean isLoadMore=true;//是否加载更多
 
     @Override
     protected void initView() {
@@ -150,6 +152,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onRefresh() {
                 page = 1;
                 store_comic_refresh_layout.setLoadmoreEnable(true);
+                isLoadMore=true;
                 getData();//刷新banner、推荐列表
             }
 
@@ -387,24 +390,30 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(final String result) {
                 if (!StringUtils.isEmpty(result)) {
                     try {
+                        setIsLoadMore(result);
                         JSONObject jsonObject = new JSONObject(result);
                         String edit_time = jsonObject.getString("max_edit_time");//获取服务器修改时间戳
                         if (page == 1) {//第一页保存修改时间戳，保存列表总条数
-                            label_total = Integer.valueOf(jsonObject.getString("label_total"));
                             max_edit_time = edit_time;
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
                             finishRefresh(true);
                         } else {
-                            boolean isEdit = !edit_time.equals(max_edit_time);
-                            finishLoadmore(isEdit);
-                            if (isEdit) {//编辑了推荐位
-                                getEditData();
-                                return;
+                            if(isLoadMore){
+                                boolean isEdit = !edit_time.equals(max_edit_time);
+                                if (isEdit) {//编辑了推荐位
+                                    getEditData();
+                                    return;
+                                }
                             }
+                            finishLoadmore(isLoadMore);
                         }
                         initInfo(result);
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }else {
+                    if(page > 1){
+                        isLoadMore=false;
                     }
                 }
             }
@@ -425,7 +434,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 加载推荐位列表缓存数据（第一页缓存）
      */
     protected void getCacheStockData(String kay) {
-        String cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
+        String cacheData="";
+        if(activity!=null){
+            cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
+        }
         if (!StringUtils.isEmpty(cacheData)) {
             initInfo(cacheData);
         }
@@ -479,7 +491,30 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 是否可以加载更多数据
      */
     private boolean isLoadMore() {
-        return listData.size() != label_total;
+        return isLoadMore;
+    }
+
+    /**
+     * 因为现在后台返回的推荐数据总数，是实际返回数据不匹配。服务器那里暂时处理不了。
+     * 经过和服务器商议用：数据返回成功，非第一页，且label数据为空时。为无更多数据加载。
+     * 根据返回数据判断是否是第一页，是否还有更多数据加载。
+     * @param json
+     */
+    private void setIsLoadMore(String json) {
+        if(!StringUtils.isEmpty(json)){
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(json);
+                JSONArray jsonArray = jsonObject.getJSONArray("label");
+                if(jsonArray.length()<=0&&page>1){
+                    isLoadMore =false;
+                }else {
+                    isLoadMore =true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -496,7 +531,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * @param isResponse 是否有数据返回
      */
     protected void finishLoadmore(boolean isResponse) {
-        store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.load_succeed : R.string.load_fail));
-        finishLoadmore();
+        if(isAdded()){
+            store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.load_succeed : R.string.load_fail));
+            finishLoadmore();
+        }
     }
 }
