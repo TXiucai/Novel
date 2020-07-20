@@ -18,6 +18,7 @@ import com.heiheilianzai.app.activity.BaseOptionActivity;
 import com.heiheilianzai.app.activity.FeedBackActivity;
 import com.heiheilianzai.app.activity.RechargeActivity;
 import com.heiheilianzai.app.activity.SettingsActivity;
+import com.heiheilianzai.app.activity.ShareActivity;
 import com.heiheilianzai.app.activity.TaskCenterActivity;
 import com.heiheilianzai.app.activity.UserInfoActivity;
 import com.heiheilianzai.app.bean.UserInfoItem;
@@ -238,7 +239,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             R.id.fragment_mine_user_info_tasklayout_friends, R.id.fragment_mine_user_info_nickname,
             R.id.fragment_mine_user_info_tasklayout_layout, R.id.fragment_mine_user_info_tasklayout_layout2, R.id.fragment_mine_user_info_shuquan_layout,
             R.id.fragment_mine_user_info_gold_layout, R.id.fragment_mine_user_info_paylayout_downmanager,
-            R.id.fragment_mine_user_info_paylayout_history, R.id.fragment_mine_user_info_lianxi
+            R.id.fragment_mine_user_info_paylayout_history, R.id.fragment_mine_user_info_lianxi,R.id.fragment_mine_user_info_tasklayout_share
     })
     public void getEvent(View view) {
         switch (view.getId()) {
@@ -323,6 +324,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 break;
             case R.id.fragment_mine_user_info_paylayout_downmanager:
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
+                break;
+            case R.id.fragment_mine_user_info_tasklayout_share:
+                startActivity(new Intent(activity, ShareActivity.class));
                 break;
         }
     }

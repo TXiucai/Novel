@@ -208,6 +208,9 @@
         <activity
             android:name="com.heiheilianzai.app.activity.TaskExplainActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.heiheilianzai.app.activity.ShareActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.heiheilianzai.app.comic.activity.ComicCommentActivity"

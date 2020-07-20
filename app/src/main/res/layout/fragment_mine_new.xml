@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-
-    >
+    android:orientation="vertical">
 
     <com.heiheilianzai.app.view.ObservableScrollView
         android:layout_width="match_parent"
@@ -24,14 +21,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_height="@dimen/dimens_80dp"
+                    android:layout_marginTop="@dimen/dimens_50dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="30dp">
+                    android:paddingLeft="@dimen/dimens_20dp"
+                    android:paddingRight="@dimen/dimens_30dp">
 
                     <RelativeLayout
-                        android:layout_width="80dp"
+                        android:layout_width="@dimen/dimens_80dp"
                         android:layout_height="match_parent">
 
                         <com.heiheilianzai.app.view.CircleImageView
@@ -42,8 +39,8 @@
 
                         <ImageView
                             android:id="@+id/fragment_mine_user_info_sex"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="@dimen/dimens_25dp"
+                            android:layout_height="@dimen/dimens_25dp"
                             android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
                             android:src="@mipmap/ic_sex_unknow_selected"
@@ -52,14 +49,14 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/dimens_60dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:orientation="vertical">
 
                         <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
+                            android:layout_width="@dimen/dimens_0dp"
+                            android:layout_height="@dimen/dimens_1dp"
                             android:layout_weight="1" />
 
                         <TextView
@@ -70,12 +67,12 @@
                             android:maxLength="7"
                             android:text="@string/user_login"
                             android:textColor="@color/black"
-                            android:textSize="28dp" />
+                            android:textSize="@dimen/dimens_28dp" />
 
                         <LinearLayout
                             android:id="@+id/fragment_mine_user_info_nologin"
                             android:layout_width="wrap_content"
-                            android:layout_height="24dp"
+                            android:layout_height="@dimen/dimens_24dp"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
@@ -90,36 +87,33 @@
 
                             <ImageView
                                 android:id="@+id/fragment_mine_user_info_isvip"
-                                android:layout_width="110px"
-                                android:layout_height="38px"
+                                android:layout_width="@dimen/dimens_110px"
+                                android:layout_height="@dimen/dimens_38px"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="15dp"
+                                android:layout_marginLeft="@dimen/dimens_15dp"
                                 android:scaleType="centerCrop"
                                 android:src="@mipmap/icon_isvip" />
                         </LinearLayout>
 
                         <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
+                            android:layout_width="@dimen/dimens_0dp"
+                            android:layout_height="@dimen/dimens_1dp"
                             android:layout_weight="1" />
                     </LinearLayout>
                 </LinearLayout>
-
-
             </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/fragment_mine_user_info_money_layout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="@dimen/dimens_60dp"
+                android:layout_marginTop="@dimen/dimens_20dp"
                 android:gravity="center_vertical">
 
                 <RelativeLayout
                     android:id="@+id/fragment_mine_user_info_gold_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="@dimen/dimens_50dp"
                     android:layout_weight="1">
 
                     <TextView
@@ -136,29 +130,24 @@
                         android:id="@+id/fragment_mine_user_info_gold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:layout_centerHorizontal="true"
                         android:text="--"
                         android:textColor="@color/mainColor"
-                        android:textSize="16dp" />
-
-
+                        android:textSize="@dimen/dimens_16dp" />
                 </RelativeLayout>
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="@dimen/dimens_1dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
                     android:background="@color/lightgray2" />
 
                 <RelativeLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="@dimen/dimens_50dp"
                     android:layout_weight="1">
 
                     <TextView
@@ -168,7 +157,7 @@
                         android:layout_centerHorizontal="true"
                         android:text="--"
                         android:textColor="@color/mainColor"
-                        android:textSize="16dp" />
+                        android:textSize="@dimen/dimens_16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -184,14 +173,14 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
                     android:background="@color/lightgray2" />
 
                 <RelativeLayout
                     android:id="@+id/fragment_mine_user_info_shuquan_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="@dimen/dimens_50dp"
                     android:layout_alignParentRight="true"
                     android:layout_weight="1">
 
@@ -202,7 +191,7 @@
                         android:layout_centerHorizontal="true"
                         android:text="--"
                         android:textColor="@color/mainColor"
-                        android:textSize="16dp" />
+                        android:textSize="@dimen/dimens_16dp" />
 
                     <TextView
                         android:id="@+id/fragment_mine_user_info_shuquan_unit"
@@ -225,20 +214,20 @@
                 <View
                     android:id="@+id/fragment_mine_user_info_paylayout_view"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="@dimen/dimens_10dp"
                     android:background="@color/lightgray2" />
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_recharge"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_5dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_shubi" />
 
@@ -247,31 +236,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_chongzhi"
                         android:textColor="@color/read_dialog_button_select"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:id="@+id/fragment_mine_user_info_recharge_song"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="送书币"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
@@ -279,21 +268,20 @@
                 <View
                     android:id="@+id/fragment_mine_user_info_paylayout_recharge_lv"
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
-
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_vip"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_vip" />
 
@@ -301,30 +289,29 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_kaitongVIP"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text=""
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
@@ -332,20 +319,20 @@
                 <View
                     android:id="@+id/fragment_mine_user_info_paylayout_vip_lv"
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_layout2"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_task" />
 
@@ -353,53 +340,52 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_fulitask"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
                         android:layout_weight="1" />
 
                     <TextView
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_fulitaskjiangli"
                         android:textColor="@color/gray"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2"
                     android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_friends"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp"
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_friend" />
 
@@ -407,36 +393,34 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_friend"
                         android:textColor="@color/read_dialog_button_select"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:id="@+id/fragment_mine_user_info_friends_song"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="送书币"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -446,20 +430,20 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="@dimen/dimens_10dp"
                     android:background="@color/lightgray2"></View>
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_history"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_jilu" />
 
@@ -470,47 +454,47 @@
                         android:layout_marginLeft="15dp"
                         android:text="@string/noverfragment_yuedulishi"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
                         android:layout_weight="1"></View>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text=""
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_downmanager"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/icon_downmine" />
 
@@ -518,51 +502,49 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/BookInfoActivity_down_manger"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text=""
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
-
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_mybookcomment"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/icon_shuping" />
 
@@ -570,39 +552,87 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_shuping"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text=""
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
 
+                <LinearLayout
+                    android:id="@+id/fragment_mine_user_info_tasklayout_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimens_60dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/ic_home_share" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:text="@string/MineNewFragment_share"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimens_15dp" />
+
+                    <View
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:textColor="@color/read_dialog_button_select"
+                        android:textSize="@dimen/public_14_dp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
+                        android:background="@mipmap/right_arrow"
+                        android:scaleType="centerCrop" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimens_0_3dp"
+                    android:background="@color/lightgray2" />
 
             </LinearLayout>
 
@@ -613,24 +643,22 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="@dimen/dimens_10dp"
                     android:background="@color/lightgray2"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_lianxi"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp"
-                    android:visibility="gone"
-                    >
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp"
+                    android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_lianxi" />
 
@@ -638,50 +666,49 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_lianxikefu"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
                         android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text=""
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_feedback"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_fankui" />
 
@@ -689,51 +716,49 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_fankui"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text=""
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.3dp"
+                    android:layout_height="@dimen/dimens_0_3dp"
                     android:background="@color/lightgray2" />
-
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_set"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="10dp">
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_10dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
                         android:layout_gravity="center_vertical"
                         android:src="@mipmap/ic_set" />
 
@@ -741,36 +766,33 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:text="@string/MineNewFragment_set"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="@dimen/dimens_15dp" />
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_1dp"
+                        android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text=""
+                        android:layout_marginLeft="@dimen/dimens_15dp"
                         android:textColor="@color/read_dialog_button_select"
                         android:textSize="@dimen/public_14_dp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dimens_20dp"
+                        android:layout_height="@dimen/dimens_20dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="9dp"
+                        android:layout_marginLeft="@dimen/dimens_9dp"
                         android:background="@mipmap/right_arrow"
                         android:scaleType="centerCrop" />
                 </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
-
     </com.heiheilianzai.app.view.ObservableScrollView>
 </LinearLayout>
