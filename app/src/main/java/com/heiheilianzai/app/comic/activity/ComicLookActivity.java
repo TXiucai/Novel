@@ -513,10 +513,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private void initData() {
         if (comicChapter != null) {
             ComicChapterSize = comicChapter.size();
+            CurrentComicChapter = getCurrentComicChapter(current_display_order);
+            if(CurrentComicChapter!=null){
+                Chapter_id = CurrentComicChapter.getChapter_id();
+                current_read_img_order = CurrentComicChapter.current_read_img_order;//本章最近阅读图片
+            }
         }
-        CurrentComicChapter = getCurrentComicChapter(current_display_order);
-        Chapter_id = CurrentComicChapter.getChapter_id();
-        current_read_img_order = CurrentComicChapter.current_read_img_order;//本章最近阅读图片
         if (baseComic.isAddBookSelf()) {
             activity_comiclook_shoucang.setVisibility(View.GONE);
         }
