@@ -40,6 +40,7 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -126,34 +127,40 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                         return;
                     }
                     String Chapter_id = "";
-                    for (ComicChapter comicDownOption : comicDownOptionAdapter.comicDownOptionListChooseDwn) {
-                        Chapter_id += "," + comicDownOption.chapter_id;
+                    if (comicDownOptionAdapter != null) {
+                        for (ComicChapter comicDownOption : comicDownOptionAdapter.comicDownOptionListChooseDwn) {
+                            Chapter_id += "," + comicDownOption.chapter_id;
+                        }
+                        if (!StringUtils.isEmpty(Chapter_id)) {
+                            httpDownChapter(Chapter_id.substring(1));
+                        }
                     }
-                    httpDownChapter(Chapter_id.substring(1));
                 } else {//删除
-                    for (ComicChapter comicDownOption : comicDownOptionAdapter.comicDownOptionListChooseDwn) {
-                        ShareUitls.putComicDownStatus(activity, comicDownOption.chapter_id, 0);//
-                        ContentValues values = new ContentValues();//设置该章节为 没有下载过
-                        values.put("ISDown", "0");
-                        LitePal.update(ComicChapter.class, values, comicDownOption.getId());
-                        String localPath = FileManager.getManhuaSDCardRoot().concat(baseComic.getComic_id() + "/").concat(comicDownOption.chapter_id);
-                        FileManager.deleteFile(localPath);//删除章节的图片
+                    if (comicDownOptionAdapter != null) {
+                        for (ComicChapter comicDownOption : comicDownOptionAdapter.comicDownOptionListChooseDwn) {
+                            ShareUitls.putComicDownStatus(activity, comicDownOption.chapter_id, 0);//
+                            ContentValues values = new ContentValues();//设置该章节为 没有下载过
+                            values.put("ISDown", "0");
+                            LitePal.update(ComicChapter.class, values, comicDownOption.getId());
+                            String localPath = FileManager.getManhuaSDCardRoot().concat(baseComic.getComic_id() + "/").concat(comicDownOption.chapter_id);
+                            FileManager.deleteFile(localPath);//删除章节的图片
+                        }
+                        int size = comicDownOptionAdapter.comicDownOptionListChooseDwn.size();
+                        int deleteSize = Size - size;
+                        if (deleteSize == 0) {
+                            fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
+                        }
+                        baseComic.setDown_chapters(deleteSize);
+                        ContentValues values1 = new ContentValues();
+                        values1.put("down_chapters", deleteSize);
+                        LitePal.update(BaseComic.class, values1, id);
+                        EventBus.getDefault().post(baseComic);//更新上一界面的 数据
+                        comicDownOptionList.removeAll(comicDownOptionAdapter.comicDownOptionListChooseDwn);
+                        comicDownOptionAdapter = new ComicDownOptionAdapter(activity, comicDownOptionList, activity_comicdown_choose_count, activity_comicdown_down, Flag);
+                        activity_comicdown_gridview.setAdapter(comicDownOptionAdapter);
+                        comicDownOptionAdapter.comicDownOptionListChooseDwn.clear();
+                        MyToash.ToashSuccess(activity, String.format(LanguageUtil.getString(activity, R.string.ReadHistoryFragment_yishanchus), size));
                     }
-                    int size = comicDownOptionAdapter.comicDownOptionListChooseDwn.size();
-                    int deleteSize = Size - size;
-                    if (deleteSize == 0) {
-                        fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
-                    }
-                    baseComic.setDown_chapters(deleteSize);
-                    ContentValues values1 = new ContentValues();
-                    values1.put("down_chapters", deleteSize);
-                    LitePal.update(BaseComic.class, values1, id);
-                    EventBus.getDefault().post(baseComic);//更新上一界面的 数据
-                    comicDownOptionList.removeAll(comicDownOptionAdapter.comicDownOptionListChooseDwn);
-                    comicDownOptionAdapter = new ComicDownOptionAdapter(activity, comicDownOptionList, activity_comicdown_choose_count, activity_comicdown_down, Flag);
-                    activity_comicdown_gridview.setAdapter(comicDownOptionAdapter);
-                    comicDownOptionAdapter.comicDownOptionListChooseDwn.clear();
-                    MyToash.ToashSuccess(activity, String.format(LanguageUtil.getString(activity, R.string.ReadHistoryFragment_yishanchus), size));
                 }
                 break;
         }
