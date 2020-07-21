@@ -99,19 +99,6 @@ public class ComicshelfFragment extends Fragment {
     Gson gson = new Gson();
     long time1;
 
-    @SuppressLint("ValidFragment")
-    public ComicshelfFragment(List<BaseComic> bookLists, LinearLayout shelf_book_delete_btn) {
-        MyToash.Log("shelf_book_delete_btn 22", (shelf_book_delete_btn == null) + "");
-        this.shelf_book_delete_btn = shelf_book_delete_btn;
-        this.fragment_novel_allchoose = shelf_book_delete_btn.findViewById(R.id.fragment_novel_allchoose);
-        this.fragment_novel_cancle = shelf_book_delete_btn.findViewById(R.id.fragment_novel_cancle);
-        mDeleteBtn = shelf_book_delete_btn.findViewById(R.id.shelf_book_delete_del);
-
-        if (bookLists != null) {
-            this.bookLists = bookLists;
-        }
-    }
-
     public void AllchooseAndCancleOnclick(boolean flag) {
         if (flag) {
             if (adapter.checkedBookList.size() == bookLists.size()) {
@@ -132,9 +119,6 @@ public class ComicshelfFragment extends Fragment {
                 }
             }
         }
-    }
-
-    public ComicshelfFragment() {
     }
 
     @Override
@@ -575,5 +559,18 @@ public class ComicshelfFragment extends Fragment {
                     }
                 }
         );
+    }
+
+    public void setBookLists(List<BaseComic> bookLists) {
+        if (bookLists != null) {
+            this.bookLists = bookLists;
+        }
+    }
+
+    public void setShelf_book_delete_btn(LinearLayout shelf_book_delete_btn) {
+        this.shelf_book_delete_btn = shelf_book_delete_btn;
+        this.fragment_novel_allchoose = shelf_book_delete_btn.findViewById(R.id.fragment_novel_allchoose);
+        this.fragment_novel_cancle = shelf_book_delete_btn.findViewById(R.id.fragment_novel_cancle);
+        mDeleteBtn = shelf_book_delete_btn.findViewById(R.id.shelf_book_delete_del);
     }
 }

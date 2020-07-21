@@ -59,6 +59,7 @@ import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.BookShelfBannerHolderView;
@@ -126,18 +127,6 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
     long time1;
     public static boolean BookShelfOpen;
 
-    @SuppressLint("ValidFragment")
-    public NovelFragmentNew(List<BaseBook> bookLists, LinearLayout shelf_book_delete_btn) {
-        MyToash.Log("shelf_book_delete_btn 11", (shelf_book_delete_btn == null) + "");
-        this.shelf_book_delete_btn = shelf_book_delete_btn;
-        this.fragment_novel_allchoose = shelf_book_delete_btn.findViewById(R.id.fragment_novel_allchoose);
-        this.fragment_novel_cancle = shelf_book_delete_btn.findViewById(R.id.fragment_novel_cancle);
-        mDeleteBtn = shelf_book_delete_btn.findViewById(R.id.shelf_book_delete_del);
-        if (bookLists != null) {
-            this.bookLists = bookLists;
-        }
-    }
-
     public void AllchooseAndCancleOnclick(boolean flag) {
         if (flag) {
             if (adapter.checkedBookList.size() == bookLists.size()) {
@@ -158,9 +147,6 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
                 }
             }
         }
-    }
-
-    public NovelFragmentNew() {
     }
 
     @Override
@@ -619,14 +605,17 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
     }
 
     public void refarsh() {
-        MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_SHELF, "ShelfComic", new MainHttpTask.GetHttpData() {
+        MainHttpTask.getInstance().httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mBookCollectUrl, "ShelfBook", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
                 try {
-                    JSONObject obj = new JSONObject(result);
-                    initBanner(obj);
-                    initAnnoun(obj);
-                } catch (Exception e) {
+                    if(!StringUtils.isEmpty(result)){
+                        JSONObject obj = new JSONObject(result);
+                        initBanner(obj);
+                        initAnnoun(obj);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -791,5 +780,18 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
                     }
                 }
         );
+    }
+
+    public void setBookLists(List<BaseBook> bookLists) {
+        if (bookLists != null) {
+            this.bookLists = bookLists;
+        }
+    }
+
+    public void setShelf_book_delete_btn(LinearLayout shelf_book_delete_btn) {
+        this.shelf_book_delete_btn = shelf_book_delete_btn;
+        this.fragment_novel_allchoose = shelf_book_delete_btn.findViewById(R.id.fragment_novel_allchoose);
+        this.fragment_novel_cancle = shelf_book_delete_btn.findViewById(R.id.fragment_novel_cancle);
+        mDeleteBtn = shelf_book_delete_btn.findViewById(R.id.shelf_book_delete_del);
     }
 }

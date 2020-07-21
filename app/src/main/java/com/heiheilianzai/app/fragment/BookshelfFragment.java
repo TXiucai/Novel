@@ -139,24 +139,18 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         fragmentList = new ArrayList<>();
         switch (GETPRODUCT_TYPE(activity)) {
             case XIAOSHUO:
-                novelFragment = new <Fragment>NovelFragmentNew(bookLists, shelf_book_delete_btn);
-                fragmentList.add(novelFragment);
+                addNovelFragmentNew(bookLists,shelf_book_delete_btn);
                 break;
             case MANHAU:
-                comicshelfFragment = new <Fragment>ComicshelfFragment(baseComics, shelf_book_delete_btn);
-                fragmentList.add(comicshelfFragment);
+                addComicshelfFragment(baseComics, shelf_book_delete_btn);
                 break;
             case XIAOSHUOMAHUA:
-                novelFragment = new <Fragment>NovelFragmentNew(bookLists, shelf_book_delete_btn);
-                fragmentList.add(novelFragment);
-                comicshelfFragment = new <Fragment>ComicshelfFragment(baseComics, shelf_book_delete_btn);
-                fragmentList.add(comicshelfFragment);
+                addNovelFragmentNew(bookLists,shelf_book_delete_btn);
+                addComicshelfFragment(baseComics, shelf_book_delete_btn);
                 break;
             case MANHAUXIAOSHUO:
-                comicshelfFragment = new <Fragment>ComicshelfFragment(baseComics, shelf_book_delete_btn);
-                fragmentList.add(comicshelfFragment);
-                novelFragment = new <Fragment>NovelFragmentNew(bookLists, shelf_book_delete_btn);
-                fragmentList.add(novelFragment);
+                addComicshelfFragment(baseComics, shelf_book_delete_btn);
+                addNovelFragmentNew(bookLists,shelf_book_delete_btn);
                 fragment_shelf_xiaoshuo.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                 fragment_shelf_manhau.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                 break;
@@ -232,4 +226,18 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+   private void addNovelFragmentNew(List<BaseBook> bookLists, LinearLayout shelf_book_delete_btn){
+       novelFragment = new <Fragment>NovelFragmentNew();
+       novelFragment.setBookLists(bookLists);
+       novelFragment.setShelf_book_delete_btn(shelf_book_delete_btn);
+       fragmentList.add(novelFragment);
+   }
+
+   private void addComicshelfFragment(List<BaseComic> bookLists, LinearLayout shelf_book_delete_btn){
+       comicshelfFragment = new <Fragment>ComicshelfFragment();
+       comicshelfFragment.setBookLists(baseComics);
+       comicshelfFragment.setShelf_book_delete_btn(shelf_book_delete_btn);
+       fragmentList.add(comicshelfFragment);
+   }
 }
