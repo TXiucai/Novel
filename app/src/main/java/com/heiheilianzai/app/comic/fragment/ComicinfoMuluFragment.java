@@ -201,7 +201,9 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
                     fragment_comicinfo_mulu_xu_img.setImageResource(R.mipmap.reverse_order);
                     orderby = 2;
                 }
-                comicChapterCatalogAdapter.setShunxu(shunxu);
+                if(comicChapterCatalogAdapter!=null){//数据刷新慢的时候Adapter还未创建
+                    comicChapterCatalogAdapter.setShunxu(shunxu);
+                }
                 mPageNum = 1;
                 httpData();
             }
@@ -259,6 +261,9 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
                 } else {
                     fragment_comicinfo_mulu_zhuangtai.setText(comic.flag);
                 }
+            }
+            if(fragment_comicinfo_mulu_layout!=null){
+                fragment_comicinfo_mulu_layout.setVisibility(View.VISIBLE);
             }
             comicChapterCatalogAdapter = new ComicChapterCatalogAdapter(true, baseComic, activity, baseComic.getCurrent_chapter_id(), comicChapterCatalogs, H96);
             fragment_comicinfo_mulu_list.setAdapter(comicChapterCatalogAdapter);
