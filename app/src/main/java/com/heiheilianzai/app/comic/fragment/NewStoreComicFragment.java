@@ -1,8 +1,5 @@
 package com.heiheilianzai.app.comic.fragment;
 
-import android.annotation.SuppressLint;
-import android.widget.RelativeLayout;
-
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.comic.adapter.HomeStoreComicAdapter;
@@ -11,7 +8,6 @@ import com.heiheilianzai.app.comic.config.ComicConfig;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.StoreComicEvent;
 import com.heiheilianzai.app.fragment.BaseHomeStoreFragment;
-import com.heiheilianzai.app.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.view.AdaptionGridView;
 
@@ -27,21 +23,12 @@ import java.util.List;
  */
 public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLable> {
 
-    StroeNewFragment.MyHotWord hot_word;
 
     @Override
     public int initContentView() {
         return R.layout.fragment_comic_store_new;
     }
 
-    @SuppressLint("ValidFragment")
-    public NewStoreComicFragment(RelativeLayout fragment_newbookself_top, StroeNewFragment.MyHotWord hot_word) {
-        this.fragment_newbookself_top = fragment_newbookself_top;
-        this.hot_word = hot_word;
-    }
-
-    public NewStoreComicFragment() {
-    }
 
     public void initViews() {
         adapter = new HomeStoreComicAdapter(activity, listData);

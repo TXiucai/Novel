@@ -65,8 +65,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     public SHSwipeRefreshLayout store_comic_refresh_layout;//该控件支持自定义动画但不支持自动刷新，待替换。
     @BindView(R2.id.fragment_store_comic_content_commend)
     public RecyclerView recyclerView;
-
     protected RelativeLayout fragment_newbookself_top;
+    protected StroeNewFragment.MyHotWord hot_word;
     protected boolean postAsyncHttpEngine_ing;//正在刷新数据
     protected Gson gson = new Gson();
     protected List<T> listData = new ArrayList<>();
@@ -78,7 +78,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     int page = 1;//分页页数
     String max_edit_time;//推荐位最后编辑时间
     boolean isEdit = false;//后台是否修改了推荐列表数据
-    boolean isLoadMore=true;//是否加载更多
+    boolean isLoadMore = true;//是否加载更多
 
     @Override
     protected void initView() {
@@ -93,6 +93,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected void initViews() {
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_store_comic_content_head, null);
+        fragment_newbookself_top = ((StroeNewFragment) getParentFragment()).fragment_newbookself_top;
+        hot_word = ((StroeNewFragment) getParentFragment()).myHotWord;
         fragment_newbookself_top.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
         layoutManager = new LinearLayoutManager(getContext());
         smartRecyclerAdapter = new SmartRecyclerAdapter(adapter);
@@ -152,7 +154,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onRefresh() {
                 page = 1;
                 store_comic_refresh_layout.setLoadmoreEnable(true);
-                isLoadMore=true;
+                isLoadMore = true;
                 getData();//刷新banner、推荐列表
             }
 
@@ -398,7 +400,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
                             finishRefresh(true);
                         } else {
-                            if(isLoadMore){
+                            if (isLoadMore) {
                                 boolean isEdit = !edit_time.equals(max_edit_time);
                                 if (isEdit) {//编辑了推荐位
                                     getEditData();
@@ -411,9 +413,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else {
-                    if(page > 1){
-                        isLoadMore=false;
+                } else {
+                    if (page > 1) {
+                        isLoadMore = false;
                     }
                 }
             }
@@ -434,8 +436,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 加载推荐位列表缓存数据（第一页缓存）
      */
     protected void getCacheStockData(String kay) {
-        String cacheData="";
-        if(activity!=null){
+        String cacheData = "";
+        if (activity != null) {
             cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
         }
         if (!StringUtils.isEmpty(cacheData)) {
@@ -481,7 +483,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 加载Banner 缓存数据
      */
     protected void getCacheBannerData(String kay) {
-        String cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
+        String cacheData = "";
+        if (activity != null) {
+            cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
+        }
         if (!StringUtils.isEmpty(cacheData)) {
             getHeaderView(cacheData);
         }
@@ -498,18 +503,19 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 因为现在后台返回的推荐数据总数，是实际返回数据不匹配。服务器那里暂时处理不了。
      * 经过和服务器商议用：数据返回成功，非第一页，且label数据为空时。为无更多数据加载。
      * 根据返回数据判断是否是第一页，是否还有更多数据加载。
+     *
      * @param json
      */
     private void setIsLoadMore(String json) {
-        if(!StringUtils.isEmpty(json)){
+        if (!StringUtils.isEmpty(json)) {
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(json);
                 JSONArray jsonArray = jsonObject.getJSONArray("label");
-                if(jsonArray.length()<=0&&page>1){
-                    isLoadMore =false;
-                }else {
-                    isLoadMore =true;
+                if (jsonArray.length() <= 0 && page > 1) {
+                    isLoadMore = false;
+                } else {
+                    isLoadMore = true;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -531,7 +537,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * @param isResponse 是否有数据返回
      */
     protected void finishLoadmore(boolean isResponse) {
-        if(isAdded()){
+        if (isAdded()) {
             store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.load_succeed : R.string.load_fail));
             finishLoadmore();
         }

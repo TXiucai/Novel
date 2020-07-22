@@ -1,8 +1,6 @@
 package com.heiheilianzai.app.book.fragment;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
-import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
@@ -11,7 +9,6 @@ import com.heiheilianzai.app.book.been.StroreBookcLable;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.StoreBookEvent;
 import com.heiheilianzai.app.fragment.BaseHomeStoreFragment;
-import com.heiheilianzai.app.fragment.StroeNewFragment;
 import com.heiheilianzai.app.view.AdaptionGridView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -25,21 +22,9 @@ import java.util.List;
  * Created by scb on 2018/6/9.
  */
 public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable> {
-
-    StroeNewFragment.MyHotWord hot_word;
-
     @Override
     public int initContentView() {
         return R.layout.fragment_comic_store_new;
-    }
-
-    @SuppressLint("ValidFragment")
-    public NewStoreBookFragment(RelativeLayout fragment_newbookself_top, StroeNewFragment.MyHotWord hot_word) {
-        this.fragment_newbookself_top = fragment_newbookself_top;
-        this.hot_word = hot_word;
-    }
-
-    public NewStoreBookFragment() {
     }
 
     @Override

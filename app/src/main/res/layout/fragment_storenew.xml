@@ -6,42 +6,41 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/fragment_store_viewpage"
+    <FrameLayout
+        android:id="@+id/fragment_store_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/fragment_store_top"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingRight="15dp">
+        android:layout_height="@dimen/dimens_70dp"
+        android:paddingRight="@dimen/dimens_15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/dimens_45dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="@dimen/dimens_10dp">
 
             <ImageView
                 android:id="@+id/fragment_store_fili"
-                android:layout_width="55dp"
-                android:layout_height="23dp"
+                android:layout_width="@dimen/dimens_55dp"
+                android:layout_height="@dimen/dimens_23dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/fuli" />
 
             <RelativeLayout
                 android:id="@+id/fragment_store_search"
-                android:layout_width="0dp"
-                android:layout_height="23dp"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_23dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_10dp"
                 android:layout_weight="8"
                 android:background="@drawable/shape_comic_store_search"
-                android:paddingLeft="10dp">
+                android:paddingLeft="@dimen/dimens_10dp">
 
 
                 <TextView
@@ -49,48 +48,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="@dimen/dimens_10dp"
                     android:textColor="@color/white"
-                    android:textSize="11dp" />
+                    android:textSize="@dimen/dimens_11dp" />
 
                 <TextView
                     android:id="@+id/fragment_store_search_bookname2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="11dp"
+                    android:layout_marginRight="@dimen/dimens_11dp"
                     android:textColor="@color/white"
                     android:textSize="10dp"
                     android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/fragment_store_search_img"
-                    android:layout_width="11dp"
-                    android:layout_height="11dp"
-
+                    android:layout_width="@dimen/dimens_11dp"
+                    android:layout_height="@dimen/dimens_11dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="12dp"
+                    android:layout_marginRight="@dimen/dimens_12dp"
                     android:src="@mipmap/main_search_white" />
             </RelativeLayout>
-
-
         </LinearLayout>
-
-        <!-- <RelativeLayout
-             android:layout_width="match_parent"
-             android:layout_height="45dp"
-
-             android:layout_alignParentBottom="true"
-             android:layout_marginBottom="10dp">
-
-             <View
-                 android:layout_width="match_parent"
-                 android:layout_height="1dp"
-                 android:layout_centerInParent="true"
-                 android:background="@color/red" />
-
-         </RelativeLayout>-->
     </RelativeLayout>
 </FrameLayout>
 

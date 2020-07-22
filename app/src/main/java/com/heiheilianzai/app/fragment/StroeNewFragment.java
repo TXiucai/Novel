@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,7 +18,6 @@ import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.activity.LoginActivity;
 import com.heiheilianzai.app.activity.SearchActivity;
 import com.heiheilianzai.app.activity.TaskCenterActivity;
-import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.book.fragment.NewStoreBookFragment;
 import com.heiheilianzai.app.comic.fragment.NewStoreComicFragment;
 import com.heiheilianzai.app.eventbus.StoreEvent;
@@ -28,9 +26,6 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,8 +37,6 @@ import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
  * 首页小说，首页漫画外层搜索
  */
 public abstract class StroeNewFragment extends BaseButterKnifeFragment {
-    @BindView(R2.id.fragment_store_viewpage)
-    public ViewPager fragment_store_viewpage;
     @BindView(R2.id.fragment_store_top)
     public RelativeLayout fragment_newbookself_top;
     @BindView(R2.id.fragment_store_search_bookname)
@@ -55,9 +48,9 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     FragmentManager fragmentManager;
     public String hot_word[];
     int hot_word_size, hot_word_position;
-    List<Fragment> fragmentList;
-    MyFragmentPagerAdapter myFragmentPagerAdapter;
     public boolean IS_NOTOP;
+    public StroeNewFragment.MyHotWord myHotWord = new MyHotWord();
+    BaseButterKnifeFragment fragment;
 
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
@@ -167,10 +160,16 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         }
     }
 
+    @Override
+    protected void initData() {
+        if (fragment != null) {
+            fragment.initData();
+        }
+    }
+
     private void initOption() {
-        fragmentList = new ArrayList<>();
-        fragmentList.add(getProduct() ? new <Fragment>NewStoreBookFragment(fragment_newbookself_top, new MyHotWord()) : new <Fragment>NewStoreComicFragment(fragment_newbookself_top, new MyHotWord()));
-        myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
-        fragment_store_viewpage.setAdapter(myFragmentPagerAdapter);
+        fragment = getProduct() ? new NewStoreBookFragment() : new NewStoreComicFragment();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.fragment_store_fragment, fragment).commit();
     }
 }
