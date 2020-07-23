@@ -108,14 +108,15 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            def apkName = variant.flavorName + "_v${variant.versionName}"
+            def apkName = variant.flavorName
+            def versionStr="_${variant.versionCode}"+"_v${variant.versionName}"
             if (variant.flavorName.isEmpty()) {
                 apkName += "App"
             }
             if (variant.buildType.name == 'release') {
-                outputFileName = apkName + "_${releaseTime()}_Release.apk"
+                outputFileName = apkName + "_${releaseTime()}"+versionStr+"_Release.apk"
             } else {
-                outputFileName = apkName + "_${releaseTime()}_Debug.apk"
+                outputFileName = apkName + "_${releaseTime()}"+versionStr+"_Debug.apk"
             }
         }
     }
@@ -266,6 +267,7 @@ dependencies {
     //友盟系列
     implementation 'com.umeng.umsdk:analytics:8.0.0'
     implementation 'com.umeng.umsdk:common:2.0.0'
+    implementation 'com.umeng.umsdk:crash:0.0.4'
     implementation files('libs/umeng-share-core-6.9.8.jar')
     implementation files('libs/umeng-share-QQ-simplify-6.9.8.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.8.jar')

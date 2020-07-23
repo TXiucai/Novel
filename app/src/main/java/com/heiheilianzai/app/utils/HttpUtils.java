@@ -13,7 +13,7 @@ import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.http.OkHttpEngine;
 import com.heiheilianzai.app.http.ResultCallback;
 import com.heiheilianzai.app.utils.decode.AESUtil;
-import com.heiheilianzai.app.BuildConfig;
+import com.umeng.umcrash.UMCrash;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -92,6 +92,7 @@ public class HttpUtils {
                         @Override
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
+                            UMCrash.generateCustomLog( LanguageUtil.getString(context, R.string.splashactivity_nonet)+":"+url + " " + body , "UmengException");
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -143,6 +144,7 @@ public class HttpUtils {
                                     default:
                                         if (code != 311 && code != 300) {//今日已签到//用户不存在
                                             MyToash.ToashError(context, msg);
+                                            UMCrash.generateCustomLog( url + " " + msg , "UmengException");
                                         }
                                         responseListener.onErrorResponse(null);
                                         break;
@@ -182,6 +184,7 @@ public class HttpUtils {
                         @Override
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
+                            UMCrash.generateCustomLog( LanguageUtil.getString(context, R.string.splashactivity_nonet)+":"+url + " " + body , "UmengException");
                             responseListener.onErrorResponse(null);
                         }
                     });
