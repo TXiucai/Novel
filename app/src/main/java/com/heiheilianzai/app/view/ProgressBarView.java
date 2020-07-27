@@ -4,27 +4,31 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
 
+/**
+ * 版本更新下载进度自定义控件
+ */
 public class ProgressBarView extends ProgressBar {
     //字体大小
     protected int mTextSize = 12;
     //字体颜色
     protected int mTextColor = Color.BLACK;
     //没有到达(右边progressbar的颜色)
-    protected int mUnReachColor = Color.GREEN;
+    protected int mUnReachColor = Color.WHITE;
     //progressbar的高度
     protected int mProgressHeight = 6;
     //progressbar进度的颜色
     protected int mReachColor = mTextColor;
     //字体间距
-    protected int mTextOffset = 10;
+    protected int mTextOffset = 0;
     protected Paint mPaint;
+    Paint textPaint;
     //progressbar真正的宽度
     protected int mRealWith;
-    Context context;
 
     public ProgressBarView(Context context) {
         this(context, null);
@@ -40,6 +44,9 @@ public class ProgressBarView extends ProgressBar {
         obtainStyledAttrs(attrs);
         mPaint = new Paint();
         mPaint.setTextSize(mTextSize);
+        textPaint = new Paint();
+        textPaint.setColor(mTextColor);
+        textPaint.setTextSize(mTextSize);
     }
 
     /**
@@ -48,11 +55,11 @@ public class ProgressBarView extends ProgressBar {
      * @param attrs
      */
     private void obtainStyledAttrs(AttributeSet attrs) {
-        mTextSize = dp2px(15);
-        mTextColor = Color.BLACK;
-        mUnReachColor = Color.parseColor("#6B6B6B");
-        mProgressHeight = dp2px(20);
-        mReachColor = Color.parseColor("#376ee5");
+        mTextSize = dp2px(10);
+        mTextColor = Color.parseColor("#FF574C");
+        mUnReachColor = Color.WHITE;
+        mProgressHeight = dp2px(6);
+        mReachColor = Color.parseColor("#FF574C");
     }
 
     @Override
@@ -70,8 +77,6 @@ public class ProgressBarView extends ProgressBar {
         canvas.save();
         //移动画布
         canvas.translate(getPaddingLeft(), getHeight() / 2);
-        //定义变量用来控制是否要绘制右边progressbar  如果宽度不够的时候就不进行绘制
-        boolean noNeedUnRech = false;
         //计算左边进度在整个控件宽度的占比
         float radio = getProgress() * 1.0f / getMax();
         //获取左边进度的宽度
@@ -80,42 +85,41 @@ public class ProgressBarView extends ProgressBar {
         String text = getProgress() + "%";
         //获取文字的宽度
         int textWidth = (int) mPaint.measureText(text);
-        if (progressX + textWidth > mRealWith) {
-            //左边进度+文字的宽度超过progressbar的宽度 重新计算左边进度的宽度 这个时候也就意味着不需要绘制右边进度
-            progressX = mRealWith - textWidth;
-            noNeedUnRech = true;
+        if (progressX + textWidth + dp2px(3) > mRealWith) {//加偏移量微调，进度文字背景不被挤出去
+            //左边进度+文字的宽度超过progressbar的宽度 5dp偏移量 重新计算左边进度的宽度 这个时候也就意味着不需要绘制右边进度
+            progressX = mRealWith - textWidth - dp2px(5);
         }
+        //绘制外部矩形背景
+        mPaint.setStyle(Paint.Style.STROKE);//空心矩形框
+        mPaint.setColor(Color.parseColor("#DFDFDF"));
+        mPaint.setStrokeWidth(dp2px(1)); //线宽
+        canvas.drawRoundRect(new RectF(dp2px(1), dp2px(-5), mRealWith - dp2px(2), dp2px(5)), dp2px(4), dp2px(4), mPaint);
         //计算左边进度结束的位置 如果结束的位置小于0就不需要绘制左边的进度
         float endX = progressX - mTextOffset / 2;
         if (endX > 0) {
-            //绘制左边进度
+            //绘制左边矩形加载进度
             mPaint.setColor(mReachColor);
             mPaint.setStrokeWidth(mProgressHeight);
-            canvas.drawLine(0, 0, endX, 0, mPaint);
+            mPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRoundRect(new RectF(dp2px(1), dp2px(-4), progressX + dp2px(4), dp2px(4)), dp2px(4), dp2px(4), mPaint);
         }
         mPaint.setColor(mTextColor);
         if (getProgress() != 0) {
             //计算文字基线
             int y = (int) (-(mPaint.descent() + mPaint.ascent()) / 2);
-            //绘制文字
-            canvas.drawText(text, progressX, y, mPaint);
+            //绘制进度文字底部白色背景
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(Color.WHITE);
+            canvas.drawRoundRect(new RectF(progressX, dp2px(-8), progressX + textWidth + dp2px(4), dp2px(8)), dp2px(4), dp2px(4), mPaint);
+            //绘制进度文字底部外框
+            mPaint.setStyle(Paint.Style.STROKE);//空心矩形框
+            mPaint.setColor(Color.parseColor("#FF574C"));
+            mPaint.setStrokeWidth(dp2px(1));//线宽
+            canvas.drawRoundRect(new RectF(progressX, dp2px(-8), progressX + textWidth + dp2px(4), dp2px(8)), dp2px(4), dp2px(4), mPaint);
+            //绘制进度文字
+            canvas.drawText(text, progressX + dp2px(2), y, textPaint);
         }
-        if (!noNeedUnRech) {
-            //右边进度的开始位置=左边进度+文字间距的一半+文字宽度
-            float start;
-            if (getProgress() == 0) {
-                start = progressX;
-            } else {
-                start = progressX + mTextOffset / 2 + textWidth;
-            }
-            mPaint.setColor(mUnReachColor);
-            mPaint.setStrokeWidth(mProgressHeight);
-            //绘制右边进度
-            canvas.drawLine(start, 0, mRealWith, 0, mPaint);
-        }
-        //重置画布
         canvas.restore();
-
     }
 
     private int measureHeight(int heightMeasureSpec) {
@@ -141,9 +145,5 @@ public class ProgressBarView extends ProgressBar {
 
     protected int dp2px(int dip) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
-    }
-
-    protected int sp2px(int sp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, getResources().getDisplayMetrics());
     }
 }

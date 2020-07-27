@@ -18,6 +18,9 @@ public class AppUpdate {
     public int cipher_img;
     public int hot_start_time;
     public int daily_max_start_page;
+    public int boyin_switch;//波音开关
+    public String boyin_h5;
+    public Version update_version;
 
     public int getDaily_max_start_page() {
         return daily_max_start_page;
@@ -131,6 +134,22 @@ public class AppUpdate {
         this.hot_start_time = hot_start_time;
     }
 
+    public int getBoyin_switch() {
+        return boyin_switch;
+    }
+
+    public String getBoyin_h5() {
+        return boyin_h5;
+    }
+
+    public void setBoyin_h5(String boyin_h5) {
+        this.boyin_h5 = boyin_h5;
+    }
+
+    public void setBoyin_switch(int boyin_switch) {
+        this.boyin_switch = boyin_switch;
+    }
+
     public class Unit_tag {
         private String currencyUnit;
         private String subUnit;
@@ -157,6 +176,10 @@ public class AppUpdate {
         public String content;
         public int skip_type;
         public String title;
+    }
+
+    public class Version{
+        public String apk;
     }
 
     public class SettingBean {

@@ -4,6 +4,7 @@
     <string name="app_nomore">没有更多内容了</string>
     <string name="app_sharegold">分享得金币</string>
     <string name="app_noresult">暂无结果～</string>
+    <string name="app_update">是否升级到版本</string>
 
     <!--启动页-->
     <string name="splashactivity_skip"> 跳过 </string>
@@ -31,11 +32,11 @@
     <string name="MainActivity_shuchen">书城</string>
     <string name="MainActivity_faxian">发现</string>
     <string name="MainActivity_my">我的</string>
-
+    <string name="MainActivity_boyin">波音</string>
 
     <string name="Discover_end">活动已结束</string>
 
-    <string name="MainActivity_holdon">再等等</string>
+    <string name="MainActivity_holdon">稍后提醒</string>
 
     <string name="MainActivity_nowupdate">立即更新</string>
 
@@ -379,5 +380,8 @@
     <string name="load_more">加载更多中...</string>
     <string name="load_over">已加载所有内容！</string>
     <string name="progress_zero">0%</string>
+
+    <!--波音-->
+    <string name="boyin_login_warn">使用波音功能新需要再次登录，感谢您的配合！</string>
 </resources>
 

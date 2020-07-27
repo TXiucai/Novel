@@ -196,7 +196,8 @@ public class UpdateApp {
         public View dialog_updateapp_view;
         @BindView(R2.id.materialSeekBar)
         public ProgressBarView materialSeekBar;
-
+        @BindView(R2.id.dialog_updateapp_version)
+        public TextView dialog_updateapp_version;
         public UpdateHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -232,6 +233,7 @@ public class UpdateApp {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_update_app, null);
         popupWindow = new Dialog(activity, R.style.updateapp);
         final UpdateHolder updateHolder = new UpdateHolder(view);
+        updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update)+mAppUpdate.update_version.apk);
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
         if (mAppUpdate.getUpdate() == 1) {
