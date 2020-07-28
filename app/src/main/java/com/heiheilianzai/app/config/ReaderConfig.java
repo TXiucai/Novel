@@ -42,6 +42,8 @@ public class ReaderConfig {
     //              4: 漫画小说
     private static int PRODUCT_TYPE = 3;
 
+    public static  boolean app_free_charge = true;//免费频道
+
     public static int GETPRODUCT_TYPE(Activity activity) {
         if (PRODUCT_TYPE == 0) {
             PRODUCT_TYPE = ShareUitls.getInt(activity, "PRODUCT_TYPE", 3);
@@ -196,6 +198,11 @@ public class ReaderConfig {
     public static final String mMobileLoginUrl = "/user/mobile-login";
 
     /**
+     * 波音登录
+     */
+    public static final String  mBoYinLoginUrl = "/auth/index";
+
+    /**
      * 用户名登录
      */
     public static final String mUsernameLoginUrl = "/user/account-login";
@@ -305,6 +312,11 @@ public class ReaderConfig {
      * 用户登录token
      */
     public static final String TOKEN = "token";
+
+    /**
+     * 波音登录token
+     */
+    public static final String BOYIN_LOGIN_TOKEN = "boyin_login_token";
 
     /**
      * 用户唯一标识

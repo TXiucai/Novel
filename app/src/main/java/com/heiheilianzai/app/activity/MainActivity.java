@@ -44,6 +44,7 @@ import com.heiheilianzai.app.eventbus.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
 import com.heiheilianzai.app.fragment.DiscoveryNewFragment;
+import com.heiheilianzai.app.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.fragment.MineNewFragment;
 import com.heiheilianzai.app.http.OkHttpEngine;
 import com.heiheilianzai.app.http.ReaderParams;
@@ -262,21 +263,36 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     /**
-     * 版本更新或签到弹框
+     * 版本更新或签到弹框 开启波音显示波音未开启 显示发现。
      */
     public void ShowPOP() {
         String str = ReaderConfig.newInstance().AppUpdate;
-        if(StringUtils.isEmpty(str)){
+        if (StringUtils.isEmpty(str)) {
             return;
         }
         if (str.length() > 0) {
             mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
-            if (mAppUpdate != null && (mAppUpdate.getUpdate() == 1 || mAppUpdate.getUpdate() == 2)) {
+            if (mAppUpdate != null && (mAppUpdate.getUpdate() == 1 || mAppUpdate.getUpdate() == 2)) {//1、普通更新 2、强制更新
                 handler.sendEmptyMessage(0);
             } else {
                 signPop();
             }
+            if (mAppUpdate != null && mAppUpdate.getBoyin_switch() == 1) {//1波音开关打开
+                setBoyinView(mAppUpdate.getBoyin_h5());
+            }
         }
+    }
+
+    private void setBoyinView(String url) {
+        setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
+        home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
+        HomeBoYinFragment homeBoYinFragment = new HomeBoYinFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(HomeBoYinFragment.BUNDLE_URL_KAY, url);
+        homeBoYinFragment.setArguments(bundle);
+        mFragmentList.remove(3);
+        mFragmentList.add(3, homeBoYinFragment);
+        myFragmentPagerAdapter.notifyDataSetChanged();
     }
 
     private void signPop(){
