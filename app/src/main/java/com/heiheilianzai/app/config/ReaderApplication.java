@@ -25,6 +25,7 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import com.tencent.bugly.Bugly;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.umcrash.UMCrash;
 
 import org.litepal.LitePalApplication;
 
@@ -44,6 +45,7 @@ public class ReaderApplication extends LitePalApplication {
             UMConfigure.setLogEnabled(false);
             String getChannelName = UpdateApp.getChannelName(this);
             UMConfigure.init(this, ReaderConfig.UMENG, getChannelName, UMConfigure.DEVICE_TYPE_PHONE, "");
+            UMCrash.init(this, ReaderConfig.UMENG, getChannelName);
             if (ReaderConfig.USE_WEIXIN) {
                 PlatformConfig.setWeixin(ReaderConfig.WEIXIN_PAY_APPID, ReaderConfig.WEIXIN_APP_SECRET);
             }
