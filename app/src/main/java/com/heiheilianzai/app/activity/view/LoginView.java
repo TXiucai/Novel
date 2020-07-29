@@ -41,4 +41,9 @@ public interface LoginView {
      */
     View getButtonView();
 
+    /**
+     * 是否从波音登录
+     * @return
+     */
+    boolean getBoyinLogin();
 }

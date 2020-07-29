@@ -85,6 +85,11 @@ public class LoginDialog {
                 return activity_login_phone_get_message_btn;
             }
 
+            @Override
+            public boolean getBoyinLogin() {
+                return false;
+            }
+
         };
         final LoginPresenter mPresenter = new LoginPresenter(loginView, activity) {
         };

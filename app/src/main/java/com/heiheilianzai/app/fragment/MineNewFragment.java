@@ -21,10 +21,13 @@ import com.heiheilianzai.app.activity.SettingsActivity;
 import com.heiheilianzai.app.activity.ShareActivity;
 import com.heiheilianzai.app.activity.TaskCenterActivity;
 import com.heiheilianzai.app.activity.UserInfoActivity;
+import com.heiheilianzai.app.activity.model.LoginModel;
+import com.heiheilianzai.app.activity.view.LoginResultCallback;
 import com.heiheilianzai.app.bean.UserInfoItem;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.GetDialog;
+import com.heiheilianzai.app.eventbus.LoginBoYinEvent;
 import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -33,6 +36,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
 
@@ -110,6 +114,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     String connect_us;
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
+
     @Override
     public int initContentView() {
         return R.layout.fragment_mine_new;
@@ -190,12 +195,16 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             } else {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, true);
             }
-            MyPicasso. GlideImageNoSize(activity, mUserInfo.getAvatar(),fragment_mine_user_info_avatar,R.mipmap.icon_def_head);
+            MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), fragment_mine_user_info_avatar, R.mipmap.icon_def_head);
             fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
             fragment_mine_user_info_tasklayout_task.setText(mUserInfo.getTask_list().getFinish_num() + "/" + mUserInfo.getTask_list().getMission_num());
             fragment_mine_user_info_gold.setText(mUserInfo.getGoldRemain() + " ");
             fragment_mine_user_info_shuquan.setText(mUserInfo.getSilverRemain() + " ");
+            String mobile = mUserInfo.getMobile();
+            if (!StringUtils.isEmpty(mobile)) {
+                loginBoYin(mobile);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -239,7 +248,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             R.id.fragment_mine_user_info_tasklayout_friends, R.id.fragment_mine_user_info_nickname,
             R.id.fragment_mine_user_info_tasklayout_layout, R.id.fragment_mine_user_info_tasklayout_layout2, R.id.fragment_mine_user_info_shuquan_layout,
             R.id.fragment_mine_user_info_gold_layout, R.id.fragment_mine_user_info_paylayout_downmanager,
-            R.id.fragment_mine_user_info_paylayout_history, R.id.fragment_mine_user_info_lianxi,R.id.fragment_mine_user_info_tasklayout_share
+            R.id.fragment_mine_user_info_paylayout_history, R.id.fragment_mine_user_info_lianxi, R.id.fragment_mine_user_info_tasklayout_share
     })
     public void getEvent(View view) {
         switch (view.getId()) {
@@ -400,9 +409,21 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     /**
      * 根据是否免费调整UI变化
      */
-    private void uiFreeCharge() {
-        uiFreeCharge(fragment_mine_user_info_isvip, fragment_mine_user_info_gold_layout,
-                fragment_mine_user_info_paylayout_recharge, fragment_mine_user_info_paylayout_recharge_lv,
-                fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+    private void uiFreeCharge() {//fragment_mine_user_info_gold_layout 书币//fragment_mine_user_info_paylayout_recharge充值书币
+        uiFreeCharge(fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+    }
+
+    /**
+     * 登录成功 或其他地方改变用户数据 刷新波音数据
+     * @param mobile
+     */
+    void loginBoYin(String mobile) {
+        LoginModel loginModel = new LoginModel(getActivity());
+        loginModel.loginBoYin(mobile, new LoginResultCallback() {
+            @Override
+            public void getResult(String jsonStr) {
+                EventBus.getDefault().post(new LoginBoYinEvent(jsonStr));
+            }
+        });
     }
 }

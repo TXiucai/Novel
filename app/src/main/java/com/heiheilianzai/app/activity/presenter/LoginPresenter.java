@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.activity.presenter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,6 +20,7 @@ import com.heiheilianzai.app.eventbus.RefreshBookSelf;
 import com.heiheilianzai.app.eventbus.RefreshDiscoveryFragment;
 import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.eventbus.RefreshReadHistory;
+import com.heiheilianzai.app.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -29,9 +31,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Instant;
+
 import static com.heiheilianzai.app.config.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.config.ReaderConfig.syncDevice;
-
 
 /**
  * Created by scb on 2018/7/14.
@@ -39,14 +42,13 @@ import static com.heiheilianzai.app.config.ReaderConfig.syncDevice;
 public class LoginPresenter {
     private LoginModel mLoginModel;
     private LoginView mLoginView;
+    Activity activity;
 
     public LoginPresenter(LoginView loginView) {
         mLoginView = loginView;
         this.activity = (LoginActivity) mLoginView;
         mLoginModel = new LoginModel((LoginActivity) mLoginView);
     }
-
-    Activity activity;
 
     public LoginPresenter(LoginView loginView, Activity activity) {
         mLoginView = loginView;
@@ -55,9 +57,7 @@ public class LoginPresenter {
     }
 
     public void getMessage() {
-
         mLoginModel.countDown(mLoginView.getButtonView());
-
         mLoginModel.getMessage(mLoginView.getPhoneNum(), new LoginResultCallback() {
             @Override
             public void getResult(final String jsonStr) {
@@ -65,7 +65,6 @@ public class LoginPresenter {
             }
         });
     }
-
 
     public void loginPhone(final LoginActivity.LoginSuccess loginSuccess) {
         mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(), new LoginResultCallback() {
@@ -84,7 +83,6 @@ public class LoginPresenter {
                         }
                     });
                     EventBus.getDefault().post(new RefreshMine(loginInfo));
-                    //EventBus.getDefault().post(new RefreshDiscoveryFragment());
                     if (GETPRODUCT_TYPE(activity) != 2) {
                         EventBus.getDefault().post(new RefreshBookSelf(null));
                     }
@@ -92,13 +90,29 @@ public class LoginPresenter {
                         EventBus.getDefault().post(new RefreshComic(null));
                     }
                     loginSuccess.success();
-                    activity.finish();
                     JPushUtil.setAlias(activity);
+                    loginBoYin();
+                    if (mLoginView.getBoyinLogin()) {
+                        loginBoYin();
+                    } else {
+                        activity.finish();
+                    }
                 }
             }
         });
     }
 
+    private void loginBoYin() {
+        mLoginModel.loginBoYin(mLoginView.getPhoneNum(), new LoginResultCallback() {
+            @Override
+            public void getResult(String jsonStr) {
+                Intent intent = new Intent();
+                intent.putExtra(HomeBoYinFragment.BOYIN_TOKEN_RESULT_KAY, jsonStr);
+                activity.onActivityReenter(Activity.RESULT_OK, intent);
+                activity.finish();
+            }
+        });
+    }
 
     /**
      * 取消倒计时
@@ -106,5 +120,4 @@ public class LoginPresenter {
     public void cancelCountDown() {
         mLoginModel.cancel();
     }
-
 }

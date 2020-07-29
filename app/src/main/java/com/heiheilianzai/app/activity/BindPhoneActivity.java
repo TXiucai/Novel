@@ -204,6 +204,11 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
     }
 
     @Override
+    public boolean getBoyinLogin() {
+        return false;
+    }
+
+    @Override
     protected void onDestroy() {
         mPresenter.cancelCountDown();
         super.onDestroy();
