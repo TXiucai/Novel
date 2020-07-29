@@ -13,6 +13,7 @@ public class BookInfoComment {
     String content;
     String reply_info;
     String book_id;
+    int is_vip;
 
     @Override
     public String toString() {
@@ -99,5 +100,13 @@ public class BookInfoComment {
 
     public void setBook_id(String book_id) {
         this.book_id = book_id;
+    }
+
+    public int getIs_vip() {
+        return is_vip;
+    }
+
+    public void setIs_vip(int is_vip) {
+        this.is_vip = is_vip;
     }
 }

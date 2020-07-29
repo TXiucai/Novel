@@ -18,7 +18,7 @@ public class ComicComment {
         public String time;//": "1分钟前", // 评论时间
         public String content;//": "支霄飞",   // 评论内容
         public String reply_info;//": "回复风风雨雨：评论一下下，嘿嘿",    // 回复内容
-        public String is_vip;//": 1     // 用户是否是VIP（1-是）
+        public int is_vip;//": 1     // 用户是否是VIP（1-是）
 
         @Override
         public String toString() {
@@ -90,11 +90,11 @@ public class ComicComment {
             this.reply_info = reply_info;
         }
 
-        public String getIs_vip() {
+        public int getIs_vip() {
             return is_vip;
         }
 
-        public void setIs_vip(String is_vip) {
+        public void setIs_vip(int is_vip) {
             this.is_vip = is_vip;
         }
     }

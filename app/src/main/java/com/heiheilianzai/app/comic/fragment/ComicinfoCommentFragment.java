@@ -112,12 +112,14 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                     TextView activity_book_info_content_comment_item_content = commentView.findViewById(R.id.activity_book_info_content_comment_item_content);
                     TextView activity_book_info_content_comment_item_reply = commentView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
                     TextView activity_book_info_content_comment_item_time = commentView.findViewById(R.id.activity_book_info_content_comment_item_time);
+                    View comment_item_isvip=commentView.findViewById(R.id.comment_item_isvip);
                     MyPicasso.IoadImage(activity, bookInfoComment.getAvatar(), R.mipmap.icon_def_head, activity_book_info_content_comment_item_avatar);
                     activity_book_info_content_comment_item_nickname.setText(bookInfoComment.getNickname());
                     activity_book_info_content_comment_item_content.setText(bookInfoComment.getContent());
                     activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
                     activity_book_info_content_comment_item_reply.setVisibility(TextUtils.isEmpty(bookInfoComment.getReply_info()) ? View.GONE : View.VISIBLE);
                     activity_book_info_content_comment_item_time.setText(bookInfoComment.getTime());
+                    comment_item_isvip.setVisibility(bookInfoComment.getIs_vip()==1 ? View.VISIBLE : View.GONE);
                     //评论点击的处理
                     commentView.setOnClickListener(new View.OnClickListener() {
                         @Override

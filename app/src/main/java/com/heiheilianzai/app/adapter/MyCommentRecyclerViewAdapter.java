@@ -57,6 +57,7 @@ public class MyCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyComment
         viewHolder.replay.setVisibility(TextUtils.isEmpty(optionBeen.getReply_info()) ? View.GONE : View.VISIBLE);
         viewHolder.nickname.setText(optionBeen.getNickname());
         viewHolder.time.setText(optionBeen.getTime());
+        viewHolder.comment_item_isvip.setVisibility(optionBeen.getIs_vip()==1 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -76,6 +77,8 @@ public class MyCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyComment
         TextView nickname;
         @BindView(R2.id.activity_book_info_content_comment_item_time)
         TextView time;
+        @BindView(R2.id.comment_item_isvip)
+        View comment_item_isvip;
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

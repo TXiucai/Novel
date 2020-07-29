@@ -5,57 +5,70 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingTop="10dp">
+    android:paddingLeft="@dimen/dimens_10dp"
+    android:paddingTop="@dimen/dimens_10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <com.heiheilianzai.app.view.CircleImageView
             android:id="@+id/activity_book_info_content_comment_item_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dimens_40dp"
+            android:layout_height="@dimen/dimens_40dp"
             android:src="@mipmap/hold_user_avatar" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/dimens_10dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/activity_book_info_content_comment_item_nickname"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/gray4"
-                android:textSize="@dimen/public_12_dp" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/activity_book_info_content_comment_item_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray4"
+                    android:textSize="@dimen/public_12_dp" />
+
+                <ImageView
+                    android:id="@+id/comment_item_isvip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimens_10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dimens_4dp"
+                    android:layout_toRightOf="@+id/activity_book_info_content_comment_item_nickname"
+                    android:src="@mipmap/icon_isvip"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/activity_book_info_content_comment_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/public_10_dp" />
         </LinearLayout>
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/activity_book_info_content_comment_item_reply_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="@dimen/dimens_50dp"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:layout_marginRight="@dimen/dimens_10dp"
         android:background="@color/lightgray3"
         android:gravity="center_vertical"
-        android:padding="5dp"
+        android:padding="@dimen/dimens_5dp"
         android:textColor="@color/black"
         android:textSize="@dimen/public_10_dp" />
 
@@ -63,18 +76,17 @@
         android:id="@+id/activity_book_info_content_comment_item_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="@dimen/dimens_50dp"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:layout_marginRight="@dimen/dimens_10dp"
         android:gravity="center_vertical"
         android:textColor="@color/black"
         android:textSize="@dimen/public_13_dp" />
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.3dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="@dimen/dimens_0_3dp"
+        android:layout_marginTop="@dimen/dimens_10dp"
         android:background="@color/gray2" />
 </LinearLayout>
 

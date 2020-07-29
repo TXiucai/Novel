@@ -21,10 +21,11 @@ import java.util.List;
  */
 public class CommentAdapter extends ReaderBaseAdapter<ComicComment.Comment> {
 
-    public CommentAdapter( Context context, List<ComicComment.Comment> list, int count, boolean close) {
+    public CommentAdapter(Context context, List<ComicComment.Comment> list, int count, boolean close) {
         super(context, list, count, close);
 
     }
+
     @Override
     public View getOwnView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
@@ -36,6 +37,7 @@ public class CommentAdapter extends ReaderBaseAdapter<ComicComment.Comment> {
             viewHolder.replay = convertView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
             viewHolder.nickname = convertView.findViewById(R.id.activity_book_info_content_comment_item_nickname);
             viewHolder.time = convertView.findViewById(R.id.activity_book_info_content_comment_item_time);
+            viewHolder.comment_item_isvip = convertView.findViewById(R.id.comment_item_isvip);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -46,6 +48,7 @@ public class CommentAdapter extends ReaderBaseAdapter<ComicComment.Comment> {
         viewHolder.replay.setVisibility(TextUtils.isEmpty(mList.get(position).getReply_info()) ? View.GONE : View.VISIBLE);
         viewHolder.nickname.setText(mList.get(position).getNickname());
         viewHolder.time.setText(mList.get(position).getTime());
+        viewHolder.comment_item_isvip.setVisibility(mList.get(position).getIs_vip()==1 ? View.VISIBLE : View.GONE);
         return convertView;
     }
 
@@ -55,5 +58,6 @@ public class CommentAdapter extends ReaderBaseAdapter<ComicComment.Comment> {
         TextView replay;
         TextView nickname;
         TextView time;
+        View comment_item_isvip;
     }
 }
