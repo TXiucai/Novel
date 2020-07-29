@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
+import com.heiheilianzai.app.activity.model.LoginModel;
 import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.RefreshMine;
@@ -186,9 +187,7 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         if (!Utils.isLogin(activity)) {
             return;
         }
-        AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, "");
-        AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
-        ReaderConfig.REFREASH_USERCENTER = true;
+        LoginModel.resetLogin(activity);
     }
 
 
