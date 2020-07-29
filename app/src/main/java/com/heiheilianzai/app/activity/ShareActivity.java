@@ -79,7 +79,7 @@ public class ShareActivity extends BaseWarmStartActivity {
         }
         if (!StringUtils.isEmpty(link)) {
             share_url_t.setText(link);
-            MyPicasso.GlideImageNoSize(ShareActivity.this, qr_url, qr_code_img);
+            MyPicasso.GlideImageNoSize(ShareActivity.this, ReaderConfig.getBaseUrl()+qr_url, qr_code_img);
         }
     }
 
