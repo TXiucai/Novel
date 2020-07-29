@@ -15,10 +15,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.GetDialog;
 import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
@@ -92,6 +92,11 @@ public class UpdateApp {
                     public void onResponse(String response) {
                         ShareUitls.putString(activity, "Update", response);
                         ReaderConfig.newInstance().AppUpdate=response;
+                        try {
+                            AppUpdate  mAppUpdate = new Gson().fromJson(response, AppUpdate.class);
+                            ReaderConfig.newInstance().app_free_charge= mAppUpdate.pay_switch==1?false:true;
+                        }catch (Exception e){
+                        }
                         if (isSplashActivity) {
                             EventBus.getDefault().post(new AppUpdateLoadOverEvent(response));
                         }

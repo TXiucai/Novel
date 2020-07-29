@@ -19,6 +19,7 @@ public class AppUpdate {
     public int hot_start_time;
     public int daily_max_start_page;
     public int boyin_switch;//波音开关
+    public int  pay_switch;
     public String boyin_h5;
     public Version update_version;
 

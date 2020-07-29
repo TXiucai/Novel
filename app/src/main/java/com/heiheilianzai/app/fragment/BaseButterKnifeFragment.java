@@ -1,7 +1,7 @@
 package com.heiheilianzai.app.fragment;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,29 +10,19 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.heiheilianzai.app.BuildConfig;
-import com.heiheilianzai.app.utils.MyToash;
 import com.umeng.analytics.MobclickAgent;
-import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.utils.StatusBarUtil;
 
 import java.lang.reflect.Field;
 
 import butterknife.ButterKnife;
 
 /**
- * 懒加载 因为项目重构原因 为不影响以前的代码 没有使用 abstract方法
- * 想用懒加载子类重写 {@link #initView()}{@link #initData()}
- *
+ * 因为项目重构原因 为不影响以前的代码 没有使用 abstract方法
  */
 public abstract class BaseButterKnifeFragment extends Fragment {
     public FragmentActivity activity;
-    //Fragment的View加载完毕的标记
-    private boolean isViewCreated;
-    //Fragment对用户可见的标记
-    private boolean isUIVisible;
 
     public abstract int initContentView();
 
@@ -47,30 +37,11 @@ public abstract class BaseButterKnifeFragment extends Fragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            isUIVisible = true;
-            lazyLoad();
-        } else {
-            isUIVisible = false;
-        }
-    }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        isViewCreated = true;
-        lazyLoad();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initData();
     }
 
-    private void lazyLoad() {
-        if (isViewCreated && isUIVisible) {
-            initData();
-            //数据加载完毕,恢复标记,防止重复加载
-            isViewCreated = false;
-            isUIVisible = false;
-        }
-    }
 
     @Override
     public void onResume() {
@@ -87,7 +58,6 @@ public abstract class BaseButterKnifeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        activity = null;
         try {
             Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
             childFragmentManager.setAccessible(true);
@@ -103,8 +73,12 @@ public abstract class BaseButterKnifeFragment extends Fragment {
      * 根据免费参数判断哪些View隐藏
      */
     protected void uiFreeCharge(View... views) {
+        uiFreeCharge(BuildConfig.free_charge , views);
+    }
+
+    protected void uiFreeCharge(boolean isGone ,View... views) {
         for (View view : views) {
-            view.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
+            view.setVisibility(isGone ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -112,5 +86,26 @@ public abstract class BaseButterKnifeFragment extends Fragment {
     }
 
     protected void initData() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            activity = (FragmentActivity) context;
+        } catch (Exception e) {
+        }
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                this.activity = (FragmentActivity) activity;
+            }
+        } catch (Exception e) {
+        }
     }
 }

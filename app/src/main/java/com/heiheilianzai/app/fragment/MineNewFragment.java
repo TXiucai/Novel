@@ -27,6 +27,7 @@ import com.heiheilianzai.app.bean.UserInfoItem;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.GetDialog;
+import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.eventbus.LoginBoYinEvent;
 import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.http.ReaderParams;
@@ -156,6 +157,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         layoutParams.width = layoutParams.height * 138 / 48;
         fragment_mine_user_info_isvip.setLayoutParams(layoutParams);
         uiFreeCharge();
+        setVipView();
     }
 
     @Override
@@ -407,10 +409,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     }
 
     /**
-     * 根据是否免费调整UI变化
+     * 根据 本地配置 判断是否免费调整UI变化
      */
-    private void uiFreeCharge() {//fragment_mine_user_info_gold_layout 书币//fragment_mine_user_info_paylayout_recharge充值书币
-        uiFreeCharge(fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+    private void uiFreeCharge() {
+        uiFreeCharge(fragment_mine_user_info_paylayout_recharge,fragment_mine_user_info_gold_layout,fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
     }
 
     /**
@@ -425,5 +427,19 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 EventBus.getDefault().post(new LoginBoYinEvent(jsonStr));
             }
         });
+    }
+
+    /**
+     * 根据 后台配置 付费开关判断是否开启
+     */
+    void setVipView(){
+        uiFreeCharge(ReaderConfig.newInstance().app_free_charge,fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventAppUpdateLoadOver(AppUpdateLoadOverEvent event) {
+        if (event != null) {
+            setVipView();
+        }
     }
 }
