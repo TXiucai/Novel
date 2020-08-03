@@ -236,15 +236,8 @@ public class MainHttpTask {
                     }
                     break;
                 case "Mine":
-                    if (Mine == null) {
-                        Mine = ShareUitls.getMainHttpTaskString(activity, Option, null);
-                    }
-                    if (Mine != null) {
-                        getHttpData.getHttpData(Mine);
-                    } else {
-                        if (Utils.isLogin(activity)) {
-                            httpSend(activity, ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, Option, getHttpData);
-                        }
+                    if (Utils.isLogin(activity)) {
+                        httpSend(activity, ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, Option, getHttpData);
                     }
                     break;
             }
