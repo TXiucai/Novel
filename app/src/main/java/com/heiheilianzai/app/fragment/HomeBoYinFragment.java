@@ -1,15 +1,20 @@
 package com.heiheilianzai.app.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
@@ -22,6 +27,7 @@ import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.zhengjt.floatingball.FloatBall;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +45,10 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     boolean isLoadUrl = false;
     @BindView(R2.id.home_boyin_webview)
     public WebView mWebView;
+    @BindView(R2.id.home_boyin_layout)
+    RelativeLayout home_boyin_layout;
+    //获取AudioManager
+    AudioManager audioManager;
 
     @Override
     public int initContentView() {
@@ -62,6 +72,8 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
+        setFloatBall(home_boyin_layout);
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
         mWebView.addJavascriptInterface(new JavascriptObject() {
             @JavascriptInterface
@@ -79,7 +91,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @JavascriptInterface
             @Override
-            public String getToken() {//
+            public String getToken() {
                 String token = AppPrefs.getSharedString(getActivity(), ReaderConfig.BOYIN_LOGIN_TOKEN, "");
                 return token;
             }
@@ -150,10 +162,48 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     }
 
     class DemoWebViewClient extends WebViewClient {//跳转外部浏览器
+
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             getContext().startActivity(browserIntent);
             return true;
         }
+    }
+
+    public void onMyResume() {
+        audioManager.abandonAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+            }
+        });
+        mWebView.reload();
+    }
+
+    public void onMyPause() {
+        audioManager.requestAudioFocus(
+                new AudioManager.OnAudioFocusChangeListener() {
+                    @Override
+                    public void onAudioFocusChange(int focusChange) {
+                    }
+                }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+    }
+
+    void setFloatBall(ViewGroup rootView) {
+        FloatBall floatBall = new FloatBall.Builder(activity, rootView)
+                .setBottomMargin(140)//悬浮球初始位置BottomMargin
+                .setRightMargin(0)//悬浮球初始位置RightMargin
+                .setHeight(80)//悬浮球高度
+                .setWidth(80)//悬浮球宽度
+                .setRes(R.mipmap.comic_refresh)//图片资源
+                .setDuration(500)//靠边动画时间
+                .setOnClickListener(new View.OnClickListener() {//悬浮球点击事件
+                    @Override
+                    public void onClick(View v) {
+                        if (mWebView != null) {
+                            mWebView.reload();
+                        }
+                    }
+                })
+                .build();
     }
 }

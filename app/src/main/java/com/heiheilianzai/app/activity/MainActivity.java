@@ -105,6 +105,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public static Activity activity;
     StroeNewFragmentBook stroeNewFragmentBook;//首页漫画
     StroeNewFragmentComic stroeNewFragmentComic;//首页小说
+    HomeBoYinFragment homeBoYinFragment;
 
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
@@ -251,10 +252,18 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     void setChangedView(int possition, boolean useDart) {
         setStatusTextColor(useDart, activity);
         IntentFragment(possition);
+        if (homeBoYinFragment != null) {
+            if (possition == 3) {
+                homeBoYinFragment.onMyResume();
+            } else {
+                homeBoYinFragment.onMyPause();
+            }
+        }
     }
 
     /**
      * 记录退出前选择的位置再次进入还原
+     *
      * @param i
      */
     private void IntentFragment(int i) {
@@ -286,7 +295,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private void setBoyinView(String url) {
         setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
         home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
-        HomeBoYinFragment homeBoYinFragment = new HomeBoYinFragment();
+        homeBoYinFragment = new HomeBoYinFragment();
         Bundle bundle = new Bundle();
         bundle.putString(HomeBoYinFragment.BUNDLE_URL_KAY, url);
         homeBoYinFragment.setArguments(bundle);

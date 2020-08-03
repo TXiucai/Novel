@@ -42,6 +42,7 @@ android {
         buildConfigField "String", "api_decode_key_uat", gradle.ext.API_DECODE_KEY_UAT
         buildConfigField "String", "api_decode_iv", gradle.ext.API_DECODE_IV
         buildConfigField "String", "api_decode_key", gradle.ext.API_DECODE_KEY
+        buildConfigField "String", "app_source_boyin", gradle.ext.APP_SOURCE_BOYIN
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -189,6 +190,7 @@ def getAppConfig() {
         buildConfigField "String", "api_decode_key_uat", gradle.ext.API_DECODE_KEY_UAT
         buildConfigField "String", "api_decode_iv", gradle.ext.API_DECODE_IV
         buildConfigField "String", "api_decode_key", gradle.ext.API_DECODE_KEY
+        buildConfigField "String", "app_source_boyin", gradle.ext.APP_SOURCE_BOYIN
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
     }
 }
@@ -316,6 +318,8 @@ dependencies {
     implementation 'com.github.piasy:ProgressPieIndicator:1.5.7'
     //二维码
     implementation 'com.google.zxing:core:3.3.3'
+    //悬浮按钮
+    implementation 'com.zhengjt:floatingball:1.0.2'
 }
 
 String SDK_DIR = System.getenv("ANDROID_SDK_HOME")
