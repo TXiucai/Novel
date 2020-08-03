@@ -1,10 +1,7 @@
 package com.heiheilianzai.app.activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -13,30 +10,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.PayChannelAdapter;
 import com.heiheilianzai.app.alipay.AlipayGoPay;
 import com.heiheilianzai.app.bean.PayChannel;
 import com.heiheilianzai.app.config.MainHttpTask;
-import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.GridViewForScrollView;
 import com.heiheilianzai.app.wxpay.WXGoPay;
 import com.heiheilianzai.app.wxpay.WXPayResult;
 
+import java.util.List;
+
 import butterknife.BindView;
 import cn.jmessage.support.qiniu.android.utils.StringUtils;
-
-import com.heiheilianzai.app.R2;
-
-import java.util.List;
 
 /**
  * 支付页面，可选择微信支付和支付宝支付
@@ -54,23 +47,18 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     ImageView weixin_paytype_img;
     @BindView(R2.id.alipay_paytype_img)
     ImageView alipay_paytype_img;
-    /**
-     * 0：微信支付 1：支付宝支付
-     */
-    private int mPayType = 1;
-
-
     @BindView(R2.id.pay_channel_gridview)
     GridViewForScrollView pay_channel_gridview;
-
+    private int mPayType = 1;//0：微信支付 1：支付宝支付
     private String channel;
     private String payType;
     private int pay_type;
-
-
     private String mGoodsId;
     private String mPrice;
     public static Activity activity;
+    Gson gson = new Gson();
+    List<PayChannel> mPayChannelList;
+    PayChannelAdapter payChannelAdapter;
 
     @Override
     public int initContentView() {
@@ -91,7 +79,6 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //此处先设置一下微信的支付结果标识
         WXPayResult.WXPAY_CODE = 1;
     }
@@ -101,21 +88,17 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
         mGoodsId = getIntent().getStringExtra("goods_id");
         mPrice = getIntent().getStringExtra("price");
         pay_confirm_btn.setText(LanguageUtil.getString(activity, R.string.PayActivity_querenzhifu) + mPrice);
-
         ReaderParams params2 = new ReaderParams(this);
         params2.putExtraParams("is_v2", "1");
         String json2 = params2.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mPayChannelList, json2, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        Log.e("", result);
-                        //  initInfo(result);
                         infoPayChanne(result);
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        Log.e("", ex);
                     }
                 }
         );
@@ -158,7 +141,6 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
                 if (!MainHttpTask.getInstance().Gotologin(activity)) {
                     return;
                 }
-                ;
                 if ("1".equals(payType)) {
                     WXGoPay wxGoPay = new WXGoPay(this);
                     wxGoPay.requestPayOrder(ReaderConfig.getBaseUrl() + ReaderConfig.payUrl, mGoodsId, channel, pay_type);
@@ -170,11 +152,6 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
                 break;
         }
     }
-
-
-    Gson gson = new Gson();
-    List<PayChannel> mPayChannelList;
-    PayChannelAdapter payChannelAdapter;
 
     private void infoPayChanne(String result) {
         if (!StringUtils.isNullOrEmpty(result)) {
@@ -195,16 +172,6 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
                     payChannelAdapter.notifyDataSetChanged();
                 }
             });
-        }
-
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (WXPayResult.WXPAY_CODE == 0) {
-//            backToHome();
         }
     }
 }
