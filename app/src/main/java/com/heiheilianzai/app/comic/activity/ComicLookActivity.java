@@ -573,7 +573,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     public void getData(Activity activity, String comic_id, String chapter_id, boolean HandleData) {
-        if (!chapter_id.equals("0")) {
+        if (!"0".equals(chapter_id)&&!StringUtils.isEmpty(chapter_id)) {
             MyToash.Log("COMIC_chapter", "COMIC_chapter");
             if (HandleData) {
                 item_dialog_downadapter_RotationLoadingView.setVisibility(View.VISIBLE);
