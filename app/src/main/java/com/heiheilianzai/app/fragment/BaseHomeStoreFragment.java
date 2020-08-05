@@ -34,6 +34,7 @@ import com.heiheilianzai.app.utils.ViewUtils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
@@ -92,6 +93,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     protected void initViews() {
+        EventBus.getDefault().register(this);
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_store_comic_content_head, null);
         fragment_newbookself_top = ((StroeNewFragment) getParentFragment()).fragment_newbookself_top;
         hot_word = ((StroeNewFragment) getParentFragment()).myHotWord;
@@ -541,5 +543,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.load_succeed : R.string.load_fail));
             finishLoadmore();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
