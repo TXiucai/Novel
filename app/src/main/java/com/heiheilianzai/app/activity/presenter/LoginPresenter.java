@@ -2,36 +2,29 @@ package com.heiheilianzai.app.activity.presenter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.activity.FirstStartActivity;
 import com.heiheilianzai.app.activity.LoginActivity;
-import com.heiheilianzai.app.activity.SplashActivity;
 import com.heiheilianzai.app.activity.model.LoginModel;
 import com.heiheilianzai.app.activity.view.LoginResultCallback;
 import com.heiheilianzai.app.activity.view.LoginView;
+import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.bean.LoginInfo;
 import com.heiheilianzai.app.comic.eventbus.RefreshComic;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.BuyLoginSuccess;
 import com.heiheilianzai.app.eventbus.RefreshBookSelf;
-import com.heiheilianzai.app.eventbus.RefreshDiscoveryFragment;
 import com.heiheilianzai.app.eventbus.RefreshMine;
-import com.heiheilianzai.app.eventbus.RefreshReadHistory;
 import com.heiheilianzai.app.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.time.Instant;
 
 import static com.heiheilianzai.app.config.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.config.ReaderConfig.syncDevice;
@@ -91,9 +84,14 @@ public class LoginPresenter {
                     }
                     loginSuccess.success();
                     JPushUtil.setAlias(activity);
-                    loginBoYin();
-                    if (mLoginView.getBoyinLogin()) {
-                        loginBoYin();
+                    String str = ReaderConfig.newInstance().AppUpdate;
+                    if (!StringUtils.isEmpty(str)) {
+                        AppUpdate appUpdate = new Gson().fromJson(str, AppUpdate.class);
+                        if (appUpdate != null && appUpdate.getBoyin_switch() == 1) {//1打开  0关闭
+                            loginBoYin();
+                        } else {
+                            activity.finish();
+                        }
                     } else {
                         activity.finish();
                     }
