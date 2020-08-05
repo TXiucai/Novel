@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.bean.AcquirePrivilegeItem;
+import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class AcquireBaoyuePrivilegeAdapter extends ReaderBaseAdapter<AcquirePriv
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        MyPicasso.GlideImageNoSize(mActivity, mList.get(position).getIcon(), viewHolder.item_acquire_privilege_img);
+        MyPicasso.GlideImageNoSize(mActivity, ReaderConfig.getBaseUrl()+mList.get(position).getIcon(), viewHolder.item_acquire_privilege_img);
         viewHolder.item_acquire_privilege_title.setText(mList.get(position).getLabel());
         return convertView;
     }
