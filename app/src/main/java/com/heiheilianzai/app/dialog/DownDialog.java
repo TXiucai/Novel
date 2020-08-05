@@ -37,19 +37,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.heiheilianzai.app.activity.AddCommentActivity;
-import com.heiheilianzai.app.activity.LoginActivity;
-import com.heiheilianzai.app.config.MainHttpTask;
-import com.heiheilianzai.app.utils.Utils;
-import com.wang.avi.AVLoadingIndicatorView;
-import com.wang.avi.indicators.LineSpinFadeLoaderIndicator;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.activity.BaseOptionActivity;
-import com.heiheilianzai.app.activity.DownMangerActivity;
-import com.heiheilianzai.app.book.been.BaseBook;
 import com.heiheilianzai.app.bean.ChapterContent;
 import com.heiheilianzai.app.bean.ChapterItem;
 import com.heiheilianzai.app.bean.Downoption;
+import com.heiheilianzai.app.book.been.BaseBook;
+import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.http.DownloadUtil;
 import com.heiheilianzai.app.http.ReaderParams;
@@ -61,33 +55,36 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.wang.avi.AVLoadingIndicatorView;
+import com.wang.avi.indicators.LineSpinFadeLoaderIndicator;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
-//.http.RequestParams;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import  static com.heiheilianzai.app.config.ReaderConfig.DOWN;
+import static com.heiheilianzai.app.config.ReaderConfig.DOWN;
 
-
-
+/**
+ * 下载小说对话框
+ */
 public class DownDialog {
-    public  static  boolean showOpen;
-     Dialog bottomDialog;
-     AVLoadingIndicatorView item_dialog_downadapter_RotationLoadingView;
+    public static boolean showOpen;
+    Dialog bottomDialog;
+    AVLoadingIndicatorView item_dialog_downadapter_RotationLoadingView;
+    private ChapterItem ChapterItem;
+    public static boolean isreaderbook;
+    public boolean Getdown_urling = false;
+    public Activity Activity;
 
-    public  void showDownoption(final Activity activity, final List<Downoption> downoption) {
-
+    public void showDownoption(final Activity activity, final List<Downoption> downoption) {
         bottomDialog = new Dialog(activity, R.style.BottomDialog);
-
-
         if (item_dialog_downadapter_RotationLoadingView != null) {
             item_dialog_downadapter_RotationLoadingView.setVisibility(View.GONE);
         }
@@ -100,8 +97,6 @@ public class DownDialog {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_down, null);
         final TextView dialog_dowu_manger = view.findViewById(R.id.dialog_dowu_manger);
         final ListView dialog_dowu_list = view.findViewById(R.id.dialog_dowu_list);
-
-
         Dialog_downAdapter dialog_downAdapter = new Dialog_downAdapter(activity, downoption);
         dialog_dowu_list.setAdapter(dialog_downAdapter);
         final boolean[] noclick = {false};
@@ -112,22 +107,11 @@ public class DownDialog {
                     noclick[0] = true;
                     item_dialog_downadapter_RotationLoadingView = v.findViewById(R.id.item_dialog_downadapter_RotationLoadingView);
                     item_dialog_downadapter_RotationLoadingView.setVisibility(View.VISIBLE);
-
                     Downoption downoption1 = downoption.get(i);
                     ChapterManager.downChapter(activity, downoption1.book_id, new ChapterManager.DownChapter() {
                         @Override
                         public void success() {
-
-                        /*
-                           View view1 = v.findViewById(R.id.item_dialog_downadapter_lable);
-                        int[] startLocation = new int[2];// 一个整型数组，用来存储按钮的在屏幕的X、Y坐标
-                            view1.getLocationOnScreen(startLocation);// 这是获取购买按钮的在屏幕的X、Y坐标（这也是动画开始的坐标）
-                            ImageView animImageView = new ImageView(activity);
-                            animImageView.setImageBitmap(getBitmapFromView(view1));// 设置ball的图片
-                            setAnim(activity, animImageView, startLocation, dialog_dowu_manger);// 开始执行动画
-                            */
                             getdown_url(activity, downoption1);
-
                         }
 
                         @Override
@@ -139,21 +123,13 @@ public class DownDialog {
                 }
             }
         });
-
-
         dialog_dowu_manger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-               // activity.startActivity(new Intent(activity, DownMangerActivity.class));
-
-                activity.startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION",DOWN).putExtra("title",LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
-
-
+                activity.startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
             }
         });
-
-
         bottomDialog.setContentView(view);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         params.width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
@@ -163,12 +139,9 @@ public class DownDialog {
         bottomDialog.show();
         bottomDialog.onWindowFocusChanged(false);
         bottomDialog.setCanceledOnTouchOutside(true);
-
     }
 
-
-     class Dialog_downAdapter extends BaseAdapter {
-
+    class Dialog_downAdapter extends BaseAdapter {
         List<Downoption> list;
         Activity activity;
 
@@ -194,16 +167,12 @@ public class DownDialog {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-
             View contentView = LayoutInflater.from(activity).inflate(R.layout.item_dialog_downadapter, null, false);
-
             TextView item_dialog_downadapter_lable = contentView.findViewById(R.id.item_dialog_downadapter_lable);
             TextView item_dialog_downadapter_tag = contentView.findViewById(R.id.item_dialog_downadapter_tag);
             TextView item_dialog_downadapter_isxiazai = contentView.findViewById(R.id.item_dialog_downadapter_isxiazai);
             AVLoadingIndicatorView item_dialog_downadapter_RotationLoadingView = contentView.findViewById(R.id.item_dialog_downadapter_RotationLoadingView);
             item_dialog_downadapter_RotationLoadingView.setIndicator(new LineSpinFadeLoaderIndicator());
-
-            //
             item_dialog_downadapter_lable.setText(getItem(i).label);
             if (getItem(i).tag.length() > 0) {
                 item_dialog_downadapter_tag.setText(getItem(i).tag);
@@ -221,15 +190,13 @@ public class DownDialog {
         }
     }
 
-    private  ChapterItem ChapterItem;
-
-    public  static  boolean isreaderbook;
-
-    public  void getDownoption(final Activity activity, final BaseBook baseBook, ChapterItem chapterItem) {
-        if(!MainHttpTask.getInstance().Gotologin(activity)){
+    /**
+     * 获取小说下载的章节列表
+     */
+    public void getDownoption(final Activity activity, final BaseBook baseBook, ChapterItem chapterItem) {
+        if (!MainHttpTask.getInstance().Gotologin(activity)) {
             return;
-        };
-
+        }
         if (Getdown_urling) {
             return;
         }
@@ -241,18 +208,13 @@ public class DownDialog {
         ChapterItem = chapterItem;
         String chapter_id = chapterItem != null ? chapterItem.getChapter_id() : (baseBook.getCurrent_chapter_id() == null ? "" : baseBook.getCurrent_chapter_id());
         MyToash.Log("chapter_iddd", (chapterItem == null) + "   " + chapter_id);
-
-
         ReaderParams readerParams = new ReaderParams(activity);
         readerParams.putExtraParams("book_id", baseBook.getBook_id());
         readerParams.putExtraParams("chapter_id", chapter_id);
-
         String json = readerParams.generateParamsJson();
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + "/chapter/down-option", json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
                         try {
                             JSONObject JsonObject = new JSONObject(result);
                             List<Downoption> downoptions = LitePal.where("book_id= ?", baseBook.getBook_id()).find(Downoption.class);
@@ -274,52 +236,32 @@ public class DownDialog {
                                     downoption.description = baseBook.getDescription();
                                     downoption.start_order = jsonObject.getInt("start_order");
                                     downoption.end_order = jsonObject.getInt("end_order");
-                                    // String str0 = ShareUitls.getDown(activity, downoption.book_id, "0-0");
                                     downoption.isdown = false;
-
                                     for (Downoption downoption1 : downoptions) {//去重 起始 和结束序号 包含在已下载内 设为已下载
                                         if (downoption1.start_order <= downoption.start_order && downoption.end_order <= downoption1.end_order) {
                                             downoption.isdown = true;
                                         }
                                     }
-/*
-                                    if (str0.equals("0-0")) {
-                                        downoption.isdown = false;
-                                    } else {
-                                        String[] str = str0.split("-");
-                                        if (downoption.start_order >= Integer.parseInt(str[0]) && downoption.end_order <= Integer.parseInt(str[1])) {
-                                            downoption.isdown = true;
-                                        } else {
-                                            downoption.isdown = false;
-                                        }
-                                    }*/
-                                    // MyToash.Log(" downoption.showHead", downoption.showHead + "  " + str0 + "  " + i);
                                     list.add(downoption);
                                 }
-
                                 showDownoption(activity, list);
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                     @Override
-                    public void onErrorResponse(String  ex) {
-
+                    public void onErrorResponse(String ex) {
                     }
                 }
-
         );
-
     }
 
-    public  boolean Getdown_urling = false;
-
-    public  void getdown_url(final Activity activity, final Downoption downoption) {
+    /**
+     * 下载某段章节到本地
+     */
+    public void getdown_url(final Activity activity, final Downoption downoption) {
         Getdown_urling = true;
         ReaderParams readerParams = new ReaderParams(activity);
         readerParams.putExtraParams("book_id", downoption.book_id);
@@ -332,12 +274,11 @@ public class DownDialog {
                         Getdown_urling = false;
                         try {
                             JSONObject jsonObject = new JSONObject(result);
-                            final String file_url = jsonObject.getString("file_url");
+                            final String file_url = ReaderConfig.getBaseUrl() + jsonObject.getString("file_url");
                             final String file_name = jsonObject.getString("file_name");
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     downFile(activity, file_url, file_name, downoption);
                                 }
                             }).start();
@@ -345,14 +286,12 @@ public class DownDialog {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                     @Override
-                    public void onErrorResponse(String  ex) {
+                    public void onErrorResponse(String ex) {
                         Getdown_urling = false;
-                        if(ex!=null&&ex.equals("701")){
-
+                        if (ex != null && ex.equals("701")) {
                             if (bottomDialog != null) {
                                 bottomDialog.dismiss();
                             }
@@ -366,12 +305,11 @@ public class DownDialog {
                         }
                     }
                 }
-
         );
     }
 
     @SuppressLint("HandlerLeak")
-     Handler handler = new Handler() {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -393,19 +331,16 @@ public class DownDialog {
             }
         }
     };
-    public  Activity Activity;
 
-    private  void downFile(final Activity activity, String url, String file_name, final Downoption downoption) {
+    private void downFile(final Activity activity, String url, String file_name, final Downoption downoption) {
         DownloadUtil.get().download(url, FileManager.getSDCardRoot() + "downoption/", file_name,
                 new DownloadUtil.OnDownloadListener() {
                     @Override
                     public void onDownloadSuccess(File file) {
                         Activity = activity;
-
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                         downoption.downoption_date = formatter.format(System.currentTimeMillis());
                         ShareUitls.putDown(activity, downoption.book_id, downoption.start_order + "-" + downoption.end_order);
-
                         List<Downoption> downoptions = LitePal.where("book_id= ?", downoption.book_id).find(Downoption.class);
                         for (Downoption downoption1 : downoptions) {//当前开始序号 包含在 已经下载的 某条序号记录内   重新记录最新的下载记录 为两个叠加
                             if (downoption.start_order <= downoption1.start_order && downoption1.end_order <= downoption.end_order) {
@@ -417,28 +352,21 @@ public class DownDialog {
                                 if (downoption1.start_order <= downoption.end_order && downoption.end_order <= downoption1.end_order && downoption.start_order < downoption1.start_order) {
                                     LitePal.deleteAll(Downoption.class, "file_name=?", downoption1.file_name);
                                     downoption.end_order = downoption1.end_order;
-
                                 }
                             }
                         }
-
-
                         downoption.save();
                         handler.sendEmptyMessage(0);
-
                         EventBus.getDefault().post(downoption);//通知进度更新
-
                         int size = 0;
                         String txt2String = FileManager.txt2String(file);
                         JsonParser jsonParser = new JsonParser();
                         JsonArray jsonElements = jsonParser.parse(txt2String).getAsJsonArray();//获取JsonArray对象
-
                         Gson gson = new Gson();
-
                         int temp = 0;
                         for (JsonElement jsonElement : jsonElements) {
                             ChapterContent chapterContent = gson.fromJson(jsonElement, ChapterContent.class);//解析
-                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(downoption.book_id + "/").concat(chapterContent.getChapter_id() + "/").concat(chapterContent.getIs_preview()+ "/").concat(chapterContent.getUpdate_time()).concat(".txt");
+                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(downoption.book_id + "/").concat(chapterContent.getChapter_id() + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
                             FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                             size += chapterContent.getWords() * 3;
                             ++temp;
@@ -447,15 +375,11 @@ public class DownDialog {
                         }
                         downoption.downoption_size = (int) (((float) size / 1048576f) * 100) / 100f + "M";
                         downoption.isdown = true;
-
                         ContentValues values = new ContentValues();
                         values.put("downoption_size", (int) (((float) size / 1048576f) * 100) / 100f + "M");
                         values.put("isdown", true);
                         LitePal.updateAll(Downoption.class, values, "file_name = ?", downoption.file_name);
-
                         EventBus.getDefault().post(downoption);
-
-
                         handler.sendEmptyMessage(1);
                     }
 
@@ -465,179 +389,7 @@ public class DownDialog {
 
                     @Override
                     public void onDownloadFailed(Exception e) {
-                     /*   activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                MyToash.Toash(activity,LanguageUtil.getString(activity,R.string.BookInfoActivity_down_downfile));
-                            }
-                        });*/
-
                     }
                 });
-
-
-    }
-
-
-    /**
-     * 设置动画
-     *
-     * @param v
-     * @param startLocation
-     * @param view
-     */
-
-     ViewGroup viewGroup;
-
-    private  void setAnim(Activity activity, final View v, int[] startLocation, final View bottom) {
-
-        viewGroup = null;
-        viewGroup = createAnimLayout(activity);
-        viewGroup.addView(v);// 把动画小球添加到动画层
-        final View viewa = addViewToAnimLayout(viewGroup, v,
-                startLocation);
-        int[] endLocation = new int[2];// 存储动画结束位置的X、Y坐标
-        bottom.getLocationOnScreen(endLocation);// shopCart是那个购物车
-
-        // 计算位移
-        int endX = endLocation[0] - startLocation[0];// 动画位移的X坐标
-        int endY = endLocation[1] - startLocation[1];// 动画位移的y坐标
-        TranslateAnimation translateAnimationX = new TranslateAnimation(0,
-                endX, 0, 0);
-        translateAnimationX.setInterpolator(new LinearInterpolator());
-        translateAnimationX.setRepeatCount(0);// 动画重复执行的次数
-        translateAnimationX.setFillAfter(true);
-
-        TranslateAnimation translateAnimationY = new TranslateAnimation(0, 0,
-                0, endY);
-        translateAnimationY.setInterpolator(new AccelerateInterpolator());
-        translateAnimationY.setRepeatCount(0);// 动画重复执行的次数
-        translateAnimationX.setFillAfter(true);
-
-        ScaleAnimation scaleAnimation = new ScaleAnimation(0.6f, 0.1f, 0.6f, 0.1f);
-        scaleAnimation.setInterpolator(new AccelerateInterpolator());
-        scaleAnimation.setRepeatCount(0);// 动画重复执行的次数
-        scaleAnimation.setFillAfter(true);
-
-        AnimationSet set = new AnimationSet(false);
-        set.setFillAfter(false);
-        set.addAnimation(scaleAnimation);
-        set.addAnimation(translateAnimationY);
-        set.addAnimation(translateAnimationX);
-        set.setDuration(600);// 动画的执行时间
-        viewa.startAnimation(set);
-        // 动画监听事件
-        set.setAnimationListener(new Animation.AnimationListener() {
-            // 动画的开始
-            @Override
-            public void onAnimationStart(Animation animation) {
-                v.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            // 动画的结束
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                v.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    /**
-     * @param
-     * @return void
-     * @throws
-     * @Description: 创建动画层
-     */
-    private  ViewGroup createAnimLayout(Activity activity) {
-        ViewGroup rootView = (ViewGroup) activity.getWindow()
-                .getDecorView();
-        LinearLayout animLayout = new LinearLayout(activity);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        animLayout.setLayoutParams(lp);
-        animLayout.setId(Integer.MAX_VALUE);
-        animLayout.setBackgroundResource(android.R.color.transparent);
-        rootView.addView(animLayout);
-        return animLayout;
-    }
-
-    private  View addViewToAnimLayout(final ViewGroup parent, final View view,
-                                            int[] location) {
-        int x = location[0];
-        int y = location[1];
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.leftMargin = x;
-        lp.topMargin = y;
-        view.setLayoutParams(lp);
-        return view;
-    }
-
-    /**
-     * 将drawable对象进行指定大小的缩放
-     *
-     * @param drawable
-     * @param w
-     * @param h
-     * @return
-     */
-    public  Drawable zoomDrawable(Drawable drawable, int w, int h) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        Bitmap oldbmp = drawableToBitmap(drawable); // drawable 转换成 bitmap
-        Matrix matrix = new Matrix(); // 创建操作图片用的 Matrix 对象
-        float scaleWidth = ((float) w / width); // 计算缩放比例
-        float scaleHeight = ((float) h / height);
-        matrix.postScale(scaleWidth, scaleHeight); // 设置缩放比例
-        Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
-                matrix, true); // 建立新的 bitmap ，其内容是对原 bitmap 的缩放后的图
-        return new BitmapDrawable(newbmp); // 把 bitmap 转换成 drawable 并返回
-    }
-
-    /**
-     * 将drawable 转换成 bitmap
-     *
-     * @param drawable
-     * @return
-     */
-    public  Bitmap drawableToBitmap(Drawable drawable) {
-        int width = drawable.getIntrinsicWidth(); // 取 drawable 的长宽
-        int height = drawable.getIntrinsicHeight();
-        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                : Bitmap.Config.RGB_565; // 取 drawable 的颜色格式
-        Bitmap bitmap = Bitmap.createBitmap(width, height, config); // 建立对应
-        // bitmap
-        Canvas canvas = new Canvas(bitmap); // 建立对应 bitmap 的画布
-        drawable.setBounds(0, 0, width, height);
-        drawable.draw(canvas); // 把 drawable 内容画到画布中
-        return bitmap;
-    }
-
-    // dp转换为像素px
-    public  int dip2Px(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-
-    public  Bitmap getBitmapFromView(View v) {
-        Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.RGB_565);
-        Canvas c = new Canvas(b);
-        v.layout(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
-        // Draw background
-        Drawable bgDrawable = v.getBackground();
-        if (bgDrawable != null)
-            bgDrawable.draw(c);
-        else
-            c.drawColor(Color.WHITE);
-        // Draw view to canvas
-        v.draw(c);
-        return b;
     }
 }
