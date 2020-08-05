@@ -1,11 +1,13 @@
 package com.heiheilianzai.app.config;
 
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
@@ -19,6 +21,7 @@ import com.heiheilianzai.app.domain.PreparedDomain;
 import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.read.ReadingConfig;
 import com.heiheilianzai.app.utils.JPushFactory;
+import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.UpdateApp;
@@ -41,6 +44,7 @@ public class ReaderApplication extends LitePalApplication {
         super.onCreate();
         try {
             context = getContext();
+            initGlobeActivity();
             preparedDomain = new PreparedDomain(context);
             UMConfigure.setLogEnabled(false);
             String getChannelName = UpdateApp.getChannelName(this);
@@ -111,7 +115,6 @@ public class ReaderApplication extends LitePalApplication {
             mNotificationManager.createNotificationChannel(mChannel);
         }
     }
-
 
     public static Context getAppContext() {
         return context;
@@ -187,5 +190,41 @@ public class ReaderApplication extends LitePalApplication {
             }
         }
         return -1;
+    }
+
+    /**
+     *注册Activity生命周期 放入MyActivityManager进行管理。
+     */
+    private void initGlobeActivity() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                MyActivityManager.getInstance().setCurrentActivity(activity);
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+        });
     }
 }
