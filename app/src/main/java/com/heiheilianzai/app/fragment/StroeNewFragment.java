@@ -160,13 +160,6 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         }
     }
 
-    @Override
-    protected void initData() {
-        if (fragment != null) {
-            fragment.initData();
-        }
-    }
-
     private void initOption() {
         fragment = getProduct() ? new NewStoreBookFragment() : new NewStoreComicFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
