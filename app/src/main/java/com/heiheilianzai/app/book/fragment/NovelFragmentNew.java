@@ -421,76 +421,79 @@ public class NovelFragmentNew extends Fragment implements View.OnClickListener, 
             initBanner(obj);
             initAnnoun(obj);
         }
-        if (Utils.isLogin(activity)) {
-            final JSONArray bookArr = obj.getJSONArray("list");
-            if (bookArr.length() != 0) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String uid = Utils.getUID(activity);
-                            for (int i = 0; i < bookArr.length(); i++) {
-                                BaseBook baseBook = new BaseBook();
-                                JSONObject jsonObject = bookArr.getJSONObject(i);
-                                baseBook.setName(jsonObject.getString("name"));
-                                baseBook.setBook_id(jsonObject.getString("book_id"));
-                                baseBook.setCover(jsonObject.getString("cover"));
-                                baseBook.setAuthor(jsonObject.getString("author"));
-                                int total_chapter = jsonObject.getInt("total_chapter");
-                                baseBook.setDescription(jsonObject.getString("description"));
-                                baseBook.setRecentChapter(total_chapter);
-                                baseBook.setTotal_Chapter(total_chapter);
-                                baseBook.setUid(Utils.getUID(activity));
-                                boolean isflag = false;//是否存在
-                                FALG:
-                                for (BaseBook baseBookt : bookLists) {
-                                    if (baseBookt.getBook_id().equals(baseBook.getBook_id())) {
-                                        isflag = true;
-                                        baseBookt.setUid(uid);
-                                        if (total_chapter > baseBookt.getTotal_Chapter()) {//更新最新章节数目
-                                            baseBookt.setTotal_Chapter(total_chapter);
-                                            baseBookt.setRecentChapter(total_chapter - baseBookt.getRecentChapter());
+        try {
+            if (Utils.isLogin(activity)) {
+                final JSONArray bookArr = obj.getJSONArray("list");
+                if (bookArr.length() != 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                String uid = Utils.getUID(activity);
+                                for (int i = 0; i < bookArr.length(); i++) {
+                                    BaseBook baseBook = new BaseBook();
+                                    JSONObject jsonObject = bookArr.getJSONObject(i);
+                                    baseBook.setName(jsonObject.getString("name"));
+                                    baseBook.setBook_id(jsonObject.getString("book_id"));
+                                    baseBook.setCover(jsonObject.getString("cover"));
+                                    baseBook.setAuthor(jsonObject.getString("author"));
+                                    int total_chapter = jsonObject.getInt("total_chapter");
+                                    baseBook.setDescription(jsonObject.getString("description"));
+                                    baseBook.setRecentChapter(total_chapter);
+                                    baseBook.setTotal_Chapter(total_chapter);
+                                    baseBook.setUid(Utils.getUID(activity));
+                                    boolean isflag = false;//是否存在
+                                    FALG:
+                                    for (BaseBook baseBookt : bookLists) {
+                                        if (baseBookt.getBook_id().equals(baseBook.getBook_id())) {
+                                            isflag = true;
+                                            baseBookt.setUid(uid);
+                                            if (total_chapter > baseBookt.getTotal_Chapter()) {//更新最新章节数目
+                                                baseBookt.setTotal_Chapter(total_chapter);
+                                                baseBookt.setRecentChapter(total_chapter - baseBookt.getRecentChapter());
+                                            }
+                                            baseBookt.setName(baseBook.getName());
+                                            baseBookt.setName(baseBook.getName());
+                                            baseBookt.setCover(baseBook.getCover());
+                                            baseBookt.setAuthor(baseBook.getAuthor());
+                                            baseBookt.setDescription(baseBook.getDescription());
+                                            break FALG;
                                         }
-                                        baseBookt.setName(baseBook.getName());
-                                        baseBookt.setName(baseBook.getName());
-                                        baseBookt.setCover(baseBook.getCover());
-                                        baseBookt.setAuthor(baseBook.getAuthor());
-                                        baseBookt.setDescription(baseBook.getDescription());
-                                        break FALG;
+                                    }
+                                    if (!isflag) {
+                                        baseBook.setAddBookSelf(1);
+                                        baseBook.saveIsexist(1);
+                                        bookLists.add(baseBook);
                                     }
                                 }
-                                if (!isflag) {
-                                    baseBook.setAddBookSelf(1);
-                                    baseBook.saveIsexist(1);
-                                    bookLists.add(baseBook);
-                                }
-                            }
-                            for (BaseBook baseBookt : bookLists) {
-                                if (baseBookt.isAddBookSelf() == 0) {
-                                    baseBookt.saveIsexist(1);
-                                    baseBookt.setAddBookSelf(1);
-                                } else {
-                                    ContentValues values = new ContentValues();
-                                    values.put("uid", uid);
-                                    values.put("total_chapter", baseBookt.getTotal_Chapter());
-                                    values.put("recentChapter", baseBookt.getTotal_Chapter());
-                                    values.put("name", baseBookt.getName());
-                                    values.put("cover", baseBookt.getCover());
-                                    values.put("author", baseBookt.getAuthor());
-                                    values.put("description", baseBookt.getDescription());
-                                    if (baseBookt.getId() == 0) {
-                                        LitePal.updateAll(BaseBook.class, values, "book_id = ?", baseBookt.getBook_id());
+                                for (BaseBook baseBookt : bookLists) {
+                                    if (baseBookt.isAddBookSelf() == 0) {
+                                        baseBookt.saveIsexist(1);
+                                        baseBookt.setAddBookSelf(1);
                                     } else {
-                                        LitePal.update(BaseBook.class, values, baseBookt.getId());
+                                        ContentValues values = new ContentValues();
+                                        values.put("uid", uid);
+                                        values.put("total_chapter", baseBookt.getTotal_Chapter());
+                                        values.put("recentChapter", baseBookt.getTotal_Chapter());
+                                        values.put("name", baseBookt.getName());
+                                        values.put("cover", baseBookt.getCover());
+                                        values.put("author", baseBookt.getAuthor());
+                                        values.put("description", baseBookt.getDescription());
+                                        if (baseBookt.getId() == 0) {
+                                            LitePal.updateAll(BaseBook.class, values, "book_id = ?", baseBookt.getBook_id());
+                                        } else {
+                                            LitePal.update(BaseBook.class, values, baseBookt.getId());
+                                        }
                                     }
                                 }
+                                handler.sendEmptyMessage(0);
+                            } catch (Exception e) {
                             }
-                            handler.sendEmptyMessage(0);
-                        } catch (Exception e) {
                         }
-                    }
-                }).start();
+                    }).start();
+                }
             }
+        } catch (Exception e) {
         }
     }
 
