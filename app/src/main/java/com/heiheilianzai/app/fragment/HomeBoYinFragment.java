@@ -49,6 +49,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     RelativeLayout home_boyin_layout;
     //获取AudioManager
     AudioManager audioManager;
+    boolean isPause=false;
 
     @Override
     public int initContentView() {
@@ -149,7 +150,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
         String json = event.getLoginJson();
         if (mWebView != null && !StringUtils.isEmpty(json) && isLoadUrl) {
             mWebView.loadUrl("javascript:thirdpartyLoginResponse('" + json + "')");
-            mWebView.reload();
+            if(!isPause){
+                mWebView.reload();
+            }
         }
     }
 
@@ -157,7 +160,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     public void refresh(LogoutBoYinEvent event) {
         if (mWebView != null) {
             mWebView.loadUrl("javascript:thirdpartyLogout()");
-            mWebView.reload();
+            if(!isPause){
+                mWebView.reload();
+            }
         }
     }
 
@@ -171,6 +176,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     }
 
     public void onMyResume() {
+        isPause=false;
         audioManager.abandonAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
@@ -180,6 +186,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     }
 
     public void onMyPause() {
+        isPause=true;
         audioManager.requestAudioFocus(
                 new AudioManager.OnAudioFocusChangeListener() {
                     @Override
