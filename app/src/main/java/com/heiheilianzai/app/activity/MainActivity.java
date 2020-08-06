@@ -40,7 +40,9 @@ import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.dialog.MyPoPwindow;
 import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
+import com.heiheilianzai.app.eventbus.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.eventbus.HomeShelfRefreshEvent;
+import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.eventbus.ToStore;
 import com.heiheilianzai.app.fragment.BookshelfFragment;
 import com.heiheilianzai.app.fragment.DiscoveryNewFragment;
@@ -52,6 +54,7 @@ import com.heiheilianzai.app.read.ReadActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -65,9 +68,12 @@ import com.umeng.socialize.UMShareAPI;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -106,6 +112,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     StroeNewFragmentBook stroeNewFragmentBook;//首页漫画
     StroeNewFragmentComic stroeNewFragmentComic;//首页小说
     HomeBoYinFragment homeBoYinFragment;
+    int send_number;//记录请求支付订单的次数
 
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
@@ -419,6 +426,61 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         }
     }
 
+    /**
+     * 支付页面关闭接收该Event。
+     * @param toStore
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void createVipPayOuder(CreateVipPayOuderEvent toStore) {//支付Vip订单创建完成
+        send_number = 0;
+        getVipPayOuder();
+    }
+
+    /**
+     *由于现在支付跳转浏览器，没有回调可以告诉客户端用户已经支付成功。经过与产品协商使用下面方案：
+     * 用户发起支付生成订单退出页面后，客户端通过拿订单信息，判断该订单有没有支付成功；
+     * 由于第三方支付成功后服务器还需要一个处理时间。客户端需要每30秒请求一次，最多请求4次；
+     * 4次之后就不再处理。如果其中有一次订单已支付成功，发送刷新个人中心Event。退出递归。
+     * status： 2支付成功  1待支付  3支付失败
+     */
+    public void getVipPayOuder() {
+        ReaderParams params = new ReaderParams(MainActivity.this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(MainActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mPayLastOrder, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(result);
+                            int code = jsonObj.getInt("status");
+                            if (code == 2) {
+                                Activity activity = MyActivityManager.getInstance().getCurrentActivity();
+                                if (activity != null) {//获取栈顶activity为了在任何页面都可以弹出该提示。
+                                    MyToash.ToashSuccess(activity, "您的支付订单已处理哦~");
+                                }
+                                EventBus.getDefault().post(new RefreshMine(null));
+                            } else {
+                                send_number += 1;
+                                if (send_number < 4) {
+                                    Timer timer = new Timer();
+                                    timer.schedule(new TimerTask() {
+                                        public void run() {
+                                            getVipPayOuder();
+                                        }
+                                    }, 3000);
+                                }
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
     //为了解决弹出PopupWindow后外部的事件不会分发,既外部的界面不可以点击
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -478,6 +540,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     /**
      * 权限管理申请
+     *
      * @param activity
      */
     public static void permission(Activity activity) {
