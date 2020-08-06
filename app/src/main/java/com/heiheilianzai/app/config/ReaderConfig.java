@@ -263,7 +263,18 @@ public class ReaderConfig {
     /**
      * 获取支付渠道列表
      */
-    public static final String mPayChannelList = "/pay/channel-list";
+    public static final String mPayChannelList = "/pay/get-pay-list";
+
+    /**
+     * 会员充值
+     */
+    public static final String mPayVip = "/pay/start-pay";
+
+    /**
+     * 获取当期最新一条充值订单
+     */
+    public static final String mPayLastOrder = "/pay/last-order";
+
 
     public static final String payUrl = "/pay/common-pay";
 

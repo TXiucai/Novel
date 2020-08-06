@@ -201,6 +201,7 @@
     <string name="PayActivity_zhifuok">支付成功</string>
     <string name="PayActivity_zhifucuowu">支付发生错误</string>
     <string name="PayActivity_zhifucancle">支付已取消</string>
+    <string name="PayActivity_order_remind">我们正在处理您的订单，请耐心等待~</string>
 
     <!--签到-->
     <string name="SigninActivity_title">签到</string>

@@ -1,6 +1,8 @@
 package com.heiheilianzai.app.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,17 +16,22 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.adapter.PayChannelAdapter;
-import com.heiheilianzai.app.alipay.AlipayGoPay;
-import com.heiheilianzai.app.bean.PayChannel;
+import com.heiheilianzai.app.adapter.PayChannelNewAdapter;
+import com.heiheilianzai.app.bean.PayChannelNew;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.dialog.GetDialog;
+import com.heiheilianzai.app.eventbus.CreateVipPayOuderEvent;
+import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.view.GridViewForScrollView;
-import com.heiheilianzai.app.wxpay.WXGoPay;
 import com.heiheilianzai.app.wxpay.WXPayResult;
+
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -32,11 +39,10 @@ import butterknife.BindView;
 import cn.jmessage.support.qiniu.android.utils.StringUtils;
 
 /**
- * 支付页面，可选择微信支付和支付宝支付
+ * 支付页面，可选择微信支付和支付宝支付(更换支付渠道，统一跳浏览器)
  * Created by scb on 2018/8/9.
  */
 public class PayActivity extends BaseActivity implements ShowTitle, View.OnClickListener {
-    private final String TAG = PayActivity.class.getSimpleName();
     @BindView(R2.id.weixin_pay_layout)
     RelativeLayout weixin_pay_layout;
     @BindView(R2.id.alipay_pay_layout)
@@ -49,16 +55,15 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     ImageView alipay_paytype_img;
     @BindView(R2.id.pay_channel_gridview)
     GridViewForScrollView pay_channel_gridview;
-    private int mPayType = 1;//0：微信支付 1：支付宝支付
-    private String channel;
-    private String payType;
-    private int pay_type;
+    private String id;
     private String mGoodsId;
+    private String payName;
     private String mPrice;
     public static Activity activity;
     Gson gson = new Gson();
-    List<PayChannel> mPayChannelList;
-    PayChannelAdapter payChannelAdapter;
+    List<PayChannelNew> mPayChannelList;
+    PayChannelNewAdapter payChannelAdapter;
+    private boolean isCreatePayOuder = false;
 
     @Override
     public int initContentView() {
@@ -128,12 +133,10 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.weixin_pay_layout:
-                mPayType = 0;
                 weixin_paytype_img.setImageResource(R.mipmap.pay_selected);
                 alipay_paytype_img.setImageResource(R.mipmap.pay_unselected);
                 break;
             case R.id.alipay_pay_layout:
-                mPayType = 1;
                 weixin_paytype_img.setImageResource(R.mipmap.pay_unselected);
                 alipay_paytype_img.setImageResource(R.mipmap.pay_selected);
                 break;
@@ -141,37 +144,82 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
                 if (!MainHttpTask.getInstance().Gotologin(activity)) {
                     return;
                 }
-                if ("1".equals(payType)) {
-                    WXGoPay wxGoPay = new WXGoPay(this);
-                    wxGoPay.requestPayOrder(ReaderConfig.getBaseUrl() + ReaderConfig.payUrl, mGoodsId, channel, pay_type);
-                } else {
-                    AlipayGoPay alipayGoPay = new AlipayGoPay(this);
-                    alipayGoPay.requestPayOrder(ReaderConfig.getBaseUrl() + ReaderConfig.payUrl, mGoodsId, channel, pay_type);
-                    return;
-                }
+                pay();
                 break;
         }
     }
 
     private void infoPayChanne(String result) {
         if (!StringUtils.isNullOrEmpty(result)) {
-            mPayChannelList = gson.fromJson(result, new TypeToken<List<PayChannel>>() {
-            }.getType());
-            channel = mPayChannelList.get(0).getChannel();
-            payType = mPayChannelList.get(0).getType();
-            pay_type = mPayChannelList.get(0).getPay_type();
-            payChannelAdapter = new PayChannelAdapter(this, mPayChannelList, mPayChannelList.size());
-            pay_channel_gridview.setAdapter(payChannelAdapter);
-            pay_channel_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            try {
+                JSONObject jsonObj = new JSONObject(result);
+                mPayChannelList = gson.fromJson(jsonObj.getString("pay_list"), new TypeToken<List<PayChannelNew>>() {
+                }.getType());
+                id = mPayChannelList.get(0).getId();
+                payName= mPayChannelList.get(0).getName();
+                payChannelAdapter = new PayChannelNewAdapter(this, mPayChannelList, mPayChannelList.size());
+                pay_channel_gridview.setAdapter(payChannelAdapter);
+                pay_channel_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        PayActivity.this.id = mPayChannelList.get(position).getId();
+                        PayActivity.this.payName= mPayChannelList.get(position).getName();
+                        payChannelAdapter.setSelectPosition(position);
+                        payChannelAdapter.notifyDataSetChanged();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void pay() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("goods_id", mGoodsId);
+        params.putExtraParams("pay_list_id", id);
+        params.putExtraParams("pay_name", payName);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mPayVip, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        if (!StringUtils.isNullOrEmpty(result)) {
+                            try {
+                                JSONObject jsonObj = new JSONObject(result);
+                                String pay_url = jsonObj.getString("pay_link");
+                                Uri uri = Uri.parse(pay_url);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                startActivity(intent);
+                                isCreatePayOuder = true;
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isCreatePayOuder) {
+            isCreatePayOuder=false;
+            GetDialog.IsOperationPositive(PayActivity.this, getString(R.string.PayActivity_order_remind), "", new GetDialog.IsOperationInterface() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    channel = mPayChannelList.get(position).getChannel();
-                    payType = mPayChannelList.get(position).getType();
-                    pay_type = mPayChannelList.get(position).getPay_type();
-                    payChannelAdapter.setSelectPosition(position);
-                    payChannelAdapter.notifyDataSetChanged();
+                public void isOperation() {
+                   finish();
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().post(new CreateVipPayOuderEvent());
     }
 }
