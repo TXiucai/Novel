@@ -1,0 +1,69 @@
+gradle.ext {
+    //版本号
+    VERSION_CODE = 20200806
+
+    //版本名
+    VERSION_NAME = "2.2.5"
+
+    // 应用程序包名
+    APPLICATION_ID = 'com.heiheilianzai.app'
+
+    MANIFESTPLACEHOLDERS = [
+            JPUSH_PKGNAME       : APPLICATION_ID,
+            JPUSH_APPKEY        : "996e9d9e29dcf507d08bed43", //JPush 上注册的包名对应的 Appkey.
+            JPUSH_CHANNEL       : "developer-default", //暂时填写默认值即可.
+            XIAOMI_APPKEY       : "MI-5231805542308",//小米平台注册的appkey
+            XIAOMI_APPID        : "MI-2882303761518055308",//小米平台注册的appid
+            MEIZU_APPKEY        : "MZ-97a6a0a655b34b8ea3491123c12c6021",//魅族平台注册的appkey
+            MEIZU_APPID         : "MZ-122431",//魅族平台注册的appid
+            OPPO_APPKEY         : "OP-3dcf9da320e44230ac43eec57db631cb", // OPPO平台注册的appkey
+            OPPO_APPID          : "OP-30155632", // OPPO平台注册的appid
+            OPPO_APPSECRET      : "OP-b95aa885ab1345cf8aed64b198cd7d8b", //OPPO平台注册的appsecret
+            UMENG_KEY           : "5cf72381570df38285000505",
+            UMENG_NAME          : APPLICATION_ID,
+            ALI_APP_KEY         : "27537597",
+            ALI_APP_SECRET      : "cba287b79cf881606ad8ab748b0fc3af",
+            APP_KEY_OPEN_INSTALL: "c18fr0",// openInstall
+    ]
+
+    SUPPORT_VERSION = "28.0.0"
+    // 签名相关
+    STORE_FILE = 'configs/sign/heiheilianzai.jks'
+    STORE_PASSWORD = 'heihei123'
+    KEY_ALIAS = 'key0'
+    KEY_PASSWORD = 'heihei123'
+    //与服务器约定的公参
+    APP_ID = "\"1\""
+    //传入波音平台源
+    APP_SOURCE_BOYIN = "\"2\""
+    //是否为免费
+    FREE_CHARGE = 'true'
+    // 友盟相关
+    UMENG_KEY = "\"5cf72381570df38285000505\""
+    UMENG_NAME = "\"default\""
+    //微信等
+    APP_WX_ID = "\"wx7ea57c51219f0e1b\""
+    APP_WX_SECRET = "\"527c359c9bd11fe5b4831d5eb8de901c\""
+    APP_QQ_ID = "\"101581714\""
+    APP_QQ_SECRET = "\"20a1d89d8d265e90d6825be24e013da0\""
+    // Server host
+    DOMAIN_HOSTS = "\"https://domain.260b18.com\""
+    API_HOSTS = "\"http://api.07dac5.com\""
+    API_HOSTS_UAT = "\"http://api.08bea5.com\""
+    DOMAIN_HOSTS_RESERVE = "\"https://domain.260b18.com\""
+    // API key
+    API_KEY = "\"hhlzv2Android\""
+    API_KEY_UAT = "\"beiwo2019v3Android\""
+    API_SECRET_KEY = "\"2qLAAYr5fMAmuPQZD2wBPYGXIHFxI9Wu\""
+    API_SECRET_KEY_UAT = "\"wanxiangyunzhisixflyV58712345678\""
+    // 图片解密密钥
+    PICTURE_KEY = "\"saIZXc4yMvq0Iz56\""
+    // 图片解密偏移量
+    PICTURE_VIPARA = "\"kbJYtBJUECT0oyjo\""
+    //API解密IV AES
+    API_DECODE_IV = "\"sciCuBC7orQtDhTO\""
+    API_DECODE_IV_UAT = "\"sciCuBC7orQtDhTO\""
+    //API解密KEY AES
+    API_DECODE_KEY = "\"D2o4XyQeIFobJ4tS\""
+    API_DECODE_KEY_UAT = "\"D2o4XyQeIFobJ4tS\""
+}

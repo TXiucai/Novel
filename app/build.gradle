@@ -80,6 +80,14 @@ android {
             storePassword
         }
 
+        heiheilianzaiRelease { // 嘿嘿连载
+            getProductConfig(heiheilianzai)
+            keyAlias gradle.ext.KEY_ALIAS
+            keyPassword gradle.ext.STORE_PASSWORD
+            storeFile file(gradle.ext.STORE_FILE)
+            storePassword gradle.ext.KEY_PASSWORD
+        }
+
         pumpkinRelease { // 南瓜阅读
             getProductConfig(pumpkin)
             keyAlias gradle.ext.KEY_ALIAS
@@ -92,6 +100,9 @@ android {
     getSigningProperties()
 
     productFlavors {
+        // 嘿嘿连载
+        heiheilianzai getProductConfig(heiheilianzai)
+        getSigningConfig(heiheilianzai)
         //南瓜阅读
         pumpkin getProductConfig(pumpkin)
         getSigningConfig(pumpkin)
@@ -209,6 +220,9 @@ def getAppConfig() {
 ProductFlavor getSigningConfig(ProductFlavor productFlavors) {
     print(productFlavors.name.toLowerCase())
     switch (productFlavors.name) {
+        case heiheilianzai.toLowerCase(): // 嘿嘿连载
+            productFlavors.signingConfig android.signingConfigs.heiheilianzaiRelease
+            break
         case pumpkin.toLowerCase(): // 南瓜阅读
             productFlavors.signingConfig android.signingConfigs.pumpkinRelease
             break
