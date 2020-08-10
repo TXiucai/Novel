@@ -608,10 +608,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
                                 map.put(chapter_id, comicChapterItem);
                                 ComicChapter CurrentComicChapter = getCurrentComicChapter(current_display_order + 1);
-                                CurrentComicChapter.setImagesText(result);
-                                ContentValues values = new ContentValues();
-                                values.put("ImagesText", result);
-                                LitePal.update(ComicChapter.class, values, CurrentComicChapter.getId());
+                                if(CurrentComicChapter!=null){
+                                    CurrentComicChapter.setImagesText(result);
+                                    ContentValues values = new ContentValues();
+                                    values.put("ImagesText", result);
+                                    LitePal.update(ComicChapter.class, values, CurrentComicChapter.getId());
+                                }
                             }
                         }
 
@@ -639,11 +641,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private ComicChapter getCurrentComicChapter(int comicChapterSize) {
-        ComicChapter comicChaptertemp;
-        if (comicChapterSize < ComicChapterSize) {
-            comicChaptertemp = comicChapter.get(comicChapterSize);
-        } else {
-            comicChaptertemp = comicChapter.get(0);
+        ComicChapter comicChaptertemp=null;
+        if(comicChapter!=null){
+            if (comicChapterSize < ComicChapterSize&&comicChapter.size()>comicChapterSize) {
+                comicChaptertemp = comicChapter.get(comicChapterSize);
+            } else {
+                comicChaptertemp = comicChapter.get(0);
+            }
         }
         return comicChaptertemp;
     }
