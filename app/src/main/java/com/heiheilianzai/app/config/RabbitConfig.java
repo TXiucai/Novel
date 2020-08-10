@@ -2,7 +2,10 @@ package com.heiheilianzai.app.config;
 
 import com.heiheilianzai.app.BuildConfig;
 
-
+/**
+ * 上线前检查 ONLINE 是否为 true  configs 配置文件里相对应参数是否正确。
+ *  当前版本记录: name=2.2.5  code=20200806
+ */
 public class RabbitConfig {
 
     public static final boolean ONLINE = true;
