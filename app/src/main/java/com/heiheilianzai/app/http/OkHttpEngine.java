@@ -65,8 +65,8 @@ public class OkHttpEngine {
         mGson = new Gson();
         mBuilder = new OkHttpClient.Builder();
         mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager).hostnameVerifier(new TrustAllHostnameVerifier());
-        mOkHttpClient = mBuilder.build();
         mBuilder.connectTimeout(50, TimeUnit.SECONDS).writeTimeout(50, TimeUnit.SECONDS).readTimeout(50, TimeUnit.SECONDS);
+        mOkHttpClient = mBuilder.build();
     }
 
     public OkHttpEngine setCache(Context mContext) {
