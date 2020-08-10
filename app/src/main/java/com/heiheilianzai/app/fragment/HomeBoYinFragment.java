@@ -24,6 +24,7 @@ import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.LoginBoYinEvent;
 import com.heiheilianzai.app.eventbus.LogoutBoYinEvent;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -177,30 +178,42 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
     public void onMyResume() {
         isPause=false;
-        audioManager.abandonAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
-            @Override
-            public void onAudioFocusChange(int focusChange) {
+        if(activity!=null){
+            if(audioManager==null){
+                audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
             }
-        });
-        mWebView.reload();
+            audioManager.abandonAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
+                @Override
+                public void onAudioFocusChange(int focusChange) {
+                }
+            });
+            if(mWebView!=null){
+                mWebView.reload();
+            }
+        }
     }
 
     public void onMyPause() {
         isPause=true;
-        audioManager.requestAudioFocus(
-                new AudioManager.OnAudioFocusChangeListener() {
-                    @Override
-                    public void onAudioFocusChange(int focusChange) {
-                    }
-                }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        if(activity!=null){
+            if(audioManager==null){
+                audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+            }
+            audioManager.requestAudioFocus(
+                    new AudioManager.OnAudioFocusChangeListener() {
+                        @Override
+                        public void onAudioFocusChange(int focusChange) {
+                        }
+                    }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        }
     }
 
     void setFloatBall(ViewGroup rootView) {
         FloatBall floatBall = new FloatBall.Builder(activity, rootView)
-                .setBottomMargin(140)//悬浮球初始位置BottomMargin
+                .setBottomMargin(ImageUtil.dp2px(activity, 70))//悬浮球初始位置BottomMargin
                 .setRightMargin(0)//悬浮球初始位置RightMargin
-                .setHeight(80)//悬浮球高度
-                .setWidth(80)//悬浮球宽度
+                .setHeight(ImageUtil.dp2px(activity, 45))//悬浮球高度
+                .setWidth(ImageUtil.dp2px(activity, 45))//悬浮球宽度
                 .setRes(R.mipmap.comic_refresh)//图片资源
                 .setDuration(500)//靠边动画时间
                 .setOnClickListener(new View.OnClickListener() {//悬浮球点击事件
