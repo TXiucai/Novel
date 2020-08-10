@@ -14,12 +14,20 @@ public class ViewUtils {
      */
   public static float getViewAlpha(View v){
       DecimalFormat df = new DecimalFormat("0.0");
-      return Float.valueOf(df.format(v.getAlpha()));
+      String str= df.format(v.getAlpha());
+      if(!StringUtils.isEmpty(str)&&str.contains(",")){
+          str.replace(",",".");
+      }
+      return Float.valueOf(str);
   }
 
     public static float getViewAlpha(Drawable drawable){
         DecimalFormat df = new DecimalFormat("0.0");
-        return Float.valueOf(df.format(drawable.getAlpha()));
+        String str= df.format(drawable.getAlpha());
+        if(!StringUtils.isEmpty(str)&&str.contains(",")){
+            str.replace(",",".");
+        }
+        return Float.valueOf(str);
     }
 
     /**
