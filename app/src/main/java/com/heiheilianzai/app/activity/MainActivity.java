@@ -39,7 +39,6 @@ import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.dialog.MyPoPwindow;
-import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.eventbus.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.eventbus.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.eventbus.RefreshMine;
@@ -112,6 +111,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     StroeNewFragmentBook stroeNewFragmentBook;//首页漫画
     StroeNewFragmentComic stroeNewFragmentComic;//首页小说
     HomeBoYinFragment homeBoYinFragment;
+    DiscoveryNewFragment discoveryFragment;
+    MineNewFragment mineFragment;
     int send_number;//记录请求支付订单的次数
 
     private Dialog popupWindow;
@@ -161,7 +162,12 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
         setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
         setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
-        setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_discovery);
+        if (getAppUpdate()!=null&&getBoyinSwitch() == 1) {
+            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
+            home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
+        } else {
+            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_discovery);
+        }
         setBottomButtonImg(home_mine_layout, R.drawable.selector_home_mine);
     }
 
@@ -186,9 +192,17 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         mFragmentList.add(stroeNewFragmentBook);
         stroeNewFragmentComic = new StroeNewFragmentComic();
         mFragmentList.add(stroeNewFragmentComic);
-        DiscoveryNewFragment discoveryFragment = new DiscoveryNewFragment();
-        mFragmentList.add(discoveryFragment);
-        MineNewFragment mineFragment = new MineNewFragment();
+        if (getAppUpdate()!=null&&getBoyinSwitch() == 1) {
+            homeBoYinFragment = new HomeBoYinFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(HomeBoYinFragment.BUNDLE_URL_KAY, getBoYinUrl());
+            homeBoYinFragment.setArguments(bundle);
+            mFragmentList.add(homeBoYinFragment);
+        } else {
+            discoveryFragment = new DiscoveryNewFragment();
+            mFragmentList.add(discoveryFragment);
+        }
+        mineFragment = new MineNewFragment();
         mFragmentList.add(mineFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, mFragmentList);
         customScrollViewPage.setAdapter(myFragmentPagerAdapter);
@@ -200,19 +214,19 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         int LastFragment = ShareUitls.getTab(activity, "LastFragment", 1);
         switch (LastFragment) {
             case 0:
-                initViewPageChecked(home_novel_layout,0,true);
+                initViewPageChecked(home_novel_layout, 0, true);
                 break;
             case 1:
-                initViewPageChecked(home_store_layout,1,false);
+                initViewPageChecked(home_store_layout, 1, false);
                 break;
             case 2:
-                initViewPageChecked(home_store_layout_comic,2,false);
+                initViewPageChecked(home_store_layout_comic, 2, false);
                 break;
             case 3:
-                initViewPageChecked(home_discovery_layout,3,true);
+                initViewPageChecked(home_discovery_layout, 3, true);
                 break;
             case 4:
-                initViewPageChecked(home_mine_layout,4,true);
+                initViewPageChecked(home_mine_layout, 4, true);
                 break;
         }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -250,7 +264,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         });
     }
 
-    void initViewPageChecked(RadioButton radioButton, int item,boolean useDart) {
+    void initViewPageChecked(RadioButton radioButton, int item, boolean useDart) {
         setStatusTextColor(useDart, activity);
         radioButton.setChecked(true);
         customScrollViewPage.setCurrentItem(item, false);
@@ -293,25 +307,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             } else {
                 signPop();
             }
-            if (mAppUpdate != null && mAppUpdate.getBoyin_switch() == 1) {//1波音开关打开
-                setBoyinView(mAppUpdate.getBoyin_h5());
-            }
         }
     }
 
-    private void setBoyinView(String url) {
-        setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
-        home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
-        homeBoYinFragment = new HomeBoYinFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(HomeBoYinFragment.BUNDLE_URL_KAY, url);
-        homeBoYinFragment.setArguments(bundle);
-        mFragmentList.remove(3);
-        mFragmentList.add(3, homeBoYinFragment);
-        myFragmentPagerAdapter.notifyDataSetChanged();
-    }
-
-    private void signPop(){
+    private void signPop() {
         final String result = ShareUitls.getString(activity, SharedPreferencesConstant.SIGN_POP_KAY, "");
         if (result.length() != 0) {
             handler.sendEmptyMessageDelayed(1, 1000);
@@ -326,6 +325,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     /**
      * 更新小说广告
+     *
      * @param activity
      */
     public void getReadButtomWebViewAD(Activity activity) {
@@ -405,18 +405,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * 防止未加载开屏广告，先跳入首页而初始化参数信息还未刷新缓存
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void eventAppUpdateLoadOver(AppUpdateLoadOverEvent event) {
-        if (event != null) {
-            ShowPOP();
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ToStore(ToStore toStore) {
         if (toStore.PRODUCT == 1) {
@@ -428,6 +416,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     /**
      * 支付页面关闭接收该Event。
+     *
      * @param toStore
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -437,7 +426,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     /**
-     *由于现在支付跳转浏览器，没有回调可以告诉客户端用户已经支付成功。经过与产品协商使用下面方案：
+     * 由于现在支付跳转浏览器，没有回调可以告诉客户端用户已经支付成功。经过与产品协商使用下面方案：
      * 用户发起支付生成订单退出页面后，客户端通过拿订单信息，判断该订单有没有支付成功；
      * 由于第三方支付成功后服务器还需要一个处理时间。客户端需要每30秒请求一次，最多请求4次；
      * 4次之后就不再处理。如果其中有一次订单已支付成功，发送刷新个人中心Event。退出递归。
@@ -559,5 +548,29 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         if (!permissionLists.isEmpty()) {//说明肯定有拒绝的权限
             ActivityCompat.requestPermissions(activity, permissionLists.toArray(new String[permissionLists.size()]), 1);
         }
+    }
+
+    /**
+     * 获取缓存系统参数
+     */
+    private AppUpdate getAppUpdate() {
+        String str = ShareUitls.getString(MainActivity.this, "Update", "");
+        return new Gson().fromJson(str, AppUpdate.class);
+    }
+
+    /**
+     * 波音是否开启
+     * @return
+     */
+    private int getBoyinSwitch() {
+        return getAppUpdate().boyin_switch;
+    }
+
+    /**
+     * 获取波音h5 url
+     * @return
+     */
+    private String getBoYinUrl() {
+        return getAppUpdate().boyin_h5;
     }
 }
