@@ -1,14 +1,13 @@
 package com.heiheilianzai.app.bean;
 
 /**
- * apk更新及系统参数
+ * 系统参数
  */
 public class AppUpdate {
     public int update;
     public String msg;
     public String url;
     public SettingBean setting;
-    public Startpage start_page;
     public String magic_state;
     public int ad_switch;
     public Unit_tag unit_tag;
@@ -19,7 +18,7 @@ public class AppUpdate {
     public int hot_start_time;
     public int daily_max_start_page;
     public int boyin_switch;//波音开关
-    public int  pay_switch;
+    public int pay_switch;
     public String boyin_h5;
     public Version update_version;
 
@@ -29,14 +28,6 @@ public class AppUpdate {
 
     public void setDaily_max_start_page(int daily_max_start_page) {
         this.daily_max_start_page = daily_max_start_page;
-    }
-
-    public Startpage getStart_page() {
-        return start_page;
-    }
-
-    public void setStart_page(Startpage start_page) {
-        this.start_page = start_page;
     }
 
     public String getMagic_state() {
@@ -172,14 +163,7 @@ public class AppUpdate {
         }
     }
 
-    public class Startpage {
-        public String image;
-        public String content;
-        public int skip_type;
-        public String title;
-    }
-
-    public class Version{
+    public class Version {
         public String apk;
     }
 

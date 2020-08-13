@@ -21,12 +21,10 @@ import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.GetDialog;
-import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.http.DownloadUtil;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.view.ProgressBarView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -52,65 +50,34 @@ public class UpdateApp {
 
     public interface UpdateAppInterface {
         void Next(String str);
+
+        void onError(String e);
     }
 
+    /**
+     * 请求 系统版本更新及初始化参数。（是否使用缓存，并更新缓存）
+     *
+     * @param updateAppInterface
+     */
     public void getRequestData(final UpdateAppInterface updateAppInterface) {
-        getRequestData(updateAppInterface, false);
-    }
-
-    /**
-     * 请求 系统版本更新及初始化参数。（是否使用缓存，并更新缓存）
-     *
-     * @param updateAppInterface
-     * @param useCache           true 有缓存时使用缓存  false不是使用缓存
-     */
-    public void getRequestData(final UpdateAppInterface updateAppInterface, boolean useCache) {
-        getRequestData(updateAppInterface, useCache, false);
-    }
-
-    /**
-     * 请求 系统版本更新及初始化参数。（是否使用缓存，并更新缓存）
-     *
-     * @param updateAppInterface
-     * @param useCache           true 有缓存时使用缓存  false不是使用缓存
-     * @param isSplashActivity   是否从SplashActivity请求
-     */
-    public void getRequestData(final UpdateAppInterface updateAppInterface, boolean useCache, boolean isSplashActivity) {
-        String responseCache;
-        if (useCache) {
-            responseCache = ShareUitls.getString(activity, "Update", "");
-            if (!StringUtils.isEmpty(responseCache)) {
-                updateAppInterface.Next(responseCache);
-            }
-        } else {
-            responseCache = "";
-        }
         ReaderParams readerParams = new ReaderParams(activity);
         String json = readerParams.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mAppUpdateUrl, json, false, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mSystemParam, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         ShareUitls.putString(activity, "Update", response);
-                        ReaderConfig.newInstance().AppUpdate=response;
+                        ReaderConfig.newInstance().AppUpdate = response;
                         try {
-                            AppUpdate  mAppUpdate = new Gson().fromJson(response, AppUpdate.class);
-                            ReaderConfig.newInstance().app_free_charge= mAppUpdate.pay_switch==1?false:true;
-                        }catch (Exception e){
+                            AppUpdate mAppUpdate = new Gson().fromJson(response, AppUpdate.class);
+                            ReaderConfig.newInstance().app_free_charge = mAppUpdate.pay_switch == 1 ? false : true;
+                        } catch (Exception e) {
                         }
-                        if (isSplashActivity) {
-                            EventBus.getDefault().post(new AppUpdateLoadOverEvent(response));
-                        }
-                        if (!useCache || StringUtils.isEmpty(responseCache)) {
-                            updateAppInterface.Next(response);
-                        }
+                        updateAppInterface.Next(response);
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        String response = ShareUitls.getString(activity, "Update", "");
-                        if (!useCache || StringUtils.isEmpty(responseCache)) {
-                            updateAppInterface.Next(response);
-                        }
+                        updateAppInterface.onError(ex);
                     }
                 }
         );
@@ -203,6 +170,7 @@ public class UpdateApp {
         public ProgressBarView materialSeekBar;
         @BindView(R2.id.dialog_updateapp_version)
         public TextView dialog_updateapp_version;
+
         public UpdateHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -238,7 +206,7 @@ public class UpdateApp {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_update_app, null);
         popupWindow = new Dialog(activity, R.style.updateapp);
         final UpdateHolder updateHolder = new UpdateHolder(view);
-        updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update)+mAppUpdate.update_version.apk);
+        updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update) + mAppUpdate.update_version.apk);
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
         if (mAppUpdate.getUpdate() == 1) {

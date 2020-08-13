@@ -42,7 +42,7 @@ public class ReaderConfig {
     //              4: 漫画小说
     private static int PRODUCT_TYPE = 3;
 
-    public static  boolean app_free_charge = true;//免费频道
+    public static boolean app_free_charge = true;//免费频道
 
     public static int GETPRODUCT_TYPE(Activity activity) {
         if (PRODUCT_TYPE == 0) {
@@ -200,7 +200,7 @@ public class ReaderConfig {
     /**
      * 波音登录
      */
-    public static final String  mBoYinLoginUrl = "/auth/index";
+    public static final String mBoYinLoginUrl = "/auth/index";
 
     /**
      * 用户名登录
@@ -293,14 +293,19 @@ public class ReaderConfig {
      */
     public static final String mChapterBuyIndex = "/chapter/buy-index";
 
-    /**
-     * 检测更新
-     */
-    public static final String mAppUpdateUrl = "/service/checkver";
-
     public static final String bind_wechat = "/user/bind-wechat";
 
     public static final String start_recommend = "/user/start-recommend";
+
+    /**
+     * 获取系统配置
+     */
+    public static final String mSystemParam = "/service/system-param";
+
+    /**
+     * 获取开屏广告接口
+     */
+    public static final String mOpenScreen = "/service/open-screen";
 
     /**
      * 首页公告
