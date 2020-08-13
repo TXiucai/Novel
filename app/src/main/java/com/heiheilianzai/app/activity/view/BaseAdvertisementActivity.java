@@ -14,24 +14,26 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.activity.AboutActivity;
-import com.heiheilianzai.app.activity.AdvertisementActivity;
 import com.heiheilianzai.app.activity.BookInfoActivity;
-import com.heiheilianzai.app.bean.AppUpdate;
+import com.heiheilianzai.app.bean.Startpage;
 import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
 import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.http.ReaderParams;
+import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.File;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +44,7 @@ public abstract class BaseAdvertisementActivity extends Activity {
     @BindView(R2.id.activity_home_viewpager_sex_next)
     public TextView activity_home_viewpager_sex_next;
     public static Activity activity;
-    protected AppUpdate.Startpage startpage;
+    protected Startpage startpage;
     protected UpdateApp updateApp;
     protected boolean skip = false;
     protected int time = 5;
@@ -77,8 +79,7 @@ public abstract class BaseAdvertisementActivity extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(initContentView());
         ButterKnife.bind(this);
         activity = this;
@@ -96,7 +97,6 @@ public abstract class BaseAdvertisementActivity extends Activity {
         initData();
     }
 
-
     /**
      * 广告图片加载
      *
@@ -105,7 +105,7 @@ public abstract class BaseAdvertisementActivity extends Activity {
      * @param activity
      * @param listener
      */
-    public static void setAdImageView(ImageView imageView, AppUpdate.Startpage startpage, Activity activity, OnAdImageListener listener) {
+    public static void setAdImageView(ImageView imageView, Startpage startpage, Activity activity, OnAdImageListener listener) {
         imageView.setVisibility(View.VISIBLE);
         MyPicasso.intoAdImage(imageView, startpage, activity, listener);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +122,7 @@ public abstract class BaseAdvertisementActivity extends Activity {
      * @param startpage
      * @param context
      */
-    public static void adSkip(AppUpdate.Startpage startpage, Context context) {
+    public static void adSkip(Startpage startpage, Context context) {
         if (startpage.skip_type == 1) {// skip_type 1 书籍 2 外部跳转链接 3 漫画 4 浏览器打开链接 5不操作
             context.startActivity(new Intent(context, BookInfoActivity.class).putExtra("book_id", startpage.content));
         } else if (startpage.skip_type == 2) {
@@ -137,19 +137,67 @@ public abstract class BaseAdvertisementActivity extends Activity {
             context.startActivity(new Intent(context, AboutActivity.class)
                     .putExtra("url", startpage.content)
                     .putExtra("flag", "splash")
-                    .putExtra("style", "4")
-            );
+                    .putExtra("style", "4"));
         }
     }
 
     /**
      * 记录开屏次数
      */
-    public  void  startPage(){
+    public void startPage() {
         if (ReaderApplication.getDailyStartPageMax() > 0) {//后台设置了每天最多广告开启广告次数
             ReaderApplication.putDailyStartPage();//记录每天广告开启次数
         }
     }
+
+    /**
+     * 预加载一次广告图片 将图片缓存下载到本地。
+     * 加载广告时可以先用本地图片初始化。
+     *
+     * @param startpage
+     */
+    public void preloadAdvertisingImg(Startpage startpage) {
+        if (startpage != null && !StringUtils.isEmpty(startpage.image)) {
+            Activity activity = MyActivityManager.getInstance().getCurrentActivity();
+            if (activity != null) {
+                MyPicasso.downloadIMG(startpage.image, activity, new MyPicasso.OnDwnloadImg() {
+                    @Override
+                    public void onFile(String nameFile) {
+                        ShareUitls.putString(ReaderApplication.getContext(), "advertising_img", nameFile);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 获取开屏广告加载内容，并将数据缓存。图片下载到本地。
+     */
+    public void getOpenScreen() {
+        ReaderParams params = new ReaderParams(this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mOpenScreen, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            String start_pag = jsonObject.getString("start_page");
+                            if (StringUtils.isEmpty(start_pag)) {
+                                ShareUitls.putString(ReaderApplication.getContext(), "advertising_json", start_pag);
+                                Startpage startpage = new Gson().fromJson(start_pag, Startpage.class);
+                                preloadAdvertisingImg(startpage);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -174,7 +222,9 @@ public abstract class BaseAdvertisementActivity extends Activity {
 
     public interface OnAdImageListener {
         void onAnimationEnd();
+
         void onFailed();
+
         void onClick();
     }
 

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.activity.view.BaseAdvertisementActivity;
 import com.heiheilianzai.app.bean.AppUpdate;
+import com.heiheilianzai.app.bean.Startpage;
 import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -35,6 +36,8 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
     @Override
     public void initData() {
+        setStartpageView();
+        getOpenScreen();
         next();
     }
 
@@ -47,6 +50,9 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
         }
     }
 
+    /**
+     * 获取系统参数，获取系统最新热更新最大启动次数。
+     */
     public void next() {
         updateApp.getRequestData(new UpdateApp.UpdateAppInterface() {
             @Override
@@ -54,41 +60,57 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
                 try {
                     if (response.length() != 0) {
                         AppUpdate dataBean = new Gson().fromJson(response, AppUpdate.class);
-                        startpage = dataBean.start_page;
                         ReaderApplication.putDailyStartPageMax(dataBean.daily_max_start_page);
-                        if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
-                            setAdImageView(activity_splash_im, startpage, activity, new OnAdImageListener() {
-                                @Override
-                                public void onAnimationEnd() {
-                                    activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                                    handler.sendEmptyMessageDelayed(1, 0);
-                                }
-
-                                @Override
-                                public void onFailed() {
-                                    handler.sendEmptyMessageDelayed(0, 500);
-                                }
-
-                                @Override
-                                public void onClick() {
-                                    skip = false;
-                                    if (!skip) {
-                                        handler.removeMessages(1);
-                                        handler.removeMessages(0);
-                                        adSkip(startpage, activity);
-                                    }
-                                }
-                            });
-                        } else {
-                            handler.sendEmptyMessageDelayed(0, 500);
-                        }
-                    } else {
-                        handler.sendEmptyMessageDelayed(0, 500);
                     }
                 } catch (Exception e) {
-                    handler.sendEmptyMessageDelayed(0, 500);
                 }
             }
-        }, true);
+
+            @Override
+            public void onError(String e) {
+            }
+        });
+    }
+
+    /**
+     * 加载缓存开屏广告到控件。
+     */
+    public void setStartpageView() {
+        String json = ShareUitls.getString(getApplicationContext(), "advertising_json", "");
+        if (!StringUtils.isEmpty(json)) {
+            Startpage startpage = new Gson().fromJson(json, Startpage.class);
+            setStartpageView(startpage);
+        } else {
+            handler.sendEmptyMessageDelayed(0, 500);
+        }
+    }
+
+    public void setStartpageView(Startpage startpage) {
+        if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
+            setAdImageView(activity_splash_im, startpage, activity, new OnAdImageListener() {
+                @Override
+                public void onAnimationEnd() {
+                    activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                    handler.sendEmptyMessageDelayed(1, 0);
+                }
+
+                @Override
+                public void onFailed() {
+                    handler.sendEmptyMessageDelayed(0, 500);
+                }
+
+                @Override
+                public void onClick() {
+                    skip = false;
+                    if (!skip) {
+                        handler.removeMessages(1);
+                        handler.removeMessages(0);
+                        adSkip(startpage, activity);
+                    }
+                }
+            });
+        } else {
+            handler.sendEmptyMessageDelayed(0, 500);
+        }
     }
 }
