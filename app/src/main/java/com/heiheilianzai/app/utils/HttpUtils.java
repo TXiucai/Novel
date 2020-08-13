@@ -22,6 +22,8 @@ import cn.jmessage.support.qiniu.android.utils.StringUtils;
 import okhttp3.Request;
 
 /**
+ * 网络请求 post
+ * 使用get请求参考 {@link OkHttpEngine#getAsyncHttp}
  * Created by abc on 2016/7/18.
  */
 public class HttpUtils {
@@ -91,7 +93,7 @@ public class HttpUtils {
                         @Override
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
-                            UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + url + " " + body, "UmengException");
+                            UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + " " + body, deletDomain(url));
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -140,13 +142,15 @@ public class HttpUtils {
                                     default:
                                         if (code != 311 && code != 300) {//今日已签到//用户不存在
                                             MyToash.ToashError(context, msg);
-                                            UMCrash.generateCustomLog(url + " " + msg, "UmengException");
+                                            UMCrash.generateCustomLog(msg, deletDomain(url));
                                         }
                                         responseListener.onErrorResponse(null);
                                         break;
                                 }
                             } catch (Exception j) {
+                                UMCrash.generateCustomLog(j.toString(), deletDomain(url));
                             } catch (Error e) {
+                                UMCrash.generateCustomLog(e.toString(), deletDomain(url));
                             }
                             if (waitDialog != null) {
                                 waitDialog.dismissDialog();
@@ -180,7 +184,7 @@ public class HttpUtils {
                         @Override
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
-                            UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + url + " " + body, "UmengException");
+                            UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + " " + body, deletDomain(url));
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -252,6 +256,18 @@ public class HttpUtils {
         }
         ReaderApplication.setCipherApi(StringUtils.isNullOrEmpty(capi) ? "0" : capi);
         return capi;
+    }
+
+    /**
+     * 删除请求url域名
+     * @param url
+     * @return
+     */
+    private String deletDomain(String url){
+        if(!StringUtils.isNullOrEmpty(url)){
+           return url.replace(ReaderConfig.getBaseUrl(), "");
+        }
+        return url;
     }
 }
 
