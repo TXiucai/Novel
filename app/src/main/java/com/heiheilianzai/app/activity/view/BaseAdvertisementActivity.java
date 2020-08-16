@@ -23,6 +23,7 @@ import com.heiheilianzai.app.bean.Startpage;
 import com.heiheilianzai.app.comic.activity.ComicInfoActivity;
 import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -38,6 +39,9 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 开屏广告 Base类 主要获取开屏广告数据 及逻辑处理
+ */
 public abstract class BaseAdvertisementActivity extends Activity {
     @BindView(R2.id.activity_splash_im)
     public ImageView activity_splash_im;
@@ -163,7 +167,7 @@ public abstract class BaseAdvertisementActivity extends Activity {
                 MyPicasso.downloadIMG(startpage.image, activity, new MyPicasso.OnDwnloadImg() {
                     @Override
                     public void onFile(String nameFile) {
-                        ShareUitls.putString(ReaderApplication.getContext(), "advertising_img", nameFile);
+                        ShareUitls.putString(ReaderApplication.getContext(), SharedPreferencesConstant.ADVERTISING_IMG_KAY, nameFile);
                     }
                 });
             }
@@ -182,8 +186,8 @@ public abstract class BaseAdvertisementActivity extends Activity {
                         try {
                             JSONObject jsonObject = new JSONObject(result);
                             String start_pag = jsonObject.getString("start_page");
-                            if (StringUtils.isEmpty(start_pag)) {
-                                ShareUitls.putString(ReaderApplication.getContext(), "advertising_json", start_pag);
+                            if (!StringUtils.isEmpty(start_pag)) {
+                                ShareUitls.putString(ReaderApplication.getContext(), SharedPreferencesConstant.ADVERTISING_JSON_KAY, start_pag);
                                 Startpage startpage = new Gson().fromJson(start_pag, Startpage.class);
                                 preloadAdvertisingImg(startpage);
                             }

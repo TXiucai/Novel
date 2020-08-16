@@ -317,6 +317,11 @@ public class ReaderConfig {
      */
     public static final String mAdvert = "/advert/info";
 
+    /**
+     * 通过第三方获取用户使用网络所在区域
+     */
+    public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";
+
     public static final String mWebviewCacheDir = "webviewCache";
 
     /**

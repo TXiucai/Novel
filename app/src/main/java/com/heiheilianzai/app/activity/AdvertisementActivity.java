@@ -9,6 +9,7 @@ import com.heiheilianzai.app.activity.view.BaseAdvertisementActivity;
 import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.bean.Startpage;
 import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
@@ -16,7 +17,7 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import java.io.File;
 
 /**
- * 热启动广告
+ * 热启动广告（根据后台配置是否显示）
  */
 public class AdvertisementActivity extends BaseAdvertisementActivity {
 
@@ -27,7 +28,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
     @Override
     public void onCreateView() {
-        String flieName = ShareUitls.getString(getApplicationContext(), "advertising_img", "");
+        String flieName = ShareUitls.getString(getApplicationContext(), SharedPreferencesConstant.ADVERTISING_IMG_KAY, "");
         if (!StringUtils.isEmpty(flieName)) {
             Glide.with(activity).load(new File(flieName)).into(activity_splash_im);
         }
@@ -76,7 +77,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
      * 加载缓存开屏广告到控件。
      */
     public void setStartpageView() {
-        String json = ShareUitls.getString(getApplicationContext(), "advertising_json", "");
+        String json = ShareUitls.getString(getApplicationContext(), SharedPreferencesConstant.ADVERTISING_JSON_KAY, "");
         if (!StringUtils.isEmpty(json)) {
             Startpage startpage = new Gson().fromJson(json, Startpage.class);
             setStartpageView(startpage);

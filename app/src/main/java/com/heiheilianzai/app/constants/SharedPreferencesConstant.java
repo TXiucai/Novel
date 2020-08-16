@@ -6,13 +6,19 @@ package com.heiheilianzai.app.constants;
 public class SharedPreferencesConstant {
 
     //------------------ ShareUitls -------------------------
-    /**{@link com.heiheilianzai.app.bean.AppUpdate} 初始化应用配置参数基本参数，版本更新数据，开屏广告 */
-    public  static  final  String UPDATE_JSON_KAY="Update";
+    /**
+     * {@link com.heiheilianzai.app.bean.AppUpdate} 初始化应用配置参数基本参数，版本更新数据，开屏广告
+     */
+    public static final String UPDATE_JSON_KAY = "Update";
 
-    public  static  final  String SIGN_POP_KAY= "sign_pop";
+    public static final String SIGN_POP_KAY = "sign_pop";
+
+    public static final String ADVERTISING_JSON_KAY = "advertising_json";
+    public static final String ADVERTISING_IMG_KAY = "advertising_img";
+
     //---------------------- END -----------------------------
 
     //------------------ PreparedDomain -------------------------
-    public  static  final  String DYNAMIC_DOMAIN_KAY = "newDynamicdomain";
+    public static final String DYNAMIC_DOMAIN_KAY = "newDynamicdomain";
     //------------------------ END -------------------------------
 }

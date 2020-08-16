@@ -17,6 +17,8 @@
     <string name="splashactivity_permissions_c2"> 」需要开启储存卡使用权限才能正常使用</string>
     <string name="splashactivity_permissions_set">设置</string>
     <string name="splashactivity_permissions_cancle">取消</string>
+    <string name="splashactivity_cannot_link">您所在区域暂时无法打开应用，我们加急处理中。请您稍后再试...</string>
+
     <!--首次启动引导页-->
     <string name="firstStartactivity_welcome">你终于来了</string>
     <string name="firstStartactivity_choosesex">现在快选择你的性别吧</string>
