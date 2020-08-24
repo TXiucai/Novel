@@ -41,6 +41,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.USE_AD_FINAL;
 
 /**
  * 开屏页
+ * 域名加载 查看 {@link DynamicDomainManager}
  */
 public class SplashActivity extends BaseAdvertisementActivity {
     private String isfirst;
@@ -66,7 +67,6 @@ public class SplashActivity extends BaseAdvertisementActivity {
         DynamicDomainManager dynamicDomainManager = new DynamicDomainManager(this, new DynamicDomainManager.OnCompleteListener() {
             @Override
             public void onComplete(String domain) {
-                findViewById(R.id.findchannel).setVisibility(View.GONE);
                 ReaderApplication.setBaseUrl(domain);
                 requestReadPhoneState();
             }
@@ -188,6 +188,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
             setAdImageView(activity_splash_im, startpage, activity, new AdvertisementActivity.OnAdImageListener() {
                 @Override
                 public void onAnimationEnd() {
+                    findViewById(R.id.findchannel).setVisibility(View.GONE);
                     activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
                     handler.sendEmptyMessageDelayed(1, 0);
                     startPage();
