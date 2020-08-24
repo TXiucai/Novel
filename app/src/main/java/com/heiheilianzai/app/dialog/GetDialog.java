@@ -5,29 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -48,6 +34,10 @@ public class GetDialog {
         void isOperation();
     }
 
+    public interface IsNegativeInterface {
+        void isNegative();
+    }
+
     public static void IsOperation(final Activity activity, String title, String suretext, final IsOperationInterface isOperationInterface) {
         IsOperationPositiveNegative(activity, title, suretext, isOperationInterface, true, true);
     }
@@ -57,6 +47,10 @@ public class GetDialog {
     }
 
     public static void IsOperationPositiveNegative(final Activity activity, String title, String suretext, final IsOperationInterface isOperationInterface, boolean isPositive, boolean isNegative) {
+        IsOperationPositiveNegative(activity, title, suretext, null, isOperationInterface, null, isPositive, isNegative);
+    }
+
+    public static void IsOperationPositiveNegative(final Activity activity, String title, String suretext, String negativeText, final IsOperationInterface isOperationInterface, final IsNegativeInterface isNegativeInterface, boolean isPositive, boolean isNegative) {
         if (activity == null) {
             return;
         }
@@ -71,8 +65,12 @@ public class GetDialog {
             });
         }
         if (isNegative) {
-            builder.setNegativeButton(LanguageUtil.getString(activity, R.string.splashactivity_cancle), new DialogInterface.OnClickListener() {
+            String str = StringUtils.isEmpty(negativeText) ? LanguageUtil.getString(activity, R.string.splashactivity_cancle) : negativeText;
+            builder.setNegativeButton(str, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    if (isNegativeInterface!=null){
+                        isNegativeInterface.isNegative();
+                    }
                 }
             });
         }

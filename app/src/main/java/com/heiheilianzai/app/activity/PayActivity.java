@@ -59,6 +59,7 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     private String mGoodsId;
     private String payName;
     private String mPrice;
+    private String mKeFuOnline;
     public static Activity activity;
     Gson gson = new Gson();
     List<PayChannelNew> mPayChannelList;
@@ -73,7 +74,6 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     @Override
     public void initView() {
         activity = this;
-        initTitleBarView(LanguageUtil.getString(activity, R.string.PayActivity_title));
         weixin_paytype_img.setImageResource(R.mipmap.pay_selected);
         alipay_paytype_img.setImageResource(R.mipmap.pay_unselected);
         weixin_pay_layout.setOnClickListener(this);
@@ -92,6 +92,8 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     public void initData() {
         mGoodsId = getIntent().getStringExtra("goods_id");
         mPrice = getIntent().getStringExtra("price");
+        mKeFuOnline = getIntent().getStringExtra("kefu_online");
+        initTitleBarView(LanguageUtil.getString(activity, R.string.PayActivity_title));
         pay_confirm_btn.setText(LanguageUtil.getString(activity, R.string.PayActivity_querenzhifu) + mPrice);
         ReaderParams params2 = new ReaderParams(this);
         params2.putExtraParams("is_v2", "1");
@@ -118,6 +120,7 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     public void initTitleBarView(String text) {
         LinearLayout mBack;
         TextView mTitle;
+        View titlebar_right,titlebar_right_img;
         mBack = findViewById(R.id.titlebar_back);
         mTitle = findViewById(R.id.titlebar_text);
         mBack.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +130,18 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
             }
         });
         mTitle.setText(text);
+        if(!StringUtils.isNullOrEmpty(mKeFuOnline)){
+            titlebar_right =  findViewById(R.id.titlebar_right);
+            titlebar_right_img =  findViewById(R.id.titlebar_right_img);
+            titlebar_right.setVisibility(View.VISIBLE);
+            titlebar_right_img.setBackgroundResource(R.mipmap.ic_customer_service);
+            titlebar_right_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    skipKeFuOnline();
+                }
+            });
+        }
     }
 
     @Override
@@ -208,12 +223,18 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
         super.onResume();
         if (isCreatePayOuder) {
             isCreatePayOuder=false;
-            GetDialog.IsOperationPositive(PayActivity.this, getString(R.string.PayActivity_order_remind), "", new GetDialog.IsOperationInterface() {
+            GetDialog.IsOperationPositiveNegative(PayActivity.this, getString(R.string.PayActivity_order_remind), "", getString(R.string.MineNewFragment_lianxikefu), new GetDialog.IsOperationInterface() {
                 @Override
                 public void isOperation() {
                    finish();
                 }
-            });
+            },new GetDialog.IsNegativeInterface(){
+
+                @Override
+                public void isNegative() {
+                    skipKeFuOnline();
+                }
+            },true,true);
         }
     }
 
@@ -221,5 +242,12 @@ public class PayActivity extends BaseActivity implements ShowTitle, View.OnClick
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().post(new CreateVipPayOuderEvent());
+    }
+
+    private void  skipKeFuOnline(){
+        if (!com.heiheilianzai.app.utils.StringUtils.isEmpty(mKeFuOnline)) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mKeFuOnline));
+            startActivity(browserIntent);
+        }
     }
 }
