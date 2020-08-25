@@ -26,6 +26,7 @@ import com.heiheilianzai.app.activity.view.LoginResultCallback;
 import com.heiheilianzai.app.bean.UserInfoItem;
 import com.heiheilianzai.app.config.MainHttpTask;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.GetDialog;
 import com.heiheilianzai.app.eventbus.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.eventbus.LoginBoYinEvent;
@@ -37,6 +38,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
@@ -206,6 +208,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             String mobile = mUserInfo.getMobile();
             if (!StringUtils.isEmpty(mobile)) {
                 loginBoYin(mobile);
+                ShareUitls.putString(activity, SharedPreferencesConstant.USER_MOBILE_KAY, mobile);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,7 +244,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 }
         );
     }
-
 
     @OnClick(value = {R.id.fragment_mine_user_info_avatar,
             R.id.fragment_mine_user_info_paylayout_recharge, R.id.fragment_mine_user_info_paylayout_vip,// R.id.fragment_mine_user_info_paylayout_rechargenotes,
@@ -288,8 +290,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             case R.id.fragment_mine_user_info_nickname:
                 if (!Utils.isLogin(activity)) {//登录状态跳个人资料
                     MainHttpTask.getInstance().Gotologin(activity);
-                } else
+                } else {
                     HandleOnclick(view, "fragment_mine_user_info_avatar");
+                }
                 break;
             case R.id.fragment_mine_user_info_gold_layout:
                 HandleOnclick(view, "fragment_mine_user_info_paylayout_rechargenotes");
@@ -329,9 +332,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 MyShare.ShareAPP(activity);
                 break;
             case R.id.fragment_mine_user_info_paylayout_history:
-                startActivity(new Intent(activity, BaseOptionActivity.class)
-                        .putExtra("OPTION", READHISTORY)
-                        .putExtra("title", LanguageUtil.getString(activity, R.string.noverfragment_yuedulishi)));
+                startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", READHISTORY).putExtra("title", LanguageUtil.getString(activity, R.string.noverfragment_yuedulishi)));
                 break;
             case R.id.fragment_mine_user_info_paylayout_downmanager:
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
@@ -356,11 +357,11 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_vip":
-                    if (Utils.isLogin(activity)){
+                    if (Utils.isLogin(activity)) {
                         intent.setClass(activity, AcquireBaoyueActivity.class);
                         intent.putExtra("isvip", true);
                         startActivity(intent);
-                    }else {
+                    } else {
                         GetDialog.IsOperation(activity, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
                             @Override
                             public void isOperation() {
@@ -370,17 +371,11 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     }
                     break;
                 case "fragment_mine_user_info_paylayout_rechargenotes":
-                    intent.setClass(activity, BaseOptionActivity.class)
-                            .putExtra("OPTION", LIUSHUIJIELU)
-                            .putExtra("title", LanguageUtil.getString(activity, R.string.liushuijilu_title))
-                            .putExtra("Extra", false);
+                    intent.setClass(activity, BaseOptionActivity.class).putExtra("OPTION", LIUSHUIJIELU).putExtra("title", LanguageUtil.getString(activity, R.string.liushuijilu_title)).putExtra("Extra", false);
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_rechargenotes2":
-                    intent.setClass(activity, BaseOptionActivity.class)
-                            .putExtra("title", LanguageUtil.getString(activity, R.string.liushuijilu_title))
-                            .putExtra("OPTION", LIUSHUIJIELU)
-                            .putExtra("Extra", true);
+                    intent.setClass(activity, BaseOptionActivity.class).putExtra("title", LanguageUtil.getString(activity, R.string.liushuijilu_title)).putExtra("OPTION", LIUSHUIJIELU).putExtra("Extra", true);
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_tasklayout_layout":
@@ -392,9 +387,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     }
                     break;
                 case "fragment_mine_user_info_tasklayout_mybookcomment":
-                    startActivity(new Intent(activity, BaseOptionActivity.class)
-                            .putExtra("OPTION", MYCOMMENT)
-                            .putExtra("title", LanguageUtil.getString(activity, R.string.MineNewFragment_shuping)));
+                    startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", MYCOMMENT).putExtra("title", LanguageUtil.getString(activity, R.string.MineNewFragment_shuping)));
                     break;
                 case "fragment_mine_user_info_tasklayout_feedback":
                     intent.setClass(activity, FeedBackActivity.class);
@@ -421,11 +414,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
      * 根据 本地配置 判断是否免费调整UI变化
      */
     private void uiFreeCharge() {
-        uiFreeCharge(fragment_mine_user_info_paylayout_recharge,fragment_mine_user_info_gold_layout,fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+        uiFreeCharge(fragment_mine_user_info_paylayout_recharge, fragment_mine_user_info_gold_layout, fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
     }
 
     /**
      * 登录成功 或其他地方改变用户数据 刷新波音数据
+     *
      * @param mobile
      */
     void loginBoYin(String mobile) {
@@ -441,8 +435,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     /**
      * 根据 后台配置 付费开关判断是否开启
      */
-    void setVipView(){
-        uiFreeCharge(ReaderConfig.newInstance().app_free_charge,fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+    void setVipView() {
+        uiFreeCharge(ReaderConfig.newInstance().app_free_charge, fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
