@@ -271,6 +271,11 @@ public class ReaderConfig {
     public static final String mPayVip = "/pay/start-pay";
 
     /**
+     * 新会员充值
+     */
+    public static final String mNewPayVip = "/paynew/start-pay";
+
+    /**
      * 获取当期最新一条充值订单
      */
     public static final String mPayLastOrder = "/pay/last-order";

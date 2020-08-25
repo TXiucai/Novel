@@ -1,8 +1,6 @@
 package com.heiheilianzai.app.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +13,14 @@ import com.heiheilianzai.app.bean.AcquirePayItem;
 import java.util.List;
 
 /**
+ * 老支付 需选择支取渠道 跳转本地页面{@link PayActivity}
+ * 新支付 无需选择支付渠道 请求支付跳转 H5(浏览器)
+ * 如需要切换回老支付 查看PayActivity 需传参数 goods_id price kefu_online 切换回老跳转代码
  * Created by scb on 2018/8/12.
  */
 public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
+    OnPayItemClickListener onPayItemClickListener;
+
     public AcquireBaoyuePayAdapter(Context context, List<AcquirePayItem> list, int count) {
         super(context, list, count);
     }
@@ -40,7 +43,6 @@ public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
         viewHolder.item_acquire_pay_title.setText(mList.get(position).getTitle());
         if (mList.get(position).getTag().size() != 0) {
             viewHolder.item_acquire_pay_title_tag.setVisibility(View.VISIBLE);
@@ -50,23 +52,16 @@ public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
         }
         viewHolder.item_acquire_pay_note.setText(mList.get(position).getNote());
         viewHolder.item_acquire_pay_price.setText("¥ " + mList.get(position).getPrice());
-
         viewHolder.item_acquire_pay_price.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //调起支付
-                Intent intent = new Intent(mContext, PayActivity.class);
-                intent.putExtra("goods_id", mList.get(position).getGoods_id());
-                String price = mList.get(position).getPrice() + "";
-                if (price.contains("元")) {
-                    price = price.substring(0, price.lastIndexOf("元"));
+                if (onPayItemClickListener != null) {
+                    if (mList != null && mList.size() > position) {
+                        onPayItemClickListener.onPayItemClick(mList.get(position));
+                    }
                 }
-                intent.putExtra("price", price);
-                ((Activity)(mContext)).startActivityForResult(intent,1);
-
             }
         });
-
         return convertView;
     }
 
@@ -75,5 +70,13 @@ public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
         TextView item_acquire_pay_title_tag;
         TextView item_acquire_pay_note;
         TextView item_acquire_pay_price;
+    }
+
+    public interface OnPayItemClickListener {
+        void onPayItemClick(AcquirePayItem item);
+    }
+
+    public void setOnPayItemClickListener(OnPayItemClickListener onPayItemClickListener) {
+        this.onPayItemClickListener = onPayItemClickListener;
     }
 }
