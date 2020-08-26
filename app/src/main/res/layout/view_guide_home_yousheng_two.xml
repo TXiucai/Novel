@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="@dimen/dimens_73dp"
+        android:layout_height="@dimen/dimens_98dp"
+        android:layout_marginLeft="@dimen/dimens_40dp"
+        android:layout_marginTop="@dimen/dimens_96dp"
+        android:layout_marginBottom="@dimen/dimens_35dp"
+        android:background="@mipmap/ic_guide_arrow_up" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:lineSpacingExtra="@dimen/dimens_4dp"
+        android:text="@string/boyin_guide_two_hint"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimens_17dp" />
+
+    <TextView
+        android:id="@+id/next"
+        android:layout_width="@dimen/dimens_160dp"
+        android:layout_height="@dimen/dimens_40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimens_20dp"
+        android:background="@drawable/shape_sol_00fff_cor_50_str_1_ffffff"
+        android:gravity="center"
+        android:text="@string/boyin_guide_finish"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimens_14dp" />
+</LinearLayout>

@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,13 +18,21 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.core.Controller;
+import com.app.hubert.guide.listener.OnLayoutInflatedListener;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
@@ -55,6 +65,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
@@ -100,6 +111,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public RadioButton home_store_layout_comic;
     @BindView(R2.id.shelf_book_delete_btn)
     public LinearLayout shelf_book_delete_btn;
+    @BindView(R2.id.view_guide_down)
+    View view_guide_down;
+
     private List<android.support.v4.app.Fragment> mFragmentList;
     private AppUpdate mAppUpdate;
     List<BaseBook> bookLists;
@@ -114,6 +128,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     DiscoveryNewFragment discoveryFragment;
     MineNewFragment mineFragment;
     int send_number;//记录请求支付订单的次数
+    Controller controller;
+    boolean loadYouSheng;
 
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
@@ -162,7 +178,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
         setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
         setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
-        if (getAppUpdate()!=null&&getBoyinSwitch() == 1) {
+        if (getAppUpdate() != null && getBoyinSwitch() == 1) {
             setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
             home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
         } else {
@@ -192,15 +208,18 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         mFragmentList.add(stroeNewFragmentBook);
         stroeNewFragmentComic = new StroeNewFragmentComic();
         mFragmentList.add(stroeNewFragmentComic);
-        if (getAppUpdate()!=null&&getBoyinSwitch() == 1) {
+        if (getAppUpdate() != null && getBoyinSwitch() == 1) {
             homeBoYinFragment = new HomeBoYinFragment();
             Bundle bundle = new Bundle();
             bundle.putString(HomeBoYinFragment.BUNDLE_URL_KAY, getBoYinUrl());
             homeBoYinFragment.setArguments(bundle);
             mFragmentList.add(homeBoYinFragment);
+            loadYouSheng = true;
+            showYouShengGuideOne();
         } else {
             discoveryFragment = new DiscoveryNewFragment();
             mFragmentList.add(discoveryFragment);
+            loadYouSheng = false;
         }
         mineFragment = new MineNewFragment();
         mFragmentList.add(mineFragment);
@@ -252,6 +271,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     case R.id.home_discovery_layout:
                         if (possition != 3) {
                             setChangedView(3, true);
+                            if (loadYouSheng) {
+                                showYouShengGuideTwo();
+                            }
                         }
                         break;
                     case R.id.home_mine_layout:
@@ -551,6 +573,47 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     /**
+     * 加载首页有声新手引导层 第一层
+     */
+    private void showYouShengGuideOne() {
+        controller = NewbieGuide.with(MainActivity.this)
+                .setLabel("guide1")
+                .setShowCounts(1)//控制次数
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(home_discovery_layout)
+                        .addHighLight(view_guide_down,
+                                new RelativeGuide(R.layout.view_guide_home_yousheng_one, Gravity.TOP, 0) {
+                                    @Override
+                                    protected void offsetMargin(MarginInfo marginInfo, ViewGroup viewGroup, View view) {
+                                        view.findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (controller != null) {
+                                                    controller.remove();
+                                                }
+                                            }
+                                        });
+                                    }
+                                })
+                        .setEverywhereCancelable(false)).show();
+    }
+
+    /**
+     * 加载首页有声新手引导层 第二层
+     */
+    private void showYouShengGuideTwo() {
+        NewbieGuide.with(MainActivity.this)
+                .setLabel("guide1")
+                .setShowCounts(2)
+                .addGuidePage(GuidePage.newInstance().addHighLight(new RectF(
+                        ImageUtil.dp2px(getApplicationContext(), 8), 0,
+                        ImageUtil.dp2px(getApplicationContext(), 90),
+                        ImageUtil.dp2px(getApplicationContext(), 64)))
+                        .setLayoutRes(R.layout.view_guide_home_yousheng_two, R.id.next)
+                        .setEverywhereCancelable(false)).show();
+    }
+
+    /**
      * 获取缓存系统参数
      */
     private AppUpdate getAppUpdate() {
@@ -560,7 +623,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     /**
      * 波音是否开启
-     * @return
      */
     private int getBoyinSwitch() {
         return getAppUpdate().boyin_switch;
@@ -568,7 +630,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     /**
      * 获取波音h5 url
-     * @return
      */
     private String getBoYinUrl() {
         return getAppUpdate().boyin_h5;

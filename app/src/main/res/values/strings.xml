@@ -380,5 +380,9 @@
 
     <!--波音-->
     <string name="boyin_login_warn">使用波音功能新需要再次登录，感谢您的配合！</string>
+    <string name="boyin_guide_one_hint">嘿嘿连载上线原创有声小说啦～\n不要错过哦～</string>
+    <string name="boyin_guide_finish">知道啦～</string>
+    <string name="boyin_guide_two_hint">顶部可以切换你想看的内容～</string>
+    <string name="boyin_guide_three_hint">点击主播\n可观看她的历史作品哦～</string>
 </resources>
 
