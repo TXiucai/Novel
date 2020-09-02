@@ -23,7 +23,7 @@ import java.util.List;
 public class ShelfAdapterNew extends BaseShelfAdapter<BaseBook> {
 
     public ShelfAdapterNew(int WIDTH, int HEIGHT, List<BaseBook> mBookList, Activity mActivity) {
-        super(WIDTH, HEIGHT, mBookList, mActivity);
+        super(WIDTH, HEIGHT, mBookList, mActivity, 1);
     }
 
     @Override

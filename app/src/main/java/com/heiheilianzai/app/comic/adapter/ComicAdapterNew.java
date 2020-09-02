@@ -24,7 +24,7 @@ import java.util.List;
 public class ComicAdapterNew extends BaseShelfAdapter<BaseComic> {
 
     public ComicAdapterNew(int WIDTH, int HEIGHT, List<BaseComic> mBookList, Activity mActivity) {
-        super(WIDTH, HEIGHT, mBookList, mActivity);
+        super(WIDTH, HEIGHT, mBookList, mActivity,2);
     }
 
     @Override

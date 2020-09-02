@@ -30,6 +30,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 书架 小说 漫画 Adapter 基类
+ */
 public abstract class BaseShelfAdapter<T> extends BaseAdapter {
     public int ListSize = 0;
     public int WIDTH, HEIGHT;
@@ -40,13 +43,15 @@ public abstract class BaseShelfAdapter<T> extends BaseAdapter {
     public Activity mActivity;
     public TextView mDeleteBtn;
     public int mPosition;
+    public int type = 1;
 
-    public BaseShelfAdapter(int WIDTH, int HEIGHT, List<T> mBookList, Activity mActivity) {
+    public BaseShelfAdapter(int WIDTH, int HEIGHT, List<T> mBookList, Activity mActivity, int type) {
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
         this.mBookList = mBookList;
         ListSize = mBookList.size();
         this.mActivity = mActivity;
+        this.type = type;
     }
 
     @Override
@@ -135,7 +140,7 @@ public abstract class BaseShelfAdapter<T> extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         if (!mIsDeletable) {
-                            EventBus.getDefault().post(new ToStore(2));
+                            EventBus.getDefault().post(new ToStore(type));
                         }
                     }
                 });
