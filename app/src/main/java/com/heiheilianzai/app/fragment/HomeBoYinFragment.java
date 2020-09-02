@@ -1,8 +1,7 @@
 package com.heiheilianzai.app.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +15,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.activity.AcquireBaoyueActivity;
@@ -41,16 +42,11 @@ import butterknife.BindView;
  */
 public class HomeBoYinFragment extends BaseButterKnifeFragment {
     public static final String BUNDLE_URL_KAY = "url";
-    public static final int LOGIN_REQUESTCODE = 0x000001f;
-    public static final String BOYIN_TOKEN_RESULT_KAY = "boyin_token";
     boolean isLoadUrl = false;
     @BindView(R2.id.home_boyin_webview)
     public WebView mWebView;
     @BindView(R2.id.home_boyin_layout)
     RelativeLayout home_boyin_layout;
-    //获取AudioManager
-    AudioManager audioManager;
-    boolean isPause=false;
 
     @Override
     public int initContentView() {
@@ -75,32 +71,31 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         setFloatBall(home_boyin_layout);
-        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
         mWebView.addJavascriptInterface(new JavascriptObject() {
             @JavascriptInterface
             @Override
-            public void thirdpartyLogin() {
+            public void thirdpartyLogin() {//h5跳转原生登录
                 if (getActivity() != null) {
                     if (Utils.isLogin(getActivity())) {
                         MyToash.ToashSuccess(getActivity(), getString(R.string.boyin_login_warn));
                     }
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     intent.putExtra(LoginActivity.BOYIN_LOGIN_KAY, true);
-                    getActivity().startActivityForResult(intent, LOGIN_REQUESTCODE);
+                    getActivity().startActivity(intent);
                 }
             }
 
             @JavascriptInterface
             @Override
-            public String getToken() {
+            public String getToken() {//h5主动获取客户端保存的波音登录数据
                 String token = AppPrefs.getSharedString(getActivity(), ReaderConfig.BOYIN_LOGIN_TOKEN, "");
                 return token;
             }
 
             @JavascriptInterface
             @Override
-            public void pay() {
+            public void pay() {//h5跳转原生支付
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), AcquireBaoyueActivity.class);
                 intent.putExtra("isvip", true);
@@ -109,11 +104,17 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @JavascriptInterface
             @Override
-            public void callExplorer(String url) {
+            public void callExplorer(String url) {//h5跳转外部浏览器
                 if (mWebView != null) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     getContext().startActivity(browserIntent);
                 }
+            }
+
+            @JavascriptInterface
+            @Override
+            public void showBookInfoGuide() {//h5第一次进入有声小说播放详情，显示新手引导悬浮层。
+                showFragmentYouShengGuide();
             }
         }, "android");
         mWebView.setWebViewClient(new DemoWebViewClient());
@@ -133,6 +134,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void callExplorer(String url);
+
+        @JavascriptInterface
+        void showBookInfoGuide();
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {
@@ -147,23 +151,19 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(LoginBoYinEvent event) {
+    public void loginBoYin(LoginBoYinEvent event) {
         String json = event.getLoginJson();
         if (mWebView != null && !StringUtils.isEmpty(json) && isLoadUrl) {
             mWebView.loadUrl("javascript:thirdpartyLoginResponse('" + json + "')");
-            if(!isPause){
-                mWebView.reload();
-            }
+            mWebView.reload();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(LogoutBoYinEvent event) {
+    public void logoutBoYin(LogoutBoYinEvent event) {
         if (mWebView != null) {
             mWebView.loadUrl("javascript:thirdpartyLogout()");
-            if(!isPause){
-                mWebView.reload();
-            }
+            mWebView.reload();
         }
     }
 
@@ -176,38 +176,21 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
         }
     }
 
+    /**
+     * 首页选中波音回调（避免之后有新需求保留了该方法）
+     */
     public void onMyResume() {
-        isPause=false;
-        if(activity!=null){
-            if(audioManager==null){
-                audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-            }
-            audioManager.abandonAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
-                @Override
-                public void onAudioFocusChange(int focusChange) {
-                }
-            });
-            if(mWebView!=null){
-                mWebView.reload();
-            }
-        }
     }
 
+    /**
+     * 首页离开波音回调（避免之后有新需求保留了该方法）
+     */
     public void onMyPause() {
-        isPause=true;
-        if(activity!=null){
-            if(audioManager==null){
-                audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-            }
-            audioManager.requestAudioFocus(
-                    new AudioManager.OnAudioFocusChangeListener() {
-                        @Override
-                        public void onAudioFocusChange(int focusChange) {
-                        }
-                    }, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-        }
     }
 
+    /**
+     * 可拖动悬浮刷新按钮
+     */
     void setFloatBall(ViewGroup rootView) {
         FloatBall floatBall = new FloatBall.Builder(activity, rootView)
                 .setBottomMargin(ImageUtil.dp2px(activity, 70))//悬浮球初始位置BottomMargin
@@ -225,5 +208,22 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
                     }
                 })
                 .build();
+    }
+
+    /**
+     * 波音小说详情页引导
+     */
+    private void showFragmentYouShengGuide() {
+        if (activity != null) {
+            NewbieGuide.with(activity)
+                    .setLabel("guide1")
+                    .setShowCounts(3)//控制次数
+                    .addGuidePage(GuidePage.newInstance().addHighLight(new RectF(
+                            ImageUtil.dp2px(activity, 8), ImageUtil.dp2px(activity, 205),
+                            ImageUtil.dp2px(activity, 160),
+                            ImageUtil.dp2px(activity, 275)))
+                            .setLayoutRes(R.layout.view_guide_home_yousheng_three, R.id.next)
+                            .setEverywhereCancelable(false)).show();
+        }
     }
 }
