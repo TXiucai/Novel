@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -136,7 +137,7 @@ public class MyPicasso {
      * @param listener
      */
     public static void intoAdImage(ImageView imageView, Startpage startpage, Activity activity, AdvertisementActivity.OnAdImageListener listener) {
-        Glide.with(activity).load(startpage.image).priority(Priority.HIGH).diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<Drawable>() {
+        RequestBuilder builder = Glide.with(activity).load(startpage.image).priority(Priority.HIGH).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 listener.onFailed();
@@ -148,7 +149,11 @@ public class MyPicasso {
                 listener.onAnimationEnd();
                 return false;
             }
-        }).into(imageView);
+        });
+        if (Rom.isVivo()) {
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        }
+        builder.into(imageView);
     }
 
     /**
