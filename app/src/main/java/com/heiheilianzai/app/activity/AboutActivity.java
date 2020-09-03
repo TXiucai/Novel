@@ -7,18 +7,20 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,22 +28,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.config.ReaderApplication;
 import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.view.webview.ReaderWebView;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by scb on 2018/8/9.
+ * 内嵌WebView Activity
+ * flag：splash-点返回跳到首页   notitle-隐藏头部titlebar
+ * style ：  4-跳转到外部浏览器，关闭当前页面    其他-使用在当前页面
  */
 public class AboutActivity extends BaseActivity implements ShowTitle {
-    private final String TAG = AboutActivity.class.getSimpleName();
+    private ValueCallback<Uri> mUploadMessage;// 表单的数据信息
+    private ValueCallback<Uri[]> mUploadCallbackAboveL;
+    private final static int FILECHOOSER_RESULTCODE = 1;// 表单的结果回调
+    private Uri imageUri;
     private WebView mWebView;
     String flag;
+    WaitDialog waitDialog;
 
     @Override
     public int initContentView() {
@@ -49,8 +59,8 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
     }
 
     @Override
-    public void initView() {///user/explain
-        String str = ReaderConfig.getBaseUrl()+ReaderConfig.privacy;
+    public void initView() {
+        String str = ReaderConfig.getBaseUrl() + ReaderConfig.privacy;
         Intent intent = getIntent();
         try {
             flag = intent.getStringExtra("flag");
@@ -65,16 +75,17 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
                 initTitleBarView("");//ceshi
             }
             String style = intent.getStringExtra("style");
-
-            MyToash.Log("style_",style+"  ");
-            if (style!=null&&style.equals("4")) {
+            MyToash.Log("style_", style + "  ");
+            if (style != null && style.equals("4")) {
                 Intent intent2 = new Intent();
                 intent2.setAction(Intent.ACTION_VIEW);
                 Uri content_uri_browsers = Uri.parse(str);
                 intent2.setData(content_uri_browsers);
                 this.startActivity(intent2);
-
                 finish();
+            }
+            if (!StringUtils.isEmpty(flag) && "notitle".equals(flag)) {
+                findViewById(R.id.titlebar_layout).setVisibility(View.GONE);
             }
         } else {
             initTitleBarView(LanguageUtil.getString(this, R.string.AboutActivity_title));
@@ -85,13 +96,12 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setJavaScriptEnabled(true);
         settings.setBlockNetworkImage(false);//解决图片不显示
+        mWebView.addJavascriptInterface(new AndroidToJs(), "AndroidClient");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        MyToash.Log(str);
         mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
         mWebView.setWebViewClient(new DemoWebViewClient());
-
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
@@ -119,8 +129,6 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
             }
         });
         mWebView.loadUrl(str);
-
-
     }
 
     class DemoWebViewClient extends WebViewClient {
@@ -131,29 +139,30 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
                 }
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
-
-
                 return true;
             } catch (Exception s) {
             }
             return true;
         }
 
-        /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)//android5.0以上手机才有效果
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            view.loadUrl(request.getUrl().toString());
-            return super.shouldOverrideUrlLoading(view, request);
-        }*/
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            initDialog();
+            waitDialog.showDailog();
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            if (waitDialog != null) {
+                waitDialog.dismissDialog();
+            }
+        }
     }
 
-    ;
-
-
     private class MyWebViewDownLoadListener implements DownloadListener {
-        //添加监听事件即可
-        public void onDownloadStart(String url, String userAgent, String contentDisposition,
-                                    String mimetype, long contentLength) {
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
@@ -162,13 +171,11 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
 
     @Override
     public void initData() {
-
     }
 
     @Override
     public void initInfo(String json) {
         super.initInfo(json);
-
     }
 
     @Override
@@ -222,16 +229,11 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         }
     }
 
-
-   /* SuppressWarnings("null")
-*/
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
         if (requestCode != FILECHOOSER_RESULTCODE || mUploadCallbackAboveL == null) {
             return;
         }
-
         Uri[] results = null;
         if (resultCode == Activity.RESULT_OK) {
             if (data == null) {
@@ -246,8 +248,9 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
                         results[i] = item.getUri();
                     }
                 }
-                if (dataString != null)
+                if (dataString != null){
                     results = new Uri[]{Uri.parse(dataString)};
+                }
             }
         }
         if (results != null) {
@@ -288,8 +291,37 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
     }
 
-    private ValueCallback<Uri> mUploadMessage;// 表单的数据信息
-    private ValueCallback<Uri[]> mUploadCallbackAboveL;
-    private final static int FILECHOOSER_RESULTCODE = 1;// 表单的结果回调
-    private Uri imageUri;
+    public class AndroidToJs {
+
+        @JavascriptInterface
+        public void backToHome() {
+            finish();
+        }
+    }
+
+    private void initDialog() {
+        if (waitDialog != null) {
+            waitDialog.dismissDialog();
+        }
+        waitDialog = null;
+        waitDialog = new WaitDialog(this);
+        waitDialog.setCancleable(true);
+    }
+
+    @Override
+    protected void onDestroy() {//关闭页面后清空所有状态，缓存。
+        super.onDestroy();
+        waitDialog = null;
+        try {
+            CookieSyncManager.createInstance(ReaderApplication.getContext());
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            CookieSyncManager.getInstance().sync();
+            mWebView.setWebChromeClient(null);
+            mWebView.setWebViewClient(null);
+            mWebView.getSettings().setJavaScriptEnabled(false);
+            mWebView.clearCache(true);
+        } catch (Exception e) {
+        }
+    }
 }
