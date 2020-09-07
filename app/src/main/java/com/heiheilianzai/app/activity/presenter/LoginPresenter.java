@@ -1,7 +1,6 @@
 package com.heiheilianzai.app.activity.presenter;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
@@ -10,19 +9,16 @@ import com.heiheilianzai.app.activity.LoginActivity;
 import com.heiheilianzai.app.activity.model.LoginModel;
 import com.heiheilianzai.app.activity.view.LoginResultCallback;
 import com.heiheilianzai.app.activity.view.LoginView;
-import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.bean.LoginInfo;
 import com.heiheilianzai.app.comic.eventbus.RefreshComic;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.eventbus.BuyLoginSuccess;
 import com.heiheilianzai.app.eventbus.RefreshBookSelf;
 import com.heiheilianzai.app.eventbus.RefreshMine;
-import com.heiheilianzai.app.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.push.JPushUtil;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,7 +26,7 @@ import static com.heiheilianzai.app.config.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.config.ReaderConfig.syncDevice;
 
 /**
- * Created by scb on 2018/7/14.
+ * 用户登录管理 Presenter
  */
 public class LoginPresenter {
     private LoginModel mLoginModel;
@@ -49,6 +45,9 @@ public class LoginPresenter {
         mLoginModel = new LoginModel(activity);
     }
 
+    /**
+     * 获取手机验证码
+     */
     public void getMessage() {
         mLoginModel.countDown(mLoginView.getButtonView());
         mLoginModel.getMessage(mLoginView.getPhoneNum(), new LoginResultCallback() {
@@ -59,6 +58,9 @@ public class LoginPresenter {
         });
     }
 
+    /**
+     * 登录请求:刷新我的页面;刷新用户数据,及登录有声用户数据;根据配置刷新书架小说、漫画
+     */
     public void loginPhone(final LoginActivity.LoginSuccess loginSuccess) {
         mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(), new LoginResultCallback() {
             @Override
@@ -84,30 +86,8 @@ public class LoginPresenter {
                     }
                     loginSuccess.success();
                     JPushUtil.setAlias(activity);
-                    String str = ReaderConfig.newInstance().AppUpdate;
-                    if (!StringUtils.isEmpty(str)) {
-                        AppUpdate appUpdate = new Gson().fromJson(str, AppUpdate.class);
-                        if (appUpdate != null && appUpdate.getBoyin_switch() == 1) {//1打开  0关闭
-                            loginBoYin();
-                        } else {
-                            activity.finish();
-                        }
-                    } else {
-                        activity.finish();
-                    }
+                    activity.finish();
                 }
-            }
-        });
-    }
-
-    private void loginBoYin() {
-        mLoginModel.loginBoYin(mLoginView.getPhoneNum(), new LoginResultCallback() {
-            @Override
-            public void getResult(String jsonStr) {
-                Intent intent = new Intent();
-                intent.putExtra(HomeBoYinFragment.BOYIN_TOKEN_RESULT_KAY, jsonStr);
-                activity.onActivityReenter(Activity.RESULT_OK, intent);
-                activity.finish();
             }
         });
     }
