@@ -1,32 +1,43 @@
 package com.heiheilianzai.app.activity;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePayAdapter;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
+import com.heiheilianzai.app.alipay.PayResult;
 import com.heiheilianzai.app.bean.AcquirePayItem;
 import com.heiheilianzai.app.bean.AcquirePrivilegeItem;
+import com.heiheilianzai.app.bean.PaymentWebBean;
+import com.heiheilianzai.app.bean.WxPayBean;
 import com.heiheilianzai.app.book.config.BookConfig;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.GetDialog;
+import com.heiheilianzai.app.dialog.PayDialog;
 import com.heiheilianzai.app.eventbus.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.CircleImageView;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -35,6 +46,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,7 +76,10 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
 
     String mKeFuOnline;
     AcquireBaoyuePayAdapter baoyuePayAdapter;
-    private boolean isCreatePayOuder = false;
+    private static final int SDK_PAY_FLAG = 1;
+    private String ALIPAY_SUCCESS = "9000";//支付宝支付成功回调
+    private String ALIPAY = "2";
+    private String WECHAT = "1";
 
     @Override
     public int initContentView() {
@@ -168,12 +183,12 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     }
 
     /**
-     *获取支付渠道url,跳转浏览器
+     * 获取支付渠道url,跳转支付Dialog
      */
-    private void pay(AcquirePayItem item){
+    private void pay(AcquirePayItem item) {
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("goods_id", item.getGoods_id());
-        params.putExtraParams("mobile",  ShareUitls.getString(AcquireBaoyueActivity.this, SharedPreferencesConstant.USER_MOBILE_KAY,""));
+        params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, SharedPreferencesConstant.USER_MOBILE_KAY, ""));
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -182,10 +197,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
                             try {
                                 JSONObject jsonObj = new JSONObject(result);
                                 String pay_url = jsonObj.getString("pay_link");
-                                Uri uri = Uri.parse(pay_url);
-                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                startActivity(intent);
-                                isCreatePayOuder=true;
+                                showPayDialog(pay_url);
                             } catch (Exception e) {
                             }
                         }
@@ -198,33 +210,131 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         );
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isCreatePayOuder) {
-            isCreatePayOuder=false;
-            GetDialog.IsOperationPositiveNegative(AcquireBaoyueActivity.this, getString(R.string.PayActivity_order_remind), "", getString(R.string.MineNewFragment_lianxikefu), new GetDialog.IsOperationInterface() {
+    /**
+     *跳转到支付Dialog
+     */
+    void showPayDialog(String url) {
+        View view = this.getWindow().getDecorView();
+        if (view != null) {
+            PayDialog payDialog = new PayDialog();
+            payDialog.showDialog(this, view, url);
+            payDialog.setPayInterface(new PayDialog.PayInterface() {
                 @Override
-                public void isOperation() {
-                    EventBus.getDefault().post(new CreateVipPayOuderEvent());
+                public void onPayFinish() {
+                    showPayFinishDialog();
                 }
-            },new GetDialog.IsNegativeInterface(){
 
                 @Override
-                public void isNegative() {
-                    skipKeFuOnline();
+                public void nativePay(String payType, String jsonData) {//跳入原生支付，（现在H5支付中并没有原生渠道）
+                    AcquireBaoyueActivity.this.nativePay(payType, jsonData);
                 }
-            },true,true);
+            });
         }
     }
 
     /**
      * 客服链接跳转浏览器
      */
-    private void  skipKeFuOnline(){
+    private void skipKeFuOnline() {
         if (!com.heiheilianzai.app.utils.StringUtils.isEmpty(mKeFuOnline)) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mKeFuOnline));
-            startActivity(browserIntent);
+            startActivity(new Intent(this, AboutActivity.class).putExtra("url", mKeFuOnline).putExtra("flag", "notitle"));
         }
     }
+
+    /**
+     * 完成支付订单，关闭支付Dialog后显示该提示弹框 根据订单刷新用户信息
+     */
+    private void showPayFinishDialog() {
+        EventBus.getDefault().post(new CreateVipPayOuderEvent());
+        GetDialog.IsOperationPositiveNegative(AcquireBaoyueActivity.this, getString(R.string.PayActivity_order_remind), "", getString(R.string.MineNewFragment_lianxikefu), new GetDialog.IsOperationInterface() {
+            @Override
+            public void isOperation() {
+            }
+        }, new GetDialog.IsNegativeInterface() {
+
+            @Override
+            public void isNegative() {
+                skipKeFuOnline();
+            }
+        }, true, true);
+    }
+
+    /**
+     *跳入原生支付 微信或支付宝
+     */
+    public void nativePay(String payType, String jsonData) {
+        PaymentWebBean bean = new Gson().fromJson(jsonData, PaymentWebBean.class);
+        String payInfo = bean.data;
+        if (TextUtils.isEmpty(payInfo)) {
+            return;
+        }
+        if (payType.equals(ALIPAY)) {
+            aliPay(payInfo);
+        } else if (payType.equals(WECHAT)) {
+            wechatPay(payInfo);
+        }
+    }
+
+    /**
+     * 原生支付宝支付
+     * @param orderInfo
+     */
+    private void aliPay(String orderInfo) {
+        final Runnable payRunnable = new Runnable() {
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(AcquireBaoyueActivity.this);
+                Map<String, String> result = alipay.payV2(orderInfo, true);
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        };
+        // 必须异步调用
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
+
+    /**
+     * 原生微信支付
+     * @param payInfo
+     */
+    private void wechatPay(String payInfo) {
+        WxPayBean wxPayBean = new Gson().fromJson(payInfo, WxPayBean.class);
+        IWXAPI api = WXAPIFactory.createWXAPI(this, wxPayBean.getAppid());
+        api.registerApp(wxPayBean.getAppid());
+        if (!api.isWXAppInstalled()) {
+            MyToash.ToashError(this, "请安装微信");
+        }
+        PayReq payRequest = new PayReq();
+        payRequest.appId = wxPayBean.getAppid();
+        payRequest.partnerId = wxPayBean.getPartnerid();
+        payRequest.prepayId = wxPayBean.getPrepayid();
+        payRequest.packageValue = "Sign=WXPay";//固定值
+        payRequest.nonceStr = wxPayBean.getNoncestr();
+        payRequest.timeStamp = wxPayBean.getTimestamp();
+        payRequest.sign = wxPayBean.getSign();
+        api.sendReq(payRequest);
+    }
+
+    //支付宝原生支付，回调监听
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    if (TextUtils.equals(resultStatus, ALIPAY_SUCCESS)) {
+                    } else {
+                        MyToash.ToashError(AcquireBaoyueActivity.this, payResult.getMemo());
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
 }
