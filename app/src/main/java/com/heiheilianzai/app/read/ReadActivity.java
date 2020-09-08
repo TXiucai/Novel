@@ -822,6 +822,7 @@ public class ReadActivity extends BaseReadActivity {
         bookpage = null;
         unregisterReceiver(myReceiver);
         isSpeaking = false;
+        dismissAllDialog();
     }
 
     public void getWebViewAD(Activity activity) {
@@ -900,5 +901,12 @@ public class ReadActivity extends BaseReadActivity {
      */
     private void uiFreeCharge() {
         uiFreeCharge(tv_noad);
+    }
+
+    /**
+     * onDestroy销毁关闭所有对话框
+     */
+    private void   dismissAllDialog(){
+        dismissAllDialog(mBrightDialog,mSettingDialog,mAutoSettingDialog);
     }
 }

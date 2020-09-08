@@ -2,6 +2,7 @@ package com.heiheilianzai.app.read;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -119,7 +120,17 @@ public abstract class BaseReadActivity extends Activity {
 
     protected void uiFreeCharge(View... views) {
         for (View view : views) {
-            view.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
+            if (view != null) {
+                view.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
+            }
+        }
+    }
+
+    protected void dismissAllDialog(Dialog... dialogs) {
+        for (Dialog dialog : dialogs) {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
         }
     }
 }
