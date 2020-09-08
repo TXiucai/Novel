@@ -9,35 +9,34 @@ public class ViewUtils {
 
     /**
      * 获取View透明度
-      * @param v
-     * @return
      */
-  public static float getViewAlpha(View v){
-      DecimalFormat df = new DecimalFormat("0.0");
-      String str= df.format(v.getAlpha());
-      if(!StringUtils.isEmpty(str)&&str.contains(",")){
-          str.replace(",",".");
-      }
-      return Float.valueOf(str);
-  }
-
-    public static float getViewAlpha(Drawable drawable){
+    public static float getViewAlpha(View v) {
         DecimalFormat df = new DecimalFormat("0.0");
-        String str= df.format(drawable.getAlpha());
-        if(!StringUtils.isEmpty(str)&&str.contains(",")){
-            str.replace(",",".");
+        String str = df.format(v.getAlpha());
+        if (!StringUtils.isEmpty(str) && str.contains(",")) {
+            str = str.replace(",", ".");
+        }
+        return Float.valueOf(str);
+    }
+
+    /**
+     * 获取Drawable透明度
+     */
+    public static float getViewAlpha(Drawable drawable) {
+        DecimalFormat df = new DecimalFormat("0.0");
+        String str = df.format(drawable.getAlpha());
+        if (!StringUtils.isEmpty(str) && str.contains(",")) {
+            str = str.replace(",", ".");
         }
         return Float.valueOf(str);
     }
 
     /**
      * 设置view显示状态
-     * @param v
-     * @param visibility
      */
-    public static void setVisibility(View v,int visibility){
-      if(v!=null){
-          v.setVisibility(visibility);
-      }
+    public static void setVisibility(View v, int visibility) {
+        if (v != null) {
+            v.setVisibility(visibility);
+        }
     }
 }
