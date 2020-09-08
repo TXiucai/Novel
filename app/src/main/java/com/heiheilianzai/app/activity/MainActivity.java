@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -26,11 +25,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.core.Controller;
-import com.app.hubert.guide.listener.OnLayoutInflatedListener;
 import com.app.hubert.guide.model.GuidePage;
 import com.app.hubert.guide.model.RelativeGuide;
 import com.google.gson.Gson;
@@ -50,6 +47,7 @@ import com.heiheilianzai.app.constants.SharedPreferencesConstant;
 import com.heiheilianzai.app.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.dialog.MyPoPwindow;
 import com.heiheilianzai.app.eventbus.CreateVipPayOuderEvent;
+import com.heiheilianzai.app.eventbus.ExitAppEvent;
 import com.heiheilianzai.app.eventbus.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.eventbus.RefreshMine;
 import com.heiheilianzai.app.eventbus.ToStore;
@@ -65,7 +63,6 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
@@ -434,6 +431,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         } else {
             home_store_layout_comic.setChecked(true);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void exitAppEvent(ExitAppEvent exitAppEvent) {//退出APP监听
+        exitAPP();
     }
 
     /**

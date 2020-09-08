@@ -51,6 +51,10 @@ public class GetDialog {
     }
 
     public static void IsOperationPositiveNegative(final Activity activity, String title, String suretext, String negativeText, final IsOperationInterface isOperationInterface, final IsNegativeInterface isNegativeInterface, boolean isPositive, boolean isNegative) {
+        IsOperationPositiveNegative(activity, title, suretext, negativeText, isOperationInterface, isNegativeInterface, isPositive, isNegative, true);
+    }
+
+    public static void IsOperationPositiveNegative(final Activity activity, String title, String suretext, String negativeText, final IsOperationInterface isOperationInterface, final IsNegativeInterface isNegativeInterface, boolean isPositive, boolean isNegative, boolean cancelable) {
         if (activity == null) {
             return;
         }
@@ -64,11 +68,12 @@ public class GetDialog {
                 }
             });
         }
+        builder.setCancelable(cancelable);
         if (isNegative) {
             String str = StringUtils.isEmpty(negativeText) ? LanguageUtil.getString(activity, R.string.splashactivity_cancle) : negativeText;
             builder.setNegativeButton(str, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    if (isNegativeInterface!=null){
+                    if (isNegativeInterface != null) {
                         isNegativeInterface.isNegative();
                     }
                 }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
@@ -21,10 +22,12 @@ import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.bean.AppUpdate;
 import com.heiheilianzai.app.config.ReaderConfig;
 import com.heiheilianzai.app.dialog.GetDialog;
+import com.heiheilianzai.app.eventbus.ExitAppEvent;
 import com.heiheilianzai.app.http.DownloadUtil;
 import com.heiheilianzai.app.http.ReaderParams;
 import com.heiheilianzai.app.view.ProgressBarView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -35,9 +38,9 @@ import butterknife.ButterKnife;
 import static com.heiheilianzai.app.config.ReaderConfig.PUTPRODUCT_TYPE;
 
 /**
+ * 版本更新 工具类
  * Created by scb on 2018/11/28.
  */
-
 public class UpdateApp {
     Activity activity;
 
@@ -195,12 +198,21 @@ public class UpdateApp {
         applocal = FileManager.getSDCardRoot() + "/Apk/" + urlmd5 + "/heiheilianzai.apk";
         File tempfile = new File(applocal);
         if (tempfile.exists()) {
-            GetDialog.IsOperation(activity, "升级", "新版本安装包已准备就绪，是否更新？", new GetDialog.IsOperationInterface() {
+            GetDialog.IsOperationPositiveNegative(activity, String.valueOf(activity.getText(R.string.app_updatefile_exist_dialog_title)), String.valueOf(activity.getText(R.string.app_updatefile_exist_dialog_suretext)), null, new GetDialog.IsOperationInterface() {
                 @Override
-                public void isOperation() {
+                public void isOperation() {//确定安装app
                     installApp(activity, tempfile);
                 }
-            });
+            }, new GetDialog.IsNegativeInterface() {
+                @Override
+                public void isNegative() {//取消删除本地文件。（如果是强制更新退出app）
+                    FileManager.deleteFile(applocal);
+                    if (mAppUpdate.getUpdate() == 2) {
+                        Toast.makeText(activity.getApplicationContext(), String.valueOf(activity.getText(R.string.app_updatefile_exist_dialog_negative_warn)), Toast.LENGTH_LONG).show();
+                        EventBus.getDefault().post(new ExitAppEvent());
+                    }
+                }
+            }, true, true, mAppUpdate.getUpdate() == 1);
             return null;
         }
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_update_app, null);

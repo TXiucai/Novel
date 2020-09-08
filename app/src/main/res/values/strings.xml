@@ -384,5 +384,10 @@
     <string name="boyin_guide_finish">知道啦～</string>
     <string name="boyin_guide_two_hint">顶部可以切换你想看的内容～</string>
     <string name="boyin_guide_three_hint">点击主播\n可观看她的历史作品哦～</string>
+
+    <!--版本更新-->
+    <string name="app_updatefile_exist_dialog_title">升级</string>
+    <string name="app_updatefile_exist_dialog_suretext">新版本安装包已准备就绪，是否更新？</string>
+    <string name="app_updatefile_exist_dialog_negative_warn">强制更新取消安装退出APP!</string>
 </resources>
 
