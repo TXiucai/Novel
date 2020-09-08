@@ -1,13 +1,11 @@
 gradle.ext {
     //版本号
-    VERSION_CODE = 20200806
-
+    VERSION_CODE = 20200828
     //版本名
-    VERSION_NAME = "2.2.5"
-
+    VERSION_NAME = "2.2.7"
     // 应用程序包名
     APPLICATION_ID = 'com.heiheilianzai.app'
-
+    //项目第三方配置
     MANIFESTPLACEHOLDERS = [
             JPUSH_PKGNAME       : APPLICATION_ID,
             JPUSH_APPKEY        : "996e9d9e29dcf507d08bed43", //JPush 上注册的包名对应的 Appkey.
@@ -66,4 +64,9 @@ gradle.ext {
     //API解密KEY AES
     API_DECODE_KEY = "\"D2o4XyQeIFobJ4tS\""
     API_DECODE_KEY_UAT = "\"D2o4XyQeIFobJ4tS\""
+    //广告SDK appkey  secret
+    AD_APPKEY_UAT ="\"k75b488bb7d834da8b3e0e3739247b977\""
+    AD_SECRET_UAT ="\"s10ba9fcfac0c48d097754302651268f3\""
+    AD_APPKEY ="\"\""
+    AD_SECRET ="\"\""
 }

@@ -125,14 +125,14 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all {
             def apkName = variant.flavorName
-            def versionStr="_${variant.versionCode}"+"_v${variant.versionName}"
+            def versionStr = "_${variant.versionCode}" + "_v${variant.versionName}"
             if (variant.flavorName.isEmpty()) {
                 apkName += "App"
             }
             if (variant.buildType.name == 'release') {
-                outputFileName = apkName + "_${releaseTime()}"+versionStr+"_Release.apk"
+                outputFileName = apkName + "_${releaseTime()}" + versionStr + "_Release.apk"
             } else {
-                outputFileName = apkName + "_${releaseTime()}"+versionStr+"_Debug.apk"
+                outputFileName = apkName + "_${releaseTime()}" + versionStr + "_Debug.apk"
             }
         }
     }
@@ -331,7 +331,7 @@ dependencies {
     implementation project(':extras:shswiperefresh')
     //有加载进度的ImageViewer
     implementation 'com.github.piasy:BigImageViewer:1.5.7'
-    implementation ('com.github.piasy:GlideImageLoader:1.5.7'){
+    implementation('com.github.piasy:GlideImageLoader:1.5.7') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
     implementation 'com.github.piasy:ProgressPieIndicator:1.5.7'
@@ -340,19 +340,19 @@ dependencies {
     //悬浮按钮
     implementation 'com.zhengjt:floatingball:1.0.2'
     //新手引导层
-    implementation  'com.github.huburt-Hu:NewbieGuide:v2.4.0'
+    implementation 'com.github.huburt-Hu:NewbieGuide:v2.4.0'
     //-------------广告SDk引入相关---------------
-    implementation ('com.squareup.retrofit2:retrofit:2.8.1'){
+    implementation('com.squareup.retrofit2:retrofit:2.8.1') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    implementation ('com.lzy.net:okgo:3.0.4'){
+    implementation('com.lzy.net:okgo:3.0.4') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
     implementation 'com.lzy.net:okserver:2.0.5'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'cn.jzvd:jiaozivideoplayer:6.4.1'
     implementation 'com.danikula:videocache:2.7.1'
-    implementation name:'XAD_comm_1001009_release', ext:'aar'
+    implementation name: 'XAD_comm_1001009_release', ext: 'aar'
     //-------------END---------------
 }
 
