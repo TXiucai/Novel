@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.FloatImageViewShow;
+import com.heiheilianzai.app.model.FloatImageViewShow;
 
 import java.lang.reflect.Field;
 

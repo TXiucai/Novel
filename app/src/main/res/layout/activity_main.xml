@@ -4,7 +4,7 @@
     android:id="@+id/activity_main_vitualkey"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.heiheilianzai.app.activity.MainActivity">
+    tools:context=".ui.activity.MainActivity">
 
     <View
         android:id="@+id/view_guide_down"

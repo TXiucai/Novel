@@ -17,7 +17,7 @@
             android:clickable="false"
             app:failureImage="@mipmap/icon_comic_def" />
 
-        <com.heiheilianzai.app.comic.view.DanmuRelativeLayout
+        <com.heiheilianzai.app.view.comic.DanmuRelativeLayout
             android:id="@+id/item_comic_recyclerview_danmu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -20,8 +20,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.activity.AdvertisementActivity;
-import com.heiheilianzai.app.bean.Startpage;
+import com.heiheilianzai.app.model.Startpage;
+import com.heiheilianzai.app.ui.activity.AdvertisementActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;

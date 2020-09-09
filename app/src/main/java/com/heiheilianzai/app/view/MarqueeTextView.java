@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.Announce;
+import com.heiheilianzai.app.model.Announce;
 
 import java.util.List;
 

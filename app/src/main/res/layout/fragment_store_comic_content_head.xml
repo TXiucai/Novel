@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_310dp">
 
-        <com.heiheilianzai.app.banner.ConvenientBanner
+        <com.heiheilianzai.app.view.ConvenientBanner
             android:id="@+id/store_banner_male"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

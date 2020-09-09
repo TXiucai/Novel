@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.banner.holder.Holder;
-import com.heiheilianzai.app.comic.been.BaseComic;
+import com.heiheilianzai.app.holder.Holder;
+import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 

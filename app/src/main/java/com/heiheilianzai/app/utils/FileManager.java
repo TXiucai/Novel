@@ -10,8 +10,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-import com.heiheilianzai.app.comic.been.BaseComicImage;
-import com.heiheilianzai.app.config.ReaderApplication;
+import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.model.comic.BaseComicImage;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,7 +54,7 @@ public class FileManager {
      * @return SD卡路径。
      */
     public static final String getSDCardRoot() {
-        return ReaderApplication.context.getExternalFilesDir(null).toString();
+        return App.context.getExternalFilesDir(null).toString();
     }
 
     //漫画下载更目录

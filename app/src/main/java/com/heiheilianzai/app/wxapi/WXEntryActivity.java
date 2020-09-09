@@ -10,16 +10,16 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.activity.FirstStartActivity;
-import com.heiheilianzai.app.activity.LoginActivity;
-import com.heiheilianzai.app.bean.LoginInfo;
-import com.heiheilianzai.app.comic.eventbus.RefreshComic;
-import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.BuyLoginSuccess;
-import com.heiheilianzai.app.eventbus.RefreshBookSelf;
-import com.heiheilianzai.app.eventbus.RefreshMine;
-import com.heiheilianzai.app.eventbus.RefreshUserInfo;
-import com.heiheilianzai.app.http.ReaderParams;
+import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.LoginInfo;
+import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
+import com.heiheilianzai.app.model.event.RefreshBookSelf;
+import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.RefreshUserInfo;
+import com.heiheilianzai.app.model.event.comic.RefreshComic;
+import com.heiheilianzai.app.ui.activity.FirstStartActivity;
+import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.MyShare;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -32,8 +32,8 @@ import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.heiheilianzai.app.config.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.config.ReaderConfig.syncDevice;
+import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
+import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.AppPrefs.putSharedString;
 
 /**
@@ -128,7 +128,7 @@ public class WXEntryActivity extends WXCallbackActivity implements IWXAPIEventHa
                             putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
                             EventBus.getDefault().post(new RefreshMine(loginInfo));
                             EventBus.getDefault().post(new RefreshUserInfo(loginInfo));
-                            EventBus.getDefault().post(new BuyLoginSuccess());
+                            EventBus.getDefault().post(new BuyLoginSuccessEvent());
                             if (GETPRODUCT_TYPE(activity) != 2) {
                                 EventBus.getDefault().post(new RefreshBookSelf(null));
                             }

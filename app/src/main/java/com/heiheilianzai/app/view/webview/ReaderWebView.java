@@ -13,7 +13,7 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.utils.NetType;
 import com.heiheilianzai.app.utils.Utils;
 

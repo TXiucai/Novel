@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
-import com.heiheilianzai.app.activity.SettingsActivity;
+import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 
 import java.util.Locale;
 

@@ -3,7 +3,7 @@ package com.heiheilianzai.app.utils;
 import android.content.ClipboardManager;
 import android.content.Context;
 
-import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constant.ReaderConfig;
 
 /**
  * 与字符串相关工具类

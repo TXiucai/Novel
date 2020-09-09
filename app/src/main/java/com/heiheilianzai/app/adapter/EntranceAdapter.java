@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.EntranceItem;
+import com.heiheilianzai.app.model.EntranceItem;
 
 import java.util.List;
 

@@ -8,7 +8,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,17 +16,14 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.activity.WebViewActivity;
-import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.bean.OptionBeen;
+import com.heiheilianzai.app.model.BaseTag;
+import com.heiheilianzai.app.model.OptionBeen;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
-import com.umeng.commonsdk.debug.E;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

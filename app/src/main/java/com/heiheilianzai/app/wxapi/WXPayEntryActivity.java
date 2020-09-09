@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.activity.PayActivity;
-import com.heiheilianzai.app.activity.RechargeActivity;
-import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.RefreshMine;
+import com.heiheilianzai.app.component.pay.wxpay.WXPayResult;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.ui.activity.PayActivity;
+import com.heiheilianzai.app.ui.activity.RechargeActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.wxpay.WXPayResult;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;

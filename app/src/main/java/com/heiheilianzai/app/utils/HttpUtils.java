@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.activity.RechargeActivity;
-import com.heiheilianzai.app.activity.model.LoginModel;
-import com.heiheilianzai.app.config.RabbitConfig;
-import com.heiheilianzai.app.config.ReaderApplication;
-import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.dialog.WaitDialog;
-import com.heiheilianzai.app.http.OkHttpEngine;
-import com.heiheilianzai.app.http.ResultCallback;
+import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.component.http.OkHttpEngine;
+import com.heiheilianzai.app.component.http.ResultCallback;
+import com.heiheilianzai.app.constant.RabbitConfig;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.LoginModel;
+import com.heiheilianzai.app.ui.activity.RechargeActivity;
+import com.heiheilianzai.app.ui.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.umeng.umcrash.UMCrash;
 
@@ -254,7 +254,7 @@ public class HttpUtils {
         if (result.contains("capi")) {
             capi = jsonObj.getString("capi");
         }
-        ReaderApplication.setCipherApi(StringUtils.isNullOrEmpty(capi) ? "0" : capi);
+        App.setCipherApi(StringUtils.isNullOrEmpty(capi) ? "0" : capi);
         return capi;
     }
 

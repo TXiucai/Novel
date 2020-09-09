@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.comic.been.StroreComicLable;
+import com.heiheilianzai.app.model.BaseTag;
+import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 

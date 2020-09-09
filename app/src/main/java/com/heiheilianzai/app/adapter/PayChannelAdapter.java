@@ -2,14 +2,14 @@ package com.heiheilianzai.app.adapter;
 
 
 import android.app.Activity;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.PayChannel;
+import com.heiheilianzai.app.model.PayChannel;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 

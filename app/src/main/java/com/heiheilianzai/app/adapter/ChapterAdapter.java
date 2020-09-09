@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.ChapterItem;
+import com.heiheilianzai.app.model.ChapterItem;
 
 import java.util.List;
 

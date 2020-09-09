@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.AcquirePrivilegeItem;
-import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AcquirePrivilegeItem;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;

@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ListView;
 
-import com.heiheilianzai.app.comic.view.SwipeListener;
+import com.heiheilianzai.app.view.comic.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;

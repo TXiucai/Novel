@@ -2,9 +2,9 @@ package com.heiheilianzai.app.utils;
 
 import android.app.Activity;
 
-import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.eventbus.RefreshMine;
-import com.heiheilianzai.app.http.ReaderParams;
+import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.event.RefreshMine;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;

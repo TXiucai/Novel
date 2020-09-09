@@ -5,7 +5,7 @@
     android:id="@+id/discover_refreshLayoutMale"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.heiheilianzai.app.activity.MainActivity">
+    tools:context=".ui.activity.MainActivity">
 
     <include layout="@layout/refresh_head" />
 
@@ -22,7 +22,7 @@
             android:orientation="vertical"
             android:paddingRight="15dp">
 
-            <com.heiheilianzai.app.banner.ConvenientBanner
+            <com.heiheilianzai.app.view.ConvenientBanner
                 android:id="@+id/discover_banner_female"
                 android:layout_width="match_parent"
 

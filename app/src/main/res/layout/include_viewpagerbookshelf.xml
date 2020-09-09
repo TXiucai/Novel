@@ -9,7 +9,7 @@
         android:layout_gravity="center_vertical"
         android:layout_height="match_parent">
 
-        <com.heiheilianzai.app.banner.view.CBLoopViewPager
+        <com.heiheilianzai.app.view.CBLoopViewPager
             android:id="@+id/cbLoopViewPager"
             android:layout_width="match_parent"
             android:layout_height="100dp" />

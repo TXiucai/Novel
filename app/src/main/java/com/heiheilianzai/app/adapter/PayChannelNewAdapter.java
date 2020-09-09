@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.PayChannelNew;
+import com.heiheilianzai.app.model.PayChannelNew;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;

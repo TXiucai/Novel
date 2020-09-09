@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.heiheilianzai.app.comic.view.ZoomRecyclerView
+    <com.heiheilianzai.app.view.comic.ZoomRecyclerView
         android:id="@+id/activity_comiclook_RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -25,8 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.book.been.BaseBook;
-import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.book.BaseBook;
 
 import org.litepal.LitePal;
 

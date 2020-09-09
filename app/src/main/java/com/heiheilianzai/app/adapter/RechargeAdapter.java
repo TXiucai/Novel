@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.RechargeItem;
+import com.heiheilianzai.app.model.RechargeItem;
 import com.heiheilianzai.app.utils.ImageUtil;
 
 import java.util.List;

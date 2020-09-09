@@ -386,7 +386,7 @@ public static final int *;
 #litepal混淆配置
 
 #javabean不被混淆
--keep class com.heiheilianzai.app.bean.** { *; }
+-keep class com.heiheilianzai.app.model.** { *; }
 #javabean不被混淆
 
 #eventbus混淆配置

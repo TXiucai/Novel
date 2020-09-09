@@ -58,7 +58,7 @@
     <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <application
-        android:name="com.heiheilianzai.app.config.ReaderApplication"
+        android:name="com.heiheilianzai.app.base.App"
         android:allowBackup="false"
         android:icon="@mipmap/appicon"
         android:label="@string/app_name"
@@ -69,7 +69,7 @@
         tools:targetApi="p">
 
         <activity
-            android:name="com.heiheilianzai.app.activity.SplashActivity"
+            android:name=".ui.activity.SplashActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -86,149 +86,149 @@
         </activity>
 
         <activity
-            android:name="com.heiheilianzai.app.activity.BookInfoActivity"
+            android:name=".ui.activity.BookInfoActivity"
             android:exported="true"
             android:launchMode="standard"
             android:screenOrientation="portrait"
             android:theme="@style/ColorTranslucentTheme" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.CatalogActivity"
+            android:name=".ui.activity.CatalogActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.CommentListActivity"
+            android:name=".ui.activity.CommentListActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.AddCommentActivity"
+            android:name=".ui.activity.AddCommentActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.FeedBackActivity"
+            android:name=".ui.activity.FeedBackActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.AboutActivity"
+            android:name=".ui.activity.setting.AboutActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.UserInfoActivity"
+            android:name=".ui.activity.UserInfoActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.BindPhoneActivity"
+            android:name=".ui.activity.BindPhoneActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.CatalogInnerActivity"
+            android:name=".ui.activity.CatalogInnerActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.RechargeActivity"
+            android:name=".ui.activity.RechargeActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.AcquireBaoyueActivity"
+            android:name=".ui.activity.AcquireBaoyueActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.ListAddCommentActivity"
+            android:name=".ui.activity.ListAddCommentActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.ReplyCommentActivity"
+            android:name=".ui.activity.ReplyCommentActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.AnnounceActivity"
+            android:name=".ui.activity.AnnounceActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.AboutUsActivity"
+            android:name=".ui.activity.setting.AboutUsActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.TaskCenterActivity"
+            android:name=".ui.activity.TaskCenterActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:configChanges="orientation|screenSize"
 
             android:theme="@style/ColorTranslucentTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.PayActivity"
+            android:name=".ui.activity.PayActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.SearchActivity"
+            android:name=".ui.activity.SearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.heiheilianzai.app.read.ReadActivity"
+            android:name=".ui.activity.read.ReadActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <activity
-            android:name="com.heiheilianzai.app.comic.activity.ComicLookActivity"
+            android:name=".ui.activity.comic.ComicLookActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.SettingsActivity"
+            android:name=".ui.activity.setting.SettingsActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.FirstStartActivity"
+            android:name=".ui.activity.FirstStartActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.BootPageActivity"
+            android:name=".ui.activity.BootPageActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.WebViewActivity"
+            android:name=".ui.activity.WebViewActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.DayShareActivity"
+            android:name=".ui.activity.DayShareActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.DownMangerActivity"
+            android:name=".ui.activity.DownMangerActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.activity.TaskExplainActivity"
+            android:name=".ui.activity.TaskExplainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.heiheilianzai.app.activity.ShareActivity"
+            android:name=".ui.activity.ShareActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.comic.activity.ComicCommentActivity"
+            android:name=".ui.activity.comic.ComicCommentActivity"
             android:theme="@style/ActivityEntryAnimation"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
-            android:name="com.heiheilianzai.app.comic.activity.ComicinfoMuluActivity"
+            android:name=".ui.activity.comic.ComicinfoMuluActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.heiheilianzai.app.comic.activity.ComicDownActivity"
+            android:name=".ui.activity.comic.ComicDownActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.heiheilianzai.app.activity.AdvertisementActivity"
+            android:name=".ui.activity.AdvertisementActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.heiheilianzai.app.activity.BaseOptionActivity"
+            android:name=".base.BaseOptionActivity"
             android:screenOrientation="portrait" />
 
         <!--微信支付-->
@@ -271,7 +271,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
         <activity
-            android:name="com.heiheilianzai.app.comic.activity.ComicInfoActivity"
+            android:name=".ui.activity.comic.ComicInfoActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -299,15 +299,15 @@
             android:theme="@style/Theme.UMDefault" />
 
         <activity
-            android:name="com.heiheilianzai.app.localapp.MainActivity"
+            android:name="com.heiheilianzai.app.ui.activity.Main2Activity"
             android:configChanges="orientation|screenSize" />
 
         <activity
-            android:name="com.heiheilianzai.app.filesearcher.delegate.FileSearcherDelegateActivity"
+            android:name=".component.filesearcher.delegate.FileSearcherDelegateActivity"
             android:theme="@style/FileSearcherTransParentTheme" />
 
         <activity
-            android:name="com.heiheilianzai.app.filesearcher.FileSearcherActivity"
+            android:name=".component.filesearcher.FileSearcherActivity"
             android:theme="@style/FileSearcherActivityTheme" />
 
         <provider
@@ -325,7 +325,7 @@
         <!-- 3.3.0开始所有事件将通过该类回调 -->
         <!-- 该广播需要继承 JPush 提供的 JPushMessageReceiver 类, 并如下新增一个 Intent-Filter -->
         <receiver
-            android:name="com.heiheilianzai.app.push.MyJPushMessageReceiver"
+            android:name=".component.push.MyJPushMessageReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -338,7 +338,7 @@
         <!-- 这是3.3.0之前版本的接收方式，3.3.0开始是通过继承 JPushMessageReceiver并配置来接收所有事件回调。-->
         <!-- 如果仍然需要在这个Receiver里接收，需要在JPushMessageReceiver 的子类里不重写对应的回调方法，或者重写方法且调用super-->
         <receiver
-            android:name=".push.MyPushReceiver"
+            android:name=".component.push.MyPushReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -357,7 +357,7 @@
         </receiver>
 
         <receiver
-            android:name=".push.ReaderMessageReceiver"
+            android:name=".component.push.ReaderMessageReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />
@@ -466,7 +466,7 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.heiheilianzai.app.comic.activity.DownComicService">
+        <service android:name=".component.DownComicService">
             <intent-filter>
                 <action android:name="com.heiheilianzai.app.comic.activity.DownComicService" />
             </intent-filter>
@@ -500,7 +500,7 @@
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
         <service
-            android:name="com.heiheilianzai.app.push.MyJPushService"
+            android:name=".component.push.MyJPushService"
             android:enabled="true"
             android:exported="false"
             android:process=":pushcore">

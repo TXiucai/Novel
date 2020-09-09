@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.eventbus.ToStore;
-import com.heiheilianzai.app.fragment.BookshelfFragment;
+import com.heiheilianzai.app.model.event.ToStore;
+import com.heiheilianzai.app.ui.fragment.BookshelfFragment;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.Utils;

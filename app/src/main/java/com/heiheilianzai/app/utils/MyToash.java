@@ -5,8 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.config.RabbitConfig;
-import com.heiheilianzai.app.dialog.ZToast;
+import com.heiheilianzai.app.constant.RabbitConfig;
 
 
 /**

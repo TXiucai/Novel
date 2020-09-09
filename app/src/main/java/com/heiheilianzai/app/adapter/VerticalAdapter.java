@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.book.been.StroreBookcLable;
+import com.heiheilianzai.app.model.BaseTag;
+import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;

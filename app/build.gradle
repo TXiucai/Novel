@@ -1,6 +1,7 @@
 import com.android.build.gradle.internal.dsl.ProductFlavor
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.google.gms.google-services'
 
@@ -353,6 +354,7 @@ dependencies {
     implementation 'cn.jzvd:jiaozivideoplayer:6.4.1'
     implementation 'com.danikula:videocache:2.7.1'
     implementation name: 'XAD_comm_1001009_release', ext: 'aar'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //-------------END---------------
 }
 
@@ -365,4 +367,7 @@ if (SDK_DIR == null) {
 
 dependencies {
     compileOnly files("${SDK_DIR}/platforms/android-20/data/layoutlib.jar")
+}
+repositories {
+    mavenCentral()
 }

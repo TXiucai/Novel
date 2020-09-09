@@ -3,9 +3,8 @@ package com.heiheilianzai.app.utils.decode;
 import android.annotation.SuppressLint;
 
 import com.heiheilianzai.app.BuildConfig;
-import com.heiheilianzai.app.config.RabbitConfig;
-import com.heiheilianzai.app.config.ReaderApplication;
-import com.heiheilianzai.app.config.ReaderConfig;
+import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.constant.RabbitConfig;
 import com.heiheilianzai.app.utils.MyToash;
 
 import java.io.ByteArrayOutputStream;
@@ -42,7 +41,7 @@ public class AESUtil {
     private static final String CipherMode = "AES/CFB/NoPadding";//使用CFB加密，需要设置IV
     private static final String VIPARA = BuildConfig.picture_vipara;//偏移量
     public static final String key = BuildConfig.picture_key;//加密秘钥
-    public static final String desFile = ReaderApplication.getAppContext().getFilesDir().getAbsolutePath() + File.separator;
+    public static final String desFile = App.getAppContext().getFilesDir().getAbsolutePath() + File.separator;
 
     //API初始向量（偏移）
     public static final String API_IV = RabbitConfig.ONLINE ? BuildConfig.api_decode_iv : BuildConfig.api_decode_iv_uat;

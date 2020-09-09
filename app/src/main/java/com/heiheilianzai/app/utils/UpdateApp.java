@@ -19,12 +19,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.bean.AppUpdate;
-import com.heiheilianzai.app.config.ReaderConfig;
-import com.heiheilianzai.app.dialog.GetDialog;
-import com.heiheilianzai.app.eventbus.ExitAppEvent;
-import com.heiheilianzai.app.http.DownloadUtil;
-import com.heiheilianzai.app.http.ReaderParams;
+import com.heiheilianzai.app.component.http.DownloadUtil;
+import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.event.ExitAppEvent;
+import com.heiheilianzai.app.ui.activity.Main2Activity;
+import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.view.ProgressBarView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +36,7 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.heiheilianzai.app.config.ReaderConfig.PUTPRODUCT_TYPE;
+import static com.heiheilianzai.app.constant.ReaderConfig.PUTPRODUCT_TYPE;
 
 /**
  * 版本更新 工具类
@@ -101,7 +102,7 @@ public class UpdateApp {
                             } catch (Exception e) {
                             }
                             if (jsonObject.getInt("service") == 1) {//开启壳子
-                                activity.startActivity(new Intent(activity, com.heiheilianzai.app.localapp.MainActivity.class));
+                                activity.startActivity(new Intent(activity, Main2Activity.class));
                             } else {
                                 updateAppInterface.Next(response);
                             }
@@ -120,7 +121,7 @@ public class UpdateApp {
                             } catch (Exception e) {
                             }
                             if (jsonObject.getInt("service") == 1) {//开启壳子
-                                activity.startActivity(new Intent(activity, com.heiheilianzai.app.localapp.MainActivity.class));
+                                activity.startActivity(new Intent(activity, Main2Activity.class));
                             } else {
                                 updateAppInterface.Next(response);
                             }

@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.bean.CommentItem;
-import com.heiheilianzai.app.bean.PayGoldDetail;
+import com.heiheilianzai.app.model.CommentItem;
+import com.heiheilianzai.app.model.PayGoldDetail;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.TaskCenter;
+import com.heiheilianzai.app.model.TaskCenter;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@ import com.githang.statusbar.StatusBarCompat;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static com.heiheilianzai.app.activity.BaseActivity.getStatusBarHeight;
+import static com.heiheilianzai.app.base.BaseActivity.getStatusBarHeight;
 
 /**
  * Created by FuKaiqiang on 2017-08-30.

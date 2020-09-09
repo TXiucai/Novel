@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.bean.CommentItem;
+import com.heiheilianzai.app.model.CommentItem;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;

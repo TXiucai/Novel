@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-import com.heiheilianzai.app.bean.Downoption;
-import com.heiheilianzai.app.book.been.BaseBook;
-import com.heiheilianzai.app.read.manager.ChapterManager;
+import com.heiheilianzai.app.component.ChapterManager;
+import com.heiheilianzai.app.model.Downoption;
+import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;

@@ -28,7 +28,7 @@
                 android:background="@drawable/shape_bookshel_bg"
                 android:orientation="vertical">
 
-                <com.heiheilianzai.app.banner.ConvenientBannerBookShelf
+                <com.heiheilianzai.app.view.ConvenientBannerBookShelf
                     android:id="@+id/fragment_shelf_banner_male"
                     android:layout_width="match_parent"
                     android:layout_height="110dp"

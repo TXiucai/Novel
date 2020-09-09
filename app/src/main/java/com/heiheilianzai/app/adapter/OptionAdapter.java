@@ -1,7 +1,6 @@
 package com.heiheilianzai.app.adapter;
 
 import android.app.Activity;
-
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,18 +8,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.R2;
-
-import com.heiheilianzai.app.bean.BaseTag;
-import com.heiheilianzai.app.bean.OptionBeen;
-
+import com.heiheilianzai.app.model.BaseTag;
+import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
-
 
 import java.util.List;
 
