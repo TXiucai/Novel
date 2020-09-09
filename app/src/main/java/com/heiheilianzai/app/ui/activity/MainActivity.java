@@ -35,7 +35,6 @@ import com.app.hubert.guide.model.RelativeGuide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
@@ -92,26 +91,26 @@ import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 public class MainActivity extends BaseButterKnifeTransparentActivity {
-    @BindView(R2.id.RadioGroup)
+    @BindView(R.id.RadioGroup)
     public RadioGroup mRadioGroup;
-    @BindView(R2.id.fragment_home_container)
+    @BindView(R.id.fragment_home_container)
     public CustomScrollViewPager customScrollViewPage;
     public long mExitTime = 0;
-    @BindView(R2.id.main_menu_layout)
+    @BindView(R.id.main_menu_layout)
     public LinearLayout mNavigationView;
-    @BindView(R2.id.home_novel_layout)
+    @BindView(R.id.home_novel_layout)
     public RadioButton home_novel_layout;
-    @BindView(R2.id.home_store_layout)
+    @BindView(R.id.home_store_layout)
     public RadioButton home_store_layout;
-    @BindView(R2.id.home_discovery_layout)
+    @BindView(R.id.home_discovery_layout)
     public RadioButton home_discovery_layout;
-    @BindView(R2.id.home_mine_layout)
+    @BindView(R.id.home_mine_layout)
     public RadioButton home_mine_layout;
-    @BindView(R2.id.home_store_layout_comic)
+    @BindView(R.id.home_store_layout_comic)
     public RadioButton home_store_layout_comic;
-    @BindView(R2.id.shelf_book_delete_btn)
+    @BindView(R.id.shelf_book_delete_btn)
     public LinearLayout shelf_book_delete_btn;
-    @BindView(R2.id.view_guide_down)
+    @BindView(R.id.view_guide_down)
     View view_guide_down;
 
     private List<Fragment> mFragmentList;

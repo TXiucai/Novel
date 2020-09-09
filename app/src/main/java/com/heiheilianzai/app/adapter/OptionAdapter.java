@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -108,19 +107,19 @@ public class OptionAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.item_store_label_male_horizontal_img)
+        @BindView(R.id.item_store_label_male_horizontal_img)
         ImageView imageView;
-        @BindView(R2.id.item_store_label_male_horizontal_name)
+        @BindView(R.id.item_store_label_male_horizontal_name)
         TextView name;
-        @BindView(R2.id.item_store_label_male_horizontal_flag)
+        @BindView(R.id.item_store_label_male_horizontal_flag)
         TextView flag;
-        @BindView(R2.id.item_store_label_male_horizontal_description)
+        @BindView(R.id.item_store_label_male_horizontal_description)
         TextView description;
-        @BindView(R2.id.item_store_label_male_horizontal_author)
+        @BindView(R.id.item_store_label_male_horizontal_author)
         TextView author;
-        @BindView(R2.id.item_store_label_male_horizontal_tag)
+        @BindView(R.id.item_store_label_male_horizontal_tag)
         TextView item_store_label_male_horizontal_tag;
-        @BindView(R2.id.item_store_label_male_vertical_layout)
+        @BindView(R.id.item_store_label_male_vertical_layout)
         LinearLayout item_store_label_male_vertical_layout;
 
         public ViewHolder(View view) {

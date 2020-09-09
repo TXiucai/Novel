@@ -36,7 +36,6 @@ import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.ComicRecyclerViewAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
@@ -103,53 +102,53 @@ import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
  * Created by abc on 2016/11/4.
  */
 public class ComicLookActivity extends BaseButterKnifeActivity {
-    @BindView(R2.id.activity_comiclook_lording)
+    @BindView(R.id.activity_comiclook_lording)
     public RelativeLayout activity_comiclook_lording;
-    @BindView(R2.id.activity_comiclook_lording_img)
+    @BindView(R.id.activity_comiclook_lording_img)
     public ImageView activity_comiclook_lording_img;
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.activity_comiclook_RecyclerView)
+    @BindView(R.id.activity_comiclook_RecyclerView)
     public ZoomRecyclerView activity_comiclook_RecyclerView;
-    @BindView(R2.id.activity_comiclook_head)
+    @BindView(R.id.activity_comiclook_head)
     public RelativeLayout activity_comiclook_head;
-    @BindView(R2.id.activity_comiclook_foot)
+    @BindView(R.id.activity_comiclook_foot)
     public LinearLayout activity_comiclook_foot;
-    @BindView(R2.id.activity_comiclook_shoucang)
+    @BindView(R.id.activity_comiclook_shoucang)
     public ImageView activity_comiclook_shoucang;
-    @BindView(R2.id.activity_comiclook_refresh)
+    @BindView(R.id.activity_comiclook_refresh)
     public ImageView activity_comiclook_refresh;
-    @BindView(R2.id.activity_comiclook_dingbu)
+    @BindView(R.id.activity_comiclook_dingbu)
     public ImageView activity_comiclook_dingbu;
-    @BindView(R2.id.activity_comiclook_danmu_layout)
+    @BindView(R.id.activity_comiclook_danmu_layout)
     public LinearLayout activity_comiclook_danmu_layout;
-    @BindView(R2.id.fragment_comicinfo_mulu_dangqian_layout)
+    @BindView(R.id.fragment_comicinfo_mulu_dangqian_layout)
     public View fragment_comicinfo_mulu_dangqian_layout;
-    @BindView(R2.id.activity_comiclook_danmu_img)
+    @BindView(R.id.activity_comiclook_danmu_img)
     public ImageView activity_comiclook_danmu_img;
-    @BindView(R2.id.activity_comiclook_danmu_text)
+    @BindView(R.id.activity_comiclook_danmu_text)
     public TextView activity_comiclook_danmu_text;
-    @BindView(R2.id.activity_comiclook_danmu_img2)
+    @BindView(R.id.activity_comiclook_danmu_img2)
     public ImageView activity_comiclook_danmu_img2;
-    @BindView(R2.id.activity_comiclook_danmu_edit)
+    @BindView(R.id.activity_comiclook_danmu_edit)
     public EditText activity_comiclook_danmu_edit;
-    @BindView(R2.id.activity_comiclook_danmu_fashe)
+    @BindView(R.id.activity_comiclook_danmu_fashe)
     public TextView activity_comiclook_danmu_fashe;
-    @BindView(R2.id.activity_comiclook_pinglunshu)
+    @BindView(R.id.activity_comiclook_pinglunshu)
     public TextView activity_comiclook_pinglunshu;
-    @BindView(R2.id.activity_comiclook_xiayihua)
+    @BindView(R.id.activity_comiclook_xiayihua)
     public ImageView activity_comiclook_xiayihua;
-    @BindView(R2.id.activity_comiclook_shangyihua)
+    @BindView(R.id.activity_comiclook_shangyihua)
     public ImageView activity_comiclook_shangyihua;
-    @BindView(R2.id.item_dialog_downadapter_RotationLoadingView)
+    @BindView(R.id.item_dialog_downadapter_RotationLoadingView)
     public AVLoadingIndicatorView item_dialog_downadapter_RotationLoadingView;
-    @BindView(R2.id.activity_comiclook_danmu_dangqianhua)
+    @BindView(R.id.activity_comiclook_danmu_dangqianhua)
     public TextView activity_comiclook_danmu_dangqianhua;
-    @BindView(R2.id.activity_comiclook_tucao_layout)
+    @BindView(R.id.activity_comiclook_tucao_layout)
     public FrameLayout activity_comiclook_tucao_layout;
-    @BindView(R2.id.activity_comiclook_share)
+    @BindView(R.id.activity_comiclook_share)
     public RelativeLayout activity_comiclook_share;
     Map<String, ComicChapterItem> map = new HashMap();//临时存储章节数据
     PurchaseDialog purchaseDialog;
@@ -875,17 +874,17 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     class MyViewHolder {
-        @BindView(R2.id.activity_comic_look_foot_shangyihua)
+        @BindView(R.id.activity_comic_look_foot_shangyihua)
         public LinearLayout activity_comic_look_foot_shangyihua;
-        @BindView(R2.id.activity_comic_look_foot_xiayihua)
+        @BindView(R.id.activity_comic_look_foot_xiayihua)
         public LinearLayout activity_comic_look_foot_xiayihua;
-        @BindView(R2.id.activity_comiclook_shangyihua_foot)
+        @BindView(R.id.activity_comiclook_shangyihua_foot)
         public ImageView activity_comiclook_shangyihua_foot;
-        @BindView(R2.id.activity_comiclook_xiayihua_foot)
+        @BindView(R.id.activity_comiclook_xiayihua_foot)
         public ImageView activity_comiclook_xiayihua_foot;
-        @BindView(R2.id.list_ad_view_layout)
+        @BindView(R.id.list_ad_view_layout)
         FrameLayout list_ad_view_layout;
-        @BindView(R2.id.list_ad_view_img)
+        @BindView(R.id.list_ad_view_img)
         ImageView list_ad_view_img;
 
         public MyViewHolder(View view) {

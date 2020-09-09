@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.ui.fragment.book.DiscoveryBookFragment;
@@ -49,21 +48,21 @@ public class DiscoveryNewFragment extends BaseButterKnifeFragment {
         return R.layout.fragment_discoverynew;
     }
 
-    @BindView(R2.id.fragment_discovery_viewpage)
+    @BindView(R.id.fragment_discovery_viewpage)
     public ViewPager fragment_discovery_viewpage;
 
-    @BindView(R2.id.fragment_discovery_top)
+    @BindView(R.id.fragment_discovery_top)
     public RelativeLayout fragment_discovery_top;
 
 
-    @BindView(R2.id.fragment_discovery_indicator)
+    @BindView(R.id.fragment_discovery_indicator)
     public UnderlinePageIndicatorHalf fragment_discovery_indicator;
 
 
-    @BindView(R2.id.fragment_discovery_xiaoshuo)
+    @BindView(R.id.fragment_discovery_xiaoshuo)
     public SizeAnmotionTextview fragment_discovery_xiaoshuo;
 
-    @BindView(R2.id.fragment_discovery_manhau)
+    @BindView(R.id.fragment_discovery_manhau)
     public SizeAnmotionTextview fragment_discovery_manhau;
 
     FragmentManager fragmentManager;

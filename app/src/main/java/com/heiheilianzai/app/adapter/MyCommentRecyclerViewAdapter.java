@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.CommentItem;
 import com.heiheilianzai.app.model.PayGoldDetail;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -68,17 +67,17 @@ public class MyCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyComment
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.activity_book_info_content_comment_item_avatar)
+        @BindView(R.id.activity_book_info_content_comment_item_avatar)
         ImageView imageView;
-        @BindView(R2.id.activity_book_info_content_comment_item_content)
+        @BindView(R.id.activity_book_info_content_comment_item_content)
         TextView content;
-        @BindView(R2.id.activity_book_info_content_comment_item_reply_info)
+        @BindView(R.id.activity_book_info_content_comment_item_reply_info)
         TextView replay;
-        @BindView(R2.id.activity_book_info_content_comment_item_nickname)
+        @BindView(R.id.activity_book_info_content_comment_item_nickname)
         TextView nickname;
-        @BindView(R2.id.activity_book_info_content_comment_item_time)
+        @BindView(R.id.activity_book_info_content_comment_item_time)
         TextView time;
-        @BindView(R2.id.comment_item_isvip)
+        @BindView(R.id.comment_item_isvip)
         View comment_item_isvip;
         public ViewHolder(View view) {
             super(view);

@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.HotWordsAdapter;
 import com.heiheilianzai.app.adapter.OptionRecyclerViewAdapter;
 import com.heiheilianzai.app.adapter.SearchVerticalAdapter;
@@ -56,31 +55,31 @@ public class SearchActivity extends BaseButterKnifeActivity {
         return R.layout.activity_search;
     }
 
-    @BindView(R2.id.activity_search_keywords_listview)
+    @BindView(R.id.activity_search_keywords_listview)
     public XRecyclerView fragment_option_listview;
     /**
      * 搜索框
      */
-    @BindView(R2.id.activity_search_keywords)
+    @BindView(R.id.activity_search_keywords)
     public EditText activity_search_keywords;
     /**
      * cancel
      */
-    @BindView(R2.id.activity_search_cancel)
+    @BindView(R.id.activity_search_cancel)
     public TextView activity_search_cancel;
     /**
      * 热词grid
      */
-    @BindView(R2.id.activity_search_hotwords_grid)
+    @BindView(R.id.activity_search_hotwords_grid)
     public AdaptionGridViewNoMargin activity_search_hotwords_grid;
     /**
      * 热搜榜grid
      */
-    @BindView(R2.id.activity_search_book_grid)
+    @BindView(R.id.activity_search_book_grid)
     public AdaptionGridViewNoMargin activity_search_book_grid;
-    @BindView(R2.id.activity_search_keywords_listview_noresult)
+    @BindView(R.id.activity_search_keywords_listview_noresult)
     public LinearLayout activity_search_keywords_listview_noresult;
-    @BindView(R2.id.activity_search_keywords_scrollview)
+    @BindView(R.id.activity_search_keywords_scrollview)
     public ObservableScrollView activity_search_keywords_scrollview;
 
 

@@ -16,7 +16,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.ComicDownOptionAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -57,23 +56,23 @@ import butterknife.OnClick;
  * 漫画下载页面
  */
 public class ComicDownActivity extends BaseButterKnifeActivity {
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.activity_comicdown_choose_count)
+    @BindView(R.id.activity_comicdown_choose_count)
     public TextView activity_comicdown_choose_count;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhuangtai)
+    @BindView(R.id.fragment_comicinfo_mulu_zhuangtai)
     public TextView fragment_comicinfo_mulu_zhuangtai;
-    @BindView(R2.id.activity_comicdown_down)
+    @BindView(R.id.activity_comicdown_down)
     public TextView activity_comicdown_down;
-    @BindView(R2.id.activity_comicdown_gridview)
+    @BindView(R.id.activity_comicdown_gridview)
     public GridView activity_comicdown_gridview;
-    @BindView(R2.id.fragment_bookshelf_noresult)
+    @BindView(R.id.fragment_bookshelf_noresult)
     public LinearLayout fragment_bookshelf_noresult;
-    @BindView(R2.id.fragment_comicinfo_mulu_xu)
+    @BindView(R.id.fragment_comicinfo_mulu_xu)
     public TextView fragment_comicinfo_mulu_xu;
-    @BindView(R2.id.fragment_comicinfo_mulu_xu_img)
+    @BindView(R.id.fragment_comicinfo_mulu_xu_img)
     public ImageView fragment_comicinfo_mulu_xu_img;
-    @BindView(R2.id.fragment_comicinfo_mulu_layout)
+    @BindView(R.id.fragment_comicinfo_mulu_layout)
     public RelativeLayout fragment_comicinfo_mulu_layout;
     boolean shunxu, Flag;
     String comic_id;

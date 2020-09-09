@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.comic.ComicDownActivity;
@@ -129,21 +128,21 @@ public class DownMangerComicAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.item_dowmmanger_HorizontalScrollView)
+        @BindView(R.id.item_dowmmanger_HorizontalScrollView)
         HorizontalScrollView item_dowmmanger_HorizontalScrollView;
-        @BindView(R2.id.item_dowmmanger_LinearLayout2)
+        @BindView(R.id.item_dowmmanger_LinearLayout2)
         public LinearLayout item_dowmmanger_LinearLayout2;
-        @BindView(R2.id.item_dowmmanger_cover)
+        @BindView(R.id.item_dowmmanger_cover)
         public ImageView item_dowmmanger_cover;
-        @BindView(R2.id.item_dowmmanger_name)
+        @BindView(R.id.item_dowmmanger_name)
         public TextView item_dowmmanger_name;
-        @BindView(R2.id.item_dowmmanger_open)
+        @BindView(R.id.item_dowmmanger_open)
         public TextView item_dowmmanger_open;
-        @BindView(R2.id.item_dowmmanger_delete)
+        @BindView(R.id.item_dowmmanger_delete)
         public TextView item_dowmmanger_delete;
-        @BindView(R2.id.item_dowmmanger_xiazaiprocess)
+        @BindView(R.id.item_dowmmanger_xiazaiprocess)
         public TextView item_dowmmanger_xiazaiprocess;
-        @BindView(R2.id.item_dowmmanger_info)
+        @BindView(R.id.item_dowmmanger_info)
         public RelativeLayout item_dowmmanger_info;
 
         public ViewHolder(View view) {

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -53,31 +52,31 @@ import butterknife.BindView;
  * 设置详情
  */
 public class SettingsActivity extends BaseActivity implements View.OnClickListener, ShowTitle {
-    @BindView(R2.id.activity_settings_same)
+    @BindView(R.id.activity_settings_same)
     ToggleButton activity_settings_same;
-    @BindView(R2.id.activity_settings_wifi)
+    @BindView(R.id.activity_settings_wifi)
     ToggleButton activity_settings_wifi;
-    @BindView(R2.id.activity_settings_auto)
+    @BindView(R.id.activity_settings_auto)
     ToggleButton activity_settings_auto;
-    @BindView(R2.id.activity_settings_switch_container)
+    @BindView(R.id.activity_settings_switch_container)
     View activity_settings_switch_container;
-    @BindView(R2.id.activity_settings_logout)
+    @BindView(R.id.activity_settings_logout)
     View activity_settings_logout;
-    @BindView(R2.id.activity_settings_clear_cache)
+    @BindView(R.id.activity_settings_clear_cache)
     View activity_settings_clear_cache;
-    @BindView(R2.id.activity_settings_support)
+    @BindView(R.id.activity_settings_support)
     View activity_settings_support;
-    @BindView(R2.id.activity_settings_about)
+    @BindView(R.id.activity_settings_about)
     View activity_settings_about;
-    @BindView(R2.id.activity_settings_language)
+    @BindView(R.id.activity_settings_language)
     View activity_settings_language;
-    @BindView(R2.id.automation_buy_next)
+    @BindView(R.id.automation_buy_next)
     View automation_buy_next;
-    @BindView(R2.id.automation_buy_next_lv)
+    @BindView(R.id.automation_buy_next_lv)
     View automation_buy_next_lv;
-    @BindView(R2.id.activity_settings_version)
+    @BindView(R.id.activity_settings_version)
     View activity_settings_version;
-    @BindView(R2.id.activity_settings_version_test)
+    @BindView(R.id.activity_settings_version_test)
     TextView activity_settings_version_test;
     Activity activity;
     public static boolean chengeLangaupage;

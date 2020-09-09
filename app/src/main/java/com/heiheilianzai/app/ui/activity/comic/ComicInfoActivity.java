@@ -36,7 +36,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseWarmStartActivity;
 import com.heiheilianzai.app.callback.AppBarStateChangeListener;
@@ -86,65 +85,65 @@ import butterknife.OnClick;
  * 作品详情
  */
 public class ComicInfoActivity extends BaseWarmStartActivity {
-    @BindView(R2.id.fragment_comicinfo_viewpage)
+    @BindView(R.id.fragment_comicinfo_viewpage)
     public ViewPager fragment_comicinfo_viewpage;
-    @BindView(R2.id.activity_comic_info_topbar_downlayout)
+    @BindView(R.id.activity_comic_info_topbar_downlayout)
     public RelativeLayout activity_comic_info_topbar_downlayout;
-    @BindView(R2.id.activity_comic_info_topbar_sharelayout)
+    @BindView(R.id.activity_comic_info_topbar_sharelayout)
     public RelativeLayout activity_comic_info_topbar_sharelayout;
-    @BindView(R2.id.fragment_comicinfo_current_chaptername)
+    @BindView(R.id.fragment_comicinfo_current_chaptername)
     public TextView fragment_comicinfo_current_chaptername;
-    @BindView(R2.id.fragment_comicinfo_current_goonread)
+    @BindView(R.id.fragment_comicinfo_current_goonread)
     public TextView fragment_comicinfo_current_goonread;
-    @BindView(R2.id.activity_book_info_content_xiangqing_text)
+    @BindView(R.id.activity_book_info_content_xiangqing_text)
     public TextView activity_book_info_content_xiangqing_text;
-    @BindView(R2.id.activity_book_info_content_mulu_text)
+    @BindView(R.id.activity_book_info_content_mulu_text)
     public TextView activity_book_info_content_mulu_text;
-    @BindView(R2.id.activity_comic_info_top_bookname)
+    @BindView(R.id.activity_comic_info_top_bookname)
     public TextView activity_comic_info_top_bookname;
-    @BindView(R2.id.activity_book_info_content_cover)
+    @BindView(R.id.activity_book_info_content_cover)
     public ImageView activity_book_info_content_cover;
-    @BindView(R2.id.activity_book_info_content_name)
+    @BindView(R.id.activity_book_info_content_name)
     public TextView activity_book_info_content_name;
-    @BindView(R2.id.activity_book_info_content_author)
+    @BindView(R.id.activity_book_info_content_author)
     public TextView activity_book_info_content_author;
-    @BindView(R2.id.activity_book_info_content_total_hot)
+    @BindView(R.id.activity_book_info_content_total_hot)
     public TextView activity_book_info_content_total_hot;
-    @BindView(R2.id.activity_book_info_content_shoucang)
+    @BindView(R.id.activity_book_info_content_shoucang)
     public TextView activity_book_info_content_shoucang;
-    @BindView(R2.id.activity_book_info_content_shoucannum)
+    @BindView(R.id.activity_book_info_content_shoucannum)
     public TextView activity_book_info_content_shoucannum;
-    @BindView(R2.id.activity_book_info_content_tag)
+    @BindView(R.id.activity_book_info_content_tag)
     public LinearLayout activity_book_info_content_tag;
-    @BindView(R2.id.activity_book_info_content_xiangqing)
+    @BindView(R.id.activity_book_info_content_xiangqing)
     public RelativeLayout activity_book_info_content_xiangqing;
-    @BindView(R2.id.activity_book_info_content_mulu)
+    @BindView(R.id.activity_book_info_content_mulu)
     public RelativeLayout activity_book_info_content_mulu;
-    @BindView(R2.id.activity_book_info_content_xiangqing_view)
+    @BindView(R.id.activity_book_info_content_xiangqing_view)
     public View activity_book_info_content_xiangqing_view;
-    @BindView(R2.id.activity_book_info_content_mulu_view)
+    @BindView(R.id.activity_book_info_content_mulu_view)
     public View activity_book_info_content_mulu_view;
-    @BindView(R2.id.channel_bar_indicator)
+    @BindView(R.id.channel_bar_indicator)
     public UnderlinePageIndicatorHalf channel_bar_indicator;
-    @BindView(R2.id.activity_book_info_content_cover_bg)
+    @BindView(R.id.activity_book_info_content_cover_bg)
     public ImageView activity_book_info_content_cover_bg;
-    @BindView(R2.id.activity_comic_info_AppBarLayout)
+    @BindView(R.id.activity_comic_info_AppBarLayout)
     public AppBarLayout activity_comic_info_AppBarLayout;
-    @BindView(R2.id.activity_comic_info_CollapsingToolbarLayout)
+    @BindView(R.id.activity_comic_info_CollapsingToolbarLayout)
     public CollapsingToolbarLayout activity_comic_info_CollapsingToolbarLayout;
-    @BindView(R2.id.fragment_comicinfo_mulu_dangqian)
+    @BindView(R.id.fragment_comicinfo_mulu_dangqian)
     public LinearLayout fragment_comicinfo_mulu_dangqian;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhiding)
+    @BindView(R.id.fragment_comicinfo_mulu_zhiding)
     public LinearLayout fragment_comicinfo_mulu_zhiding;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhiding_img)
+    @BindView(R.id.fragment_comicinfo_mulu_zhiding_img)
     public ImageView fragment_comicinfo_mulu_zhiding_img;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhiding_text)
+    @BindView(R.id.fragment_comicinfo_mulu_zhiding_text)
     public TextView fragment_comicinfo_mulu_zhiding_text;
-    @BindView(R2.id.fragment_comicinfo_mulu_dangqian_layout)
+    @BindView(R.id.fragment_comicinfo_mulu_dangqian_layout)
     public RelativeLayout fragment_comicinfo_mulu_dangqian_layout;
-    @BindView(R2.id.activity_comic_info_comment_layout)
+    @BindView(R.id.activity_comic_info_comment_layout)
     public LinearLayout activity_comic_info_comment_layout;
-    @BindView(R2.id.activity_comic_info_topbar)
+    @BindView(R.id.activity_comic_info_topbar)
     public RelativeLayout activity_comic_info_topbar;
     Resources resources;
     FragmentActivity activity;

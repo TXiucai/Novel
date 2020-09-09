@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -106,15 +105,15 @@ public class StoreComicAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.liem_store_comic_style1_layout)
+        @BindView(R.id.liem_store_comic_style1_layout)
         LinearLayout liem_store_comic_style1_layout;
-        @BindView(R2.id.liem_store_comic_style1_img)
+        @BindView(R.id.liem_store_comic_style1_img)
         ImageView liem_store_comic_style1_img;
-        @BindView(R2.id.liem_store_comic_style1_flag)
+        @BindView(R.id.liem_store_comic_style1_flag)
         TextView liem_store_comic_style1_flag;
-        @BindView(R2.id.liem_store_comic_style1_name)
+        @BindView(R.id.liem_store_comic_style1_name)
         TextView liem_store_comic_style1_name;
-        @BindView(R2.id.liem_store_comic_style1_description)
+        @BindView(R.id.liem_store_comic_style1_description)
         TextView liem_store_comic_style1_description;
 
         public ViewHolder(View view) {

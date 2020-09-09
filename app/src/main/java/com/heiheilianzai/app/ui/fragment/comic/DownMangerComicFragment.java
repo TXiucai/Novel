@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.DownMangerComicAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.model.comic.BaseComic;
@@ -36,9 +35,9 @@ public class DownMangerComicFragment extends BaseButterKnifeFragment {
         return R.layout.fragment_downmanger;
     }
 
-    @BindView(R2.id.activity_downmanger_list)
+    @BindView(R.id.activity_downmanger_list)
     public ListView activity_downmanger_list;
-    @BindView(R2.id.fragment_bookshelf_noresult)
+    @BindView(R.id.fragment_bookshelf_noresult)
     public LinearLayout fragment_bookshelf_noresult;
     DownMangerComicAdapter downMangerAdapter;
     List<BaseComic> baseComicList;

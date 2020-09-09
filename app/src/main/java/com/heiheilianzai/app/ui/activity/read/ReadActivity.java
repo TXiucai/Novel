@@ -32,7 +32,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -97,51 +96,51 @@ import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfO
 public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
-    @BindView(R2.id.bookpage)
+    @BindView(R.id.bookpage)
     PageWidget bookpage;
-    @BindView(R2.id.activity_read_top_back_view)
+    @BindView(R.id.activity_read_top_back_view)
     LinearLayout activity_read_top_back_view;
-    @BindView(R2.id.activity_read_top_menu)
+    @BindView(R.id.activity_read_top_menu)
     View activity_read_top_menu;
-    @BindView(R2.id.tv_directory)
+    @BindView(R.id.tv_directory)
     TextView tv_directory;
-    @BindView(R2.id.tv_brightness)
+    @BindView(R.id.tv_brightness)
     TextView tv_brightness;
-    @BindView(R2.id.tv_comment)
+    @BindView(R.id.tv_comment)
     TextView tv_comment;
-    @BindView(R2.id.tv_setting)
+    @BindView(R.id.tv_setting)
     TextView tv_setting;
-    @BindView(R2.id.bookpop_bottom)
+    @BindView(R.id.bookpop_bottom)
     RelativeLayout bookpop_bottom;
-    @BindView(R2.id.activity_read_bottom_view)
+    @BindView(R.id.activity_read_bottom_view)
     RelativeLayout activity_read_bottom_view;
-    @BindView(R2.id.activity_read_change_day_night)
+    @BindView(R.id.activity_read_change_day_night)
     ImageView activity_read_change_day_night;
-    @BindView(R2.id.titlebar_share)
+    @BindView(R.id.titlebar_share)
     RelativeLayout titlebar_share;
-    @BindView(R2.id.titlebar_down)
+    @BindView(R.id.titlebar_down)
     RelativeLayout titlebar_down;
-    @BindView(R2.id.activity_read_firstread)
+    @BindView(R.id.activity_read_firstread)
     ImageView activity_read_firstread;
-    @BindView(R2.id.auto_read_progress_bar)
+    @BindView(R.id.auto_read_progress_bar)
     ProgressBar auto_read_progress_bar;
-    @BindView(R2.id.bookpage_scroll)
+    @BindView(R.id.bookpage_scroll)
     MScrollView bookpage_scroll;
-    @BindView(R2.id.bookpage_scroll_text)
+    @BindView(R.id.bookpage_scroll_text)
     ScrollEditText bookpage_scroll_text;
-    @BindView(R2.id.list_ad_view_layout)
+    @BindView(R.id.list_ad_view_layout)
     public FrameLayout insert_todayone2;
-    @BindView(R2.id.activity_read_buttom_ad_layout)
+    @BindView(R.id.activity_read_buttom_ad_layout)
     public FrameLayout activity_read_buttom_ad_layout;
-    @BindView(R2.id.tv_noad)
+    @BindView(R.id.tv_noad)
     TextView tv_noad;
-    @BindView(R2.id.activity_read_shangyizhang)
+    @BindView(R.id.activity_read_shangyizhang)
     Button activity_read_shangyizhang;
-    @BindView(R2.id.activity_read_xiayizhang)
+    @BindView(R.id.activity_read_xiayizhang)
     Button activity_read_xiayizhang;
-    @BindView(R2.id.activity_read_purchase_layout)
+    @BindView(R.id.activity_read_purchase_layout)
     LinearLayout activity_read_purchase_layout;
-    @BindView(R2.id.activity_read_purchase_layout2)
+    @BindView(R.id.activity_read_purchase_layout2)
     public LinearLayout activity_read_purchase_layout2;
 
     public static boolean USE_BUTTOM_AD;

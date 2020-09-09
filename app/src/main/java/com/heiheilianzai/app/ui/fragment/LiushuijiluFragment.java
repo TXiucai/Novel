@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.LiushuijiluRecyclerViewAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -38,13 +37,13 @@ public class LiushuijiluFragment extends BaseButterKnifeFragment {
     }
 
 
-    @BindView(R2.id.fragment_option_noresult)
+    @BindView(R.id.fragment_option_noresult)
     public LinearLayout fragment_option_noresult;
 
-    /*   @BindView(R2.id.fragment_option_listview)
+    /*   @BindView(R.id.fragment_option_listview)
        public PullToRefreshListView fragment_option_listview;
        */
-    @BindView(R2.id.fragment_option_listview)
+    @BindView(R.id.fragment_option_listview)
     public XRecyclerView fragment_option_listview;
 
     Gson gson = new Gson();

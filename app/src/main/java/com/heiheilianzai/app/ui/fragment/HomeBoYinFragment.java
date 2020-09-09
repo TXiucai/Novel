@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
@@ -45,9 +44,9 @@ import butterknife.BindView;
 public class HomeBoYinFragment extends BaseButterKnifeFragment {
     public static final String BUNDLE_URL_KAY = "url";
     boolean isLoadUrl = false;
-    @BindView(R2.id.home_boyin_webview)
+    @BindView(R.id.home_boyin_webview)
     public WebView mWebView;
-    @BindView(R2.id.home_boyin_layout)
+    @BindView(R.id.home_boyin_layout)
     RelativeLayout home_boyin_layout;
 
     @Override

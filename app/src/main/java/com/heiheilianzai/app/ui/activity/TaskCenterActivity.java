@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.TaskCenterAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -45,15 +44,15 @@ import butterknife.OnClick;
  * Created by abc on 2016/11/4.
  */
 public class TaskCenterActivity extends BaseButterKnifeActivity {
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.titlebar_right)
+    @BindView(R.id.titlebar_right)
     public RelativeLayout titlebar_right;
-    @BindView(R2.id.titlebar_right_img)
+    @BindView(R.id.titlebar_right_img)
     public RelativeLayout titlebar_right_img;
-    @BindView(R2.id.activity_taskcenter_listview)
+    @BindView(R.id.activity_taskcenter_listview)
     public ListView activity_taskcenter_listview;
     TaskCenter.Sign_info sign_info;
     public Holder holder;
@@ -129,11 +128,11 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
     }
 
     public class Holder {
-        @BindView(R2.id.activity_taskcenter_lianxuday)
+        @BindView(R.id.activity_taskcenter_lianxuday)
         public TextView activity_taskcenter_lianxuday;
-        @BindView(R2.id.activity_taskcenter_sign)
+        @BindView(R.id.activity_taskcenter_sign)
         public ImageView activity_taskcenter_sign;
-        @BindView(R2.id.activity_taskcenter_getshuquan)
+        @BindView(R.id.activity_taskcenter_getshuquan)
         public TextView activity_taskcenter_getshuquan;
 
         public Holder(View view) {

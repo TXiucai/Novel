@@ -33,7 +33,6 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -76,29 +75,29 @@ import static com.heiheilianzai.app.constant.ReaderConfig.USE_WEIXIN;
  * 用户个人资料页
  */
 public class UserInfoActivity extends BaseActivity implements View.OnClickListener, ShowTitle {
-    @BindView(R2.id.user_info_avatar_container)
+    @BindView(R.id.user_info_avatar_container)
     View user_info_avatar_container;
-    @BindView(R2.id.user_info_avatar)
+    @BindView(R.id.user_info_avatar)
     CircleImageView user_info_avatar;
-    @BindView(R2.id.user_info_nickname_container)
+    @BindView(R.id.user_info_nickname_container)
     View user_info_nickname_container;
-    @BindView(R2.id.user_info_nickname)
+    @BindView(R.id.user_info_nickname)
     TextView user_info_nickname;
-    @BindView(R2.id.user_info_uid)
+    @BindView(R.id.user_info_uid)
     TextView user_info_uid;
-    @BindView(R2.id.user_info_phone_container)
+    @BindView(R.id.user_info_phone_container)
     View user_info_phone_container;
-    @BindView(R2.id.user_info_phone)
+    @BindView(R.id.user_info_phone)
     TextView user_info_phone;
-    @BindView(R2.id.user_info_weixin_container)
+    @BindView(R.id.user_info_weixin_container)
     View user_info_weixin_container;
-    @BindView(R2.id.user_info_weixin)
+    @BindView(R.id.user_info_weixin)
     TextView user_info_weixin;
-    @BindView(R2.id.user_info_phone_jiantou)
+    @BindView(R.id.user_info_phone_jiantou)
     ImageView user_info_phone_jiantou;
-    @BindView(R2.id.user_info_sex)
+    @BindView(R.id.user_info_sex)
     TextView user_info_sex;
-    @BindView(R2.id.user_info_nickname_sex)
+    @BindView(R.id.user_info_nickname_sex)
     RelativeLayout user_info_nickname_sex;
     private EditText mEdit;
     private UserInfoItem mUserInfo;

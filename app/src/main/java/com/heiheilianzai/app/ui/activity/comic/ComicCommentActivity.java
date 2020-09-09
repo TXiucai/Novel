@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.CommentAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -45,16 +44,16 @@ import butterknife.OnClick;
 
 public class ComicCommentActivity extends BaseButterKnifeActivity {
 
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
 
-    @BindView(R2.id.activity_finish_listview_noresult)
+    @BindView(R.id.activity_finish_listview_noresult)
     public LinearLayout mNoResult;
-    @BindView(R2.id.activity_finish_listview)
+    @BindView(R.id.activity_finish_listview)
     public ListView mListView;
-    @BindView(R2.id.activity_comment_list_add_comment)
+    @BindView(R.id.activity_comment_list_add_comment)
     public EditText activity_comment_list_add_comment;
 
     // public RelativeLayout mSearchLayout;

@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -133,25 +132,25 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.item_store_label_male_horizontal_img)
+        @BindView(R.id.item_store_label_male_horizontal_img)
         ImageView imageView;
-        @BindView(R2.id.item_store_label_male_horizontal_name)
+        @BindView(R.id.item_store_label_male_horizontal_name)
         TextView name;
-        //  @BindView(R2.id.item_store_label_male_horizontal_flag)
+        //  @BindView(R.id.item_store_label_male_horizontal_flag)
         //  TextView flag;
-        @BindView(R2.id.item_store_label_male_horizontal_description)
+        @BindView(R.id.item_store_label_male_horizontal_description)
         TextView description;
-        @BindView(R2.id.item_store_label_male_horizontal_author)
+        @BindView(R.id.item_store_label_male_horizontal_author)
         TextView author;
-        @BindView(R2.id.item_store_label_male_horizontal_tag)
+        @BindView(R.id.item_store_label_male_horizontal_tag)
         TextView item_store_label_male_horizontal_tag;
-        @BindView(R2.id.item_store_label_male_vertical_layout)
+        @BindView(R.id.item_store_label_male_vertical_layout)
         LinearLayout item_store_label_male_vertical_layout;
-        @BindView(R2.id.item_layout)
+        @BindView(R.id.item_layout)
         RelativeLayout item_layout;
-        @BindView(R2.id.list_ad_view_layout)
+        @BindView(R.id.list_ad_view_layout)
         FrameLayout list_ad_view_layout;
-        @BindView(R2.id.list_ad_view_img)
+        @BindView(R.id.list_ad_view_img)
         ImageView list_ad_view_img;
 
         public ViewHolder(View view) {

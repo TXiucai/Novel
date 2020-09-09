@@ -23,7 +23,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
@@ -64,11 +63,11 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
         return R.layout.fragment_discovery;
     }
 
-    @BindView(R2.id.fragment_discovery_container)
+    @BindView(R.id.fragment_discovery_container)
     public LinearLayout fragment_discovery_container;
-    @BindView(R2.id.fragment_discovery_banner_male)
+    @BindView(R.id.fragment_discovery_banner_male)
     public ConvenientBanner mStoreBannerMale;
-    @BindView(R2.id.refreshLayoutMale)
+    @BindView(R.id.refreshLayoutMale)
     public PullToRefreshLayout pullToRefreshLayout;
     public int WIDTH, WIDTHH, WIDTH_MAIN_AD, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20, H30;
     LayoutInflater layoutInflater;

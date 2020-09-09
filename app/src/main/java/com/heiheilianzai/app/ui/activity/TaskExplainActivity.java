@@ -9,7 +9,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 
@@ -31,12 +30,12 @@ public class TaskExplainActivity extends BaseButterKnifeActivity {
     public int initContentView() {
         return R.layout.activity_taskexplain;
     }
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
 
-    @BindView(R2.id.activity_taskcenter_listview)
+    @BindView(R.id.activity_taskcenter_listview)
     public ListView activity_taskcenter_listview;
 
 

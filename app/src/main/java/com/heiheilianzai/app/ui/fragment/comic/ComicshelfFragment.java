@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.ComicAdapterNew;
 import com.heiheilianzai.app.callback.OnItemClickListener;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -71,21 +70,21 @@ import butterknife.OnClick;
  * 书架漫画
  */
 public class ComicshelfFragment extends Fragment {
-    @BindView(R2.id.fragment_bookshelf_scrollview)
+    @BindView(R.id.fragment_bookshelf_scrollview)
     NestedScrollView fragment_comicshelf_scrollview;
-    @BindView(R2.id.fragment_bookshelf_head)
+    @BindView(R.id.fragment_bookshelf_head)
     public LinearLayout fragment_bookshelf_head;
-    @BindView(R2.id.fragment_shelf_banner_male)
+    @BindView(R.id.fragment_shelf_banner_male)
     public ConvenientBannerBookShelf fragment_discovery_banner_male;
-    @BindView(R2.id.fragment_shelf_banner_layout)
+    @BindView(R.id.fragment_shelf_banner_layout)
     public LinearLayout fragment_shelf_banner_layout;
-    @BindView(R2.id.fragment_bookshelf_noresult)
+    @BindView(R.id.fragment_bookshelf_noresult)
     public LinearLayout fragment_bookshelf_noresult;
-    @BindView(R2.id.fragment_bookshelf_marquee_layout)
+    @BindView(R.id.fragment_bookshelf_marquee_layout)
     public LinearLayout fragment_bookshelf_marquee_layout;
-    @BindView(R2.id.fragment_bookshelf_marquee)
+    @BindView(R.id.fragment_bookshelf_marquee)
     public MarqueeTextView fragment_bookshelf_marquee;
-    @BindView(R2.id.fragment_comicshelf_AdaptionGridViewNoMargin)
+    @BindView(R.id.fragment_comicshelf_AdaptionGridViewNoMargin)
     public AdaptionGridViewNoMargin bookShelf;
     public List<BaseComic> bookLists;
     public int WIDTH, HEIGHT, HorizontalSpacing, H40;

@@ -12,7 +12,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.ui.fragment.LiushuijiluFragment;
 import com.heiheilianzai.app.ui.fragment.MyCommentFragment;
@@ -58,22 +57,22 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         return R.layout.activity_baseoption;
     }
 
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.channel_bar_male_text)
+    @BindView(R.id.channel_bar_male_text)
     public TextView channel_bar_male_text;
-    @BindView(R2.id.channel_bar_female_text)
+    @BindView(R.id.channel_bar_female_text)
     public TextView channel_bar_female_text;
 
-    @BindView(R2.id.top_channel_layout)
+    @BindView(R.id.top_channel_layout)
     public LinearLayout top_channel_layout;
 
 
-    @BindView(R2.id.channel_bar_indicator)
+    @BindView(R.id.channel_bar_indicator)
     public UnderlinePageIndicatorHalf channel_bar_indicator;
 
 
-    @BindView(R2.id.activity_baseoption_viewpage)
+    @BindView(R.id.activity_baseoption_viewpage)
     public ViewPager activity_baseoption_viewpage;
 
 

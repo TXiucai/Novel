@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 
@@ -24,10 +23,10 @@ import butterknife.OnClick;
  */
 public class AutoSettingDialog extends Dialog {
 
-    @BindView(R2.id.auto_setting_seekBar)
+    @BindView(R.id.auto_setting_seekBar)
     SeekBar auto_setting_seekBar;
 
-    @BindView(R2.id.auto_setting_exit)
+    @BindView(R.id.auto_setting_exit)
     View auto_setting_exit;
 
     private ReadActivity mContext;

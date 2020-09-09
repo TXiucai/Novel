@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.RankAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
@@ -41,10 +40,10 @@ public class RankIndexFragment extends BaseButterKnifeFragment {
         return R.layout.fragment_rank_index;
     }
 
-    @BindView(R2.id.fragment_option_noresult)
+    @BindView(R.id.fragment_option_noresult)
     public LinearLayout fragment_option_noresult;
 
-    @BindView(R2.id.fragment_rankindex_listview)
+    @BindView(R.id.fragment_rankindex_listview)
     public ListView fragment_rankindex_listview;
 
     boolean PRODUCT;

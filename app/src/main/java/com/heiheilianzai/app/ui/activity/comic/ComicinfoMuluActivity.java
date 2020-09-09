@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.ComicChapterCatalogAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.model.comic.ComicChapter;
@@ -34,19 +33,19 @@ import butterknife.OnClick;
  * Created by scb on 2018/6/9.
  */
 public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.fragment_comicinfo_mulu_xu)
+    @BindView(R.id.fragment_comicinfo_mulu_xu)
     public TextView fragment_comicinfo_mulu_xu;
-    @BindView(R2.id.fragment_comicinfo_mulu_xu_img)
+    @BindView(R.id.fragment_comicinfo_mulu_xu_img)
     public ImageView fragment_comicinfo_mulu_xu_img;
-    @BindView(R2.id.fragment_comicinfo_mulu_list)
+    @BindView(R.id.fragment_comicinfo_mulu_list)
     public XRecyclerView fragment_comicinfo_mulu_list;
-    @BindView(R2.id.fragment_comicinfo_mulu_layout)
+    @BindView(R.id.fragment_comicinfo_mulu_layout)
     public RelativeLayout fragment_comicinfo_mulu_layout;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhiding_img)
+    @BindView(R.id.fragment_comicinfo_mulu_zhiding_img)
     public ImageView fragment_comicinfo_mulu_zhiding_img;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhiding_text)
+    @BindView(R.id.fragment_comicinfo_mulu_zhiding_text)
     public TextView fragment_comicinfo_mulu_zhiding_text;
 
     String currentChapter_id;

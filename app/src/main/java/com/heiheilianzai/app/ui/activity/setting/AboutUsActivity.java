@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -34,33 +33,33 @@ public class AboutUsActivity extends BaseButterKnifeActivity {
         return R.layout.activity_aboutus;
     }
 
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.activity_about_appversion)
+    @BindView(R.id.activity_about_appversion)
     public TextView activity_about_appversion;
 
-    @BindView(R2.id.activity_about_email)
+    @BindView(R.id.activity_about_email)
     public RelativeLayout activity_about_email;
-    @BindView(R2.id.activity_about_phone)
+    @BindView(R.id.activity_about_phone)
     public RelativeLayout activity_about_phone;
-    @BindView(R2.id.activity_about_qq)
+    @BindView(R.id.activity_about_qq)
     public RelativeLayout activity_about_qq;
 
-    @BindView(R2.id.activity_about_emailText)
+    @BindView(R.id.activity_about_emailText)
     public TextView activity_about_emailText;
-    @BindView(R2.id.activity_about_phoneText)
+    @BindView(R.id.activity_about_phoneText)
     public TextView activity_about_phoneText;
-    @BindView(R2.id.activity_about_qqText)
+    @BindView(R.id.activity_about_qqText)
     public TextView activity_about_qqText;
-    @BindView(R2.id.activity_about_wechatText)
+    @BindView(R.id.activity_about_wechatText)
     public TextView activity_about_wechatText;
-    @BindView(R2.id.activity_about_wechat)
+    @BindView(R.id.activity_about_wechat)
     public RelativeLayout activity_about_wechat;
 
 
-    @BindView(R2.id.activity_about_company)
+    @BindView(R.id.activity_about_company)
     public TextView activity_about_company;
     public boolean flag;//判断是否支持自定义状态栏
 

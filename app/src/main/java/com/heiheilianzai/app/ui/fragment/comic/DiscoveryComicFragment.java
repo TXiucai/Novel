@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.ComicDiscoveryAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -63,17 +62,17 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
     }
 
     Gson gson = new Gson();
-    @BindView(R2.id.discover_banner_female)
+    @BindView(R.id.discover_banner_female)
     public ConvenientBanner<BannerItemStore> mStoreBannerMale;
 
-    @BindView(R2.id.discover_entrance_grid_female)
+    @BindView(R.id.discover_entrance_grid_female)
     public NestedListView listView;
 
 
-    @BindView(R2.id.discover_refreshLayoutMale)
+    @BindView(R.id.discover_refreshLayoutMale)
     PullToRefreshLayout malePullLayout;
 
-    @BindView(R2.id.discover_scrollViewMale)
+    @BindView(R.id.discover_scrollViewMale)
     ObservableScrollView discover_scrollViewMale;
     int total_page, current_page = 1;
     ComicDiscoveryAdapter comicDiscoveryAdapter;

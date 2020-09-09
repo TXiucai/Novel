@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.comic.DiscoveryComic;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -114,19 +113,19 @@ public class ComicDiscoveryAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.item_discovery_comic_img)
+        @BindView(R.id.item_discovery_comic_img)
         public ImageView item_discovery_comic_img;
-        @BindView(R2.id.item_discovery_comic_title)
+        @BindView(R.id.item_discovery_comic_title)
         public TextView item_discovery_comic_title;
-        @BindView(R2.id.item_discovery_comic_flag)
+        @BindView(R.id.item_discovery_comic_flag)
         public TextView item_discovery_comic_flag;
-        @BindView(R2.id.item_discovery_comic_tag)
+        @BindView(R.id.item_discovery_comic_tag)
         public LinearLayout item_discovery_comic_tag;
-        @BindView(R2.id.list_ad_view_layout)
+        @BindView(R.id.list_ad_view_layout)
         FrameLayout list_ad_view_layout;
-        @BindView(R2.id.list_ad_view_img)
+        @BindView(R.id.list_ad_view_img)
         ImageView list_ad_view_img;
-        @BindView(R2.id.list_ad_view_noAD)
+        @BindView(R.id.list_ad_view_noAD)
         public LinearLayout list_ad_view_noAD;
 
         public ViewHolder(View view) {

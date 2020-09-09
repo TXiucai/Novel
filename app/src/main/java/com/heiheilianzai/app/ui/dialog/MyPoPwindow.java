@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.Recommend;
 import com.heiheilianzai.app.model.SigninSuccess;
 import com.heiheilianzai.app.model.book.BaseBook;
@@ -169,43 +168,43 @@ public class MyPoPwindow {
     }
 
     class HolderSign {
-        @BindView(R2.id.popwindow_sign_golds)
+        @BindView(R.id.popwindow_sign_golds)
         public TextView popwindow_sign_golds;
-        @BindView(R2.id.popwindow_sign_golds_tomorrow)
+        @BindView(R.id.popwindow_sign_golds_tomorrow)
         public TextView popwindow_sign_golds_tomorrow;
-        @BindView(R2.id.popwindow_sign_layout)
+        @BindView(R.id.popwindow_sign_layout)
         public FrameLayout popwindow_sign_layout;
-        @BindView(R2.id.popwindow_sign_bookname1)
+        @BindView(R.id.popwindow_sign_bookname1)
         public TextView popwindow_sign_bookname1;
-        @BindView(R2.id.popwindow_sign_bookname2)
+        @BindView(R.id.popwindow_sign_bookname2)
         public TextView popwindow_sign_bookname2;
-        @BindView(R2.id.popwindow_sign_bookname3)
+        @BindView(R.id.popwindow_sign_bookname3)
         public TextView popwindow_sign_bookname3;
-        @BindView(R2.id.popwindow_sign_book_layout)
+        @BindView(R.id.popwindow_sign_book_layout)
         public LinearLayout popwindow_sign_book_layout;
-        @BindView(R2.id.popwindow_sign_book_layout1)
+        @BindView(R.id.popwindow_sign_book_layout1)
         public LinearLayout popwindow_sign_book_layout1;
-        @BindView(R2.id.popwindow_sign_book_layout2)
+        @BindView(R.id.popwindow_sign_book_layout2)
         public LinearLayout popwindow_sign_book_layout2;
-        @BindView(R2.id.popwindow_sign_book_layout3)
+        @BindView(R.id.popwindow_sign_book_layout3)
         public LinearLayout popwindow_sign_book_layout3;
-        @BindView(R2.id.popwindow_sign_book_havebook)
+        @BindView(R.id.popwindow_sign_book_havebook)
         public LinearLayout popwindow_sign_book_havebook;
-        @BindView(R2.id.popwindow_sign_view2)
+        @BindView(R.id.popwindow_sign_view2)
         public View popwindow_sign_view2;
-        @BindView(R2.id.popwindow_sign_view3)
+        @BindView(R.id.popwindow_sign_view3)
         public View popwindow_sign_view3;
-        @BindView(R2.id.popwindow_sign_book1)
+        @BindView(R.id.popwindow_sign_book1)
         public ImageView popwindow_sign_book1;
-        @BindView(R2.id.popwindow_sign_book2)
+        @BindView(R.id.popwindow_sign_book2)
         public ImageView popwindow_sign_book2;
-        @BindView(R2.id.popwindow_sign_book3)
+        @BindView(R.id.popwindow_sign_book3)
         public ImageView popwindow_sign_book3;
-        @BindView(R2.id.popwindow_sign_no)
+        @BindView(R.id.popwindow_sign_no)
         public Button popwindow_sign_no;
-        @BindView(R2.id.popwindow_sign_alladd)
+        @BindView(R.id.popwindow_sign_alladd)
         public Button popwindow_sign_alladd;
-        @BindView(R2.id.popwindow_sign_nobook)
+        @BindView(R.id.popwindow_sign_nobook)
         public Button popwindow_sign_nobook;
 
         public HolderSign(View view) {

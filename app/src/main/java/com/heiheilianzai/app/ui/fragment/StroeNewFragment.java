@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.model.event.StoreEvent;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
@@ -39,13 +38,13 @@ import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
  * 首页小说，首页漫画外层搜索
  */
 public abstract class StroeNewFragment extends BaseButterKnifeFragment {
-    @BindView(R2.id.fragment_store_top)
+    @BindView(R.id.fragment_store_top)
     public RelativeLayout fragment_newbookself_top;
-    @BindView(R2.id.fragment_store_search_bookname)
+    @BindView(R.id.fragment_store_search_bookname)
     public TextView fragment_store_search_bookname;
-    @BindView(R2.id.fragment_store_search_img)
+    @BindView(R.id.fragment_store_search_img)
     public ImageView fragment_store_search_img;
-    @BindView(R2.id.fragment_store_search)
+    @BindView(R.id.fragment_store_search)
     public RelativeLayout fragment_store_search;
     FragmentManager fragmentManager;
     public String hot_word[];

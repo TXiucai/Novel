@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
@@ -30,51 +29,51 @@ import butterknife.OnClick;
  * Created by Administrator on 2016/7/26 0026.
  */
 public class SettingDialog extends Dialog {
-    @BindView(R2.id.tv_subtract)
+    @BindView(R.id.tv_subtract)
     View tv_subtract;
-    @BindView(R2.id.tv_size)
+    @BindView(R.id.tv_size)
     TextView tv_size;
-    @BindView(R2.id.tv_add)
+    @BindView(R.id.tv_add)
     View tv_add;
-    @BindView(R2.id.iv_bg_default)
+    @BindView(R.id.iv_bg_default)
     View iv_bg_default;
-    @BindView(R2.id.iv_bg_1)
+    @BindView(R.id.iv_bg_1)
     View iv_bg1;
-    @BindView(R2.id.iv_bg_2)
+    @BindView(R.id.iv_bg_2)
     View iv_bg2;
-    @BindView(R2.id.iv_bg_3)
+    @BindView(R.id.iv_bg_3)
     View iv_bg3;
-    @BindView(R2.id.iv_bg_4)
+    @BindView(R.id.iv_bg_4)
     View iv_bg4;
-    @BindView(R2.id.iv_bg_7)
+    @BindView(R.id.iv_bg_7)
     View iv_bg7;
-    @BindView(R2.id.iv_bg_8)
+    @BindView(R.id.iv_bg_8)
     View iv_bg8;
-    @BindView(R2.id.tv_simulation)
+    @BindView(R.id.tv_simulation)
     TextView tv_simulation;
-    @BindView(R2.id.tv_cover)
+    @BindView(R.id.tv_cover)
     TextView tv_cover;
-    @BindView(R2.id.tv_slide)
+    @BindView(R.id.tv_slide)
     TextView tv_slide;
-    @BindView(R2.id.tv_none)
+    @BindView(R.id.tv_none)
     TextView tv_none;
-    @BindView(R2.id.tv_shangxia)
+    @BindView(R.id.tv_shangxia)
     TextView tv_shangxia;
-    @BindView(R2.id.margin_big)
+    @BindView(R.id.margin_big)
     View margin_big;
-    @BindView(R2.id.margin_medium)
+    @BindView(R.id.margin_medium)
     View margin_medium;
-    @BindView(R2.id.margin_small)
+    @BindView(R.id.margin_small)
     View margin_small;
-    @BindView(R2.id.margin_big_tv)
+    @BindView(R.id.margin_big_tv)
     View margin_big_tv;
-    @BindView(R2.id.margin_medium_tv)
+    @BindView(R.id.margin_medium_tv)
     View margin_medium_tv;
-    @BindView(R2.id.margin_small_tv)
+    @BindView(R.id.margin_small_tv)
     View margin_small_tv;
-    @BindView(R2.id.auto_read_layout)
+    @BindView(R.id.auto_read_layout)
     View auto_read_layout;
-    @BindView(R2.id.tv_jianfan)
+    @BindView(R.id.tv_jianfan)
     View tv_jianfan;
 
     private ReadActivity mContext;

@@ -16,7 +16,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.ui.fragment.BookshelfFragment;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -220,17 +219,17 @@ public abstract class BaseShelfAdapter<T> extends BaseAdapter {
     }
 
     public class ViewHolder {
-        @BindView(R2.id.shelfitem_check)
+        @BindView(R.id.shelfitem_check)
         public CheckBox shelfitem_check;
-        @BindView(R2.id.shelfitem_title)
+        @BindView(R.id.shelfitem_title)
         public TextView shelfitem_title;
-        @BindView(R2.id.shelfitem_img)
+        @BindView(R.id.shelfitem_img)
         public ImageView shelfitem_img;
-        @BindView(R2.id.shelfitem_layout)
+        @BindView(R.id.shelfitem_layout)
         public LinearLayout shelfitem_layout;
-        @BindView(R2.id.shelfitem_check_container)
+        @BindView(R.id.shelfitem_check_container)
         public View shelfitem_check_container;
-        @BindView(R2.id.shelfitem_top_newchapter)
+        @BindView(R.id.shelfitem_top_newchapter)
         public TextView shelfitem_top_newchapter;
 
         public ViewHolder(View view) {
@@ -239,9 +238,9 @@ public abstract class BaseShelfAdapter<T> extends BaseAdapter {
     }
 
     public class ViewHolder2 {
-        @BindView(R2.id.listview_item_nover_add_image)
+        @BindView(R.id.listview_item_nover_add_image)
         public ImageView listview_item_nover_add_image;
-        @BindView(R2.id.listview_item_nover_add_layout)
+        @BindView(R.id.listview_item_nover_add_layout)
         public RelativeLayout listview_item_nover_add_layout;
 
         public ViewHolder2(View view) {

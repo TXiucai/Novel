@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.callback.LoginResultCallback;
@@ -67,53 +66,53 @@ import static com.heiheilianzai.app.constant.ReaderConfig.getSubUnit;
  */
 public class MineNewFragment extends BaseButterKnifeFragment {
     public String TAG = MineNewFragment.class.getSimpleName();
-    @BindView(R2.id.fragment_mine_user_info_avatar)
+    @BindView(R.id.fragment_mine_user_info_avatar)
     public CircleImageView fragment_mine_user_info_avatar;
-    @BindView(R2.id.fragment_mine_user_info_sex)
+    @BindView(R.id.fragment_mine_user_info_sex)
     public ImageView fragment_mine_user_info_sex;
-    @BindView(R2.id.fragment_mine_user_info_nickname)
+    @BindView(R.id.fragment_mine_user_info_nickname)
     public TextView fragment_mine_user_info_nickname;
-    @BindView(R2.id.fragment_mine_user_info_id)
+    @BindView(R.id.fragment_mine_user_info_id)
     public TextView fragment_mine_user_info_id;
-    @BindView(R2.id.fragment_mine_user_info_nologin)
+    @BindView(R.id.fragment_mine_user_info_nologin)
     public LinearLayout fragment_mine_user_info_nologin;
-    @BindView(R2.id.fragment_mine_user_info_gold_unit)
+    @BindView(R.id.fragment_mine_user_info_gold_unit)
     public TextView fragment_mine_user_info_gold_unit;
-    @BindView(R2.id.fragment_mine_user_info_shuquan_unit)
+    @BindView(R.id.fragment_mine_user_info_shuquan_unit)
     public TextView fragment_mine_user_info_shuquan_unit;
-    @BindView(R2.id.fragment_mine_user_info_recharge_song)
+    @BindView(R.id.fragment_mine_user_info_recharge_song)
     public TextView fragment_mine_user_info_recharge_song;
-    @BindView(R2.id.fragment_mine_user_info_friends_song)
+    @BindView(R.id.fragment_mine_user_info_friends_song)
     public TextView fragment_mine_user_info_friends_song;
-    @BindView(R2.id.fragment_mine_user_info_recharge_text)
+    @BindView(R.id.fragment_mine_user_info_recharge_text)
     public TextView fragment_mine_user_info_recharge_text;
-    @BindView(R2.id.fragment_mine_user_info_money_layout)
+    @BindView(R.id.fragment_mine_user_info_money_layout)
     public LinearLayout fragment_mine_user_info_money_layout;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_history)
+    @BindView(R.id.fragment_mine_user_info_paylayout_history)
     public LinearLayout fragment_mine_user_info_paylayout_history;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_downmanager)
+    @BindView(R.id.fragment_mine_user_info_paylayout_downmanager)
     public LinearLayout fragment_mine_user_info_paylayout_downmanager;
-    @BindView(R2.id.fragment_mine_user_info_gold)
+    @BindView(R.id.fragment_mine_user_info_gold)
     public TextView fragment_mine_user_info_gold;
-    @BindView(R2.id.fragment_mine_user_info_shuquan)
+    @BindView(R.id.fragment_mine_user_info_shuquan)
     public TextView fragment_mine_user_info_shuquan;
-    @BindView(R2.id.fragment_mine_user_info_tasklayout_task)
+    @BindView(R.id.fragment_mine_user_info_tasklayout_task)
     public TextView fragment_mine_user_info_tasklayout_task;
-    @BindView(R2.id.fragment_mine_user_info_isvip)
+    @BindView(R.id.fragment_mine_user_info_isvip)
     public ImageView fragment_mine_user_info_isvip;
-    @BindView(R2.id.fragment_mine_user_info_paylayout)
+    @BindView(R.id.fragment_mine_user_info_paylayout)
     public LinearLayout fragment_mine_user_info_paylayout;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_view)
+    @BindView(R.id.fragment_mine_user_info_paylayout_view)
     public View fragment_mine_user_info_paylayout_view;
-    @BindView(R2.id.fragment_mine_user_info_gold_layout)
+    @BindView(R.id.fragment_mine_user_info_gold_layout)
     public View fragment_mine_user_info_gold_layout;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_recharge)
+    @BindView(R.id.fragment_mine_user_info_paylayout_recharge)
     public View fragment_mine_user_info_paylayout_recharge;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_recharge_lv)
+    @BindView(R.id.fragment_mine_user_info_paylayout_recharge_lv)
     public View fragment_mine_user_info_paylayout_recharge_lv;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_vip)
+    @BindView(R.id.fragment_mine_user_info_paylayout_vip)
     public View fragment_mine_user_info_paylayout_vip;
-    @BindView(R2.id.fragment_mine_user_info_paylayout_vip_lv)
+    @BindView(R.id.fragment_mine_user_info_paylayout_vip_lv)
     public View fragment_mine_user_info_paylayout_vip_lv;
 
     String connect_us;

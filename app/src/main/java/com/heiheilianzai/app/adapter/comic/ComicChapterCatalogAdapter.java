@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
@@ -134,17 +133,17 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.item_comicchaptercatalog_current_bg)
+        @BindView(R.id.item_comicchaptercatalog_current_bg)
         public LinearLayout item_comicchaptercatalog_current_bg;
-        @BindView(R2.id.item_comicchaptercatalog_img)
+        @BindView(R.id.item_comicchaptercatalog_img)
         public ImageView item_comicchaptercatalog_img;
-        @BindView(R2.id.item_comicchaptercatalog_current)
+        @BindView(R.id.item_comicchaptercatalog_current)
         public ImageView item_comicchaptercatalog_current;
-        @BindView(R2.id.item_comicchaptercatalog_name)
+        @BindView(R.id.item_comicchaptercatalog_name)
         public TextView item_comicchaptercatalog_name;
-        @BindView(R2.id.item_comicchaptercatalog_time)
+        @BindView(R.id.item_comicchaptercatalog_time)
         public TextView item_comicchaptercatalog_time;
-        @BindView(R2.id.item_comicchaptercatalog_needbuy)
+        @BindView(R.id.item_comicchaptercatalog_needbuy)
         public RelativeLayout item_comicchaptercatalog_needbuy;
 
         public ViewHolder(View view) {

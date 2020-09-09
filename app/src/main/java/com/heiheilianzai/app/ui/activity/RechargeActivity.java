@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.PayChannelAdapter;
 import com.heiheilianzai.app.adapter.RechargeAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
@@ -53,28 +52,28 @@ import static com.heiheilianzai.app.constant.ReaderConfig.getCurrencyUnit;
 public class RechargeActivity extends BaseActivity implements ShowTitle, AdapterView.OnItemClickListener, View.OnClickListener {
     private final String TAG = RechargeActivity.class.getSimpleName();
 
-    @BindView(R2.id.activity_recharge_tips)
+    @BindView(R.id.activity_recharge_tips)
     TextView activity_recharge_tips;
-    @BindView(R2.id.activity_recharge_keyong)
+    @BindView(R.id.activity_recharge_keyong)
     TextView activity_recharge_keyong;
-    @BindView(R2.id.activity_recharge_keyong_unit)
+    @BindView(R.id.activity_recharge_keyong_unit)
     TextView activity_recharge_keyong_unit;
 
-    @BindView(R2.id.activity_recharge_gridview)
+    @BindView(R.id.activity_recharge_gridview)
     GridViewForScrollView activity_recharge_gridview;
 
-    @BindView(R2.id.pay_channel_gridview)
+    @BindView(R.id.pay_channel_gridview)
     GridViewForScrollView pay_channel_gridview;
 
-    @BindView(R2.id.weixin_pay_layout)
+    @BindView(R.id.weixin_pay_layout)
     RelativeLayout weixin_pay_layout;
-    @BindView(R2.id.alipay_pay_layout)
+    @BindView(R.id.alipay_pay_layout)
     RelativeLayout alipay_pay_layout;
-    @BindView(R2.id.pay_confirm_btn)
+    @BindView(R.id.pay_confirm_btn)
     Button pay_confirm_btn;
-    @BindView(R2.id.weixin_paytype_img)
+    @BindView(R.id.weixin_paytype_img)
     ImageView weixin_paytype_img;
-    @BindView(R2.id.alipay_paytype_img)
+    @BindView(R.id.alipay_paytype_img)
     ImageView alipay_paytype_img;
 
     List<RechargeItem> mList;

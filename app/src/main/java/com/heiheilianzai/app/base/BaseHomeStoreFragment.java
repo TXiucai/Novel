@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 import com.headerfooter.songhang.library.SmartRecyclerAdapter;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.EntranceAdapter;
 import com.heiheilianzai.app.adapter.ReaderBaseAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -63,9 +62,9 @@ import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
  * @param <T>
  */
 public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
-    @BindView(R2.id.store_comic_refresh_layout)
+    @BindView(R.id.store_comic_refresh_layout)
     public SHSwipeRefreshLayout store_comic_refresh_layout;//该控件支持自定义动画但不支持自动刷新，待替换。
-    @BindView(R2.id.fragment_store_comic_content_commend)
+    @BindView(R.id.fragment_store_comic_content_commend)
     public RecyclerView recyclerView;
     protected RelativeLayout fragment_newbookself_top;
     protected StroeNewFragment.MyHotWord hot_word;

@@ -15,7 +15,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.umeng.analytics.MobclickAgent;
 
@@ -32,9 +31,9 @@ import butterknife.BindView;
 public class BootPageActivity extends BaseButterKnifeActivity {
 
 
-    @BindView(R2.id.activity_bootpage)
+    @BindView(R.id.activity_bootpage)
     public ViewPager activity_bootpage;
-    @BindView(R2.id.bootpage_viewpage_item_im)
+    @BindView(R.id.bootpage_viewpage_item_im)
     public ImageView bootpage_viewpage_item_im;
 
     @Override

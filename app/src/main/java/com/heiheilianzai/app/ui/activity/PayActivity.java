@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.PayChannelNewAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
@@ -44,17 +43,17 @@ import cn.jmessage.support.qiniu.android.utils.StringUtils;
  * Created by scb on 2018/8/9.
  */
 public class PayActivity extends BaseActivity implements ShowTitle, View.OnClickListener {
-    @BindView(R2.id.weixin_pay_layout)
+    @BindView(R.id.weixin_pay_layout)
     RelativeLayout weixin_pay_layout;
-    @BindView(R2.id.alipay_pay_layout)
+    @BindView(R.id.alipay_pay_layout)
     RelativeLayout alipay_pay_layout;
-    @BindView(R2.id.pay_confirm_btn)
+    @BindView(R.id.pay_confirm_btn)
     Button pay_confirm_btn;
-    @BindView(R2.id.weixin_paytype_img)
+    @BindView(R.id.weixin_paytype_img)
     ImageView weixin_paytype_img;
-    @BindView(R2.id.alipay_paytype_img)
+    @BindView(R.id.alipay_paytype_img)
     ImageView alipay_paytype_img;
-    @BindView(R2.id.pay_channel_gridview)
+    @BindView(R.id.pay_channel_gridview)
     GridViewForScrollView pay_channel_gridview;
     private String id;
     private String mGoodsId;

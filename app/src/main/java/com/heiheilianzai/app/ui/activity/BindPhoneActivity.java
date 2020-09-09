@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.presenter.BindPresenter;
@@ -26,17 +25,17 @@ import butterknife.BindView;
  */
 public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginView, View.OnClickListener {
 
-  @BindView(R2.id.activity_bind_phone_text)
+  @BindView(R.id.activity_bind_phone_text)
     EditText activity_bind_phone_text;
-  @BindView(R2.id.activity_bind_phone_clear)
+    @BindView(R.id.activity_bind_phone_clear)
     ImageView activity_bind_phone_clear;
 
-  @BindView(R2.id.activity_bind_phone_message)
+    @BindView(R.id.activity_bind_phone_message)
     EditText activity_bind_phone_message;
-  @BindView(R2.id.activity_bind_phone_get_message_btn)
+    @BindView(R.id.activity_bind_phone_get_message_btn)
     Button activity_bind_phone_get_message_btn;
 
-  @BindView(R2.id.activity_bind_phone_btn)
+    @BindView(R.id.activity_bind_phone_btn)
     Button activity_bind_phone_btn;
 
     private BindPresenter mPresenter;

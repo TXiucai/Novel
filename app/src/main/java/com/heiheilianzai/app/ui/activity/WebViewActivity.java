@@ -12,7 +12,6 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -32,9 +31,9 @@ public class WebViewActivity extends BaseButterKnifeActivity {
         return R.layout.activity_about;
     }
 
-    @BindView(R2.id.software_webview)
+    @BindView(R.id.software_webview)
     public ReaderWebView mWebView;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
 
     @OnClick(value = {R.id.titlebar_back

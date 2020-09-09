@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.model.FloatImageViewShow;
 import com.heiheilianzai.app.utils.MyToash;
@@ -44,12 +43,12 @@ public class DayShareActivity extends BaseButterKnifeActivity {
         return R.layout.activity_dayshare;
     }
 
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
 
-    @BindView(R2.id.activity_dayshare_webview)
+    @BindView(R.id.activity_dayshare_webview)
     public WebView mWebView;
 
 

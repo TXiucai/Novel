@@ -8,7 +8,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.model.Downoption;
@@ -43,13 +42,13 @@ public class DownMangerActivity extends BaseButterKnifeActivity {
         return R.layout.activity_downmanger;
     }
 
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.activity_downmanger_list)
+    @BindView(R.id.activity_downmanger_list)
     public ListView activity_downmanger_list;
-    @BindView(R2.id.fragment_bookshelf_noresult)
+    @BindView(R.id.fragment_bookshelf_noresult)
     public LinearLayout fragment_bookshelf_noresult;
 
 

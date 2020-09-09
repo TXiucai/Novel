@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ShareUitls;
@@ -196,11 +195,11 @@ public class ComicDownOptionAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.item_comicdownoption_downstatus)
+        @BindView(R.id.item_comicdownoption_downstatus)
         TextView item_comicdownoption_downstatus;
-        @BindView(R2.id.item_comicdownoption_vip)
+        @BindView(R.id.item_comicdownoption_vip)
         ImageView item_comicdownoption_vip;
-        @BindView(R2.id.item_comicdownoption_text)
+        @BindView(R.id.item_comicdownoption_text)
         TextView item_comicdownoption_text;
 
         public ViewHolder(View view) {

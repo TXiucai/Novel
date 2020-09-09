@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -35,13 +34,13 @@ import butterknife.BindView;
  * 阅读历史记录基类
  */
 public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment {
-    @BindView(R2.id.fragment_readhistory_readhistory)
+    @BindView(R.id.fragment_readhistory_readhistory)
     public XRecyclerView fragment_option_listview;
-    @BindView(R2.id.fragment_readhistory_pop)
+    @BindView(R.id.fragment_readhistory_pop)
     public LinearLayout fragment_readhistory_pop;
-    @BindView(R2.id.fragment_bookshelf_go_shelf)
+    @BindView(R.id.fragment_bookshelf_go_shelf)
     public Button fragment_bookshelf_go_shelf;
-    @BindView(R2.id.fragment_bookshelf_text)
+    @BindView(R.id.fragment_bookshelf_text)
     public TextView fragment_bookshelf_text;
     public Gson gson = new Gson();
     public BaseReadHistoryAdapter<T> optionAdapter;

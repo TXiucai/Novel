@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 
@@ -60,25 +59,25 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.recyclerview_item_readhistory_img)
+        @BindView(R.id.recyclerview_item_readhistory_img)
         public ImageView recyclerview_item_readhistory_img;
-        @BindView(R2.id.recyclerview_item_readhistory_name)
+        @BindView(R.id.recyclerview_item_readhistory_name)
         public TextView recyclerview_item_readhistory_name;
-        @BindView(R2.id.recyclerview_item_readhistory_des)
+        @BindView(R.id.recyclerview_item_readhistory_des)
         public TextView recyclerview_item_readhistory_des;
-        @BindView(R2.id.recyclerview_item_readhistory_time)
+        @BindView(R.id.recyclerview_item_readhistory_time)
         public TextView recyclerview_item_readhistory_time;
-        @BindView(R2.id.recyclerview_item_readhistory_goon)
+        @BindView(R.id.recyclerview_item_readhistory_goon)
         public Button recyclerview_item_readhistory_goon;
-        @BindView(R2.id.list_ad_view_layout)
+        @BindView(R.id.list_ad_view_layout)
         public FrameLayout list_ad_view_layout;
-        @BindView(R2.id.list_ad_view_img)
+        @BindView(R.id.list_ad_view_img)
         public ImageView list_ad_view_img;
-        @BindView(R2.id.recyclerview_item_readhistory_book)
+        @BindView(R.id.recyclerview_item_readhistory_book)
         public LinearLayout recyclerview_item_readhistory_book;
-        @BindView(R2.id.recyclerview_item_readhistory_del)
+        @BindView(R.id.recyclerview_item_readhistory_del)
         public TextView recyclerview_item_readhistory_del;
-        @BindView(R2.id.recyclerview_item_readhistory_HorizontalScrollView)
+        @BindView(R.id.recyclerview_item_readhistory_HorizontalScrollView)
         public HorizontalScrollView recyclerview_item_readhistory_HorizontalScrollView;
 
         public MyViewHolder(View view) {

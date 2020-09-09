@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -56,15 +55,15 @@ import static com.heiheilianzai.app.constant.ReaderConfig.fragment_store_xiaoshu
  */
 public class BookshelfFragment extends BaseButterKnifeFragment {
     private static final long CHILL_TIME = 300;//秒 5分钟
-    @BindView(R2.id.fragment_shelf_viewpage)
+    @BindView(R.id.fragment_shelf_viewpage)
     public ViewPager fragment_newbookself_viewpager;
-    @BindView(R2.id.fragment_bookself_topbar)
+    @BindView(R.id.fragment_bookself_topbar)
     public RelativeLayout fragment_bookself_topbar;
-    @BindView(R2.id.fragment_shelf_indicator)
+    @BindView(R.id.fragment_shelf_indicator)
     public UnderlinePageIndicator indicator;
-    @BindView(R2.id.fragment_shelf_xiaoshuo)
+    @BindView(R.id.fragment_shelf_xiaoshuo)
     public SizeAnmotionTextview fragment_shelf_xiaoshuo;
-    @BindView(R2.id.fragment_shelf_manhau)
+    @BindView(R.id.fragment_shelf_manhau)
     public SizeAnmotionTextview fragment_shelf_manhau;
     LinearLayout shelf_book_delete_btn;
 

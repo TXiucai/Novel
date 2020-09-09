@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.PayGoldDetail;
 
 import java.util.List;
@@ -70,11 +69,11 @@ public class LiushuijiluRecyclerViewAdapter extends RecyclerView.Adapter<Liushui
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.item_pay_gold_detail_article)
+        @BindView(R.id.item_pay_gold_detail_article)
         TextView article;
-        @BindView(R2.id.item_pay_gold_detail_date)
+        @BindView(R.id.item_pay_gold_detail_date)
         TextView date;
-        @BindView(R2.id.item_pay_gold_detail_detail)
+        @BindView(R.id.item_pay_gold_detail_detail)
         TextView detail;
 
         public ViewHolder(View view) {

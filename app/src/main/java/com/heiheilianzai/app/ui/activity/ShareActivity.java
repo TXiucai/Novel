@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseWarmStartActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -33,15 +32,15 @@ import butterknife.OnClick;
  * 我的分享页面（侵入式状态栏）
  */
 public class ShareActivity extends BaseWarmStartActivity {
-    @BindView(R2.id.share_back)
+    @BindView(R.id.share_back)
     View share_back;
-    @BindView(R2.id.qr_code_img)
+    @BindView(R.id.qr_code_img)
     ImageView qr_code_img;
-    @BindView(R2.id.share_url_t)
+    @BindView(R.id.share_url_t)
     TextView share_url_t;
-    @BindView(R2.id.share_title_t)
+    @BindView(R.id.share_title_t)
     TextView share_title_t;
-    @BindView(R2.id.share_content_layout)
+    @BindView(R.id.share_content_layout)
     View share_content_layout;
 
     @OnClick({R.id.share_save_qr_code, R.id.share_save, R.id.share_back})

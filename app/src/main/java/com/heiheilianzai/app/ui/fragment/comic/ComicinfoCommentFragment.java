@@ -15,7 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -52,24 +51,24 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
     /**
      * 评论的视图容器
      */
-    @BindView(R2.id.activity_book_info_content_comment_container)
+    @BindView(R.id.activity_book_info_content_comment_container)
     public LinearLayout activity_book_info_content_comment_container;
-    @BindView(R2.id.activity_book_info_scrollview)
+    @BindView(R.id.activity_book_info_scrollview)
     public ObservableScrollView activity_book_info_scrollview;
-    @BindView(R2.id.activity_book_info_content_comment_des)
+    @BindView(R.id.activity_book_info_content_comment_des)
     public TextView activity_book_info_content_comment_des;
 
     /**
      * 精品推荐的视图容器
      */
-    @BindView(R2.id.activity_book_info_content_label_container)
+    @BindView(R.id.activity_book_info_content_label_container)
     public LinearLayout activity_book_info_content_label_container;
-    @BindView(R2.id.list_ad_view_layout)
+    @BindView(R.id.list_ad_view_layout)
     FrameLayout activity_book_info_ad;
-    @BindView(R2.id.list_ad_view_img)
+    @BindView(R.id.list_ad_view_img)
     ImageView list_ad_view_img;
 
-    @BindView(R2.id.activity_book_info_content_add_comment)
+    @BindView(R.id.activity_book_info_content_add_comment)
     public TextView activity_book_info_content_add_comment;
     public int WIDTH, HEIGHT;
 

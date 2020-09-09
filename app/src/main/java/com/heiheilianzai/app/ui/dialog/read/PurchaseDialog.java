@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -56,23 +55,23 @@ import butterknife.ButterKnife;
  * Created by scb on 2018/8/16
  */
 public class PurchaseDialog extends Dialog {
-    @BindView(R2.id.dialog_purchase_some_select_rgs)
+    @BindView(R.id.dialog_purchase_some_select_rgs)
     RadioGroup dialog_purchase_some_select_rgs;
-    @BindView(R2.id.dialog_purchase_some_remain)
+    @BindView(R.id.dialog_purchase_some_remain)
     TextView dialog_purchase_some_remain;
-    @BindView(R2.id.dialog_purchase_some_auto_buy)
+    @BindView(R.id.dialog_purchase_some_auto_buy)
     ToggleButton dialog_purchase_some_auto_buy;
-    @BindView(R2.id.dialog_purchase_some_total_price)
+    @BindView(R.id.dialog_purchase_some_total_price)
     TextView dialog_purchase_some_total_price;
-    @BindView(R2.id.dialog_purchase_some_original_price)
+    @BindView(R.id.dialog_purchase_some_original_price)
     TextView dialog_purchase_some_original_price;
-    @BindView(R2.id.dialog_purchase_some_buy)
+    @BindView(R.id.dialog_purchase_some_buy)
     Button dialog_purchase_some_buy;
-    @BindView(R2.id.dialog_purchase_some_tite)
+    @BindView(R.id.dialog_purchase_some_tite)
     TextView dialog_purchase_some_tite;
-    @BindView(R2.id.dialog_purchase_auto)
+    @BindView(R.id.dialog_purchase_auto)
     RelativeLayout dialog_purchase_auto;
-    @BindView(R2.id.dialog_purchase_HorizontalScrollView)
+    @BindView(R.id.dialog_purchase_HorizontalScrollView)
     HorizontalScrollView dialog_purchase_HorizontalScrollView;
     //用以标识是去充值还是去购买
     private int mFlag = 0;

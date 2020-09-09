@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -138,9 +137,9 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     class AdViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.list_ad_view_layout)
+        @BindView(R.id.list_ad_view_layout)
         FrameLayout list_ad_view_layout;
-        @BindView(R2.id.list_ad_view_img)
+        @BindView(R.id.list_ad_view_img)
         ImageView list_ad_view_img;
 
         public AdViewHolder(View view) {
@@ -206,21 +205,21 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     class ComicViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.fragment_store_gridview1_text)
+        @BindView(R.id.fragment_store_gridview1_text)
         TextView lable;
-        @BindView(R2.id.fragment_store_gridview1_more)
+        @BindView(R.id.fragment_store_gridview1_more)
         LinearLayout fragment_store_gridview1_more;
-        @BindView(R2.id.fragment_store_gridview_huanyihuan)
+        @BindView(R.id.fragment_store_gridview_huanyihuan)
         LinearLayout fragment_store_gridview_huanyihuan;
-        @BindView(R2.id.fragment_store_gridview1_view1)
+        @BindView(R.id.fragment_store_gridview1_view1)
         View fragment_store_gridview1_view1;
-        @BindView(R2.id.fragment_store_gridview1_view2)
+        @BindView(R.id.fragment_store_gridview1_view2)
         View fragment_store_gridview1_view2;
-        @BindView(R2.id.fragment_store_gridview1_view3)
+        @BindView(R.id.fragment_store_gridview1_view3)
         View fragment_store_gridview1_view3;
-        @BindView(R2.id.fragment_store_gridview1_gridview)
+        @BindView(R.id.fragment_store_gridview1_gridview)
         AdaptionGridViewNoMargin fragment_store_gridview1_gridview;
-        @BindView(R2.id.liem_store_comic_style1_style3)
+        @BindView(R.id.liem_store_comic_style1_style3)
         AdaptionGridViewNoMargin liem_store_comic_style1_style3;
 
         public ComicViewHolder(View view) {

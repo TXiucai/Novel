@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.piasy.biv.view.BigImageView;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.FileManager;
@@ -160,13 +159,13 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.item_comic_recyclerview_photoview)
+        @BindView(R.id.item_comic_recyclerview_photoview)
         BigImageView recyclerview_img;
-        @BindView(R2.id.item_comic_recyclerview_danmu)
+        @BindView(R.id.item_comic_recyclerview_danmu)
         DanmuRelativeLayout item_comic_recyclerview_danmu;
-        @BindView(R2.id.item_comic_recyclerview_layout)
+        @BindView(R.id.item_comic_recyclerview_layout)
         FrameLayout item_comic_recyclerview_layout;
-        @BindView(R2.id.ban_touch_float)
+        @BindView(R.id.ban_touch_float)
         View ban_touch_float;
 
         public MyViewHolder(View itemView) {

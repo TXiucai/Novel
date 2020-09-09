@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -51,37 +50,37 @@ public class ReplyCommentActivity extends BaseActivity implements ShowTitle {
     /**
      * 评论内容
      */
-    @BindView(R2.id.activity_reply_comment_content)
+    @BindView(R.id.activity_reply_comment_content)
     EditText activity_reply_comment_content;
 
     /**
      * 原始评论内容
      */
-    @BindView(R2.id.activity_reply_origin_comment)
+    @BindView(R.id.activity_reply_origin_comment)
     TextView activity_reply_origin_comment;
 
     /**
      * 字数百分比
      */
-    @BindView(R2.id.activity_reply_comment_percentage)
+    @BindView(R.id.activity_reply_comment_percentage)
     TextView activity_reply_comment_percentage;
 
     /**
      * 头像
      */
-    @BindView(R2.id.activity_reply_avatar)
+    @BindView(R.id.activity_reply_avatar)
     CircleImageView activity_reply_avatar;
 
     /**
      * 昵称
      */
-    @BindView(R2.id.activity_reply_nickname)
+    @BindView(R.id.activity_reply_nickname)
     TextView activity_reply_nickname;
 
     /**
      * "评论"
      */
-    @BindView(R2.id.comment_titlebar_add_comment)
+    @BindView(R.id.comment_titlebar_add_comment)
     LinearLayout comment_titlebar_add_comment;
 
     @Override

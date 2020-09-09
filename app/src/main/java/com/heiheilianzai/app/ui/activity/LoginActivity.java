@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.presenter.LoginPresenter;
@@ -44,23 +43,23 @@ import static com.heiheilianzai.app.constant.ReaderConfig.USE_WEIXIN;
  * Created by wudeyan on 2018/7/14.
  */
 public class LoginActivity extends BaseActivity implements LoginView {
-    @BindView(R2.id.activity_login_close)
+    @BindView(R.id.activity_login_close)
     LinearLayout activity_login_close;
-    @BindView(R2.id.activity_login_title)
+    @BindView(R.id.activity_login_title)
     TextView activity_login_title;
-    @BindView(R2.id.activity_login_phone_username)
+    @BindView(R.id.activity_login_phone_username)
     EditText activity_login_phone_username;
-    @BindView(R2.id.activity_login_phone_message)
+    @BindView(R.id.activity_login_phone_message)
     EditText activity_login_phone_message;
-    @BindView(R2.id.activity_login_phone_get_message_btn)
+    @BindView(R.id.activity_login_phone_get_message_btn)
     Button activity_login_phone_get_message_btn;
-    @BindView(R2.id.activity_login_phone_btn)
+    @BindView(R.id.activity_login_phone_btn)
     Button activity_login_phone_btn;
-    @BindView(R2.id.activity_login_phone_clear)
+    @BindView(R.id.activity_login_phone_clear)
     ImageView activity_login_phone_clear;
-    @BindView(R2.id.activity_login_contract)
+    @BindView(R.id.activity_login_contract)
     TextView activity_login_contract;
-    @BindView(R2.id.activity_login_weixin)
+    @BindView(R.id.activity_login_weixin)
     LinearLayout activity_login_weixin;
 
     public static final String BOYIN_LOGIN_KAY = "boyin_login";

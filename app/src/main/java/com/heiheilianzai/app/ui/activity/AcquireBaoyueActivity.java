@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePayAdapter;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
@@ -59,22 +58,22 @@ import butterknife.OnClick;
  * Created by scb on 2018/8/12.
  */
 public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout mBack;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView mTitle;
     private String mAvatar;
-    @BindView(R2.id.activity_acquire_avatar)
+    @BindView(R.id.activity_acquire_avatar)
     public CircleImageView activity_acquire_avatar;
-    @BindView(R2.id.activity_acquire_avatar_name)
+    @BindView(R.id.activity_acquire_avatar_name)
     public TextView activity_acquire_avatar_name;
-    @BindView(R2.id.activity_acquire_pay_gridview)
+    @BindView(R.id.activity_acquire_pay_gridview)
     public AdaptionGridViewNoMargin activity_acquire_pay_gridview;
-    @BindView(R2.id.activity_acquire_privilege_gridview)
+    @BindView(R.id.activity_acquire_privilege_gridview)
     public AdaptionGridViewNoMargin activity_acquire_privilege_gridview;
-    @BindView(R2.id.activity_acquire_avatar_desc)
+    @BindView(R.id.activity_acquire_avatar_desc)
     public TextView activity_acquire_avatar_desc;
-    @BindView(R2.id.activity_acquire_customer_service)
+    @BindView(R.id.activity_acquire_customer_service)
     public View activity_acquire_customer_service;
 
     String mKeFuOnline;

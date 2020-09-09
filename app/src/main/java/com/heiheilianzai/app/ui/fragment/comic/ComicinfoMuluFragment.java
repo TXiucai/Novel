@@ -17,7 +17,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.comic.ComicChapterCatalogAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -67,15 +66,15 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
     String comic_id;
     StroreComicLable.Comic comic;
     boolean shunxu, isHttp;
-    @BindView(R2.id.fragment_comicinfo_mulu_zhuangtai)
+    @BindView(R.id.fragment_comicinfo_mulu_zhuangtai)
     public TextView fragment_comicinfo_mulu_zhuangtai;
-    @BindView(R2.id.fragment_comicinfo_mulu_xu)
+    @BindView(R.id.fragment_comicinfo_mulu_xu)
     public TextView fragment_comicinfo_mulu_xu;
-    @BindView(R2.id.fragment_comicinfo_mulu_xu_img)
+    @BindView(R.id.fragment_comicinfo_mulu_xu_img)
     public ImageView fragment_comicinfo_mulu_xu_img;
-    @BindView(R2.id.fragment_comicinfo_mulu_list)
+    @BindView(R.id.fragment_comicinfo_mulu_list)
     public XRecyclerView fragment_comicinfo_mulu_list;
-    @BindView(R2.id.fragment_comicinfo_mulu_layout)
+    @BindView(R.id.fragment_comicinfo_mulu_layout)
     public RelativeLayout fragment_comicinfo_mulu_layout;
     ComicInfoActivity.MuluLorded muluLorded;
     int Current_chapter_displayOrder;

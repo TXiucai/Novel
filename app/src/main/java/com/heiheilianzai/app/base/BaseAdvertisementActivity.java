@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -42,9 +41,9 @@ import butterknife.ButterKnife;
  * 开屏广告 Base类 主要获取开屏广告数据 及逻辑处理
  */
 public abstract class BaseAdvertisementActivity extends Activity {
-    @BindView(R2.id.activity_splash_im)
+    @BindView(R.id.activity_splash_im)
     public ImageView activity_splash_im;
-    @BindView(R2.id.activity_home_viewpager_sex_next)
+    @BindView(R.id.activity_home_viewpager_sex_next)
     public TextView activity_home_viewpager_sex_next;
     public static Activity activity;
     protected Startpage startpage;

@@ -31,7 +31,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -82,55 +81,55 @@ import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
  */
 public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public final String TAG = BookInfoActivity.class.getSimpleName();
-    @BindView(R2.id.book_info_titlebar_container)
+    @BindView(R.id.book_info_titlebar_container)
     public RelativeLayout book_info_titlebar_container;
-    @BindView(R2.id.book_info_titlebar_container_shadow)
+    @BindView(R.id.book_info_titlebar_container_shadow)
     public View book_info_titlebar_container_shadow;
-    @BindView(R2.id.activity_book_info_scrollview)
+    @BindView(R.id.activity_book_info_scrollview)
     public ObservableScrollView activity_book_info_scrollview;
-    @BindView(R2.id.activity_book_info_content_cover_bg)
+    @BindView(R.id.activity_book_info_content_cover_bg)
     public RelativeLayout activity_book_info_content_cover_bg;
-    @BindView(R2.id.titlebar_back)
+    @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
-    @BindView(R2.id.back)
+    @BindView(R.id.back)
     public ImageView back;
-    @BindView(R2.id.titlebar_share)
+    @BindView(R.id.titlebar_share)
     RelativeLayout titlebar_share;
-    @BindView(R2.id.titlebar_text)
+    @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R2.id.activity_book_info_content_name)
+    @BindView(R.id.activity_book_info_content_name)
     public TextView activity_book_info_content_name;
-    @BindView(R2.id.activity_book_info_content_author)
+    @BindView(R.id.activity_book_info_content_author)
     public TextView activity_book_info_content_author;
-    @BindView(R2.id.activity_book_info_content_display_label)
+    @BindView(R.id.activity_book_info_content_display_label)
     public TextView activity_book_info_content_display_label;
-    @BindView(R2.id.activity_book_info_content_total_comment)
+    @BindView(R.id.activity_book_info_content_total_comment)
     public TextView activity_book_info_content_total_comment;
-    @BindView(R2.id.activity_book_info_content_total_shoucanshu)
+    @BindView(R.id.activity_book_info_content_total_shoucanshu)
     public TextView activity_book_info_content_total_shoucanshu;
-    @BindView(R2.id.activity_book_info_content_cover)
+    @BindView(R.id.activity_book_info_content_cover)
     public ImageView activity_book_info_content_cover;
-    @BindView(R2.id.activity_book_info_content_description)
+    @BindView(R.id.activity_book_info_content_description)
     public TextView activity_book_info_content_description;
-    @BindView(R2.id.activity_book_info_content_last_chapter_time)
+    @BindView(R.id.activity_book_info_content_last_chapter_time)
     public TextView activity_book_info_content_last_chapter_time;
-    @BindView(R2.id.activity_book_info_content_last_chapter)
+    @BindView(R.id.activity_book_info_content_last_chapter)
     public TextView activity_book_info_content_last_chapter;
-    @BindView(R2.id.activity_book_info_content_comment_container)
+    @BindView(R.id.activity_book_info_content_comment_container)
     public LinearLayout activity_book_info_content_comment_container;
-    @BindView(R2.id.activity_book_info_content_label_container)
+    @BindView(R.id.activity_book_info_content_label_container)
     public LinearLayout activity_book_info_content_label_container;
-    @BindView(R2.id.activity_book_info_content_category_layout)
+    @BindView(R.id.activity_book_info_content_category_layout)
     public RelativeLayout activity_book_info_content_category_layout;
-    @BindView(R2.id.activity_book_info_add_shelf)
+    @BindView(R.id.activity_book_info_add_shelf)
     public TextView activity_book_info_add_shelf;
-    @BindView(R2.id.activity_book_info_start_read)
+    @BindView(R.id.activity_book_info_start_read)
     public TextView activity_book_info_start_read;
-    @BindView(R2.id.activity_book_info_tag)
+    @BindView(R.id.activity_book_info_tag)
     LinearLayout activity_book_info_tag;
-    @BindView(R2.id.list_ad_view_layout)
+    @BindView(R.id.list_ad_view_layout)
     FrameLayout activity_book_info_ad;
-    @BindView(R2.id.list_ad_view_img)
+    @BindView(R.id.list_ad_view_img)
     ImageView list_ad_view_img;
 
     public String mBookId;

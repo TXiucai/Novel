@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.model.book.BaseBook;
@@ -125,27 +124,27 @@ public class DownMangerAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.item_dowmmanger_HorizontalScrollView)
+        @BindView(R.id.item_dowmmanger_HorizontalScrollView)
         public HorizontalScrollView item_dowmmanger_HorizontalScrollView;
-        @BindView(R2.id.item_dowmmanger_LinearLayout1)
+        @BindView(R.id.item_dowmmanger_LinearLayout1)
         public LinearLayout item_dowmmanger_LinearLayout1;
-        @BindView(R2.id.item_dowmmanger_LinearLayout2)
+        @BindView(R.id.item_dowmmanger_LinearLayout2)
         public LinearLayout item_dowmmanger_LinearLayout2;
-        @BindView(R2.id.item_dowmmanger_cover)
+        @BindView(R.id.item_dowmmanger_cover)
         public ImageView item_dowmmanger_cover;
-        @BindView(R2.id.item_dowmmanger_name)
+        @BindView(R.id.item_dowmmanger_name)
         public TextView item_dowmmanger_name;
-        @BindView(R2.id.item_dowmmanger_open)
+        @BindView(R.id.item_dowmmanger_open)
         public TextView item_dowmmanger_open;
-        @BindView(R2.id.item_dowmmanger_delete)
+        @BindView(R.id.item_dowmmanger_delete)
         public TextView item_dowmmanger_delete;
-        @BindView(R2.id.item_dowmmanger_Downoption_title)
+        @BindView(R.id.item_dowmmanger_Downoption_title)
         public TextView item_dowmmanger_Downoption_title;
-        @BindView(R2.id.item_dowmmanger_Downoption_date)
+        @BindView(R.id.item_dowmmanger_Downoption_date)
         public TextView item_dowmmanger_Downoption_date;
-        @BindView(R2.id.item_dowmmanger_Downoption_size)
+        @BindView(R.id.item_dowmmanger_Downoption_size)
         public TextView item_dowmmanger_Downoption_size;
-        @BindView(R2.id.item_dowmmanger_Downoption_yixizai)
+        @BindView(R.id.item_dowmmanger_Downoption_yixizai)
         public TextView item_dowmmanger_Downoption_yixizai;
 
         public ViewHolder(View view) {

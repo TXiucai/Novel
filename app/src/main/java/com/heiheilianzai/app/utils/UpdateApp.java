@@ -19,7 +19,6 @@ import androidx.core.content.FileProvider;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.component.http.DownloadUtil;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -161,19 +160,19 @@ public class UpdateApp {
     }
 
     class UpdateHolder {
-        @BindView(R2.id.dialog_updateapp_sec)
+        @BindView(R.id.dialog_updateapp_sec)
         public TextView dialog_updateapp_sec;
-        @BindView(R2.id.dialog_updateapp_no)
+        @BindView(R.id.dialog_updateapp_no)
         public TextView dialog_updateapp_no;
-        @BindView(R2.id.dialog_updateapp_yes)
+        @BindView(R.id.dialog_updateapp_yes)
         public TextView dialog_updateapp_yes;
-        @BindView(R2.id.dialog_updateapp_layout)
+        @BindView(R.id.dialog_updateapp_layout)
         public LinearLayout dialog_updateapp_layout;
-        @BindView(R2.id.dialog_updateapp_view)
+        @BindView(R.id.dialog_updateapp_view)
         public View dialog_updateapp_view;
-        @BindView(R2.id.materialSeekBar)
+        @BindView(R.id.materialSeekBar)
         public ProgressBarView materialSeekBar;
-        @BindView(R2.id.dialog_updateapp_version)
+        @BindView(R.id.dialog_updateapp_version)
         public TextView dialog_updateapp_version;
 
         public UpdateHolder(View view) {

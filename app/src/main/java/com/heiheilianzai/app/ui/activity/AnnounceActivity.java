@@ -5,7 +5,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -18,9 +17,9 @@ import butterknife.BindView;
  */
 public class AnnounceActivity extends BaseActivity implements ShowTitle {
     private final String TAG = AnnounceActivity.class.getSimpleName();
-  @BindView(R2.id.activity_announce_content)
+  @BindView(R.id.activity_announce_content)
     TextView activity_announce_content;
-  @BindView(R2.id.activity_announce_title)
+    @BindView(R.id.activity_announce_title)
     TextView activity_announce_title;
 
     private String mContent;

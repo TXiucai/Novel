@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.utils.BrightnessUtil;
 
@@ -21,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2016/8/30 0030.
  */
 public class BrightnessDialog extends Dialog {
-    @BindView(R2.id.dialog_bright_seekBar)
+    @BindView(R.id.dialog_bright_seekBar)
     SeekBar dialog_bright_seekBar;
     private Activity mContext;
     private ReadingConfig config;

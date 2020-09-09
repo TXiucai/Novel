@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.adapter.OptionRecyclerViewAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
@@ -89,13 +88,13 @@ public class OptionFragment extends BaseButterKnifeFragment {
         return R.layout.fragment_option;
     }
 
-    @BindView(R2.id.fragment_option_noresult)
+    @BindView(R.id.fragment_option_noresult)
     public LinearLayout fragment_option_noresult;
 
-    /*   @BindView(R2.id.fragment_option_listview)
+    /*   @BindView(R.id.fragment_option_listview)
        public PullToRefreshListView fragment_option_listview;
        */
-    @BindView(R2.id.fragment_option_listview)
+    @BindView(R.id.fragment_option_listview)
     public XRecyclerView fragment_option_listview;
 
 
@@ -155,13 +154,13 @@ public class OptionFragment extends BaseButterKnifeFragment {
             ButterKnife.bind(this, view);
         }
 
-        @BindView(R2.id.activity_baoyue_ok)
+        @BindView(R.id.activity_baoyue_ok)
         public Button activity_baoyue_ok;
-        @BindView(R2.id.activity_baoyue_circle_img)
+        @BindView(R.id.activity_baoyue_circle_img)
         public CircleImageView activity_baoyue_circle_img;
-        @BindView(R2.id.activity_baoyue_nickname)
+        @BindView(R.id.activity_baoyue_nickname)
         public TextView activity_baoyue_nickname;
-        @BindView(R2.id.activity_baoyue_desc)
+        @BindView(R.id.activity_baoyue_desc)
         public TextView activity_baoyue_desc;
 
         public String mAvatar;

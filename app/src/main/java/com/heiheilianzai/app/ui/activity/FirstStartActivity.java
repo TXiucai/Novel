@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.R2;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -49,11 +48,11 @@ import butterknife.OnClick;
  * Created by abc on 2016/11/4.
  */
 public class FirstStartActivity extends BaseButterKnifeActivity {
-    @BindView(R2.id.activity_home_viewpager_book_next)
+    @BindView(R.id.activity_home_viewpager_book_next)
     public TextView activity_home_viewpager_book_next;
-    @BindView(R2.id.activity_home_viewpager_book_ok)
+    @BindView(R.id.activity_home_viewpager_book_ok)
     public Button activity_home_viewpager_book_ok;
-    @BindView(R2.id.activity_home_viewpager_book_GridView)
+    @BindView(R.id.activity_home_viewpager_book_GridView)
     public GridView activity_home_viewpager_book_GridView;
     int WIDTH, HEIGHT;
     private WaitDialog waitDialog;
