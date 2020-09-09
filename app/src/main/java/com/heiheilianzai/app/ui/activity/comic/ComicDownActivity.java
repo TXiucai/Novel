@@ -288,7 +288,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                         MyToash.Log("XXomicChapter22", "333");
                         MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_adddown));
                         Intent intent = new Intent();
-                        intent.setAction("com.heiheilianzai.app.comic.activity.DownComicService");
+                        intent.setAction("com.heiheilianzai.app.ui.activity.comic.DownComicService");
                         intent.setPackage(BuildConfig.APPLICATION_ID);
                         Bundle bundle2 = new Bundle();
                         bundle2.putSerializable("baseComic", baseComic);

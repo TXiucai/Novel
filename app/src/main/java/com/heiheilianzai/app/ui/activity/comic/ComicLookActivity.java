@@ -356,7 +356,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.activity_comiclook_tucao_layout:
                 Intent intent1 = new Intent(activity, ComicCommentActivity.class).putExtra("comic_id", comic_id).putExtra("IsBook", false);
-                intent1.setClassName(activity, "com.heiheilianzai.app.comic.activity.ComicCommentActivity");//打开一个activity
                 startActivityForResult(intent1, 111);
                 overridePendingTransition(R.anim.activity_open, 0);
                 showMenu(false);

@@ -468,7 +468,7 @@
 
         <service android:name=".component.DownComicService">
             <intent-filter>
-                <action android:name="com.heiheilianzai.app.comic.activity.DownComicService" />
+                <action android:name="com.heiheilianzai.app.ui.activity.comic.DownComicService" />
             </intent-filter>
         </service>
 
