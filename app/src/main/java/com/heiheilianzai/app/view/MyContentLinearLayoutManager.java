@@ -1,18 +1,19 @@
 package com.heiheilianzai.app.view;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MyContentLinearLayoutManager extends LinearLayoutManager {
 
-    public MyContentLinearLayoutManager(Context context){
+    public MyContentLinearLayoutManager(Context context) {
         super(context);
     }
 
-    public MyContentLinearLayoutManager(Context context,int orientation,boolean reverseLayout){
-        super(context,orientation,reverseLayout);
+    public MyContentLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+        super(context, orientation, reverseLayout);
     }
 
     public MyContentLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){

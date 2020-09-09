@@ -1,8 +1,9 @@
 package com.heiheilianzai.app.adapter.banner;
 
-import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.holder.CBViewHolderCreator;

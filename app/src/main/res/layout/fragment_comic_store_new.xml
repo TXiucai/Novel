@@ -11,7 +11,7 @@
     app:progress_bar_color="@color/lightcoral"
     app:refresh_text="@string/pull_to_refresh">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_store_comic_content_commend"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

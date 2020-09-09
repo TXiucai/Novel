@@ -1,10 +1,11 @@
 package com.heiheilianzai.app.view;
 
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 
-public class MScrollView  extends NestedScrollView {
+import androidx.core.widget.NestedScrollView;
+
+public class MScrollView extends NestedScrollView {
     public MScrollView(Context context) {
         super(context);
     }

@@ -2,7 +2,8 @@ package com.heiheilianzai.app.utils.decode;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
@@ -16,7 +17,6 @@ import com.bumptech.glide.load.engine.cache.MemorySizeCalculator;
 import com.bumptech.glide.load.model.FileLoader;
 import com.bumptech.glide.module.AppGlideModule;
 import com.bumptech.glide.request.RequestOptions;
-import com.heiheilianzai.app.utils.SystemUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

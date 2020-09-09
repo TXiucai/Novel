@@ -1,7 +1,8 @@
 package com.heiheilianzai.app.callback;
 
-import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
+
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,8 @@ package com.heiheilianzai.app.component.filesearcher;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.heiheilianzai.app.component.filesearcher.delegate.FileSearcherDelegateActivity;
 import com.heiheilianzai.app.component.filesearcher.filter.FileFilter;

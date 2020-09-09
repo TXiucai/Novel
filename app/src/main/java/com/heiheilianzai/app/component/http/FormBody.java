@@ -1,6 +1,6 @@
 package com.heiheilianzai.app.component.http;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

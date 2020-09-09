@@ -14,9 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -25,6 +22,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.core.Controller;
@@ -112,7 +114,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     @BindView(R2.id.view_guide_down)
     View view_guide_down;
 
-    private List<android.support.v4.app.Fragment> mFragmentList;
+    private List<Fragment> mFragmentList;
     private AppUpdate mAppUpdate;
     List<BaseBook> bookLists;
     List<BaseComic> comicList;

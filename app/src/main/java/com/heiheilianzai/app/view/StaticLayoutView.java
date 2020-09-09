@@ -2,8 +2,6 @@ package com.heiheilianzai.app.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,7 +11,6 @@ public class StaticLayoutView extends View {
     private int width;
     private int height;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public StaticLayoutView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

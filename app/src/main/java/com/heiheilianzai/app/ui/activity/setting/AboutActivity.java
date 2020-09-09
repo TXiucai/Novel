@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.ui.activity.setting;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ComponentName;
@@ -232,7 +231,6 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
         if (requestCode != FILECHOOSER_RESULTCODE || mUploadCallbackAboveL == null) {
             return;

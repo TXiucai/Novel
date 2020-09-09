@@ -2,11 +2,12 @@ package com.heiheilianzai.app.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
 
 import com.heiheilianzai.app.view.comic.SwipeListener;
 

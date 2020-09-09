@@ -2,8 +2,9 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.github.dfqin.grantor.PermissionListener;

@@ -1,8 +1,9 @@
 package com.heiheilianzai.app.view;
 
 import android.content.Context;
-import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
+
+import androidx.core.widget.NestedScrollView;
 
 /**
  * Created by scb on 2018/5/26. 滚动监听  没有API  等级限制
