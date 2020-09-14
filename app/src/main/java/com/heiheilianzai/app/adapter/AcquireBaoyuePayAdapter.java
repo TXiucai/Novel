@@ -39,6 +39,7 @@ public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
             viewHolder.item_acquire_pay_title_tag = convertView.findViewById(R.id.item_acquire_pay_title_tag);
             viewHolder.item_acquire_pay_note = convertView.findViewById(R.id.item_acquire_pay_note);
             viewHolder.item_acquire_pay_price = convertView.findViewById(R.id.item_acquire_pay_price);
+            viewHolder.item_acquire_pay_layout = convertView.findViewById(R.id.item_acquire_pay_layout);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -52,7 +53,7 @@ public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
         }
         viewHolder.item_acquire_pay_note.setText(mList.get(position).getNote());
         viewHolder.item_acquire_pay_price.setText("¥ " + mList.get(position).getPrice());
-        viewHolder.item_acquire_pay_price.setOnClickListener(new View.OnClickListener() {
+        viewHolder.item_acquire_pay_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onPayItemClickListener != null) {
@@ -70,6 +71,7 @@ public class AcquireBaoyuePayAdapter extends ReaderBaseAdapter<AcquirePayItem> {
         TextView item_acquire_pay_title_tag;
         TextView item_acquire_pay_note;
         TextView item_acquire_pay_price;
+        View item_acquire_pay_layout;
     }
 
     public interface OnPayItemClickListener {
