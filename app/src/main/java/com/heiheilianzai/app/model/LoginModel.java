@@ -11,6 +11,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.callback.LoginResultCallback;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -112,7 +113,7 @@ public class LoginModel {
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBoYinLoginUrl, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
-                        if(!StringUtils.isEmpty(result)){
+                        if (!StringUtils.isEmpty(result)) {
                             AppPrefs.putSharedString(mActivity, ReaderConfig.BOYIN_LOGIN_TOKEN, result);
                         }
                         if (callback != null) {
@@ -234,12 +235,12 @@ public class LoginModel {
 
     /**
      * 清空登录信息
-     * @param context
      */
-    public static void resetLogin(Context context){
+    public static void resetLogin(Context context) {
         AppPrefs.putSharedString(context, ReaderConfig.TOKEN, "");
         AppPrefs.putSharedString(context, ReaderConfig.UID, "");
         AppPrefs.putSharedString(context, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
+        AppPrefs.putSharedString(context, PrefConst.USER_INFO_KAY, "");
         ReaderConfig.REFREASH_USERCENTER = true;
         EventBus.getDefault().post(new RefreshMine(null));
         EventBus.getDefault().post(new LogoutBoYinEvent());

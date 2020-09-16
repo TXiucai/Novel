@@ -24,6 +24,10 @@ public class PrefConst {
      * 当前登录用户手机号
      */
     public static final String USER_MOBILE_KAY = "user_mobile";
+    /**
+     * 用户信息
+     */
+    public static final String USER_INFO_KAY = "user_info";
     //---------------------- END -----------------------------
 
     //------------------ PreparedDomain -------------------------
