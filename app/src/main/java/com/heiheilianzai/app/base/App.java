@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.base;
 
-
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,14 +17,19 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.component.http.PreparedDomain;
 import com.heiheilianzai.app.component.push.JPushUtil;
+import com.heiheilianzai.app.constant.RabbitConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.utils.JPushFactory;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.UpdateApp;
+import com.sensorsdata.analytics.android.sdk.SAConfigOptions;
+import com.sensorsdata.analytics.android.sdk.SensorsAnalyticsAutoTrackEventType;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.tencent.bugly.Bugly;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -57,6 +61,8 @@ public class App extends LitePalApplication {
             if (ReaderConfig.USE_QQ) {
                 PlatformConfig.setQQZone(ReaderConfig.QQ_APPID, ReaderConfig.QQ_SECRET);
             }
+            //初始化神策
+            initSensors();
             //初始化BigImageViewer图片加载方式为Glide
             BigImageViewer.initialize(GlideImageLoader.with(getAppContext()));
             ReadingConfig.createConfig(this);
@@ -114,6 +120,31 @@ public class App extends LitePalApplication {
             mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             //最后在notificationmanager中创建该通知渠道
             mNotificationManager.createNotificationChannel(mChannel);
+        }
+    }
+
+    /**
+     * 初始化神策
+     */
+    private void initSensors() {
+        // 初始化配置
+        SAConfigOptions saConfigOptions = new SAConfigOptions(RabbitConfig.ONLINE ? BuildConfig.sa_server_url : BuildConfig.sa_server_url_uat);
+        // 开启全埋点
+        saConfigOptions.setAutoTrackEventType(SensorsAnalyticsAutoTrackEventType.APP_CLICK |
+                SensorsAnalyticsAutoTrackEventType.APP_START |
+                SensorsAnalyticsAutoTrackEventType.APP_END |
+                SensorsAnalyticsAutoTrackEventType.APP_VIEW_SCREEN);
+        saConfigOptions.enableTrackAppCrash();
+        if (!RabbitConfig.ONLINE) {
+            saConfigOptions.enableVisualizedAutoTrack(true);//开启可视化全埋点
+            saConfigOptions.enableLog(true);//开启Log
+        }
+        saConfigOptions.enableTrackScreenOrientation(true);//屏幕方向
+        // 需要在主线程初始化神策 SDK
+        if (context != null) {
+            SensorsDataAPI.startWithConfigOptions(context, saConfigOptions);
+            SensorsDataHelper.setAppId();//设置Appid
+            SensorsDataHelper.setDynamicPublicProperty(context);//设置神策公共参数
         }
     }
 
@@ -194,7 +225,7 @@ public class App extends LitePalApplication {
     }
 
     /**
-     *注册Activity生命周期 放入MyActivityManager进行管理。
+     * 注册Activity生命周期 放入MyActivityManager进行管理。
      */
     private void initGlobeActivity() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {

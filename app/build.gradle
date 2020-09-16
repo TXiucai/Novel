@@ -6,7 +6,7 @@ apply plugin: "kotlin-android-extensions"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.google.gms.google-services'
-
+apply plugin: 'com.sensorsdata.analytics.android'
 apply from: 'configs/configpumpkin.gradle'
 
 android {
@@ -49,6 +49,9 @@ android {
         buildConfigField "String", "ad_secret_uat", gradle.ext.AD_SECRET_UAT
         buildConfigField "String", "ad_appkey", gradle.ext.AD_APPKEY
         buildConfigField "String", "ad_secret", gradle.ext.AD_SECRET
+        buildConfigField "String", "sa_server_url", gradle.ext.SA_SERVER_URL
+        buildConfigField "String", "sa_server_url_uat", gradle.ext.SA_SERVER_URL_UAT
+        buildConfigField "String", "sa_server_app_id", gradle.ext.SA_SERVER_APP_ID
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
 
         ndk {
@@ -205,6 +208,9 @@ def getAppConfig() {
         buildConfigField "String", "ad_secret_uat", gradle.ext.AD_SECRET_UAT
         buildConfigField "String", "ad_appkey", gradle.ext.AD_APPKEY
         buildConfigField "String", "ad_secret", gradle.ext.AD_SECRET
+        buildConfigField "String", "sa_server_url", gradle.ext.SA_SERVER_URL
+        buildConfigField "String", "sa_server_url_uat", gradle.ext.SA_SERVER_URL_UAT
+        buildConfigField "String", "sa_server_app_id", gradle.ext.SA_SERVER_APP_ID
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
     }
 }
@@ -319,7 +325,8 @@ dependencies {
     // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-
+    // 添加 Sensors Analytics SDK 依赖
+    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:4.2.8'
 }
 
 /**

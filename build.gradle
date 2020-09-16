@@ -10,10 +10,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath 'com.jakewharton:butterknife-gradle-plugin:10.2.0'
         classpath 'com.google.gms:google-services:4.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.sensorsdata.analytics.android:android-gradle-plugin2:3.2.10'
     }
 }
 
