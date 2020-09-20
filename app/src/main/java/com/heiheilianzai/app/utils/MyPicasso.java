@@ -23,11 +23,16 @@ import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.ui.activity.AdvertisementActivity;
+import com.heiheilianzai.app.utils.decode.AESUtil;
+import com.heiheilianzai.app.utils.decode.ExecutorFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -222,5 +227,53 @@ public class MyPicasso {
             }
         }
         return "";
+    }
+
+    /**
+     * 支持 webp格式加载gif图片
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param loadListener
+     */
+    public static void loadGif(final Activity context, final String url, final ImageView imageView, OnGlideLoadListener loadListener) {
+        ExecutorFactory.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                try {
+                    conn = (HttpURLConnection) new URL(url).openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(5000);
+                    int code = conn.getResponseCode();
+                    if (code == 200) {
+                        InputStream inputStream = conn.getInputStream();
+                        String file = context.getFilesDir().getAbsolutePath() + File.separator + "test_out.gif";
+                        File file1 = AESUtil.decryptFile(AESUtil.key, inputStream, file);
+                        dealWithResult(context, file1, imageView, loadListener);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public static void dealWithResult(final Activity context, final File res, final ImageView imageView, OnGlideLoadListener loadListener) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loadListener != null) {
+                    loadListener.onGlideLoad(context, res, imageView);
+                } else {
+                    Glide.with(context).load(res).into(imageView);
+                }
+            }
+        });
+    }
+
+    public interface OnGlideLoadListener {
+        void onGlideLoad(Activity context, File res, ImageView imageView);
     }
 }
