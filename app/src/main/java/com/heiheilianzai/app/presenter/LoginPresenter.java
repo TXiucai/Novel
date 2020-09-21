@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.callback.LoginResultCallback;
 import com.heiheilianzai.app.component.push.JPushUtil;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.LoginInfo;
 import com.heiheilianzai.app.model.LoginModel;
@@ -18,6 +19,7 @@ import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -64,28 +66,32 @@ public class LoginPresenter {
         mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(), new LoginResultCallback() {
             @Override
             public void getResult(final String loginStr) {
-                Gson gson = new Gson();
-                LoginInfo loginInfo = gson.fromJson(loginStr, LoginInfo.class);
-                if (loginInfo != null) {
-                    AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
-                    AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
-                    EventBus.getDefault().post(new BuyLoginSuccessEvent());
-                    syncDevice(activity);
-                    FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
-                        @Override
-                        public void saveSuccess() {
+                try {
+                    Gson gson = new Gson();
+                    LoginInfo loginInfo = gson.fromJson(loginStr, LoginInfo.class);
+                    AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, loginStr);
+                    if (loginInfo != null) {
+                        AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
+                        AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
+                        EventBus.getDefault().post(new BuyLoginSuccessEvent());
+                        syncDevice(activity);
+                        FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
+                            @Override
+                            public void saveSuccess() {
+                            }
+                        });
+                        EventBus.getDefault().post(new RefreshMine(loginInfo));
+                        if (GETPRODUCT_TYPE(activity) != 2) {
+                            EventBus.getDefault().post(new RefreshBookSelf(null));
                         }
-                    });
-                    EventBus.getDefault().post(new RefreshMine(loginInfo));
-                    if (GETPRODUCT_TYPE(activity) != 2) {
-                        EventBus.getDefault().post(new RefreshBookSelf(null));
+                        if (GETPRODUCT_TYPE(activity) != 1) {
+                            EventBus.getDefault().post(new RefreshComic(null));
+                        }
+                        loginSuccess.success();
+                        JPushUtil.setAlias(activity);
+                        activity.finish();
                     }
-                    if (GETPRODUCT_TYPE(activity) != 1) {
-                        EventBus.getDefault().post(new RefreshComic(null));
-                    }
-                    loginSuccess.success();
-                    JPushUtil.setAlias(activity);
-                    activity.finish();
+                } catch (Exception e) {
                 }
             }
         });

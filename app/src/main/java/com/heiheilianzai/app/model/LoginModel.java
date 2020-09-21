@@ -19,6 +19,7 @@ import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -85,11 +86,13 @@ public class LoginModel {
                     public void onResponse(String result) {
                         if (callback != null) {
                             callback.getResult(result);
+                            setLoginSuccessEvent(true, "NULL");
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        setLoginSuccessEvent(false, ex);
                     }
                 }
         );
@@ -244,5 +247,14 @@ public class LoginModel {
         ReaderConfig.REFREASH_USERCENTER = true;
         EventBus.getDefault().post(new RefreshMine(null));
         EventBus.getDefault().post(new LogoutBoYinEvent());
+    }
+
+    /**
+     * 设置神策登录事件
+     */
+    private void setLoginSuccessEvent(boolean is_success, String fail_reason) {
+        if (mActivity != null) {
+            SensorsDataHelper.setLoginSuccessEvent(is_success, fail_reason, "登录");
+        }
     }
 }

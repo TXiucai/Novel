@@ -200,7 +200,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             } else {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, true);
             }
-            AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, StringUtils.isEmpty(info) ? "" : info);
+            String sharedUserInfo = StringUtils.isEmpty(info) ? (userInfoItem != null ? gson.toJson(userInfoItem) : "") : info;
+            if (!StringUtils.isEmpty(sharedUserInfo)) {
+                AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, sharedUserInfo);
+            }
             MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), fragment_mine_user_info_avatar, R.mipmap.icon_def_head);
             fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
