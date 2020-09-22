@@ -28,6 +28,19 @@ public class StringUtils {
     }
 
     /**
+     * 图片url 是否是 gif
+     *
+     * @param imgeUrl
+     * @return
+     */
+    public static boolean isImgeUrlGifEncryptPostfix(String imgeUrl) {
+        if (isEmpty(imgeUrl)) {
+            return false;
+        }
+        return imgeUrl.contains(".gif");
+    }
+
+    /**
      * String前缀是否是http
      *
      * @param imgeUrl
@@ -44,7 +57,7 @@ public class StringUtils {
      * 设置内容到粘贴板 并弹出相关提示
      *
      * @param context
-     * @param str      放入粘切板内容
+     * @param str     放入粘切板内容
      */
     public static void setStringInClipboard(Context context, String str) {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

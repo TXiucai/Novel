@@ -5,16 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -23,17 +19,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.ui.activity.AdvertisementActivity;
-import com.heiheilianzai.app.utils.decode.AESUtil;
-import com.heiheilianzai.app.utils.decode.ExecutorFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -55,7 +48,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            Glide.with(activity).load(url).apply(getRequestOptions(def)).into(imageView);
+            Glide.with(activity).load(url).apply(getRequestOptions(def, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView)).into(imageView);
         }
     }
 
@@ -68,7 +61,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = getRequestOptions(width, height, def, true, false);
+            RequestOptions options = getRequestOptions(width, height, def, true, false, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
@@ -82,7 +75,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = getRequestOptions(width, height, def, radius, activity);
+            RequestOptions options = getRequestOptions(width, height, def, radius, activity, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
@@ -96,37 +89,47 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = getRequestOptions(width, height, def, true, true);
+            RequestOptions options = getRequestOptions(width, height, def, true, true, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
 
-    public static RequestOptions getRequestOptions(int def) {
-        return getRequestOptions(0, 0, def, 0, null, false, false);
+    public static RequestOptions getRequestOptions(int def, boolean isGif, ImageView imageView) {
+        return getRequestOptions(0, 0, def, 0, null, false, false, isGif, imageView);
     }
 
-    public static RequestOptions getRequestOptions(int width, int height, int def, boolean centerCrop, boolean transform) {
-        return getRequestOptions(width, height, def, 0, null, centerCrop, transform);
+    public static RequestOptions getRequestOptions(int width, int height, int def, boolean centerCrop, boolean transform, boolean isGif, ImageView imageView) {
+        return getRequestOptions(width, height, def, 0, null, centerCrop, transform, isGif, imageView);
     }
 
-    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity) {
-        return getRequestOptions(width, height, def, radius, activity, false, false);
+    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean isGif, ImageView imageView) {
+        return getRequestOptions(width, height, def, radius, activity, false, false, isGif, imageView);
     }
 
-    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean centerCrop, boolean transform) {
+    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean centerCrop, boolean transform, boolean isGif, ImageView imageView) {
         RequestOptions options = new RequestOptions()
                 .placeholder(def)    //加载成功之前占位图
                 .error(def)    //加载错误之后的错误图
-                .priority(Priority.LOW)
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
+                .priority(Priority.LOW);
+        if (!isGif) {
+            options = options.diskCacheStrategy(DiskCacheStrategy.ALL);
+        }
         if (width > 0 && height > 0) {
             options = options.override(width, height);
         }
         if (radius > 0 && activity != null) {
-            options = options.transforms(new CenterCrop(), new RoundedCornersTransformation(ImageUtil.dp2px(activity, radius), 0));
+            if (!isGif) {
+                options = options.transforms(new RoundedCornersTransformation(ImageUtil.dp2px(activity, radius), 0));
+            } else {
+                ImageUtil.setImageViewCenterCrop(width, height, imageView);
+            }
         }
         if (centerCrop) {
-            options = options.centerCrop();
+            if (!isGif) {
+                options = options.centerCrop();
+            } else {
+                ImageUtil.setImageViewCenterCrop(width, height, imageView);
+            }
         }
         if (transform) {
             options = options.transform(new BlurTransformation());
@@ -143,7 +146,7 @@ public class MyPicasso {
      * @param listener
      */
     public static void intoAdImage(ImageView imageView, Startpage startpage, Activity activity, AdvertisementActivity.OnAdImageListener listener) {
-        RequestBuilder builder = Glide.with(activity).load(startpage.image).priority(Priority.HIGH).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).listener(new RequestListener<Drawable>() {
+        RequestBuilder builder = Glide.with(activity).load(startpage.image).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 listener.onFailed();
@@ -227,53 +230,5 @@ public class MyPicasso {
             }
         }
         return "";
-    }
-
-    /**
-     * 支持 webp格式加载gif图片
-     *
-     * @param context
-     * @param url
-     * @param imageView
-     * @param loadListener
-     */
-    public static void loadGif(final Activity context, final String url, final ImageView imageView, OnGlideLoadListener loadListener) {
-        ExecutorFactory.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                HttpURLConnection conn = null;
-                try {
-                    conn = (HttpURLConnection) new URL(url).openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(5000);
-                    int code = conn.getResponseCode();
-                    if (code == 200) {
-                        InputStream inputStream = conn.getInputStream();
-                        String file = context.getFilesDir().getAbsolutePath() + File.separator + "test_out.gif";
-                        File file1 = AESUtil.decryptFile(AESUtil.key, inputStream, file);
-                        dealWithResult(context, file1, imageView, loadListener);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public static void dealWithResult(final Activity context, final File res, final ImageView imageView, OnGlideLoadListener loadListener) {
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (loadListener != null) {
-                    loadListener.onGlideLoad(context, res, imageView);
-                } else {
-                    Glide.with(context).load(res).into(imageView);
-                }
-            }
-        });
-    }
-
-    public interface OnGlideLoadListener {
-        void onGlideLoad(Activity context, File res, ImageView imageView);
     }
 }

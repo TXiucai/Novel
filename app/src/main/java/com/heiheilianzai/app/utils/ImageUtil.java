@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.opengl.GLES10;
 import android.os.Build;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 
@@ -204,6 +205,7 @@ public class ImageUtil {
 
     /**
      * Drawable转换成Bitmap
+     *
      * @param drawable
      * @return
      */
@@ -279,6 +281,7 @@ public class ImageUtil {
 
     /**
      * view转换itmap
+     *
      * @param v
      * @return
      */
@@ -288,5 +291,22 @@ public class ImageUtil {
         Canvas canvas = new Canvas(screenshot);
         v.draw(canvas);
         return screenshot;
+    }
+
+    /**
+     * ImageView 设置图片放大居中 并设置最小宽，高
+     *
+     * @param width
+     * @param height
+     * @param imageView
+     */
+    public static void setImageViewCenterCrop(int width, int height, ImageView imageView) {
+        if (imageView != null) {
+            if (width > 0 && height > 0) {
+                imageView.setMinimumHeight(height);
+                imageView.setMinimumWidth(width);
+            }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
     }
 }

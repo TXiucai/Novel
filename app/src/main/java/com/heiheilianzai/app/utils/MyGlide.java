@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.heiheilianzai.app.R;
@@ -19,15 +18,11 @@ import java.io.FileInputStream;
 import static com.heiheilianzai.app.utils.FileManager.GlideCopy;
 import static com.heiheilianzai.app.utils.FileManager.getManhuaSDCardRoot;
 
-
-/**
- * Created by scb on 2018/12/14.
- */
-
 public class MyGlide {
     static int WIDTH;
     static int HEIGHT;
     private static MyGlide myGlide;
+    private static DownloadTask mDownloadTask;
 
     private MyGlide() {
     }
@@ -44,11 +39,8 @@ public class MyGlide {
         return myGlide;
     }
 
-    private static DownloadTask mDownloadTask;
-
     public static void GlideImageSubsamplingScaleImageView(Activity activity, BaseComicImage baseComicImage, LargeImageView imageView) {
         try {
-            MyToash.Log("baseComicIBB", "1");
             File localPathFile;
             String ImgName = "";
             String localPath = getManhuaSDCardRoot().concat(baseComicImage.comic_id + "/").concat(baseComicImage.chapter_id + "/");
@@ -65,7 +57,6 @@ public class MyGlide {
             } else {
                 return;
             }
-            MyToash.Log("baseComicIBB", "3");
             localPathFile = new File(localPath.concat(ImgName));
             if (localPathFile.exists()) {
                 MyToash.Log("baseComicIBB", localPathFile.getAbsolutePath());
@@ -76,7 +67,6 @@ public class MyGlide {
                 }
             } else {
                 localPathFile.mkdirs();
-                MyToash.Log("baseComicIBB", localPathFile.getAbsolutePath());
                 if (mDownloadTask == null) {
                     mDownloadTask = new DownloadTask();
                 }
@@ -90,7 +80,6 @@ public class MyGlide {
                                     .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                     .get();
                             GlideCopy(filee, localPathFile);
-                            MyToash.Log("baseComicIBBA", filee.getAbsolutePath() + "  " + localPathFile.getAbsolutePath());
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -122,11 +111,9 @@ public class MyGlide {
                 RequestOptions options = new RequestOptions()
                         .placeholder(R.mipmap.icon_comic_def)        //加载成功之前占位图
                         .error(R.mipmap.icon_comic_def)        //加载错误之后的错误图
-                        //指定图片的尺寸 WIDTH * height / width
-                        .override(WIDTH, height)
+                        .override(WIDTH, height) //指定图片的尺寸 WIDTH * height / width
                         .centerCrop()
-                        .skipMemoryCache(false)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);    //bu缓存
+                        .skipMemoryCache(false);
                 try {
                     Glide.with(activity).load(localPathFile).apply(options).into(imageView);
                 } catch (Exception e) {
@@ -139,10 +126,8 @@ public class MyGlide {
                     RequestOptions options = new RequestOptions()
                             .placeholder(R.mipmap.icon_comic_def)        //加载成功之前占位图
                             .error(R.mipmap.icon_comic_def)        //加载错误之后的错误图
-                            //指定图片的尺寸
-                            .override(WIDTH, height)
-                            .centerCrop()//
-                            .diskCacheStrategy(DiskCacheStrategy.ALL);    //缓存所有版本的图像
+                            .override(WIDTH, height) //指定图片的尺寸
+                            .centerCrop();
                     try {
                         Glide.with(activity).load(url).apply(options).into(imageView);
                     } catch (Exception e) {
@@ -167,10 +152,7 @@ public class MyGlide {
             RequestOptions options = new RequestOptions()
                     .placeholder(def)        //加载成功之前占位图
                     .error(def)        //加载错误之后的错误图
-                    //指定图片的尺寸
-                    .override(WIDTH, WIDTH * height / width)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE);    //缓存所有版本的图像
+                    .override(WIDTH, WIDTH * height / width);//指定图片的尺寸
             try {
                 Glide.with(activity).load(url).apply(options).into(imageView);
             } catch (Exception e) {
@@ -178,8 +160,3 @@ public class MyGlide {
         }
     }
 }
-
-
-
-
-
