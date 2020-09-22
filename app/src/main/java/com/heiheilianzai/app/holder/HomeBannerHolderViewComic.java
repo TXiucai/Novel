@@ -47,10 +47,10 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
         GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
         item_store_entrance_comic_bgVIEW.setBackground(g);
         if(flag==0){
-            MyPicasso.GlideImageRoundedCorners(6,activity, data.getImage(), item_store_entrance_comic_img,width2  , height,R.mipmap.book_def_cross);
+            MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img,width2  , height,R.mipmap.book_def_cross);
             MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg,width, ImageUtil.dp2px(activity, 310),R.mipmap.book_def_cross);
         }else {
-            MyPicasso.GlideImageRoundedCorners(6,activity, data.getImage(), item_store_entrance_comic_img,width2  , height,R.mipmap.comic_def_cross);
+            MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img,width2  , height,R.mipmap.comic_def_cross);
             MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg,width, ImageUtil.dp2px(activity, 310),R.mipmap.comic_def_cross);
         }
     }
