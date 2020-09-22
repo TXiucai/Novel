@@ -1,1 +1,1 @@
-include ':app' , 'extras:shswiperefresh'
+include ':app', 'extras:shswiperefresh', 'extras:niceimageview'
