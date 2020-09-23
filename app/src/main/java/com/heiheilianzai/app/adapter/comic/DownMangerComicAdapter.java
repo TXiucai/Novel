@@ -75,13 +75,11 @@ public class DownMangerComicAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) contentView.getTag();
         }
         final BaseComic baseComic = getItem(i);
-        viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = WIDTH;/*+ holder.rl_left.getLayoutParams().width*/
+        viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = WIDTH;
         viewHolder.item_dowmmanger_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity, ComicLookActivity.class);
-                intent.putExtra("baseComic", baseComic);
-                activity.startActivity(intent);
+                activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_down)));
             }
         });
         viewHolder.item_dowmmanger_info.setOnClickListener(new View.OnClickListener() {

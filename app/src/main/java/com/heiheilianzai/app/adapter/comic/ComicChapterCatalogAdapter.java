@@ -20,6 +20,7 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;
@@ -79,9 +80,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
                     if (flag) {
                         baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
                         baseComic.saveIsexist(false);
-                        Intent intent = new Intent(activity, ComicLookActivity.class);
-                        intent.putExtra("baseComic", baseComic);
-                        activity.startActivity(intent);
+                        activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
                     } else {
                         Intent intent = new Intent();
                         intent.putExtra("currentChapter_id", comicChapterCatalog.chapter_id);

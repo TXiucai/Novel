@@ -189,11 +189,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             case R.id.fragment_comicinfo_current_goonread:
                 if (baseComic != null && comicChapter != null) {
                     baseComic.saveIsexist(false);
-                    MyToash.Log("fragment_comicinfo_current_goonread", comic_id);
-                    Intent intent = new Intent(activity, ComicLookActivity.class);
-                    intent.putExtra("baseComic", baseComic);
-                    intent.putExtra("FORM_INFO", true);
-                    //intent.putExtra("comicChapter", (Serializable) comicChapter);
+                    Intent intent = ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(this, R.string.refer_page_info));
+                    intent.putExtra(ComicLookActivity.FORM_INFO_EXT_KAY, true);
                     startActivity(intent);
                 } else {
                     MyToash.ToashError(activity, "漫画正在更新中~");

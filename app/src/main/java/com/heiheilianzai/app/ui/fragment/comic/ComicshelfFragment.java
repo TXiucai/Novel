@@ -40,6 +40,7 @@ import com.heiheilianzai.app.ui.fragment.BookshelfFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.InternetUtils;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
@@ -143,9 +144,7 @@ public class ComicshelfFragment extends Fragment {
                     if (!adapter.isDeletable()) {
                         BaseComic baseComic = bookLists.get(position);
                         baseComic.setAddBookSelf(true);
-                        Intent intent = new Intent(activity, ComicLookActivity.class);
-                        intent.putExtra("baseComic", baseComic);
-                        startActivity(intent);
+                        startActivity(ComicLookActivity.getMyIntent(activity, baseComic,  LanguageUtil.getString(activity, R.string.refer_page_shelf)));
                         if (position != 0) {
                             openBaseComic = baseComic;
                             openPosition = position;
