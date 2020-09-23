@@ -5,6 +5,9 @@ import android.content.Context;
 
 import com.heiheilianzai.app.constant.ReaderConfig;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 与字符串相关工具类
  */
@@ -62,5 +65,15 @@ public class StringUtils {
     public static void setStringInClipboard(Context context, String str) {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setText(str);
+    }
+
+    /**
+     * String 转 List
+     */
+    public static List<String> getStringToList(String c, String regex) {
+        if (!isEmpty(c)) {
+            return Arrays.asList(c.split(regex));
+        }
+        return null;
     }
 }

@@ -10,7 +10,7 @@ public class StroreComicLable extends BaseAd {
     public String label;//": "超人气作品", //名称
     public int style;//": 1, //展示风格
     public String can_more;//": true, //是否有更多 true有，false没有
-    public  String  can_refresh;
+    public String can_refresh;
     public int total;//": 15, //漫画数
     public List<Comic> list;
 
@@ -75,7 +75,6 @@ public class StroreComicLable extends BaseAd {
         public String name;//"": "乔乔的奇妙冒险", //漫画名称
         public String horizontal_cover; //水平封面
         public String vertical_cover; //竖封面
-
         public String author;//"": "黎明C", //作者
         public String description;//"": "美貌千金与帅气王爷", //描述
         public int is_finish;//"": 1, //是否完结 1已完结 0连载中
@@ -85,7 +84,9 @@ public class StroreComicLable extends BaseAd {
         public String total_favors;
         public int total_comment;
         public int total_chapters;
-
+        public String is_hot; // 是否是热门 0否 1 是
+        public String is_recommend; // 是否是推荐
+        public String sorts; //分类标签
 
         @Override
         public String toString() {

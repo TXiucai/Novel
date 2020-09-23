@@ -138,7 +138,6 @@
     <string name="AboutActivity_QQ2">QQ</string>
 
 
-
     <!--用户中心-->
     <string name="UserInfoActivity_title">个人资料</string>
     <string name="UserInfoActivity_weizhi">未知</string>
@@ -323,8 +322,6 @@
     <string name="file_searcher_searching_completed">搜索完成</string>
 
 
-
-
     <!--漫画详情-->
     <string name="fragment_comic_info_shoucang">+收藏</string>
     <string name="fragment_comic_info_yishoucang">已收藏</string>
@@ -389,5 +386,13 @@
     <string name="app_updatefile_exist_dialog_title">升级</string>
     <string name="app_updatefile_exist_dialog_suretext">新版本安装包已准备就绪，是否更新？</string>
     <string name="app_updatefile_exist_dialog_negative_warn">强制更新取消安装退出APP!</string>
-</resources>
 
+    <!--神策-->
+    <string name="refer_page_read_history">历史页</string>
+    <string name="refer_page_down">下载页</string>
+    <string name="refer_page_info">简介页</string>
+    <string name="refer_page_info_catalog">简介页(目录)</string>
+    <string name="refer_page_shelf">书架页</string>
+    <string name="refer_page_previous_chapter">上一章</string>
+    <string name="refer_page_next_chapter">下一章</string>
+</resources>

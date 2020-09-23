@@ -28,8 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.github.piasy.biv.BigImageViewer;
@@ -48,6 +46,7 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.comic.ComicChapterItem;
+import com.heiheilianzai.app.model.comic.ComicInfo;
 import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
@@ -58,6 +57,7 @@ import com.heiheilianzai.app.ui.dialog.comic.PurchaseDialog;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BrightnessUtil;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -65,6 +65,7 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.decode.GlideEncypeImageLoader;
@@ -88,6 +89,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -102,6 +104,15 @@ import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
  * Created by abc on 2016/11/4.
  */
 public class ComicLookActivity extends BaseButterKnifeActivity {
+    //漫画数据
+    public static final String BASE_COMIC_EXT_KAY = "baseComic";
+    //是否从漫画详情页进入
+    public static final String FORM_INFO_EXT_KAY = "FORM_INFO";
+    //是否从阅读历史页进入
+    public static final String FORM_READHISTORY_EXT_KAY = "FORM_READHISTORY";
+    //神策埋点数据从哪个页面进入
+    public static final String REFER_PAGE_EXT_KAY = "referPage";
+
     @BindView(R.id.activity_comiclook_lording)
     public RelativeLayout activity_comiclook_lording;
     @BindView(R.id.activity_comiclook_lording_img)
@@ -177,6 +188,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     LinearLayoutManager linearLayoutManager;
     boolean FORM_INFO, FORM_READHISTORY;
     View activity_comic_look_foot;
+    String mReferPage;//从哪个页面打开漫画阅读(神策埋点数据)
+    long mOpenCurrentTime;//打开漫画阅读页的当前时间
+    ComicInfo mComicInfo;//漫画具体信息
 
     @Override
     public int initContentView() {
@@ -342,6 +356,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.activity_comiclook_xiayihua_layout:
                 if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
+                    resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
                     getData(activity, comic_id, comicChapterItem.next_chapter, true);
                 } else {
                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
@@ -349,6 +364,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.activity_comiclook_shangyihua_layout:
                 if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
+                    resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                     getData(activity, comic_id, comicChapterItem.last_chapter, true);
                 } else {
                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
@@ -466,11 +482,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             showMenu(true);
             Intent intent = getIntent();
             tocao_bgcolor = Color.parseColor("#4d000000");
-            baseComic = (BaseComic) intent.getSerializableExtra("baseComic");
+            baseComic = (BaseComic) intent.getSerializableExtra(BASE_COMIC_EXT_KAY);
             comic_id = baseComic.getComic_id();
             current_display_order = baseComic.getCurrent_display_order();
-            FORM_INFO = intent.getBooleanExtra("FORM_INFO", false);//是否是漫画详情界面过来的
-            FORM_READHISTORY = intent.getBooleanExtra("FORM_READHISTORY", false);//阅读历史过来的 需要校验 服务端和本地记录
+            FORM_INFO = intent.getBooleanExtra(FORM_INFO_EXT_KAY, false);//是否是漫画详情界面过来的
+            FORM_READHISTORY = intent.getBooleanExtra(FORM_READHISTORY_EXT_KAY, false);//阅读历史过来的 需要校验 服务端和本地记录
+            mReferPage = intent.getStringExtra(REFER_PAGE_EXT_KAY);
+            setOpenCurrentTime();
             if (FORM_READHISTORY) {
                 baseComicLocal = LitePal.where("comic_id = ?", comic_id).findFirst(BaseComic.class);
                 if (baseComicLocal != null) {
@@ -503,6 +521,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     }
                 }
             });
+            httpDataComicInfo();
         } catch (Exception e) {
         } catch (Error e) {
         }
@@ -512,7 +531,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (comicChapter != null) {
             ComicChapterSize = comicChapter.size();
             CurrentComicChapter = getCurrentComicChapter(current_display_order);
-            if(CurrentComicChapter!=null){
+            if (CurrentComicChapter != null) {
                 Chapter_id = CurrentComicChapter.getChapter_id();
                 current_read_img_order = CurrentComicChapter.current_read_img_order;//本章最近阅读图片
             }
@@ -571,7 +590,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     public void getData(Activity activity, String comic_id, String chapter_id, boolean HandleData) {
-        if (!"0".equals(chapter_id)&&!StringUtils.isEmpty(chapter_id)) {
+        if (!"0".equals(chapter_id) && !StringUtils.isEmpty(chapter_id)) {
             MyToash.Log("COMIC_chapter", "COMIC_chapter");
             if (HandleData) {
                 item_dialog_downadapter_RotationLoadingView.setVisibility(View.VISIBLE);
@@ -606,7 +625,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
                                 map.put(chapter_id, comicChapterItem);
                                 ComicChapter CurrentComicChapter = getCurrentComicChapter(current_display_order + 1);
-                                if(CurrentComicChapter!=null){
+                                if (CurrentComicChapter != null) {
                                     CurrentComicChapter.setImagesText(result);
                                     ContentValues values = new ContentValues();
                                     values.put("ImagesText", result);
@@ -639,9 +658,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private ComicChapter getCurrentComicChapter(int comicChapterSize) {
-        ComicChapter comicChaptertemp=null;
-        if(comicChapter!=null){
-            if (comicChapterSize < ComicChapterSize&&comicChapter.size()>comicChapterSize) {
+        ComicChapter comicChaptertemp = null;
+        if (comicChapter != null) {
+            if (comicChapterSize < ComicChapterSize && comicChapter.size() > comicChapterSize) {
                 comicChaptertemp = comicChapter.get(comicChapterSize);
             } else {
                 comicChaptertemp = comicChapter.get(0);
@@ -769,6 +788,33 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         );
     }
 
+    /**
+     * 获取该本漫画详情
+     */
+    private void httpDataComicInfo() {
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("comic_id", comic_id);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_info, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            MyToash.LogE("httpDataComicInfo", result);
+                            ComicInfo comicInfo = gson.fromJson(result, ComicInfo.class);
+                            if (comicInfo != null) {
+                                mComicInfo = comicInfo;
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -871,6 +917,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     protected void onDestroy() {
         super.onDestroy();
         map.clear();
+        setMHContentPageEvent();
     }
 
     class MyViewHolder {
@@ -897,6 +944,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 case R.id.activity_comic_look_foot_xiayihua:
                     isclickScreen = false;
                     if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
+                        resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
                         getData(activity, comic_id, comicChapterItem.next_chapter, true);
                     } else {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
@@ -905,6 +953,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 case R.id.activity_comic_look_foot_shangyihua:
                     isclickScreen = false;
                     if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
+                        resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                         getData(activity, comic_id, comicChapterItem.last_chapter, true);
                     } else {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
@@ -961,14 +1010,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
     /**
      * 拿到数据后 据数据判断图片地址是否需要解密。(只在ComicLookActivity使用)
+     *
      * @param bigImageImageLoader
      */
-    void setBigImageImageLoader(BaseComicImage bigImageImageLoader){
+    void setBigImageImageLoader(BaseComicImage bigImageImageLoader) {
         String imageStr = bigImageImageLoader.getImage();
         setBigImageImageLoader(StringUtils.isImgeUrlEncryptPostfix(imageStr));
     }
 
-    void setBigImageImageLoader(boolean isEncrype){
+    void setBigImageImageLoader(boolean isEncrype) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
@@ -979,5 +1029,88 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         } else {
             BigImageViewer.initialize(GlideImageLoader.with(App.getAppContext(), okHttpClient));
         }
+    }
+
+    /**
+     * 神策漫画阅读页埋点
+     */
+    private void setMHContentPageEvent() {
+        if (mComicInfo == null) {
+            httpDataComicInfo();
+            return;
+        }
+        SensorsDataHelper.setMHContentPageEvent(baseComicImagesSize,//当前章总页数
+                Last_read_img_order,//当前章已读页数
+                new Long(DateUtils.getCurrentTimeDifferenceSecond(mOpenCurrentTime)).intValue(),//停留时长
+                getPropIdList(),//属性ID
+                getTagIdList(),//分类ID
+                mReferPage,//前向页面
+                Integer.valueOf(comicChapterItem == null ? "0" : comicChapterItem.comic_id),//漫画ID
+                Integer.valueOf(comicChapterItem == null ? "0" : comicChapterItem.chapter_id),//漫画当前章节ID
+                mComicInfo == null ? 0 : mComicInfo.comic.total_chapters, //漫画总章节
+                0);//作者ID
+    }
+
+    /**
+     * 进入漫漶详情必传参数
+     *
+     * @param context
+     * @param baseComic 漫画数据
+     * @param referPage 神策埋点数据从哪个页面进入
+     * @return Intent
+     */
+    public static Intent getMyIntent(Context context, BaseComic baseComic, String referPage) {
+        Intent intent = new Intent(context, ComicLookActivity.class);
+        intent.putExtra(ComicLookActivity.BASE_COMIC_EXT_KAY, baseComic);
+        intent.putExtra(ComicLookActivity.REFER_PAGE_EXT_KAY, referPage);
+        return intent;
+    }
+
+    /**
+     * 点击上一章 下一章 触发埋点并重置埋点数据
+     *
+     * @param referPage
+     */
+    private void resetSaData(String referPage) {
+        setMHContentPageEvent();
+        setOpenCurrentTime();
+        mReferPage = String.valueOf(referPage);
+    }
+
+    /**
+     * 设置打开漫画阅读当前时间
+     */
+    private void setOpenCurrentTime() {
+        mOpenCurrentTime = DateUtils.currentTime();
+    }
+
+    /**
+     * 神策埋点 获取prop_id属性数据
+     */
+    private List<String> getPropIdList() {
+        List<String> propId = new ArrayList<>();
+        if (mComicInfo != null) {
+            if ("1".equals(mComicInfo.comic.is_hot)) {
+                propId.add("热门");
+            }
+            if ("1".equals(mComicInfo.comic.is_recommend)) {
+                propId.add("推荐");
+            }
+        }
+        return propId;
+    }
+
+    /**
+     * 神策埋点 获取tag_id分类信息
+     */
+    private List<String> getTagIdList() {
+        List<String> tagId = new ArrayList<>();
+        if (mComicInfo != null) {
+            List<String> list = StringUtils.getStringToList(mComicInfo.comic.sorts, ",");
+            if (list != null) {
+                tagId.addAll(list);
+            }
+        }
+        return tagId;
     }
 }
