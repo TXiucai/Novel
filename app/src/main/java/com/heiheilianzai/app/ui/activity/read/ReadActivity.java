@@ -40,12 +40,14 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterItem;
+import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.event.CloseAnimationEvent;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.CatalogInnerActivity;
 import com.heiheilianzai.app.ui.activity.CommentListActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -54,17 +56,22 @@ import com.heiheilianzai.app.ui.dialog.read.AutoProgressBar;
 import com.heiheilianzai.app.ui.dialog.read.AutoSettingDialog;
 import com.heiheilianzai.app.ui.dialog.read.BrightnessDialog;
 import com.heiheilianzai.app.ui.dialog.read.SettingDialog;
+import com.heiheilianzai.app.utils.BookUtil;
 import com.heiheilianzai.app.utils.BrightnessUtil;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.PageFactory;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
@@ -96,6 +103,8 @@ import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfO
 public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
+    //神策埋点数据从哪个页面进入
+    public static final String REFER_PAGE_EXT_KAY = "referPage";
     @BindView(R.id.bookpage)
     PageWidget bookpage;
     @BindView(R.id.activity_read_top_back_view)
@@ -158,6 +167,9 @@ public class ReadActivity extends BaseReadActivity {
     BaseBook baseBook;
     BaseAd baseAd;
     ImageView list_ad_view_img;
+    InfoBookItem mInfoBookItem;
+    String mReferPage;//从哪个页面打开小说阅读(神策埋点数据)
+    long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
 
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -225,6 +237,7 @@ public class ReadActivity extends BaseReadActivity {
             layoutParams.height = ImageUtil.dp2px(this, 50);
             activity_read_top_menu.setLayoutParams(layoutParams);
         }
+        setOpenCurrentTime();
         uiFreeCharge();
     }
 
@@ -246,6 +259,7 @@ public class ReadActivity extends BaseReadActivity {
         }
         bookpage.setADview(insert_todayone2);
         next();
+        getBookInfo();
     }
 
     private void next() {
@@ -255,6 +269,7 @@ public class ReadActivity extends BaseReadActivity {
         Intent intent = getIntent();
         chapter = (ChapterItem) intent.getSerializableExtra(EXTRA_CHAPTER);
         baseBook = (BaseBook) intent.getSerializableExtra(EXTRA_BOOK);
+        mReferPage = intent.getStringExtra(REFER_PAGE_EXT_KAY);
         pageFactory = new PageFactory(baseBook, bookpage_scroll, bookpage_scroll_text, insert_todayone2, this);
         pageFactory.setPurchaseLayout(activity_read_purchase_layout, activity_read_purchase_layout2);
         if (ReaderConfig.USE_AD) {
@@ -411,10 +426,16 @@ public class ReadActivity extends BaseReadActivity {
                 pageFactory.changeLineSpacing(mode);
             }
         });
-
-        pageFactory.setPageEvent(new PageFactory.PageEvent() {
+        pageFactory.setPageEvent(new PageFactory.PageEvent() {//小说翻页监听
             @Override
-            public void changeProgress(float progress) {
+            public void changeProgress(float progress) {//翻页
+            }
+
+            @Override
+            public void onSwitchChapter(BookUtil oldBookUtil) {//章节变化
+                if (pageFactory != null) {
+                    resetSaData(LanguageUtil.getString(activity, pageFactory.mNextPage ? R.string.refer_page_next_chapter : R.string.refer_page_previous_chapter), oldBookUtil);
+                }
             }
         });
         bookpage.setTouchListener(new PageWidget.TouchListener() {
@@ -599,6 +620,7 @@ public class ReadActivity extends BaseReadActivity {
         Intent intent = new Intent(context, ReadActivity.class);
         intent.putExtra(EXTRA_CHAPTER, chapterItem);
         intent.putExtra(EXTRA_BOOK, baseBook);
+        intent.putExtra(REFER_PAGE_EXT_KAY, StringUtils.isEmpty(context.getTitle().toString()) ? "" : context.getTitle());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         context.startActivity(intent);
@@ -818,7 +840,10 @@ public class ReadActivity extends BaseReadActivity {
             }
         } catch (Exception e) {
         }
-        pageFactory.clear();
+        if (pageFactory != null) {
+            setMHContentPageEvent(pageFactory.getBookUtil());
+            pageFactory.clear();
+        }
         bookpage = null;
         unregisterReceiver(myReceiver);
         isSpeaking = false;
@@ -897,6 +922,28 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     /**
+     * 获取小说详情数据
+     */
+    private void getBookInfo() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("book_id", mBookId);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBookInfoUrl, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String result) {
+                try {
+                    mInfoBookItem = new Gson().fromJson(result, InfoBookItem.class);
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+            }
+        });
+    }
+
+    /**
      * 根据是否免费调整UI变化
      */
     private void uiFreeCharge() {
@@ -906,7 +953,79 @@ public class ReadActivity extends BaseReadActivity {
     /**
      * onDestroy销毁关闭所有对话框
      */
-    private void   dismissAllDialog(){
-        dismissAllDialog(mBrightDialog,mSettingDialog,mAutoSettingDialog);
+    private void dismissAllDialog() {
+        dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog);
+    }
+
+    /**
+     * 神策小说阅读页埋点
+     */
+    private void setMHContentPageEvent(BookUtil bookUtil) {
+        if (mInfoBookItem == null) {
+            getBookInfo();
+            return;
+        }
+        if (bookUtil != null) {
+            SensorsDataHelper.setXSContentPageEvent(new Long(bookUtil.getBookLen()).intValue(),//当前章总页数
+                    new Long(bookUtil.getPosition()).intValue(),//当前章已读页数
+                    new Long(DateUtils.getCurrentTimeDifferenceSecond(mOpenCurrentTime)).intValue(),//停留时长
+                    getPropIdList(),//属性ID
+                    getTagIdList(),//分类ID
+                    mReferPage,//前向页面
+                    Integer.valueOf(bookUtil.getBook_id()),//小说ID
+                    Integer.valueOf(bookUtil.getChapter_id()),//小说当前章节ID
+                    mInfoBookItem == null ? 0 : Integer.valueOf(mInfoBookItem.book.total_chapters), //小说总章节
+                    0);//作者ID
+        }
+    }
+
+    /**
+     * 神策埋点 获取prop_id属性数据
+     */
+    private List<String> getPropIdList() {
+        List<String> propId = new ArrayList<>();
+        if (mInfoBookItem != null) {
+            putPropIdL(propId, mInfoBookItem.book.is_new, "新书");
+            putPropIdL(propId, mInfoBookItem.book.is_hot, "热门");
+            putPropIdL(propId, mInfoBookItem.book.is_yy, "爽文");
+            putPropIdL(propId, mInfoBookItem.book.is_greatest, "精选");
+            putPropIdL(propId, mInfoBookItem.book.is_god, "大神");
+        }
+        return propId;
+    }
+
+    private void putPropIdL(List<String> list, String PropId, String PropName) {
+        if ("1".equals(PropId)) {
+            list.add(PropName);
+        }
+    }
+
+    /**
+     * 神策埋点 获取tag_id分类信息
+     */
+    private List<String> getTagIdList() {
+        List<String> tagId = new ArrayList<>();
+        if (mInfoBookItem != null) {
+            tagId.add(mInfoBookItem.book.cid1);
+        }
+        return tagId;
+    }
+
+    /**
+     * 点击上一章 下一章 触发埋点并重置埋点数据
+     *
+     * @param referPage
+     */
+    private void resetSaData(String referPage, BookUtil bookUtil) {
+        setMHContentPageEvent(bookUtil);
+        setOpenCurrentTime();
+        mReferPage = String.valueOf(referPage);
+    }
+
+    /**
+     * 设置打开漫画阅读当前时间
+     */
+    private void setOpenCurrentTime() {
+        mOpenCurrentTime = DateUtils.currentTime();
     }
 }

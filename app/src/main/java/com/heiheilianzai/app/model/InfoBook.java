@@ -14,6 +14,13 @@ public class InfoBook extends StroreBookcLable.Book {
     public int total_chapter;//": 542,
     public String last_chapter_time;//": "更新于4个月前",
     public String last_chapter;//": "第542 鬼门",
+    public String total_chapters;//总章节数
+    public String cid1;//分类ID
+    public String is_new;//是否是新书 1:是 0:否
+    public String is_hot;//是否是热门 1:是 0:否
+    public String is_yy;//是否是爽文 1:是 0:否
+    public String is_greatest;//是否是精选 1:是 0:否
+    public String is_god;//是否是大神 1:是 0:否
 
     public String getViews() {
         return views;

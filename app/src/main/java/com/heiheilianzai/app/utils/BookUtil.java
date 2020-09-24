@@ -345,6 +345,14 @@ public class BookUtil {
         this.position = position;
     }
 
+    public String getBook_id() {
+        return book_id;
+    }
+
+    public String getChapter_id() {
+        return chapter_id;
+    }
+
     //缓存书本
     private void cacheBook() throws IOException {
         m_strCharsetName = chapter.getCharset();
@@ -399,6 +407,7 @@ public class BookUtil {
     protected String fileName(int index) {
         return cachedPath + bookName + index + ".txt";
     }
+
     //获取书本缓存
     public char[] block(int index) {
         if (myArray.size() == 0) {

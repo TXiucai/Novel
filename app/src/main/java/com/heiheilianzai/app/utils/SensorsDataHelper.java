@@ -97,6 +97,28 @@ public class SensorsDataHelper {
      * @param author_id         作者ID
      */
     public static void setMHContentPageEvent(int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
+        setContentPageEvent(SaEventConfig.MH_CONTENT_PAGE_EVENT, total_page_num, read_page_num, stay_time, prop_id, tag_id, refer_page, work_id, chapter_id, total_chapter_num, author_id);
+    }
+
+    /**
+     * 神策 小说内容 埋点事件
+     *
+     * @param total_page_num    当前章总页数
+     * @param read_page_num     当前章已读页数
+     * @param stay_time         停留时长
+     * @param prop_id           属性ID
+     * @param tag_id            分类ID
+     * @param refer_page        前向页面
+     * @param work_id           漫画ID
+     * @param chapter_id        漫画当前章节ID
+     * @param total_chapter_num 漫画总章节
+     * @param author_id         作者ID
+     */
+    public static void setXSContentPageEvent(int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
+        setContentPageEvent(SaEventConfig.XS_CONTENT_PAGE_EVENT, total_page_num, read_page_num, stay_time, prop_id, tag_id, refer_page, work_id, chapter_id, total_chapter_num, author_id);
+    }
+
+    public static void setContentPageEvent(String event, int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.TOTAL_PAGE_NUM_VAR, total_page_num);
@@ -109,7 +131,7 @@ public class SensorsDataHelper {
             properties.put(SaVarConfig.CHAPTER_ID_VAR, chapter_id);
             properties.put(SaVarConfig.TOTAL_CHAPTER_NUM_VAR, total_chapter_num);
             properties.put(SaVarConfig.AUTHOR_ID_VAR, author_id);
-            SensorsDataAPI.sharedInstance().track(SaEventConfig.MH_CONTENT_PAGE_EVENT, properties);
+            SensorsDataAPI.sharedInstance().track(event, properties);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -14,4 +14,8 @@ public class SaEventConfig {
      */
     public static final String MH_CONTENT_PAGE_EVENT = "MH_Content_Page";
 
+    /**
+     * XS内容页
+     */
+    public static final String XS_CONTENT_PAGE_EVENT = "XS_Content_Page";
 }

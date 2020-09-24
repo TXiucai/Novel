@@ -180,6 +180,7 @@ public class PageFactory {
     int button_ad_heigth, bg_color, color;
     public boolean IS_CHAPTERLast = true;
     public boolean IS_CHAPTERFirst = true;
+    public boolean mNextPage = true;//变化是否向后翻页
 
     public enum Status {
         OPENING,
@@ -660,6 +661,7 @@ public class PageFactory {
     //向前翻页
     public void prePage() {
         boolean last_chapter = currentPage.getBegin() <= 0;
+        mNextPage = false;
         if (last_chapter) {
             if (!ChapterManager.getInstance(mActivity).hasPreChapter()) {
                 if (!m_isfirstPage) {
@@ -736,6 +738,7 @@ public class PageFactory {
     //向后翻页
     public void nextPage() {
         boolean nextChapter = currentPage.getEnd() >= mBookUtil.getBookLen();
+        mNextPage = true;
         if (currentPage == null) {
             return;
         }
@@ -850,19 +853,22 @@ public class PageFactory {
         if (baseBook.isAddBookSelf() == 1) {
             EventBus.getDefault().post(new RefreshTopbook(book_id, chapter_id, true));
         }
+        if (mPageEvent != null && mBookUtil != null) {
+            mPageEvent.onSwitchChapter(mBookUtil);
+        }
         if (isfirst != 4) {
-            ViewUtils.setVisibility(mBookPageWidget,View.VISIBLE);
+            ViewUtils.setVisibility(mBookPageWidget, View.VISIBLE);
             mBookPageWidget.setVisibility(View.VISIBLE);
-            ViewUtils.setVisibility( bookpage_scroll,View.GONE);
+            ViewUtils.setVisibility(bookpage_scroll, View.GONE);
             mStatus = Status.OPENING;
             MyToash.Log("getPageForBegin0", "");
             if (bookUtil == null) {
                 try {
                     mBookUtil.openBook(mActivity, chapterItem, book_id, chapter_id);
                     if (mIsPreview.equals("1")) {
-                        ViewUtils.setVisibility(mPurchaseLayout,View.VISIBLE);
+                        ViewUtils.setVisibility(mPurchaseLayout, View.VISIBLE);
                     } else if (mIsPreview.equals("0")) {
-                        ViewUtils.setVisibility(mPurchaseLayout,View.GONE);
+                        ViewUtils.setVisibility(mPurchaseLayout, View.GONE);
                     }
                     PageFactory.mStatus = PageFactory.Status.FINISH;
                     if (chapterItem.getBegin() == 0) {
@@ -878,9 +884,9 @@ public class PageFactory {
             } else {
                 mBookUtil = bookUtil;
                 if (mIsPreview.equals("1")) {
-                    ViewUtils.setVisibility(mPurchaseLayout,View.VISIBLE);
+                    ViewUtils.setVisibility(mPurchaseLayout, View.VISIBLE);
                 } else if (mIsPreview.equals("0")) {
-                    ViewUtils.setVisibility(mPurchaseLayout,View.GONE);
+                    ViewUtils.setVisibility(mPurchaseLayout, View.GONE);
                 }
                 PageFactory.mStatus = PageFactory.Status.FINISH;
                 currentPage = getPageForBegin(chapterItem.getBegin());
@@ -940,7 +946,7 @@ public class PageFactory {
                             values.put("is_preview", "0");
                             values.put("update_time", chapterContent.getUpdate_time());
                             LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
-                            if(mActivity!=null){
+                            if (mActivity != null) {
                                 MyToash.ToashSuccess(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_buysuccess));
                                 ChapterManager.getInstance(mActivity).getCurrentChapter().setIs_preview("0");
                                 ChapterManager.getInstance(mActivity).getCurrentChapter().setChapter_path(filepath);
@@ -1406,6 +1412,12 @@ public class PageFactory {
 
     public interface PageEvent {
         void changeProgress(float progress);
+
+        void onSwitchChapter(BookUtil oldBookUtil);
+    }
+
+    public BookUtil getBookUtil() {
+        return mBookUtil;
     }
 
     private void drawLastChapter(ChapterItem querychapterItem, String preChapterId) {
@@ -1503,7 +1515,7 @@ public class PageFactory {
                 values.put("chapteritem_begin", 0);
                 LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", nextChapter.getBook_id(), nextChapter.getChapter_id());
                 nextChapter.setChapteritem_begin(0);
-                if(mActivity!=null){
+                if (mActivity != null) {
                     openBook(2, nextChapter, bookUtil);
                     ChapterManager.getInstance(mActivity).setCurrentChapter(nextChapter);
                     IS_CHAPTERLast = true;
