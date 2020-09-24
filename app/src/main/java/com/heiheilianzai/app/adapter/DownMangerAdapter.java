@@ -14,6 +14,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
@@ -74,18 +75,21 @@ public class DownMangerAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 BaseBook basebooks = LitePal.where("book_id = ?", downoption.book_id).findFirst(BaseBook.class);
-                if (basebooks != null) {
-                    ChapterManager.getInstance(activity).openBook(basebooks, downoption.book_id, basebooks.getCurrent_chapter_id());
-                } else {
-                    BaseBook baseBook;
-                    baseBook = new BaseBook();
-                    baseBook.setBook_id(downoption.book_id);
-                    baseBook.setName(downoption.bookname);
-                    baseBook.setCover(downoption.cover);
-                    baseBook.setDescription(downoption.description);
-                    baseBook.setAddBookSelf(0);
-                    baseBook.saveIsexist(0);
-                    ChapterManager.getInstance(activity).openBook(baseBook, downoption.book_id, null);
+                if (activity != null) {
+                    activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_down));
+                    if (basebooks != null) {
+                        ChapterManager.getInstance(activity).openBook(basebooks, downoption.book_id, basebooks.getCurrent_chapter_id());
+                    } else {
+                        BaseBook baseBook;
+                        baseBook = new BaseBook();
+                        baseBook.setBook_id(downoption.book_id);
+                        baseBook.setName(downoption.bookname);
+                        baseBook.setCover(downoption.cover);
+                        baseBook.setDescription(downoption.description);
+                        baseBook.setAddBookSelf(0);
+                        baseBook.saveIsexist(0);
+                        ChapterManager.getInstance(activity).openBook(baseBook, downoption.book_id, null);
+                    }
                 }
             }
         });

@@ -21,6 +21,7 @@ import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.HttpUtils;
+import com.heiheilianzai.app.utils.LanguageUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,7 +99,10 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         baseBook.saveIsexist(1);
                         String book_id = mItemList.get(position).getBook_id();
-                        ChapterManager.getInstance(activity).openBook(baseBook, book_id, mItemList.get(position).getChapter_id());
+                        if (activity != null) {
+                            activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
+                            ChapterManager.getInstance(activity).openBook(baseBook, book_id, mItemList.get(position).getChapter_id());
+                        }
                         ReaderConfig.integerList.add(1);
                     }
                 });
@@ -159,7 +163,10 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         ReaderConfig.CatalogInnerActivityOpen = true;
-                        ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, mItemList.get(position).getChapter_id(), json);
+                        if (activity != null) {
+                            activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
+                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, mItemList.get(position).getChapter_id(), json);
+                        }
                     }
                 });
                 if (mDisplayOrder < mItemList.size()) {

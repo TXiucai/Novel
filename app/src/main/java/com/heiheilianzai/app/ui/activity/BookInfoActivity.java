@@ -176,7 +176,10 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                 if (!onclickTwo) {
                     onclickTwo = true;
                     mBaseBook.saveIsexist(0);
-                    ChapterManager.getInstance(BookInfoActivity.this).openBook(mBaseBook, mBookId);
+                    if (activity != null) {
+                        activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_info));
+                        ChapterManager.getInstance(activity).openBook(mBaseBook, mBookId);
+                    }
                     onclickTwo = false;
                     ReaderConfig.integerList.add(1);
                 }
@@ -322,7 +325,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
                     activity_book_info_content_comment_item_reply.setVisibility(TextUtils.isEmpty(bookInfoComment.getReply_info()) ? View.GONE : View.VISIBLE);
                     activity_book_info_content_comment_item_time.setText(bookInfoComment.getTime());
-                    comment_item_isvip.setVisibility(bookInfoComment.getIs_vip()==1 ? View.VISIBLE : View.GONE);
+                    comment_item_isvip.setVisibility(bookInfoComment.getIs_vip() == 1 ? View.VISIBLE : View.GONE);
                     //评论点击的处理
                     commentView.setOnClickListener(new View.OnClickListener() {
                         @Override

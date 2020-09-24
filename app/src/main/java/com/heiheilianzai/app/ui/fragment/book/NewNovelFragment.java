@@ -53,6 +53,7 @@ import com.heiheilianzai.app.utils.DisplayUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.InternetUtils;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
@@ -578,7 +579,10 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
                 BaseBook baseBook = bookLists.get(mPosition);
                 baseBook.setAddBookSelf(1);
                 BookShelfOpen = true;
-                ChapterManager.getInstance(activity).openBook(baseBook, baseBook.getBook_id());
+                if (activity != null) {
+                    activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_shelf));
+                    ChapterManager.getInstance(activity).openBook(baseBook, baseBook.getBook_id());
+                }
                 if (mPosition != 0) {
                     exchangePosition(baseBook);
                     setBookSelfBooks();
@@ -612,7 +616,7 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void getHttpData(String result) {
                 try {
-                    if(!StringUtils.isEmpty(result)){
+                    if (!StringUtils.isEmpty(result)) {
                         JSONObject obj = new JSONObject(result);
                         initBanner(obj);
                         initAnnoun(obj);

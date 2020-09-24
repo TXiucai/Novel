@@ -21,6 +21,7 @@ import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.HttpUtils;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 
 import org.json.JSONArray;
@@ -70,6 +71,7 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 baseBook.saveIsexist(0);
                 String chapter_id = mItemList.get(position).getChapter_id();
+                CatalogActivity.this.setTitle(LanguageUtil.getString(CatalogActivity.this, R.string.refer_page_catalog));
                 ChapterManager.getInstance(CatalogActivity.this).openBook(baseBook, mBookId, chapter_id, mJson);
                 ReaderConfig.integerList.add(1);
                 mAdapter.mDisplayOrder = position;

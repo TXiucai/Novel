@@ -49,7 +49,10 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
                     BaseBook basebooks = LitePal.where("book_id = ?", readHistoryBook.getBook_id()).findFirst(BaseBook.class);
                     if (basebooks != null) {
                         basebooks.setCurrent_chapter_id(readHistoryBook.chapter_id);
-                        ChapterManager.getInstance(activity).openBook(basebooks, readHistoryBook.getBook_id(), readHistoryBook.chapter_id);
+                        if (activity != null) {
+                            activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_read_history));
+                            ChapterManager.getInstance(activity).openBook(basebooks, readHistoryBook.getBook_id(), readHistoryBook.chapter_id);
+                        }
                     } else {
                         BaseBook baseBook;
                         baseBook = new BaseBook();

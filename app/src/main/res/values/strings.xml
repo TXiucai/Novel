@@ -395,4 +395,5 @@
     <string name="refer_page_shelf">书架页</string>
     <string name="refer_page_previous_chapter">上一章</string>
     <string name="refer_page_next_chapter">下一章</string>
+    <string name="refer_page_catalog">目录页</string>
 </resources>
