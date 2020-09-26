@@ -30,6 +30,7 @@ import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,14 +57,13 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
     @BindView(R.id.activity_comment_list_add_comment)
     public EditText activity_comment_list_add_comment;
 
-    // public RelativeLayout mSearchLayout;
-
     boolean IsBook;
     int mCurrentPage = 1, total_count;
     Gson gson = new Gson();
     List<ComicComment.Comment> commentList;
     CommentAdapter commentAdapter;
     String comic_id;
+    boolean isLoad;
 
     @OnClick(value = {R.id.titlebar_back, R.id.activity_comment_list_add_comment
     })
@@ -76,7 +76,6 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                 finish();
                 break;
             case R.id.activity_comment_list_add_comment:
-
                 break;
         }
     }
@@ -103,7 +102,6 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         init();
-
     }
 
     private void init() {
@@ -149,19 +147,13 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                 }
                 return false;
             }
-
         });
         commentList = new ArrayList<>();
-
         IsBook = getIntent().getBooleanExtra("IsBook", false);
-
         comic_id = getIntent().getStringExtra("comic_id");
-        //   View temphead = LayoutInflater.from(activity).inflate(R.layout.item_list_head, null);
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Intent intent = new Intent(activity, ReplyCommentActivity.class);
                 intent.putExtra("comic_id", comic_id);
                 intent.putExtra("comment_id", commentList.get(position).getComment_id());
@@ -171,7 +163,6 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                 startActivity(intent);
             }
         });
-
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -185,35 +176,26 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                 isLoad = ((firstVisibleItem + visibleItemCount) == totalItemCount);
             }
         });
-
         getHttp();
     }
 
-    boolean isLoad;
-
     public void getHttp() {
-
-
         String requestParams;
         ReaderParams params = new ReaderParams(activity);
         if (!IsBook) {
             requestParams = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_comment_list;
         } else {
-            requestParams = ReaderConfig.getBaseUrl()+ReaderConfig.mFinishUrl;
+            requestParams = ReaderConfig.getBaseUrl() + ReaderConfig.mFinishUrl;
             params.putExtraParams("channel", "1");
         }
-
         params.putExtraParams("comic_id", comic_id);
         params.putExtraParams("page_num", mCurrentPage + "");
-
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         if (!IsBook) {
                             ComicComment comicComment = gson.fromJson(result, ComicComment.class);
-                            //    MyToash.Log("comicComment", mCurrentPage+"   "+comicComment.toString());
                             if ((mCurrentPage > comicComment.total_page)) {
                                 if (mCurrentPage > 1) {
                                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
@@ -223,9 +205,7 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                             if (mCurrentPage == 1) {
                                 total_count = comicComment.total_count;
                             }
-
                             if (!comicComment.list.isEmpty()) {
-
                                 if (mCurrentPage == 1) {
                                     commentList.clear();
                                     commentList.addAll(comicComment.list);
@@ -235,7 +215,6 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                                     commentList.addAll(comicComment.list);
                                     commentAdapter.notifyDataSetChanged();
                                 }
-
                                 mCurrentPage = comicComment.current_page;
                                 mCurrentPage++;
                             }
@@ -247,15 +226,12 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
                                 mListView.setVisibility(View.VISIBLE);
                             }
                         }
-
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
 
@@ -264,24 +240,18 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
     }
 
     public static void sendComment(Activity activity, String comic_id, String content, SendSuccess sendSuccess) {
-
         if (!MainHttpTask.getInstance().Gotologin(activity)) {
             return;
         }
-        ;
+        setMHDiscussEvent(comic_id);
         ReaderParams params = new ReaderParams(activity);
         String requestParams = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_sendcomment;
         params.putExtraParams("comic_id", comic_id);
-        //params.putExtraParams("comment_id", comic_id);
         params.putExtraParams("content", content);
         String json = params.generateParamsJson();
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        //  MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.CommentListActivity_success));
-
-
                         if (sendSuccess != null) {
                             sendSuccess.Success(result);
                         }
@@ -289,24 +259,10 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
-
-    /*    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-        @Override
-        protected void onDestroy() {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                mSearchLayout.getViewTreeObserver().removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
-            } else {
-                mSearchLayout.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
-            }
-            super.onDestroy();
-        }*/
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreashComicInfoActivity refreshBookInfo) {
@@ -322,5 +278,15 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
         super.finish();
         //关闭窗体动画显示
         this.overridePendingTransition(R.anim.activity_close, 0);
+    }
+
+    /**
+     * 漫画评论 神策埋点
+     */
+    private static void setMHDiscussEvent(String comic_id) {
+        try {
+            SensorsDataHelper.setMHDiscussEvent(Integer.valueOf(comic_id));
+        } catch (Exception e) {
+        }
     }
 }
