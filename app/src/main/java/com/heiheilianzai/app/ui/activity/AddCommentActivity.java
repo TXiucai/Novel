@@ -21,22 +21,18 @@ import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.OnMultiClickListener;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.regex.Pattern;
 
-//import com.squareup.okhttp.Request;
-//import com.squareup.okhttp.Response;
-//.http.RequestParams;
-
 /**
  * 写作品评论
  * Created by scb on 2018/7/8.
  */
 public class AddCommentActivity extends BaseActivity implements ShowTitle {
-    private final String TAG = AddCommentActivity.class.getSimpleName();
     private LinearLayout mBack;
     private TextView mTitle;
     private String mBookId;
@@ -65,12 +61,10 @@ public class AddCommentActivity extends BaseActivity implements ShowTitle {
         activity_add_comment_content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -89,70 +83,58 @@ public class AddCommentActivity extends BaseActivity implements ShowTitle {
             }
 
         });
-
     }
 
     @Override
     public void initData() {
-
     }
 
     /**
      * 发请求
      */
     public void addComment() {
-
-        if(!MainHttpTask.getInstance().Gotologin(AddCommentActivity.this)){
+        if (!MainHttpTask.getInstance().Gotologin(AddCommentActivity.this)) {
             return;
-        };
-
+        }
         String str = activity_add_comment_content.getText().toString();
-        if (TextUtils.isEmpty(str)||Pattern.matches("\\s*", str)) {
+        if (TextUtils.isEmpty(str) || Pattern.matches("\\s*", str)) {
             MyToash.ToashError(AddCommentActivity.this, LanguageUtil.getString(AddCommentActivity.this, R.string.CommentListActivity_some));
             return;
         }
         mBookId = getIntent().getStringExtra("book_id");
-
-
+        setXSDiscussEvent(mBookId);
         ReaderParams readerParams = new ReaderParams(this);
         readerParams.putExtraParams("book_id", mBookId);
         readerParams.putExtraParams("content", str);
         String json = readerParams.generateParamsJson();
-
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl()+ReaderConfig.mCommentPostUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mCommentPostUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
-                        if(result!=null&&!result.equals("315")) {
+                        if (result != null && !result.equals("315")) {
                             MyToash.ToashSuccess(AddCommentActivity.this, "评论成功");
                             EventBus.getDefault().post(new RefreshBookInfoEvent());//刷新小说 详情里的评论列表
                             EventBus.getDefault().post(new RefreshMine(null));
-                        }else {
-
+                        } else {
                         }
-                        new Handler(){
+                        new Handler() {
                             @Override
                             public void handleMessage(Message msg) {
                                 super.handleMessage(msg);
                                 finish();
                             }
-                        }.sendEmptyMessageDelayed(0,1500);
-
+                        }.sendEmptyMessageDelayed(0, 1500);
                     }
 
                     @Override
-                    public void onErrorResponse(String  ex) {
-
+                    public void onErrorResponse(String ex) {
                     }
                 }
-
         );
-
     }
 
     @Override
     public void initInfo(String json) {
         super.initInfo(json);
-
     }
 
     @Override
@@ -170,5 +152,13 @@ public class AddCommentActivity extends BaseActivity implements ShowTitle {
         mTitle.setText(text);
     }
 
-
+    /**
+     * 小说评论 神策埋点
+     */
+    private void setXSDiscussEvent(String book_id) {
+        try {
+            SensorsDataHelper.setXSDiscussEvent(Integer.valueOf(book_id));
+        } catch (Exception e) {
+        }
+    }
 }
