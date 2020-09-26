@@ -73,5 +73,5 @@ gradle.ext {
     //神策
     SA_SERVER_URL_UAT = "\"https://shence.jiushengliye.com/sa?project=YDA44TEST\""
     SA_SERVER_URL = "\"https://shence.jiushengliye.com/sa?project=YDA44\""
-    SA_SERVER_APP_ID = "\"2000\""
+    SA_SERVER_APP_ID = "\"A44\""
 }
