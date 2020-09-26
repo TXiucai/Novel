@@ -34,6 +34,7 @@ import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 
@@ -56,6 +57,7 @@ import butterknife.OnClick;
  * 漫画下载页面
  */
 public class ComicDownActivity extends BaseButterKnifeActivity {
+    private static final String CHAPTER_SEPARATOR = ",";
     @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
     @BindView(R.id.activity_comicdown_choose_count)
@@ -124,7 +126,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                     String Chapter_id = "";
                     if (comicDownOptionAdapter != null) {
                         for (ComicChapter comicDownOption : comicDownOptionAdapter.comicDownOptionListChooseDwn) {
-                            Chapter_id += "," + comicDownOption.chapter_id;
+                            Chapter_id += CHAPTER_SEPARATOR + comicDownOption.chapter_id;
                         }
                         if (!StringUtils.isEmpty(Chapter_id)) {
                             httpDownChapter(Chapter_id.substring(1));
@@ -245,7 +247,6 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             JSONObject jsonObject = new JSONObject(result);
-
                             ComicDownOptionData.Base_info base_info = gson.fromJson(jsonObject.getString("base_info"), ComicDownOptionData.Base_info.class);
                             fragment_comicinfo_mulu_zhuangtai.setText(base_info.display_label);
                         } catch (JSONException e) {
@@ -269,6 +270,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
     }
 
     public void httpDownChapter(String chapter_id) {
+        setMHWorkDownloadEvent(comic_id, chapter_id);
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("comic_id", comic_id);
         params.putExtraParams("chapter_id", chapter_id);
@@ -279,7 +281,6 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                         Collections.sort(comicDownOptionAdapter.comicDownOptionListChooseDwn);// 排序
                         for (ComicChapter comicDownOption : comicDownOptionAdapter.comicDownOptionListChooseDwn) {
                             ShareUitls.putComicDownStatus(activity, comicDownOption.chapter_id, 2);
-
                         }
                         comicDownOptionAdapter.notifyDataSetChanged();
                         comicDownOptionAdapter.comicDownOptionListChooseDwn.clear();
@@ -308,7 +309,6 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                                         comicDownOption.is_preview = 0;
                                     }
                                     comicDownOptionAdapter.notifyDataSetChanged();
-
                                     httpDownChapter(chapter_id);
                                 }
                             }, true);
@@ -331,6 +331,20 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                     comicDownOptionAdapter.notifyDataSetChanged();
                 }
             }
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 神策埋点 漫画下载
+     *
+     * @param workId
+     * @param chapters
+     */
+    private void setMHWorkDownloadEvent(String workId, String chapters) {
+        try {
+            SensorsDataHelper.setMHWorkDownloadEvent(Integer.valueOf(workId),//漫画iD
+                    StringUtils.getStringToList(chapters, CHAPTER_SEPARATOR));//选中下载章节
         } catch (Exception e) {
         }
     }
