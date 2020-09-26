@@ -770,6 +770,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (!MainHttpTask.getInstance().Gotologin(activity)) {
             return;
         }
+        setMHDMEvent(image_id, Chapter_id, comic_id);
         final ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("comic_id", comic_id);
         params.putExtraParams("chapter_id", Chapter_id);
@@ -1028,6 +1029,20 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             BigImageViewer.initialize(GlideEncypeImageLoader.with(App.getAppContext(), okHttpClient));
         } else {
             BigImageViewer.initialize(GlideImageLoader.with(App.getAppContext(), okHttpClient));
+        }
+    }
+
+    /**
+     * 神策吐槽某一页漫画埋点
+     *
+     * @param page_id    该页漫画ID
+     * @param chapter_id 漫画章节ID
+     * @param work_id    漫画 ID
+     */
+    private void setMHDMEvent(String page_id, String chapter_id, String work_id) {
+        try {
+            SensorsDataHelper.setMHDMEvent(Integer.valueOf(page_id), Integer.valueOf(chapter_id), Integer.valueOf(work_id));
+        } catch (Exception e) {
         }
     }
 
