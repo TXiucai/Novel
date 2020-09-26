@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
 import com.bumptech.glide.Glide;
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
@@ -14,29 +12,26 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseAdvertisementActivity;
 import com.heiheilianzai.app.component.http.DynamicDomainManager;
-import com.heiheilianzai.app.component.http.OkHttpEngine;
-import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.Startpage;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
-import com.umeng.umcrash.UMCrash;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 
-import okhttp3.Request;
-import okhttp3.Response;
+import androidx.annotation.NonNull;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 
@@ -45,8 +40,10 @@ import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
  * 域名加载 查看 {@link DynamicDomainManager}
  */
 public class SplashActivity extends BaseAdvertisementActivity {
+    public static final String OPEN_TIME_KAY = "open_time";//传参首页打开app时间戳KAY
     private String isfirst;
     private int reconnect_num = 0;
+    private long mOpenCurrentTime;//进入开屏页记录时间戳
 
     @Override
     public int initContentView() {
@@ -60,6 +57,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
             finish();
             return;
         }
+        mOpenCurrentTime = DateUtils.currentTime();
         isfirst = ShareUitls.getString(activity, "isfirst", "yes");
         compatibleOldUpdate();
         if (isfirst.equals("yes")) {//首次使用删除文件
@@ -78,7 +76,6 @@ public class SplashActivity extends BaseAdvertisementActivity {
     private void requestReadPhoneState() {
         if (PermissionsUtil.hasPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             next();
-            getIpTerritory();
         } else {
             PermissionsUtil.requestPermission(this, new PermissionListener() {
                 @Override
@@ -151,7 +148,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         next();
                     } else {
                         MyToash.ToashError(SplashActivity.this, getString(R.string.splashactivity_cannot_link));
-                        getIpTerritory();
+                        saAppFailedLoad();
                     }
                 }
             }
@@ -162,11 +159,14 @@ public class SplashActivity extends BaseAdvertisementActivity {
     public void setMessage() {
         if (!into) {
             into = true;
+            Intent intent = new Intent();
+            intent.putExtra(OPEN_TIME_KAY, mOpenCurrentTime);
             if (InternetUtils.internett(activity) && isfirst.equals("yes")) {
-                startActivity(new Intent(activity, FirstStartActivity.class));
+                intent.setClass(activity, FirstStartActivity.class);
             } else {
-                startActivity(new Intent(activity, MainActivity.class));
+                intent.setClass(activity, MainActivity.class);
             }
+            startActivity(intent);
         }
     }
 
@@ -236,31 +236,13 @@ public class SplashActivity extends BaseAdvertisementActivity {
     }
 
     /**
-     * 通过第三方提供查询IP方法。
-     * 获取用户网络运营地域上报友盟自定义异常。
-     * http://pv.sohu.com/cityjson?ie=utf-8 获取用户使用网络的所在地域
+     * app加载失败上报神策
      */
-    public void getIpTerritory() {
-        OkHttpEngine.getInstance(activity).getAsyncHttp(ReaderConfig.thirdpartyGetCity, new ResultCallback() {
-            @Override
-            public void onError(Request request, Exception e) {
-            }
-
-            @Override
-            public void onResponse(String response) {
-            }
-
-            @Override
-            public void onResponse(Response response) {
-                try {
-                    String body = response.body().string();
-                    if (!StringUtils.isEmpty(body)) {
-                        UMCrash.generateCustomLog(body, "getIpTerritoryError");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    public void saAppFailedLoad() {
+        try {
+            SensorsDataHelper.setOpenTimeEvent(new Long(DateUtils.getCurrentTimeDifferenceSecond(-1)).intValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

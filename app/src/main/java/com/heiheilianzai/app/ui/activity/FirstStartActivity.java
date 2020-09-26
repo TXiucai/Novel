@@ -60,6 +60,7 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
     Recommend recommend;
     List<Recommend.RecommendProduc> recommendProducs = new ArrayList<>();
     List<Recommend.RecommendProduc> addrecommendProducs = new ArrayList<>();
+    long mOpenAppTime;//打开App记录的时间戳
 
     @Override
     public int initContentView() {
@@ -114,6 +115,7 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                             if (comicadd) {
                                 bookadd = false;
                                 Intent intent = new Intent(activity, MainActivity.class);
+                                intent.putExtra(SplashActivity.OPEN_TIME_KAY, mOpenAppTime);
                                 intent.putExtra("mBaseBooks", (ArrayList<? extends Serializable>) list);
                                 intent.putExtra("mBaseComics", (ArrayList<? extends Serializable>) comics);
                                 startActivity(intent);
@@ -128,6 +130,8 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                             if (bookadd) {
                                 comicadd = false;
                                 Intent intent = new Intent(activity, MainActivity.class);
+                                intent.putExtra(SplashActivity.OPEN_TIME_KAY, mOpenAppTime);
+                                intent.putExtra("mBaseBooks", (ArrayList<? extends Serializable>) list);
                                 intent.putExtra("mBaseBooks", (ArrayList<? extends Serializable>) list);
                                 intent.putExtra("mBaseComics", (ArrayList<? extends Serializable>) comics);
                                 startActivity(intent);
@@ -149,6 +153,7 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
         waitDialog = new WaitDialog(activity);
         waitDialog.setCancleable(true);
         getRecommend(1);
+        mOpenAppTime = getIntent().getLongExtra(SplashActivity.OPEN_TIME_KAY, -1);
     }
 
     private void setViewPager() {
@@ -245,7 +250,9 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
     }
 
     public void startMainActivity(Activity activity) {
-        startActivity(new Intent(activity, MainActivity.class));
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.putExtra(SplashActivity.OPEN_TIME_KAY, mOpenAppTime);
+        startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 

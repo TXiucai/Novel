@@ -60,11 +60,13 @@ import com.heiheilianzai.app.ui.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.ui.fragment.MineNewFragment;
 import com.heiheilianzai.app.ui.fragment.book.StroeNewFragmentBook;
 import com.heiheilianzai.app.ui.fragment.comic.StroeNewFragmentComic;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
@@ -162,6 +164,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         permission(activity);
         initView();
         initData();
+        setOpenTimeEvent();
     }
 
     private void initView() {
@@ -637,5 +640,19 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      */
     private String getBoYinUrl() {
         return getAppUpdate().boyin_h5;
+    }
+
+    /**
+     * 神策埋点事件 APP打开时长（从开屏页到首页）
+     */
+    public void setOpenTimeEvent(){
+        try {
+            long openTime = getIntent().getLongExtra(SplashActivity.OPEN_TIME_KAY,-1);
+            if(openTime!=-1){
+                SensorsDataHelper.setOpenTimeEvent(new Long(DateUtils.getCurrentTimeDifferenceSecond(openTime)).intValue());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
