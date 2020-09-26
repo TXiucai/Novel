@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.piasy.biv.view.BigImageView;
+import com.github.piasy.biv.view.GlideImageViewFactory;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
@@ -103,7 +104,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                         itemOnclick.onClick(position, baseComicImage);
                     }
                 });
-                holder.recyclerview_img.setProgressIndicator(new ProgressPieIndicator());
+                holder.recyclerview_img.setProgressIndicator(new ProgressPieIndicator());//自定义加载进度条
+                holder.recyclerview_img.setImageViewFactory(new GlideImageViewFactory());//兼容漫画图片内部有GIF编码问题
                 Uri uri = getUri(baseComicImage);
                 if (uri != null) {
                     holder.recyclerview_img.showImage(uri);
@@ -186,6 +188,3 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         return null;
     }
 }
-
-
-
