@@ -39,6 +39,7 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.wang.avi.indicators.LineSpinFadeLoaderIndicator;
@@ -247,6 +248,7 @@ public class DownDialog {
      * 下载某段章节到本地
      */
     public void getdown_url(final Activity activity, final Downoption downoption) {
+        setXSWorkDownloadEvent(downoption.book_id, downoption.s_chapter, String.valueOf(downoption.down_num));
         Getdown_urling = true;
         ReaderParams readerParams = new ReaderParams(activity);
         readerParams.putExtraParams("book_id", downoption.book_id);
@@ -267,7 +269,6 @@ public class DownDialog {
                                     downFile(activity, file_url, file_name, downoption);
                                 }
                             }).start();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -376,5 +377,19 @@ public class DownDialog {
                     public void onDownloadFailed(Exception e) {
                     }
                 });
+    }
+
+    /**
+     * 神策埋点 小说下载 (由于小说下载并非按照章节,暂定为埋点 chapter_id num)
+     */
+    private void setXSWorkDownloadEvent(String workId, String chapter_id, String num) {
+        try {
+            List<String> chapterList = new ArrayList<>();
+            chapterList.add(chapter_id);
+            chapterList.add(num);
+            SensorsDataHelper.setXSWorkDownloadEvent(Integer.valueOf(workId),//漫画iD
+                    chapterList);//选中下载章节
+        } catch (Exception e) {
+        }
     }
 }
