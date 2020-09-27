@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HotWordsAdapter;
@@ -42,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -82,7 +81,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
     @BindView(R.id.activity_search_keywords_scrollview)
     public ObservableScrollView activity_search_keywords_scrollview;
 
-
     public String mKeyWord, mKeyWordHint;
     Gson gson = new Gson();
     int total_page, current_page = 1;
@@ -90,6 +88,8 @@ public class SearchActivity extends BaseButterKnifeActivity {
     LayoutInflater layoutInflater;
     List<OptionBeen> optionBeenList;
     boolean PRODUCT;
+    boolean mIsHotSearch = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,30 +100,24 @@ public class SearchActivity extends BaseButterKnifeActivity {
     OptionRecyclerViewAdapter.OnItemClick onItemClick = new OptionRecyclerViewAdapter.OnItemClick() {
         @Override
         public void OnItemClick(int position, OptionBeen optionBeen) {
-
-            Intent intent = new Intent();
+            Intent intent;
+            int stringId = mIsHotSearch ? R.string.refer_page_hot_search : R.string.refer_page_search;
             if (PRODUCT) {
-                intent.setClass(activity, BookInfoActivity.class);
-                intent.putExtra("book_id", optionBeen.getBook_id());
+                intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, stringId), optionBeen.getBook_id());
             } else {
-                intent.setClass(activity, ComicInfoActivity.class);
-                intent.putExtra("comic_id", optionBeen.getComic_id());
+                intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, stringId), optionBeen.getComic_id());
             }
             startActivity(intent);
-
         }
     };
 
     public void initView() {
         optionBeenList = new ArrayList<>();
         layoutInflater = LayoutInflater.from(activity);
-
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragment_option_listview.setLayoutManager(layoutManager);
         fragment_option_listview.addHeaderView((LinearLayout) layoutInflater.inflate(R.layout.item_list_head, null));
-
-
         PRODUCT = getIntent().getBooleanExtra("PRODUCT", false);
         mKeyWord = getIntent().getStringExtra("mKeyWord");
         if (mKeyWord != null) {
@@ -134,7 +128,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
         fragment_option_listview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-
             }
 
             @Override
@@ -144,8 +137,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 }
             }
         });
-
-
         activity_search_keywords.clearFocus();
         activity_search_keywords.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -154,8 +145,10 @@ public class SearchActivity extends BaseButterKnifeActivity {
                     String KeyWord = activity_search_keywords.getText().toString() + "";
                     if (TextUtils.isEmpty(KeyWord) && Pattern.matches("\\s*", KeyWord)) {
                         mKeyWord = mKeyWordHint;
-                    } else
+                    } else {
                         mKeyWord = KeyWord;
+                    }
+                    mIsHotSearch = false;
                     current_page = 1;
                     gotoSearch(mKeyWord);
                     return true;
@@ -166,7 +159,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
         activity_search_keywords.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -180,7 +172,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
                     fragment_option_listview.setVisibility(View.GONE);
                     activity_search_keywords_scrollview.setVisibility(View.VISIBLE);
                 }
-
             }
         });
         initData();
@@ -194,27 +185,19 @@ public class SearchActivity extends BaseButterKnifeActivity {
         if (PRODUCT) {
             url = ReaderConfig.getBaseUrl() + BookConfig.mSearchIndexUrl;
         } else {
-            url =ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search_index;
+            url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search_index;
         }
-     /*   if (true) {
-            MyToash.Log("mSearchIndexUrl",url+"     "+json);
-            return;
-        }*/
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
                         initInfo(result);
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
-
     }
 
 
@@ -231,29 +214,26 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     mKeyWord = serachItem.hot_word[position];
                     activity_search_keywords.setText(mKeyWord);
+                    mIsHotSearch = true;
                     current_page = 1;
                     gotoSearch(mKeyWord);
                 }
             });
         }
-        SearchVerticalAdapter adapter = new SearchVerticalAdapter(activity, serachItem.list,PRODUCT);
+        SearchVerticalAdapter adapter = new SearchVerticalAdapter(activity, serachItem.list, PRODUCT);
         activity_search_book_grid.setAdapter(adapter);
         activity_search_book_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
                 if (PRODUCT) {
-                    intent = new Intent(activity, BookInfoActivity.class);
-                    intent.putExtra("book_id", serachItem.list.get(position).getBook_id());
+                    intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), serachItem.list.get(position).getBook_id());
                 } else {
-                    intent = new Intent(activity, ComicInfoActivity.class);
-                    intent.putExtra("comic_id", serachItem.list.get(position).getComic_id());
+                    intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), serachItem.list.get(position).getComic_id());
                 }
                 startActivity(intent);
             }
         });
-
-
     }
 
     @OnClick(value = {R.id.activity_search_cancel})
@@ -282,7 +262,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
         if (PRODUCT) {
             url = ReaderConfig.getBaseUrl() + BookConfig.mSearchUrl;
         } else {
-            url =ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search;
+            url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search;
         }
 
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {

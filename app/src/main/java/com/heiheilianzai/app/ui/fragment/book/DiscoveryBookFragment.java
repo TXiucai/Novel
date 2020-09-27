@@ -35,6 +35,7 @@ import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
@@ -334,9 +335,9 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
                 fragment_store_gridview3_gridview_second.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(activity, BookInfoActivity.class);
-                        intent.putExtra("book_id", secondList.get(position).getBook_id());
-                        activity.startActivity(intent);
+                        if (activity != null) {
+                            activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_discovery), secondList.get(position).getBook_id()));
+                        }
                     }
                 });
             }
@@ -351,9 +352,9 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
             fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(activity, BookInfoActivity.class);
-                    intent.putExtra("book_id", secondList.get(position).getBook_id());
-                    activity.startActivity(intent);
+                    if (activity != null) {
+                        activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_discovery), secondList.get(position).getBook_id()));
+                    }
                 }
             });
         }
@@ -363,9 +364,9 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
         fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(activity, BookInfoActivity.class);
-                intent.putExtra("book_id", bookList.get(position).getBook_id());
-                activity.startActivity(intent);
+                if (activity != null) {
+                    activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_discovery), bookList.get(position).getBook_id()));
+                }
             }
         });
         return ItemHeigth;

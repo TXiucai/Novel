@@ -94,7 +94,7 @@ public class DownMangerComicAdapter extends BaseAdapter {
         viewHolder.item_dowmmanger_cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity, ComicInfoActivity.class);
+                Intent intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_down), null);
                 intent.putExtra("baseComic", baseComic);
                 activity.startActivity(intent);
             }

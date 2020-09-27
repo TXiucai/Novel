@@ -131,8 +131,6 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
         malePullLayout.setOnPullListener(new PullToRefreshLayout.OnPullListener() {
             @Override
             public void onPulling(float y) {
-/*                float ratio = Math.min(Math.max(y, 0), REFRESH_HEIGHT) / REFRESH_HEIGHT;
-                fragment_newbookself_top.setAlpha(1 - ratio);*/
             }
 
         });
@@ -140,9 +138,7 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (discoveryComicList.get(position).ad_type == 0) {
-                    Intent intent = new Intent(activity, ComicInfoActivity.class);
-                    intent.putExtra("comic_id", discoveryComicList.get(position).comic_id);
-                    activity.startActivity(intent);
+                    activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_discovery), discoveryComicList.get(position).comic_id));
                 } else {
                     DiscoveryComic comic = discoveryComicList.get(position);
                     Intent intent = new Intent();
@@ -156,14 +152,6 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
 
             }
         });
-      /*  mScrollViewMale.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
-            @Override
-            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-                EventBus.getDefault().post(new DiscoveryEventbus(true, y));
-            }
-        });*/
-
-
     }
 
     public void postAsyncHttpEngine(final PullToRefreshLayout pullToRefreshLayout) {
@@ -172,15 +160,12 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
         }
         postAsyncHttpEngine_ing = true;
         ReaderParams params = new ReaderParams(activity);
-
         params.putExtraParams("page_num", current_page + "");
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_featured, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         initInfo(result);
-
-
                         if (pullToRefreshLayout != null) {
                             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                         }
@@ -194,10 +179,7 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
                         }
                     }
                 }
-
         );
-
-
     }
 
 
@@ -207,14 +189,11 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
     public void initInfo(String json) {
         try {
             JSONObject jsonObject = new JSONObject(json);
-
             //1.初始化男频banner控件数据
             if (current_page == 1) {
                 ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 2000, 3);
             }
             initWaterfall(jsonObject.getString("item_list"));
-
-
             postAsyncHttpEngine_ing = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -224,12 +203,9 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
 
     public void initWaterfall(String jsonObject) {
         DiscoveryItem discoveryItem = gson.fromJson(jsonObject, DiscoveryItem.class);
-
-
         MyToash.Log("initWaterfall", discoveryItem.toString());
         total_page = discoveryItem.total_page;
         if (current_page <= total_page && !discoveryItem.list.isEmpty()) {
-
             if (current_page == 1) {
                 discoveryComicList.clear();
             }
@@ -242,8 +218,6 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
         } else {
             MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
         }
-
-
     }
 
     class DiscoveryItem {
@@ -252,16 +226,5 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
         public int page_size;//": 2,
         public int total_count;//,
         public List<DiscoveryComic> list;
-
-        @Override
-        public String toString() {
-            return "DiscoveryItem{" +
-                    "total_page=" + total_page +
-                    ", current_page=" + current_page +
-                    ", page_size=" + page_size +
-                    ", total_count=" + total_count +
-                    ", list=" + list +
-                    '}';
-        }
     }
 }

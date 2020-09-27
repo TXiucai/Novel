@@ -548,9 +548,10 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(activity, BookInfoActivity.class);
-                    intent.putExtra("book_id", stroreComicLable.list.get(position).getBook_id());
-                    activity.startActivity(intent);
+                    if (activity != null) {
+                        String bookId = stroreComicLable.list.get(position).getBook_id();
+                        activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_info) + " " + bookId, bookId));
+                    }
                 }
             });
             int minSize = 0;
@@ -587,7 +588,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
      * @param referPage 神策埋点数据从哪个页面进入
      * @return Intent
      */
-    public static Intent getMyIntent(Context context, String referPage,String bookId) {
+    public static Intent getMyIntent(Context context, String referPage, String bookId) {
         Intent intent = new Intent(context, BookInfoActivity.class);
         intent.putExtra(SaVarConfig.REFER_PAGE_VAR, referPage);
         intent.putExtra(BOOK_ID_EXT_KAY, bookId);

@@ -39,7 +39,7 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- *漫画详情评论
+ * 漫画详情评论
  * Created by scb on 2018/6/9.
  */
 public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
@@ -112,14 +112,14 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                     TextView activity_book_info_content_comment_item_content = commentView.findViewById(R.id.activity_book_info_content_comment_item_content);
                     TextView activity_book_info_content_comment_item_reply = commentView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
                     TextView activity_book_info_content_comment_item_time = commentView.findViewById(R.id.activity_book_info_content_comment_item_time);
-                    View comment_item_isvip=commentView.findViewById(R.id.comment_item_isvip);
+                    View comment_item_isvip = commentView.findViewById(R.id.comment_item_isvip);
                     MyPicasso.IoadImage(activity, bookInfoComment.getAvatar(), R.mipmap.icon_def_head, activity_book_info_content_comment_item_avatar);
                     activity_book_info_content_comment_item_nickname.setText(bookInfoComment.getNickname());
                     activity_book_info_content_comment_item_content.setText(bookInfoComment.getContent());
                     activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
                     activity_book_info_content_comment_item_reply.setVisibility(TextUtils.isEmpty(bookInfoComment.getReply_info()) ? View.GONE : View.VISIBLE);
                     activity_book_info_content_comment_item_time.setText(bookInfoComment.getTime());
-                    comment_item_isvip.setVisibility(bookInfoComment.getIs_vip()==1 ? View.VISIBLE : View.GONE);
+                    comment_item_isvip.setVisibility(bookInfoComment.getIs_vip() == 1 ? View.VISIBLE : View.GONE);
                     //评论点击的处理
                     commentView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -174,9 +174,8 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
                 fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(activity, ComicInfoActivity.class);
-                        intent.putExtra("comic_id", comicList.get(position).comic_id);
-                        activity.startActivity(intent);
+                        String comic_id = comicList.get(position).comic_id;
+                        activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_info) + " " + comic_id, comic_id));
                     }
                 });
                 fragment_store_gridview1_gridview.setNumColumns(3);

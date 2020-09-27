@@ -309,30 +309,22 @@ public class OptionFragment extends BaseButterKnifeFragment {
                 HttpData();
             }
         });
-
         if (OPTION == BAOYUE) {
             fragment_option_listview.setLoadingMoreEnabled(false);
         }
-
         initHttpUrl();
     }
 
-    int style = -1;
     OptionRecyclerViewAdapter.OnItemClick onItemClick = new OptionRecyclerViewAdapter.OnItemClick() {
         @Override
         public void OnItemClick(int position, OptionBeen optionBeen) {
-            //  if (position >= 2) {
-            // OptionBeen optionBeen = optionBeenList.get(position - 2);
             Intent intent = new Intent();
             if (PRODUCT) {
-                intent.setClass(activity, BookInfoActivity.class);
-                intent.putExtra("book_id", optionBeen.getBook_id());
+                intent = BookInfoActivity.getMyIntent(activity, getActivity().getIntent().getStringExtra("title"), optionBeen.getBook_id());
             } else {
-                intent.setClass(activity, ComicInfoActivity.class);
-                intent.putExtra("comic_id", optionBeen.getComic_id());
+                intent = ComicInfoActivity.getMyIntent(activity, getActivity().getIntent().getStringExtra("title"), optionBeen.getComic_id());
             }
             startActivity(intent);
-            //   }
         }
     };
 

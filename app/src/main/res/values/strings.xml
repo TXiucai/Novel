@@ -400,4 +400,13 @@
     <string name="refer_page_mine">我的</string>
     <string name="refer_page_vip_dialog">VIP弹窗</string>
     <string name="refer_page_book_read">小说内容页</string>
+    <string name="refer_page_home_column">首页栏目</string>
+    <string name="refer_page_home_ad">首页广告</string>
+    <string name="refer_page_more">更多</string>
+    <string name="refer_page_column_id">栏目ID:</string>
+    <string name="refer_page_search">搜索结果</string>
+    <string name="refer_page_hot_search">热门搜索</string>
+    <string name="refer_page_hot_search_list">热搜榜</string>
+    <string name="refer_page_discovery">发现页</string>
+    <string name="refer_page_nove_push">书架推荐栏目</string>
 </resources>

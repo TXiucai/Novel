@@ -551,9 +551,7 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
                         .setOnItemClickListener(new OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
-                                Intent intent = new Intent(activity, BookInfoActivity.class);
-                                intent.putExtra("book_id", mBannerItemListMale.get(position).getBook_id());
-                                startActivity(intent);
+                                startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_nove_push), mBannerItemListMale.get(position).getBook_id()));
                             }
                         });
                 fragment_discovery_banner_male.startTurning(2000);

@@ -25,6 +25,7 @@ import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
@@ -169,6 +170,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                     activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                             .putExtra("OPTION", LOOKMORE)
                             .putExtra("PRODUCT", true)
+                            .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                             .putExtra("recommend_id", stroreComicLable.recommend_id));
                 } catch (Exception E) {
                 }
@@ -184,7 +186,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else {
             holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
         }
-        int ItemHeigth = Huanyihuan(stroreComicLable.style, stroreComicLable.list, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore);
+        int ItemHeigth = Huanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, stroreComicLable.list, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.height = ItemHeigth;
@@ -234,10 +236,11 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         fragment_store_gridview1_view1.setLayoutParams(layoutParams3);
     }
 
-    private int Huanyihuan(int style, List<StroreBookcLable.Book> bookList, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore) {
+    private int Huanyihuan(String recommend_id, int style, List<StroreBookcLable.Book> bookList, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore) {
         int size = bookList.size();
         int minSize = 0;
         int ItemHeigth = 0, raw = 0, start = 0;
+        String referPage = LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id;
         if (style == BOOK_UI_STYLE_1) {
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
@@ -262,9 +265,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 fragment_store_gridview3_gridview_second.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(activity, BookInfoActivity.class);
-                        intent.putExtra("book_id", secondList.get(position).getBook_id());
-                        activity.startActivity(intent);
+                        activity.startActivity(BookInfoActivity.getMyIntent(activity, referPage, secondList.get(position).getBook_id()));
                     }
                 });
             }
@@ -273,21 +274,19 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             minSize = Math.min(size, 4);
             ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing);
             fragment_store_gridview3_gridview_fore.setVisibility(View.VISIBLE);
-            if( bookList.size()>0){
+            if (bookList.size() > 0) {
                 final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
                 fragment_store_gridview3_gridview_fore.setAdapter(horizontalAdapter);
                 fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(activity, BookInfoActivity.class);
-                        intent.putExtra("book_id", secondList.get(position).getBook_id());
-                        activity.startActivity(intent);
+                        activity.startActivity(BookInfoActivity.getMyIntent(activity, referPage, secondList.get(position).getBook_id()));
                     }
                 });
             }
         }
-        if(bookList.size()>0){
+        if (bookList.size() > 0) {
             List<StroreBookcLable.Book> firstList = bookList.subList(start, minSize);
             VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
             fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
@@ -295,11 +294,14 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        Intent intent = new Intent(activity, BookInfoActivity.class);
+                        Intent intent;
+                        String book_id;
                         if (style < 4) {
-                            intent.putExtra("book_id", bookList.get(position).getBook_id());
-                        } else intent.putExtra("book_id", bookList.get(position + 1).getBook_id());
-                        activity.startActivity(intent);
+                            book_id = bookList.get(position).getBook_id();
+                        } else {
+                            book_id = bookList.get(position + 1).getBook_id();
+                        }
+                        activity.startActivity(BookInfoActivity.getMyIntent(activity, referPage, book_id));
                     } catch (Exception e) {
                     }
                 }
@@ -320,7 +322,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                             List<StroreBookcLable.Book> bookList = gson.fromJson(new JSONObject(result).getString("list"), new TypeToken<List<StroreBookcLable.Book>>() {
                             }.getType());
                             if (!bookList.isEmpty()) {
-                                int ItemHeigth = Huanyihuan(style, bookList, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore);
+                                int ItemHeigth = Huanyihuan(recommend_id, style, bookList, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

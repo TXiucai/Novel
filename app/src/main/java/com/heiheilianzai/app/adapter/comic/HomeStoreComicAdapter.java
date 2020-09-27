@@ -26,6 +26,7 @@ import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
@@ -183,7 +184,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int ItemHeigth = setItemData(stroreComicLable.style, comicList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
+        int ItemHeigth = setItemData(stroreComicLable.recommend_id, stroreComicLable.style, comicList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
         if (comicList.isEmpty()) {
             ItemHeigth = 0;
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
@@ -228,16 +229,17 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private int setItemData(int style, List<StroreComicLable.Comic> comicList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
+    private int setItemData(String recommend_id, int style, List<StroreComicLable.Comic> comicList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
         fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(activity, ComicInfoActivity.class);
+                String comic_id;
                 if (style != COMIC_UI_STYLE_3) {
-                    intent.putExtra("comic_id", comicList.get(position).comic_id);
+                    comic_id = comicList.get(position).comic_id;
                 } else {
-                    intent.putExtra("comic_id", comicList.get(position + 1).comic_id);
+                    comic_id = comicList.get(position + 1).comic_id;
                 }
+                Intent intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comic_id);
                 activity.startActivity(intent);
             }
         });
@@ -268,9 +270,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(activity, ComicInfoActivity.class);
-                            intent.putExtra("comic_id", comicList.get(0).comic_id);
-                            activity.startActivity(intent);
+                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comicList.get(0).comic_id));
                         }
                     });
                     width = WIDTH / 3;
@@ -314,7 +314,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             e.printStackTrace();
                         }
                         if (comicList != null && !comicList.isEmpty()) {
-                            setItemData(style, comicList, fragment_store_gridview1_gridview, type1);
+                            setItemData(recommend_id, style, comicList, fragment_store_gridview1_gridview, type1);
                         }
                     }
 

@@ -144,7 +144,7 @@ public class ComicshelfFragment extends Fragment {
                     if (!adapter.isDeletable()) {
                         BaseComic baseComic = bookLists.get(position);
                         baseComic.setAddBookSelf(true);
-                        startActivity(ComicLookActivity.getMyIntent(activity, baseComic,  LanguageUtil.getString(activity, R.string.refer_page_shelf)));
+                        startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_shelf)));
                         if (position != 0) {
                             openBaseComic = baseComic;
                             openPosition = position;
@@ -412,12 +412,9 @@ public class ComicshelfFragment extends Fragment {
                 }
             }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.ic_shelf_yes, R.mipmap.ic_shelf_no})
                     .setOnItemClickListener(new OnItemClickListener() {
-
                         @Override
                         public void onItemClick(int position) {
-                            Intent intent = new Intent(getActivity(), ComicInfoActivity.class);
-                            intent.putExtra("comic_id", mBannerItemListMale.get(position).getComic_id());
-                            startActivity(intent);
+                            startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_nove_push), mBannerItemListMale.get(position).getComic_id()));
                         }
                     });
             fragment_discovery_banner_male.startTurning(2000);

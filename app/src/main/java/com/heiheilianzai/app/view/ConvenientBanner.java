@@ -467,11 +467,9 @@ public class ConvenientBanner<T> extends LinearLayout {
             case 1:
                 Intent intent;
                 if (flag == 2 || flag == 0) {
-                    intent = new Intent(activity, BookInfoActivity.class);
-                    intent.putExtra("book_id", bannerItemStore.getContent());
+                    intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), bannerItemStore.getContent());
                 } else {
-                    intent = new Intent(activity, ComicInfoActivity.class);
-                    intent.putExtra("comic_id", bannerItemStore.getContent());
+                    intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), bannerItemStore.getContent());
                 }
                 activity.startActivity(intent);
                 break;

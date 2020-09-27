@@ -68,9 +68,7 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
                     }
                     break;
                 case 0:
-                    intent = new Intent(activity, BookInfoActivity.class);
-                    intent.putExtra("book_id", readHistoryBook.getBook_id());
-                    activity.startActivity(intent);
+                    activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_read_history), readHistoryBook.getBook_id()));
                     break;
                 case 2:
                     GetDialog.IsOperation(activity, LanguageUtil.getString(activity, R.string.ReadHistoryFragment_qurenshanchu), "", new GetDialog.IsOperationInterface() {

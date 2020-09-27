@@ -52,8 +52,7 @@ public class ReadHistoryComicFragment extends BaseReadHistoryFragment<ComicReadH
                     startActivityForResult(intent, RefarchrequestCode);
                     break;
                 case 0:
-                    intent = new Intent(activity, ComicInfoActivity.class);
-                    intent.putExtra("comic_id", readHistoryBook.getComic_id());
+                    intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_read_history), readHistoryBook.getComic_id());
                     startActivityForResult(intent, RefarchrequestCode);
                     break;
                 case 2:
