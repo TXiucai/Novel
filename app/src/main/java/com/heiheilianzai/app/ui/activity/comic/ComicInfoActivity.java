@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.activity.comic;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -42,6 +43,7 @@ import com.heiheilianzai.app.callback.AppBarStateChangeListener;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.BookInfoComment;
@@ -51,7 +53,9 @@ import com.heiheilianzai.app.model.comic.ComicInfo;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
+import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -61,6 +65,8 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
@@ -85,6 +91,7 @@ import butterknife.OnClick;
  * 作品详情
  */
 public class ComicInfoActivity extends BaseWarmStartActivity {
+    public static final String COMIC_ID_EXT_KAY = "comic_id";//进小说简介 传入小说id
     @BindView(R.id.fragment_comicinfo_viewpage)
     public ViewPager fragment_comicinfo_viewpage;
     @BindView(R.id.activity_comic_info_topbar_downlayout)
@@ -162,6 +169,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     ComicinfoMuluFragment muluFragment;
     Drawable activity_comic_info_topbarD;
     boolean refreshComment;
+    ComicInfo mComicInfo;//漫画具体信息
     MuluLorded muluLorded = new MuluLorded() {
         @Override
         public void getReadChapterItem(List<ComicChapter> comicChapter1) {
@@ -414,7 +422,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
 
     public void httpData() {
         Intent intent = getIntent();
-        comic_id = intent.getStringExtra("comic_id");
+        comic_id = intent.getStringExtra(COMIC_ID_EXT_KAY);
         if (comic_id == null) {
             baseComic = (BaseComic) intent.getSerializableExtra("baseComic");
             if (baseComic != null) {
@@ -454,14 +462,15 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            ComicInfo comicInfo = gs.fromJson(result, ComicInfo.class);
-                            if (comicInfo != null) {
-                                comic = comicInfo.comic;
-                                stroreComicLable = comicInfo.label.get(0);
-                                bookInfoComment = comicInfo.comment;
-                                baseAd = comicInfo.advert;
+                            mComicInfo = gs.fromJson(result, ComicInfo.class);
+                            if (mComicInfo != null) {
+                                comic = mComicInfo.comic;
+                                stroreComicLable = mComicInfo.label.get(0);
+                                bookInfoComment = mComicInfo.comment;
+                                baseAd = mComicInfo.advert;
                             }
                             handdata();
+                            setMHIntroPageEvent();
                         } catch (Exception e) {
                         }
                     }
@@ -542,5 +551,49 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         ContentValues values = new ContentValues();
         values.put("isAddBookSelf", baseComic.isAddBookSelf());
         LitePal.update(BaseComic.class, values, baseComic.getId());
+    }
+
+
+    /**
+     * 进入漫画简介页必传参数
+     *
+     * @param context
+     * @param referPage 神策埋点数据从哪个页面进入
+     * @return Intent
+     */
+    public static Intent getMyIntent(Context context, String referPage, String comicId) {
+        Intent intent = new Intent(context, ComicInfoActivity.class);
+        intent.putExtra(SaVarConfig.REFER_PAGE_VAR, referPage);
+        intent.putExtra(COMIC_ID_EXT_KAY, comicId);
+        return intent;
+    }
+
+    /**
+     * 神策埋点 进入漫画简介页
+     */
+    private void setMHIntroPageEvent() {
+        try {
+            SensorsDataHelper.setMHIntroPageEvent(getPropIdList(),//属性ID
+                    getTagIdList(),//分类ID
+                    getIntent().getStringExtra(SaVarConfig.REFER_PAGE_VAR),//前向页面
+                    Integer.valueOf(StringUtils.isEmpty(comic_id) ? "0" : comic_id),//小说ID
+                    comic == null ? 0 : Integer.valueOf(comic.total_chapters),//小说总章节
+                    0);//作者ID
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 神策埋点 获取prop_id属性数据
+     */
+    private List<String> getPropIdList() {
+        return ComicLookActivity.getPropIdList(mComicInfo);
+    }
+
+    /**
+     * 神策埋点 获取tag_id分类信息
+     */
+    private List<String> getTagIdList() {
+        return ComicLookActivity.getTagIdList(mComicInfo);
     }
 }

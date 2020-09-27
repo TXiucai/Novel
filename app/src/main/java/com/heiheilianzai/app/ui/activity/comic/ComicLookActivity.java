@@ -1103,12 +1103,16 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
      * 神策埋点 获取prop_id属性数据
      */
     private List<String> getPropIdList() {
+        return getPropIdList(mComicInfo);
+    }
+
+    public static List<String> getPropIdList(ComicInfo comicInfo) {
         List<String> propId = new ArrayList<>();
-        if (mComicInfo != null) {
-            if ("1".equals(mComicInfo.comic.is_hot)) {
+        if (comicInfo != null) {
+            if ("1".equals(comicInfo.comic.is_hot)) {
                 propId.add("热门");
             }
-            if ("1".equals(mComicInfo.comic.is_recommend)) {
+            if ("1".equals(comicInfo.comic.is_recommend)) {
                 propId.add("推荐");
             }
         }
@@ -1119,9 +1123,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
      * 神策埋点 获取tag_id分类信息
      */
     private List<String> getTagIdList() {
+        return getTagIdList(mComicInfo);
+    }
+
+    public static List<String> getTagIdList(ComicInfo comicInfo) {
         List<String> tagId = new ArrayList<>();
-        if (mComicInfo != null) {
-            List<String> list = StringUtils.getStringToList(mComicInfo.comic.sorts, ",");
+        if (comicInfo != null) {
+            List<String> list = StringUtils.getStringToList(comicInfo.comic.sorts, ",");
             if (list != null) {
                 tagId.addAll(list);
             }
