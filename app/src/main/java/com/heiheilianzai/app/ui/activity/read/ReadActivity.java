@@ -985,18 +985,22 @@ public class ReadActivity extends BaseReadActivity {
      * 神策埋点 获取prop_id属性数据
      */
     private List<String> getPropIdList() {
+        return getPropIdList(mInfoBookItem);
+    }
+
+    public static List<String> getPropIdList(InfoBookItem infoBookItem) {
         List<String> propId = new ArrayList<>();
-        if (mInfoBookItem != null) {
-            putPropIdL(propId, mInfoBookItem.book.is_new, "新书");
-            putPropIdL(propId, mInfoBookItem.book.is_hot, "热门");
-            putPropIdL(propId, mInfoBookItem.book.is_yy, "爽文");
-            putPropIdL(propId, mInfoBookItem.book.is_greatest, "精选");
-            putPropIdL(propId, mInfoBookItem.book.is_god, "大神");
+        if (infoBookItem != null) {
+            putPropIdL(propId, infoBookItem.book.is_new, "新书");
+            putPropIdL(propId, infoBookItem.book.is_hot, "热门");
+            putPropIdL(propId, infoBookItem.book.is_yy, "爽文");
+            putPropIdL(propId, infoBookItem.book.is_greatest, "精选");
+            putPropIdL(propId, infoBookItem.book.is_god, "大神");
         }
         return propId;
     }
 
-    private void putPropIdL(List<String> list, String PropId, String PropName) {
+    private static void putPropIdL(List<String> list, String PropId, String PropName) {
         if ("1".equals(PropId)) {
             list.add(PropName);
         }
@@ -1006,9 +1010,13 @@ public class ReadActivity extends BaseReadActivity {
      * 神策埋点 获取tag_id分类信息
      */
     private List<String> getTagIdList() {
+        return getTagIdList(mInfoBookItem);
+    }
+
+    public static List<String> getTagIdList(InfoBookItem infoBookItem) {
         List<String> tagId = new ArrayList<>();
-        if (mInfoBookItem != null) {
-            tagId.add(mInfoBookItem.book.cid1);
+        if (infoBookItem != null) {
+            tagId.add(infoBookItem.book.cid1);
         }
         return tagId;
     }

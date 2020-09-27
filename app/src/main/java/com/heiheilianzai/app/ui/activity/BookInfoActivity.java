@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,7 @@ import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.BookInfoComment;
@@ -45,6 +47,7 @@ import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
+import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.DownDialog;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -53,6 +56,8 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
@@ -77,10 +82,11 @@ import butterknife.OnClick;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
- * 作品详情
+ * 小说简介页
  */
 public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public final String TAG = BookInfoActivity.class.getSimpleName();
+    public static final String BOOK_ID_EXT_KAY = "book_id";//进小说简介 传入小说id
     @BindView(R.id.book_info_titlebar_container)
     public RelativeLayout book_info_titlebar_container;
     @BindView(R.id.book_info_titlebar_container_shadow)
@@ -134,6 +140,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
 
     public String mBookId;
     public BaseBook mBaseBook;
+    InfoBookItem mInfoBookItem;
     public int WIDTH, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20;
     LayoutInflater layoutInflater;
     Activity activity;
@@ -249,6 +256,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public void initInfo(String json) {
         try {
             InfoBookItem infoBookItem = gson.fromJson(json, InfoBookItem.class);
+            mInfoBookItem = infoBookItem;
             InfoBook infoBook = infoBookItem.book;
             mBaseBook.setName(infoBook.name);
             mBaseBook.setCover(infoBook.cover);
@@ -403,6 +411,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             } else {
                 activity_book_info_ad.setVisibility(View.GONE);
             }
+            setXSIntroPageEvent();
         } catch (Exception e) {
             MyToash.Log("", e.getMessage());
         }
@@ -412,8 +421,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         if (mBookId == null) {
             falseDialg = true;
             try {
-                mBookId = getIntent().getStringExtra("book_id");
-
+                mBookId = getIntent().getStringExtra(BOOK_ID_EXT_KAY);
             } catch (Exception e) {
             }
         } else {
@@ -473,7 +481,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             list.add(mBaseBook);
             EventBus.getDefault().post(new RefreshBookSelf(list));
         }
-
     }
 
     @Override
@@ -571,6 +578,48 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
+    }
 
+    /**
+     * 进入小说简介页必传参数
+     *
+     * @param context
+     * @param referPage 神策埋点数据从哪个页面进入
+     * @return Intent
+     */
+    public static Intent getMyIntent(Context context, String referPage,String bookId) {
+        Intent intent = new Intent(context, BookInfoActivity.class);
+        intent.putExtra(SaVarConfig.REFER_PAGE_VAR, referPage);
+        intent.putExtra(BOOK_ID_EXT_KAY, bookId);
+        return intent;
+    }
+
+    /**
+     * 神策埋点 进入小说简介页
+     */
+    private void setXSIntroPageEvent() {
+        try {
+            SensorsDataHelper.setXSIntroPageEvent(getPropIdList(),//属性ID
+                    getTagIdList(),//分类ID
+                    getIntent().getStringExtra(SaVarConfig.REFER_PAGE_VAR),//前向页面
+                    Integer.valueOf(StringUtils.isEmpty(mBookId) ? "0" : mBookId),//小说ID
+                    mInfoBookItem == null ? 0 : Integer.valueOf(mInfoBookItem.book.total_chapters),//小说总章节
+                    0);//作者ID
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 神策埋点 获取prop_id属性数据
+     */
+    private List<String> getPropIdList() {
+        return ReadActivity.getPropIdList(mInfoBookItem);
+    }
+
+    /**
+     * 神策埋点 获取tag_id分类信息
+     */
+    private List<String> getTagIdList() {
+        return ReadActivity.getTagIdList(mInfoBookItem);
     }
 }
