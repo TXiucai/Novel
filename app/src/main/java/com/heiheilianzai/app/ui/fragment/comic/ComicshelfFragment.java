@@ -43,6 +43,7 @@ import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
@@ -66,6 +67,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 
 /**
  * 书架漫画
@@ -99,6 +103,7 @@ public class ComicshelfFragment extends Fragment {
     boolean showGuangbo;
     Gson gson = new Gson();
     long time1;
+    List<String> mBannerComicIds = new ArrayList<>();//头部推荐漫画
 
     public void AllchooseAndCancleOnclick(boolean flag) {
         if (flag) {
@@ -403,6 +408,7 @@ public class ComicshelfFragment extends Fragment {
             BaseComic.setVertical_cover(labelObj.getString("vertical_cover"));
             BaseComic.setDescription(labelObj.getString("description"));
             mBannerItemListMale.add(BaseComic);
+            mBannerComicIds.add(labelObj.getString("comic_id"));
         }
         if (!mBannerItemListMale.isEmpty()) {
             fragment_discovery_banner_male.setPages(new CBViewHolderCreator<ComicShelfBannerHolderView>() {
@@ -568,5 +574,12 @@ public class ComicshelfFragment extends Fragment {
         this.fragment_novel_allchoose = shelf_book_delete_btn.findViewById(R.id.fragment_novel_allchoose);
         this.fragment_novel_cancle = shelf_book_delete_btn.findViewById(R.id.fragment_novel_cancle);
         mDeleteBtn = shelf_book_delete_btn.findViewById(R.id.shelf_book_delete_del);
+    }
+
+    /**
+     * 神策埋点 头部漫画推荐作品
+     */
+    public void setBookshelfRecommendationEvent() {
+        SensorsDataHelper.setBookshelfRecommendationEvent(WORKS_TYPE_COMICS, mBannerComicIds);
     }
 }

@@ -56,6 +56,7 @@ import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -78,6 +79,8 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
 
 /**
  * 书架小说
@@ -127,6 +130,7 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
     public int WIDTH, HEIGHT, HorizontalSpacing, H40;
     long time1;
     public static boolean BookShelfOpen;
+    List<String> mBannerBookIds = new ArrayList<>();//头部推荐小说ID
 
     public void AllchooseAndCancleOnclick(boolean flag) {
         if (flag) {
@@ -529,7 +533,11 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
     private JSONObject initBanner(JSONObject obj) {
         try {
             JSONArray recomment = obj.getJSONArray("recommend");
-
+            if (mBannerBookIds == null) {
+                mBannerBookIds = new ArrayList<>();
+            } else {
+                mBannerBookIds.clear();
+            }
             List<BaseBook> mBannerItemListMale = new ArrayList<>();
             for (int i = 0; i < recomment.length(); i++) {
                 final JSONObject labelObj = recomment.getJSONObject(i);
@@ -539,6 +547,7 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
                 baseBook.setCover(labelObj.getString("cover"));
                 baseBook.setDescription(labelObj.getString("description"));
                 mBannerItemListMale.add(baseBook);
+                mBannerBookIds.add(labelObj.getString("book_id"));
             }
             if (!mBannerItemListMale.isEmpty()) {
                 fragment_discovery_banner_male.setVisibility(View.VISIBLE);
@@ -798,5 +807,11 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
         this.fragment_novel_allchoose = shelf_book_delete_btn.findViewById(R.id.fragment_novel_allchoose);
         this.fragment_novel_cancle = shelf_book_delete_btn.findViewById(R.id.fragment_novel_cancle);
         mDeleteBtn = shelf_book_delete_btn.findViewById(R.id.shelf_book_delete_del);
+    }
+    /**
+     * 神策埋点 头部小说推荐作品
+     */
+    public void setBookshelfRecommendationEvent() {
+        SensorsDataHelper.setBookshelfRecommendationEvent(WORKS_TYPE_BOOK, mBannerBookIds);
     }
 }

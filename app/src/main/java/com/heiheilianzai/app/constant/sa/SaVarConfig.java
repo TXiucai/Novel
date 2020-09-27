@@ -18,7 +18,7 @@ public class SaVarConfig {
     public static final String CHAPTER_ID_VAR = "chapter_id";//当前章节ID
     public static final String REFER_PAGE_VAR = "refer_page";//前向页面
     public static final String WORKS_TYPE_VAR = "works_type";//作品类型
-    public static final String COLUMN_ID_VAR ="column_id";//栏目ID
+    public static final String COLUMN_ID_VAR = "column_id";//栏目ID
     /******************END ******************/
 
     /****************** 登录 *******************/
@@ -61,4 +61,9 @@ public class SaVarConfig {
     /*****************首页子页推荐**************/
     public static final String SUBPAGES_TYPE_VAR = "Subpages_type";//子页类型
     /******************  END  ****************/
+
+    /****************其他**************/
+    public static final String WORKS_TYPE_BOOK = "XS";
+    public static final String WORKS_TYPE_COMICS = "MH";
+    /*****************END**************/
 }

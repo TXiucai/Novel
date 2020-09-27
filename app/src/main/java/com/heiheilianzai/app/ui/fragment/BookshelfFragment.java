@@ -141,18 +141,18 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         fragmentList = new ArrayList<>();
         switch (GETPRODUCT_TYPE(activity)) {
             case XIAOSHUO:
-                addNovelFragmentNew(bookLists,shelf_book_delete_btn);
+                addNovelFragmentNew(bookLists, shelf_book_delete_btn);
                 break;
             case MANHAU:
                 addComicshelfFragment(baseComics, shelf_book_delete_btn);
                 break;
             case XIAOSHUOMAHUA:
-                addNovelFragmentNew(bookLists,shelf_book_delete_btn);
+                addNovelFragmentNew(bookLists, shelf_book_delete_btn);
                 addComicshelfFragment(baseComics, shelf_book_delete_btn);
                 break;
             case MANHAUXIAOSHUO:
                 addComicshelfFragment(baseComics, shelf_book_delete_btn);
-                addNovelFragmentNew(bookLists,shelf_book_delete_btn);
+                addNovelFragmentNew(bookLists, shelf_book_delete_btn);
                 fragment_shelf_xiaoshuo.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                 fragment_shelf_manhau.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                 break;
@@ -198,6 +198,7 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
                         fragment_shelf_xiaoshuo.setTextSize(fragment_store_manhau_dp);
                         fragment_shelf_manhau.setTextSize(fragment_store_xiaoshuo_dp);
                     }
+                    setBookshelfRecommendationEvent();
                 }
 
                 @Override
@@ -221,6 +222,22 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
             refreshTime = DateUtils.currentTime();
             refarsh();
         }
+        setBookshelfRecommendationEvent();
+    }
+
+    /**
+     * 神策埋点
+     */
+    private void setBookshelfRecommendationEvent() {
+        if (!chooseWho) {
+            if (novelFragment != null) {
+                novelFragment.setBookshelfRecommendationEvent();
+            }
+        } else {
+            if (comicshelfFragment != null) {
+                comicshelfFragment.setBookshelfRecommendationEvent();
+            }
+        }
     }
 
     @Override
@@ -229,17 +246,17 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         EventBus.getDefault().unregister(this);
     }
 
-   private void addNovelFragmentNew(List<BaseBook> bookLists, LinearLayout shelf_book_delete_btn){
-       novelFragment = new <Fragment>NewNovelFragment();
-       novelFragment.setBookLists(bookLists);
-       novelFragment.setShelf_book_delete_btn(shelf_book_delete_btn);
-       fragmentList.add(novelFragment);
-   }
+    private void addNovelFragmentNew(List<BaseBook> bookLists, LinearLayout shelf_book_delete_btn) {
+        novelFragment = new <Fragment>NewNovelFragment();
+        novelFragment.setBookLists(bookLists);
+        novelFragment.setShelf_book_delete_btn(shelf_book_delete_btn);
+        fragmentList.add(novelFragment);
+    }
 
-   private void addComicshelfFragment(List<BaseComic> bookLists, LinearLayout shelf_book_delete_btn){
-       comicshelfFragment = new <Fragment>ComicshelfFragment();
-       comicshelfFragment.setBookLists(baseComics);
-       comicshelfFragment.setShelf_book_delete_btn(shelf_book_delete_btn);
-       fragmentList.add(comicshelfFragment);
-   }
+    private void addComicshelfFragment(List<BaseComic> bookLists, LinearLayout shelf_book_delete_btn) {
+        comicshelfFragment = new <Fragment>ComicshelfFragment();
+        comicshelfFragment.setBookLists(baseComics);
+        comicshelfFragment.setShelf_book_delete_btn(shelf_book_delete_btn);
+        fragmentList.add(comicshelfFragment);
+    }
 }
