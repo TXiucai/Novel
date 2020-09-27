@@ -27,6 +27,7 @@ import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -97,10 +98,11 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             @JavascriptInterface
             @Override
             public void pay() {//h5跳转原生支付
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), AcquireBaoyueActivity.class);
-                intent.putExtra("isvip", true);
-                startActivity(intent);
+                if (activity != null) {
+                    Intent intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_vip_dialog));
+                    intent.putExtra("isvip", true);
+                    startActivity(intent);
+                }
             }
 
             @JavascriptInterface

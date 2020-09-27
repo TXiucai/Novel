@@ -363,7 +363,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     break;
                 case "fragment_mine_user_info_paylayout_vip":
                     if (Utils.isLogin(activity)) {
-                        intent.setClass(activity, AcquireBaoyueActivity.class);
+                        intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
                         intent.putExtra("isvip", true);
                         startActivity(intent);
                     } else {

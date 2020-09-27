@@ -99,8 +99,7 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                             finish();
                             break;
                         case "vip":
-                            intent.setClass(activity, AcquireBaoyueActivity.class);
-                            startActivity(intent);
+                            startActivity(AcquireBaoyueActivity.getMyIntent(activity,LanguageUtil.getString(activity, R.string.refer_page_task)));
                             finish();
                             break;
                         case "share_app":

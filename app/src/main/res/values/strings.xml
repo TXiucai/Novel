@@ -396,4 +396,8 @@
     <string name="refer_page_previous_chapter">上一章</string>
     <string name="refer_page_next_chapter">下一章</string>
     <string name="refer_page_catalog">目录页</string>
+    <string name="refer_page_task">任务页</string>
+    <string name="refer_page_mine">我的</string>
+    <string name="refer_page_vip_dialog">VIP弹窗</string>
+    <string name="refer_page_book_read">小说内容页</string>
 </resources>

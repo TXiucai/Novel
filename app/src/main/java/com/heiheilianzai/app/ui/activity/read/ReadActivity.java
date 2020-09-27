@@ -734,8 +734,10 @@ public class ReadActivity extends BaseReadActivity {
             case R.id.tv_noad:
                 hideReadSetting();
                 if (ReaderConfig.USE_AD) {
-                    if (MainHttpTask.getInstance().Gotologin(activity)) {
-                        startActivityForResult(new Intent(activity, AcquireBaoyueActivity.class), 301);
+                    if (activity != null) {
+                        if (MainHttpTask.getInstance().Gotologin(activity)) {
+                            startActivityForResult(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_book_read)), 301);
+                        }
                     }
                 }
                 break;
