@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -20,11 +21,14 @@ import com.heiheilianzai.app.component.pay.alipay.PayResult;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.AcquirePayItem;
 import com.heiheilianzai.app.model.AcquirePrivilegeItem;
 import com.heiheilianzai.app.model.PaymentWebBean;
 import com.heiheilianzai.app.model.WxPayBean;
+import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
+import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
@@ -32,6 +36,7 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -95,6 +100,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
 
     @Override
     public void initData() {
+        setVIPConfirmEvent();
         mAvatar = getIntent().getStringExtra("avatar");
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
@@ -188,6 +194,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
      * 获取支付渠道url,跳转支付Dialog
      */
     private void pay(AcquirePayItem item) {
+        setVIPChoiceEvent(item.getGoods_id());
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("goods_id", item.getGoods_id());
         params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
@@ -213,7 +220,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     }
 
     /**
-     *跳转到支付Dialog
+     * 跳转到支付Dialog
      */
     void showPayDialog(String url) {
         View view = this.getWindow().getDecorView();
@@ -262,7 +269,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     }
 
     /**
-     *跳入原生支付 微信或支付宝
+     * 跳入原生支付 微信或支付宝
      */
     public void nativePay(String payType, String jsonData) {
         PaymentWebBean bean = new Gson().fromJson(jsonData, PaymentWebBean.class);
@@ -279,6 +286,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
 
     /**
      * 原生支付宝支付
+     *
      * @param orderInfo
      */
     private void aliPay(String orderInfo) {
@@ -300,6 +308,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
 
     /**
      * 原生微信支付
+     *
      * @param payInfo
      */
     private void wechatPay(String payInfo) {
@@ -339,4 +348,36 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             }
         }
     };
+
+    /**
+     * 进入VIP会员购买必传参数
+     *
+     * @param context
+     * @param referPage 神策埋点数据从哪个页面进入
+     * @return Intent
+     */
+    public static Intent getMyIntent(Context context, String referPage) {
+        Intent intent = new Intent(context, AcquireBaoyueActivity.class);
+        intent.putExtra(SaVarConfig.REFER_PAGE_VAR, referPage);
+        return intent;
+    }
+
+    /**
+     * 神策埋点 进入VIP购买页时
+     */
+    private void setVIPConfirmEvent() {
+        SensorsDataHelper.setVIPConfirmEvent(getIntent().getStringExtra(SaVarConfig.REFER_PAGE_VAR));
+    }
+
+    /**
+     * 神策埋点 选购vip套餐类型
+     *
+     * @param goodsId 套餐ID
+     */
+    private void setVIPChoiceEvent(String goodsId) {
+        try {
+            SensorsDataHelper.setVIPChoiceEvent(Integer.valueOf(goodsId));
+        } catch (Exception e) {
+        }
+    }
 }
