@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
@@ -29,18 +27,22 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.AdaptionGridView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.heiheilianzai.app.constant.BookConfig.book_refresh;
 import static com.heiheilianzai.app.constant.ReaderConfig.LOOKMORE;
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
 
 /**
  * 首页小说 Adapter
@@ -187,7 +189,6 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
         }
         int ItemHeigth = Huanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, stroreComicLable.list, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore);
-
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.height = ItemHeigth;
         if (!stroreComicLable.can_more && !stroreComicLable.can_refresh) {
@@ -322,7 +323,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                             List<StroreBookcLable.Book> bookList = gson.fromJson(new JSONObject(result).getString("list"), new TypeToken<List<StroreBookcLable.Book>>() {
                             }.getType());
                             if (!bookList.isEmpty()) {
-                                int ItemHeigth = Huanyihuan(recommend_id, style, bookList, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore);
+                                Huanyihuan(recommend_id, style, bookList, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore);
+                                setChangeRecommendationEvent(style, recommend_id, bookList);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -334,5 +336,38 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 }
         );
+    }
+
+    /**
+     * 点击换一换 加入神策埋点
+     *
+     * @param column_id
+     * @param bookList
+     */
+    private void setChangeRecommendationEvent(int style, String column_id, List<StroreBookcLable.Book> bookList) {
+        try {
+            int minSize = 0;
+            int size = bookList.size();
+            List<StroreBookcLable.Book> subListComics = new ArrayList<>();
+            switch (style) {
+                case BOOK_UI_STYLE_1:
+                case BOOK_UI_STYLE_3:
+                    minSize = Math.min(size, 3);
+                    break;
+                case BOOK_UI_STYLE_2:
+                    minSize = Math.min(size, 6);
+                    break;
+                case BOOK_UI_STYLE_4:
+                    minSize = Math.min(size, 4);
+                    break;
+            }
+            subListComics.addAll(bookList.subList(0, minSize));
+            List<String> workId = new ArrayList<>();
+            for (StroreBookcLable.Book book : subListComics) {
+                workId.add(book.book_id);
+            }
+            SensorsDataHelper.setChangeRecommendationEvent(WORKS_TYPE_BOOK, Integer.valueOf(column_id), workId);
+        } catch (Exception e) {
+        }
     }
 }
