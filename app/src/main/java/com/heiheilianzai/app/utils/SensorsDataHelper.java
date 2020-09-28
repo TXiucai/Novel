@@ -374,7 +374,15 @@ public class SensorsDataHelper {
      * @param work_id
      */
     public static void setChangeRecommendationEvent(String works_type, int column_id, List<String> work_id) {
-        setColumnRecommendationEvent(SaEventConfig.CHANGE_RECOMMENDATION_EVENT, works_type, column_id, work_id);
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
+            properties.put(SaVarConfig.COLUMN_ID_VAR, column_id);
+            properties.put(SaVarConfig.WORK_ID_VAR, work_id != null ? new JSONArray(work_id) : null);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.CHANGE_RECOMMENDATION_EVENT, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -382,21 +390,13 @@ public class SensorsDataHelper {
      *
      * @param works_type
      * @param column_id
-     * @param work_id
      */
-    public static void setHomeRecommendationEvent(String works_type, int column_id, List<String> work_id) {
-        setColumnRecommendationEvent(SaEventConfig.HOME_RECOMMENDATION_EVENT, works_type, column_id, work_id);
-    }
-
-    public static void setColumnRecommendationEvent(String event, String works_type, int column_id, List<String> work_id) {
+    public static void setHomeRecommendationEvent(String works_type, List<String> column_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
-            properties.put(SaVarConfig.COLUMN_ID_VAR, column_id);
-            if (SaEventConfig.CHANGE_RECOMMENDATION_EVENT.equals(event)) {
-                properties.put(SaVarConfig.WORK_ID_VAR, work_id != null ? new JSONArray(work_id) : null);
-            }
-            SensorsDataAPI.sharedInstance().track(event, properties);
+            properties.put(SaVarConfig.COLUMN_ID_VAR, column_id != null ? new JSONArray(column_id) : null);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.HOME_RECOMMENDATION_EVENT, properties);
         } catch (JSONException e) {
             e.printStackTrace();
         }
