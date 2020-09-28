@@ -24,19 +24,23 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.model.OptionItem;
+import com.heiheilianzai.app.model.SearchItem;
 import com.heiheilianzai.app.model.SerachItem;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.ObservableScrollView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -87,9 +91,9 @@ public class SearchActivity extends BaseButterKnifeActivity {
     OptionRecyclerViewAdapter optionAdapter;
     LayoutInflater layoutInflater;
     List<OptionBeen> optionBeenList;
-    boolean PRODUCT;
+    boolean PRODUCT;//true小说  false漫画
     boolean mIsHotSearch = false;
-
+    int Size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +167,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -176,7 +179,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
         });
         initData();
     }
-
 
     public void initData() {
         ReaderParams params = new ReaderParams(activity);
@@ -199,7 +201,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 }
         );
     }
-
 
     public void initInfo(String json) {
         SerachItem serachItem = gson.fromJson(json, SerachItem.class);
@@ -234,6 +235,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 startActivity(intent);
             }
         });
+        setSearchRecommendationEvent(serachItem);
     }
 
     @OnClick(value = {R.id.activity_search_cancel})
@@ -242,7 +244,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
             case R.id.activity_search_cancel:
                 finish();
                 break;
-
         }
     }
 
@@ -252,8 +253,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
      * @param keyword
      */
     public void gotoSearch(String keyword) {
-
-
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("keyword", keyword);
         params.putExtraParams("page_num", current_page + "");
@@ -264,7 +263,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
         } else {
             url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search;
         }
-
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
@@ -273,19 +271,14 @@ public class SearchActivity extends BaseButterKnifeActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
-
         );
     }
-
-    int Size;
 
     public void initNextInfo(String result) {
         OptionItem optionItem = gson.fromJson(result, OptionItem.class);
         total_page = optionItem.total_page;
-
         MyToash.Log("initNextInfo", optionItem.toString());
         if (total_page != 0 && (current_page <= total_page && !optionItem.list.isEmpty())) {
             int optionItem_list_size = optionItem.list.size();
@@ -296,7 +289,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 Size = optionItem_list_size;
                 optionAdapter = new OptionRecyclerViewAdapter(activity, optionBeenList, 0, PRODUCT, layoutInflater, onItemClick);
                 fragment_option_listview.setAdapter(optionAdapter);
-
                 activity_search_keywords_listview_noresult.setVisibility(View.GONE);
                 fragment_option_listview.setVisibility(View.VISIBLE);
                 activity_search_keywords_scrollview.setVisibility(View.GONE);
@@ -325,7 +317,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
         activity_search_keywords_scrollview.setVisibility(View.GONE);
     }
 
-
     @Override
     public void onBackPressed() {
         // 判断时间间隔
@@ -336,7 +327,31 @@ public class SearchActivity extends BaseButterKnifeActivity {
         } else {
             finish();
         }
+    }
+
+    /**
+     * 神策埋点  搜索推荐
+     */
+    private void setSearchRecommendationEvent(SerachItem serachItem) {
+        if (serachItem == null) {
+            return;
+        }
+        List<String> hotWord = new ArrayList<>();
+        List<String> hotList = new ArrayList<>();
+        if (serachItem.hot_word != null) {
+            hotWord.addAll(Arrays.asList(serachItem.hot_word));
+            setSearchRecommendationEvent(LanguageUtil.getString(activity, R.string.refer_page_hot_search), hotWord);
+        }
+        if (serachItem.list != null) {
+            for (SearchItem searchItem : serachItem.list) {
+                hotList.add(PRODUCT ? searchItem.book_id : searchItem.comic_id);
+            }
+            setSearchRecommendationEvent(LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), hotList);
+        }
 
     }
 
+    private void setSearchRecommendationEvent(String recommendType, List<String> work_id) {
+        SensorsDataHelper.setSearchRecommendationEvent(PRODUCT ? SaVarConfig.WORKS_TYPE_BOOK : SaVarConfig.WORKS_TYPE_COMICS, recommendType, work_id);
+    }
 }
