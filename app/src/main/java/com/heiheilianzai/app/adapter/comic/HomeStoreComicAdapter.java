@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
@@ -30,17 +28,21 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.LOOKMORE;
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 
 /**
  * 首页漫画 Adapter
@@ -315,6 +317,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                         if (comicList != null && !comicList.isEmpty()) {
                             setItemData(recommend_id, style, comicList, fragment_store_gridview1_gridview, type1);
+                            setChangeRecommendationEvent(recommend_id, style, comicList);
                         }
                     }
 
@@ -323,5 +326,32 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 }
         );
+    }
+
+    /**
+     * 点击换一换 加入神策埋点
+     *
+     * @param column_id
+     * @param comics
+     */
+    private void setChangeRecommendationEvent(String column_id, int style, List<StroreComicLable.Comic> comics) {
+        try {
+            List<StroreComicLable.Comic> subListComics = new ArrayList<>();
+            switch (style) {
+                case COMIC_UI_STYLE_1:
+                case COMIC_UI_STYLE_3:
+                    subListComics.addAll(comics.subList(0, Math.min(4, comics.size())));
+                    break;
+                case COMIC_UI_STYLE_2:
+                    subListComics.addAll(comics.subList(0, Math.min(6, comics.size())));
+                    break;
+            }
+            List<String> workId = new ArrayList<>();
+            for (StroreComicLable.Comic comic : subListComics) {
+                workId.add(comic.comic_id);
+            }
+            SensorsDataHelper.setChangeRecommendationEvent(WORKS_TYPE_COMICS, Integer.valueOf(column_id), workId);
+        } catch (Exception e) {
+        }
     }
 }
