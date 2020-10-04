@@ -7,8 +7,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.callback.LoginResultCallback;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.PrefConst;
@@ -112,6 +114,10 @@ public class LoginModel {
         params.putExtraParams("mobile", phoneNum);
         params.putExtraParams("platform", "1");//1安卓  2iOS  3苹果商店
         params.putExtraParams("user_source", BuildConfig.app_source_boyin);
+        UserInfoItem userInfo = App.getUserInfoItem(mActivity);
+        if (userInfo != null) {
+            params.putExtraParams("hhlz_uid", String.valueOf(userInfo.getUid()));
+        }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBoYinLoginUrl, json, false, new HttpUtils.ResponseListener() {
                     @Override
@@ -247,6 +253,7 @@ public class LoginModel {
         ReaderConfig.REFREASH_USERCENTER = true;
         EventBus.getDefault().post(new RefreshMine(null));
         EventBus.getDefault().post(new LogoutBoYinEvent());
+        SensorsDataHelper.profileSet(context);
     }
 
     /**
