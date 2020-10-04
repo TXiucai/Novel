@@ -20,15 +20,19 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.component.http.PreparedDomain;
 import com.heiheilianzai.app.component.push.JPushUtil;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.RabbitConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.UserInfoItem;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.JPushFactory;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.webp.WebpBytebufferDecoder;
 import com.heiheilianzai.app.utils.webp.WebpResourceDecoder;
@@ -145,6 +149,8 @@ public class App extends LitePalApplication {
                 SensorsAnalyticsAutoTrackEventType.APP_END |
                 SensorsAnalyticsAutoTrackEventType.APP_VIEW_SCREEN);
         saConfigOptions.enableTrackAppCrash();
+        //与H5打通
+        saConfigOptions.enableJavaScriptBridge(true);
         if (!RabbitConfig.ONLINE) {
             saConfigOptions.enableVisualizedAutoTrack(true);//开启可视化全埋点
             saConfigOptions.enableLog(true);//开启Log
@@ -243,6 +249,22 @@ public class App extends LitePalApplication {
             }
         }
         return -1;
+    }
+
+    /**
+     * 登录后获得缓存用户信息
+     *
+     * @param context
+     * @return
+     */
+    public static UserInfoItem getUserInfoItem(Context context){
+        String userInfoStr = AppPrefs.getSharedString(context, PrefConst.USER_INFO_KAY, "");
+        UserInfoItem userInfo = null;
+        if (!StringUtils.isEmpty(userInfoStr)) {
+            Gson gson = new Gson();
+            return gson.fromJson(userInfoStr, UserInfoItem.class);
+        }
+        return  null;
     }
 
     /**

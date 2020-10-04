@@ -19,6 +19,8 @@ public class SaVarConfig {
     public static final String REFER_PAGE_VAR = "refer_page";//前向页面
     public static final String WORKS_TYPE_VAR = "works_type";//作品类型
     public static final String COLUMN_ID_VAR = "column_id";//栏目ID
+    public static final String WORKS_ID_VAR = "works_id";//作品ID
+    public static final String COLUMN_ID_LIST_VAR = "column_id_list";//栏目ID
     /******************END ******************/
 
     /****************** 登录 *******************/
@@ -33,7 +35,7 @@ public class SaVarConfig {
     public static final String READ_PAGE_NUM_VAR = "read_page_num";//当前章已读页数
     public static final String STAY_TIME_VAR = "stay_time";//停留时长
     public static final String PROP_ID_VAR = "prop_id";//对应后台的"属性"
-    public static final String TAG_ID_VAR = "tag_id";//内容标签ID
+    public static final String TAG_ID_VAR_LIST = "tag_id_list";//内容标签ID tag_id_list
     public static final String TOTAL_CHAPTER_NUM_VAR = "total_chapter_num";//最新总章节数
     public static final String AUTHOR_ID_VAR = "author_id";//作者ID
     /****************** END *******************/

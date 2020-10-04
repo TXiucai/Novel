@@ -4,15 +4,16 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import java.util.List;
 
@@ -25,28 +26,37 @@ public class SensorsDataHelper {
      * 设置动态公共属性
      */
     public static void setDynamicPublicProperty(Context context) {
-        // 初始化 SDK 后，设置动态公共属性
         SensorsDataAPI.sharedInstance().registerDynamicSuperProperties(() -> {
             try {
-                String userInfoStr = AppPrefs.getSharedString(context, PrefConst.USER_INFO_KAY, "");
-                UserInfoItem userInfo = null;
-                if (!StringUtils.isEmpty(userInfoStr)) {
-                    Gson gson = new Gson();
-                    userInfo = gson.fromJson(userInfoStr, UserInfoItem.class);
-                }
-                JSONObject properties = new JSONObject();
-                properties.put(SaVarConfig.LOGIN_STATUS_VAR, Utils.isLogin(context) ? "登录中" : "已登出");//登录状态
-                properties.put(SaVarConfig.LOGIN_USERID_VAR, userInfo == null ? "" : userInfo.getUid());//登录账号ids
-                properties.put(SaVarConfig.LOGIN_PHONE_VAR, userInfo == null ? "" : userInfo.getMobile());//登录手机号
-                properties.put(SaVarConfig.BINDING_TYPE_VAR, Utils.isLogin(context) ? "1" : "0");//绑定类型
-                properties.put(SaVarConfig.VIP_TYPE_VAR, userInfo == null ? "0" : userInfo.getIs_vip());//VIP类型
-                properties.put(SaVarConfig.REG_TYPE_VAR, Utils.isLogin(context) ? "1" : "0");//注册类型
-                return properties;
+                return getUserJSONObject(context, false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         });
+    }
+
+    /**
+     * 神策获取用户相关信息数据
+     *
+     * @param context
+     * @param profileSet  是否是  神策埋点profileSet方法。
+     * @return
+     * @throws JSONException
+     */
+    private static JSONObject getUserJSONObject(Context context, boolean profileSet) throws JSONException {
+        UserInfoItem userInfo = App.getUserInfoItem(context);
+        if (profileSet) {
+            login(userInfo == null ? Utils.getUUID(context) : BuildConfig.sa_server_app_id + "_" + userInfo.getUid());
+        }
+        JSONObject properties = new JSONObject();
+        properties.put(SaVarConfig.LOGIN_STATUS_VAR, Utils.isLogin(context) ? "登录中" : "已登出");//登录状态
+        properties.put(SaVarConfig.LOGIN_USERID_VAR, userInfo == null ? "" : BuildConfig.sa_server_app_id + "_" + userInfo.getUid());//登录账号ids
+        properties.put(SaVarConfig.LOGIN_PHONE_VAR, userInfo == null ? "" : userInfo.getMobile());//登录手机号
+        properties.put(SaVarConfig.BINDING_TYPE_VAR, Utils.isLogin(context) ? "1" : "0");//绑定类型
+        properties.put(SaVarConfig.VIP_TYPE_VAR, userInfo == null ? "0" : userInfo.getIs_vip());//VIP类型
+        properties.put(SaVarConfig.REG_TYPE_VAR, Utils.isLogin(context) ? "1" : "0");//注册类型
+        return properties;
     }
 
     /**
@@ -89,15 +99,15 @@ public class SensorsDataHelper {
      * @param read_page_num     当前章已读页数
      * @param stay_time         停留时长
      * @param prop_id           属性ID
-     * @param tag_id            分类ID
+     * @param tag_id_list       分类ID
      * @param refer_page        前向页面
      * @param work_id           漫画ID
      * @param chapter_id        漫画当前章节ID
      * @param total_chapter_num 漫画总章节
      * @param author_id         作者ID
      */
-    public static void setMHContentPageEvent(int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
-        setContentPageEvent(SaEventConfig.MH_CONTENT_PAGE_EVENT, total_page_num, read_page_num, stay_time, prop_id, tag_id, refer_page, work_id, chapter_id, total_chapter_num, author_id);
+    public static void setMHContentPageEvent(int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id_list, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
+        setContentPageEvent(SaEventConfig.MH_CONTENT_PAGE_EVENT, total_page_num, read_page_num, stay_time, prop_id, tag_id_list, refer_page, work_id, chapter_id, total_chapter_num, author_id);
     }
 
     /**
@@ -107,25 +117,25 @@ public class SensorsDataHelper {
      * @param read_page_num     当前章已读页数
      * @param stay_time         停留时长
      * @param prop_id           属性ID
-     * @param tag_id            分类ID
+     * @param tag_id_list       分类ID
      * @param refer_page        前向页面
      * @param work_id           漫画ID
      * @param chapter_id        漫画当前章节ID
      * @param total_chapter_num 漫画总章节
      * @param author_id         作者ID
      */
-    public static void setXSContentPageEvent(int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
-        setContentPageEvent(SaEventConfig.XS_CONTENT_PAGE_EVENT, total_page_num, read_page_num, stay_time, prop_id, tag_id, refer_page, work_id, chapter_id, total_chapter_num, author_id);
+    public static void setXSContentPageEvent(int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id_list, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
+        setContentPageEvent(SaEventConfig.XS_CONTENT_PAGE_EVENT, total_page_num, read_page_num, stay_time, prop_id, tag_id_list, refer_page, work_id, chapter_id, total_chapter_num, author_id);
     }
 
-    public static void setContentPageEvent(String event, int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
+    public static void setContentPageEvent(String event, int total_page_num, int read_page_num, int stay_time, List<String> prop_id, List<String> tag_id_list, String refer_page, int work_id, int chapter_id, int total_chapter_num, int author_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.TOTAL_PAGE_NUM_VAR, total_page_num);
             properties.put(SaVarConfig.READ_PAGE_NUM_VAR, read_page_num);
             properties.put(SaVarConfig.STAY_TIME_VAR, stay_time);
             properties.put(SaVarConfig.PROP_ID_VAR, prop_id != null ? new JSONArray(prop_id) : null);
-            properties.put(SaVarConfig.TAG_ID_VAR, tag_id != null ? new JSONArray(tag_id) : null);
+            properties.put(SaVarConfig.TAG_ID_VAR_LIST, tag_id_list != null ? new JSONArray(tag_id_list) : null);
             properties.put(SaVarConfig.REFER_PAGE_VAR, refer_page);
             properties.put(SaVarConfig.WORK_ID_VAR, work_id);
             properties.put(SaVarConfig.CHAPTER_ID_VAR, chapter_id);
@@ -303,7 +313,7 @@ public class SensorsDataHelper {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.PROP_ID_VAR, prop_id != null ? new JSONArray(prop_id) : null);
-            properties.put(SaVarConfig.TAG_ID_VAR, tag_id != null ? new JSONArray(tag_id) : null);
+            properties.put(SaVarConfig.TAG_ID_VAR_LIST, tag_id != null ? new JSONArray(tag_id) : null);
             properties.put(SaVarConfig.REFER_PAGE_VAR, refer_page);
             properties.put(SaVarConfig.WORK_ID_VAR, work_id);
             properties.put(SaVarConfig.TOTAL_CHAPTER_NUM_VAR, total_chapter_num);
@@ -318,13 +328,13 @@ public class SensorsDataHelper {
      * 神策埋点  书架推荐
      *
      * @param works_type 作品类型
-     * @param work_id    作品ID
+     * @param works_id   作品ID
      */
-    public static void setBookshelfRecommendationEvent(String works_type, List<String> work_id) {
+    public static void setBookshelfRecommendationEvent(String works_type, List<String> works_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
-            properties.put(SaVarConfig.WORK_ID_VAR, work_id != null ? new JSONArray(work_id) : null);
+            properties.put(SaVarConfig.WORKS_ID_VAR, works_id != null ? new JSONArray(works_id) : null);
             SensorsDataAPI.sharedInstance().track(SaEventConfig.BOOKSHELF_RECOMMENDATION_EVENT, properties);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -335,14 +345,14 @@ public class SensorsDataHelper {
      * 神策埋点  搜索推荐
      *
      * @param works_type
-     * @param work_id
+     * @param works_id
      */
-    public static void setSearchRecommendationEvent(String works_type, String recommend_type, List<String> work_id) {
+    public static void setSearchRecommendationEvent(String works_type, String recommend_type, List<String> works_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
             properties.put(SaVarConfig.RECOMMEND_TYPE_VAR, recommend_type);
-            properties.put(SaVarConfig.WORK_ID_VAR, work_id != null ? new JSONArray(work_id) : null);
+            properties.put(SaVarConfig.WORKS_ID_VAR, works_id != null ? new JSONArray(works_id) : null);
             SensorsDataAPI.sharedInstance().track(SaEventConfig.SEARCH_RECOMMENDATION_EVENT, properties);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -371,14 +381,14 @@ public class SensorsDataHelper {
      *
      * @param works_type
      * @param column_id
-     * @param work_id
+     * @param works_id
      */
-    public static void setChangeRecommendationEvent(String works_type, int column_id, List<String> work_id) {
+    public static void setChangeRecommendationEvent(String works_type, int column_id, List<String> works_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
             properties.put(SaVarConfig.COLUMN_ID_VAR, column_id);
-            properties.put(SaVarConfig.WORK_ID_VAR, work_id != null ? new JSONArray(work_id) : null);
+            properties.put(SaVarConfig.WORKS_ID_VAR, works_id != null ? new JSONArray(works_id) : null);
             SensorsDataAPI.sharedInstance().track(SaEventConfig.CHANGE_RECOMMENDATION_EVENT, properties);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -389,15 +399,64 @@ public class SensorsDataHelper {
      * 神策埋点 首页推荐
      *
      * @param works_type
-     * @param column_id
+     * @param columns_id
      */
-    public static void setHomeRecommendationEvent(String works_type, List<String> column_id) {
+    public static void setHomeRecommendationEvent(String works_type, List<String> columns_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
-            properties.put(SaVarConfig.COLUMN_ID_VAR, column_id != null ? new JSONArray(column_id) : null);
+            properties.put(SaVarConfig.COLUMN_ID_LIST_VAR, columns_id != null ? new JSONArray(columns_id) : null);
             SensorsDataAPI.sharedInstance().track(SaEventConfig.HOME_RECOMMENDATION_EVENT, properties);
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置用户属性
+     *
+     * @param last_login_time //最近登录时间
+     */
+    public static void profileSet(String last_login_time) {
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put("last_login_time", last_login_time);
+            SensorsDataAPI.sharedInstance().profileSet(properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置神策用户属性
+     *
+     * @param context
+     */
+    public static void profileSet(Context context) {
+        try {
+            SensorsDataAPI.sharedInstance().profileSet(getUserJSONObject(context, true));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 神策埋点用户登录
+     * 应用打开时调用，用户登录时调用
+     *
+     * @param loginId 用户登录时 神策应用ID_用户ID 未登录时 手机唯一识别码IMEI
+     */
+    public static void login(String loginId) {
+        SensorsDataAPI.sharedInstance().login(loginId);
+    }
+
+    /**
+     * 神策激活事件
+     */
+    public static void trackInstallation() {
+        try {
+            SensorsDataAPI.sharedInstance().trackInstallation("AppInstall");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
