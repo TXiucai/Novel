@@ -14,7 +14,11 @@ import com.heiheilianzai.app.view.AdaptionGridView;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 
 
 /**
@@ -94,5 +98,17 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
     public void initEntranceGrid(AdaptionGridView mEntranceGridMale) {
         initEntranceGrid(mEntranceGridMale, true, R.mipmap.entrance1, R.mipmap.entrance2, R.mipmap.entrance3, R.mipmap.entrance4, R.mipmap.entrance5);
     }
-}
 
+    @Override
+    protected void onMyScrollStateChanged(int position) {
+        List<String> columnId = new ArrayList<>();
+        List<StroreBookcLable> list = new ArrayList<>();
+        list.addAll(listData.subList(0, position + 1));
+        for (StroreBookcLable stroreBookcLable : list) {
+            if (stroreBookcLable.ad_type == 0) {
+                columnId.add(stroreBookcLable.recommend_id);
+            }
+        }
+        setHomeRecommendationEvent(WORKS_TYPE_BOOK, columnId);
+    }
+}

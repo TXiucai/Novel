@@ -27,6 +27,7 @@ import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.ViewUtils;
@@ -80,6 +81,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     String max_edit_time;//推荐位最后编辑时间
     boolean isEdit = false;//后台是否修改了推荐列表数据
     boolean isLoadMore = true;//是否加载更多
+    int mFirstIndex = -1;//上次列表滚动到的位置
 
     @Override
     protected void initView() {
@@ -120,6 +122,14 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // 获取当前滚动到的条目位置
+                    int newPosition = layoutManager.findFirstVisibleItemPosition();
+                    if (mFirstIndex != newPosition) {
+                        onMyScrollStateChanged(newPosition);
+                        mFirstIndex = newPosition;
+                    }
+                }
             }
 
             @Override
@@ -155,6 +165,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             @Override
             public void onRefresh() {
                 page = 1;
+                mFirstIndex = 0;
                 store_comic_refresh_layout.setLoadmoreEnable(true);
                 isLoadMore = true;
                 getData();//刷新banner、推荐列表
@@ -251,9 +262,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void initEntranceGrid(AdaptionGridView mEntranceGridMale);
 
+    protected abstract void onMyScrollStateChanged(int position);//停止滑动后列表位置
+
     /**
      * @param mEntranceGridMale
-     * @param isProduct         参考 {@link BaseOptionActivity.PRODUCT } isProduct false 漫画  true  小说
+     * @param isProduct         false 漫画  true 小说
      * @param resId1
      * @param resId2
      * @param resId3
@@ -453,6 +466,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     void getEditData() {
         recyclerView.scrollToPosition(0);
         page = 1;
+        mFirstIndex = 0;
         getData();
         MyToash.ToashError(activity, getString(R.string.home_store_edit_data));
     }
@@ -549,5 +563,19 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 神策埋点 首页推荐位
+     * 每次滑动列表位置改变，上报推荐位ID到神策
+     *
+     * @param works_type   漫画 MH 小说XS
+     * @param column_id   推荐ID
+     */
+    protected void setHomeRecommendationEvent(String works_type, List<String> column_id) {
+        try {
+            SensorsDataHelper.setHomeRecommendationEvent(works_type, column_id);
+        } catch (Exception e) {
+        }
     }
 }

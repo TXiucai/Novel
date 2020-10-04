@@ -6,6 +6,7 @@ import com.heiheilianzai.app.adapter.comic.HomeStoreComicAdapter;
 import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.StoreComicEvent;
 import com.heiheilianzai.app.utils.MyToash;
@@ -14,7 +15,11 @@ import com.heiheilianzai.app.view.AdaptionGridView;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
+import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 
 
 /**
@@ -96,5 +101,18 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     @Override
     public void initEntranceGrid(AdaptionGridView mEntranceGridMale) {
         initEntranceGrid(mEntranceGridMale, false, R.mipmap.comic_classification, R.mipmap.comic_ranking, R.mipmap.comic_member, R.mipmap.comic_finished, R.mipmap.comic_limitfree);
+    }
+
+    @Override
+    protected void onMyScrollStateChanged(int position) {
+        List<String> columnId = new ArrayList<>();
+        List<StroreComicLable> list = new ArrayList<>();
+        list.addAll(listData.subList(0, position + 1));
+        for (StroreComicLable stroreComicLable : list) {
+            if (stroreComicLable.ad_type == 0) {
+                columnId.add(stroreComicLable.recommend_id);
+            }
+        }
+        setHomeRecommendationEvent(WORKS_TYPE_COMICS, columnId);
     }
 }
