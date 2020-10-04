@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide;
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseAdvertisementActivity;
@@ -17,6 +18,7 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.Startpage;
+import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.InternetUtils;
@@ -25,6 +27,7 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +60,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
             finish();
             return;
         }
+        saAppLogin();//神策登录
         mOpenCurrentTime = DateUtils.currentTime();
         isfirst = ShareUitls.getString(activity, "isfirst", "yes");
         compatibleOldUpdate();
@@ -241,6 +245,19 @@ public class SplashActivity extends BaseAdvertisementActivity {
     public void saAppFailedLoad() {
         try {
             SensorsDataHelper.setOpenTimeEvent(new Long(DateUtils.getCurrentTimeDifferenceSecond(-1)).intValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 进入app神策登录，有用户信息时用户信息登录，没有时 设备ID登录
+     */
+    public void saAppLogin() {
+        try {
+            UserInfoItem userInfo = App.getUserInfoItem(activity);
+            String loginId = userInfo != null ? BuildConfig.sa_server_app_id + "_" + userInfo.getUid() : Utils.getUUID(activity);
+            SensorsDataHelper.login(loginId);
         } catch (Exception e) {
             e.printStackTrace();
         }
