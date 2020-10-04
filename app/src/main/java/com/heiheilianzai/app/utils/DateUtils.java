@@ -51,11 +51,18 @@ public class DateUtils {
      * @return
      */
     public static String getTodayTime() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return  getTodayTime("yyyy-MM-dd");
+    }
+
+    public static String getTodayTimeHMS() {
+        return  getTodayTime("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public static String getTodayTime(String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         Date date = new Date(System.currentTimeMillis());
         return simpleDateFormat.format(date);
     }
-
     /**
      * 获取系统时间戳
      *

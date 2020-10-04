@@ -17,8 +17,10 @@ import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.FirstStartActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,6 +89,7 @@ public class LoginPresenter {
                         if (GETPRODUCT_TYPE(activity) != 1) {
                             EventBus.getDefault().post(new RefreshComic(null));
                         }
+                        SensorsDataHelper.profileSet(DateUtils.getTodayTimeHMS());
                         loginSuccess.success();
                         JPushUtil.setAlias(activity);
                         activity.finish();

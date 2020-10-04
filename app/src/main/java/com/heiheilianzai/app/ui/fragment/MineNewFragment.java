@@ -39,6 +39,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -203,6 +204,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             String sharedUserInfo = StringUtils.isEmpty(info) ? (userInfoItem != null ? gson.toJson(userInfoItem) : "") : info;
             if (!StringUtils.isEmpty(sharedUserInfo)) {
                 AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, sharedUserInfo);
+                SensorsDataHelper.profileSet(activity);
             }
             MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), fragment_mine_user_info_avatar, R.mipmap.icon_def_head);
             fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
