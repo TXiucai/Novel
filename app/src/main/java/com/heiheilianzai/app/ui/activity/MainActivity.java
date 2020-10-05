@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -73,6 +74,7 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CustomScrollViewPager;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
@@ -561,10 +563,12 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      *
      * @param activity
      */
-    public static void permission(Activity activity) {
+    public void permission(Activity activity) {
         List<String> permissionLists = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             permissionLists.add(Manifest.permission.READ_PHONE_STATE);
+        } else {
+            trackInstallation();
         }
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.REQUEST_INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -645,14 +649,29 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     /**
      * 神策埋点事件 APP打开时长（从开屏页到首页）
      */
-    public void setOpenTimeEvent(){
+    public void setOpenTimeEvent() {
         try {
-            long openTime = getIntent().getLongExtra(SplashActivity.OPEN_TIME_KAY,-1);
-            if(openTime!=-1){
+            long openTime = getIntent().getLongExtra(SplashActivity.OPEN_TIME_KAY, -1);
+            if (openTime != -1) {
                 SensorsDataHelper.setOpenTimeEvent(new Long(DateUtils.getCurrentTimeDifferenceSecond(openTime)).intValue());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            trackInstallation();
+        }
+    }
+
+    /**
+     * 记录激活事件
+     */
+    private void trackInstallation() {
+        SensorsDataHelper.trackInstallation();
     }
 }
