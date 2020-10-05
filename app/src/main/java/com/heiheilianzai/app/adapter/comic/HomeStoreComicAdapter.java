@@ -173,6 +173,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                                 .putExtra("OPTION", LOOKMORE)
                                 .putExtra("PRODUCT", false)
+                                .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                                 .putExtra("recommend_id", stroreComicLable.recommend_id)
                         );
                     } catch (Exception E) {
