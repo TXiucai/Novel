@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -48,7 +47,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            Glide.with(activity).load(url).apply(getRequestOptions(def, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView)).into(imageView);
+            Glide.with(activity).load(url).apply(getRequestOptions(def, imageView)).into(imageView);
         }
     }
 
@@ -61,7 +60,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = getRequestOptions(width, height, def, true, false, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView);
+            RequestOptions options = getRequestOptions(width, height, def, true, false, imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
@@ -75,7 +74,7 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = getRequestOptions(width, height, def, radius, activity, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView);
+            RequestOptions options = getRequestOptions(width, height, def, radius, activity, imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
@@ -89,47 +88,36 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            RequestOptions options = getRequestOptions(width, height, def, true, true, StringUtils.isImgeUrlGifEncryptPostfix(url), imageView);
+            RequestOptions options = getRequestOptions(width, height, def, true, true, imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
     }
 
-    public static RequestOptions getRequestOptions(int def, boolean isGif, ImageView imageView) {
-        return getRequestOptions(0, 0, def, 0, null, false, false, isGif, imageView);
+    public static RequestOptions getRequestOptions(int def, ImageView imageView) {
+        return getRequestOptions(0, 0, def, 0, null, false, false, imageView);
     }
 
-    public static RequestOptions getRequestOptions(int width, int height, int def, boolean centerCrop, boolean transform, boolean isGif, ImageView imageView) {
-        return getRequestOptions(width, height, def, 0, null, centerCrop, transform, isGif, imageView);
+    public static RequestOptions getRequestOptions(int width, int height, int def, boolean centerCrop, boolean transform, ImageView imageView) {
+        return getRequestOptions(width, height, def, 0, null, centerCrop, transform, imageView);
     }
 
-    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean isGif, ImageView imageView) {
-        return getRequestOptions(width, height, def, radius, activity, false, false, isGif, imageView);
+    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, ImageView imageView) {
+        return getRequestOptions(width, height, def, radius, activity, false, false, imageView);
     }
 
-    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean centerCrop, boolean transform, boolean isGif, ImageView imageView) {
+    public static RequestOptions getRequestOptions(int width, int height, int def, int radius, Activity activity, boolean centerCrop, boolean transform, ImageView imageView) {
         RequestOptions options = new RequestOptions()
                 .placeholder(def)    //加载成功之前占位图
                 .error(def)    //加载错误之后的错误图
                 .priority(Priority.LOW);
-        if (!isGif) {
-            options = options.diskCacheStrategy(DiskCacheStrategy.ALL);
-        }
         if (width > 0 && height > 0) {
             options = options.override(width, height);
         }
         if (radius > 0 && activity != null) {
-            if (!isGif) {
-                options = options.transforms(new RoundedCornersTransformation(ImageUtil.dp2px(activity, radius), 0));
-            } else {
-                ImageUtil.setImageViewCenterCrop(width, height, imageView);
-            }
+            ImageUtil.setImageViewCenterCrop(width, height, imageView);
         }
         if (centerCrop) {
-            if (!isGif) {
-                options = options.centerCrop();
-            } else {
-                ImageUtil.setImageViewCenterCrop(width, height, imageView);
-            }
+            ImageUtil.setImageViewCenterCrop(width, height, imageView);
         }
         if (transform) {
             options = options.transform(new BlurTransformation());
