@@ -81,7 +81,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     @BindView(R.id.activity_acquire_customer_service)
     public View activity_acquire_customer_service;
 
-    String mKeFuOnline;
+    String mKeFuOnline;//客服链接
     AcquireBaoyuePayAdapter baoyuePayAdapter;
     private static final int SDK_PAY_FLAG = 1;
     private String ALIPAY_SUCCESS = "9000";//支付宝支付成功回调
@@ -123,8 +123,8 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         Gson gson = new Gson();
         try {
             JSONObject jsonObj = new JSONObject(json);
+            JSONObject userObj = jsonObj.getJSONObject("user");
             if (Utils.isLogin(this)) {
-                JSONObject userObj = jsonObj.getJSONObject("user");
                 String nickName = userObj.getString("nickname");
                 activity_acquire_avatar_name.setText(nickName);
                 activity_acquire_avatar_desc.setText(userObj.getString("display_date"));
@@ -142,6 +142,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             mKeFuOnline = jsonObj.getString("kefu_online");
             if (!StringUtils.isEmpty(mKeFuOnline)) {
                 activity_acquire_customer_service.setVisibility(View.VISIBLE);
+                mKeFuOnline += "?uid=" + userObj.getString("uid");
             }
             List<AcquirePrivilegeItem> privilegeList = new ArrayList<>();
             JSONArray privilegeArray = jsonObj.getJSONArray("privilege");
