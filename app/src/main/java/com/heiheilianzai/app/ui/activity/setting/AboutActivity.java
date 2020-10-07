@@ -66,71 +66,70 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         Intent intent = getIntent();
         try {
             flag = intent.getStringExtra("flag");
+            if (intent != null && intent.getStringExtra("url") != null) {
+                str = intent.getStringExtra("url");
+                String title = intent.getStringExtra("title");
+                if (title != null) {
+                    initTitleBarView(title);
+                } else {
+                    initTitleBarView("");//ceshi
+                }
+                String style = intent.getStringExtra("style");
+                MyToash.Log("style_", style + "  ");
+                if (style != null && style.equals("4")) {
+                    Intent intent2 = new Intent();
+                    intent2.setAction(Intent.ACTION_VIEW);
+                    Uri content_uri_browsers = Uri.parse(str);
+                    intent2.setData(content_uri_browsers);
+                    if (!this.isFinishing() && !this.isDestroyed()) {
+                        this.startActivity(intent2);
+                    }
+                    finish();
+                }
+                if (!StringUtils.isEmpty(flag) && "notitle".equals(flag)) {
+                    findViewById(R.id.titlebar_layout).setVisibility(View.GONE);
+                }
+            } else {
+                initTitleBarView(LanguageUtil.getString(this, R.string.AboutActivity_title));
+                str = "file:///android_asset/web/notify.html";
+            }
+            mWebView = findViewById(R.id.software_webview);
+            WebSettings settings = mWebView.getSettings();
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            settings.setJavaScriptEnabled(true);
+            settings.setBlockNetworkImage(false);//解决图片不显示
+            mWebView.addJavascriptInterface(new AndroidToJs(), "AndroidClient");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            }
+            mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
+            mWebView.setWebViewClient(new DemoWebViewClient());
+            mWebView.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                    mUploadCallbackAboveL = filePathCallback;
+                    take();
+                    return true;
+                }
+
+                public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                    mUploadMessage = uploadMsg;
+                    take();
+                }
+
+                public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+                    mUploadMessage = uploadMsg;
+                    take();
+                }
+
+                public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+                    mUploadMessage = uploadMsg;
+                    take();
+                }
+            });
+            mWebView.loadUrl(str);
         } catch (Exception e) {
         }
-        if (intent != null && intent.getStringExtra("url") != null) {
-            str = intent.getStringExtra("url");
-            String title = intent.getStringExtra("title");
-            if (title != null) {
-                initTitleBarView(title);
-            } else {
-                initTitleBarView("");//ceshi
-            }
-            String style = intent.getStringExtra("style");
-            MyToash.Log("style_", style + "  ");
-            if (style != null && style.equals("4")) {
-                Intent intent2 = new Intent();
-                intent2.setAction(Intent.ACTION_VIEW);
-                Uri content_uri_browsers = Uri.parse(str);
-                intent2.setData(content_uri_browsers);
-                this.startActivity(intent2);
-                finish();
-            }
-            if (!StringUtils.isEmpty(flag) && "notitle".equals(flag)) {
-                findViewById(R.id.titlebar_layout).setVisibility(View.GONE);
-            }
-        } else {
-            initTitleBarView(LanguageUtil.getString(this, R.string.AboutActivity_title));
-            str = "file:///android_asset/web/notify.html";
-        }
-        mWebView = findViewById(R.id.software_webview);
-        WebSettings settings = mWebView.getSettings();
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        settings.setJavaScriptEnabled(true);
-        settings.setBlockNetworkImage(false);//解决图片不显示
-        mWebView.addJavascriptInterface(new AndroidToJs(), "AndroidClient");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
-        mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
-        mWebView.setWebViewClient(new DemoWebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-                mUploadCallbackAboveL = filePathCallback;
-                take();
-                return true;
-            }
-
-            //<3.0
-            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-                mUploadMessage = uploadMsg;
-                take();
-            }
-
-            //>3.0+
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
-                mUploadMessage = uploadMsg;
-                take();
-            }
-
-            //>4.1.1
-            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-                mUploadMessage = uploadMsg;
-                take();
-            }
-        });
-        mWebView.loadUrl(str);
     }
 
     class DemoWebViewClient extends WebViewClient {
@@ -249,7 +248,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
                         results[i] = item.getUri();
                     }
                 }
-                if (dataString != null){
+                if (dataString != null) {
                     results = new Uri[]{Uri.parse(dataString)};
                 }
             }
