@@ -40,7 +40,7 @@ public class SensorsDataHelper {
      * 神策获取用户相关信息数据
      *
      * @param context
-     * @param profileSet  是否是  神策埋点profileSet方法。
+     * @param profileSet 是否是  神策埋点profileSet方法。
      * @return
      * @throws JSONException
      */
@@ -344,15 +344,15 @@ public class SensorsDataHelper {
     /**
      * 神策埋点  搜索推荐
      *
-     * @param works_type
-     * @param works_id
+     * @param works_type     作品类型   MH XS
+     * @param recommend_type 推荐类型   热搜榜 热门推荐
+     * @param works_id       （产品说先去掉works_id防止反复修改先保留数据，只删除了上报）
      */
     public static void setSearchRecommendationEvent(String works_type, String recommend_type, List<String> works_id) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.WORKS_TYPE_VAR, works_type);
             properties.put(SaVarConfig.RECOMMEND_TYPE_VAR, recommend_type);
-            properties.put(SaVarConfig.WORKS_ID_VAR, works_id != null ? new JSONArray(works_id) : null);
             SensorsDataAPI.sharedInstance().track(SaEventConfig.SEARCH_RECOMMENDATION_EVENT, properties);
         } catch (JSONException e) {
             e.printStackTrace();
