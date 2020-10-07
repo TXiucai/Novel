@@ -173,6 +173,9 @@ public class WebpFrameLoader {
             }
             this.isLoadPending = true;
             int delay = this.gifDecoder.getNextDelay();
+            if (delay == 0) {
+                delay = 100;
+            }
             long targetTime = SystemClock.uptimeMillis() + (long) delay;
             this.gifDecoder.advance();
             this.next = new DelayTarget(this.handler, this.gifDecoder.getCurrentFrameIndex(), targetTime);
