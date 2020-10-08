@@ -71,6 +71,8 @@ import com.umeng.socialize.media.UMWeb;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -148,6 +150,8 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     boolean falseDialg;
     BaseBook basebooks;
     boolean onclickTwo = false;
+    int mTotalchapter = -1; //小说总章节数
+    boolean mXSIntroPageEvent;//防止重复调用神策埋点
 
     @Override
     public int initContentView() {
@@ -411,7 +415,9 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             } else {
                 activity_book_info_ad.setVisibility(View.GONE);
             }
-            setXSIntroPageEvent();
+            if (mTotalchapter != -1 && !mXSIntroPageEvent) {
+                setXSIntroPageEvent();
+            }
         } catch (Exception e) {
             MyToash.Log("", e.getMessage());
         }
@@ -468,6 +474,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     }
                 }
         );
+        getDataCatalogInfo();//获取小说目录
     }
 
     public void addBookToLocalShelf() {
@@ -582,6 +589,34 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     }
 
     /**
+     * 获取小说目录  神策埋点需要总章节数
+     * 现在小说详细(/book/info)接口服务器说耗性能不返回章节总数了，让在章节目录里面拿
+     */
+    void getDataCatalogInfo() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("book_id", mBookId);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterCatalogUrl, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            mTotalchapter = jsonObject.getInt("total_chapter");
+                            if (mInfoBookItem != null && !mXSIntroPageEvent) {
+                                setXSIntroPageEvent();
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    /**
      * 进入小说简介页必传参数
      *
      * @param context
@@ -600,11 +635,12 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
      */
     private void setXSIntroPageEvent() {
         try {
+            mXSIntroPageEvent = true;
             SensorsDataHelper.setXSIntroPageEvent(getPropIdList(),//属性ID
                     getTagIdList(),//分类ID
                     getIntent().getStringExtra(SaVarConfig.REFER_PAGE_VAR),//前向页面
                     Integer.valueOf(StringUtils.isEmpty(mBookId) ? "0" : mBookId),//小说ID
-                    mInfoBookItem == null ? 0 : Integer.valueOf(mInfoBookItem.book.total_chapters),//小说总章节
+                    Integer.valueOf(mTotalchapter),//小说总章节
                     0);//作者ID
         } catch (Exception e) {
         }
