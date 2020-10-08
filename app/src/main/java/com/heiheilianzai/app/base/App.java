@@ -5,15 +5,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.ResourceDecoder;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
@@ -34,8 +31,6 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
-import com.heiheilianzai.app.utils.webp.WebpBytebufferDecoder;
-import com.heiheilianzai.app.utils.webp.WebpResourceDecoder;
 import com.sensorsdata.analytics.android.sdk.SAConfigOptions;
 import com.sensorsdata.analytics.android.sdk.SensorsAnalyticsAutoTrackEventType;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
@@ -45,9 +40,6 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.umcrash.UMCrash;
 
 import org.litepal.LitePalApplication;
-
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 /**
  * application配置
@@ -75,8 +67,6 @@ public class App extends LitePalApplication {
             }
             //初始化神策
             initSensors();
-            //初始化webpSupport
-            initWebpSupport();
             //初始化BigImageViewer图片加载方式为Glide
             BigImageViewer.initialize(GlideImageLoader.with(getAppContext()));
             ReadingConfig.createConfig(this);
@@ -162,17 +152,6 @@ public class App extends LitePalApplication {
             SensorsDataHelper.setAppId();//设置Appid
             SensorsDataHelper.setDynamicPublicProperty(context);//设置神策公共参数
         }
-    }
-
-    /**
-     * 初始化 WebP格式支持
-     */
-    private void  initWebpSupport(){
-        ResourceDecoder decoder = new WebpResourceDecoder(this);
-        ResourceDecoder byteDecoder = new WebpBytebufferDecoder(this);
-        Glide.get(this).getRegistry()
-                .prepend(InputStream.class, Drawable.class, decoder)
-                .prepend(ByteBuffer.class, Drawable.class, byteDecoder);
     }
 
     public static Context getAppContext() {

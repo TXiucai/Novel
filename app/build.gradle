@@ -317,6 +317,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
+    implementation "com.zlc.glide:webpdecoder:2.0.4.11.0"
     // ---
     // 图片压缩  拍摄头像后压缩 在上传服务端
     implementation 'top.zibin:Luban:1.1.8'
