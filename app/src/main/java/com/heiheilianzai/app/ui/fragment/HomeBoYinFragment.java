@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -119,6 +120,12 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             public void showBookInfoGuide() {//h5第一次进入有声小说播放详情，显示新手引导悬浮层。
                 showFragmentYouShengGuide();
             }
+
+            @JavascriptInterface
+            @Override
+            public String getSaServerAppId() {//获取神策埋点AppId
+                return BuildConfig.sa_server_app_id;
+            }
         }, "android");
         mWebView.setWebViewClient(new DemoWebViewClient());
         mWebView.loadUrl(url);
@@ -140,6 +147,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void showBookInfoGuide();
+
+        @JavascriptInterface
+        String getSaServerAppId();
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {
