@@ -56,6 +56,8 @@ public class ChapterManager {
     public ChapterItem mCurrentChapter;
     //目录json
     String CatalogActivity;
+    //小说总章节数
+    int mTotalChapter;
 
     public ChapterManager(Context context) {
         mChapterList = new ArrayList<>();
@@ -631,6 +633,7 @@ public class ChapterManager {
         try {
             JSONObject jsonObj = new JSONObject(result);
             String bookName = jsonObj.getString("name");
+            mTotalChapter = jsonObj.getInt("total_chapter");
             JSONArray chapterListArr = jsonObj.getJSONArray("chapter_list");
             size = chapterListArr.length();
             if (size == 0) {
@@ -852,5 +855,14 @@ public class ChapterManager {
         } else {
             downChapter.fail();
         }
+    }
+
+    /**
+     * 获取总章节数
+     *
+     * @return
+     */
+    public int getmTotalChapter() {
+        return mTotalChapter;
     }
 }

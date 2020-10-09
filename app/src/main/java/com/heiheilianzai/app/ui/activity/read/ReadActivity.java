@@ -976,7 +976,7 @@ public class ReadActivity extends BaseReadActivity {
                     mReferPage,//前向页面
                     Integer.valueOf(bookUtil.getBook_id()),//小说ID
                     Integer.valueOf(bookUtil.getChapter_id()),//小说当前章节ID
-                    mInfoBookItem == null ? 0 : Integer.valueOf(mInfoBookItem.book.total_chapters), //小说总章节
+                    ChapterManager.getInstance(ReadActivity.this).getmTotalChapter(), //小说总章节
                     0);//作者ID
         }
     }
