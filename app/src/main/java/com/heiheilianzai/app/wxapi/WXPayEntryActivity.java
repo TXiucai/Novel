@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.wxapi;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -21,10 +20,12 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
 
+import androidx.fragment.app.FragmentActivity;
+
 /**
  * 微信支付结果显示
  */
-public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
+public class WXPayEntryActivity extends FragmentActivity implements IWXAPIEventHandler {
     private IWXAPI api;
 
     @Override

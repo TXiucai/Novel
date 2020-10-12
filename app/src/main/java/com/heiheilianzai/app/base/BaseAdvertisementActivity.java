@@ -34,13 +34,14 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * 开屏广告 Base类 主要获取开屏广告数据 及逻辑处理
  */
-public abstract class BaseAdvertisementActivity extends Activity {
+public abstract class BaseAdvertisementActivity extends FragmentActivity {
     @BindView(R.id.activity_splash_im)
     public ImageView activity_splash_im;
     @BindView(R.id.activity_home_viewpager_sex_next)
@@ -87,15 +88,17 @@ public abstract class BaseAdvertisementActivity extends Activity {
         activity = this;
         updateApp = new UpdateApp(this);
         onCreateView();
-        activity_home_viewpager_sex_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getString(R.string.splashactivity_skip).equals(activity_home_viewpager_sex_next.getText().toString())) {
-                    skip = true;
-                    handler.sendEmptyMessageDelayed(0, 0);
+        if (activity_home_viewpager_sex_next != null) {
+            activity_home_viewpager_sex_next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (getString(R.string.splashactivity_skip).equals(activity_home_viewpager_sex_next.getText().toString())) {
+                        skip = true;
+                        handler.sendEmptyMessageDelayed(0, 0);
+                    }
                 }
-            }
-        });
+            });
+        }
         initData();
     }
 
