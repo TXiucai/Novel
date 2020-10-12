@@ -105,14 +105,17 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
     @Override
     protected void onMyScrollStateChanged(int position) {
-        List<String> columnId = new ArrayList<>();
-        List<StroreComicLable> list = new ArrayList<>();
-        list.addAll(listData.subList(0, position + 1));
-        for (StroreComicLable stroreComicLable : list) {
-            if (stroreComicLable.ad_type == 0) {
-                columnId.add(stroreComicLable.recommend_id);
+        try {
+            List<String> columnId = new ArrayList<>();
+            List<StroreComicLable> list = new ArrayList<>();
+            list.addAll(listData.subList(0, (position + 1) >= listData.size() ? listData.size() : (position + 1)));
+            for (StroreComicLable stroreComicLable : list) {
+                if (stroreComicLable.ad_type == 0) {
+                    columnId.add(stroreComicLable.recommend_id);
+                }
             }
+            setHomeRecommendationEvent(WORKS_TYPE_COMICS, columnId);
+        } catch (Exception e) {
         }
-        setHomeRecommendationEvent(WORKS_TYPE_COMICS, columnId);
     }
 }

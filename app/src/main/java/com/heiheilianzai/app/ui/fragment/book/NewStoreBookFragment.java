@@ -101,14 +101,17 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     protected void onMyScrollStateChanged(int position) {
-        List<String> columnId = new ArrayList<>();
-        List<StroreBookcLable> list = new ArrayList<>();
-        list.addAll(listData.subList(0, position + 1));
-        for (StroreBookcLable stroreBookcLable : list) {
-            if (stroreBookcLable.ad_type == 0) {
-                columnId.add(stroreBookcLable.recommend_id);
+        try {
+            List<String> columnId = new ArrayList<>();
+            List<StroreBookcLable> list = new ArrayList<>();
+            list.addAll(listData.subList(0, (position + 1) >= listData.size() ? listData.size() : (position + 1)));
+            for (StroreBookcLable stroreBookcLable : list) {
+                if (stroreBookcLable.ad_type == 0) {
+                    columnId.add(stroreBookcLable.recommend_id);
+                }
             }
+            setHomeRecommendationEvent(WORKS_TYPE_BOOK, columnId);
+        } catch (Exception e) {
         }
-        setHomeRecommendationEvent(WORKS_TYPE_BOOK, columnId);
     }
 }
