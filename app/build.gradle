@@ -10,13 +10,13 @@ apply plugin: 'com.sensorsdata.analytics.android'
 apply from: 'configs/configpumpkin.gradle'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     flavorDimensions "default"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
         applicationId gradle.ext.APPLICATION_ID
         versionCode gradle.ext.VERSION_CODE
@@ -217,124 +217,116 @@ def getAppConfig() {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'junit:junit:4.12'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation "androidx.legacy:legacy-support-v4:${rootProject.androidx}"
+    implementation "junit:junit:${rootProject.junit}"
+    implementation "androidx.cardview:cardview:${rootProject.androidx}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.androidx}"
+    implementation "com.google.android.material:material:${rootProject.material}"
+    implementation "androidx.appcompat:appcompat:${rootProject.androidx}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
     // ==================================第三方SDK==================================
     // 微信支付
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:1.3.4'
+    implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:${rootProject.wechat}"
     // 腾讯bug统计
     implementation files('libs/bugly_crash_release.jar')
     // 支付宝支付
     implementation files('libs/alipaySdk-20170725.jar')
     // 阿里云推送
-    implementation 'com.aliyun.ams:alicloud-android-push:3.1.6@aar'
+    implementation "com.aliyun.ams:alicloud-android-push:${rootProject.alicloud}"
     // 友盟系列
-    implementation 'com.umeng.umsdk:analytics:8.0.0'
-    implementation 'com.umeng.umsdk:common:2.0.0'
-    implementation 'com.umeng.umsdk:crash:0.0.4'
+    implementation "com.umeng.umsdk:analytics:${rootProject.umeng_analytics}"
+    implementation "com.umeng.umsdk:common:${rootProject.umeng_common}"
+    implementation "com.umeng.umsdk:crash:${rootProject.umeng_crash}"
     implementation files('libs/umeng-share-core-6.9.8.jar')
     implementation files('libs/umeng-share-QQ-simplify-6.9.8.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.8.jar')
     implementation files('libs/umeng-sharetool-6.9.8.jar')
     // --- 极光
-    implementation 'cn.jiguang.sdk:jpush:3.3.2'  // 此处以JPush 3.3.2 版本为例。
-    implementation 'cn.jiguang.sdk:jcore:2.1.2'  // 此处以JCore 2.1.0 版本为例。
-    implementation 'cn.jiguang.sdk:jmessage:2.9.0'  // 此处以JMessage 2.9.0 版本为例。
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.3.2'// 此版本插件仅支持JPushSDK3.3.2及以上
-    implementation 'cn.jiguang.sdk.plugin:meizu:3.3.2'// 此版本插件仅支持JPushSDK3.3.2及以上版本
-    implementation 'cn.jiguang.sdk.plugin:oppo:3.3.2'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    // ---
+    implementation "cn.jiguang.sdk:jpush:${rootProject.jiguang_jpush}"  // 此处以JPush 3.3.2 版本为例。
+    implementation "cn.jiguang.sdk:jcore:${rootProject.jiguang_jcore}"  // 此处以JCore 2.1.0 版本为例。
+    implementation "cn.jiguang.sdk:jmessage:${rootProject.jiguang_jmessage}" // 此处以JMessage 2.9.0 版本为例。
+    implementation "cn.jiguang.sdk.plugin:xiaomi:${rootProject.jiguang_plugin}"// 此版本插件仅支持JPushSDK3.3.2及以上
+    implementation "cn.jiguang.sdk.plugin:meizu:${rootProject.jiguang_plugin}"// 此版本插件仅支持JPushSDK3.3.2及以上版本
+    implementation "cn.jiguang.sdk.plugin:oppo:${rootProject.jiguang_plugin}"
+    implementation "com.google.firebase:firebase-messaging:${rootProject.firebase_messaging}"
 
     // ==================================广告SDK要求依赖==================================
-    implementation('com.squareup.retrofit2:retrofit:2.8.1') {
+    implementation("com.squareup.retrofit2:retrofit:${rootProject.retrofit}") {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    implementation('com.lzy.net:okgo:3.0.4') {
+    implementation("com.lzy.net:okgo:${rootProject.okgo}") {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    implementation 'com.lzy.net:okserver:2.0.5'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'cn.jzvd:jiaozivideoplayer:6.4.1'
-    implementation 'com.danikula:videocache:2.7.1'
+    implementation "com.lzy.net:okserver:${rootProject.okserver}"
+    implementation "com.google.code.gson:gson:${rootProject.gson}"
+    implementation "cn.jzvd:jiaozivideoplayer:${rootProject.jiaozivideoplayer}"
+    implementation "com.danikula:videocache:${rootProject.videocache}"
     implementation name: 'XAD_comm_1001009_release', ext: 'aar'
-
 
     // ==================================UI==================================
     // 进度条
-    implementation 'com.crystal:crystalrangeseekbar:1.1.3'
+    implementation "com.crystal:crystalrangeseekbar:${rootProject.crystalrangeseekbar}"
     // 滑动开关
-    implementation 'com.zcw:togglebutton-library:1.0.0'
+    implementation "com.zcw:togglebutton-library:${rootProject.togglebutton_library}"
     // 处理各种版本沉侵状态栏
-    implementation 'com.jaeger.statusbaruitl:library:1.5.0'
+    implementation "com.jaeger.statusbaruitl:library:${rootProject.statusbaruitl}"
     // 处理各种机型改变状态栏文字颜色
-    implementation 'com.githang:status-bar-compat:0.7'
+    implementation "com.githang:status-bar-compat:${rootProject.status_bar_compat}"
     // recyclerview 添加头部底部轻量级
-    implementation 'com.songhang:smart-headerfooter-recyclerview:1.0.1'
+    implementation "com.songhang:smart-headerfooter-recyclerview:${rootProject.smart_headerfooter_recyclerview}"
     implementation project(':extras:shswiperefresh')
-    implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+    implementation "com.jcodecraeer:xrecyclerview:${rootProject.xrecyclerview}"
     // 有加载进度的ImageViewer
-    implementation 'com.github.piasy:BigImageViewer:1.5.7'
-    implementation('com.github.piasy:GlideImageLoader:1.5.7') { exclude group: 'com.squareup.okhttp3', module: 'okhttp' }
-    implementation 'com.github.piasy:ProgressPieIndicator:1.5.7'
-    implementation 'com.github.piasy:GlideImageViewFactory:1.5.7'
+    implementation "com.github.piasy:BigImageViewer:${rootProject.bigImage}"
+    implementation("com.github.piasy:GlideImageLoader:${rootProject.bigImage}") { exclude group: 'com.squareup.okhttp3', module: 'okhttp' }
+    implementation "com.github.piasy:ProgressPieIndicator:${rootProject.bigImage}"
+    implementation "com.github.piasy:GlideImageViewFactory:${rootProject.bigImage}"
     // 二维码
-    implementation 'com.google.zxing:core:3.3.3'
+    implementation "com.google.zxing:core:${rootProject.zxing}"
     // 悬浮按钮
-    implementation 'com.zhengjt:floatingball:1.0.2'
+    implementation "com.zhengjt:floatingball:${rootProject.floatingball}"
     // 新手引导层
-    implementation 'com.github.huburt-Hu:NewbieGuide:v2.4.0'
+    implementation "com.github.huburt-Hu:NewbieGuide:${rootProject.newbieGuide}"
     //圆角图片
     implementation project(':extras:niceimageview')
 
-
     // ==================================工具==================================
     //  butterknife 注解
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation "com.jakewharton:butterknife:${rootProject.butterknife}"
+    kapt "com.jakewharton:butterknife-compiler:${rootProject.butterknife}"
     // 数据库
-    implementation 'org.litepal.android:java:3.0.0'
+    implementation "org.litepal.android:java:${rootProject.litepal}"
     // 本地偏好存储
-    implementation 'net.grandcentrix.tray:tray:0.12.0'
+    implementation "net.grandcentrix.tray:tray:${rootProject.grandcentrix}"
     // 组件通信工具
-    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation "org.greenrobot:eventbus:${rootProject.eventbus}"
     // 权限管理
-    implementation 'com.github.dfqin:grantor:2.5'
+    implementation "com.github.dfqin:grantor:${rootProject.dfqin}"
     // 处理编码
     implementation files('libs/juniversalchardet-2.3.0.jar')
     // commons-codec
-    implementation 'commons-codec:commons-codec:1.3'
+    implementation "commons-codec:commons-codec:${rootProject.commons_codec}"
     // OK网络库
-    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+    implementation "com.squareup.okhttp3:okhttp:${rootProject.okhttp}"
     // Glide图片加载
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation 'jp.wasabeef:glide-transformations:3.3.0'
-    implementation "com.zlc.glide:webpdecoder:2.0.4.11.0"
+    implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
+    kapt "com.github.bumptech.glide:compiler:${rootProject.glide}"
+    implementation "jp.wasabeef:glide-transformations:${rootProject.glide_transformations}"
+    implementation "com.zlc.glide:webpdecoder:${rootProject.webpdecoder}"
     // ---
     // 图片压缩  拍摄头像后压缩 在上传服务端
-    implementation 'top.zibin:Luban:1.1.8'
+    implementation "top.zibin:Luban:${rootProject.zibin}"
     // 网络请求loading
-    implementation 'com.wang.avi:library:2.1.3'
+    implementation "com.wang.avi:library:${rootProject.avloading}"
     // FastJson 解析json
-    implementation 'com.alibaba:fastjson:1.1.60.android'
+    implementation "com.alibaba:fastjson:${rootProject.fastjson}"
     // RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation "io.reactivex.rxjava2:rxjava:${rootProject.rxjava}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxandroid}"
     // 添加 Sensors Analytics SDK 依赖
-    implementation 'com.sensorsdata.analytics.android:SensorsAnalyticsSDK:4.2.8'
-    // WebP依赖库
-    implementation 'com.facebook.fresco:animated-base-support:1.3.0'
-    implementation 'com.facebook.fresco:animated-webp:2.1.0'
-    implementation 'com.facebook.fresco:webpsupport:2.0.0'
-    implementation 'com.facebook.soloader:soloader:0.9.0+'
+    implementation "com.sensorsdata.analytics.android:SensorsAnalyticsSDK:${rootProject.SensorsAnalyticsSDK}"
 }
 
 /**
