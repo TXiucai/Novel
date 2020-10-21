@@ -22,6 +22,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.event.BannerBoYinAdEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
@@ -50,6 +51,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     public WebView mWebView;
     @BindView(R.id.home_boyin_layout)
     RelativeLayout home_boyin_layout;
+    private String mBoyinUrl;
 
     @Override
     public int initContentView() {
@@ -64,7 +66,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
     @Override
     protected void initView() {
-        String url = getArguments().getString(BUNDLE_URL_KAY);
+        mBoyinUrl = getArguments().getString(BUNDLE_URL_KAY);
         WebSettings settings = mWebView.getSettings();
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setJavaScriptEnabled(true);
@@ -128,7 +130,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             }
         }, "android");
         mWebView.setWebViewClient(new DemoWebViewClient());
-        mWebView.loadUrl(url);
+        mWebView.loadUrl(mBoyinUrl);
         isLoadUrl = true;
     }
 
@@ -177,6 +179,18 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
         if (mWebView != null) {
             mWebView.loadUrl("javascript:thirdpartyLogout()");
             mWebView.reload();
+        }
+    }
+
+    /**
+     * bannen与H5交互
+     *
+     * @param bannerBoYinAdEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void bannerAdChangeBoyin(BannerBoYinAdEvent bannerBoYinAdEvent) {
+        if (mWebView != null) {
+            mWebView.loadUrl(mBoyinUrl + bannerBoYinAdEvent.getContent());
         }
     }
 

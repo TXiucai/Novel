@@ -47,6 +47,7 @@ import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
+import com.heiheilianzai.app.model.event.BannerBoYinAdEvent;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
@@ -454,6 +455,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public void createVipPayOuder(CreateVipPayOuderEvent toStore) {//支付Vip订单创建完成
         send_number = 0;
         getVipPayOuder();
+    }
+
+    /**
+     * bannen 点击切换有声fragment
+     * @param bannerBoYinAdEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void bannerAdChangeBoyin(BannerBoYinAdEvent  bannerBoYinAdEvent) {
+        initViewPageChecked(home_discovery_layout, 3, true);
     }
 
     /**

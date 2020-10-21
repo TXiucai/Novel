@@ -33,6 +33,7 @@ import com.heiheilianzai.app.holder.DiscoverBannerHolderViewBook;
 import com.heiheilianzai.app.holder.DiscoveryBannerHolderViewComic;
 import com.heiheilianzai.app.holder.HomeBannerHolderViewComic;
 import com.heiheilianzai.app.model.BannerItemStore;
+import com.heiheilianzai.app.model.event.BannerBoYinAdEvent;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
@@ -43,6 +44,8 @@ import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -510,6 +513,9 @@ public class ConvenientBanner<T> extends LinearLayout {
                         putExtra("url", bannerItemStore.getContent())
                         .putExtra("style", "4")
                 );
+                break;
+            case 6:
+                EventBus.getDefault().post(new BannerBoYinAdEvent(bannerItemStore.getContent()));
                 break;
         }
     }
