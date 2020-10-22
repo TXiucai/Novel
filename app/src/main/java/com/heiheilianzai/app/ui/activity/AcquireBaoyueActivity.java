@@ -14,9 +14,12 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePayAdapter;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
+import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.component.pay.alipay.PayResult;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
@@ -57,6 +60,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * 包月购买页
@@ -87,6 +92,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     private String ALIPAY_SUCCESS = "9000";//支付宝支付成功回调
     private String ALIPAY = "2";
     private String WECHAT = "1";
+    private String mInternetIp;//用户IP
 
     @Override
     public int initContentView() {
@@ -100,6 +106,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
 
     @Override
     public void initData() {
+        getIpTerritory();//获取用户IP
         setVIPConfirmEvent();
         mAvatar = getIntent().getStringExtra("avatar");
         ReaderParams params = new ReaderParams(this);
@@ -199,6 +206,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("goods_id", item.getGoods_id());
         params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
+        params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -380,5 +388,39 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             SensorsDataHelper.setVIPChoiceEvent(Integer.valueOf(goodsId));
         } catch (Exception e) {
         }
+    }
+
+    /**
+     * 获取用户IP
+     */
+    public void getIpTerritory() {
+        OkHttpEngine.getInstance(AcquireBaoyueActivity.this).getAsyncHttp(ReaderConfig.thirdpartyGetCity, new ResultCallback() {
+
+            @Override
+            public void onError(Request request, Exception e) {
+            }
+
+            @Override
+            public void onResponse(String response) {
+            }
+
+            @Override
+            public void onResponse(Response response) {
+                try {
+                    String body = response.body().string();
+                    if (!StringUtils.isEmpty(body)) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(body);
+                        int satrtIndex = builder.indexOf("{");//包含[
+                        int endIndex = builder.indexOf("}");//包含]
+                        String json = builder.substring(satrtIndex, endIndex + 1);
+                        JSONObject jo = new JSONObject(json);
+                        mInternetIp = jo.getString("cip");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
