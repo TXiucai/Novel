@@ -31,6 +31,9 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
+import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.sensorsdata.analytics.android.sdk.SAConfigOptions;
 import com.sensorsdata.analytics.android.sdk.SensorsAnalyticsAutoTrackEventType;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
@@ -40,6 +43,8 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.umcrash.UMCrash;
 
 import org.litepal.LitePalApplication;
+
+import java.net.Proxy;
 
 /**
  * application配置
@@ -51,6 +56,8 @@ public class App extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        //liulishuo 初始化
+        setupFileDownload();
         try {
             context = getContext();
             initGlobeActivity();
@@ -281,4 +288,24 @@ public class App extends LitePalApplication {
             }
         });
     }
+
+    /**
+     * 初始化流利说下载库
+     */
+    private void setupFileDownload() {
+        // 下载相关设置
+        FileDownloadLog.NEED_LOG = BuildConfig.DEBUG;
+        FileDownloader.setupOnApplicationOnCreate(this)
+                .connectionCreator(new FileDownloadUrlConnection
+                        .Creator(new FileDownloadUrlConnection.Configuration()
+                        // set connection timeout.
+                        .connectTimeout(15_000)
+                        // set read timeout.
+                        .readTimeout(15_000)
+                        // set proxy
+                        .proxy(Proxy.NO_PROXY)
+                )).commit();
+        FileDownloader.getImpl().setMaxNetworkThreadCount(1);
+    }
+
 }

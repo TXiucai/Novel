@@ -27,6 +27,7 @@ import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
+import com.heiheilianzai.app.ui.activity.boyin.BoyinDownActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -128,6 +129,16 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             public String getSaServerAppId() {//获取神策埋点AppId
                 return BuildConfig.sa_server_app_id;
             }
+
+            @JavascriptInterface
+            @Override
+            public void getDownBoyinChapter(int nid) {
+                if (activity != null) {
+                    Intent intent = new Intent(activity, BoyinDownActivity.class);
+                    intent.putExtra("nid", nid);
+                    startActivity(intent);
+                }
+            }
         }, "android");
         mWebView.setWebViewClient(new DemoWebViewClient());
         mWebView.loadUrl(mBoyinUrl);
@@ -152,6 +163,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         String getSaServerAppId();
+
+        @JavascriptInterface
+        void getDownBoyinChapter(int nid);
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {

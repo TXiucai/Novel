@@ -40,6 +40,7 @@ import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.task.DownloadBoyinService;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
@@ -53,6 +54,7 @@ import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.ToStore;
+import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.ui.dialog.MyPoPwindow;
@@ -446,6 +448,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         exitAPP();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void downComplete(BoyinInfoEvent boyinInfoEvent) {//退出APP监听
+        exitService();
+    }
+
     /**
      * 支付页面关闭接收该Event。
      *
@@ -559,9 +566,17 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     @Override
     protected void onDestroy() {
+        exitService();
         super.onDestroy();
         Utils.mDialog = null;
         OkHttpEngine.mInstance = null;
+    }
+
+    private void exitService() {
+        if (DownloadBoyinService.isServiceRunning(this, "DownloadBoyinService")) {
+            Intent intent = new Intent(MainActivity.this, DownloadBoyinService.class);
+            stopService(intent);// 关闭服务
+        }
     }
 
     public View getNavigationView() {

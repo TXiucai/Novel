@@ -240,8 +240,11 @@
     <string name="BookInfoActivity_down_delete">删除</string>
     <string name="BookInfoActivity_down_open">打开</string>
     <string name="BookInfoActivity_down_adddown">已添加下载队列</string>
+    <string name="BookInfoActivity_down_noadddown">没有可用的下载章节</string>
     <string name="BookInfoActivity_down_downcomplete">下载已完成</string>
     <string name="BookInfoActivity_down_downcompleteSize">下载已完成,共%s章</string>
+    <string name="BookInfoActivity_down_downeror">下载失败</string>
+    <string name="BookInfoActivity_down_downinterrupt">下载中断</string>
     <string name="BookInfoActivity_down_nobooks">还没有下载的书籍</string>
     <!--评论-->
     <string name="CommentListActivity_title">评论详情</string>
@@ -350,6 +353,7 @@
     <string name="ComicLookActivity_start">不能再往前翻了</string>
 
     <string name="ComicDownActivity_title">漫画下载</string>
+    <string name="BoyinDownActivity_title">有声下载</string>
     <string name="ComicDownActivity_xuhandi">续看第%s话</string>
     <string name="ComicDownActivity_choosecount">已选%s话</string>
     <string name="ComicDownActivity_downing">下载中</string>
@@ -357,6 +361,7 @@
     <string name="ComicDownActivity_local">本地</string>
     <string name="ComicDownActivity_yixiazai">已下载%s话</string>
     <string name="ComicDownActivity_downprocess">下载完成%s</string>
+    <string name="ComicDownActivity_total"> 共%s话</string>
     <string name="ComicDownActivity_choose">请选择下载章节</string>
 
     <string name="StoreFragment_toman">已切换至男频</string>

@@ -32,7 +32,7 @@ public class HttpUtils {
     private WaitDialog waitDialog;
 
     public interface ResponseListener {
-        void onResponse(String response);
+        void onResponse(String response) throws JSONException;
 
         void onErrorResponse(String ex);
     }

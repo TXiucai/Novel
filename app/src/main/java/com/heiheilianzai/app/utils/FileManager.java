@@ -377,4 +377,9 @@ public class FileManager {
         // 发送广播，通知刷新图库的显示
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
     }
+
+    //漫画下载更目录
+    public static final String getBoyinSDCardRoot() {
+        return FileManager.getSDCardRoot() + "boyin/";
+    }
 }

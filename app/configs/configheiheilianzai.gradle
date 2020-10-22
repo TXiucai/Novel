@@ -2,7 +2,7 @@ gradle.ext {
     //版本号
     VERSION_CODE = 20201011
     //版本名
-    VERSION_NAME = "2.2.8"
+    VERSION_NAME = "2.2.9"
     // 应用程序包名
     APPLICATION_ID = 'com.heiheilianzai.app'
     //项目第三方配置

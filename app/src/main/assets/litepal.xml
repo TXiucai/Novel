@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="book" />
 
-    <version value="17" />
+    <version value="18" />
 
     <list>
         <mapping class="com.heiheilianzai.app.model.book.BaseBook" />
@@ -11,5 +11,7 @@
         <mapping class="com.heiheilianzai.app.model.comic.ComicChapter" />
         <mapping class="com.heiheilianzai.app.model.ChapterItem" />
         <mapping class="com.heiheilianzai.app.model.Book" />
+        <mapping class="com.heiheilianzai.app.model.boyin.BoyinChapterBean" />
+        <mapping class="com.heiheilianzai.app.model.boyin.BoyinInfoBean" />
     </list>
 </litepal>

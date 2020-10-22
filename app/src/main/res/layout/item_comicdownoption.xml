@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
 
     <FrameLayout
@@ -21,32 +20,28 @@
             android:id="@+id/item_comicdownoption_vip"
             android:layout_width="12dp"
             android:layout_height="12dp"
+            android:layout_gravity="top|left"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:visibility="gone"
-            android:layout_gravity="top|left"
-            android:src="@mipmap/lock_orange" />
+            android:src="@mipmap/lock_orange"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/item_comicdownoption_downstatus"
             android:layout_width="wrap_content"
-            android:layout_height="12dp"
-            android:paddingRight="3dp"
-            android:paddingLeft="3dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
             android:layout_marginRight="2dp"
             android:layout_marginBottom="1dp"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-           android:layout_gravity="bottom|right"
-            android:textColor="@color/white"
-            android:text="@string/ComicDownActivity_local"
             android:background="@drawable/shape_comicdownoption_green"
             android:gravity="center"
-            android:visibility="gone"
-            android:textSize="6dp" />
+            android:paddingLeft="3dp"
+            android:paddingTop="2dp"
+            android:paddingRight="3dp"
+            android:paddingBottom="2dp"
+            android:text="@string/ComicDownActivity_local"
+            android:textColor="@color/white"
+            android:textSize="6dp"
+            android:visibility="gone" />
     </FrameLayout>
 </RelativeLayout>
-
-    <!--    android:background="@drawable/selector_comicdownoption"
-      android:textColor="@color/downoption_text_color_selector"
-    -->
