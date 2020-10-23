@@ -70,7 +70,8 @@
 
         <activity
             android:name=".ui.activity.SplashActivity"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -167,7 +168,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="orientation|screenSize"
-
+            android:screenOrientation="portrait"
             android:theme="@style/ColorTranslucentTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
@@ -223,7 +224,8 @@
         <activity
             android:name=".ui.activity.comic.ComicCommentActivity"
             android:theme="@style/ActivityEntryAnimation"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.activity.comic.ComicinfoMuluActivity"
@@ -243,14 +245,16 @@
         <activity
             android:name="com.heiheilianzai.app.wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
 
         <!--微信登录-->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"/>
 
         <!--支付宝支付-->
         <activity
@@ -276,7 +280,8 @@
             android:finishOnTaskLaunch="false"
             android:launchMode="singleInstance"
             android:process=":channel"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.activity.comic.ComicInfoActivity"
@@ -285,6 +290,7 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -299,24 +305,29 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault" />
+            android:theme="@style/Theme.UMDefault"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.heiheilianzai.app.ui.activity.Main2Activity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".component.filesearcher.delegate.FileSearcherDelegateActivity"
-            android:theme="@style/FileSearcherTransParentTheme" />
+            android:theme="@style/FileSearcherTransParentTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".component.filesearcher.FileSearcherActivity"
-            android:theme="@style/FileSearcherActivityTheme" />
+            android:theme="@style/FileSearcherActivityTheme"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
