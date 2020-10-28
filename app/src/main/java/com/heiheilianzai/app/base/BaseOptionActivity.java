@@ -10,20 +10,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.ui.fragment.LiushuijiluFragment;
 import com.heiheilianzai.app.ui.fragment.MyCommentFragment;
 import com.heiheilianzai.app.ui.fragment.OptionFragment;
 import com.heiheilianzai.app.ui.fragment.RankIndexFragment;
+import com.heiheilianzai.app.ui.fragment.ReadHistoryPhonicFragment;
 import com.heiheilianzai.app.ui.fragment.book.DownMangerBookFragment;
 import com.heiheilianzai.app.ui.fragment.book.ReadHistoryBookFragment;
 import com.heiheilianzai.app.ui.fragment.comic.DownMangerComicFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ReadHistoryComicFragment;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.view.UnderlinePageIndicatorHalf;
 
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.heiheilianzai.app.constant.PrefConst.UPDATE_JSON_KAY;
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE;
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE_SEARCH;
 import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
@@ -60,6 +65,8 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     public TextView channel_bar_male_text;
     @BindView(R.id.channel_bar_female_text)
     public TextView channel_bar_female_text;
+    @BindView(R.id.channel_bar_yousheng_text)
+    public TextView channel_bar_yousheng_text;
     @BindView(R.id.top_channel_layout)
     public LinearLayout top_channel_layout;
     @BindView(R.id.channel_bar_indicator)
@@ -70,7 +77,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     FragmentManager fragmentManager;
     List<Fragment> fragmentList;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
-    Fragment baseButterKnifeFragment1, baseButterKnifeFragment2;
+    Fragment baseButterKnifeFragment1, baseButterKnifeFragment2, baseButterKnifeFragment3;
     int OPTION;
     boolean PRODUCT;// false 漫画  true  小说
     Intent IntentFrom;
@@ -80,7 +87,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         return R.layout.activity_baseoption;
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text})
+    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -91,6 +98,9 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.channel_bar_female_text:
                 activity_baseoption_viewpage.setCurrentItem(1);
+                break;
+            case R.id.channel_bar_yousheng_text:
+                activity_baseoption_viewpage.setCurrentItem(2);
                 break;
         }
     }
@@ -112,6 +122,12 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
 
 
     private void init() {
+        String str = ShareUitls.getString(this, UPDATE_JSON_KAY, "");
+        int boYinSwitch = 0;//系统参数配置波音开关  0关  1开
+        if (str.length() > 0) {
+            AppUpdate mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
+            boYinSwitch = mAppUpdate.getBoyin_switch();
+        }
         fragmentList = new ArrayList<>();
         switch (OPTION) {
             case MIANFEI:
@@ -167,6 +183,10 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                         baseButterKnifeFragment2 = new ReadHistoryComicFragment();
                         channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                         channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
+                        if (boYinSwitch != 0) {
+                            baseButterKnifeFragment3 = new ReadHistoryPhonicFragment();
+                            channel_bar_yousheng_text.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case MANHAUXIAOSHUO:
                         baseButterKnifeFragment2 = new ReadHistoryBookFragment();
@@ -227,8 +247,12 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         } else {
             top_channel_layout.setVisibility(View.GONE);
         }
+        if (baseButterKnifeFragment3 != null) {
+            fragmentList.add(baseButterKnifeFragment3);
+        }
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         activity_baseoption_viewpage.setAdapter(myFragmentPagerAdapter);
+        activity_baseoption_viewpage.setOffscreenPageLimit(fragmentList.size());
         if (OPTION == LIUSHUIJIELU) {
             boolean Extra = IntentFrom.getBooleanExtra("Extra", false);
             if (Extra) {
@@ -255,6 +279,9 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 case XIAOSHUOMAHUA:
                     ((ReadHistoryBookFragment) (baseButterKnifeFragment1)).initdata();
                     ((ReadHistoryComicFragment) (baseButterKnifeFragment2)).initdata();
+                    if (baseButterKnifeFragment3 != null) {
+                        ((ReadHistoryPhonicFragment) (baseButterKnifeFragment3)).initdata();
+                    }
                     break;
                 case MANHAUXIAOSHUO:
                     ((ReadHistoryBookFragment) (baseButterKnifeFragment2)).initdata();
