@@ -33,7 +33,7 @@ import com.heiheilianzai.app.holder.DiscoverBannerHolderViewBook;
 import com.heiheilianzai.app.holder.DiscoveryBannerHolderViewComic;
 import com.heiheilianzai.app.holder.HomeBannerHolderViewComic;
 import com.heiheilianzai.app.model.BannerItemStore;
-import com.heiheilianzai.app.model.event.BannerBoYinAdEvent;
+import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
@@ -515,7 +515,7 @@ public class ConvenientBanner<T> extends LinearLayout {
                 );
                 break;
             case 6:
-                EventBus.getDefault().post(new BannerBoYinAdEvent(bannerItemStore.getContent()));
+                EventBus.getDefault().post(new SkipToBoYinEvent(bannerItemStore.getContent()));
                 break;
         }
     }

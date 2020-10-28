@@ -48,7 +48,7 @@ import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
-import com.heiheilianzai.app.model.event.BannerBoYinAdEvent;
+import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
@@ -77,7 +77,6 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CustomScrollViewPager;
-import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
@@ -436,10 +435,12 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ToStore(ToStore toStore) {
-        if (toStore.PRODUCT == 1) {
-            home_store_layout.setChecked(true);
-        } else {
-            home_store_layout_comic.setChecked(true);
+        if (toStore.PRODUCT == 1) {//小说
+            initViewPageChecked(home_store_layout, 1, true);
+        } else if (toStore.PRODUCT == 2) {//漫画
+            initViewPageChecked(home_store_layout_comic, 2, true);
+        } else if (toStore.PRODUCT == 3) {//有声 or 推荐
+            initViewPageChecked(home_discovery_layout, 3, true);
         }
     }
 
@@ -466,10 +467,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     /**
      * bannen 点击切换有声fragment
-     * @param bannerBoYinAdEvent
+     *
+     * @param skipToBoYinEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void bannerAdChangeBoyin(BannerBoYinAdEvent  bannerBoYinAdEvent) {
+    public void bannerAdChangeBoyin(SkipToBoYinEvent skipToBoYinEvent) {
         initViewPageChecked(home_discovery_layout, 3, true);
     }
 
