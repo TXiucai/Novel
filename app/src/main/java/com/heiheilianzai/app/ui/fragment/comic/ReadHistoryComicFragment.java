@@ -30,6 +30,7 @@ public class ReadHistoryComicFragment extends BaseReadHistoryFragment<ComicReadH
 
     @Override
     protected void initView() {
+        mSonType = COMIC_SON_TYPE;
         optionAdapter = new ReadHistoryRecyclerViewComicAdapter(activity, optionBeenList, getPosition);
         super.initView();
     }
@@ -62,12 +63,7 @@ public class ReadHistoryComicFragment extends BaseReadHistoryFragment<ComicReadH
                             if (readHistoryBook.ad_type == 0 && Utils.isLogin(activity)) {
                                 delad(readHistoryBook.log_id, ComicConfig.COMIC_read_log_del);
                             }
-                            if (optionBeenList != null && optionBeenList.size() > position) {
-                                optionBeenList.remove(position);
-                            }
-                            if (optionAdapter != null) {
-                                optionAdapter.notifyDataSetChanged();
-                            }
+                            deladItemRefresh(position);
                         }
                     });
                     break;

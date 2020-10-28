@@ -35,7 +35,10 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
 
     @Override
     protected void initView() {
-        EventBus.getDefault().register(this);
+        mSonType = BOOK_SON_TYPE;
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         optionAdapter = new ReadHistoryRecyclerViewAdapter(activity, optionBeenList, getPosition);
         super.initView();
     }
@@ -77,8 +80,7 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
                             if (readHistoryBook.ad_type == 0) {
                                 delad(readHistoryBook.log_id, BookConfig.del_read_log);
                             }
-                            optionBeenList.remove(position);
-                            optionAdapter.notifyDataSetChanged();
+                            deladItemRefresh(position);
                         }
                     });
                     break;
