@@ -7,14 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
-
-import androidx.annotation.Nullable;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
@@ -22,9 +21,9 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.event.BannerBoYinAdEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
+import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.ui.activity.boyin.BoyinDownActivity;
@@ -40,6 +39,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 
 /**
@@ -140,7 +140,6 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
                 }
             }
         }, "android");
-        mWebView.setWebViewClient(new DemoWebViewClient());
         mWebView.loadUrl(mBoyinUrl);
         isLoadUrl = true;
     }
@@ -197,23 +196,19 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     }
 
     /**
-     * bannen与H5交互
+     * 跳转波音交互
      *
-     * @param bannerBoYinAdEvent
+     * @param skipToBoYinEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void bannerAdChangeBoyin(BannerBoYinAdEvent bannerBoYinAdEvent) {
+    public void bannerAdChangeBoyin(SkipToBoYinEvent skipToBoYinEvent) {
         if (mWebView != null) {
-            mWebView.loadUrl(mBoyinUrl + bannerBoYinAdEvent.getContent());
-        }
-    }
-
-    class DemoWebViewClient extends WebViewClient {//跳转外部浏览器
-
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            getContext().startActivity(browserIntent);
-            return true;
+            if (!StringUtils.isEmpty(skipToBoYinEvent.getContent())) {//首页banner跳转波音
+                mWebView.loadUrl(mBoyinUrl + skipToBoYinEvent.getContent());
+            } else if (skipToBoYinEvent.getPhonicSkipInfo() != null) {
+                SkipToBoYinEvent.PhonicSkipInfo phonicSkipInfo = skipToBoYinEvent.getPhonicSkipInfo();
+                mWebView.loadUrl("javascript:toPlayDetail('" + phonicSkipInfo.getNcid() + "','" + phonicSkipInfo.getNid() + "','" + phonicSkipInfo.getAcnme() + "','" + phonicSkipInfo.getCurrent_time() + "')");
+            }
         }
     }
 

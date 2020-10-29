@@ -119,8 +119,16 @@ public class ReaderWebView extends WebView {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                if (getProgress() < 10 || errorCode == -2) {
-                    handler.sendMessage(handler.obtainMessage(1, failingUrl));
+                try {
+                    mActivity.runOnUiThread(new Runnable() {
+                        public void run() {//getProgress() 不可以在非主线程使用 判断是否加载完成
+                            if (getProgress() < 10 || errorCode == -2) {
+                                handler.sendMessage(handler.obtainMessage(1, failingUrl));
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
