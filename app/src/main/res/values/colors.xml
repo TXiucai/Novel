@@ -120,5 +120,7 @@
     <color name="color_cc9a5fba">#CC9A5FBA</color>
     <color name="color_cc5349e7">#CC5349E7</color>
     <color name="color_22ffd04f">#22ffd04f</color>
+    <color name="boyin_tittle">#7F8384</color>
+    <color name="boyin_catalog">#323334</color>
     <!--色值定义END-->
 </resources>

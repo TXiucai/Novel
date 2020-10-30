@@ -51,11 +51,11 @@ public class DateUtils {
      * @return
      */
     public static String getTodayTime() {
-        return  getTodayTime("yyyy-MM-dd");
+        return getTodayTime("yyyy-MM-dd");
     }
 
     public static String getTodayTimeHMS() {
-        return  getTodayTime("yyyy-MM-dd HH:mm:ss");
+        return getTodayTime("yyyy-MM-dd HH:mm:ss");
     }
 
     public static String getTodayTime(String pattern) {
@@ -63,6 +63,7 @@ public class DateUtils {
         Date date = new Date(System.currentTimeMillis());
         return simpleDateFormat.format(date);
     }
+
     /**
      * 获取系统时间戳
      *
@@ -90,5 +91,32 @@ public class DateUtils {
      */
     public static long getCurrentTimeDifferenceSecond(long timeMillis) {
         return getCurrentTimeDifference(timeMillis) / 1000;
+    }
+
+
+    public static String formatTime(Object timeTemp) {
+        int timeParam = 0;
+        if (timeTemp instanceof Integer) {
+            timeParam = (Integer) timeTemp;
+        }
+        if (timeTemp instanceof String) {
+            timeParam = Integer.valueOf((String) timeTemp);
+        }
+
+        int second = timeParam % 60;
+        int minuteTemp = timeParam / 60;
+        if (minuteTemp > 0) {
+            int minute = minuteTemp % 60;
+            int hour = minuteTemp / 60;
+            if (hour > 0) {
+                return (hour >= 10 ? (hour + "") : ("0" + hour)) + ":" + (minute >= 10 ? (minute + "") : ("0" + minute))
+                        + ":" + (second >= 10 ? (second + "") : ("0" + second));
+            } else {
+                return (minute >= 10 ? (minute + "") : ("0" + minute)) + ":"
+                        + (second >= 10 ? (second + "") : ("0" + second));
+            }
+        } else {
+            return "00:" + (second >= 10 ? (second + "") : ("0" + second));
+        }
     }
 }

@@ -34,6 +34,15 @@ public class BoyinChapterBean extends LitePalSupport implements Serializable, Co
     private String savePath = "";
     private int downloadStatus; //0 未下载  1 下载成功 2 下载中 3下载失败
     private int downloadId;
+    private boolean isPlay;
+
+    public boolean isPlay() {
+        return isPlay;
+    }
+
+    public void setPlay(boolean play) {
+        isPlay = play;
+    }
 
     public int getDownloadId() {
         return downloadId;

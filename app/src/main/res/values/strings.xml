@@ -414,4 +414,6 @@
     <string name="refer_page_hot_search_list">热搜榜</string>
     <string name="refer_page_discovery">发现页</string>
     <string name="refer_page_nove_push">书架推荐栏目</string>
+    <string name="no_last_chapter">没有上一章了</string>
+    <string name="no_next_chapter">没有下一章了</string>
 </resources>

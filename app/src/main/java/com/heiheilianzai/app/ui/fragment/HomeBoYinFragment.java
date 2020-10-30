@@ -21,6 +21,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.event.BoyinPlayerEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
@@ -208,6 +209,22 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             } else if (skipToBoYinEvent.getPhonicSkipInfo() != null) {
                 SkipToBoYinEvent.PhonicSkipInfo phonicSkipInfo = skipToBoYinEvent.getPhonicSkipInfo();
                 mWebView.loadUrl("javascript:toPlayDetail('" + phonicSkipInfo.getNcid() + "','" + phonicSkipInfo.getNid() + "','" + phonicSkipInfo.getAcnme() + "','" + phonicSkipInfo.getCurrent_time() + "')");
+            }
+        }
+    }
+
+    /**
+     * player与H5交互
+     *
+     * @param boyinPlayerEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void boyinPlayerBoyin(BoyinPlayerEvent boyinPlayerEvent) {
+        if (mWebView != null) {
+            if (boyinPlayerEvent.isIsplay()){
+                mWebView.loadUrl("javascript:playPause()");
+            }else {
+                mWebView.loadUrl("javascript:playRun()");
             }
         }
     }
