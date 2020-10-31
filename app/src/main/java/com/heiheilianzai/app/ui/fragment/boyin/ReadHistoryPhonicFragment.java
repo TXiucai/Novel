@@ -1,16 +1,14 @@
-package com.heiheilianzai.app.ui.fragment;
+package com.heiheilianzai.app.ui.fragment.boyin;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.adapter.ReadHistoryRecyclerViewPhonicAdapter;
 import com.heiheilianzai.app.base.BaseReadHistoryFragment;
 import com.heiheilianzai.app.constant.BoyinConfig;
-
 import com.heiheilianzai.app.model.boyin.PhonicReadHistory;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
