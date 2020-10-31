@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.component.task;
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,14 +12,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-
-
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
-import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
 import com.heiheilianzai.app.model.event.BoyinDownloadEvent;
 import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
 import com.heiheilianzai.app.utils.MyToash;
@@ -40,21 +33,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
 import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 import static com.heiheilianzai.app.model.event.BoyinDownloadEvent.EventTag.COMPLETE_DOWNLOAD;
 import static com.heiheilianzai.app.model.event.BoyinDownloadEvent.EventTag.ERROR;
-import static com.heiheilianzai.app.model.event.BoyinDownloadEvent.EventTag.INTERRUPT;
 import static com.heiheilianzai.app.model.event.BoyinDownloadEvent.EventTag.TASK_STATUS;
 
 /**
- * @description 下载有声MP3
+ * 有声小说下载 Service
  */
-public class DownloadBoyinService extends Service
-        implements NetStateChangeReceiver.NetStateChangeObserver {
+public class DownloadBoyinService extends Service implements NetStateChangeReceiver.NetStateChangeObserver {
 
     private static final int ID_NOTIFICATION = 101;
     private List<BoyinChapterBean> mAllDownloadList = new CopyOnWriteArrayList<>();
-    private BoyinDownloadEvent mDownloadEvent;
     private FileDownloadListener mDownloadListener;
     private FileDownloadQueueSet mQueueSet;
     private int mComplteChapter;
@@ -72,7 +65,6 @@ public class DownloadBoyinService extends Service
         super.onCreate();
         EventBus.getDefault().register(this);
         NetStateChangeReceiver.registerObserver(this);
-        mDownloadEvent = new BoyinDownloadEvent(TASK_STATUS, mAllDownloadList);
         // 兼容Android O 版本处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "1";
@@ -87,9 +79,7 @@ public class DownloadBoyinService extends Service
                 return;
             }
             manager.createNotificationChannel(channel);
-
             notification = getNotification(channelId, "运行中");
-
             startForeground(ID_NOTIFICATION, notification);
         }
     }
@@ -98,7 +88,6 @@ public class DownloadBoyinService extends Service
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         NetStateChangeReceiver.unregisterObserver(this);
-
         // 进程被杀死时，把正在下载任务状态改成暂停
         pauseAllDownloadTask();
         mAllDownloadList.clear();
@@ -108,7 +97,6 @@ public class DownloadBoyinService extends Service
             stopForeground(true);
             MyToash.Log("FileDownloader", "下载服务退出8.0：");
         }
-
         MyToash.Log("FileDownloader", "下载服务退出：");
         super.onDestroy();
     }
@@ -130,10 +118,7 @@ public class DownloadBoyinService extends Service
             }
 
             @Override
-            protected void progress(BaseDownloadTask task,
-                                    long soFarBytes,
-                                    long totalBytes) {
-
+            protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
                 if (task.getListener() != mDownloadListener) {
                     return;
                 }
@@ -155,10 +140,7 @@ public class DownloadBoyinService extends Service
             }
 
             @Override
-            protected void paused(BaseDownloadTask task,
-                                  long soFarBytes,
-                                  long totalBytes) {
-
+            protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
                 if (task.getListener() != mDownloadListener) {
                     return;
                 }
@@ -180,13 +162,11 @@ public class DownloadBoyinService extends Service
                     return;
                 }
                 MyToash.Log("FileDownloader", "下载失败");
-
                 downloadTaskModel.setDownloadStatus(BoyinChapterBean.STATUS_DOWNLOAD_ERROR);
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("downloadstatus", BoyinChapterBean.STATUS_DOWNLOAD_ERROR);
                 LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ?", String.valueOf(downloadTaskModel.getChapter_id()));
-                EventBus.getDefault().post(new BoyinDownloadEvent(ERROR,
-                        Arrays.asList(downloadTaskModel)));
+                EventBus.getDefault().post(new BoyinDownloadEvent(ERROR, Arrays.asList(downloadTaskModel)));
                 startNextDownloadTask();
             }
 
@@ -226,8 +206,6 @@ public class DownloadBoyinService extends Service
         }
         switch (downloadEvent.getTag()) {
             case START_DOWNLOAD:
-
-                //startList(downloadEvent.getDownloadTaskList());
                 for (BoyinChapterBean downloadTaskModel : downloadEntityList) {
                     addDownloadTask(downloadTaskModel);
                 }
@@ -243,8 +221,7 @@ public class DownloadBoyinService extends Service
      * @param downloadEntity
      */
     private void addDownloadTask(BoyinChapterBean downloadEntity) {
-        if (downloadEntity.getUrl() == null
-                || !downloadEntity.getUrl().startsWith("http")) {
+        if (downloadEntity.getUrl() == null || !downloadEntity.getUrl().startsWith("http")) {
             return;
         }
         // 校验任务是否已经存在,如已存在不进行下面操作
@@ -298,8 +275,13 @@ public class DownloadBoyinService extends Service
     private void startDownloadTask(BoyinChapterBean downloadEntity) {
         notificationContent("下载中");
         downloadEntity.setDownloadStatus(BoyinChapterBean.STATUS_DOWNLOADING);
-        // 快速更新状态
-        EventBus.getDefault().post(mDownloadEvent);
+        int position = mAllDownloadList.indexOf(downloadEntity);//oldId对应的index
+        if (position >= 0 && position < mAllDownloadList.size()) {
+            mAllDownloadList.set(position, downloadEntity);
+        }
+        List<BoyinChapterBean> list = new ArrayList<BoyinChapterBean>();
+        list.add(downloadEntity);
+        EventBus.getDefault().post(new BoyinDownloadEvent(TASK_STATUS, list));
         // 更新数据库数据状态
         ContentValues contentValues = new ContentValues();
         contentValues.put("downloadstatus", BoyinChapterBean.STATUS_DOWNLOADING);
@@ -311,16 +293,13 @@ public class DownloadBoyinService extends Service
     private void start(BoyinChapterBean downloadEntity) {
         if (mDownloadListener == null) {
             mDownloadListener = createListener();
-
         }
         if (mQueueSet == null) {
             mQueueSet = new FileDownloadQueueSet(mDownloadListener);
         }
-
         BaseDownloadTask task = FileDownloader.getImpl().create(downloadEntity.getUrl())
                 .setTag(downloadEntity.getUrl())
                 .setPath(downloadEntity.getSavePath());
-
         downloadEntity.setDownloadId(task.getId());
         MyToash.Log("FileDownloader", "isServiceConnected: " + FileDownloader.getImpl().isServiceConnected());
         // 避免掉帧
@@ -330,7 +309,6 @@ public class DownloadBoyinService extends Service
         mQueueSet.downloadSequentially(task);
         mQueueSet.start();
     }
-
 
     /**
      * 通过Url校验任务是否已经存在
@@ -376,10 +354,8 @@ public class DownloadBoyinService extends Service
                 LitePal.updateAll(BoyinChapterBean.class, contentValues, "nid = ?", String.valueOf(mAllDownloadList.get(i).getNid()));
             }
         }
-        //EventBus.getDefault().post(new BoyinDownloadEvent(INTERRUPT, mAllDownloadList));
         notificationContent("运行中");
     }
-
 
     /**
      * 获取通知管理器

@@ -4,17 +4,18 @@ import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class BoyinChapterBean extends LitePalSupport implements Serializable,Comparable<BoyinChapterBean> {
-    public static final int STATUS_WAITING            = 0;
-    public static final int STATUS_COMPLETE           = 1;
-    public static final int STATUS_DOWNLOADING        = 2;
-    public static final int STATUS_DOWNLOAD_ERROR     = 3;
+public class BoyinChapterBean extends LitePalSupport implements Serializable, Comparable<BoyinChapterBean> {
+    public static final int STATUS_WAITING = 0;
+    public static final int STATUS_COMPLETE = 1;
+    public static final int STATUS_DOWNLOADING = 2;
+    public static final int STATUS_DOWNLOAD_ERROR = 3;
 
 
     /**
      * 播音章节
-     *
+     * <p>
      * nid : 2
      * numbers : 1
      * url : http://compressdownload.i9bc0rmy.com/我是哥哥的情人(下).mp3
@@ -27,7 +28,7 @@ public class BoyinChapterBean extends LitePalSupport implements Serializable,Com
     private int numbers;
     private String url;
     private String chapter_name;
-    @Column (unique = true)
+    @Column(unique = true)
     private int chapter_id;
     private int chapter_play_time;
     private String savePath = "";
@@ -107,7 +108,22 @@ public class BoyinChapterBean extends LitePalSupport implements Serializable,Com
     }
 
     @Override
-    public int compareTo(BoyinChapterBean o) {
-        return 0;
+    public int compareTo(BoyinChapterBean boyinChapterBean) {
+        return boyinChapterBean.chapter_id - chapter_id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoyinChapterBean that = (BoyinChapterBean) o;
+        return nid == that.nid &&
+                chapter_id == that.chapter_id &&
+                Objects.equals(chapter_name, that.chapter_name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nid, chapter_name, chapter_id);
     }
 }

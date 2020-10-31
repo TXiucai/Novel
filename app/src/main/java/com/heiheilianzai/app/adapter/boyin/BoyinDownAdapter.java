@@ -17,6 +17,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 有声小说下载 Adapter
+ */
 public class BoyinDownAdapter extends BaseAdapter {
     Activity activity;
     public List<BoyinChapterBean> comicDownOptionList;
@@ -24,7 +27,6 @@ public class BoyinDownAdapter extends BaseAdapter {
     LayoutInflater layoutInflater;
     TextView activity_comicdown_choose_count, activity_comicdown_down;
     public int mSize;
-
 
     public BoyinDownAdapter(Activity activity, List<BoyinChapterBean> comicDownOptionList, TextView activity_comicdown_choose_count, TextView activity_comicdown_down) {
         this.activity = activity;
@@ -54,7 +56,6 @@ public class BoyinDownAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_comicdownoption, parent, false);
@@ -75,13 +76,11 @@ public class BoyinDownAdapter extends BaseAdapter {
                 viewHolder.item_comicdownoption_text.setBackgroundResource(R.drawable.shape_comicdownoption_white);
                 viewHolder.item_comicdownoption_text.setTextColor(Color.BLACK);
             }
-
             if (status == 3) {
                 viewHolder.item_comicdownoption_downstatus.setVisibility(View.VISIBLE);
                 viewHolder.item_comicdownoption_downstatus.setText(LanguageUtil.getString(activity, R.string.ComicDownActivity_downfail));
             } else {
                 viewHolder.item_comicdownoption_downstatus.setVisibility(View.GONE);
-
             }
         } else {
             viewHolder.item_comicdownoption_text.setBackgroundResource(R.drawable.shape_comicdownoption_gray);
@@ -109,7 +108,6 @@ public class BoyinDownAdapter extends BaseAdapter {
                     refreshBtn(mChooseBoyinList.size());
                 }
             }
-
         });
         return convertView;
     }
@@ -124,7 +122,6 @@ public class BoyinDownAdapter extends BaseAdapter {
             refreshBtn(0);
         }
         notifyDataSetChanged();
-
     }
 
     public void refreshBtn(int size) {

@@ -53,7 +53,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 漫画下载页面
+ * 有声小说下载页面
  */
 public class BoyinDownActivity extends BaseButterKnifeActivity {
     private static final String CHAPTER_SEPARATOR = ",";
@@ -121,7 +121,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                     mBoyinChapterDownBeans.clear();
                     for (BoyinChapterBean boyinChapterBean : mBoyDownAdapter.mChooseBoyinList) {
                         if (!boyinChapterBean.getUrl().isEmpty() && (boyinChapterBean.getDownloadStatus() == 0 || boyinChapterBean.getDownloadStatus() == 3)) {
-                            boyinChapterBean.setSavePath(FileManager.getBoyinSDCardRoot() + File.separator + boyinChapterBean.getChapter_name() + ".mp3");
+                            boyinChapterBean.setSavePath(FileManager.getBoyinSDCardRoot() + File.separator + boyinChapterBean.getNid() + File.separator + boyinChapterBean.getChapter_id() + "_" + boyinChapterBean.getChapter_name() + ".mp3");
                             mBoyinChapterDownBeans.add(boyinChapterBean);
                         }
                     }
@@ -144,7 +144,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
 
     private void judgmentService() {
         if (!DownloadBoyinService.isServiceRunning(this, "DownloadBoyinService")) {
-                Intent downloadVideoServiceIntent = new Intent(this, DownloadBoyinService.class);
+            Intent downloadVideoServiceIntent = new Intent(this, DownloadBoyinService.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(downloadVideoServiceIntent);
             } else {
@@ -163,7 +163,6 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
         int nid = intent.getIntExtra("nid", 0);
         mTvBoyinDown.setClickable(false);
         mTvTitlebar.setText(LanguageUtil.getString(activity, R.string.BoyinDownActivity_title));
-        //getDownBoyinChapter(String.valueOf(nid), chapter);
         getDownBoyinChapter(String.valueOf(nid));
     }
 
@@ -173,10 +172,8 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
     private void getDownBoyinChapter(String nid) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("nid", nid);
-        params.putExtraParams("mobile", "15263819432");
-        //params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
+        params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
         params.putExtraParams("user_source", BuildConfig.app_source_boyin);
-
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BoyinConfig.DOWN_BOYIN, json, true, new HttpUtils.ResponseListener() {
             @Override
@@ -205,7 +202,6 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -297,7 +293,6 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
         int id = mBoyInfoBean.getId();
         List<BoyinChapterBean> boyinChapterBeans = LitePal.where("nid = ? and downloadstatus = ?", String.valueOf(id), "1").find(BoyinChapterBean.class);
         MyToash.Log("FileDownloader", "NotifyBiyinInfo: " + id + "    这次下载成功过的章节size:" + boyinChapterBeans.size());
-
         ContentValues contentValues = new ContentValues();
         contentValues.put("down_chapter", boyinChapterBeans.size());
         LitePal.updateAll(BoyinInfoBean.class, contentValues, "nid = ?", String.valueOf(id));
@@ -306,26 +301,27 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void downBoyinEvenbus(BoyinDownloadEvent downloadEvent) {
-        MyToash.Log("FileDownloader", "更新状态："+downloadEvent.getTag());
+        MyToash.Log("FileDownloader", "更新状态：" + downloadEvent.getTag());
         if (downloadEvent.getTag() == BoyinDownloadEvent.EventTag.COMPLETE_DOWNLOAD) {
             if (downloadEvent.getDownComplete() == mBoyinChapterDownBeans.size()) {
                 MyToash.ToashSuccess(activity, String.format(LanguageUtil.getString(activity, R.string.BookInfoActivity_down_downcompleteSize), downloadEvent.getDownComplete()));
             }
         } else if (downloadEvent.getTag() == BoyinDownloadEvent.EventTag.ERROR) {
             MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_downeror));
-        }  else if (downloadEvent.getTag() == BoyinDownloadEvent.EventTag.INTERRUPT) {
+        } else if (downloadEvent.getTag() == BoyinDownloadEvent.EventTag.INTERRUPT) {
             MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_downinterrupt));
         }
         BoyinChapterBean boyinChapterBean = downloadEvent.getDownloadTaskList().get(0);
-        BoyinChapterBean boyinChooseChapterBean = null;
-        for (int i = 0; i < mBoyDownAdapter.mChooseBoyinList.size(); i++) {
-            boyinChooseChapterBean = mBoyDownAdapter.mChooseBoyinList.get(i);
-            if (boyinChapterBean.getChapter_id() == boyinChooseChapterBean.getChapter_id()) {
-                break;
-            }
-        }
-        Collections.replaceAll(mBoyDownAdapter.mChooseBoyinList, boyinChooseChapterBean, boyinChapterBean);
+        setAdapterItemData(boyinChapterBean, mBoyDownAdapter.mChooseBoyinList);
+        setAdapterItemData(boyinChapterBean, mBoyDownAdapter.comicDownOptionList);
         mBoyDownAdapter.notifyDataSetChanged();
+    }
+
+    void setAdapterItemData(BoyinChapterBean boyinChapterBean, List<BoyinChapterBean> list) {
+        int position = list.indexOf(boyinChapterBean);
+        if (position >= 0 && position < list.size()) {
+            list.set(position, boyinChapterBean);
+        }
     }
 
     /**

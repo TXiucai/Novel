@@ -1,9 +1,15 @@
 package com.heiheilianzai.app.model.event;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.util.List;
 
+/**
+ * 有声小说下载  Event
+ */
 public class BoyinDownloadEvent {
 
     public enum EventTag {
@@ -16,9 +22,13 @@ public class BoyinDownloadEvent {
     }
 
     private EventTag mTag;
-
-    private List<BoyinChapterBean> mDownloadTaskList;
     private int downComplete;
+    private String json;
+
+    public BoyinDownloadEvent(EventTag tag, List<BoyinChapterBean> downloadTaskList) {
+        mTag = tag;
+        setDownloadTaskList(downloadTaskList);
+    }
 
     public int getDownComplete() {
         return downComplete;
@@ -28,17 +38,17 @@ public class BoyinDownloadEvent {
         this.downComplete = downComplete;
     }
 
-    public BoyinDownloadEvent(EventTag tag, List<BoyinChapterBean> downloadTaskList) {
-        mTag = tag;
-        mDownloadTaskList = downloadTaskList;
-    }
 
     public List<BoyinChapterBean> getDownloadTaskList() {
-        return mDownloadTaskList;
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        return new Gson().fromJson(json, new TypeToken<List<BoyinChapterBean>>() {
+        }.getType());
     }
 
     public void setDownloadTaskList(List<BoyinChapterBean> downloadTaskList) {
-        mDownloadTaskList = downloadTaskList;
+        json = downloadTaskList == null || downloadTaskList.size() < 1 ? "" : new Gson().toJson(downloadTaskList);
     }
 
     public BoyinDownloadEvent(EventTag tag) {
