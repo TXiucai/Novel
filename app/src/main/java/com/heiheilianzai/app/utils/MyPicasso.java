@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -91,6 +93,11 @@ public class MyPicasso {
             RequestOptions options = getRequestOptions(width, height, def, true, true, imageView);
             Glide.with(activity).load(url).apply(options).into(imageView);
         }
+    }
+    public static void loadLocalImage(Activity activity,int drawable,ImageView imageView){
+        Glide.with(activity)
+                .setDefaultRequestOptions(new RequestOptions().set(GifOptions.DECODE_FORMAT, DecodeFormat.PREFER_ARGB_8888))//处理gif动图黑底的情况
+                .load(drawable).into(imageView);
     }
 
     public static RequestOptions getRequestOptions(int def, ImageView imageView) {

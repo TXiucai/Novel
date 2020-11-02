@@ -67,7 +67,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     private boolean mIsPlay = true;
     private boolean mIsResume = false;//是否继续
     private int mCureentIndex = 0;
-    private int mPreIndex=0;
+    private int mPreIndex = 0;
     private boolean mIsFirstPlay = true;
     private List<BoyinChapterBean> mBoyinChapterBeans;
     private ObjectAnimator mObjectAnimator;
@@ -101,7 +101,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
                     startOrpause();
                 } else {
                     if (mCureentIndex != position) {
-                        mPreIndex=mCureentIndex;
+                        mPreIndex = mCureentIndex;
                         mChooseChapterBean = boyinChapterBean;
                         mCureentIndex = position;
                         if (mMediaPlayerUtils.isRunning()) {
@@ -113,7 +113,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
                         startOrpause();
                     }
                 }
-                MyToash.Log("FileDownloader", "mIsFirstPlay:"+mIsFirstPlay+"   mCurentIndex:"+mCureentIndex+"    mPreIndex:"+mPreIndex);
+                MyToash.Log("FileDownloader", "mIsFirstPlay:" + mIsFirstPlay + "   mCurentIndex:" + mCureentIndex + "    mPreIndex:" + mPreIndex);
             }
         });
     }
@@ -143,7 +143,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     }
 
     private void palyLast() {
-        mPreIndex=mCureentIndex;
+        mPreIndex = mCureentIndex;
         mCureentIndex--;
         if (mCureentIndex >= 0 && mBoyinChapterBeans != null && mBoyinChapterBeans.size() > 0) {
             if (mMediaPlayerUtils.isRunning()) {
@@ -161,7 +161,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     }
 
     private void playNext() {
-        mPreIndex=mCureentIndex;
+        mPreIndex = mCureentIndex;
         mCureentIndex++;
         if (mCureentIndex >= 0 && mBoyinChapterBeans != null && mBoyinChapterBeans.size() > 0 && mCureentIndex < mBoyinChapterBeans.size()) {
             if (mMediaPlayerUtils.isRunning()) {
@@ -218,6 +218,8 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             if (mChooseChapterBean != null) {
                 mIvStatus.setImageResource(R.mipmap.ic_play);
                 if (mIsResume) {
+                    mChooseChapterBean.setPlay(true);
+                    mBoyinPlayerAdapter.notifyItemChanged(mCureentIndex);
                     mIsResume = false;
                     mMediaPlayerUtils.resume();
                     mObjectAnimator.resume();
@@ -267,6 +269,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
 
     @Override
     public void stop() {
+        mTvStartTime.setText(DateUtils.formatTime(0));
         mBoyinChapterBeans.get(mPreIndex).setPlay(false);
         mBoyinPlayerAdapter.notifyItemChanged(mPreIndex);
         mIsResume = true;
@@ -326,15 +329,26 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         //拖动条停止拖动的时候调用
-        if (mMediaPlayerUtils.isRunning()) {
-            mMediaPlayerUtils.seekTo(seekBar.getProgress());
+        mChooseChapterBean.setPlay(true);
+        mBoyinPlayerAdapter.notifyItemChanged(mCureentIndex);
+        if (mIsPlay) {
+            mIvStatus.setImageResource(R.mipmap.ic_play);
             if (mIsResume) {
-                mIvStatus.setImageResource(R.mipmap.ic_play);
+                mChooseChapterBean.setPlay(true);
+                mBoyinPlayerAdapter.notifyItemChanged(mCureentIndex);
                 mIsResume = false;
                 mMediaPlayerUtils.resume();
+                mObjectAnimator.resume();
+            } else {
+                mMediaPlayerUtils.setFilePlay(new File(mChooseChapterBean.getSavePath()));
+                mMediaPlayerUtils.start();
+                mIsResume = true;
             }
-            MyToash.Log("FileDownloader", "seekbar weizhi :" + seekBar.getProgress() + "    时间播放：" + seekBar.getProgress());
+            mIsPlay = false;
         }
+        mIsFirstPlay=false;
+        mMediaPlayerUtils.seekTo(seekBar.getProgress());
+        MyToash.Log("FileDownloader", "seekbar weizhi :" + seekBar.getProgress() + "    时间播放：" + seekBar.getProgress());
     }
 
     @Override

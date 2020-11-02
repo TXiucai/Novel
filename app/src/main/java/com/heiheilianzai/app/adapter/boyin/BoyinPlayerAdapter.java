@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.adapter.boyin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
-import com.heiheilianzai.app.utils.AnimationDrawable;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.MyPicasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,26 +48,10 @@ public class BoyinPlayerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ViewHolder viewHolder= (ViewHolder) holder;
         viewHolder.mTvChapter.setText(boyinChapterBean.getChapter_name());
         viewHolder.mTvTime.setText(DateUtils.formatTime(boyinChapterBean.getChapter_play_time()));
-        AnimationDrawable animationDrawable=new AnimationDrawable();
-        List<Integer> integers = new ArrayList<>();
-        integers.add(R.mipmap.ic_speaker3);
-        integers.add(R.mipmap.ic_speaker1);
-        integers.add(R.mipmap.ic_speaker2);
-        animationDrawable.setAnimation(viewHolder.mIvSpeaker,integers);
         if (boyinChapterBean.isPlay()){
-            animationDrawable.start(true, 500, new AnimationDrawable.AnimationLisenter() {
-                @Override
-                public void startAnimation() {
-
-                }
-
-                @Override
-                public void endAnimation() {
-
-                }
-            });
+           MyPicasso.loadLocalImage((Activity) mContext,R.drawable.ic_speaker,viewHolder.mIvSpeaker);
         }else {
-            animationDrawable.stop();
+            MyPicasso.loadLocalImage((Activity) mContext,R.mipmap.ic_speaker3,viewHolder.mIvSpeaker);
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
