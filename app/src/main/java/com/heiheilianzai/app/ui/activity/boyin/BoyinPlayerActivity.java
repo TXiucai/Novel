@@ -101,6 +101,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
                     mCureentIndex = position;
                     mIsPlay = true;
                     mIsResume = false;
+                    setChapterInfo();
                     startOrpause();
                 } else {
                     if (mCureentIndex != position) {
@@ -203,7 +204,9 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             }
         });
 
-        LitePal.where("nid = ?  and downloadstatus = ?", "1", mNid).findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
+        LitePal.where("nid = ?  and downloadstatus = ?", mNid, "1" )
+                .order("chapter_id asc")
+                .findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
             @Override
             public void onFinish(List<BoyinChapterBean> list) {
                 if (list != null && list.size() > 0) {
@@ -217,6 +220,8 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             }
         });
         mSbProgress.setMax(100);
+        mRyChapter.setNestedScrollingEnabled(false);
+        mRyChapter.setFocusableInTouchMode(false);
     }
 
     public void startOrpause() {
