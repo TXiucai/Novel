@@ -96,6 +96,9 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             @Override
             public void onItemListener(BoyinChapterBean boyinChapterBean, int position) {
                 if (mIsFirstPlay) {
+                    mPreIndex = mCureentIndex;
+                    mChooseChapterBean = boyinChapterBean;
+                    mCureentIndex = position;
                     mIsPlay = true;
                     mIsResume = false;
                     startOrpause();
@@ -127,9 +130,12 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
         mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
     }
 
-    @OnClick(value = {R.id.iv_last, R.id.iv_status, R.id.iv_next})
+    @OnClick(value = {R.id.back, R.id.iv_last, R.id.iv_status, R.id.iv_next})
     public void clickLisener(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
             case R.id.iv_last:
                 palyLast();
                 break;
@@ -197,7 +203,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             }
         });
 
-        LitePal.where("nid = ?", mNid).findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
+        LitePal.where("nid = ?  and downloadstatus = ?", "1", mNid).findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
             @Override
             public void onFinish(List<BoyinChapterBean> list) {
                 if (list != null && list.size() > 0) {
@@ -346,7 +352,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             }
             mIsPlay = false;
         }
-        mIsFirstPlay=false;
+        mIsFirstPlay = false;
         mMediaPlayerUtils.seekTo(seekBar.getProgress());
         MyToash.Log("FileDownloader", "seekbar weizhi :" + seekBar.getProgress() + "    时间播放：" + seekBar.getProgress());
     }
