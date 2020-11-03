@@ -18,6 +18,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.ComicDownOptionAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
+import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ComicConfig;
@@ -25,6 +26,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.comic.ComicDownOptionData;
+import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.comic.DownComicEvenbus;
 import com.heiheilianzai.app.ui.dialog.WaitDialog;
@@ -54,7 +56,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 漫画下载页面
+ * 漫画下载页面  漫画下载缓存管理
  */
 public class ComicDownActivity extends BaseButterKnifeActivity {
     private static final String CHAPTER_SEPARATOR = ",";
@@ -87,6 +89,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
     long id;
     int Size;
     PurchaseDialog purchaseDialog;
+    boolean mIsDeleteItem;//是否有删除漫画章节
 
     @Override
     public int initContentView() {
@@ -147,6 +150,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                         if (deleteSize == 0) {
                             fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
                         }
+                        mIsDeleteItem = true;
                         baseComic.setDown_chapters(deleteSize);
                         ContentValues values1 = new ContentValues();
                         values1.put("down_chapters", deleteSize);
@@ -346,6 +350,14 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
             SensorsDataHelper.setMHWorkDownloadEvent(Integer.valueOf(workId),//漫画iD
                     StringUtils.getStringToList(chapters, CHAPTER_SEPARATOR));//选中下载章节
         } catch (Exception e) {
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mIsDeleteItem) {//有删除发送通知
+            EventBus.getDefault().post(new DownMangerDeleteAllChapterEvent(BaseDownMangerFragment.COMIC_SON_TYPE));
         }
     }
 }
