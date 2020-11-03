@@ -7,10 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -204,11 +202,15 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void bannerAdChangeBoyin(SkipToBoYinEvent skipToBoYinEvent) {
         if (mWebView != null) {
+            String js = "";
             if (!StringUtils.isEmpty(skipToBoYinEvent.getContent())) {//首页banner跳转波音
-                mWebView.loadUrl(mBoyinUrl + skipToBoYinEvent.getContent());
+                js = skipToBoYinEvent.getContent();
             } else if (skipToBoYinEvent.getPhonicSkipInfo() != null) {
                 SkipToBoYinEvent.PhonicSkipInfo phonicSkipInfo = skipToBoYinEvent.getPhonicSkipInfo();
-                mWebView.loadUrl("javascript:toPlayDetail('" + phonicSkipInfo.getNcid() + "','" + phonicSkipInfo.getNid() + "','" + phonicSkipInfo.getAcnme() + "','" + phonicSkipInfo.getCurrent_time() + "')");
+                js = "'" + phonicSkipInfo.getNcid() + "','" + phonicSkipInfo.getNid() + "','" + phonicSkipInfo.getAcnme() + "','" + phonicSkipInfo.getCurrent_time() + "'";
+            }
+            if (!StringUtils.isEmpty(js)) {
+                mWebView.loadUrl("javascript:toPlayDetail(" + js + ")");
             }
         }
     }
@@ -221,9 +223,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void boyinPlayerBoyin(BoyinPlayerEvent boyinPlayerEvent) {
         if (mWebView != null) {
-            if (boyinPlayerEvent.isIsplay()){
+            if (boyinPlayerEvent.isIsplay()) {
                 mWebView.loadUrl("javascript:playPause()");
-            }else {
+            } else {
                 mWebView.loadUrl("javascript:playRun()");
             }
         }

@@ -44,6 +44,7 @@ import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -515,7 +516,11 @@ public class ConvenientBanner<T> extends LinearLayout {
                 );
                 break;
             case 6:
-                EventBus.getDefault().post(new SkipToBoYinEvent(bannerItemStore.getContent()));
+                if (Utils.isLogin(activity)) {
+                    EventBus.getDefault().post(new SkipToBoYinEvent(bannerItemStore.getContent()));
+                } else {
+                    activity.startActivity(new Intent(activity, LoginActivity.class));
+                }
                 break;
         }
     }
