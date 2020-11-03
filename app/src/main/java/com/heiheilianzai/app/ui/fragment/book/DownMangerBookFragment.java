@@ -1,108 +1,70 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.BaseAdapter;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
-import com.heiheilianzai.app.base.BaseButterKnifeFragment;
+import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.model.Downoption;
-import com.heiheilianzai.app.utils.MyToash;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
+import org.litepal.crud.callback.FindMultiCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-
-//.view.annotation.ContentView;
-//.view.annotation.Event;
-//.view.annotation.ViewInject;
-//.x;
-
 /**
- * Created by abc on 2016/11/4.
+ * 下载缓存页面 小说
  */
-
-public class DownMangerBookFragment extends BaseButterKnifeFragment {
-    @Override
-    public int initContentView() {
-        return R.layout.fragment_downmanger;
-    }
-    @BindView(R.id.activity_downmanger_list)
-    public ListView activity_downmanger_list;
-    @BindView(R.id.fragment_bookshelf_noresult)
-    public LinearLayout fragment_bookshelf_noresult;
-    DownMangerAdapter downMangerAdapter;
-    List<Downoption> downoptions;
+public class DownMangerBookFragment extends BaseDownMangerFragment<Downoption> {
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        EventBus.getDefault().register(this);
-        View temphead = LayoutInflater.from(activity).inflate(R.layout.item_list_head, null);
-        activity_downmanger_list.addHeaderView(temphead, null, false);
-        activity_downmanger_list.setHeaderDividersEnabled(true);
-        downoptions = LitePal.where().find(Downoption.class);
-        List<String> list = new ArrayList<>();
-        if (downoptions.size() != 0) {
-            Collections.sort(downoptions);//按bookid 排序
-
-            for (Downoption downoption : downoptions) {
-                if (list.contains(downoption.book_id)) {
-                    downoption.showHead = false;
-                } else {
-                    downoption.showHead = true;
-                    list.add(downoption.book_id);
+    protected void initData() {
+        LitePal.where().findAsync(Downoption.class).listen(new FindMultiCallback<Downoption>() {
+            @Override
+            public void onFinish(List<Downoption> list) {
+                List<String> stringList = new ArrayList<>();
+                if (list.size() != 0) {
+                    Collections.sort(list);//按bookid 排序
+                    for (Downoption downoption : list) {
+                        if (stringList.contains(downoption.book_id)) {
+                            downoption.showHead = false;
+                        } else {
+                            downoption.showHead = true;
+                            stringList.add(downoption.book_id);
+                        }
+                    }
                 }
+                refreshData(list);
             }
-            downMangerAdapter = new DownMangerAdapter(activity, downoptions, fragment_bookshelf_noresult);
-            activity_downmanger_list.setAdapter(downMangerAdapter);
-        } else {
-            fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
-        }
-
+        });
     }
+
+    @Override
+    protected BaseAdapter getAeAdapter() {
+        return new DownMangerAdapter(activity, baseList, fragment_bookshelf_noresult);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshProcess(Downoption downoption) {
-
-        if(!downoptions.isEmpty()) {
-            for (Downoption downoption1 : downoptions) {
+        if (!baseList.isEmpty()) {
+            for (Downoption downoption1 : baseList) {
                 if (downoption1.file_name.equals(downoption.file_name)) {
-                    MyToash.Log("refreshProcess--", downoption.toString());
                     downoption1.down_cunrrent_num = downoption.down_cunrrent_num;
                     downoption1.downoption_size = downoption.downoption_size;
                     downoption1.isdown = downoption.isdown;
                     downMangerAdapter.notifyDataSetChanged();
                     return;
                 }
-
             }
-            MyToash.Log("refreshProcess", downoption.toString());
-            downoptions.add(downoption);
+            baseList.add(downoption);
             downMangerAdapter.notifyDataSetChanged();
-        }else {
-            downoptions.add(downoption);
-            downMangerAdapter = new DownMangerAdapter(activity, downoptions, fragment_bookshelf_noresult);
+        } else {
+            baseList.add(downoption);
+            downMangerAdapter = new DownMangerAdapter(activity, baseList, fragment_bookshelf_noresult);
             activity_downmanger_list.setAdapter(downMangerAdapter);
         }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(activity);
-    }
-    
 }
