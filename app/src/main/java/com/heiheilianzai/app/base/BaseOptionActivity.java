@@ -20,7 +20,8 @@ import com.heiheilianzai.app.ui.fragment.LiushuijiluFragment;
 import com.heiheilianzai.app.ui.fragment.MyCommentFragment;
 import com.heiheilianzai.app.ui.fragment.OptionFragment;
 import com.heiheilianzai.app.ui.fragment.RankIndexFragment;
-import com.heiheilianzai.app.ui.fragment.ReadHistoryPhonicFragment;
+import com.heiheilianzai.app.ui.fragment.boyin.DownMangerPhonicFragment;
+import com.heiheilianzai.app.ui.fragment.boyin.ReadHistoryPhonicFragment;
 import com.heiheilianzai.app.ui.fragment.book.DownMangerBookFragment;
 import com.heiheilianzai.app.ui.fragment.book.ReadHistoryBookFragment;
 import com.heiheilianzai.app.ui.fragment.comic.DownMangerComicFragment;
@@ -159,6 +160,10 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                     case XIAOSHUOMAHUA:
                         baseButterKnifeFragment1 = new DownMangerBookFragment();
                         baseButterKnifeFragment2 = new DownMangerComicFragment();
+                        if (boYinSwitch != 0) {
+                            baseButterKnifeFragment3 = new DownMangerPhonicFragment();
+                            channel_bar_yousheng_text.setVisibility(View.VISIBLE);
+                        }
                         channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                         channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                         break;
