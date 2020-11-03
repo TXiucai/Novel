@@ -18,9 +18,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.adapter.boyin.BasePhonicDownAdapter;
 import com.heiheilianzai.app.adapter.boyin.BoyinDownAdapter;
+import com.heiheilianzai.app.adapter.boyin.DownPhonicChapterDeleteAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
+import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.DownloadBoyinService;
 import com.heiheilianzai.app.constant.BoyinConfig;
@@ -28,13 +31,11 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
 import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
 import com.heiheilianzai.app.model.event.BoyinDownloadEvent;
-import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
+import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.SensorsDataHelper;
-import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +54,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 有声小说下载页面
+ * 有声小说下载页面 有声小说下载章节管理
  */
 public class BoyinDownActivity extends BaseButterKnifeActivity {
     private static final String CHAPTER_SEPARATOR = ",";
@@ -78,13 +79,49 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
     boolean mShunxu;
     List<BoyinChapterBean> mBoyinChapterBeans;//boyin  章节list
     List<BoyinChapterBean> mBoyinChapterDownBeans;//boyin  章节list
-    BoyinDownAdapter mBoyDownAdapter;
+    BasePhonicDownAdapter mBoyDownAdapter;
     Gson gson = new Gson();
+    String mPhonicId;//有声小说Id
     private BoyinInfoBean mBoyInfoBean;//播音小说详情
+    boolean mIsDown = true; //true-有声小说下载 false 有声下载到本地的章节删除
+    boolean mIsDeleteItem;//是否删除过有声小说章节
 
     @Override
     public int initContentView() {
         return R.layout.activity_comicdown;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+        startDownloadService();
+        mIsDown = getIntent().getBooleanExtra("isDown", true);
+        mBoyinChapterBeans = new ArrayList<>();
+        initView();
+        initData();
+    }
+
+    private void initView() {
+        if (mIsDown) {
+            mBoyDownAdapter = new BoyinDownAdapter(activity, mBoyinChapterBeans, mTvChooseCount, mTvBoyinDown);
+            mTvBoyinDown.setText(LanguageUtil.getString(activity, R.string.BookInfoActivity_downn));
+        } else {
+            mBoyDownAdapter = new DownPhonicChapterDeleteAdapter(activity, mBoyinChapterBeans, mTvChooseCount, mTvBoyinDown);
+            mTvBoyinDown.setText(LanguageUtil.getString(activity, R.string.BookInfoActivity_down_delete));
+        }
+        mTvBoyinDown.setClickable(false);
+        mTvTitlebar.setText(mIsDown ? LanguageUtil.getString(activity, R.string.BoyinDownActivity_title) : LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger));
+        mBoyinGv.setAdapter(mBoyDownAdapter);
+    }
+
+    private void initData() {
+        mPhonicId = String.valueOf(getIntent().getIntExtra("nid", 0));
+        if (mIsDown) {
+            getDownBoyinChapter(mPhonicId);
+        } else {
+            localData(mPhonicId);
+        }
     }
 
     @OnClick(value = {R.id.titlebar_back, R.id.activity_comicdown_quanxuan, R.id.activity_comicdown_down, R.id.fragment_comicinfo_mulu_layout})
@@ -95,7 +132,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.activity_comicdown_quanxuan:
                 if (mBoyDownAdapter != null) {
-                    mBoyDownAdapter.selectAll();
+                    mBoyDownAdapter.selectAll(mIsDown, mPhonicId);
                 }
                 break;
             case R.id.fragment_comicinfo_mulu_layout:
@@ -113,35 +150,49 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case R.id.activity_comicdown_down:
-                judgmentService();
-                if (mBoyDownAdapter != null) {
-                    if (mBoyinChapterDownBeans == null) {
-                        mBoyinChapterDownBeans = new ArrayList<>();
-                    }
-                    mBoyinChapterDownBeans.clear();
-                    for (BoyinChapterBean boyinChapterBean : mBoyDownAdapter.mChooseBoyinList) {
-                        if (!boyinChapterBean.getUrl().isEmpty() && (boyinChapterBean.getDownloadStatus() == 0 || boyinChapterBean.getDownloadStatus() == 3)) {
-                            boyinChapterBean.setSavePath(FileManager.getBoyinSDCardRoot() + File.separator + boyinChapterBean.getNid() + File.separator + boyinChapterBean.getChapter_id() + "_" + boyinChapterBean.getChapter_name() + ".mp3");
-                            mBoyinChapterDownBeans.add(boyinChapterBean);
-                        }
-                    }
-                    if (mBoyinChapterDownBeans.size() > 0) {
-                        MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_adddown));
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                EventBus.getDefault().post(new BoyinDownloadEvent(BoyinDownloadEvent.EventTag.START_DOWNLOAD, mBoyinChapterDownBeans));
-                            }
-                        }, 500);
-                    } else {
-                        MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_noadddown));
-                    }
-                    MyToash.Log("FileDownloader", "下载章节数量：" + mBoyinChapterDownBeans.size());
+                if (mIsDown) {
+                    downInfo();
+                } else {
+                    deleteDownInfo();
                 }
                 break;
         }
     }
 
+    /**
+     * 下载选中有声小说章节
+     */
+    private void downInfo() {
+        judgmentService();
+        if (mBoyDownAdapter != null) {
+            if (mBoyinChapterDownBeans == null) {
+                mBoyinChapterDownBeans = new ArrayList<>();
+            }
+            mBoyinChapterDownBeans.clear();
+            for (BoyinChapterBean boyinChapterBean : mBoyDownAdapter.mChooseBoyinList) {
+                if (!boyinChapterBean.getUrl().isEmpty() && (boyinChapterBean.getDownloadStatus() == 0 || boyinChapterBean.getDownloadStatus() == 3)) {
+                    boyinChapterBean.setSavePath(FileManager.getBoyinSDCardRoot() + File.separator + boyinChapterBean.getNid() + File.separator + boyinChapterBean.getChapter_id() + "_" + boyinChapterBean.getChapter_name() + ".mp3");
+                    mBoyinChapterDownBeans.add(boyinChapterBean);
+                }
+            }
+            if (mBoyinChapterDownBeans.size() > 0) {
+                MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_adddown));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventBus.getDefault().post(new BoyinDownloadEvent(BoyinDownloadEvent.EventTag.START_DOWNLOAD, mBoyinChapterDownBeans));
+                    }
+                }, 500);
+            } else {
+                MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_noadddown));
+            }
+            MyToash.Log("FileDownloader", "下载章节数量：" + mBoyinChapterDownBeans.size());
+        }
+    }
+
+    /**
+     * 开启下载服务器
+     */
     private void judgmentService() {
         if (!DownloadBoyinService.isServiceRunning(this, "DownloadBoyinService")) {
             Intent downloadVideoServiceIntent = new Intent(this, DownloadBoyinService.class);
@@ -153,17 +204,44 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        startDownloadService();
-        mBoyinChapterBeans = new ArrayList<>();
-        Intent intent = getIntent();
-        int nid = intent.getIntExtra("nid", 0);
-        mTvBoyinDown.setClickable(false);
-        mTvTitlebar.setText(LanguageUtil.getString(activity, R.string.BoyinDownActivity_title));
-        getDownBoyinChapter(String.valueOf(nid));
+    /**
+     * 删除下载章节
+     */
+    private void deleteDownInfo() {
+        if (mBoyDownAdapter.mChooseBoyinList != null && mBoyDownAdapter.mChooseBoyinList.size() > 0) {
+            mIsDeleteItem = true;
+            for (BoyinChapterBean info : mBoyDownAdapter.mChooseBoyinList) {
+                LitePal.deleteAll(BoyinChapterBean.class, "nid = ? and chapter_id = ?", String.valueOf(info.getNid()), String.valueOf(info.getChapter_id()));//删除有声章节数据
+            }
+            mBoyDownAdapter.mChooseBoyinList.clear();
+            initData();
+        }
+    }
+
+    /**
+     * 只加载本地数据用于删除
+     *
+     * @param nid
+     */
+    private void localData(String nid) {
+        mBoyinChapterBeans.clear();
+        List<BoyinChapterBean> boyinChapterBeanList = LitePal.where("nid = ?", nid).find(BoyinChapterBean.class);
+        if (boyinChapterBeanList != null && boyinChapterBeanList.size() > 0) {
+            mBoyinChapterBeans.addAll(boyinChapterBeanList);
+            List<BoyinInfoBean> infoBeanList = LitePal.where("nid != ?", nid).find(BoyinInfoBean.class);
+            if (infoBeanList != null && infoBeanList.size() > 0) {
+                mBoyInfoBean = infoBeanList.get(0);
+                setCatalogStatus(mBoyInfoBean);
+            }
+            ContentValues values1 = new ContentValues();
+            values1.put("down_chapter", mBoyinChapterBeans.size());
+            LitePal.updateAll(BoyinInfoBean.class, values1, "nid = ?", nid);
+        } else {
+            LitePal.deleteAll(BoyinInfoBean.class, "nid = ?", String.valueOf(nid));
+            finish();
+            return;
+        }
+        mBoyDownAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -190,12 +268,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                         BoyinChapterBean boyinChapterBean = gson.fromJson(jsonElement, BoyinChapterBean.class);
                         mBoyinChapterBeans.add(boyinChapterBean);
                     }
-                    if (mBoyinChapterBeans != null) {
-                        if (mBoyDownAdapter == null) {
-                            mBoyDownAdapter = new BoyinDownAdapter(activity, mBoyinChapterBeans, mTvChooseCount, mTvBoyinDown);
-                        }
-                        mBoyinGv.setAdapter(mBoyDownAdapter);
-                    }
+                    mBoyDownAdapter.notifyDataSetChanged();
                     getSplChapter(nid);
                     saveAllChapter();
                     setCatalogStatus(mBoyInfoBean);
@@ -213,7 +286,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
     private void notifyChapter(int chapter) {
         //从H5交互过来单章默认选中
         if (chapter == -1) {
-            mBoyDownAdapter.selectAll();
+            mBoyDownAdapter.selectAll(mIsDown, mPhonicId);
         } else {
             for (BoyinChapterBean boyinChapterBean : mBoyinChapterBeans) {
                 if (boyinChapterBean.getChapter_id() == chapter) {
@@ -268,7 +341,6 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
      * @param nid
      */
     private void getSplChapter(String nid) {
-
         LitePal.where("nid = ?", nid).findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
             @Override
             public void onFinish(List<BoyinChapterBean> list) {
@@ -286,17 +358,6 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                 mBoyDownAdapter.notifyDataSetChanged();
             }
         });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void notifyBiyinInfo(BoyinInfoEvent boyinInfoEvent) {
-        int id = mBoyInfoBean.getId();
-        List<BoyinChapterBean> boyinChapterBeans = LitePal.where("nid = ? and downloadstatus = ?", String.valueOf(id), "1").find(BoyinChapterBean.class);
-        MyToash.Log("FileDownloader", "NotifyBiyinInfo: " + id + "    这次下载成功过的章节size:" + boyinChapterBeans.size());
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("down_chapter", boyinChapterBeans.size());
-        LitePal.updateAll(BoyinInfoBean.class, contentValues, "nid = ?", String.valueOf(id));
-        MyToash.Log("FileDownloader", "小说信息成功过的章节");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -325,20 +386,6 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
     }
 
     /**
-     * 神策埋点 漫画下载
-     *
-     * @param workId
-     * @param chapters
-     */
-    private void setMHWorkDownloadEvent(String workId, String chapters) {
-        try {
-            SensorsDataHelper.setMHWorkDownloadEvent(Integer.valueOf(workId),//漫画iD
-                    StringUtils.getStringToList(chapters, CHAPTER_SEPARATOR));//选中下载章节
-        } catch (Exception e) {
-        }
-    }
-
-    /**
      * 启动下载服务
      */
     public void startDownloadService() {
@@ -355,5 +402,13 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
     protected void onResume() {
         super.onResume();
         judgmentService();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mIsDeleteItem) {
+            EventBus.getDefault().post(new DownMangerDeleteAllChapterEvent(BaseDownMangerFragment.PhONIC_SON_TYPE));
+        }
     }
 }

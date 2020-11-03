@@ -14,6 +14,7 @@ import android.text.TextUtils;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
+import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
 import com.heiheilianzai.app.model.event.BoyinDownloadEvent;
 import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
 import com.heiheilianzai.app.utils.MyToash;
@@ -187,6 +188,12 @@ public class DownloadBoyinService extends Service implements NetStateChangeRecei
         contentValues.put("downloadstatus", BoyinChapterBean.STATUS_COMPLETE);
         LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ?", String.valueOf(downloadTask.getChapter_id()));
         MyToash.Log("FileDownloader", "完成 更新章节数据库");
+        List<BoyinChapterBean> boyinChapterBeans = LitePal.where("nid = ? and downloadstatus = ?", String.valueOf(downloadTask.getNid()), "1").find(BoyinChapterBean.class);
+        if (boyinChapterBeans != null && boyinChapterBeans.size() > 0) {
+            contentValues.clear();
+            contentValues.put("down_chapter", boyinChapterBeans.size());
+            LitePal.updateAll(BoyinInfoBean.class, contentValues, "nid = ?", String.valueOf(downloadTask.getNid()));
+        }
         BoyinDownloadEvent boyinDownloadEvent = new BoyinDownloadEvent(COMPLETE_DOWNLOAD, Arrays.asList(downloadTask));
         boyinDownloadEvent.setDownComplete(mComplteChapter);
         EventBus.getDefault().post(boyinDownloadEvent);
