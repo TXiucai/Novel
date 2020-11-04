@@ -206,6 +206,10 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (paused) {
+            if (handler != null)
+                handler.removeCallbacksAndMessages(null);
+        }
         paused = false;
         MobclickAgent.onResume(this); // 基础指标统计，不能遗漏
         if (time != 5) {
@@ -224,6 +228,14 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
         paused = true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+    }
 
     public interface OnAdImageListener {
         void onAnimationEnd();

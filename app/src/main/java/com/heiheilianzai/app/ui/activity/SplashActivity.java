@@ -195,7 +195,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 public void onAnimationEnd() {
                     findViewById(R.id.findchannel).setVisibility(View.GONE);
                     activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                    handler.sendEmptyMessageDelayed(1, 0);
+                    handler.sendEmptyMessageDelayed(1, time == 5 ? 0 : 1000);
                     startPage();
                 }
 

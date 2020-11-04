@@ -37,7 +37,6 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
     @Override
     public void initData() {
-        setStartpageView();
         getOpenScreen();
         next();
     }
@@ -71,6 +70,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
             public void onError(String e) {
             }
         });
+        setStartpageView();
     }
 
     /**
@@ -92,7 +92,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
                 @Override
                 public void onAnimationEnd() {
                     activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                    handler.sendEmptyMessageDelayed(1, 0);
+                    handler.sendEmptyMessageDelayed(1, time == 5 ? 0 : 1000);
                 }
 
                 @Override
