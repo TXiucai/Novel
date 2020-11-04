@@ -29,6 +29,7 @@ public class ReadHistoryRecyclerViewPhonicAdapter extends BaseReadHistoryAdapter
         holder.recyclerview_item_readhistory_des.setText(phonicInfo.getRecord_title());
         holder.recyclerview_item_readhistory_time.setText(phonicInfo.getLast_chapter_time() + "  " + String.format(LanguageUtil.getString(activity, R.string.ReadHistoryFragment_total_chapter), phonicInfo.getTotal_numbers()));
         MyPicasso.GlideImageNoSize(activity, phonicInfo.getImg(), holder.recyclerview_item_readhistory_img, R.mipmap.comic_def_v);
+        holder.recyclerview_item_readhistory_goon.setText(LanguageUtil.getString(activity, R.string.boyin_continue_play));
         holder.recyclerview_item_readhistory_book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
