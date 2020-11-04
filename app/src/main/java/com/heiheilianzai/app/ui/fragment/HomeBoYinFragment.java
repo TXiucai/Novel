@@ -138,6 +138,10 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                 }
             }
+
+            @Override
+            public void isPlaying(boolean isPlay) {//保留方法 获取有声页面播放状态
+            }
         }, "android");
         mWebView.loadUrl(mBoyinUrl);
         isLoadUrl = true;
@@ -164,6 +168,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void getDownBoyinChapter(int nid);
+
+        @JavascriptInterface
+        void isPlaying(boolean isPlay);
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {
