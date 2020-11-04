@@ -16,9 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager.widget.ViewPager.PageTransformer;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -44,7 +41,6 @@ import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
-import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -52,6 +48,9 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.PageTransformer;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE;
 
@@ -516,11 +515,7 @@ public class ConvenientBanner<T> extends LinearLayout {
                 );
                 break;
             case 6:
-                if (Utils.isLogin(activity)) {
-                    EventBus.getDefault().post(new SkipToBoYinEvent(bannerItemStore.getContent()));
-                } else {
-                    activity.startActivity(new Intent(activity, LoginActivity.class));
-                }
+                EventBus.getDefault().post(new SkipToBoYinEvent(bannerItemStore.getContent()));
                 break;
         }
     }
