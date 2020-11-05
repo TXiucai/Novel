@@ -99,6 +99,6 @@ ext {
     fastjson = '1.1.60.android'
     rxjava = '2.1.4'
     rxandroid = '2.0.2'
-    SensorsAnalyticsSDK = '4.2.8'
+    SensorsAnalyticsSDK = '4.3.6'
     liulishuo = '1.7.6'
 }
