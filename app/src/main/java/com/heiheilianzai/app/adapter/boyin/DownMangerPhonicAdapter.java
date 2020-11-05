@@ -81,13 +81,10 @@ public class DownMangerPhonicAdapter extends BaseAdapter {
             }
         });
         viewHolder.item_dowmmanger_open.setText(LanguageUtil.getString(activity, R.string.boyin_selections_play));
-        viewHolder.item_dowmmanger_info.setOnClickListener(new View.OnClickListener() {//下载章节管理
+        viewHolder.item_dowmmanger_info.setOnClickListener(new View.OnClickListener() {//下载章节管理 因为需求这里改为了进入有声本地播放
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity, BoyinDownActivity.class);
-                intent.putExtra("nid", boyinInfoBean.getId());
-                intent.putExtra("isDown", false);
-                activity.startActivity(intent);
+                startBoyinPlayer(String.valueOf(boyinInfoBean.getId()));
             }
         });
         viewHolder.item_dowmmanger_cover.setOnClickListener(new View.OnClickListener() {//下载播放
