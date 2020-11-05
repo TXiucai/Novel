@@ -4,7 +4,7 @@ gradle.ext {
     //版本名
     VERSION_NAME = "2.2.9"
     // 应用程序包名
-    APPLICATION_ID = 'com.heiheilianzai.app'
+    APPLICATION_ID = 'com.hhhhlianzai.app'
     //项目第三方配置
     MANIFESTPLACEHOLDERS = [
             JPUSH_PKGNAME       : APPLICATION_ID,

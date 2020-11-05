@@ -66,6 +66,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     private BoyinChapterBean mChooseChapterBean;
     private boolean mIsPlay = true;
     private boolean mIsResume = false;//是否继续
+    private boolean mIsDrag = false;
     private int mCureentIndex = 0;
     private int mPreIndex = 0;
     private boolean mIsFirstPlay = true;
@@ -204,7 +205,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             }
         });
 
-        LitePal.where("nid = ?  and downloadstatus = ?", mNid, "1" )
+        LitePal.where("nid = ?  and downloadstatus = ?", mNid, "1")
                 .order("chapter_id asc")
                 .findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
             @Override
@@ -318,8 +319,10 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     @Override
     public void onSeekBarProgress(int progress) {
         if (!mIsResume) {
-            mSbProgress.setProgress(progress);
-            mTvStartTime.setText(DateUtils.formatTime(progress / 1000));
+            if (!mIsDrag) {
+                mSbProgress.setProgress(progress);
+                mTvStartTime.setText(DateUtils.formatTime(progress / 1000));
+            }
         }
     }
 
@@ -334,7 +337,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
         //拖动条开始拖动的时候调用
-
+        mIsDrag = true;
     }
 
     @Override
@@ -358,6 +361,7 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
             mIsPlay = false;
         }
         mIsFirstPlay = false;
+        mIsDrag = false;
         mMediaPlayerUtils.seekTo(seekBar.getProgress());
         MyToash.Log("FileDownloader", "seekbar weizhi :" + seekBar.getProgress() + "    时间播放：" + seekBar.getProgress());
     }
