@@ -108,7 +108,12 @@ public class ReaderWebView extends WebView {
                         @Override
                         public void run() {
                             handler.sendEmptyMessage(2);
-                            onReceivedError(view, -6, "Connection time-out", url);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onReceivedError(view, -6, "Connection time-out", url);
+                                }
+                            });
                         }
                     };
                     mTimer.schedule(task, mTimeOut);// 30秒超时时间过后也要关闭加载对话框

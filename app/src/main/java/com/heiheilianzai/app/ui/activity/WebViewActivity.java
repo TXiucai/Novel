@@ -138,4 +138,12 @@ public class WebViewActivity extends BaseButterKnifeActivity {
 
         );
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ReaderWebView.mDialog.isShowing()){
+            ReaderWebView.mDialog.dismiss();
+        }
+    }
 }

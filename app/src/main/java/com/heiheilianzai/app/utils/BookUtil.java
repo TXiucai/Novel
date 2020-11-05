@@ -211,8 +211,10 @@ public class BookUtil {
             file.mkdir();
         } else {
             File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                files[i].delete();
+            if (files != null && files.length > 0) {
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
             }
         }
     }

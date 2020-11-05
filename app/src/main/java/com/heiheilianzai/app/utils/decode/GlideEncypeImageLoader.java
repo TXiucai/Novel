@@ -68,14 +68,16 @@ public class GlideEncypeImageLoader implements ImageLoader {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                if(cacheMissed!=null&&cacheMissed.length>0){
-                    if (cacheMissed[0]) {
-                        callback.onCacheMiss(ImageInfoExtractor.getImageType(file), file);
-                    } else {
-                        callback.onCacheHit(ImageInfoExtractor.getImageType(file), file);
+                if (file != null) {
+                    if (cacheMissed != null && cacheMissed.length > 0) {
+                        if (cacheMissed[0]) {
+                            callback.onCacheMiss(ImageInfoExtractor.getImageType(file), file);
+                        } else {
+                            callback.onCacheHit(ImageInfoExtractor.getImageType(file), file);
+                        }
                     }
+                    callback.onSuccess(file);
                 }
-                callback.onSuccess(file);
             }
 
             @Override

@@ -98,10 +98,12 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         baseBook.saveIsexist(1);
-                        String book_id = mItemList.get(position).getBook_id();
-                        if (activity != null) {
-                            activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
-                            ChapterManager.getInstance(activity).openBook(baseBook, book_id, mItemList.get(position).getChapter_id());
+                        if (mItemList.get(position) != null) {
+                            String book_id = mItemList.get(position).getBook_id();
+                            if (activity != null) {
+                                activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
+                                ChapterManager.getInstance(activity).openBook(baseBook, book_id, mItemList.get(position).getChapter_id());
+                            }
                         }
                         ReaderConfig.integerList.add(1);
                     }

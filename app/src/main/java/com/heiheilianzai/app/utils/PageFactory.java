@@ -858,7 +858,6 @@ public class PageFactory {
         }
         if (isfirst != 4) {
             ViewUtils.setVisibility(mBookPageWidget, View.VISIBLE);
-            mBookPageWidget.setVisibility(View.VISIBLE);
             ViewUtils.setVisibility(bookpage_scroll, View.GONE);
             mStatus = Status.OPENING;
             MyToash.Log("getPageForBegin0", "");
