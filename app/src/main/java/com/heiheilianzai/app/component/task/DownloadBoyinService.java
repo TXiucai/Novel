@@ -358,7 +358,7 @@ public class DownloadBoyinService extends Service implements NetStateChangeRecei
                 mAllDownloadList.get(i).setDownloadStatus(BoyinChapterBean.STATUS_DOWNLOAD_ERROR);
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("downloadstatus", BoyinChapterBean.STATUS_DOWNLOAD_ERROR);
-                LitePal.updateAll(BoyinChapterBean.class, contentValues, "nid = ?", String.valueOf(mAllDownloadList.get(i).getNid()));
+                LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ?", String.valueOf(mAllDownloadList.get(i).getChapter_id()));
             }
         }
         notificationContent("运行中");
