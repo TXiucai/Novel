@@ -92,7 +92,9 @@ public class MarqueeTextView extends LinearLayout {
                             }
                         });
                         ViewFlipper.LayoutParams lp = new ViewFlipper.LayoutParams(ViewFlipper.LayoutParams.MATCH_PARENT, mHeight);
-                        viewFlipper.addView(textView, lp);
+                        if (viewFlipper != null) {
+                            viewFlipper.addView(textView, lp);
+                        }
                         i++;
                     }
                     mHandler.removeCallbacks(this);

@@ -108,12 +108,14 @@ public class ReaderWebView extends WebView {
                         @Override
                         public void run() {
                             handler.sendEmptyMessage(2);
-                            mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onReceivedError(view, -6, "Connection time-out", url);
-                                }
-                            });
+                            if (mActivity != null) {
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onReceivedError(view, -6, "Connection time-out", url);
+                                    }
+                                });
+                            }
                         }
                     };
                     mTimer.schedule(task, mTimeOut);// 30秒超时时间过后也要关闭加载对话框
@@ -125,13 +127,15 @@ public class ReaderWebView extends WebView {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 try {
-                    mActivity.runOnUiThread(new Runnable() {
-                        public void run() {//getProgress() 不可以在非主线程使用 判断是否加载完成
-                            if (getProgress() < 10 || errorCode == -2) {
-                                handler.sendMessage(handler.obtainMessage(1, failingUrl));
+                    if (mActivity != null) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            public void run() {//getProgress() 不可以在非主线程使用 判断是否加载完成
+                                if (getProgress() < 10 || errorCode == -2) {
+                                    handler.sendMessage(handler.obtainMessage(1, failingUrl));
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

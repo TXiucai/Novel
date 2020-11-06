@@ -63,12 +63,12 @@ public class WebViewActivity extends BaseButterKnifeActivity {
         if (url == null) {
             return;
         }
-        String advert_id=intent.getStringExtra("advert_id");
-        if(advert_id!=null) {
+        String advert_id = intent.getStringExtra("advert_id");
+        if (advert_id != null) {
             onclicAD(advert_id);
         }
-        int style = intent.getIntExtra("ad_url_type",1);
-        if (style==2) {
+        int style = intent.getIntExtra("ad_url_type", 1);
+        if (style == 2) {
             Intent intent2 = new Intent();
             intent2.setAction(Intent.ACTION_VIEW);
             Uri content_uri_browsers = Uri.parse(url);
@@ -124,7 +124,7 @@ public class WebViewActivity extends BaseButterKnifeActivity {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("advert_id", advert_id + "");
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl()+"/advert/click", json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + "/advert/click", json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
 
@@ -142,7 +142,7 @@ public class WebViewActivity extends BaseButterKnifeActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (ReaderWebView.mDialog.isShowing()){
+        if (ReaderWebView.mDialog != null && ReaderWebView.mDialog.isShowing()) {
             ReaderWebView.mDialog.dismiss();
         }
     }
