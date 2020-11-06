@@ -1,6 +1,6 @@
 gradle.ext {
     //版本号
-    VERSION_CODE = 20201011
+    VERSION_CODE = 20201101
     //版本名
     VERSION_NAME = "2.2.9"
     // 应用程序包名
