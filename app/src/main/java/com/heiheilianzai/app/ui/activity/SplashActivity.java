@@ -13,26 +13,34 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseAdvertisementActivity;
 import com.heiheilianzai.app.component.http.DynamicDomainManager;
+import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.push.JPushUtil;
+import com.heiheilianzai.app.constant.AppConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.H5UrlBean;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.UserInfoItem;
+import com.heiheilianzai.app.utils.ConcurrentUrlhelpterKt;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.OnCompletUrl;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -69,12 +77,38 @@ public class SplashActivity extends BaseAdvertisementActivity {
         }
         DynamicDomainManager dynamicDomainManager = new DynamicDomainManager(this, new DynamicDomainManager.OnCompleteListener() {
             @Override
-            public void onComplete(String domain) {
-                App.setBaseUrl(domain);
-                requestReadPhoneState();
+            public void onComplete(List<String> apiUrl) {
+                ConcurrentUrlhelpterKt.getFastUrl(apiUrl, new OnCompletUrl() {
+                    @Override
+                    public void onComplteApi(@NotNull String api) {
+                        requestReadPhoneState();
+                        getH5Domins();
+                    }
+                });
             }
         });
         dynamicDomainManager.start();
+    }
+
+    public void getH5Domins() {
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        String url = App.getBaseUrl() + AppConfig.SERVER_H5_DOMAIN;
+        HttpUtils.getInstance(this).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) throws JSONException {
+                H5UrlBean h5UrlBean = new Gson().fromJson(response, H5UrlBean.class);
+                if (h5UrlBean != null && h5UrlBean.getDomin_list().size() > 0) {
+                    ConcurrentUrlhelpterKt.getFastH5Url(h5UrlBean.getDomin_list());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+
+            }
+        });
+
     }
 
     private void requestReadPhoneState() {

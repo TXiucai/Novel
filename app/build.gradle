@@ -329,6 +329,13 @@ dependencies {
     implementation "com.sensorsdata.analytics.android:SensorsAnalyticsSDK:${rootProject.SensorsAnalyticsSDK}"
     // 下载库
     implementation "com.liulishuo.filedownloader:library:${rootProject.liulishuo}"
+
+    // 协程库
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.kotlinx_coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.kotlinx_coroutines}"
+    implementation "com.github.liangjingkanji:BRV:${rootProject.BRV}"
+    implementation "com.github.liangjingkanji:Net:${rootProject.net}"
+    implementation "com.github.liangjingkanji:LogCat:${rootProject.LogCat}"
 }
 
 /**

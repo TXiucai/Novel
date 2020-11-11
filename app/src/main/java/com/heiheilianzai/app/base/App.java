@@ -181,6 +181,14 @@ public class App extends LitePalApplication {
         preparedDomain.putString("base_url", url);
     }
 
+    public static String getBaseH5Url() {
+        return preparedDomain.getString("base__h5_url", "");
+    }
+
+    public static void setBaseh5Url(String url) {
+        preparedDomain.putString("base_h5_url", url);
+    }
+
     public static boolean getNeedInstall() {
         return preparedDomain.getBoolean("needInstall", true);
     }
