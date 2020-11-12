@@ -45,14 +45,15 @@
             android:textColor="@color/white"
             android:textSize="@dimen/dimens_20dp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/qr_code_layout"
             android:layout_width="@dimen/dimens_205dp"
-            android:layout_height="@dimen/dimens_223dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/share_title_t"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dimens_32dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/qr_code_img"
@@ -64,15 +65,16 @@
 
             <TextView
                 android:id="@+id/share_url_t"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimens_9dp"
+                android:gravity="center"
                 android:text="http://www.heihei3.app"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dimens_16dp" />
-        </RelativeLayout>
+                android:textSize="@dimen/dimens_16dp"
+                android:translationY="-3dp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ImageView
