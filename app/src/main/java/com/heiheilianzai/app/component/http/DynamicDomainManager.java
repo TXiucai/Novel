@@ -33,9 +33,10 @@ public class DynamicDomainManager {
     private Context context;
     private boolean stop = false;
     private boolean completed = false;
+    private List<String> mApiUrl;
 
     public interface OnCompleteListener {
-        public void onComplete(String domain);
+        public void onComplete(List<String> apiUrl);
     }
 
     public DynamicDomainManager(Context context, OnCompleteListener listener) {
@@ -43,6 +44,7 @@ public class DynamicDomainManager {
         handler = new Handler(Looper.getMainLooper());
         preparedDomain = new PreparedDomain(context);
         this.context = context;
+        mApiUrl = new ArrayList<>();
     }
 
     public boolean isCompleted() {
@@ -101,8 +103,9 @@ public class DynamicDomainManager {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                mApiUrl.add(domain);
                 preparedDomain.setDefaultDomain(domain);
-                onCompleteListener.onComplete(domain);
+                onCompleteListener.onComplete(mApiUrl);
             }
         });
     }
@@ -131,41 +134,15 @@ public class DynamicDomainManager {
                 return;
             }
             if (!bean.data.isEmpty()) {
-                String theDomain = "";
-                boolean theSuccess = false;
-                for (int index = 0; index < bean.data.size(); index++) {
-                    String domain = bean.data.get(index).name;
-                    boolean success = ApiTest.synTestConnected(domain);
-                    if (stop) {
-                        return;
-                    }
-                    if (success) {
-                        theSuccess = true;
-                        theDomain = domain;
-                        postRecord(success, domain);
-                        break;
-                    } else {
-                        postRecord(success, domain);
-                    }
-                }
                 if (stop) {
                     return;
                 }
-                shouldTestPreparedDomain = !theSuccess;
-                if (theSuccess) {
-                    onCompleteUI(theDomain);
-                    return;
-                } else {
-                    List<String> domains = preparedDomain.getDomain();
-                    for (String domainUrl : domains) {
-                        if (stop) {
-                            return;
-                        }
-                        if (ApiTest.synTestConnected(domainUrl)) {
-                            onCompleteUI(domainUrl);
-                            return;
-                        }
+                if (onCompleteListener != null) {
+                    for (int i = 0; i < bean.data.size(); i++) {
+                        String domain = bean.data.get(i).name;
+                        mApiUrl.add(domain);
                     }
+                    onCompleteListener.onComplete(mApiUrl);
                 }
             }
         } catch (Exception e) {
@@ -180,7 +157,7 @@ public class DynamicDomainManager {
     /**
      * 有缓存情况下，异步替换缓存数据
      */
-    private  void htttpCachePublicDomain(){
+    private void htttpCachePublicDomain() {
         new Thread() {
             @Override
             public void run() {

@@ -4,7 +4,7 @@ import com.heiheilianzai.app.BuildConfig;
 
 /**
  * 上线前检查 ONLINE 是否为 true  configs 配置文件里相对应参数是否正确。
- *  当前版本记录: name=2.2.7  code=20200828
+ * 当前版本记录: name=2.2.7  code=20200828
  */
 public class RabbitConfig {
 

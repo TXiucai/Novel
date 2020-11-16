@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -92,6 +93,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.APP_SHARE;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
@@ -670,7 +672,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      * 获取波音h5 url
      */
     private String getBoYinUrl() {
-        return getAppUpdate().boyin_h5;
+        return App.getBaseH5Url().equals("") ? getAppUpdate().boyin_h5 : App.getBaseH5Url();
     }
 
     /**

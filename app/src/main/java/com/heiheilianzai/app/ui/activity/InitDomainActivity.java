@@ -9,8 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.DynamicDomainManager;
+import com.heiheilianzai.app.utils.ConcurrentUrlhelpterKt;
+import com.heiheilianzai.app.utils.OnCompletUrl;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class InitDomainActivity extends AppCompatActivity {
 
@@ -28,13 +33,17 @@ public class InitDomainActivity extends AppCompatActivity {
 
         DynamicDomainManager dynamicDomainManager = new DynamicDomainManager(this, new DynamicDomainManager.OnCompleteListener() {
             @Override
-            public void onComplete(String domain) {
-                App.setBaseUrl(domain);
-                Intent intent = new Intent();
-                intent.setClass(InitDomainActivity.this, BookInfoActivity.class);
-                intent.putExtras(getIntent());
-                startActivity(intent);
-                finish();
+            public void onComplete(List<String> apiUrl) {
+                ConcurrentUrlhelpterKt.getFastUrl(apiUrl, new OnCompletUrl() {
+                    @Override
+                    public void onComplteApi(@NotNull String api) {
+                        Intent intent = new Intent();
+                        intent.setClass(InitDomainActivity.this, BookInfoActivity.class);
+                        intent.putExtras(getIntent());
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             }
         });
         dynamicDomainManager.start();
