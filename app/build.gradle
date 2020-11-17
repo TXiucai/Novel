@@ -217,12 +217,12 @@ def getAppConfig() {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.legacy:legacy-support-v4:${rootProject.androidx}"
+    implementation "androidx.legacy:legacy-support-v4:${rootProject.xLegacy}"
     implementation "junit:junit:${rootProject.junit}"
-    implementation "androidx.cardview:cardview:${rootProject.androidx}"
-    implementation "androidx.recyclerview:recyclerview:${rootProject.androidx}"
+    implementation "androidx.cardview:cardview:${rootProject.xCardview}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.xRecycleview}"
     implementation "com.google.android.material:material:${rootProject.material}"
-    implementation "androidx.appcompat:appcompat:${rootProject.androidx}"
+    implementation "androidx.appcompat:appcompat:${rootProject.xAppcompat}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 

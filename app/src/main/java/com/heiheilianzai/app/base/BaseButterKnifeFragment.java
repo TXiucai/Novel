@@ -56,20 +56,6 @@ public abstract class BaseButterKnifeFragment extends Fragment {
         MobclickAgent.onPageEnd(getClass().getSimpleName());
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * 根据免费参数判断哪些View隐藏
      */
