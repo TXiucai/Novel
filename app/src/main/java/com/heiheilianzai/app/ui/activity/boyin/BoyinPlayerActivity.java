@@ -372,6 +372,5 @@ public class BoyinPlayerActivity extends BaseButterKnifeActivity implements Medi
         if (mMediaPlayerUtils != null) {
             mMediaPlayerUtils.destory();
         }
-        EventBus.getDefault().post(new BoyinPlayerEvent(false));
     }
 }
