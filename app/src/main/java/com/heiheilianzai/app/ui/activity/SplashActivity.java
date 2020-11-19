@@ -29,6 +29,7 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.OnCompletUrl;
+import com.heiheilianzai.app.utils.OnError;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -83,6 +84,11 @@ public class SplashActivity extends BaseAdvertisementActivity {
                     public void onComplteApi(@NotNull String api) {
                         requestReadPhoneState();
                         getH5Domins();
+                    }
+                }, new OnError() {
+                    @Override
+                    public void onError() {
+                        handler.sendEmptyMessageDelayed(0, 500);
                     }
                 });
             }

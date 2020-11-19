@@ -107,6 +107,6 @@ ext {
     liulishuo = '1.7.6'
     kotlinx_coroutines = '1.3.7'
     BRV = '1.3.13'
-    net = '2.3.2'
+    net = '2.3.9'
     LogCat = '1.0'
 }

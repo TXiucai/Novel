@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.heiheilianzai.app.component.http.DynamicDomainManager;
 import com.heiheilianzai.app.utils.ConcurrentUrlhelpterKt;
 import com.heiheilianzai.app.utils.OnCompletUrl;
+import com.heiheilianzai.app.utils.OnError;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +43,11 @@ public class InitDomainActivity extends AppCompatActivity {
                         intent.putExtras(getIntent());
                         startActivity(intent);
                         finish();
+                    }
+                }, new OnError() {
+                    @Override
+                    public void onError() {
+
                     }
                 });
             }

@@ -49,11 +49,11 @@ private suspend fun requestH5Domains(scope: CoroutineScope, domains: List<String
 }
 
 @JvmOverloads
-fun getFastUrl(domains: List<String>, onComplete: OnCompletUrl) {
+fun getFastUrl(domains: List<String>, onComplete: OnCompletUrl, onError: OnError) {
     scopeNet {
         requestDomains(this, domains, onComplete)
     }.catch {
-        handleError(it)
+        onError.onError()
     }
 }
 
@@ -62,10 +62,14 @@ fun getFastH5Url(h5domains: List<String>) {
     scopeNet {
         requestH5Domains(this, h5domains)
     }.catch {
-        handleError(it)
+
     }
 }
 
 interface OnCompletUrl {
     fun onComplteApi(api: String)
+}
+
+interface OnError {
+    fun onError()
 }
