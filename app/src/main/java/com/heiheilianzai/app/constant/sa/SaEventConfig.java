@@ -98,4 +98,9 @@ public class SaEventConfig {
      * 首页推荐
      */
     public static final String HOME_RECOMMENDATION_EVENT = "Home_recommendation";
+
+    /**
+     * 漫画获取失败
+     */
+    public static final String COMIC_FAIL_EVENT = "MH_Fail_Interface";
 }

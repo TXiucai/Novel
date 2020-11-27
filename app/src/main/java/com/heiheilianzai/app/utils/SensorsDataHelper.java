@@ -203,6 +203,21 @@ public class SensorsDataHelper {
     }
 
     /**
+     * 神策埋点  漫画失败
+     *
+     * @param fail 失败string
+     */
+    public static void setMHFailEvent(String fail){
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(SaVarConfig.FAIL_REASON, fail);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.COMIC_FAIL_EVENT, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 神策埋点 小说评论
      *
      * @param work_id 小说ID

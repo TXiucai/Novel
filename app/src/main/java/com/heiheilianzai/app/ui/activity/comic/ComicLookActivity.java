@@ -41,6 +41,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
@@ -71,6 +72,7 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.decode.GlideEncypeImageLoader;
 import com.heiheilianzai.app.view.comic.DanmuRelativeLayout;
 import com.heiheilianzai.app.view.comic.ZoomRecyclerView;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -522,6 +524,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
             });
             httpDataComicInfo();
+            SensorsDataAPI.sharedInstance().trackTimerStart(SaEventConfig.MH_CONTENT_PAGE_EVENT);
         } catch (Exception e) {
         } catch (Error e) {
         }
@@ -636,6 +639,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
                         @Override
                         public void onErrorResponse(String ex) {
+                            SensorsDataHelper.setMHFailEvent(ex);
                             if (ex != null) {
                                 if (ex.equals("nonet")) {
                                     String s = getCurrentComicChapter(chapter_id).ImagesText;
@@ -919,6 +923,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         super.onDestroy();
         map.clear();
         setMHContentPageEvent();
+        SensorsDataAPI.sharedInstance().trackTimerEnd(SaEventConfig.MH_CONTENT_PAGE_EVENT);
     }
 
     class MyViewHolder {

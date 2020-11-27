@@ -38,6 +38,7 @@ import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
+import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.InfoBookItem;
@@ -76,6 +77,7 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
 import com.heiheilianzai.app.view.read.PageWidget;
+import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
@@ -228,6 +230,7 @@ public class ReadActivity extends BaseReadActivity {
             });
         }
         MyToash.Log("frameLayoutToday", ReaderConfig.USE_AD + "");
+        SensorsDataAPI.sharedInstance().trackTimerStart(SaEventConfig.XS_CONTENT_PAGE_EVENT);
     }
 
     @Override
@@ -850,6 +853,7 @@ public class ReadActivity extends BaseReadActivity {
         unregisterReceiver(myReceiver);
         isSpeaking = false;
         dismissAllDialog();
+        SensorsDataAPI.sharedInstance().trackTimerEnd(SaEventConfig.XS_CONTENT_PAGE_EVENT);
     }
 
     public void getWebViewAD(Activity activity) {

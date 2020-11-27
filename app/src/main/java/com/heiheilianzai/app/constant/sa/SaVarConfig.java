@@ -11,6 +11,7 @@ public class SaVarConfig {
     public static final String BINDING_TYPE_VAR = "binding_type";//绑定类型
     public static final String VIP_TYPE_VAR = "vip_type";//VIP类型
     public static final String REG_TYPE_VAR = "reg_type";//注册类型
+    public static final String FAIL_REASON = "fail_reason";//失败原因
     /****************** END *******************/
 
     /**************事件共用字段***************/
