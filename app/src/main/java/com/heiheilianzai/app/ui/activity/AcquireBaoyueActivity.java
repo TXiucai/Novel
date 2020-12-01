@@ -21,6 +21,7 @@ import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.component.pay.alipay.PayResult;
+import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -130,11 +131,13 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         Gson gson = new Gson();
         try {
             JSONObject jsonObj = new JSONObject(json);
-            JSONObject userObj = jsonObj.getJSONObject("user");
+            mKeFuOnline = jsonObj.getString("kefu_online");
             if (Utils.isLogin(this)) {
+                JSONObject userObj = jsonObj.getJSONObject("user");
                 String nickName = userObj.getString("nickname");
                 activity_acquire_avatar_name.setText(nickName);
                 activity_acquire_avatar_desc.setText(userObj.getString("display_date"));
+                mKeFuOnline += "?uid=" + userObj.getString("uid");
                 MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar);
             } else {
                 activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
@@ -146,10 +149,8 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
                 AcquirePayItem item = gson.fromJson(listArray.getString(i), AcquirePayItem.class);
                 payList.add(item);
             }
-            mKeFuOnline = jsonObj.getString("kefu_online");
             if (!StringUtils.isEmpty(mKeFuOnline)) {
                 activity_acquire_customer_service.setVisibility(View.VISIBLE);
-                mKeFuOnline += "?uid=" + userObj.getString("uid");
             }
             List<AcquirePrivilegeItem> privilegeList = new ArrayList<>();
             JSONArray privilegeArray = jsonObj.getJSONArray("privilege");
@@ -161,7 +162,16 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             baoyuePayAdapter.setOnPayItemClickListener(new AcquireBaoyuePayAdapter.OnPayItemClickListener() {
                 @Override
                 public void onPayItemClick(AcquirePayItem item) {
-                    pay(item);
+                    if (Utils.isLogin(AcquireBaoyueActivity.this)){
+                        pay(item);
+                    }else {
+                        GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
+                            @Override
+                            public void isOperation() {
+                                MainHttpTask.getInstance().Gotologin(AcquireBaoyueActivity.this);
+                            }
+                        });
+                    }
                 }
             });
             activity_acquire_pay_gridview.setAdapter(baoyuePayAdapter);

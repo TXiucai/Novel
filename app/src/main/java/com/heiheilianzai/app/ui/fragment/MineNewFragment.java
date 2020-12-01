@@ -364,18 +364,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_vip":
-                    if (Utils.isLogin(activity)) {
-                        intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
-                        intent.putExtra("isvip", true);
-                        startActivity(intent);
-                    } else {
-                        GetDialog.IsOperation(activity, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
-                            @Override
-                            public void isOperation() {
-                                MainHttpTask.getInstance().Gotologin(activity);
-                            }
-                        });
-                    }
+                    intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                    intent.putExtra("isvip", Utils.isLogin(activity));
+                    startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_rechargenotes":
                     intent.setClass(activity, BaseOptionActivity.class).putExtra("OPTION", LIUSHUIJIELU).putExtra("title", LanguageUtil.getString(activity, R.string.liushuijilu_title)).putExtra("Extra", false);
