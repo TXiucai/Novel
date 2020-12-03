@@ -53,7 +53,7 @@ public class LoginPresenter {
      */
     public void getMessage() {
         mLoginModel.countDown(mLoginView.getButtonView());
-        mLoginModel.getMessage(mLoginView.getPhoneNum(), new LoginResultCallback() {
+        mLoginModel.getMessage(mLoginView.getPhoneNum(), mLoginView.getCountryCode(), new LoginResultCallback() {
             @Override
             public void getResult(final String jsonStr) {
                 MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.LoginActivity_getcodeing));

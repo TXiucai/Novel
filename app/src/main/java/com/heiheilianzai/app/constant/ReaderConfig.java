@@ -324,6 +324,16 @@ public class ReaderConfig {
     public static final String mAdvert = "/advert/info";
 
     /**
+     * 国家code
+     */
+    public static final String mCountryCode = "/message/area-list";
+
+    /**
+     * 首页推荐
+     */
+    public static final String mHomeRecomment = "/home-recommen/index";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

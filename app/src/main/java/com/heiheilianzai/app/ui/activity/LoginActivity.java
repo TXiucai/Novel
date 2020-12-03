@@ -61,12 +61,15 @@ public class LoginActivity extends BaseActivity implements LoginView {
     TextView activity_login_contract;
     @BindView(R.id.activity_login_weixin)
     LinearLayout activity_login_weixin;
+    @BindView(R.id.tx_code)
+    TextView mTxCode;
 
     public static final String BOYIN_LOGIN_KAY = "boyin_login";
     private boolean boyinLogin = false;
     private LoginPresenter mPresenter;
     public static Activity activity;
     public IWXAPI iwxapi;
+    private int mCode = 86;
 
     @Override
     public int initContentView() {
@@ -78,7 +81,8 @@ public class LoginActivity extends BaseActivity implements LoginView {
             , R.id.activity_login_phone_clear
             , R.id.activity_login_contract,
             R.id.activity_login_weixin
-            , R.id.activity_login_close
+            , R.id.activity_login_close,
+            R.id.tx_code
     })
     public void getEvent(View view) {
         switch (view.getId()) {
@@ -108,6 +112,9 @@ public class LoginActivity extends BaseActivity implements LoginView {
             case R.id.activity_login_weixin:
                 //微信登录
                 weixinLogin(activity, true, null);
+                break;
+            case R.id.tx_code:
+                startActivityForResult(new Intent(LoginActivity.this, CountryActivity.class), 1);
                 break;
         }
     }
@@ -255,6 +262,11 @@ public class LoginActivity extends BaseActivity implements LoginView {
         return boyinLogin;
     }
 
+    @Override
+    public int getCountryCode() {
+        return mCode;
+    }
+
     public interface LoginSuccess {
         void success();
 
@@ -316,5 +328,9 @@ public class LoginActivity extends BaseActivity implements LoginView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            mCode = data.getExtras().getInt("code", 0);
+            mTxCode.setText("+" + mCode);
+        }
     }
 }

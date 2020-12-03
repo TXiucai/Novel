@@ -122,5 +122,7 @@
     <color name="color_22ffd04f">#22ffd04f</color>
     <color name="boyin_tittle">#7F8384</color>
     <color name="boyin_catalog">#323334</color>
+    <color name="login_black">#39383C</color>
+    <color name="login_gray">#C4C4C6</color>
     <!--色值定义END-->
 </resources>

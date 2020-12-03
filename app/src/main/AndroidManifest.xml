@@ -339,6 +339,10 @@
             android:name=".ui.activity.boyin.BoyinPlayerActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.activity.CountryActivity"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

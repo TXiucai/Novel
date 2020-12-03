@@ -261,6 +261,7 @@
 
     <!--登录-->
     <string name="LoginActivity_title">手机号快捷登录</string>
+    <string name="CountryActivity_title">选择国家和地区</string>
     <string name="LoginActivity_denglu">登录</string>
     <string name="LoginActivity_weixin">微信登录</string>
 

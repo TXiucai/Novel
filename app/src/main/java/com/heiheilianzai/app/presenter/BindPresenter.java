@@ -35,7 +35,7 @@ public class BindPresenter {
 
         mLoginModel.countDown(mLoginView.getButtonView());
 
-        mLoginModel.getMessage(mLoginView.getPhoneNum(), new LoginResultCallback() {
+        mLoginModel.getMessage(mLoginView.getPhoneNum(), mLoginView.getCountryCode(), new LoginResultCallback() {
             @Override
             public void getResult(final String jsonStr) {
                 final Activity activity = (Activity) mLoginView;

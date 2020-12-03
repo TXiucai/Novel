@@ -51,7 +51,7 @@ public class LoginModel {
     /**
      * 发送请求获取验证码
      */
-    public void getMessage(String phoneNum, final LoginResultCallback callback) {
+    public void getMessage(String phoneNum, int code, final LoginResultCallback callback) {
         if (!isMobileNO(phoneNum))
             return;
         //开启倒计时
@@ -59,6 +59,7 @@ public class LoginModel {
         ReaderParams params = new ReaderParams(mActivity);
         String formattedPhoneNum = phoneNum.replaceAll(" ", "");
         params.putExtraParams("mobile", formattedPhoneNum);
+        params.putExtraParams("area_code", String.valueOf(code));
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mMessageUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -198,9 +199,8 @@ public class LoginModel {
      */
     public boolean isMobileNO(String mobiles) {
         String str = mobiles.replaceAll(" ", "");
-        //"[1]"代表第1位为数字1，"[3578]"代表第二位可以为3、5、7、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        String telRegex = "[1][345678]\\d{9}";
-        if (str.matches(telRegex)) {
+        int length = str.length();
+        if (length > 6 && length <= 11) {
             return true;
         } else {
             MyToash.ToashError(mActivity, LanguageUtil.getString(mActivity, R.string.LoginActivity_phoneerrpr));

@@ -46,4 +46,9 @@ public interface LoginView {
      * @return
      */
     boolean getBoyinLogin();
+
+    /**
+     * 获取国际code
+     */
+    int getCountryCode();
 }
