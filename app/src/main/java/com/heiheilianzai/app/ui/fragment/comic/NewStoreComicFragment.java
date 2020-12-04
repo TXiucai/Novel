@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.HomeStoreComicAdapter;
@@ -93,15 +95,6 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
         getCacheStockData("HomeStoreComicMan");
     }
 
-    /**
-     * 设置头部中间按钮
-     *
-     * @param mEntranceGridMale
-     */
-    @Override
-    public void initEntranceGrid(AdaptionGridView mEntranceGridMale) {
-        initEntranceGrid(mEntranceGridMale, false, R.mipmap.comic_classification, R.mipmap.comic_ranking, R.mipmap.comic_member, R.mipmap.comic_finished, R.mipmap.comic_limitfree);
-    }
 
     @Override
     protected void onMyScrollStateChanged(int position) {
@@ -117,5 +110,10 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
             setHomeRecommendationEvent(WORKS_TYPE_COMICS, columnId);
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    protected void getHomeRecommend(RecyclerView recyclerView) {
+        getHomeRecommend(recyclerView,1);
     }
 }

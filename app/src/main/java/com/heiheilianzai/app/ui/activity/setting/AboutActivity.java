@@ -311,8 +311,11 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
     @Override
     protected void onDestroy() {//关闭页面后清空所有状态，缓存。
         super.onDestroy();
-        waitDialog = null;
         try {
+            if (waitDialog != null) {
+                waitDialog.dismissDialog();
+            }
+            waitDialog = null;
             CookieSyncManager.createInstance(App.getContext());
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.removeAllCookie();

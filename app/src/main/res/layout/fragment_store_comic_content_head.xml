@@ -28,12 +28,10 @@
             android:src="@mipmap/banner_bottom_line" />
     </FrameLayout>
 
-    <com.heiheilianzai.app.view.AdaptionGridView
-        android:id="@+id/store_entrance_grid_male"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ry_recommend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center"
-        android:horizontalSpacing="@dimen/dimens_3dp"
-        android:numColumns="5" />
+        android:paddingLeft="@dimen/dimens_15dp"
+        android:paddingRight="@dimen/dimens_15dp" />
 </LinearLayout>

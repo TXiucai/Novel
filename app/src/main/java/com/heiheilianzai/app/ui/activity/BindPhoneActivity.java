@@ -211,6 +211,11 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
     }
 
     @Override
+    public int getCountryCode() {
+        return 0;
+    }
+
+    @Override
     protected void onDestroy() {
         mPresenter.cancelCountDown();
         super.onDestroy();

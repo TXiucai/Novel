@@ -2,6 +2,8 @@ package com.heiheilianzai.app.ui.fragment.book;
 
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.book.HomeStoreBookAdapter;
@@ -90,14 +92,6 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
         getCacheStockData("HomeStoreBookMan");
     }
 
-    /**
-     * 设置头部中间按钮
-     *
-     * @param mEntranceGridMale
-     */
-    public void initEntranceGrid(AdaptionGridView mEntranceGridMale) {
-        initEntranceGrid(mEntranceGridMale, true, R.mipmap.entrance1, R.mipmap.entrance2, R.mipmap.entrance3, R.mipmap.entrance4, R.mipmap.entrance5);
-    }
 
     @Override
     protected void onMyScrollStateChanged(int position) {
@@ -113,5 +107,10 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
             setHomeRecommendationEvent(WORKS_TYPE_BOOK, columnId);
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    protected void getHomeRecommend(RecyclerView recyclerView) {
+        getHomeRecommend(recyclerView,0);
     }
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 
 import androidx.core.content.ContextCompat;
@@ -14,15 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.headerfooter.songhang.library.SmartRecyclerAdapter;
-import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.EntranceAdapter;
-import com.heiheilianzai.app.adapter.ReaderBaseAdapter;
+import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BannerItemStore;
-import com.heiheilianzai.app.model.EntranceItem;
+import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -31,7 +29,6 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.ViewUtils;
-import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.ConvenientBanner;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
@@ -220,8 +217,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         }
         ConvenientBanner<BannerItemStore> mStoreBannerMale = headerView.findViewById(R.id.store_banner_male);
         ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, 1);
-        AdaptionGridView mEntranceGridMale = headerView.findViewById(R.id.store_entrance_grid_male);
-        initEntranceGrid(mEntranceGridMale);
+        RecyclerView recyclerView = headerView.findViewById(R.id.ry_recommend);
+        getHomeRecommend(recyclerView);
         smartRecyclerAdapter.setHeaderView(headerView);
     }
 
@@ -260,108 +257,69 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void postEvent(float alpha);
 
-    protected abstract void initEntranceGrid(AdaptionGridView mEntranceGridMale);
-
     protected abstract void onMyScrollStateChanged(int position);//停止滑动后列表位置
 
-    /**
-     * @param mEntranceGridMale
-     * @param isProduct         false 漫画  true 小说
-     * @param resId1
-     * @param resId2
-     * @param resId3
-     * @param resId4
-     * @param resId5
-     */
-    protected void initEntranceGrid(AdaptionGridView mEntranceGridMale, boolean isProduct, int resId1, int resId2, int resId3, int resId4, int resId5) {
-        List<EntranceItem> mEntranceItemListMale = new ArrayList<>();
-        if (ReaderConfig.USE_PAY) {
-            EntranceItem entranceItem1 = new EntranceItem();
-            entranceItem1.setName(LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
-            entranceItem1.setResId(resId1);
-            EntranceItem entranceItem2 = new EntranceItem();
-            entranceItem2.setName(LanguageUtil.getString(activity, R.string.storeFragment_paihang));
-            entranceItem2.setResId(resId2);
-            EntranceItem entranceItem3 = new EntranceItem();
-            entranceItem3.setName(LanguageUtil.getString(activity, R.string.storeFragment_baoyue));
-            entranceItem3.setResId(resId3);
-            EntranceItem entranceItem4 = new EntranceItem();
-            entranceItem4.setName(LanguageUtil.getString(activity, R.string.storeFragment_wanben));
-            entranceItem4.setResId(resId4);
-            EntranceItem entranceItem5 = new EntranceItem();
-            entranceItem5.setName(LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
-            entranceItem5.setResId(resId5);
-            mEntranceItemListMale.add(entranceItem5);
-            mEntranceItemListMale.add(entranceItem4);
-            mEntranceItemListMale.add(entranceItem1);
-            mEntranceItemListMale.add(entranceItem2);
-            if (!BuildConfig.free_charge) {
-                mEntranceItemListMale.add(entranceItem3);
-            } else {
-                mEntranceGridMale.setNumColumns(4);
-            }
-        } else {
-            EntranceItem entranceItem5 = new EntranceItem();
-            entranceItem5.setName(LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
-            entranceItem5.setResId(resId5);
-            mEntranceItemListMale.add(entranceItem5);
-            EntranceItem entranceItem1 = new EntranceItem();
-            entranceItem1.setName(LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
-            entranceItem1.setResId(resId1);
-            EntranceItem entranceItem2 = new EntranceItem();
-            entranceItem2.setName(LanguageUtil.getString(activity, R.string.storeFragment_paihang));
-            entranceItem2.setResId(resId2);
-            EntranceItem entranceItem4 = new EntranceItem();
-            entranceItem4.setName(LanguageUtil.getString(activity, R.string.storeFragment_wanben));
-            entranceItem4.setResId(resId4);
-            mEntranceItemListMale.add(entranceItem1);
-            mEntranceItemListMale.add(entranceItem2);
-            mEntranceItemListMale.add(entranceItem4);
-            mEntranceGridMale.setNumColumns(4);
-        }
-        ReaderBaseAdapter entranceAdapter = new EntranceAdapter(activity, mEntranceItemListMale, mEntranceItemListMale.size());
-        mEntranceGridMale.setAdapter(entranceAdapter);
-        mEntranceGridMale.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    protected abstract void getHomeRecommend(RecyclerView recyclerView);
+
+    protected void getHomeRecommend(RecyclerView recyclerView, int recommendType) {
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("recommend_type", String.valueOf(recommendType));//男频
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(App.getBaseUrl() + ReaderConfig.mHomeRecomment, json, false, new HttpUtils.ResponseListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onResponse(String response) throws JSONException {
+                HomeRecommendBean homeRecommendBean = new Gson().fromJson(response, HomeRecommendBean.class);
+                List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
+                initRecommend(recyclerView, recomme_list);
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+
+            }
+        });
+    }
+
+    private void initRecommend(RecyclerView recyclerView, List<HomeRecommendBean.RecommeListBean> recomme_list) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        HomeRecommendAdapter homeRecommendAdapter = new HomeRecommendAdapter(activity, recomme_list);
+        recyclerView.setAdapter(homeRecommendAdapter);
+        homeRecommendAdapter.setOnItemRecommendListener(new HomeRecommendAdapter.OnItemRecommendListener() {
+            @Override
+            public void onItemRecommendListener(HomeRecommendBean.RecommeListBean recommeListBean) {
+                int jump_type = Integer.valueOf(recommeListBean.getJump_type());//0跳转链接 1首页-推荐页   2首页完结页  3首页-榜单页  4VIP充值页   5活动中心
+                String jump_url = recommeListBean.getJump_url();
+                int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  小说   1为漫画',
+                int redirect_type = Integer.valueOf(recommeListBean.getRedirect_type());//默认为0  内置应用  1为内置浏览器   2为外部浏览器
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
-                intent.putExtra("PRODUCT", isProduct);
-                if (!ReaderConfig.USE_PAY) {
-                    if (position == 0) {
-                        intent.putExtra("OPTION", MIANFEI);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
-                    } else if (position == 1) {//分类
-                        intent.putExtra("OPTION", SHUKU);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
-                    } else if (position == 2) {
-                        //排行
-                        intent.putExtra("OPTION", PAIHANGINSEX);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_paihang));
-                    } else if (position == 3) {
-                        //完本
-                        intent.putExtra("OPTION", WANBEN);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_wanben));
-                    }
-                } else {
-                    MyToash.Log("position", position + "");
-                    if (position == 0) {
-                        intent.putExtra("OPTION", MIANFEI);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
-                    } else if (position == 1) {
-                        intent.putExtra("OPTION", WANBEN);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_wanben));
-                    } else if (position == 2) {
-                        intent.putExtra("OPTION", SHUKU);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
-                    } else if (position == 3) {
-                        intent.putExtra("OPTION", PAIHANGINSEX);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_paihang));
-                    } else if (position == 4) {
-                        intent.putExtra("OPTION", BAOYUE);
-                        intent.putExtra("title", LanguageUtil.getString(activity, R.string.BaoyueActivity_title));
-                    }
+                intent.putExtra("PRODUCT", recommend_type == 0);
+                if (jump_type == 0 || jump_type == 5) {
+                    activity.startActivity(new Intent(activity, AboutActivity.class).
+                            putExtra("url", jump_url)
+                            .putExtra("style", "4"));
+                } else if (jump_type == 1) {
+                    intent.putExtra("OPTION", MIANFEI);
+                    intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
+                    startActivity(intent);
+                } else if (jump_type == 2) {
+                    intent.putExtra("OPTION", WANBEN);
+                    intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_wanben));
+                    startActivity(intent);
+                } else if (jump_type == 3) {
+                    intent.putExtra("OPTION", PAIHANGINSEX);
+                    intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_paihang));
+                    startActivity(intent);
+                } else if (jump_type == 4) {
+                    intent.putExtra("OPTION", BAOYUE);
+                    intent.putExtra("title", LanguageUtil.getString(activity, R.string.BaoyueActivity_title));
+                    startActivity(intent);
+                } else if (jump_type == 6) {
+                    intent.putExtra("OPTION", SHUKU);
+                    intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
+                    startActivity(intent);
                 }
-                startActivity(intent);
             }
         });
     }
@@ -569,8 +527,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 神策埋点 首页推荐位
      * 每次滑动列表位置改变，上报推荐位ID到神策
      *
-     * @param works_type   漫画 MH 小说XS
-     * @param column_id   推荐ID
+     * @param works_type 漫画 MH 小说XS
+     * @param column_id  推荐ID
      */
     protected void setHomeRecommendationEvent(String works_type, List<String> column_id) {
         try {
