@@ -122,7 +122,7 @@ public class CountryActivity extends BaseButterKnifeActivity {
         adapter.setOnItemListener(new CountryAdapter.OnItemListener() {
             @Override
             public void onItemListener(CountryBean.ListBean listBean, int position) {
-                setResult(1, new Intent().putExtra("code", listBean.getCounter_code()));
+                setResult(2, new Intent().putExtra("code", listBean.getCounter_code()));
                 finish();
             }
         });

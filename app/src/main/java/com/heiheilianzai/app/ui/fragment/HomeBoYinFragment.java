@@ -75,7 +75,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        setFloatBall(home_boyin_layout);
+        //setFloatBall(home_boyin_layout);
         mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
         mWebView.addJavascriptInterface(new JavascriptObject() {
             @JavascriptInterface

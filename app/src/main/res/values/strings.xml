@@ -100,7 +100,7 @@
     <string name="MineNewFragment_set">设置</string>
     <string name="MineNewFragment_fuli">福利中心</string>
     <string name="MineNewFragment_nologin">未登录</string>
-    <string name="MineNewFragment_nologin_prompt">登录后才可以购买购买VIP哦~</string>
+    <string name="MineNewFragment_nologin_prompt">登录后才可以购买VIP哦~</string>
 
     <!--设置中心-->
     <string name="SettingsActivity_nomark">在手机上没有找到应用市场哦！</string>

@@ -108,7 +108,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimens_60dp"
                 android:layout_marginTop="@dimen/dimens_20dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/fragment_mine_user_info_gold_layout"
@@ -328,7 +329,8 @@
                     android:layout_height="@dimen/dimens_60dp"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/dimens_15dp"
-                    android:paddingRight="@dimen/dimens_10dp">
+                    android:paddingRight="@dimen/dimens_10dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/dimens_25dp"

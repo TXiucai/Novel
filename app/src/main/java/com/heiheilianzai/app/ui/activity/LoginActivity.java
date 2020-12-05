@@ -70,6 +70,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
     public static Activity activity;
     public IWXAPI iwxapi;
     private int mCode = 86;
+    private final static int REQUESTCODE = 1; // 返回的结果码
 
     @Override
     public int initContentView() {
@@ -328,7 +329,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == REQUESTCODE && requestCode ==2) {
             mCode = data.getExtras().getInt("code", 0);
             mTxCode.setText("+" + mCode);
         }
