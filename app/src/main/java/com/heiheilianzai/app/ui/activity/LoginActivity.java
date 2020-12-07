@@ -1,9 +1,13 @@
 package com.heiheilianzai.app.ui.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,12 +18,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.github.dfqin.grantor.PermissionListener;
+import com.github.dfqin.grantor.PermissionsUtil;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.observe.SMSContentObserver;
 import com.heiheilianzai.app.presenter.LoginPresenter;
 import com.heiheilianzai.app.presenter.LoginView;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
+import com.heiheilianzai.app.utils.MyToash;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -71,6 +81,19 @@ public class LoginActivity extends BaseActivity implements LoginView {
     public IWXAPI iwxapi;
     private int mCode = 86;
     private final static int REQUESTCODE = 1; // 返回的结果码
+    private SMSContentObserver smsContentObserver;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    String outbox = smsContentObserver.getStrContent();//(String) msg.obj;
+                    activity_login_phone_message.setText(outbox);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public int initContentView() {
@@ -128,6 +151,14 @@ public class LoginActivity extends BaseActivity implements LoginView {
         if (!USE_WEIXIN) {
             activity_login_weixin.setVisibility(View.GONE);
         }
+        requestReadPhoneState();
+        initRegisterContentObserver();
+    }
+
+    private void initRegisterContentObserver() {
+        smsContentObserver = new SMSContentObserver(this, mHandler);
+        Uri smsUri = Uri.parse("content://sms");
+        getContentResolver().registerContentObserver(smsUri, true, smsContentObserver);
     }
 
     class ASD {
@@ -323,15 +354,37 @@ public class LoginActivity extends BaseActivity implements LoginView {
     protected void onDestroy() {
         mPresenter.cancelCountDown();
         super.onDestroy();
+        if (getContentResolver()!=null){
+            getContentResolver().unregisterContentObserver(smsContentObserver);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUESTCODE && requestCode ==2) {
+        if (requestCode == REQUESTCODE && resultCode ==2) {
             mCode = data.getExtras().getInt("code", 0);
             mTxCode.setText("+" + mCode);
         }
     }
+
+    private void requestReadPhoneState() {
+        if (PermissionsUtil.hasPermission(activity, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS)) {
+
+        } else {
+            PermissionsUtil.requestPermission(this, new PermissionListener() {
+                @Override
+                public void permissionGranted(@NonNull String[] permission) {
+
+                }
+
+                @Override
+                public void permissionDenied(@NonNull String[] permission) {
+                    MyToash.Toash(LoginActivity.this, getString(R.string.no_permission));
+                }
+            }, new String[]{ Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, true, new PermissionsUtil.TipInfo(activity.getString(R.string.splashactivity_permissions_t), activity.getString(R.string.splashactivity_permissions_c1) + activity.getString(R.string.app_name) + activity.getString(R.string.login_permissions_c2), activity.getString(R.string.splashactivity_permissions_cancle), activity.getString(R.string.splashactivity_permissions_set)));
+        }
+    }
+
 }

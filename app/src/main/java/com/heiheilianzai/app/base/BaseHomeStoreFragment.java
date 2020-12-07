@@ -20,6 +20,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -28,6 +29,7 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.ViewUtils;
 import com.heiheilianzai.app.view.ConvenientBanner;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
@@ -45,7 +47,6 @@ import java.util.List;
 
 import butterknife.BindView;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE;
 import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.constant.ReaderConfig.PAIHANGINSEX;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
@@ -296,6 +297,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
                 intent.putExtra("PRODUCT", recommend_type == 0);
                 if (jump_type == 0 || jump_type == 5) {
+                    if (jump_type == 5 && Utils.isLogin(activity)) {
+                        jump_url += "&uid=" + Utils.getUID(activity);
+                    }
                     activity.startActivity(new Intent(activity, AboutActivity.class).
                             putExtra("url", jump_url)
                             .putExtra("style", "4"));
@@ -312,9 +316,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_paihang));
                     startActivity(intent);
                 } else if (jump_type == 4) {
-                    intent.putExtra("OPTION", BAOYUE);
-                    intent.putExtra("title", LanguageUtil.getString(activity, R.string.BaoyueActivity_title));
-                    startActivity(intent);
+                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                    myIntent.putExtra("isvip", Utils.isLogin(activity));
+                    startActivity(myIntent);
                 } else if (jump_type == 6) {
                     intent.putExtra("OPTION", SHUKU);
                     intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));

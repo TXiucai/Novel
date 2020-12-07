@@ -11,6 +11,7 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
@@ -122,6 +123,7 @@ public class MainHttpTask {
                                     if (USE_AD_FINAL) {
                                         ReaderConfig.REFREASH_USERCENTER = false;
                                         UserInfoItem mUserInfo = new Gson().fromJson(result, UserInfoItem.class);
+                                        AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, mUserInfo.getUser_token());
                                         if (mUserInfo.getIs_vip() == 1) {
                                             ReaderConfig.USE_AD = false;
                                         } else {

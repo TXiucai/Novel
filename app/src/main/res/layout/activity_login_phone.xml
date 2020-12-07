@@ -20,7 +20,7 @@
             android:layout_height="51dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -70,13 +70,11 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/lightgray2" />
-
         </RelativeLayout>
 
         <LinearLayout
@@ -98,7 +96,6 @@
                     android:inputType="number"
                     android:textColorHint="@color/login_input_tip"
                     android:textSize="@dimen/public_12_dp" />
-
 
                 <Button
                     android:id="@+id/activity_login_phone_get_message_btn"

@@ -76,13 +76,15 @@ public class LoginModel {
         );
     }
 
-    public void loginPhone(String userName, String message, final LoginResultCallback callback) {
+    public void loginPhone(String userName, String message,int areaCode,  final LoginResultCallback callback) {
         if (!isMobileNO(userName) || isEmpty(message))
             return;
         ReaderParams params = new ReaderParams(mActivity);
         String phoneNum = userName.replaceAll(" ", "");
         params.putExtraParams("mobile", phoneNum);
         params.putExtraParams("code", message);
+        params.putExtraParams("ver",BuildConfig.VERSION_NAME);
+        params.putExtraParams("area_code",String.valueOf(areaCode));
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mMobileLoginUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override

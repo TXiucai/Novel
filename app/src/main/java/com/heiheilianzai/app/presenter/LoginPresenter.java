@@ -65,7 +65,7 @@ public class LoginPresenter {
      * 登录请求:刷新我的页面;刷新用户数据,及登录有声用户数据;根据配置刷新书架小说、漫画
      */
     public void loginPhone(final LoginActivity.LoginSuccess loginSuccess) {
-        mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(), new LoginResultCallback() {
+        mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(),mLoginView.getCountryCode(), new LoginResultCallback() {
             @Override
             public void getResult(final String loginStr) {
                 try {

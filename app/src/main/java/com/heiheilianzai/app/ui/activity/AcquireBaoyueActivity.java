@@ -32,10 +32,13 @@ import com.heiheilianzai.app.model.PaymentWebBean;
 import com.heiheilianzai.app.model.WxPayBean;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
+import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
+import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -133,12 +136,21 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             JSONObject jsonObj = new JSONObject(json);
             mKeFuOnline = jsonObj.getString("kefu_online");
             if (Utils.isLogin(this)) {
-                JSONObject userObj = jsonObj.getJSONObject("user");
-                String nickName = userObj.getString("nickname");
-                activity_acquire_avatar_name.setText(nickName);
-                activity_acquire_avatar_desc.setText(userObj.getString("display_date"));
-                mKeFuOnline += "?uid=" + userObj.getString("uid");
-                MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar);
+                if (!jsonObj.isNull("user")) {
+                    JSONObject userObj = jsonObj.getJSONObject("user");
+                    String nickName = userObj.getString("nickname");
+                    activity_acquire_avatar_name.setText(nickName);
+                    activity_acquire_avatar_desc.setText(userObj.getString("display_date"));
+                    int onlineIsNew = jsonObj.getInt("kefu_online_is_new");
+                    if (onlineIsNew == 0) {//1 新客服系统 0为久客户系统
+                        mKeFuOnline += "?uid=" + userObj.getString("uid");
+                    }
+                    MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar);
+                } else {
+                    activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
+                    activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_nologin));
+                    resetLogin(this);
+                }
             } else {
                 activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
                 activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_nologin));
@@ -162,9 +174,9 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             baoyuePayAdapter.setOnPayItemClickListener(new AcquireBaoyuePayAdapter.OnPayItemClickListener() {
                 @Override
                 public void onPayItemClick(AcquirePayItem item) {
-                    if (Utils.isLogin(AcquireBaoyueActivity.this)){
+                    if (Utils.isLogin(AcquireBaoyueActivity.this)) {
                         pay(item);
-                    }else {
+                    } else {
                         GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
                             @Override
                             public void isOperation() {
@@ -179,6 +191,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
             activity_acquire_privilege_gridview.setAdapter(baoyuePrivilegeAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
+            resetLogin(this);
         }
     }
 
@@ -432,5 +445,19 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
                 }
             }
         });
+    }
+
+    /**
+     * 清空登录信息
+     */
+    public static void resetLogin(Context context) {
+        AppPrefs.putSharedString(context, ReaderConfig.TOKEN, "");
+        AppPrefs.putSharedString(context, ReaderConfig.UID, "");
+        AppPrefs.putSharedString(context, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
+        AppPrefs.putSharedString(context, PrefConst.USER_INFO_KAY, "");
+        ReaderConfig.REFREASH_USERCENTER = true;
+        EventBus.getDefault().post(new RefreshMine(null));
+        EventBus.getDefault().post(new LogoutBoYinEvent());
+        SensorsDataHelper.profileSet(context);
     }
 }

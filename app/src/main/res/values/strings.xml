@@ -15,6 +15,7 @@
     <string name="splashactivity_permissions_t">开启权限</string>
     <string name="splashactivity_permissions_c1">「 </string>
     <string name="splashactivity_permissions_c2"> 」需要开启储存卡使用权限才能正常使用</string>
+    <string name="login_permissions_c2"> 」需要开启短信使用权限才能正常使用</string>
     <string name="splashactivity_permissions_set">设置</string>
     <string name="splashactivity_permissions_cancle">取消</string>
     <string name="splashactivity_cannot_link">您所在区域暂时无法打开应用，我们加急处理中。请您稍后再试...</string>
@@ -419,4 +420,5 @@
     <string name="refer_page_nove_push">书架推荐栏目</string>
     <string name="no_last_chapter">没有上一章了</string>
     <string name="no_next_chapter">没有下一章了</string>
+    <string name="no_permission">没有该权限，请在设置允许该权限</string>
 </resources>
