@@ -49,6 +49,7 @@ import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
+import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
@@ -287,6 +288,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     case R.id.home_mine_layout:
                         if (possition != 4) {
                             setChangedView(4, true);
+                            EventBus.getDefault().post(new AcceptMineFragment());
                         }
                         break;
                 }

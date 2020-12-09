@@ -42,6 +42,16 @@ public class UserInfoItem implements Serializable{
     private int auto_sub;
 
     private int sign_status;
+    private String area_code;
+
+    public String getArea_code() {
+        return area_code;
+    }
+
+    public void setArea_code(String area_code) {
+        this.area_code = area_code;
+    }
+
 
     public int getSign_status() {
         return sign_status;

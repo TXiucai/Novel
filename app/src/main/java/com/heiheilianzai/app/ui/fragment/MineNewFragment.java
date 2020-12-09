@@ -21,6 +21,7 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.UserInfoItem;
+import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -176,6 +177,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public void initInfo(final String info, UserInfoItem userInfoItem) {
         if (!Utils.isLogin(activity)) {
             fragment_mine_user_info_nologin.setVisibility(View.GONE);
+            fragment_mine_user_info_nickname.setText(LanguageUtil.getString(activity, R.string.user_login));
+            AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
+            AppPrefs.putSharedString(activity, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
+            AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, "");
             return;
         } else {
             fragment_mine_user_info_nologin.setVisibility(View.VISIBLE);
@@ -406,6 +411,16 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         } else {
             initInfo(null, refreshMine.userInfoItem);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void acceptMine(AcceptMineFragment refreshMine) {
+        MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
+            @Override
+            public void getHttpData(String result) {
+                initInfo(result, null);
+            }
+        });
     }
 
     /**

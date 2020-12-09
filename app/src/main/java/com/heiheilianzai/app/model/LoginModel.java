@@ -120,6 +120,7 @@ public class LoginModel {
         UserInfoItem userInfo = App.getUserInfoItem(mActivity);
         if (userInfo != null) {
             params.putExtraParams("hhlz_uid", String.valueOf(userInfo.getUid()));
+            params.putExtraParams("area_code",userInfo.getArea_code());
         }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBoYinLoginUrl, json, false, new HttpUtils.ResponseListener() {

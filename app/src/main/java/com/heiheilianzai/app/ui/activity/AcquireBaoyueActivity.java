@@ -109,6 +109,12 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    @Override
     public void initData() {
         getIpTerritory();//获取用户IP
         setVIPConfirmEvent();
