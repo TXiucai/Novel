@@ -32,6 +32,6 @@
         android:id="@+id/ry_recommend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dimens_15dp"
-        android:paddingRight="@dimen/dimens_15dp" />
+        android:paddingLeft="@dimen/dimens_10dp"
+        android:paddingRight="@dimen/dimens_10dp" />
 </LinearLayout>

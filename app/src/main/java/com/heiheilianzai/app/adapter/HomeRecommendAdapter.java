@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.view.comic.DisplayUtil;
 
 import java.util.List;
 
@@ -44,6 +45,13 @@ public class HomeRecommendAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         RecommendViewHolder recommendViewHolder = (RecommendViewHolder) holder;
+        ViewGroup.LayoutParams layoutParams = recommendViewHolder.itemView.getLayoutParams();
+        if (getItemCount() <= 5) {
+            layoutParams.width = (DisplayUtil.getScreenWidth(mContext) - DisplayUtil.dip2px(mContext, 10) * 2) / getItemCount();
+        } else {
+            layoutParams.width = (DisplayUtil.getScreenWidth(mContext) - DisplayUtil.dip2px(mContext, 10) * 2) / 5;
+        }
+        recommendViewHolder.itemView.setLayoutParams(layoutParams);
         HomeRecommendBean.RecommeListBean recommeListBean = mRecommendLists.get(position);
         MyPicasso.GlideImageNoSize((Activity) mContext, recommeListBean.getImg_icon(), recommendViewHolder.mIvIcon);
         recommendViewHolder.mTxName.setText(recommeListBean.getTitle());
