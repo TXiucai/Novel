@@ -152,7 +152,6 @@ public class LoginActivity extends BaseActivity implements LoginView {
             activity_login_weixin.setVisibility(View.GONE);
         }
         requestReadPhoneState();
-        initRegisterContentObserver();
     }
 
     private void initRegisterContentObserver() {
@@ -346,24 +345,25 @@ public class LoginActivity extends BaseActivity implements LoginView {
 
     @Override
     protected void onPause() {
-        super.onPause();
         MobclickAgent.onPause(this); // 基础指标统计，不能遗漏
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         mPresenter.cancelCountDown();
-        super.onDestroy();
-        if (getContentResolver()!=null){
+        if (getContentResolver() != null && smsContentObserver != null) {
             getContentResolver().unregisterContentObserver(smsContentObserver);
+            smsContentObserver = null;
         }
+        super.onDestroy();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUESTCODE && resultCode ==2) {
+        if (requestCode == REQUESTCODE && resultCode == 2) {
             mCode = data.getExtras().getInt("code", 0);
             mTxCode.setText("+" + mCode);
         }
@@ -371,19 +371,19 @@ public class LoginActivity extends BaseActivity implements LoginView {
 
     private void requestReadPhoneState() {
         if (PermissionsUtil.hasPermission(activity, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS)) {
-
+            initRegisterContentObserver();
         } else {
             PermissionsUtil.requestPermission(this, new PermissionListener() {
                 @Override
                 public void permissionGranted(@NonNull String[] permission) {
-
+                    initRegisterContentObserver();
                 }
 
                 @Override
                 public void permissionDenied(@NonNull String[] permission) {
                     MyToash.Toash(LoginActivity.this, getString(R.string.no_permission));
                 }
-            }, new String[]{ Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, true, new PermissionsUtil.TipInfo(activity.getString(R.string.splashactivity_permissions_t), activity.getString(R.string.splashactivity_permissions_c1) + activity.getString(R.string.app_name) + activity.getString(R.string.login_permissions_c2), activity.getString(R.string.splashactivity_permissions_cancle), activity.getString(R.string.splashactivity_permissions_set)));
+            }, new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, true, new PermissionsUtil.TipInfo(activity.getString(R.string.splashactivity_permissions_t), activity.getString(R.string.splashactivity_permissions_c1) + activity.getString(R.string.app_name) + activity.getString(R.string.login_permissions_c2), activity.getString(R.string.splashactivity_permissions_cancle), activity.getString(R.string.splashactivity_permissions_set)));
         }
     }
 
