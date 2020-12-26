@@ -120,7 +120,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             @JavascriptInterface
             @Override
             public void showBookInfoGuide() {//h5第一次进入有声小说播放详情，显示新手引导悬浮层。
-                showFragmentYouShengGuide();
+                //showFragmentYouShengGuide();
             }
 
             @JavascriptInterface
