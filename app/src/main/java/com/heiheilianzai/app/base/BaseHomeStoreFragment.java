@@ -300,9 +300,14 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     if (jump_type == 5 && Utils.isLogin(activity)) {
                         jump_url += "&uid=" + Utils.getUID(activity);
                     }
-                    activity.startActivity(new Intent(activity, AboutActivity.class).
-                            putExtra("url", jump_url)
-                            .putExtra("style", "4"));
+                    if (redirect_type == 0) {
+                        activity.startActivity(new Intent(activity, AboutActivity.class).
+                                putExtra("url", jump_url));
+                    } else {
+                        activity.startActivity(new Intent(activity, AboutActivity.class).
+                                putExtra("url", jump_url)
+                                .putExtra("style", "4"));
+                    }
                 } else if (jump_type == 1) {
                     intent.putExtra("OPTION", MIANFEI);
                     intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
