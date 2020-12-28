@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.ChapterItem;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.util.List;
 
@@ -46,8 +47,11 @@ public class ChapterAdapter extends ReaderBaseAdapter<ChapterItem> {
             viewHolder.title.setTextColor(Color.BLACK);
         }
         viewHolder.title.setText(chapterItem.getChapter_title());
-        viewHolder.vip.setText(chapterItem.getChaptertab());
-        viewHolder.vip.setTextColor(Color.parseColor(chapterItem.getChaptercolor()));
+        if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && chapterItem.getIs_vip().equals("0")) {//免费
+            viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
+        } else {
+            viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+        }
         return convertView;
     }
 

@@ -22,6 +22,15 @@ public class ChapterContent {
     private String chapter_id;
     private int words;
     private String update_time;
+    private String is_new_content;
+
+    public String getIs_new_content() {
+        return is_new_content;
+    }
+
+    public void setIs_new_content(String is_new_content) {
+        this.is_new_content = is_new_content;
+    }
 
     public String getUpdate_time() {
         return update_time;

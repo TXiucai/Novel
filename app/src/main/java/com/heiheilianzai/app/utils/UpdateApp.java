@@ -9,8 +9,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.ui.activity.Main2Activity;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.view.ProgressBarView;
 
@@ -174,6 +178,8 @@ public class UpdateApp {
         public ProgressBarView materialSeekBar;
         @BindView(R.id.dialog_updateapp_version)
         public TextView dialog_updateapp_version;
+        @BindView(R.id.img_close)
+        public ImageView dialog_close;
 
         public UpdateHolder(View view) {
             ButterKnife.bind(this, view);
@@ -218,21 +224,37 @@ public class UpdateApp {
         }
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_update_app, null);
         popupWindow = new Dialog(activity, R.style.updateapp);
+        Window window = popupWindow.getWindow();
+        //设置弹出位置
+        window.setGravity(Gravity.CENTER);
         final UpdateHolder updateHolder = new UpdateHolder(view);
         updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update) + mAppUpdate.update_version.apk);
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
         if (mAppUpdate.getUpdate() == 1) {
-            updateHolder.dialog_updateapp_no.setOnClickListener(new View.OnClickListener() {
+            updateHolder.dialog_close.setVisibility(View.VISIBLE);
+            updateHolder.dialog_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     popupWindow.dismiss();
                 }
             });
         } else {
-            updateHolder.dialog_updateapp_view.setVisibility(View.GONE);
-            updateHolder.dialog_updateapp_no.setVisibility(View.GONE);
+            updateHolder.dialog_close.setVisibility(View.GONE);
         }
+        updateHolder.dialog_updateapp_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!StringUtils.isEmpty(mAppUpdate.getWebsite_android())) {
+                    if (popupWindow != null) {
+                        popupWindow.dismiss();
+                    }
+                    activity.startActivity(new Intent(activity, AboutActivity.class)
+                            .putExtra("url", mAppUpdate.getWebsite_android())
+                            .putExtra("style", "4"));
+                }
+            }
+        });
         updateHolder.dialog_updateapp_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

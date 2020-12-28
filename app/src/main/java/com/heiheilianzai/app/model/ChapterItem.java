@@ -25,10 +25,19 @@ public class ChapterItem extends LitePalSupport implements Serializable {
     String charset;
     String book_name;
     String chapter_uid;
+    String is_new_content;
     @Column(ignore = true)
     String chaptertab;
     @Column(ignore = true)
     String chaptercolor;
+
+    public String getIs_new_content() {
+        return is_new_content;
+    }
+
+    public void setIs_new_content(String is_new_content) {
+        this.is_new_content = is_new_content;
+    }
 
     public String getChaptertab() {
         return chaptertab;

@@ -177,7 +177,6 @@
                     android:layout_centerInParent="true"
                     android:background="@mipmap/icon_download_black"
                     android:scaleType="centerCrop" />
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -199,21 +198,35 @@
                     android:src="@mipmap/share_black" />
 
             </RelativeLayout>
-
-
         </RelativeLayout>
-
 
         <include
             android:id="@+id/activity_read_purchase_layout"
             layout="@layout/view_readactivity_buy"
             android:visibility="gone" />
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/activity_read_buttom_ad_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/public_read_buttom_ad_hegth2"
-            android:layout_alignParentBottom="true" />
+            android:paddingLeft="@dimen/dimens_8dp"
+            android:paddingRight="@dimen/dimens_8dp"
+            android:layout_marginBottom="@dimen/dimens_30dp"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:id="@+id/activity_read_buttom_ad_iv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_60dp"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/activity_read_buttom_ad_close"
+                android:src="@mipmap/float_close_button"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"/>
+        </RelativeLayout>>
 
         <RelativeLayout
             android:id="@+id/activity_read_bottom_view"

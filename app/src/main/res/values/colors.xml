@@ -124,5 +124,6 @@
     <color name="boyin_catalog">#323334</color>
     <color name="login_black">#39383C</color>
     <color name="login_gray">#C4C4C6</color>
+    <color name="color_f7f7f7">#F7F7F7</color>
     <!--色值定义END-->
 </resources>

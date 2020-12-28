@@ -59,6 +59,12 @@ public class PageWidget extends View {
     FrameLayout ADview;
     public int Current_Page;
     boolean onTouchEventing;
+    private BackPage backPage;
+    private int page=0;
+
+    public void setBackPage(BackPage backPage) {
+        this.backPage = backPage;
+    }
 
     public void setADview(FrameLayout ADview) {
         this.ADview = ADview;
@@ -83,9 +89,9 @@ public class PageWidget extends View {
     private void initPage() {
         mScreenWidth = ScreenSizeUtils.getInstance(mContext).getScreenWidth();
         mScreenHeight = ScreenSizeUtils.getInstance(mContext).getScreenHeight();  //RGB_565
-        if (USE_BUTTOM_AD) {
-            mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60);
-        }
+        /*if (USE_BUTTOM_AD) {
+            mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60); //暂时浮在小说页面上
+        }*/
         MyToash.Log("mScreenHeight", mScreenHeight + "");
         try {
             mCurPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);      //android:LargeHeap=true  use in  manifest application
@@ -201,6 +207,7 @@ public class PageWidget extends View {
                     if (isNext) {
                         Boolean isNext = mTouchListener.nextPage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+                        backPage.backPage(page++);
                         if (!isNext) {
                             onTouchEventing = false;
                             noNext = true;
@@ -398,5 +405,9 @@ public class PageWidget extends View {
         Boolean nextPage();
 
         void cancel();
+    }
+
+    public interface BackPage{
+        void backPage(int page);
     }
 }

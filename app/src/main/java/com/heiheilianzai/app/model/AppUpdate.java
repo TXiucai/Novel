@@ -21,6 +21,15 @@ public class AppUpdate {
     public int pay_switch;
     public String boyin_h5;
     public Version update_version;
+    public String website_android;
+
+    public String getWebsite_android() {
+        return website_android;
+    }
+
+    public void setWebsite_android(String website_android) {
+        this.website_android = website_android;
+    }
 
     public int getDaily_max_start_page() {
         return daily_max_start_page;

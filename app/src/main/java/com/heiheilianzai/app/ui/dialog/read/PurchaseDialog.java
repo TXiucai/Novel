@@ -319,7 +319,7 @@ public class PurchaseDialog extends Dialog {
                             ChapterManager.getInstance(mContext).getCurrentChapter().setIs_preview(chapterContent.getIs_preview());
                             ChapterManager.getInstance(mContext).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
                             ContentValues values = new ContentValues();
-                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
+                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getIs_new_content()+"/").concat(chapterContent.getUpdate_time()).concat(".txt");
                             FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                             values.put("chapteritem_begin", 0);
                             values.put("chapter_path", filepath);

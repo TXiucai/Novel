@@ -132,6 +132,8 @@ public class PageFactory {
     private boolean m_isfirstPage;
     //当前是否为最后一页
     private boolean m_islastPage;
+    //向后翻页
+    private int page = 0;
     //书本widget
     private PageWidget mBookPageWidget;
     //书本名字
@@ -181,6 +183,7 @@ public class PageFactory {
     public boolean IS_CHAPTERLast = true;
     public boolean IS_CHAPTERFirst = true;
     public boolean mNextPage = true;//变化是否向后翻页
+    private String is_new_content;
 
     public enum Status {
         OPENING,
@@ -202,9 +205,9 @@ public class PageFactory {
         MHeight = ScreenSizeUtils.getInstance(mActivity).getScreenHeight();
         mHeight = MHeight;
         button_ad_heigth = ImageUtil.dp2px(mActivity, READBUTTOM_HEIGHT);
-        if (USE_BUTTOM_AD) {
-            mHeight -= button_ad_heigth;
-        }
+        /*if (USE_BUTTOM_AD) {
+            mHeight -= button_ad_heigth; //暂时浮在页面上
+        }*/
         mWidth = ScreenSizeUtils.getInstance(mActivity).getScreenWidth();
         sdf = new SimpleDateFormat("HH:mm");//HH:mm为24小时制,hh:mm为12小时制
         date = sdf.format(new java.util.Date());
@@ -647,7 +650,7 @@ public class PageFactory {
         if (bookpage_scroll_text_Map.containsKey(chapter_id + "" + mIsPreview)) {
             str = bookpage_scroll_text_Map.get(chapter_id + "" + mIsPreview);
         } else {
-            String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(mIsPreview).concat(".txt");
+            String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(mIsPreview).concat(is_new_content).concat(".txt");
             str = chapterTitle + "\n\n" + FileManager.txt2String(new File(path));
             bookpage_scroll_text_Map.put(chapter_id + "" + mIsPreview, str);
         }
@@ -691,7 +694,7 @@ public class PageFactory {
                     @Override
                     public void success(final ChapterItem querychapterItem) {
                         if (querychapterItem.getChapter_path() == null) {
-                            String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(preChapterId + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                            String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(preChapterId + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                             if (FileManager.isExist(path)) {
                                 ContentValues values = new ContentValues();
                                 values.put("chapter_path", path);
@@ -772,7 +775,7 @@ public class PageFactory {
                         @Override
                         public void success(final ChapterItem querychapterItem) {
                             if (querychapterItem.getChapter_path() == null) {
-                                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(nextChapterId + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(nextChapterId + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                                 if (FileManager.isExist(path)) {
                                     ContentValues values = new ContentValues();
                                     values.put("chapter_path", path);
@@ -844,6 +847,7 @@ public class PageFactory {
         book_id = chapterItem.getBook_id();
         chapter_id = chapterItem.getChapter_id();
         mIsPreview = chapterItem.getIs_preview();
+        is_new_content = chapterItem.getIs_new_content();
         baseBook.setCurrent_chapter_displayOrder(chapterItem.getDisplay_order());
         baseBook.setCurrent_chapter_id(chapter_id);
         ContentValues values = new ContentValues();
@@ -938,7 +942,7 @@ public class PageFactory {
                             chapterItem.setIs_preview(chapterContent.getIs_preview());
                             chapterItem.setUpdate_time(chapterContent.getUpdate_time());
                             ContentValues values = new ContentValues();
-                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterItem.getIs_preview() + "/").concat(chapterItem.getUpdate_time()).concat(".txt");
+                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterItem.getIs_preview() + "/").concat(chapterItem.getIs_new_content() + "/").concat(chapterItem.getUpdate_time()).concat(".txt");
                             FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                             values.put("chapteritem_begin", 0);
                             values.put("chapter_path", filepath);

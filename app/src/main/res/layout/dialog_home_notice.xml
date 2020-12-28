@@ -51,7 +51,7 @@
 
         <View
             android:id="@+id/home_notice_close"
-            android:layout_width="@dimen/dimens_30dp"
+            android:layout_width="20dp"
             android:layout_height="@dimen/dimens_30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimens_20dp"

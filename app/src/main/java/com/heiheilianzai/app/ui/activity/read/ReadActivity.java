@@ -142,7 +142,11 @@ public class ReadActivity extends BaseReadActivity {
     @BindView(R.id.list_ad_view_layout)
     public FrameLayout insert_todayone2;
     @BindView(R.id.activity_read_buttom_ad_layout)
-    public FrameLayout activity_read_buttom_ad_layout;
+    public RelativeLayout activity_read_buttom_ad_layout;
+    @BindView(R.id.activity_read_buttom_ad_iv)
+    ImageView mIvAd;
+    @BindView(R.id.activity_read_buttom_ad_close)
+    ImageView mIvClose;
     @BindView(R.id.tv_noad)
     TextView tv_noad;
     @BindView(R.id.activity_read_shangyizhang)
@@ -172,6 +176,7 @@ public class ReadActivity extends BaseReadActivity {
     InfoBookItem mInfoBookItem;
     String mReferPage;//从哪个页面打开小说阅读(神策埋点数据)
     long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
+    private Boolean isClose = false;
 
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -242,13 +247,15 @@ public class ReadActivity extends BaseReadActivity {
         }
         setOpenCurrentTime();
         uiFreeCharge();
+        setButtonADVisible();
     }
 
     @Override
     public void initData() {
         if (USE_BUTTOM_AD) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
-            layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
+            //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
+            layoutParams.height = mScreenHeight;
             bookpage.setLayoutParams(layoutParams);
             tv_noad.setVisibility(View.VISIBLE);
             getWebViewAD(activity);
@@ -349,7 +356,7 @@ public class ReadActivity extends BaseReadActivity {
             public void success(final ChapterItem querychapterItem) {
                 final String nextChapterId = querychapterItem.getChapter_id();
                 if (querychapterItem.getChapter_path() == null) {
-                    String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(mBookId + "/").concat(nextChapterId + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                    String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(mBookId + "/").concat(nextChapterId + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()).concat(querychapterItem.getUpdate_time()).concat(".txt");
                     if (FileManager.isExist(path)) {
                         ContentValues values = new ContentValues();
                         values.put("chapter_path", path);
@@ -873,22 +880,23 @@ public class ReadActivity extends BaseReadActivity {
                                     insert_todayone2.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent intent = new Intent();
-                                            intent.setClass(activity, WebViewActivity.class);
-                                            intent.putExtra("url", baseAd.ad_skip_url);
-                                            intent.putExtra("title", baseAd.ad_title);
-                                            intent.putExtra("advert_id", baseAd.advert_id);
-                                            intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                                            activity.startActivity(intent);
+                                            JumpBookAd(activity);
                                         }
                                     });
-                                    if (list_ad_view_img == null) {
-                                        list_ad_view_img = new ImageView(activity);
-                                        list_ad_view_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ImageUtil.dp2px(activity, READBUTTOM_HEIGHT));
-                                        activity_read_buttom_ad_layout.addView(list_ad_view_img, params);
-                                    }
-                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                                    mIvAd.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            JumpBookAd(activity);
+                                        }
+                                    });
+                                    mIvClose.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                                            isClose = true;
+                                        }
+                                    });
+                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mIvAd);
                                 } else {
                                     ReadActivity.USE_BUTTOM_AD = false;
                                 }
@@ -907,13 +915,7 @@ public class ReadActivity extends BaseReadActivity {
                 insert_todayone2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(activity, WebViewActivity.class);
-                        intent.putExtra("url", baseAd.ad_skip_url);
-                        intent.putExtra("title", baseAd.ad_title);
-                        intent.putExtra("advert_id", baseAd.advert_id);
-                        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                        activity.startActivity(intent);
+                        JumpBookAd(activity);
                     }
                 });
                 if (list_ad_view_img == null) {
@@ -925,6 +927,16 @@ public class ReadActivity extends BaseReadActivity {
                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
             }
         }
+    }
+
+    private void JumpBookAd(Activity activity) {
+        Intent intent = new Intent();
+        intent.setClass(activity, WebViewActivity.class);
+        intent.putExtra("url", baseAd.ad_skip_url);
+        intent.putExtra("title", baseAd.ad_title);
+        intent.putExtra("advert_id", baseAd.advert_id);
+        intent.putExtra("ad_url_type", baseAd.ad_url_type);
+        activity.startActivity(intent);
     }
 
     /**
@@ -1041,5 +1053,23 @@ public class ReadActivity extends BaseReadActivity {
      */
     private void setOpenCurrentTime() {
         mOpenCurrentTime = DateUtils.currentTime();
+    }
+
+    /**
+     * 控制广告翻多少页后显示
+     */
+    private void setButtonADVisible() {
+        bookpage.setBackPage(new PageWidget.BackPage() {
+            @Override
+            public void backPage(int page) {
+                if (!isClose) {
+                    if (page % 2 == 0) {
+                        activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
+                    } else {
+                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 }

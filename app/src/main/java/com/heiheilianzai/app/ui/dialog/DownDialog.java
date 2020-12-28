@@ -352,7 +352,7 @@ public class DownDialog {
                         int temp = 0;
                         for (JsonElement jsonElement : jsonElements) {
                             ChapterContent chapterContent = gson.fromJson(jsonElement, ChapterContent.class);//解析
-                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(downoption.book_id + "/").concat(chapterContent.getChapter_id() + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
+                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(downoption.book_id + "/").concat(chapterContent.getChapter_id() + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getIs_new_content() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
                             FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                             size += chapterContent.getWords() * 3;
                             ++temp;
