@@ -46,6 +46,18 @@ public class ShareUitls {
         e.commit();
     }
 
+    public static void putDominString(Context c, String key, String msg) {
+        SharedPreferences sp = c.getSharedPreferences("domain.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putString(key, msg);
+        e.commit();
+    }
+
+    public static String getDonminString(Context c, String key, String d) {
+        SharedPreferences sp = c.getSharedPreferences("domain.xml", Context.MODE_PRIVATE);
+        return sp.getString(key, d);
+    }
+
     public static void clearComicDownStatus(Context c) {
         SharedPreferences sp = c.getSharedPreferences("ComicDownStatus.xml", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();

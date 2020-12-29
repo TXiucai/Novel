@@ -174,7 +174,7 @@ public class App extends LitePalApplication {
     }
 
     public static String getBaseUrl() {
-        return preparedDomain.getString("base_url", BuildConfig.api_host);
+        return preparedDomain.getString("base_url", BuildConfig.api_host[0]);
     }
 
     public static void setBaseUrl(String url) {

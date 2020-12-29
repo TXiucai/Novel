@@ -29,8 +29,8 @@ android {
         buildConfigField "String", "app_qq_id", gradle.ext.APP_QQ_ID
         buildConfigField "String", "app_qq_secret", gradle.ext.APP_QQ_SECRET
         buildConfigField "String", "domain_host", gradle.ext.DOMAIN_HOSTS
-        buildConfigField "String", "api_host", gradle.ext.API_HOSTS
-        buildConfigField "String", "api_host_uat", gradle.ext.API_HOSTS_UAT
+        buildConfigField "String[]", "api_host", gradle.ext.API_HOSTS
+        buildConfigField "String[]", "api_host_uat", gradle.ext.API_HOSTS_UAT
         buildConfigField "String", "api_key", gradle.ext.API_KEY
         buildConfigField "String", "api_key_uat", gradle.ext.API_KEY_UAT
         buildConfigField "String", "api_secret_key", gradle.ext.API_SECRET_KEY
@@ -188,8 +188,8 @@ def getAppConfig() {
         buildConfigField "String", "app_qq_id", gradle.ext.APP_QQ_ID
         buildConfigField "String", "app_qq_secret", gradle.ext.APP_QQ_SECRET
         buildConfigField "String", "domain_host", gradle.ext.DOMAIN_HOSTS
-        buildConfigField "String", "api_host", gradle.ext.API_HOSTS
-        buildConfigField "String", "api_host_uat", gradle.ext.API_HOSTS_UAT
+        buildConfigField "String[]", "api_host", gradle.ext.API_HOSTS
+        buildConfigField "String[]", "api_host_uat", gradle.ext.API_HOSTS_UAT
         buildConfigField "String", "api_key", gradle.ext.API_KEY
         buildConfigField "String", "api_key_uat", gradle.ext.API_KEY_UAT
         buildConfigField "String", "api_secret_key", gradle.ext.API_SECRET_KEY
@@ -246,9 +246,12 @@ dependencies {
     // --- 极光
     implementation "cn.jiguang.sdk:jpush:${rootProject.jiguang_jpush}"  // 此处以JPush 3.3.2 版本为例。
     implementation "cn.jiguang.sdk:jcore:${rootProject.jiguang_jcore}"  // 此处以JCore 2.1.0 版本为例。
-    implementation "cn.jiguang.sdk:jmessage:${rootProject.jiguang_jmessage}" // 此处以JMessage 2.9.0 版本为例。
-    implementation "cn.jiguang.sdk.plugin:xiaomi:${rootProject.jiguang_plugin}"// 此版本插件仅支持JPushSDK3.3.2及以上
-    implementation "cn.jiguang.sdk.plugin:meizu:${rootProject.jiguang_plugin}"// 此版本插件仅支持JPushSDK3.3.2及以上版本
+    implementation "cn.jiguang.sdk:jmessage:${rootProject.jiguang_jmessage}"
+    // 此处以JMessage 2.9.0 版本为例。
+    implementation "cn.jiguang.sdk.plugin:xiaomi:${rootProject.jiguang_plugin}"
+// 此版本插件仅支持JPushSDK3.3.2及以上
+    implementation "cn.jiguang.sdk.plugin:meizu:${rootProject.jiguang_plugin}"
+// 此版本插件仅支持JPushSDK3.3.2及以上版本
     implementation "cn.jiguang.sdk.plugin:oppo:${rootProject.jiguang_plugin}"
     implementation "com.google.firebase:firebase-messaging:${rootProject.firebase_messaging}"
 

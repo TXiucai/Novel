@@ -12,12 +12,12 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseAdvertisementActivity;
-import com.heiheilianzai.app.component.http.DynamicDomainManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.constant.AppConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.ApiDomainBean;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.H5UrlBean;
 import com.heiheilianzai.app.model.Startpage;
@@ -30,6 +30,8 @@ import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.OnCompletUrl;
 import com.heiheilianzai.app.utils.OnError;
+import com.heiheilianzai.app.utils.OnThirdComlete;
+import com.heiheilianzai.app.utils.OnThirdError;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -41,15 +43,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.List;
 
 import androidx.annotation.NonNull;
+
 
 import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 
 /**
  * 开屏页
- * 域名加载 查看 {@link DynamicDomainManager}
+ *
  */
 public class SplashActivity extends BaseAdvertisementActivity {
     public static final String OPEN_TIME_KAY = "open_time";//传参首页打开app时间戳KAY
@@ -76,24 +78,54 @@ public class SplashActivity extends BaseAdvertisementActivity {
         if (isfirst.equals("yes")) {//首次使用删除文件
             FileManager.deleteFile(FileManager.getSDCardRoot());
         }
-        DynamicDomainManager dynamicDomainManager = new DynamicDomainManager(this, new DynamicDomainManager.OnCompleteListener() {
+        ConcurrentUrlhelpterKt.requestThree(new OnThirdComlete() {
             @Override
-            public void onComplete(List<String> apiUrl) {
-                ConcurrentUrlhelpterKt.getFastUrl(apiUrl, new OnCompletUrl() {
-                    @Override
-                    public void onComplteApi(@NotNull String api) {
-                        requestReadPhoneState();
-                        getH5Domins();
-                    }
-                }, new OnError() {
-                    @Override
-                    public void onError() {
-                        handler.sendEmptyMessageDelayed(0, 500);
-                    }
-                });
+            public void onThirdComplete() {
+                checkHost();
+            }
+        }, new OnThirdError() {
+            @Override
+            public void onThirdCError() {
+                checkHost();
             }
         });
-        dynamicDomainManager.start();
+    }
+
+    private void checkHost() {
+        ConcurrentUrlhelpterKt.getFastUrl(new OnCompletUrl() {
+            @Override
+            public void onComplteApi(@NotNull String api) {
+                requestReadPhoneState();
+                getH5Domins();
+                getDomainHost();
+            }
+        }, new OnError() {
+            @Override
+            public void onError() {
+                handler.sendEmptyMessageDelayed(0, 500);
+            }
+        });
+    }
+
+    /**
+     * 获取服务端url
+     */
+    private void getDomainHost() {
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        String url =ReaderConfig.getBaseUrl() + AppConfig.SERVER_DYNAMIC_DOMAIN;
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) throws JSONException {
+                ApiDomainBean apiDomainBean = new Gson().fromJson(response, ApiDomainBean.class);
+                ShareUitls.putDominString(activity,"Donmain",new Gson().toJson(apiDomainBean.getApi_domins()));
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+
+            }
+        });
     }
 
     public void getH5Domins() {

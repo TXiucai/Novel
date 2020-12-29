@@ -26,7 +26,7 @@ public class ReaderConfig {
     //本应用的appsecret
     public static final String mAppSecretKey = RabbitConfig.mAppSecretKey;
     //本应用的IP域名
-    public static String BASE_URL = RabbitConfig.BASE_URL;
+    public static String BASE_URL = App.getBaseUrl();
     //appid 微信分配的APPID
     public static final String WEIXIN_PAY_APPID = BuildConfig.app_wx_id;
     //appid 微信分配的SECRET

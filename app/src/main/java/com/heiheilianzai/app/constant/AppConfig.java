@@ -9,7 +9,7 @@ import com.heiheilianzai.app.base.App;
 public class AppConfig {
 
     // 动态域名服务器
-    public static final   String SERVER_DYNAMIC_DOMAIN = "/v1/domain/dynamic/data";
+    public static final   String SERVER_DYNAMIC_DOMAIN = "/service/hhlz-domain";
 
     public static final   String SERVER_H5_DOMAIN = "/service/h5-domin";
 

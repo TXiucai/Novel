@@ -13,15 +13,15 @@ public class RabbitConfig {
     private static final String mAppkey_online = BuildConfig.api_key;
     private static final String mAppkey_uat = BuildConfig.api_key_uat;
 
+    public static final String DOMAIN_DEBUGG = "https://raw.githubusercontent.com/2116245820/hhlz-uat/main/hhlzuatapi.json";
+    public static final String DOMAIN_RELEASE = "https://raw.githubusercontent.com/2116245820/hhlzapi/main/hhlzapi.json";
+
     private static final String mAppSecretKey_online = BuildConfig.api_secret_key;
     private static final String mAppSecretKey_uat = BuildConfig.api_secret_key_uat;
 
-    private static final String BASE_URL_online = BuildConfig.api_host;
-    private static final String BASE_URL_uat = BuildConfig.api_host_uat;
     // 本应用的appkey
     public static final String mAppkey = ONLINE ? mAppkey_online : mAppkey_uat;
     // 本应用的appsecret
     public static final String mAppSecretKey = ONLINE ? mAppSecretKey_online : mAppSecretKey_uat;
-    // 本应用的IP域名
-    public static final String BASE_URL = ONLINE ? BASE_URL_online : BASE_URL_uat;
+
 }

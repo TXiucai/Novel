@@ -57,11 +57,6 @@ public class PreparedDomain {
         sharedPreferences.edit().putString("defdomain", domain).commit();
     }
 
-    public String getDefaultDomain() {
-        String def = sharedPreferences.getString("defdomain", RabbitConfig.BASE_URL);
-        return def;
-    }
-
     public List<String> getDomain() {
 
         List domains = getStringList("domains");
