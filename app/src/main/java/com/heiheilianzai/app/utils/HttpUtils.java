@@ -1,6 +1,8 @@
 package com.heiheilianzai.app.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 
 import com.heiheilianzai.app.R;
@@ -70,6 +72,20 @@ public class HttpUtils {
         waitDialog.setCancleable(true);
     }
 
+    public void hideProgress() {
+        if(waitDialog != null) {
+            if(waitDialog.isShowing()) { //check if dialog is showing.
+                Context context = ((ContextWrapper)waitDialog.getContext()).getBaseContext();
+                if(context instanceof Activity) {
+                    if(!((Activity)context).isFinishing() && !((Activity)context).isDestroyed())
+                        waitDialog.dismiss();
+                } else //if the Context used wasnt an Activity, then dismiss it too
+                    waitDialog.dismiss();
+            }
+            waitDialog = null;
+        }
+    }
+
     public void sendRequestRequestParams3(final String url, final String body, final boolean dialog, final ResponseListener responseListener) {
         if (context == null) {
             responseListener.onErrorResponse(null);
@@ -94,6 +110,7 @@ public class HttpUtils {
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
                             UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + " " + body, deletDomain(url));
+                            hideProgress();
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -152,9 +169,7 @@ public class HttpUtils {
                             } catch (Error e) {
                                 UMCrash.generateCustomLog(e.toString(), deletDomain(url));
                             }
-                            if (waitDialog != null) {
-                                waitDialog.dismissDialog();
-                            }
+                           hideProgress();
                         }
                     });
 
@@ -185,6 +200,7 @@ public class HttpUtils {
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
                             UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + " " + body, deletDomain(url));
+                            hideProgress();
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -235,9 +251,7 @@ public class HttpUtils {
                             } catch (Exception j) {
                             }
                             if (code != 0) {
-                                if (waitDialog != null) {
-                                    waitDialog.dismissDialog();
-                                }
+                                hideProgress();
                             }
                         }
                     });
@@ -260,12 +274,13 @@ public class HttpUtils {
 
     /**
      * 删除请求url域名
+     *
      * @param url
      * @return
      */
-    private String deletDomain(String url){
-        if(!StringUtils.isNullOrEmpty(url)){
-           return url.replace(ReaderConfig.getBaseUrl(), "");
+    private String deletDomain(String url) {
+        if (!StringUtils.isNullOrEmpty(url)) {
+            return url.replace(ReaderConfig.getBaseUrl(), "");
         }
         return url;
     }
