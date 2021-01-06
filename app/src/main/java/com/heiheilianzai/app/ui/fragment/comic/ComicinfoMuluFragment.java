@@ -87,6 +87,8 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
     private int mPageNum = 1;//页数
     private int orderby = 1;//1 正序 2 倒序
     boolean isLoadOverHintShow = false;//是否显示了数据加载完成
+    public ComicChapterCatalogAdapter comicChapterCatalogAdapter;
+    List<ComicChapter> comicChapterCatalogs;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshMine refreshMine) {
@@ -145,9 +147,6 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
             }
         }
     }
-
-    public ComicChapterCatalogAdapter comicChapterCatalogAdapter;
-    List<ComicChapter> comicChapterCatalogs;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

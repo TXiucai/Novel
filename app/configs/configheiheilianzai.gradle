@@ -55,11 +55,12 @@ gradle.ext {
             "\"https://api.askoc8.com\"," +
             "}"
     API_HOSTS_UAT = "{" +
-            "\"https://uatapi.08bea5.com\"," +
-            "\"https://uatapi2.08bea5.com\"," +
-            "\"https://uatapi3.08bea5.com\"," +
-            "\"https://uatapi4.08bea5.com\"," +
-            "\"https://uatapi5.08bea5.com\"," +
+//            "\"https://uatapi.08bea5.com\"," +
+//            "\"https://uatapi2.08bea5.com\"," +
+//            "\"https://uatapi3.08bea5.com\"," +
+//            "\"https://uatapi4.08bea5.com\"," +
+//            "\"https://uatapi5.08bea5.com\"," +
+            "\"http://api.08bea5.com\"," +
             "}"
     DOMAIN_HOSTS_RESERVE = "\"https://domain.260b18.com\""
     // API key

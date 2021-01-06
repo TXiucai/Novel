@@ -11,7 +11,52 @@ public class BaseComicImage{
     public int width;//"": "800", //宽带
     public int height;//"": "1123", //高度
     public String image;//图片地址
+    public int ad;//0正常1 广告
     public List<Tucao> tucao;
+    private String ad_skip_url;
+    private int ad_url_type;
+    private int ad_type;
+    private int advert_id;
+
+    public int getAdvert_id() {
+        return advert_id;
+    }
+
+    public void setAdvert_id(int advert_id) {
+        this.advert_id = advert_id;
+    }
+
+    public int getAd() {
+        return ad;
+    }
+
+    public void setAd(int ad) {
+        this.ad = ad;
+    }
+
+    public String getAd_skip_url() {
+        return ad_skip_url;
+    }
+
+    public void setAd_skip_url(String ad_skip_url) {
+        this.ad_skip_url = ad_skip_url;
+    }
+
+    public int getAd_url_type() {
+        return ad_url_type;
+    }
+
+    public void setAd_url_type(int ad_url_type) {
+        this.ad_url_type = ad_url_type;
+    }
+
+    public int getAd_type() {
+        return ad_type;
+    }
+
+    public void setAd_type(int ad_type) {
+        this.ad_type = ad_type;
+    }
 
     public String getComic_id() {
         return comic_id;

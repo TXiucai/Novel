@@ -47,6 +47,7 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.comic.ComicChapterItem;
+import com.heiheilianzai.app.model.comic.ComicChapterTopAd;
 import com.heiheilianzai.app.model.comic.ComicInfo;
 import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
@@ -163,6 +164,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public FrameLayout activity_comiclook_tucao_layout;
     @BindView(R.id.activity_comiclook_share)
     public RelativeLayout activity_comiclook_share;
+
     Map<String, ComicChapterItem> map = new HashMap();//临时存储章节数据
     PurchaseDialog purchaseDialog;
     MyViewHolder holderFoot;
@@ -211,6 +213,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                             @Override
                             public void onResponse(final String result) {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
+                                ComicChapterTopAd comicAdvert = comicChapterItem.getAdvert();
                                 HandleData(comicChapterItem, Chapter_id, comic_id, activity);
                                 map.put(Chapter_id, comicChapterItem);
                                 CurrentComicChapter.setImagesText(result);
@@ -617,6 +620,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         public void onResponse(final String result) {
                             if (HandleData) {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
+                                ComicChapterTopAd comicAdvert = comicChapterItem.getAdvert();
                                 HandleData(comicChapterItem, chapter_id, comic_id, activity);
                                 map.put(chapter_id, comicChapterItem);
                                 CurrentComicChapter.setImagesText(result);
@@ -707,6 +711,19 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     ++baseComicImagesSize;
                 }
                 baseComicImages.addAll(comicChapterItem.image_list);
+                ComicChapterTopAd advert = comicChapterItem.getAdvert();
+                if (advert!=null){
+                    BaseComicImage baseComicImage=new BaseComicImage();
+                    baseComicImage.setAd(1);
+                    baseComicImage.setAd_skip_url(advert.getAd_skip_url());
+                    baseComicImage.setImage(advert.getAd_image());
+                    baseComicImage.setAd_type(advert.getAd_type());
+                    baseComicImage.setAd_url_type(advert.getAd_url_type());
+                    baseComicImage.setHeight(advert.getAd_height());
+                    baseComicImage.setWidth(advert.getAd_width());
+                    baseComicImage.setAdvert_id(advert.getAdvert_id());
+                    baseComicImages.add(0,baseComicImage);
+                }
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
                     activity_comiclook_RecyclerView.setAdapter(comicChapterCatalogAdapter);

@@ -28,6 +28,60 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     public String last_chapter;//
     public String next_chapter;//
     public String display_label;
+    private int advert_id;
+    private int ad_type;
+    private String ad_title;
+    private String ad_image;
+    private String ad_skip_url;
+    private int ad_url_type;
+
+    public int getAdvert_id() {
+        return advert_id;
+    }
+
+    public void setAdvert_id(int advert_id) {
+        this.advert_id = advert_id;
+    }
+
+    public int getAd_type() {
+        return ad_type;
+    }
+
+    public void setAd_type(int ad_type) {
+        this.ad_type = ad_type;
+    }
+
+    public String getAd_title() {
+        return ad_title;
+    }
+
+    public void setAd_title(String ad_title) {
+        this.ad_title = ad_title;
+    }
+
+    public String getAd_image() {
+        return ad_image;
+    }
+
+    public void setAd_image(String ad_image) {
+        this.ad_image = ad_image;
+    }
+
+    public String getAd_skip_url() {
+        return ad_skip_url;
+    }
+
+    public void setAd_skip_url(String ad_skip_url) {
+        this.ad_skip_url = ad_skip_url;
+    }
+
+    public int getAd_url_type() {
+        return ad_url_type;
+    }
+
+    public void setAd_url_type(int ad_url_type) {
+        this.ad_url_type = ad_url_type;
+    }
 
     public String getDisplay_labe() {
         return display_label;

@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.comic.BaseComic;
+import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * 漫画详情目录列表Adapter
  */
-public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapterCatalogAdapter.ViewHolder> {
+public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Activity activity;
     public List<ComicChapter> comicChapterCatalogList;
     public int size;
@@ -42,6 +45,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
     BaseComic baseComic;
     boolean shunxu;
     boolean flag;
+    private int ad = 1;
 
     public ComicChapterCatalogAdapter(boolean flag, BaseComic baseComic, Activity activity, String currentChapterId, List<ComicChapter> comicChapterCatalogList, int H96) {
         this.activity = activity;
@@ -65,54 +69,80 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.item_comicchaptercatalog, null);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if (i == ad) {
+            View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_cotegory_ad, null, false);
+            return new MyAdViewHolder(rootView);
+        } else {
+            View view = LayoutInflater.from(activity).inflate(R.layout.item_comicchaptercatalog, null);
+            return new ViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ComicChapterCatalogAdapter.ViewHolder viewHolder, @SuppressLint("RecyclerView") int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, @SuppressLint("RecyclerView") int i) {
         final ComicChapter comicChapterCatalog = comicChapterCatalogList.get(i);
-        viewHolder.item_comicchaptercatalog_current_bg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (comicChapterCatalog != null) {
-                    if (flag) {
-                        baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
-                        baseComic.saveIsexist(false);
-                        activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
-                    } else {
-                        Intent intent = new Intent();
-                        intent.putExtra("currentChapter_id", comicChapterCatalog.chapter_id);
-                        activity.setResult(222, intent);
-                        activity.finish();
+        if (viewHolder instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder) viewHolder;
+            holder.item_comicchaptercatalog_current_bg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (comicChapterCatalog != null) {
+                        if (flag) {
+                            baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
+                            baseComic.saveIsexist(false);
+                            activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
+                        } else {
+                            Intent intent = new Intent();
+                            intent.putExtra("currentChapter_id", comicChapterCatalog.chapter_id);
+                            activity.setResult(222, intent);
+                            activity.finish();
+                        }
                     }
                 }
+            });
+            ViewGroup.LayoutParams layoutInflater = holder.item_comicchaptercatalog_img.getLayoutParams();
+            layoutInflater.width = width;
+            layoutInflater.height = height;
+            holder.item_comicchaptercatalog_img.setLayoutParams(layoutInflater);
+            MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+            holder.item_comicchaptercatalog_time.setText(comicChapterCatalog.subtitle);
+            holder.item_comicchaptercatalog_name.setText(comicChapterCatalog.chapter_title);
+            if (comicChapterCatalog.is_preview == 0) {
+                holder.item_comicchaptercatalog_needbuy.setVisibility(View.GONE);
+            } else {
+                holder.item_comicchaptercatalog_needbuy.setVisibility(View.VISIBLE);
             }
-        });
-        ViewGroup.LayoutParams layoutInflater = viewHolder.item_comicchaptercatalog_img.getLayoutParams();
-        layoutInflater.width = width;
-        layoutInflater.height = height;
-        viewHolder.item_comicchaptercatalog_img.setLayoutParams(layoutInflater);
-        MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, viewHolder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
-        viewHolder.item_comicchaptercatalog_time.setText(comicChapterCatalog.subtitle);
-        viewHolder.item_comicchaptercatalog_name.setText(comicChapterCatalog.chapter_title);
-        if (comicChapterCatalog.is_preview == 0) {
-            viewHolder.item_comicchaptercatalog_needbuy.setVisibility(View.GONE);
-        } else {
-            viewHolder.item_comicchaptercatalog_needbuy.setVisibility(View.VISIBLE);
-        }
-        if (comicChapterCatalog.isRead()) {
-            viewHolder.item_comicchaptercatalog_current_bg.setBackgroundColor(activity.getResources().getColor(R.color.lightgray2));
-        } else {
-            viewHolder.item_comicchaptercatalog_current_bg.setBackgroundColor(Color.WHITE);
+            if (comicChapterCatalog.isRead()) {
+                holder.item_comicchaptercatalog_current_bg.setBackgroundColor(activity.getResources().getColor(R.color.lightgray2));
+            } else {
+                holder.item_comicchaptercatalog_current_bg.setBackgroundColor(Color.WHITE);
 
-        }
-        if (comicChapterCatalog.chapter_id.equals(currentChapterId)) {
-            CurrentPosition = i;
-            viewHolder.item_comicchaptercatalog_current.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.item_comicchaptercatalog_current.setVisibility(View.GONE);
+            }
+            if (comicChapterCatalog.chapter_id.equals(currentChapterId)) {
+                CurrentPosition = i;
+                holder.item_comicchaptercatalog_current.setVisibility(View.VISIBLE);
+            } else {
+                holder.item_comicchaptercatalog_current.setVisibility(View.GONE);
+            }
+            if (comicChapterCatalog.getIs_vip() == 0) {//免费
+                holder.item_comicchaptercatalog_vip.setBackgroundResource(R.mipmap.category_free);
+            } else {
+                holder.item_comicchaptercatalog_vip.setBackgroundResource(R.mipmap.category_vip);
+            }
+        } else if (viewHolder instanceof MyAdViewHolder) {
+            MyAdViewHolder myAdViewHolder = (MyAdViewHolder) viewHolder;
+            MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            myAdViewHolder.ivAD.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, WebViewActivity.class);
+                    intent.putExtra("url", comicChapterCatalog.getAd_skip_url());
+                    intent.putExtra("ad_url_type", comicChapterCatalog.getAd_url_type());
+                    activity.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -130,6 +160,16 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
         return CurrentPosition;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        ComicChapter comicChapter = comicChapterCatalogList.get(position);
+        String comic_id = comicChapter.getAd_image();
+        if (comic_id != null) {
+            return ad;
+        } else {
+            return super.getItemViewType(position);
+        }
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_comicchaptercatalog_current_bg)
@@ -142,12 +182,25 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<ComicChapte
         public TextView item_comicchaptercatalog_name;
         @BindView(R.id.item_comicchaptercatalog_time)
         public TextView item_comicchaptercatalog_time;
+        @BindView(R.id.item_chapter_catalog_vip)
+        public TextView item_comicchaptercatalog_vip;
         @BindView(R.id.item_comicchaptercatalog_needbuy)
         public RelativeLayout item_comicchaptercatalog_needbuy;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+    }
+
+    class MyAdViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.item_comic_ad)
+        ImageView ivAD;
+
+        public MyAdViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

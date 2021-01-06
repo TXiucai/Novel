@@ -12,6 +12,15 @@ public class ComicChapterItem {
     public int is_preview;//": 1, //是否预览章节 1是 0不是
     public  int  display_order;
     public List<BaseComicImage> image_list;
+    public ComicChapterTopAd advert;
+
+    public ComicChapterTopAd getAdvert() {
+        return advert;
+    }
+
+    public void setAdvert(ComicChapterTopAd advert) {
+        this.advert = advert;
+    }
 
     public String getComic_id() {
         return comic_id;

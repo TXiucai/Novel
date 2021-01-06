@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.adapter.comic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,11 +23,14 @@ import com.github.piasy.biv.view.BigImageView;
 import com.github.piasy.biv.view.GlideImageViewFactory;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.view.comic.DanmuRelativeLayout;
 import com.heiheilianzai.app.view.comic.ProgressPieIndicator;
+import com.liulishuo.filedownloader.i.IFileDownloadIPCCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +50,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     int WIDTH;
     int HEIGHT;
     int MAXheigth;
+    int ad = 1;
     private List<BaseComicImage> list;
     private Activity activity;
     int tocao_bgcolor;
@@ -75,7 +81,9 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public int getItemViewType(int position) {
         if (position == size) {
             return 888;
-        } else {
+        }else if(position==0){
+            return ad;
+        }else {
             return super.getItemViewType(position);
         }
     }
@@ -84,66 +92,91 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 888) {
             return new MyViewHolderFoot(activity_comic_look_foot);
+        } else if (viewType ==ad){
+            View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_recyclerview_ad, parent, false);
+            return new MyAdViewHolder(rootView);
+        }else {
+            View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_recyclerview_, parent, false);
+            return new MyViewHolder(rootView);
         }
-        View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_recyclerview_, parent, false);
-        return new MyViewHolder(rootView);
+
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holderr, final int position) {
         try {
-            if (position < size) {
-                MyViewHolder holder = (MyViewHolder) holderr;
-                final BaseComicImage baseComicImage = list.get(position);
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.item_comic_recyclerview_layout.getLayoutParams();
-                int trueHeigth = Math.min(MAXheigth, WIDTH * baseComicImage.height / baseComicImage.width);
-                layoutParams.height = trueHeigth;//默认
-                holder.item_comic_recyclerview_layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        itemOnclick.onClick(position, baseComicImage);
+            if (holderr instanceof MyViewHolder){
+                if (position < size) {
+                    MyViewHolder holder = (MyViewHolder) holderr;
+                    final BaseComicImage baseComicImage = list.get(position);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.item_comic_recyclerview_layout.getLayoutParams();
+                    int trueHeigth = Math.min(MAXheigth, WIDTH * baseComicImage.height / baseComicImage.width);
+                    layoutParams.height = trueHeigth;//默认
+                    holder.item_comic_recyclerview_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            itemOnclick.onClick(position, baseComicImage);
+                        }
+                    });
+                    holder.recyclerview_img.setProgressIndicator(new ProgressPieIndicator());//自定义加载进度条
+                    holder.recyclerview_img.setImageViewFactory(new GlideImageViewFactory());//兼容漫画图片内部有GIF编码问题
+
+                    Uri uri = getUri(baseComicImage);
+                    if (uri != null) {
+                        holder.recyclerview_img.showImage(uri);
                     }
-                });
-                holder.recyclerview_img.setProgressIndicator(new ProgressPieIndicator());//自定义加载进度条
-                holder.recyclerview_img.setImageViewFactory(new GlideImageViewFactory());//兼容漫画图片内部有GIF编码问题
-                Uri uri = getUri(baseComicImage);
-                if (uri != null) {
-                    holder.recyclerview_img.showImage(uri);
-                }
-                //阻隔BigImageView控件与父控件事件冲突
-                holder.ban_touch_float.setOnClickListener(null);
-                holder.item_comic_recyclerview_layout.setLayoutParams(layoutParams);
-                holder.item_comic_recyclerview_danmu.setPosition(position);
-                relativeLayoutsDanmu.add(holder.item_comic_recyclerview_danmu);
-                if (IS_OPEN_DANMU(activity) && holder.item_comic_recyclerview_danmu.getPosition() == position) {
-                    holder.item_comic_recyclerview_danmu.removeAllViews();
-                    holder.item_comic_recyclerview_danmu.setVisibility(View.VISIBLE);
-                    if (baseComicImage.tucao != null && !baseComicImage.tucao.isEmpty()) {
-                        for (BaseComicImage.Tucao tucao : baseComicImage.tucao) {
-                            if (!TextUtils.isEmpty(tucao.content)) {
-                                TextView textView2 = new TextView(activity);
-                                textView2.setTextColor(Color.WHITE);
-                                textView2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-                                textView2.setLines(1);
-                                textView2.setText(tucao.content);
-                                textView2.setPadding(8, 4, 8, 4);
-                                GradientDrawable drawable2 = new GradientDrawable();
-                                drawable2.setColor(tocao_bgcolor);
-                                drawable2.setCornerRadius(20);
-                                textView2.setBackgroundDrawable(drawable2);
-                                RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                int x = (int) (Math.random() * WIDTH);
-                                int y = (int) (Math.random() * (layoutParams.height));
-                                layoutParams2.setMargins(x, y, 0, 0);
-                                layoutParams2.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                                holder.item_comic_recyclerview_danmu.addView(textView2, layoutParams2);
+                    //阻隔BigImageView控件与父控件事件冲突
+                    holder.ban_touch_float.setOnClickListener(null);
+                    holder.item_comic_recyclerview_layout.setLayoutParams(layoutParams);
+                    holder.item_comic_recyclerview_danmu.setPosition(position);
+                    relativeLayoutsDanmu.add(holder.item_comic_recyclerview_danmu);
+                    if (IS_OPEN_DANMU(activity) && holder.item_comic_recyclerview_danmu.getPosition() == position) {
+                        holder.item_comic_recyclerview_danmu.removeAllViews();
+                        holder.item_comic_recyclerview_danmu.setVisibility(View.VISIBLE);
+                        if (baseComicImage.tucao != null && !baseComicImage.tucao.isEmpty()) {
+                            for (BaseComicImage.Tucao tucao : baseComicImage.tucao) {
+                                if (!TextUtils.isEmpty(tucao.content)) {
+                                    TextView textView2 = new TextView(activity);
+                                    textView2.setTextColor(Color.WHITE);
+                                    textView2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+                                    textView2.setLines(1);
+                                    textView2.setText(tucao.content);
+                                    textView2.setPadding(8, 4, 8, 4);
+                                    GradientDrawable drawable2 = new GradientDrawable();
+                                    drawable2.setColor(tocao_bgcolor);
+                                    drawable2.setCornerRadius(20);
+                                    textView2.setBackgroundDrawable(drawable2);
+                                    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    int x = (int) (Math.random() * WIDTH);
+                                    int y = (int) (Math.random() * (layoutParams.height));
+                                    layoutParams2.setMargins(x, y, 0, 0);
+                                    layoutParams2.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                                    holder.item_comic_recyclerview_danmu.addView(textView2, layoutParams2);
+                                }
                             }
                         }
+                    } else {
+                        holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
                     }
-                } else {
-                    holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
+                }
+            } else if (holderr instanceof MyAdViewHolder){
+                MyAdViewHolder holderAd= (MyAdViewHolder) holderr;
+                BaseComicImage comicImage = list.get(position);
+                MyPicasso.GlideImageNoSize(activity, comicImage.getImage(), holderAd.ivAD);
+                if (comicImage.getAd()==1){
+                    holderAd.ivAD.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent();
+                            intent.setClass(activity, WebViewActivity.class);
+                            intent.putExtra("url", comicImage.getAd_skip_url());
+                            intent.putExtra("ad_url_type", comicImage.getAd_url_type());
+                            activity.startActivity(intent);
+                        }
+                    });
                 }
             }
+
         } catch (Exception e) {
         } catch (Error e) {
         }
@@ -171,6 +204,17 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         View ban_touch_float;
 
         public MyViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    class MyAdViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.item_comic_ad)
+        ImageView ivAD;
+
+        public MyAdViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
