@@ -421,4 +421,7 @@
     <string name="no_last_chapter">没有上一章了</string>
     <string name="no_next_chapter">没有下一章了</string>
     <string name="no_permission">没有该权限，请在设置允许该权限</string>
+    <string name="dialog_buy_vip">购买VIP</string>
+    <string name="dialog_close_vip">再看看</string>
+    <string name="dialog_tittle_vip">此章节为VIP专享，购买VIP畅读全本哦~</string>
 </resources>

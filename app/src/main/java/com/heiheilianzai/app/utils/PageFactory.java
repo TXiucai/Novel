@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -35,6 +36,7 @@ import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.book.ReadHistory;
 import com.heiheilianzai.app.model.event.RefreshTopbook;
+import com.heiheilianzai.app.ui.activity.CatalogActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.read.PurchaseDialog;
@@ -666,6 +668,7 @@ public class PageFactory {
         boolean last_chapter = currentPage.getBegin() <= 0;
         mNextPage = false;
         if (last_chapter) {
+            checkIsVip(chapterItem);
             if (!ChapterManager.getInstance(mActivity).hasPreChapter()) {
                 if (!m_isfirstPage) {
                     MyToash.ToashError(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_startpage));
@@ -748,6 +751,7 @@ public class PageFactory {
         if (nextChapter) {//开启新章节
             if (!m_islastPage) {
             }
+            checkIsVip(chapterItem);
             if (!ChapterManager.getInstance(mActivity).hasNextChapter()) {
                 if (!m_islastPage) {
                     MyToash.ToashError(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_endpage));
@@ -898,6 +902,7 @@ public class PageFactory {
             drawScroll();
         }
         ReadHistory.addReadHistory(true, mActivity, book_id, chapter_id);//阅读历史上传 没看一个新章节都上传一次
+        checkIsVip(chapterItem);
     }
 
     /**
@@ -1646,5 +1651,14 @@ public class PageFactory {
         //画书名
         c.drawText(chapterTitle, marginWidth, statusMarginBottom + BookNameTop + tendp, mBatteryPaint);
         mBookPageWidget.postInvalidate();
+    }
+
+    private void checkIsVip(ChapterItem chapterItem){
+        String is_vip =chapterItem.getIs_vip();
+        if (is_vip != null && is_vip.equals("1") && !App.isVip(mActivity)) {
+            DialogVip dialogVip = new DialogVip();
+            dialogVip.getDialogVipPop(mActivity, true);
+            return;
+        }
     }
 }

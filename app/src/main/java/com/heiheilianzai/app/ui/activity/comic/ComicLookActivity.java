@@ -43,6 +43,7 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
@@ -60,6 +61,7 @@ import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BrightnessUtil;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -620,7 +622,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         public void onResponse(final String result) {
                             if (HandleData) {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
-                                ComicChapterTopAd comicAdvert = comicChapterItem.getAdvert();
                                 HandleData(comicChapterItem, chapter_id, comic_id, activity);
                                 map.put(chapter_id, comicChapterItem);
                                 CurrentComicChapter.setImagesText(result);
@@ -691,6 +692,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         try {
             this.comicChapterItem = comicChapterItem;
             if (comicChapterItem != null && !comicChapterItem.image_list.isEmpty()) {
+                checkIsVip(comicChapterItem);
                 setBigImageImageLoader(comicChapterItem.image_list.get(0));
                 titlebar_text.setText(comicChapterItem.chapter_title);
                 Chapter_title = comicChapterItem.chapter_title;
@@ -780,6 +782,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     holderFoot.list_ad_view_layout.setVisibility(View.VISIBLE);
                     getWebViewAD(activity);
                 }
+
                 ComicReadHistory.addReadHistory(FORM_READHISTORY, activity, comic_id, chapter_id);
             }
         } catch (Exception e) {
@@ -1157,5 +1160,14 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             }
         }
         return tagId;
+    }
+
+    private void checkIsVip(ComicChapterItem chapterItem){
+        String is_vip =chapterItem.getIs_vip();
+        if (is_vip != null && is_vip.equals("1") && !App.isVip(activity)) {
+            DialogVip dialogVip = new DialogVip();
+            dialogVip.getDialogVipPop(activity, true);
+            return;
+        }
     }
 }

@@ -16,11 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
+import com.heiheilianzai.app.ui.activity.CatalogActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
+import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -89,6 +92,12 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
                 public void onClick(View v) {
                     if (comicChapterCatalog != null) {
                         if (flag) {
+                            int is_vip = comicChapterCatalog.getIs_vip();
+                            if ( is_vip==1 && !App.isVip(activity)) {
+                                DialogVip dialogVip = new DialogVip();
+                                dialogVip.getDialogVipPop(activity, false);
+                                return;
+                            }
                             baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
                             baseComic.saveIsexist(false);
                             activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));

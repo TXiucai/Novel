@@ -13,6 +13,15 @@ public class ComicChapterItem {
     public  int  display_order;
     public List<BaseComicImage> image_list;
     public ComicChapterTopAd advert;
+    public String is_vip;
+
+    public String getIs_vip() {
+        return is_vip;
+    }
+
+    public void setIs_vip(String is_vip) {
+        this.is_vip = is_vip;
+    }
 
     public ComicChapterTopAd getAdvert() {
         return advert;

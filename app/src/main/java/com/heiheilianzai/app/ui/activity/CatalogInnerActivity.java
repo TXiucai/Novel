@@ -12,6 +12,7 @@ import android.widget.ToggleButton;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.ChapterAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -20,6 +21,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 
@@ -151,7 +153,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                 BaseTag tag = gson.fromJson(jsonObject1.getString("tag"), BaseTag.class);
                 chapterItem1.setChaptertab(tag.getTab());
                 chapterItem1.setChaptercolor(tag.getColor());
-
+                chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
                 mItemList.add(chapterItem1);
@@ -167,6 +169,12 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                         ReaderConfig.CatalogInnerActivityOpen = true;
                         if (activity != null) {
                             activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
+                            String is_vip = mItemList.get(position).getIs_vip();
+                            if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
+                                DialogVip dialogVip = new DialogVip();
+                                dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
+                                return;
+                            }
                             ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, mItemList.get(position).getChapter_id(), json);
                         }
                     }

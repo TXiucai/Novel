@@ -12,6 +12,7 @@ import android.widget.ToggleButton;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.ChapterAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -20,9 +21,11 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,6 +75,12 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
                 baseBook.saveIsexist(0);
                 String chapter_id = mItemList.get(position).getChapter_id();
                 CatalogActivity.this.setTitle(LanguageUtil.getString(CatalogActivity.this, R.string.refer_page_catalog));
+                String is_vip = mItemList.get(position).getIs_vip();
+                if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogActivity.this)) {
+                    DialogVip dialogVip = new DialogVip();
+                    dialogVip.getDialogVipPop(CatalogActivity.this, false);
+                    return;
+                }
                 ChapterManager.getInstance(CatalogActivity.this).openBook(baseBook, mBookId, chapter_id, mJson);
                 ReaderConfig.integerList.add(1);
                 mAdapter.mDisplayOrder = position;
@@ -168,6 +177,7 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
                 chapterItem1.setChaptercolor(tag.getColor());
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
+                chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));
                 mItemList.add(chapterItem1);
             }
             mJson = json;

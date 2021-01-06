@@ -251,14 +251,28 @@ public class App extends LitePalApplication {
      * @param context
      * @return
      */
-    public static UserInfoItem getUserInfoItem(Context context){
+    public static UserInfoItem getUserInfoItem(Context context) {
         String userInfoStr = AppPrefs.getSharedString(context, PrefConst.USER_INFO_KAY, "");
         UserInfoItem userInfo = null;
         if (!StringUtils.isEmpty(userInfoStr)) {
             Gson gson = new Gson();
             return gson.fromJson(userInfoStr, UserInfoItem.class);
         }
-        return  null;
+        return null;
+    }
+
+    public static Boolean isVip(Context context) {
+        UserInfoItem userInfoItem = getUserInfoItem(context);
+        if (userInfoItem != null) {
+            int is_vip = userInfoItem.getIs_vip();
+            if (is_vip == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
