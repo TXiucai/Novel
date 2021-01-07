@@ -35,7 +35,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     public void initViews() {
-        adapter = new HomeStoreBookAdapter(activity, listData);
+        adapter = new HomeStoreBookAdapter(activity, listData,false);
         super.initViews();
     }
 

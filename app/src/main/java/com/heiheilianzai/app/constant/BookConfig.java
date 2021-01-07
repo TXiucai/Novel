@@ -52,6 +52,10 @@ public class BookConfig {
      */
     public static final String mRecommendUrl =  "/book/recommend";
 
+    /**
+     * 推荐更多年度榜单
+     */
+    public static final String mRecommendTopYearUrl =  "/home-recommen/book-recommend";
 
     /**
      * 排行榜首页
@@ -121,6 +125,11 @@ public class BookConfig {
      * 换一换
      */
     public static final String book_refresh =  "/book/refresh";
+
+    /**
+     * 年度榜单换一换
+     */
+    public static final String book_top_year_refresh =  "/home-recommen/book-refresh";
 
 
 

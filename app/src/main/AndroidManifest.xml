@@ -345,6 +345,14 @@
             android:name=".ui.activity.CountryActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.activity.TopYearComicActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.TopYearBookActivity"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

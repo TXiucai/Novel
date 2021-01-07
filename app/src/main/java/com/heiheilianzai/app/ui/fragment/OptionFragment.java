@@ -60,7 +60,9 @@ import static com.heiheilianzai.app.constant.BookConfig.mBaoyueUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mFinishUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mFreeTimeUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mRankListUrl;
+import static com.heiheilianzai.app.constant.BookConfig.mRecommendTopYearUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mRecommendUrl;
+import static com.heiheilianzai.app.constant.ComicConfig.COMIC_TOP_YEAR_recommend;
 import static com.heiheilianzai.app.constant.ComicConfig.COMIC_baoyue;
 import static com.heiheilianzai.app.constant.ComicConfig.COMIC_baoyue_list;
 import static com.heiheilianzai.app.constant.ComicConfig.COMIC_finish;
@@ -99,6 +101,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
 
 
     boolean PRODUCT;
+    boolean isTopYear;
     int SEX, OPTION;
     String httpUrl;
     Gson gson = new Gson();
@@ -124,11 +127,12 @@ public class OptionFragment extends BaseButterKnifeFragment {
 
     //推荐列表
     @SuppressLint("ValidFragment")
-    public OptionFragment(boolean PRODUCT, int OPTION, String recommend_id, TextView titlebar_text) {
+    public OptionFragment(boolean PRODUCT, int OPTION, String recommend_id, TextView titlebar_text, boolean isTopYear) {
         this.PRODUCT = PRODUCT;
         this.recommend_id = recommend_id;
         this.OPTION = OPTION;
         this.titlebar_text = titlebar_text;
+        this.isTopYear = isTopYear;
     }
 
 
@@ -225,7 +229,12 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     break;
 
                 case LOOKMORE:
-                    httpUrl = ReaderConfig.getBaseUrl() + COMIC_recommend;
+                    if (isTopYear) {
+                        httpUrl = ReaderConfig.getBaseUrl() + COMIC_TOP_YEAR_recommend;
+                    } else {
+                        httpUrl = ReaderConfig.getBaseUrl() + COMIC_recommend;
+                    }
+
                     break;
 
 
@@ -261,10 +270,14 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     break;
 
                 case LOOKMORE:
-                    if (recommend_id != null) {
-                        httpUrl = ReaderConfig.getBaseUrl() + mRecommendUrl;
+                    if (isTopYear) {
+                        httpUrl = ReaderConfig.getBaseUrl() + mRecommendTopYearUrl;
                     } else {
-                        httpUrl = ReaderConfig.getBaseUrl() + free_time;
+                        if (recommend_id != null) {
+                            httpUrl = ReaderConfig.getBaseUrl() + mRecommendUrl;
+                        } else {
+                            httpUrl = ReaderConfig.getBaseUrl() + free_time;
+                        }
                     }
                     break;
             }

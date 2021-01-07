@@ -38,7 +38,7 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
 
     public void initViews() {
-        adapter = new HomeStoreComicAdapter(activity, listData);
+        adapter = new HomeStoreComicAdapter(activity, listData,false);
         super.initViews();
     }
 

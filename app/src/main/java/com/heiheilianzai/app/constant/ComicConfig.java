@@ -36,6 +36,11 @@ public class ComicConfig {
     public static final String COMIC_home_refresh = "/comic/refresh";
 
     /**
+     * 漫画年度榜单换一换
+     */
+    public static final String COMIC_TOP_YEAR_refresh = "/home-recommen/comic-refresh";
+
+    /**
      * 漫画发现
      */
     public static final String COMIC_featured = "/comic/featured";
@@ -164,6 +169,11 @@ public class ComicConfig {
      * 漫画 查看更多
      */
     public static final String COMIC_recommend = "/comic/recommend";
+
+    /**
+     * 漫画 年度榜单查看更多
+     */
+    public static final String COMIC_TOP_YEAR_recommend = "/home-recommen/comic-recommend";
 
     private static boolean IS_OPEN_DANMU;
 

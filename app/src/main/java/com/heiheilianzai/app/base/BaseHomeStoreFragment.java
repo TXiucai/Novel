@@ -21,6 +21,8 @@ import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
+import com.heiheilianzai.app.ui.activity.TopYearComicActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -328,6 +330,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     intent.putExtra("OPTION", SHUKU);
                     intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
                     startActivity(intent);
+                } else if (jump_type == 7) {
+                    activity.startActivity(new Intent(activity, TopYearBookActivity.class));
+                } else if (jump_type == 8) {
+                    activity.startActivity(new Intent(activity, TopYearComicActivity.class));
                 }
             }
         });

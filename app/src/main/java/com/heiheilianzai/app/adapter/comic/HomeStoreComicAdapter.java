@@ -54,14 +54,16 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public static final int COMIC_UI_STYLE_1 = 1;//风格1
     public static final int COMIC_UI_STYLE_2 = 2;//风格2
     public static final int COMIC_UI_STYLE_3 = 3;//风格3
+    private boolean isTopYear;
 
-    public HomeStoreComicAdapter(Activity activity, List<StroreComicLable> listData) {
+    public HomeStoreComicAdapter(Activity activity, List<StroreComicLable> listData, boolean isTopYear) {
         this.activity = activity;
         this.listData = listData;
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         WIDTHH = WIDTH;
         WIDTH_MAIN_AD = WIDTH;
         H30 = WIDTH / 5;
+        this.isTopYear=isTopYear;
         H55 = ImageUtil.dp2px(activity, 55);
     }
 
@@ -173,6 +175,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                                 .putExtra("OPTION", LOOKMORE)
                                 .putExtra("PRODUCT", false)
+                                .putExtra("IS_TOP_YEAR",isTopYear)
                                 .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                                 .putExtra("recommend_id", stroreComicLable.recommend_id)
                         );
@@ -306,7 +309,13 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id + "");
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_refresh, json, false, new HttpUtils.ResponseListener() {
+        String url;
+        if (isTopYear){
+            url=ReaderConfig.getBaseUrl() + ComicConfig.COMIC_TOP_YEAR_refresh;
+        }else {
+            url=ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_refresh;
+        }
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         List<StroreComicLable.Comic> comicList = null;

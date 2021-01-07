@@ -82,6 +82,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     int OPTION;
     boolean PRODUCT;// false 漫画  true  小说
     Intent IntentFrom;
+    private boolean is_top_year;
 
     @Override
     public int initContentView() {
@@ -113,6 +114,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         IntentFrom = getIntent();
         OPTION = IntentFrom.getIntExtra("OPTION", 0);
         PRODUCT = IntentFrom.getBooleanExtra("PRODUCT", false);
+        is_top_year = IntentFrom.getBooleanExtra("IS_TOP_YEAR", false);
         if (OPTION != LOOKMORE) {
             String title = IntentFrom.getStringExtra("title");
             titlebar_text.setText(title);
@@ -216,7 +218,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                     baseButterKnifeFragment1 = new OptionFragment(PRODUCT, OPTION, 1);
                     baseButterKnifeFragment2 = new OptionFragment(PRODUCT, OPTION, 2);
                 } else {
-                    baseButterKnifeFragment1 = new OptionFragment(PRODUCT, OPTION, recommend_id, titlebar_text);
+                    baseButterKnifeFragment1 = new OptionFragment(PRODUCT, OPTION, recommend_id, titlebar_text, is_top_year);
                 }
                 break;
             case MYCOMMENT:

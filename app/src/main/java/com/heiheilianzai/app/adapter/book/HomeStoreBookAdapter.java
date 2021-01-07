@@ -17,6 +17,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
@@ -41,6 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.heiheilianzai.app.constant.BookConfig.book_refresh;
+import static com.heiheilianzai.app.constant.BookConfig.book_top_year_refresh;
 import static com.heiheilianzai.app.constant.ReaderConfig.LOOKMORE;
 import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
 
@@ -55,8 +57,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int BOOK_UI_STYLE_2 = 2;//风格2
     public static final int BOOK_UI_STYLE_3 = 3;//风格3
     public static final int BOOK_UI_STYLE_4 = 4;//风格4
-
-    public HomeStoreBookAdapter(Activity activity, List<StroreBookcLable> listData) {
+    private boolean isTopYear;
+    public HomeStoreBookAdapter(Activity activity, List<StroreBookcLable> listData,boolean isTopYear) {
         this.activity = activity;
         this.listData = listData;
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
@@ -69,6 +71,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         HEIGHTV = (int) (((float) WIDTHV * 4f / 3f));//
         H100 = ImageUtil.dp2px(activity, 100);
         H50 = ImageUtil.dp2px(activity, 55);
+        this.isTopYear=isTopYear;
     }
 
     @Override
@@ -171,6 +174,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 try {
                     activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                             .putExtra("OPTION", LOOKMORE)
+                            .putExtra("IS_TOP_YEAR",isTopYear)
                             .putExtra("PRODUCT", true)
                             .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                             .putExtra("recommend_id", stroreComicLable.recommend_id));
@@ -315,7 +319,13 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id);
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + book_refresh, json, false, new HttpUtils.ResponseListener() {
+        String url;
+        if (isTopYear){
+            url=ReaderConfig.getBaseUrl() + book_top_year_refresh;
+        }else {
+            url=ReaderConfig.getBaseUrl() + book_refresh;
+        }
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {

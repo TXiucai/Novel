@@ -116,6 +116,10 @@ public class ReaderConfig {
 
     public static final String mBookStoreUrl = "/book/store";
 
+    public static final String mTopYearBookUrl = "/home-recommen/annuallist";
+
+    public static final String mTopYearComicUrl = "/home-recommen/annualcomic";
+
     /**
      * 获取分享APP接口
      */
