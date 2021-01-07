@@ -236,7 +236,7 @@ public class UpdateApp {
             updateHolder.dialog_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popupWindow.dismiss();
+                    dismissPop();
                 }
             });
         } else {
@@ -246,9 +246,7 @@ public class UpdateApp {
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(mAppUpdate.getWebsite_android())) {
-                    if (popupWindow != null) {
-                        popupWindow.dismiss();
-                    }
+                    dismissPop();
                     activity.startActivity(new Intent(activity, AboutActivity.class)
                             .putExtra("url", mAppUpdate.getWebsite_android())
                             .putExtra("style", "4"));
@@ -272,6 +270,14 @@ public class UpdateApp {
         popupWindow.setCanceledOnTouchOutside(false);
         popupWindow.show();
         return popupWindow;
+    }
+
+    private void dismissPop(){
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+            RecomendApp recomendApp=new RecomendApp(activity);
+            recomendApp.getRequestData();
+        }
     }
 
     /**

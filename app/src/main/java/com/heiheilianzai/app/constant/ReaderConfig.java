@@ -319,6 +319,11 @@ public class ReaderConfig {
     public static final String mHomeNotice = "/site/notice";
 
     /**
+     * 推荐app
+     */
+    public static final String mRecommendApp = "/home-recommen/app";
+
+    /**
      * 广告
      */
     public static final String mAdvert = "/advert/info";

@@ -8,6 +8,17 @@ import android.content.SharedPreferences;
  */
 public class ShareUitls {
 
+    public static long getRecommendAppTime(Context c, String key, long time) {
+        SharedPreferences sp = c.getSharedPreferences("recommendAppTime.xml", Context.MODE_PRIVATE);
+        return sp.getLong(key, time);
+    }
+
+    public static void putRecommendAppTime(Context c, String key, long time) {
+        SharedPreferences sp = c.getSharedPreferences("recommendAppTime.xml", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putLong(key, time);
+        e.commit();
+    }
 
     public static int getTab(Context c, String key, int d) {
         SharedPreferences sp = c.getSharedPreferences("heiheilianzaitab.xml", Context.MODE_PRIVATE);

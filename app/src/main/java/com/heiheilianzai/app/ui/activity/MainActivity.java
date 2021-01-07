@@ -72,6 +72,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.RecomendApp;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -330,6 +331,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public void ShowPOP() {
         String str = ReaderConfig.newInstance().AppUpdate;
         if (StringUtils.isEmpty(str)) {
+            RecomendApp recomendApp = new RecomendApp(activity);
+            recomendApp.getRequestData();
             return;
         }
         if (str.length() > 0) {

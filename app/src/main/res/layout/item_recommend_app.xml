@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:background="@drawable/recommend_app_logo_background"
+        android:id="@+id/iv_recommend_logo"
+        android:scaleType="centerCrop"
+        android:layout_width="@dimen/dimens_60dp"
+        android:layout_height="@dimen/dimens_60dp" />
+
+    <TextView
+        android:id="@+id/tv_recommend_name"
+        android:layout_width="@dimen/dimens_60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:gravity="center"
+        android:textColor="@color/color_444444"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_recommend_install"
+        android:layout_width="@dimen/dimens_56dp"
+        android:layout_height="@dimen/dimens_24dp"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:textSize="10sp"
+        android:background="@drawable/recommend_app_install_background"
+        android:gravity="center"
+        android:text="@string/dialog_recommend_app_install"
+        android:textColor="@color/white" />
+</LinearLayout>
