@@ -282,7 +282,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         if (possition != 3) {
                             setChangedView(3, true);
                             if (loadYouSheng) {
-                                showYouShengGuideTwo();
+                                //showYouShengGuideTwo();
                             }
                         }
                         break;

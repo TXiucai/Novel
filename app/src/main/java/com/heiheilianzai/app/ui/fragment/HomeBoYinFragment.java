@@ -18,6 +18,7 @@ import com.app.hubert.guide.model.GuidePage;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
+import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.BoyinPlayerEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
@@ -40,6 +41,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
+
+import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
+import static com.heiheilianzai.app.constant.ReaderConfig.READHISTORY;
 
 /**
  * 首页波音页面
@@ -142,6 +146,18 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             @Override
             public void isPlaying(boolean isPlay) {//保留方法 获取有声页面播放状态
             }
+
+            @JavascriptInterface
+            @Override
+            public void toNativeMineAudioHistory() {
+                startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", READHISTORY).putExtra("title", LanguageUtil.getString(activity, R.string.noverfragment_yuedulishi)));
+            }
+
+            @JavascriptInterface
+            @Override
+            public void toNativeMineAudioDownload() {
+                startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
+            }
         }, "android");
         mWebView.loadUrl(mBoyinUrl);
         isLoadUrl = true;
@@ -171,6 +187,12 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void isPlaying(boolean isPlay);
+
+        @JavascriptInterface
+        void toNativeMineAudioHistory();
+
+        @JavascriptInterface
+        void toNativeMineAudioDownload();
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {
