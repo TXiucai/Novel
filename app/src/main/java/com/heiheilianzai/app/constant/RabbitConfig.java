@@ -8,7 +8,7 @@ import com.heiheilianzai.app.BuildConfig;
  */
 public class RabbitConfig {
 
-    public static final boolean ONLINE = true;
+    public static final boolean ONLINE = !BuildConfig.DEBUG;
 
     private static final String mAppkey_online = BuildConfig.api_key;
     private static final String mAppkey_uat = BuildConfig.api_key_uat;
