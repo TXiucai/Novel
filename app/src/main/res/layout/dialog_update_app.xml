@@ -23,10 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:paddingLeft="@dimen/dimens_30dp"
+           android:gravity="center"
             android:paddingTop="@dimen/dimens_10dp"
             android:singleLine="true"
-            android:textColor="#FFFF574C"
+            android:text="@string/app_update"
+            android:textColor="@color/color_282727"
             android:textSize="@dimen/dimens_16dp" />
 
         <RelativeLayout

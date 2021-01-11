@@ -228,7 +228,7 @@ public class UpdateApp {
         //设置弹出位置
         window.setGravity(Gravity.CENTER);
         final UpdateHolder updateHolder = new UpdateHolder(view);
-        updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update) + mAppUpdate.update_version.apk);
+        updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update));
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
         if (mAppUpdate.getUpdate() == 1) {
@@ -246,7 +246,9 @@ public class UpdateApp {
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(mAppUpdate.getWebsite_android())) {
-                    dismissPop();
+                    if (mAppUpdate.getUpdate()==1){//强制更新即使去官网下载也不能关闭
+                        dismissPop();
+                    }
                     activity.startActivity(new Intent(activity, AboutActivity.class)
                             .putExtra("url", mAppUpdate.getWebsite_android())
                             .putExtra("style", "4"));

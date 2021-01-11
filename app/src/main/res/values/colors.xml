@@ -126,5 +126,6 @@
     <color name="login_gray">#C4C4C6</color>
     <color name="color_f7f7f7">#F7F7F7</color>
     <color name="color_444444">#444444</color>
+    <color name="color_282727">#282727</color>
     <!--色值定义END-->
 </resources>

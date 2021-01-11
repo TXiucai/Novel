@@ -141,7 +141,7 @@ public class RecomendApp {
             appHolder.tvInstall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (StringUtils.isEmpty(appListBean.getDown_link())) {
+                    if (!StringUtils.isEmpty(appListBean.getDown_link())) {
                         activity.startActivity(new Intent(activity, AboutActivity.class).
                                 putExtra("url", appListBean.getDown_link())
                                 .putExtra("style", "4"));
