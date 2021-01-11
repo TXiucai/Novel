@@ -72,20 +72,6 @@ public class HttpUtils {
         waitDialog.setCancleable(true);
     }
 
-    public void hideProgress() {
-        if(waitDialog != null) {
-            if(waitDialog.isShowing()) { //check if dialog is showing.
-                Context context = ((ContextWrapper)waitDialog.getContext()).getBaseContext();
-                if(context instanceof Activity) {
-                    if(!((Activity)context).isFinishing() && !((Activity)context).isDestroyed())
-                        waitDialog.dismiss();
-                } else //if the Context used wasnt an Activity, then dismiss it too
-                    waitDialog.dismiss();
-            }
-            waitDialog = null;
-        }
-    }
-
     public void sendRequestRequestParams3(final String url, final String body, final boolean dialog, final ResponseListener responseListener) {
         if (context == null) {
             responseListener.onErrorResponse(null);
@@ -110,7 +96,7 @@ public class HttpUtils {
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
                             UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + " " + body, deletDomain(url));
-                            hideProgress();
+                            hideProgress(dialog);
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -122,6 +108,7 @@ public class HttpUtils {
                         @Override
                         public void run() {
                             try {
+                                hideProgress(dialog);
                                 if (!RabbitConfig.ONLINE) {
                                     MyToash.LogJson("http_utils  " + url, result);
                                 }
@@ -169,7 +156,6 @@ public class HttpUtils {
                             } catch (Error e) {
                                 UMCrash.generateCustomLog(e.toString(), deletDomain(url));
                             }
-                           hideProgress();
                         }
                     });
 
@@ -178,6 +164,19 @@ public class HttpUtils {
         } else {
             MyToash.Log("getCurrentComicChapter", "  sss");
             responseListener.onErrorResponse("nonet");
+        }
+    }
+
+    /**
+     * 关闭dialog
+     *
+     * @param dialog
+     */
+    private void hideProgress(boolean dialog) {
+        if (dialog) {
+            if (waitDialog != null) {
+                waitDialog.dismissDialog();
+            }
         }
     }
 
@@ -200,7 +199,7 @@ public class HttpUtils {
                         public void run() {
                             MyToash.ToashError(context, LanguageUtil.getString(context, R.string.splashactivity_nonet));
                             UMCrash.generateCustomLog(LanguageUtil.getString(context, R.string.splashactivity_nonet) + ":" + " " + body, deletDomain(url));
-                            hideProgress();
+                            hideProgress(true);
                             responseListener.onErrorResponse(null);
                         }
                     });
@@ -213,6 +212,7 @@ public class HttpUtils {
                         public void run() {
                             int code = 0;
                             try {
+                                hideProgress(true);
                                 if (!RabbitConfig.ONLINE) {
                                     MyToash.LogJson("http_utils  " + url, result);
                                 }
@@ -249,9 +249,6 @@ public class HttpUtils {
                                 }
                             } catch (JSONException j) {
                             } catch (Exception j) {
-                            }
-                            if (code != 0) {
-                                hideProgress();
                             }
                         }
                     });

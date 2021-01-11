@@ -225,7 +225,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             homeBoYinFragment.setArguments(bundle);
             mFragmentList.add(homeBoYinFragment);
             loadYouSheng = true;
-            showYouShengGuideOne();
+            //showYouShengGuideOne();
         } else {
             discoveryFragment = new DiscoveryNewFragment();
             mFragmentList.add(discoveryFragment);
