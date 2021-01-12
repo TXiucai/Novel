@@ -60,7 +60,7 @@ public class PageWidget extends View {
     public int Current_Page;
     boolean onTouchEventing;
     private BackPage backPage;
-    private int page=0;
+    private int page = 0;
 
     public void setBackPage(BackPage backPage) {
         this.backPage = backPage;
@@ -207,7 +207,10 @@ public class PageWidget extends View {
                     if (isNext) {
                         Boolean isNext = mTouchListener.nextPage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.next);
-                        backPage.backPage(page++);
+                        if (isNext) {
+                            page++;
+                            backPage.backPage(page);
+                        }
                         if (!isNext) {
                             onTouchEventing = false;
                             noNext = true;
@@ -216,7 +219,10 @@ public class PageWidget extends View {
                     } else {
                         Boolean isPre = mTouchListener.prePage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-
+                        if (isPre) {
+                            page--;
+                            backPage.backPage(page);
+                        }
                         if (!isPre) {
                             noNext = true;
                             onTouchEventing = false;
@@ -407,7 +413,7 @@ public class PageWidget extends View {
         void cancel();
     }
 
-    public interface BackPage{
+    public interface BackPage {
         void backPage(int page);
     }
 }

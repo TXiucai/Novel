@@ -176,7 +176,7 @@ public class ReadActivity extends BaseReadActivity {
     InfoBookItem mInfoBookItem;
     String mReferPage;//从哪个页面打开小说阅读(神策埋点数据)
     long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
-    private Boolean isClose = false;
+    int visible = 0;//每间隔多少也显示底部广告
 
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -259,7 +259,7 @@ public class ReadActivity extends BaseReadActivity {
             bookpage.setLayoutParams(layoutParams);
             tv_noad.setVisibility(View.VISIBLE);
             getWebViewAD(activity);
-            handler.sendEmptyMessageDelayed(1, 30000);
+            //handler.sendEmptyMessageDelayed(1, 30000);
         } else {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
@@ -875,6 +875,7 @@ public class ReadActivity extends BaseReadActivity {
                         public void onResponse(final String result) {
                             try {
                                 baseAd = new Gson().fromJson(result, BaseAd.class);
+                                visible = baseAd.getAdvert_interval();
                                 if (baseAd.ad_type == 1) {
                                     ReadActivity.USE_BUTTOM_AD = true;
                                     insert_todayone2.setOnClickListener(new View.OnClickListener() {
@@ -893,10 +894,10 @@ public class ReadActivity extends BaseReadActivity {
                                         @Override
                                         public void onClick(View v) {
                                             activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                                            isClose = true;
                                         }
                                     });
                                     MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mIvAd);
+
                                 } else {
                                     ReadActivity.USE_BUTTOM_AD = false;
                                 }
@@ -1062,12 +1063,16 @@ public class ReadActivity extends BaseReadActivity {
         bookpage.setBackPage(new PageWidget.BackPage() {
             @Override
             public void backPage(int page) {
-                if (!isClose) {
-                    if (page % 2 == 0) {
+                if (visible > 0) {
+                    if (Math.abs(page) % (visible + 1) == 0) {
                         activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
                     } else {
                         activity_read_buttom_ad_layout.setVisibility(View.GONE);
                     }
+                } else if (visible == 0) {
+                    activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
+                } else {
+                    activity_read_buttom_ad_layout.setVisibility(View.GONE);
                 }
             }
         });
