@@ -175,7 +175,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         public void getReadChapterItem(List<ComicChapter> comicChapter1) {
             if (comicChapter1 != null && !comicChapter1.isEmpty()) {
                 comicChapter = comicChapter1;
-                baseComic.setTotal_chapters(comicChapter1.size());
                 if (baseComic.getCurrent_chapter_name() == null) {
                     fragment_comicinfo_current_chaptername.setText(comicChapter.get(0).chapter_title);
                 }
