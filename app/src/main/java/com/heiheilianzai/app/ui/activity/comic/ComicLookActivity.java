@@ -397,10 +397,14 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 showMenu(false);
                 break;
             case R.id.activity_comiclook_xiazai:
-                Intent intentxiazai = new Intent(activity, ComicDownActivity.class);
-                intentxiazai.putExtra("baseComic", baseComic);
-                intentxiazai.putExtra("comicChapter", (Serializable) comicChapter);
-                startActivity(intentxiazai);
+                if (App.isVip(activity)) {
+                    Intent intentxiazai = new Intent(activity, ComicDownActivity.class);
+                    intentxiazai.putExtra("baseComic", baseComic);
+                    intentxiazai.putExtra("comicChapter", (Serializable) comicChapter);
+                    startActivity(intentxiazai);
+                } else {
+                    MyToash.Toash(activity, getString(R.string.down_toast_msg));
+                }
                 break;
             case R.id.activity_comiclook_danmu_img2:
                 CommentFlag = !CommentFlag;

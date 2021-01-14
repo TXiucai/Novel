@@ -38,6 +38,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseWarmStartActivity;
 import com.heiheilianzai.app.callback.AppBarStateChangeListener;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -244,13 +245,17 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
                 break;
             case R.id.activity_comic_info_topbar_downlayout:
-                if (baseComic != null && comicChapter != null) {
-                    baseComic.saveIsexist(false);
-                    Intent intent = new Intent(activity, ComicDownActivity.class);
-                    intent.putExtra("baseComic", baseComic);
-                    startActivity(intent);
+                if (App.isVip(activity)) {
+                    if (baseComic != null && comicChapter != null) {
+                        baseComic.saveIsexist(false);
+                        Intent intent = new Intent(activity, ComicDownActivity.class);
+                        intent.putExtra("baseComic", baseComic);
+                        startActivity(intent);
+                    } else {
+                        MyToash.ToashError(activity, "漫画正在更新中~");
+                    }
                 } else {
-                    MyToash.ToashError(activity, "漫画正在更新中~");
+                    MyToash.Toash(activity, getString(R.string.down_toast_msg));
                 }
                 break;
             case R.id.fragment_comicinfo_mulu_dangqian://baseComic.getCurrent_chapter_displayOrder()

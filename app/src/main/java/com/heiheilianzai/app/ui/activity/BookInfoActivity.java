@@ -33,6 +33,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -196,9 +197,13 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                 }
                 break;
             case R.id.activity_book_info_down:
-                DownDialog downDialog = new DownDialog();
-                downDialog.getDownoption(BookInfoActivity.this, mBaseBook, null);
-                DownDialog.showOpen = true;
+                if (App.isVip(activity)) {
+                    DownDialog downDialog = new DownDialog();
+                    downDialog.getDownoption(BookInfoActivity.this, mBaseBook, null);
+                    DownDialog.showOpen = true;
+                } else {
+                    MyToash.Toash(activity, getString(R.string.down_toast_msg));
+                }
                 break;
             case R.id.titlebar_share:
                 String url = ReaderConfig.getBaseUrl() + "/site/share?uid=" + Utils.getUID(BookInfoActivity.this) + "&book_id=" + mBookId + "&osType=2&product=1";

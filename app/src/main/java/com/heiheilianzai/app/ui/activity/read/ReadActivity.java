@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -176,7 +177,7 @@ public class ReadActivity extends BaseReadActivity {
     InfoBookItem mInfoBookItem;
     String mReferPage;//从哪个页面打开小说阅读(神策埋点数据)
     long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
-    int visible = 0;//每间隔多少也显示底部广告
+    int visible = -1;//每间隔多少也显示底部广告
 
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -521,7 +522,11 @@ public class ReadActivity extends BaseReadActivity {
         titlebar_down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DownDialog().getDownoption(ReadActivity.this, baseBook, pageFactory.chapterItem);
+                if (App.isVip(activity)) {
+                    new DownDialog().getDownoption(ReadActivity.this, baseBook, pageFactory.chapterItem);
+                } else {
+                    MyToash.Toash(activity, getString(R.string.down_toast_msg));
+                }
             }
         });
     }

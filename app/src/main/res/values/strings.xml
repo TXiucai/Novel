@@ -426,4 +426,5 @@
     <string name="dialog_tittle_vip">此章节为VIP专享，购买VIP畅读全本哦~</string>
     <string name="dialog_recommend_app_install">安装</string>
     <string name="top_year_tittle">年度榜单</string>
+    <string name="down_toast_msg">此功能为VIP专享哦~</string>
 </resources>
