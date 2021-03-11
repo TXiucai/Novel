@@ -194,7 +194,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
         });
         MainActivityNavigationView = ((MainActivity) activity).getNavigationView();
         view.findViewById(R.id.fragment_bookshelf_go_shelf).setOnClickListener(this);
-        view.findViewById(R.id.fragment_bookshelf_sign).setOnClickListener(this);
         return view;
     }
 
@@ -556,7 +555,7 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
                     public BookShelfBannerHolderView createHolder() {
                         return new BookShelfBannerHolderView(activity);
                     }
-                }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.ic_shelf_yes, R.mipmap.ic_shelf_no})
+                }, mBannerItemListMale).setPointViewVisible(false)
                         .setOnItemClickListener(new OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
@@ -711,13 +710,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
             case R.id.fragment_bookshelf_go_shelf:
                 //去书城逛逛
                 EventBus.getDefault().post(new ToStore(1));
-                break;
-            case R.id.fragment_bookshelf_sign:
-                if (Utils.isLogin(activity)) {
-                    startActivity(new Intent(activity, TaskCenterActivity.class));
-                } else {
-                    MainHttpTask.getInstance().Gotologin(activity);
-                }
                 break;
         }
     }

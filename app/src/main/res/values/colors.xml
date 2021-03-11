@@ -127,5 +127,10 @@
     <color name="color_f7f7f7">#F7F7F7</color>
     <color name="color_444444">#444444</color>
     <color name="color_282727">#282727</color>
+    <color name="color_ff8350">#FF8350</color>
+    <color name="color_f6f6f6">#F6F6F6</color>
+    <color name="color_c0c0c0">#C0C0C0</color>
+    <color name="color_929292">#929292</color>
+    <color name="color_FF7E38">#4DFF7E38</color>
     <!--色值定义END-->
 </resources>

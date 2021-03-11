@@ -1,10 +1,13 @@
 package com.heiheilianzai.app.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,10 +17,12 @@ import androidx.viewpager.widget.ViewPager;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
+import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
+import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.fragment.book.NewNovelFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ComicshelfFragment;
 import com.heiheilianzai.app.utils.DateUtils;
@@ -26,6 +31,7 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.SizeAnmotionTextview;
 import com.heiheilianzai.app.view.UnderlinePageIndicator;
 
@@ -44,8 +50,6 @@ import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
 import static com.heiheilianzai.app.constant.ReaderConfig.MANHAUXIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUOMAHUA;
-import static com.heiheilianzai.app.constant.ReaderConfig.fragment_store_manhau_dp;
-import static com.heiheilianzai.app.constant.ReaderConfig.fragment_store_xiaoshuo_dp;
 
 /**
  * 首页书架 界面
@@ -59,13 +63,17 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
     public ViewPager fragment_newbookself_viewpager;
     @BindView(R.id.fragment_bookself_topbar)
     public RelativeLayout fragment_bookself_topbar;
-    @BindView(R.id.fragment_shelf_indicator)
-    public UnderlinePageIndicator indicator;
     @BindView(R.id.fragment_shelf_xiaoshuo)
     public SizeAnmotionTextview fragment_shelf_xiaoshuo;
     @BindView(R.id.fragment_shelf_manhau)
     public SizeAnmotionTextview fragment_shelf_manhau;
     LinearLayout shelf_book_delete_btn;
+    @BindView(R.id.fragment_bookself_sign)
+    public TextView fragment_book_sign;
+    @BindView(R.id.fragment_manhua_select)
+    public View fragment_comic_select;
+    @BindView(R.id.fragment_xiaoshuo_select)
+    public View fragment_novel_select;
 
     List<BaseBook> bookLists;
     List<BaseComic> baseComics;
@@ -106,7 +114,7 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         }
     }
 
-    @OnClick(value = {R.id.fragment_shelf_xiaoshuo, R.id.fragment_shelf_manhau})
+    @OnClick(value = {R.id.fragment_shelf_xiaoshuo, R.id.fragment_shelf_manhau, R.id.fragment_bookself_sign})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.fragment_shelf_xiaoshuo:
@@ -119,6 +127,13 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
                 if (!chooseWho) {
                     fragment_newbookself_viewpager.setCurrentItem(1);
                     chooseWho = true;
+                }
+                break;
+            case R.id.fragment_bookself_sign:
+                if (Utils.isLogin(activity)) {
+                    startActivity(new Intent(activity, TaskCenterActivity.class));
+                } else {
+                    MainHttpTask.getInstance().Gotologin(activity);
                 }
                 break;
         }
@@ -168,15 +183,17 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
             int LastFragment = ShareUitls.getTab(activity, "BookshelfFragment", 0);
             if (LastFragment == 1) {
                 fragment_newbookself_viewpager.setCurrentItem(1);
-                fragment_shelf_xiaoshuo.setTextSize(fragment_store_manhau_dp);
-                fragment_shelf_manhau.setTextSize(fragment_store_xiaoshuo_dp);
+                fragment_comic_select.setVisibility(View.VISIBLE);
+                fragment_novel_select.setVisibility(View.GONE);
+                fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
+                fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
                 chooseWho = true;
             } else {
-                fragment_shelf_xiaoshuo.setTextSize(fragment_store_xiaoshuo_dp);
-                fragment_shelf_manhau.setTextSize(fragment_store_manhau_dp);
+                fragment_comic_select.setVisibility(View.GONE);
+                fragment_novel_select.setVisibility(View.VISIBLE);
+                fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
+                fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
             }
-            indicator.setViewPager(fragment_newbookself_viewpager);
-            indicator.setFades(false);
             position = true;
             fragment_newbookself_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -192,11 +209,15 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
                         comicshelfFragment.AllchooseAndCancleOnclick(false);
                     }
                     if (!chooseWho) {
-                        fragment_shelf_xiaoshuo.setTextSize(fragment_store_xiaoshuo_dp);
-                        fragment_shelf_manhau.setTextSize(fragment_store_manhau_dp);
+                        fragment_comic_select.setVisibility(View.GONE);
+                        fragment_novel_select.setVisibility(View.VISIBLE);
+                        fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
+                        fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
                     } else {
-                        fragment_shelf_xiaoshuo.setTextSize(fragment_store_manhau_dp);
-                        fragment_shelf_manhau.setTextSize(fragment_store_xiaoshuo_dp);
+                        fragment_comic_select.setVisibility(View.VISIBLE);
+                        fragment_novel_select.setVisibility(View.GONE);
+                        fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
+                        fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
                     }
                     setBookshelfRecommendationEvent();
                 }

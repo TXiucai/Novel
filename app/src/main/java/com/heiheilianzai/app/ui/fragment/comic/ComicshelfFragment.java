@@ -195,20 +195,14 @@ public class ComicshelfFragment extends Fragment {
         });
     }
 
-    @OnClick(value = {R.id.fragment_bookshelf_go_shelf, R.id.fragment_bookshelf_sign})
+    @OnClick(value = {R.id.fragment_bookshelf_go_shelf})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.fragment_bookshelf_go_shelf:
                 //去书城逛逛
                 EventBus.getDefault().post(new ToStore(2));
                 break;
-            case R.id.fragment_bookshelf_sign:
-                if (Utils.isLogin(activity)) {
-                    startActivity(new Intent(activity, TaskCenterActivity.class));
-                } else {
-                    MainHttpTask.getInstance().Gotologin(activity);
-                }
-                break;
+
         }
     }
 
@@ -416,7 +410,7 @@ public class ComicshelfFragment extends Fragment {
                 public ComicShelfBannerHolderView createHolder() {
                     return new ComicShelfBannerHolderView(activity);
                 }
-            }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.ic_shelf_yes, R.mipmap.ic_shelf_no})
+            }, mBannerItemListMale).setPointViewVisible(false)
                     .setOnItemClickListener(new OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {

@@ -14,45 +14,47 @@
 
         <LinearLayout
             android:id="@+id/fragment_bookshelf_head"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/fragment_shelf_banner_layout"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
                 android:background="@drawable/shape_bookshel_bg"
                 android:orientation="vertical">
 
                 <com.heiheilianzai.app.view.ConvenientBannerBookShelf
                     android:id="@+id/fragment_shelf_banner_male"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="@dimen/dimens_120dp"
                     app:canLoop="true" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/fragment_bookshelf_marquee_layout"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="@dimen/dimens_30dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:layout_marginBottom="@dimen/dimens_10dp"
                 android:background="@drawable/shape_announce"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="15dp"
+                android:paddingLeft="@dimen/dimens_15dp"
                 android:visibility="visible">
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:src="@mipmap/shelf_laba" />
+                <TextView
+                    android:layout_width="@dimen/dimens_66dp"
+                    android:layout_height="@dimen/dimens_30dp"
+                    android:background="@mipmap/fragment_bookself_anounce_bg"
+                    android:gravity="center"
+                    android:text="@string/string_anounce"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
                 <com.heiheilianzai.app.view.MarqueeTextView
                     android:id="@+id/fragment_bookshelf_marquee"
@@ -61,100 +63,62 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1" />
 
-                <LinearLayout
-                    android:id="@+id/fragment_bookshelf_sign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="10dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/shelf_sign" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="4dp"
-                        android:text="@string/noverfragment_sign"
-                        android:textColor="@color/mainColor2"
-                        android:textSize="11dp" />
-
-                    <!--    <RelativeLayout
-                            android:layout_width="40dp"
-                            android:padding="2dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_vertical">
-
-                            <View
-                                android:layout_width="9dp"
-                                android:layout_height="9dp"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:background="@drawable/signin_yes_shape" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:text="@string/noverfragment_sign"
-                                android:textColor="@color/bookshelf_sign" />
-
-                        </RelativeLayout>-->
-
-                </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingLeft="@dimen/dimens_10dp"
+            android:paddingRight="@dimen/dimens_10dp">
 
             <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
 
                 android:id="@+id/bookShelf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dimens_40dp"
                 android:gravity="center"
-                android:horizontalSpacing="10dp"
+                android:horizontalSpacing="@dimen/dimens_10dp"
                 android:numColumns="3"
-                android:paddingBottom="25dp" />
+                android:paddingBottom="@dimen/dimens_25dp" />
 
             <LinearLayout
                 android:id="@+id/fragment_bookshelf_noresult"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="@dimen/dimens_40dp"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="@dimen/dimens_120dp"
+                    android:layout_height="@dimen/dimens_120dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="50dp"
-                    android:background="@mipmap/no_data"
+                    android:layout_marginTop="@dimen/dimens_70dp"
+                    android:background="@mipmap/fragement_bookself_noresult"
                     android:scaleType="centerCrop" />
 
                 <TextView
+                    android:id="@+id/fragment_bookself_tip1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/dimens_15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/noverfragment_nobooks"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/public_12_dp" />
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/fragment_bookself_tip2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/noverfragment_nobooks2"
+                    android:textColor="@color/color_929292"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/fragment_bookshelf_go_shelf"
@@ -162,13 +126,22 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/shape_go_shelf_button"
+                    android:background="@drawable/bookself_store_bg"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="@string/noverfragment_gostore"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/public_12_dp" />
+                    android:text="@string/noverfragment_gostore_book"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="12sp" />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_10dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:text="@string/string_bookself_book"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
         </FrameLayout>
     </LinearLayout>
 </com.heiheilianzai.app.view.ObservableScrollView>

@@ -51,8 +51,13 @@
     <string name="noverfragment_yuedulishi">阅读历史</string>
     <string name="noverfragment_shanchushuji2">删除(%d)</string>
     <string name="noverfragment_goonread">继续阅读</string>
-    <string name="noverfragment_nobooks">书架空空~</string>
+    <string name="noverfragment_nobooks">您还没有添加过一部小说到书架</string>
+    <string name="noverfragment_nocomics">您还没有添加过一部漫画到书架</string>
+    <string name="noverfragment_nobooks2">不妨去追一部小说吧～</string>
+    <string name="noverfragment_nocomic2">不妨去追一部漫画吧～</string>
     <string name="noverfragment_gostore">去书城逛逛</string>
+    <string name="noverfragment_gostore_comic">去「漫画」看看</string>
+    <string name="noverfragment_gostore_book">去「小说」看看</string>
 
     <string name="AnnounceActivity_title">公告</string>
     <string name="ReadHistoryFragment_loginlook">登录后查看阅读历史</string>
@@ -427,4 +432,7 @@
     <string name="dialog_recommend_app_install">安装</string>
     <string name="top_year_tittle">年度榜单</string>
     <string name="down_toast_msg">此功能为VIP专享哦~</string>
+    <string name="string_anounce">公告</string>
+    <string name="string_bookself_comic">我的漫画</string>
+    <string name="string_bookself_book">我的小说</string>
 </resources>

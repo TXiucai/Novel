@@ -12,7 +12,7 @@
         <com.heiheilianzai.app.view.CBLoopViewPager
             android:id="@+id/cbLoopViewPager"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="wrap_content" />
 
         <!-- 翻页指示点的viewgroup -->
         <LinearLayout
