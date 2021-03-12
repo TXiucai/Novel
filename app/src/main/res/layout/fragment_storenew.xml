@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
-
-    <FrameLayout
-        android:id="@+id/fragment_store_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <RelativeLayout
         android:id="@+id/fragment_store_top"
         android:layout_width="match_parent"
@@ -35,7 +29,7 @@
             <RelativeLayout
                 android:id="@+id/fragment_store_search"
                 android:layout_width="@dimen/dimens_0dp"
-                android:layout_height="@dimen/dimens_23dp"
+                android:layout_height="@dimen/dimens_30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dimens_10dp"
                 android:layout_weight="8"
@@ -49,8 +43,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dimens_10dp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/dimens_11dp" />
+                    android:textColor="@color/color_c3c3c3"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/fragment_store_search_bookname2"
@@ -64,14 +58,18 @@
 
                 <ImageView
                     android:id="@+id/fragment_store_search_img"
-                    android:layout_width="@dimen/dimens_11dp"
-                    android:layout_height="@dimen/dimens_11dp"
+                    android:layout_width="@dimen/dimens_14dp"
+                    android:layout_height="@dimen/dimens_14dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dimens_12dp"
-                    android:src="@mipmap/main_search_white" />
+                    android:src="@mipmap/search" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/fragment_store_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
 

@@ -4,32 +4,33 @@
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/item_store_label_male_vertical_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="120dp"
-        android:orientation="horizontal">
+        android:background="@mipmap/home_novel_13_red"
+        android:layout_marginBottom="@dimen/dimens_16dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimens_10dp"
+        android:paddingTop="@dimen/dimens_14dp"
+        android:paddingRight="@dimen/dimens_20dp"
+        android:paddingBottom="@dimen/dimens_14dp">
 
         <ImageView
             android:id="@+id/item_store_label_male_horizontal_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="120dp"
-            android:minWidth="90dp"
-            android:scaleType="centerCrop"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:orientation="vertical"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp">
+            android:layout_marginLeft="@dimen/dimens_10dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/LinearLayout"
@@ -44,9 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="我真不是开玩笑"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/public_12_dp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/item_store_label_male_horizontal_flag"
@@ -54,6 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
+                    android:visibility="gone"
                     android:background="@drawable/shape_book_flag"
                     android:paddingLeft="3dp"
                     android:paddingTop="1dp"
@@ -71,18 +72,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/LinearLayout"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
                 android:ellipsize="end"
-                android:lineSpacingExtra="5dp"
-                android:lines="3"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/public_10_dp" />
+                android:lineSpacingExtra="@dimen/dimens_2dp"
+                android:lines="4"
+                android:textColor="@color/color_c0c0c0"
+                android:textSize="12sp"
+                android:visibility="gone" />
 
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -94,16 +97,21 @@
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:text="作者"
-                    android:textColor="@color/gray3"
-                    android:textSize="@dimen/public_10_dp" />
+                    android:textColor="@color/color_c0c0c0"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/item_store_label_male_horizontal_tag"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dimens_16dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/public_10_dp" />
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_ff8350_20"
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_15dp"
+                    android:textSize="10sp" />
 
             </RelativeLayout>
         </RelativeLayout>

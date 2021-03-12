@@ -9,12 +9,12 @@ public class StroreBookcLable extends BaseAd {
     public String recommend_id;//": 29, //推荐位id
     public String label;//": "超人气作品", //名称
     public int style;//": 1, //展示风格
-    public  int expire_time;
-    public  boolean  can_more;
-    public  boolean  can_refresh;
+    public int expire_time;
+    public boolean can_more;
+    public boolean can_refresh;
 
-   // public String can_more;//": true, //是否有更多 true有，false没有
-  //  public int total;//": 15, //漫画数
+    // public String can_more;//": true, //是否有更多 true有，false没有
+    //  public int total;//": 15, //漫画数
     public List<Book> list;
 
     public String getRecommend_id() {
@@ -66,7 +66,6 @@ public class StroreBookcLable extends BaseAd {
     }
 
 
-
     public List<Book> getList() {
         return list;
     }
@@ -83,12 +82,17 @@ public class StroreBookcLable extends BaseAd {
         public String author;//"": "黎明C", //作者
         public String description;//"": "美貌千金与帅气王爷", //描述
         public String is_finished;//"": 1, //是否完结 1已完结 0连载中
-         public String flag;//"": "更新至32话", //角标
+        public String flag;//"": "更新至32话", //角标
         public List<BaseTag> tag;
-        // public String hot_num;
-        // public String total_comment;
-        //   public int total_chapters;
+        public String jiao_biao;
 
+        public String getJiao_biao() {
+            return jiao_biao;
+        }
+
+        public void setJiao_biao(String jiao_biao) {
+            this.jiao_biao = jiao_biao;
+        }
 
         public String getFlag() {
             return flag;

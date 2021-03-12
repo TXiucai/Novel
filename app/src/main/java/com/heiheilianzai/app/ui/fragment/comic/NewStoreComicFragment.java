@@ -65,11 +65,11 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
     @Override
     protected void postEvent(float alpha) {
-        if (alpha == 0.0) {
+       /* if (alpha == 0.0) {
             EventBus.getDefault().post(new StoreComicEvent(true, 0));
         } else if (alpha == 255) {
             EventBus.getDefault().post(new StoreComicEvent(true, ReaderConfig.REFRESH_HEIGHT + 1));
-        }
+        }*/
     }
 
     /**

@@ -155,9 +155,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="@dimen/dimens_36dp"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:layout_marginBottom="@dimen/dimens_5dp"
         android:background="@color/white"
         android:orientation="horizontal">
 
@@ -172,7 +172,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@drawable/shape_announce"
+            android:background="@drawable/shape_f6f6f6_20"
             android:orientation="horizontal">
 
             <View
@@ -180,14 +180,7 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <TextView
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/storeFragment_more"
-                android:textColor="#999999"
-                android:textSize="11dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -195,6 +188,14 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:src="@mipmap/comic_mall_more" />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/storeFragment_more"
+                android:textColor="@color/color_c0c0c0"
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="0dp"
@@ -213,7 +214,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@drawable/shape_announce"
+            android:background="@drawable/shape_f6f6f6_20"
             android:orientation="horizontal">
 
             <View
@@ -221,14 +222,6 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <TextView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/storeFragment_huanyihuan"
-                android:textColor="#999999"
-                android:textSize="11dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -236,6 +229,15 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:src="@mipmap/comic_mall_refresh" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/storeFragment_huanyihuan"
+                android:textColor="@color/color_c0c0c0"
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="0dp"

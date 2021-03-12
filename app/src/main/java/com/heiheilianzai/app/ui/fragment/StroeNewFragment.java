@@ -49,7 +49,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     FragmentManager fragmentManager;
     public String hot_word[];
     int hot_word_size, hot_word_position;
-    public boolean IS_NOTOP;
+    public boolean IS_NOTOP = true;
     public StroeNewFragment.MyHotWord myHotWord = new MyHotWord();
     BaseButterKnifeFragment fragment;
 
@@ -118,11 +118,11 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     }
 
     protected void setStoreSearchView(StoreEvent storeEvent) {
-        if (storeEvent.Y > REFRESH_HEIGHT) {
+       /* if (storeEvent.Y > REFRESH_HEIGHT) {
             setBgBlack();
         } else if (storeEvent.Y <= REFRESH_HEIGHT) {
             setBgWhite();
-        }
+        }*/
     }
 
     protected abstract boolean getProduct();

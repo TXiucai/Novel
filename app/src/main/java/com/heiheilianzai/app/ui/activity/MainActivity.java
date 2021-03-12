@@ -246,10 +246,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 initViewPageChecked(home_novel_layout, 0, true);
                 break;
             case 1:
-                initViewPageChecked(home_store_layout, 1, false);
+                initViewPageChecked(home_store_layout, 1, true);
                 break;
             case 2:
-                initViewPageChecked(home_store_layout_comic, 2, false);
+                initViewPageChecked(home_store_layout_comic, 2, true);
                 break;
             case 3:
                 initViewPageChecked(home_discovery_layout, 3, true);

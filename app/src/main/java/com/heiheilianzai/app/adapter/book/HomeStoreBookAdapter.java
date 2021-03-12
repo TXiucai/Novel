@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,26 +53,34 @@ import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
 public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Activity activity;
     List<StroreBookcLable> listData;
-    public int WIDTH, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20, H30;
+    public int WIDTH, WIDTHV, HEIGHT, HEIGHTV, HorizontalSpacing, H100, H50, H20, H30, HWIDTH, HHEIGHT, HorizontalHeight;
     public static final int BOOK_UI_STYLE_1 = 1;//风格1
     public static final int BOOK_UI_STYLE_2 = 2;//风格2
     public static final int BOOK_UI_STYLE_3 = 3;//风格3
     public static final int BOOK_UI_STYLE_4 = 4;//风格4
+    public static final int BOOK_UI_STYLE_5 = 5;//风格5 横4
+    public static final int BOOK_UI_STYLE_6 = 6;//风格6 横六  一排2 3排
     private boolean isTopYear;
-    public HomeStoreBookAdapter(Activity activity, List<StroreBookcLable> listData,boolean isTopYear) {
+    private boolean isHorizontal = false;
+    private boolean isBackground = false;
+
+    public HomeStoreBookAdapter(Activity activity, List<StroreBookcLable> listData, boolean isTopYear) {
         this.activity = activity;
         this.listData = listData;
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
+        HorizontalHeight = ImageUtil.dp2px(activity, 28);
         H30 = WIDTH / 5;
         H20 = ImageUtil.dp2px(activity, 20);
         WIDTH = (WIDTH - H20) / 3;//横向排版 图片宽度
         HEIGHT = (int) (((float) WIDTH * 4f / 3f));//
+        HWIDTH = (ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 10)) / 2;
+        HHEIGHT = HWIDTH / 2;
         HorizontalSpacing = ImageUtil.dp2px(activity, 3);//横间距
         WIDTHV = WIDTH - ImageUtil.dp2px(activity, 26);//竖向 图片宽度
         HEIGHTV = (int) (((float) WIDTHV * 4f / 3f));//
         H100 = ImageUtil.dp2px(activity, 100);
         H50 = ImageUtil.dp2px(activity, 55);
-        this.isTopYear=isTopYear;
+        this.isTopYear = isTopYear;
     }
 
     @Override
@@ -174,7 +183,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 try {
                     activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                             .putExtra("OPTION", LOOKMORE)
-                            .putExtra("IS_TOP_YEAR",isTopYear)
+                            .putExtra("IS_TOP_YEAR", isTopYear)
                             .putExtra("PRODUCT", true)
                             .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                             .putExtra("recommend_id", stroreComicLable.recommend_id));
@@ -247,9 +256,11 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         int ItemHeigth = 0, raw = 0, start = 0;
         String referPage = LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id;
         if (style == BOOK_UI_STYLE_1) {
+            isHorizontal = false;
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
         } else if (style == BOOK_UI_STYLE_2) {
+            isHorizontal = false;
             minSize = Math.min(size, 6);
             if (minSize > 3) {
                 raw = 2;
@@ -259,13 +270,16 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ItemHeigth = H100 + HEIGHT + H50;
             }
         } else if (style == BOOK_UI_STYLE_3) {
+            isHorizontal = false;
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
             if (size > 3) {
-                ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing) * 3;
+                ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing + HorizontalHeight) * 3;
                 fragment_store_gridview3_gridview_second.setVisibility(View.VISIBLE);
                 final List<StroreBookcLable.Book> secondList = bookList.subList(3, Math.min(size, 6));
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
+                horizontalAdapter.setBackground(isBackground);
+                isBackground = !isBackground;
                 fragment_store_gridview3_gridview_second.setAdapter(horizontalAdapter);
                 fragment_store_gridview3_gridview_second.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -275,13 +289,16 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         } else if (style == BOOK_UI_STYLE_4) {
+            isHorizontal = false;
             start = 1;
             minSize = Math.min(size, 4);
-            ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing);
+            ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing + HorizontalHeight);
             fragment_store_gridview3_gridview_fore.setVisibility(View.VISIBLE);
             if (bookList.size() > 0) {
                 final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
+                horizontalAdapter.setBackground(isBackground);
+                isBackground = !isBackground;
                 fragment_store_gridview3_gridview_fore.setAdapter(horizontalAdapter);
                 fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -290,11 +307,29 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
             }
+        } else if (style == BOOK_UI_STYLE_5) {
+            minSize = Math.min(size, 4);
+            ItemHeigth = H100 + (H50 + HHEIGHT) * 2;
+            isHorizontal = true;
+            fragment_store_gridview3_gridview_first.setNumColumns(2);
+        } else if (style == BOOK_UI_STYLE_6) {
+            isHorizontal = true;
+            minSize = Math.min(size, 6);
+            ItemHeigth = H100 + (H50 + HHEIGHT) * 3;
+            fragment_store_gridview3_gridview_first.setNumColumns(2);
         }
         if (bookList.size() > 0) {
             List<StroreBookcLable.Book> firstList = bookList.subList(start, minSize);
-            VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
-            fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
+            if (isHorizontal) {
+                VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, HWIDTH, HHEIGHT, false);
+                verticalAdapter.setHorizontal(isHorizontal);
+                fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
+            } else {
+                VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
+                verticalAdapter.setHorizontal(isHorizontal);
+                fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
+            }
+
             fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -320,10 +355,10 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         params.putExtraParams("recommend_id", recommend_id);
         String json = params.generateParamsJson();
         String url;
-        if (isTopYear){
-            url=ReaderConfig.getBaseUrl() + book_top_year_refresh;
-        }else {
-            url=ReaderConfig.getBaseUrl() + book_refresh;
+        if (isTopYear) {
+            url = ReaderConfig.getBaseUrl() + book_top_year_refresh;
+        } else {
+            url = ReaderConfig.getBaseUrl() + book_refresh;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
                     @Override

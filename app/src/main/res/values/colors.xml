@@ -132,5 +132,8 @@
     <color name="color_c0c0c0">#C0C0C0</color>
     <color name="color_929292">#929292</color>
     <color name="color_FF7E38">#4DFF7E38</color>
+    <color name="color_F5F5F5">#F5F5F5</color>
+    <color name="color_c3c3c3">#C3C3C3</color>
+    <color name="color_666666">#666666</color>
     <!--色值定义END-->
 </resources>

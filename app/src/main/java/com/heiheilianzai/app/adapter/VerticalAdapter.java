@@ -18,6 +18,7 @@ import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.util.List;
 
@@ -30,6 +31,16 @@ public class VerticalAdapter extends BaseAdapter {
     LayoutInflater layoutInflater;
     private int WIDTH, HEIGHT, height;
     boolean orientation;
+    boolean isBackground;
+    private boolean isHorizontal;
+
+    public void setHorizontal(boolean horizontal) {
+        isHorizontal = horizontal;
+    }
+
+    public void setBackground(boolean background) {
+        isBackground = background;
+    }
 
     public VerticalAdapter(Activity activity, List<StroreBookcLable.Book> bookListint, int WIDTH, int HEIGHT, boolean orientation) {
         this.activity = activity;
@@ -67,6 +78,20 @@ public class VerticalAdapter extends BaseAdapter {
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
             TextView name = contentView.findViewById(R.id.item_store_label_male_vertical_text);
             TextView item_store_label_male_vertical_text2 = contentView.findViewById(R.id.item_store_label_male_vertical_text2);
+            TextView corner = contentView.findViewById(R.id.item_store_corner);
+            String jiao_biao = book.getJiao_biao();
+            if (jiao_biao != null && !StringUtils.isEmpty(jiao_biao)) {
+                corner.setText(jiao_biao);
+                if (jiao_biao.contains("新书")) {
+                    corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_new));
+                } else if (jiao_biao.contains("乱伦")) {
+                    corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_luanlun));
+                } else if (jiao_biao.contains("人妻")) {
+                    corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_wife));
+                } else if (jiao_biao.contains("完结")) {
+                    corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_finish));
+                }
+            }
             if (!book.tag.isEmpty()) {
                 String tagString = "";
                 for (BaseTag tag : book.tag) {
@@ -78,14 +103,15 @@ public class VerticalAdapter extends BaseAdapter {
                 item_store_label_male_vertical_text2.setVisibility(View.GONE);
             }
             name.setText(book.getName());
-            LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
-            layoutParamsIm.height = HEIGHT;
-            imageView.setLayoutParams(layoutParamsIm);
             ViewGroup.LayoutParams layoutParams11 = imageView.getLayoutParams();
             layoutParams11.height = HEIGHT;
             layoutParams11.width = WIDTH;
             imageView.setLayoutParams(layoutParams11);
-            MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
+            if (isHorizontal) {
+                MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_cross);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
+            }
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
             layoutParams.height = HEIGHT + height;
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
@@ -93,8 +119,13 @@ public class VerticalAdapter extends BaseAdapter {
             contentView = layoutInflater.inflate(R.layout.item_store_label_male_horizontal2, null, false);
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
-            layoutParams.height = HEIGHT;
+            layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
+            if (isBackground) {
+                item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
+            } else {
+                item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_green));
+            }
             ImageView imageView = contentView.findViewById(R.id.item_store_label_male_horizontal_img);
             TextView name = contentView.findViewById(R.id.item_store_label_male_horizontal_name);
             TextView flag = contentView.findViewById(R.id.item_store_label_male_horizontal_flag);
@@ -117,9 +148,9 @@ public class VerticalAdapter extends BaseAdapter {
             author.setText(book.getAuthor());
             String str = "";
             for (BaseTag tag : book.tag) {
-                str += "&nbsp&nbsp<font color='" + tag.color + "'>" + tag.tab + "</font>";
+                str = tag.tab;
             }
-            item_store_label_male_horizontal_tag.setText(Html.fromHtml(str));
+            item_store_label_male_horizontal_tag.setText(str);
         }
         return contentView;
     }

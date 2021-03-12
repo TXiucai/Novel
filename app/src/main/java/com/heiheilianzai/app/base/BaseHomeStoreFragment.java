@@ -53,6 +53,7 @@ import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.constant.ReaderConfig.PAIHANGINSEX;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
  * 首页小说，首页漫画内容基类。
@@ -104,7 +105,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         smartRecyclerAdapter = new SmartRecyclerAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(smartRecyclerAdapter);
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+        //暂时注释滑动状态栏改变
+        /*recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = MotionEventCompat.getActionMasked(event);
@@ -117,8 +119,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 }
                 return false;
             }
-        });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        });*/
+      /*  recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -160,7 +162,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     }
                 }
             }
-        });
+        });*/
         store_comic_refresh_layout.setOnRefreshListener(new SHSwipeRefreshLayout.SHSOnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -186,7 +188,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 switch (state) {
                     case SHSwipeRefreshLayout.NOT_OVER_TRIGGER_POINT:
                         store_comic_refresh_layout.setRefreshViewText(getString(R.string.pull_to_refresh));
-                        fragment_newbookself_top.setAlpha(1.0f - percent);
+                        //fragment_newbookself_top.setAlpha(1.0f - percent);
                         break;
                     case SHSwipeRefreshLayout.OVER_TRIGGER_POINT:
                         store_comic_refresh_layout.setRefreshViewText(getString(R.string.release_to_refresh));
@@ -343,7 +345,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         if (store_comic_refresh_layout.isRefreshing()) {
             store_comic_refresh_layout.setRefreshViewText(getString(isResponse ? R.string.refresh_succeed : R.string.refresh_fail));
             store_comic_refresh_layout.finishRefresh();
-            fragment_newbookself_top.setAlpha(1);
+            //fragment_newbookself_top.setAlpha(1);
         } else {
             if (isEdit) {
                 MyToash.ToashError(activity, getString(R.string.home_store_edit_data_refresh));
