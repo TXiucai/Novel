@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimens_96dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/item_store_label_male_vertical_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_88dp">
+
+        <ImageView
+            android:id="@+id/item_store_label_male_horizontal_img"
+            android:layout_width="@dimen/dimens_60dp"
+            android:layout_height="@dimen/dimens_80dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_88dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimens_2dp"
+            android:paddingBottom="@dimen/dimens_2dp">
+
+            <LinearLayout
+                android:id="@+id/LinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="我真不是开玩笑"
+                    android:textColor="@color/color_1a1a1a"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/item_store_label_male_horizontal_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/LinearLayout"
+                android:layout_marginTop="@dimen/dimens_2dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="@dimen/dimens_1dp"
+                android:lines="2"
+                android:textColor="@color/color_c0c0c0"
+                android:textSize="12sp" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@mipmap/home_item_eye"
+                    android:drawablePadding="@dimen/dimens_5dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="作者"
+                    android:textColor="@color/color_c0c0c0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/shape_announce"
+                    android:paddingLeft="@dimen/dimens_10dp"
+                    android:paddingRight="@dimen/dimens_10dp"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/item_top_img"
+        android:layout_width="@dimen/dimens_20dp"
+        android:layout_height="@dimen/dimens_24dp"
+        android:layout_marginLeft="@dimen/dimens_36dp" />
+</RelativeLayout>

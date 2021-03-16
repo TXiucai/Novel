@@ -368,7 +368,8 @@ public class OptionFragment extends BaseButterKnifeFragment {
             optionBeenList.addAll(baoyueItem.list);
 
             optionAdapter.notifyDataSetChanged();
-        } else if (OPTION == BAOYUE_SEARCH || SHUKU == OPTION) {
+        }
+        else if (OPTION == BAOYUE_SEARCH || SHUKU == OPTION) {
             CategoryItem categoryItem = gson.fromJson(result, CategoryItem.class);
             int optionItem_list_size = categoryItem.list.list.size();
             if (current_page == 1) {

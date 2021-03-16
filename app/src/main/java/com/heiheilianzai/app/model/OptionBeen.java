@@ -12,11 +12,20 @@ public class OptionBeen  extends  BaseAd {
    // public int is_finish;//"": 1, //是否完结 1已完结 0连载中
     public String flag;//"": "更新至32话", //角标
     public List<BaseTag> tag;
+    public int total_views;
   //  public String finished;
    // public int is_vip;//": 1,
  //   public int is_baoyue;//": 0,
  //   public String enable_time;//": "06月11日",
   //  public String expire_time;//": "06月30日"
+
+    public int getTotal_views() {
+        return total_views;
+    }
+
+    public void setTotal_views(int total_views) {
+        this.total_views = total_views;
+    }
 
     public String getComic_id() {
         return comic_id;

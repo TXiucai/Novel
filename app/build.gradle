@@ -394,6 +394,8 @@ if (SDK_DIR == null) {
 }
 
 dependencies {
+
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     compileOnly files("${SDK_DIR}/platforms/android-20/data/layoutlib.jar")
 }
 repositories {

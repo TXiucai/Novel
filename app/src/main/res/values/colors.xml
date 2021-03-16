@@ -135,5 +135,7 @@
     <color name="color_F5F5F5">#F5F5F5</color>
     <color name="color_c3c3c3">#C3C3C3</color>
     <color name="color_666666">#666666</color>
+    <color name="color_f8f8f8">#F8F8F8</color>
+    <color name="color_1a1a1a">#1A1A1A</color>
     <!--色值定义END-->
 </resources>

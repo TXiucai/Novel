@@ -435,4 +435,5 @@
     <string name="string_anounce">公告</string>
     <string name="string_bookself_comic">我的漫画</string>
     <string name="string_bookself_book">我的小说</string>
+    <string name="string_top_tittle">榜单排行</string>
 </resources>
