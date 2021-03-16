@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,7 +51,7 @@ import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Activity activity;
     List<StroreComicLable> listData;
-    public int WIDTH, WIDTHH, WIDTH_MAIN_AD, HEIGHT, H55, H30;
+    public int WIDTH,HEIGHT, H55, H30;
     public static final int COMIC_UI_STYLE_1 = 1;//风格1
     public static final int COMIC_UI_STYLE_2 = 2;//风格2
     public static final int COMIC_UI_STYLE_3 = 3;//风格3
@@ -60,10 +61,8 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.activity = activity;
         this.listData = listData;
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
-        WIDTHH = WIDTH;
-        WIDTH_MAIN_AD = WIDTH;
         H30 = WIDTH / 5;
-        this.isTopYear=isTopYear;
+        this.isTopYear = isTopYear;
         H55 = ImageUtil.dp2px(activity, 55);
     }
 
@@ -175,7 +174,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                                 .putExtra("OPTION", LOOKMORE)
                                 .putExtra("PRODUCT", false)
-                                .putExtra("IS_TOP_YEAR",isTopYear)
+                                .putExtra("IS_TOP_YEAR", isTopYear)
                                 .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                                 .putExtra("recommend_id", stroreComicLable.recommend_id)
                         );
@@ -279,7 +278,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comicList.get(0).comic_id));
                         }
                     });
-                    width = WIDTH / 3;
+                    width = WIDTH  / 3;
                     height = width * 4 / 3;
                     raw = 1;
                     fragment_store_gridview1_gridview.setNumColumns(3);
@@ -289,7 +288,6 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_gridview.getLayoutParams();
         fragment_store_gridview1_gridview.setAdapter(storeComicAdapter);
-        layoutParams.height = (height + H55) * raw;
         layoutParams.height = (height + H55) * raw;
         fragment_store_gridview1_gridview.setLayoutParams(layoutParams);
         return layoutParams.height;
@@ -310,10 +308,10 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         params.putExtraParams("recommend_id", recommend_id + "");
         String json = params.generateParamsJson();
         String url;
-        if (isTopYear){
-            url=ReaderConfig.getBaseUrl() + ComicConfig.COMIC_TOP_YEAR_refresh;
-        }else {
-            url=ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_refresh;
+        if (isTopYear) {
+            url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_TOP_YEAR_refresh;
+        } else {
+            url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_refresh;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
                     @Override

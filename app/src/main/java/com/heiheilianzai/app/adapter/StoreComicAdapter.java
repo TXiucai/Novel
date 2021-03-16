@@ -80,12 +80,13 @@ public class StoreComicAdapter extends BaseAdapter {
         layoutParams11.height = HEIGHT;
         layoutParams11.width = WIDTH;
         viewHolder.liem_store_comic_style1_img.setLayoutParams(layoutParams11);
-        if (!TextUtils.isEmpty(comic.flag)) {
+        //暂时隐藏更新到多少话的ui
+        /*if (!TextUtils.isEmpty(comic.flag)) {
             viewHolder.liem_store_comic_style1_flag.setVisibility(View.VISIBLE);
             viewHolder.liem_store_comic_style1_flag.setText(comic.flag);
         } else {
             viewHolder.liem_store_comic_style1_flag.setVisibility(View.GONE);
-        }
+        }*/
         viewHolder.liem_store_comic_style1_name.setText(comic.name);
         if (comic.description != null) {
             viewHolder.liem_store_comic_style1_description.setText(comic.description);
