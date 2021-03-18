@@ -221,6 +221,7 @@ dependencies {
     implementation "junit:junit:${rootProject.junit}"
     implementation "androidx.cardview:cardview:${rootProject.xCardview}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.xRecycleview}"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:${rootProject.xRecycleview}"
     implementation "com.google.android.material:material:${rootProject.material}"
     implementation "androidx.appcompat:appcompat:${rootProject.xAppcompat}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

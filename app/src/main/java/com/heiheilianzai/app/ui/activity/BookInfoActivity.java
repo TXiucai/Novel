@@ -17,8 +17,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,12 +24,17 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
@@ -50,6 +53,10 @@ import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.DownDialog;
+import com.heiheilianzai.app.ui.fragment.book.NovelInfoCommentFragment;
+import com.heiheilianzai.app.ui.fragment.book.NovelMuluFragment;
+import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
+import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -60,11 +67,9 @@ import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
 import com.heiheilianzai.app.view.CircleImageView;
-import com.heiheilianzai.app.view.ObservableScrollView;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
@@ -72,8 +77,6 @@ import com.umeng.socialize.media.UMWeb;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -90,56 +93,38 @@ import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public final String TAG = BookInfoActivity.class.getSimpleName();
     public static final String BOOK_ID_EXT_KAY = "book_id";//进小说简介 传入小说id
-    @BindView(R.id.book_info_titlebar_container)
-    public RelativeLayout book_info_titlebar_container;
-    @BindView(R.id.book_info_titlebar_container_shadow)
-    public View book_info_titlebar_container_shadow;
-    @BindView(R.id.activity_book_info_scrollview)
-    public ObservableScrollView activity_book_info_scrollview;
-    @BindView(R.id.activity_book_info_content_cover_bg)
-    public RelativeLayout activity_book_info_content_cover_bg;
-    @BindView(R.id.titlebar_back)
-    public LinearLayout titlebar_back;
-    @BindView(R.id.back)
-    public ImageView back;
-    @BindView(R.id.titlebar_share)
-    RelativeLayout titlebar_share;
-    @BindView(R.id.titlebar_text)
-    public TextView titlebar_text;
-    @BindView(R.id.activity_book_info_content_name)
-    public TextView activity_book_info_content_name;
-    @BindView(R.id.activity_book_info_content_author)
-    public TextView activity_book_info_content_author;
-    @BindView(R.id.activity_book_info_content_display_label)
-    public TextView activity_book_info_content_display_label;
-    @BindView(R.id.activity_book_info_content_total_comment)
-    public TextView activity_book_info_content_total_comment;
-    @BindView(R.id.activity_book_info_content_total_shoucanshu)
-    public TextView activity_book_info_content_total_shoucanshu;
-    @BindView(R.id.activity_book_info_content_cover)
-    public ImageView activity_book_info_content_cover;
-    @BindView(R.id.activity_book_info_content_description)
-    public TextView activity_book_info_content_description;
-    @BindView(R.id.activity_book_info_content_last_chapter_time)
-    public TextView activity_book_info_content_last_chapter_time;
-    @BindView(R.id.activity_book_info_content_last_chapter)
-    public TextView activity_book_info_content_last_chapter;
-    @BindView(R.id.activity_book_info_content_comment_container)
-    public LinearLayout activity_book_info_content_comment_container;
-    @BindView(R.id.activity_book_info_content_label_container)
-    public LinearLayout activity_book_info_content_label_container;
-    @BindView(R.id.activity_book_info_content_category_layout)
-    public RelativeLayout activity_book_info_content_category_layout;
     @BindView(R.id.activity_book_info_add_shelf)
     public TextView activity_book_info_add_shelf;
     @BindView(R.id.activity_book_info_start_read)
     public TextView activity_book_info_start_read;
-    @BindView(R.id.activity_book_info_tag)
-    LinearLayout activity_book_info_tag;
-    @BindView(R.id.list_ad_view_layout)
-    FrameLayout activity_book_info_ad;
-    @BindView(R.id.list_ad_view_img)
-    ImageView list_ad_view_img;
+    @BindView(R.id.fragment_comicinfo_viewpage)
+    public ViewPager fragment_comicinfo_viewpage;
+    @BindView(R.id.activity_book_info_content_xiangqing_text)
+    public TextView activity_book_info_content_xiangqing_text;
+    @BindView(R.id.activity_book_info_content_mulu_text)
+    public TextView activity_book_info_content_mulu_text;
+    @BindView(R.id.activity_book_info_content_xiangqing_view)
+    public View activity_book_info_content_xiangqing_view;
+    @BindView(R.id.activity_book_info_content_mulu_view)
+    public View activity_book_info_content_mulu_view;
+    @BindView(R.id.activity_book_info_content_mulu_flag)
+    public TextView activity_book_info_content_mulu_flag;
+    @BindView(R.id.activity_comic_info_comment_layout)
+    public RelativeLayout activity_comic_info_comment_layout;
+    @BindView(R.id.activity_book_info_content_cover)
+    public ImageView activity_book_info_content_cover;
+    @BindView(R.id.activity_book_info_content_cover_bg)
+    public ImageView activity_book_info_content_cover_bg;
+    @BindView(R.id.activity_comic_info_AppBarLayout)
+    public AppBarLayout activity_comic_info_AppBarLayout;
+    @BindView(R.id.activity_comic_info_CollapsingToolbarLayout)
+    public CollapsingToolbarLayout activity_comic_info_CollapsingToolbarLayout;
+    @BindView(R.id.activity_book_info_content_display_label)
+    public TextView activity_book_info_content_display_label;
+    @BindView(R.id.activity_book_info_content_views)
+    public TextView activity_book_info_content_views;
+    @BindView(R.id.activity_comic_info_top_bookname)
+    public TextView activity_comic_info_top_bookname;
 
     public String mBookId;
     public BaseBook mBaseBook;
@@ -153,16 +138,19 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     boolean onclickTwo = false;
     int mTotalchapter = -1; //小说总章节数
     boolean mXSIntroPageEvent;//防止重复调用神策埋点
+    public boolean chooseWho;
+    List<Fragment> fragmentList;
+    MyFragmentPagerAdapter myFragmentPagerAdapter;
+    private NovelMuluFragment novelMuluFragment;
+    private NovelInfoCommentFragment novelInfoCommentFragment;
 
     @Override
     public int initContentView() {
         return R.layout.activity_book_info;
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.activity_book_info_content_category_layout,
-            R.id.activity_book_info_add_shelf, R.id.activity_book_info_start_read,
-            R.id.activity_book_info_down, R.id.titlebar_share
-    })
+    @OnClick(value = {R.id.titlebar_back, R.id.activity_book_info_add_shelf, R.id.activity_book_info_start_read,
+            R.id.activity_book_info_down,  R.id.activity_book_info_content_xiangqing, R.id.activity_book_info_content_mulu})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -205,13 +193,19 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     MyToash.Toash(activity, getString(R.string.down_toast_msg));
                 }
                 break;
-            case R.id.titlebar_share:
-                String url = ReaderConfig.getBaseUrl() + "/site/share?uid=" + Utils.getUID(BookInfoActivity.this) + "&book_id=" + mBookId + "&osType=2&product=1";
-                UMWeb web = new UMWeb(url);
-                web.setTitle(mBaseBook.getName());//标题
-                web.setThumb(new UMImage(BookInfoActivity.this, mBaseBook.getCover()));  //缩略图
-                web.setDescription(mBaseBook.getDescription());//描述
-                MyShare.Share(BookInfoActivity.this, "", web);
+            case R.id.activity_book_info_content_xiangqing:
+                MyToash.Log("activity_book_info_content_xiangqing", "" + chooseWho);
+                if (chooseWho) {
+                    fragment_comicinfo_viewpage.setCurrentItem(0);
+                    chooseWho = false;
+                }
+                break;
+            case R.id.activity_book_info_content_mulu:
+                MyToash.Log("activity_book_info_content_mulu", "" + chooseWho);
+                if (!chooseWho) {
+                    fragment_comicinfo_viewpage.setCurrentItem(1);
+                    chooseWho = true;
+                }
                 break;
         }
     }
@@ -239,24 +233,32 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     }
 
     public void initView() {
-        if (!ReaderConfig.USE_SHARE) {
-            titlebar_share.setVisibility(View.GONE);
-        }
-        activity_book_info_scrollview.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
+        novelMuluFragment = new <Fragment>NovelMuluFragment();
+        novelInfoCommentFragment = new <Fragment>NovelInfoCommentFragment();
+        fragmentList = new ArrayList<>();
+        fragmentList.add(novelInfoCommentFragment);
+        fragmentList.add(novelMuluFragment);
+        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
+        fragment_comicinfo_viewpage.setAdapter(myFragmentPagerAdapter);
+        fragment_comicinfo_viewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-                if (y <= 0) {
-                    setStatusTextColor(false, activity);
-                    back.setBackgroundResource(R.mipmap.back_white);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                chooseWho = position == 1;
+                if (!chooseWho) {
+                    activity_book_info_content_mulu_text.setTextColor(Color.BLACK);
+                    activity_book_info_content_xiangqing_text.setTextColor(ContextCompat.getColor(activity, R.color.color_ff8350));
                 } else {
-                    setStatusTextColor(true, activity);
-                    back.setBackgroundResource(R.mipmap.back_black);
+                    activity_book_info_content_xiangqing_text.setTextColor(Color.BLACK);
+                    activity_book_info_content_mulu_text.setTextColor(ContextCompat.getColor(activity, R.color.color_ff8350));
                 }
-                final float ratio = (float) Math.min(Math.max(y, 0), 120) / 120;
-                float alpha = (int) (ratio * 255);
-                book_info_titlebar_container.setBackgroundColor(Color.argb((int) alpha, 255, 255, 255));
-                titlebar_text.setAlpha(ratio);
-                book_info_titlebar_container_shadow.setAlpha(ratio);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
             }
         });
         initData();
@@ -275,17 +277,13 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             mBaseBook.setRecentChapter(infoBook.total_chapter);
             mBaseBook.setName(infoBook.name);
             mBaseBook.setUid(Utils.getUID(activity));
-            activity_book_info_content_name.setText(infoBook.name);
-            activity_book_info_content_author.setText(infoBook.author);
+            activity_comic_info_top_bookname.setText(infoBook.name);
             activity_book_info_content_display_label.setText(infoBook.display_label);
-            activity_book_info_content_total_comment.setText(infoBook.hot_num);
+            activity_book_info_content_views.setText(infoBook.hot_num);
+            activity_book_info_content_mulu_flag.setText("("+infoBook.getTag().get(0).getTab()+")");
             MyPicasso.GlideImageNoSize(activity, infoBook.cover, activity_book_info_content_cover, R.mipmap.book_def_v);
-            activity_book_info_content_description.setText(infoBook.description);
-            activity_book_info_content_last_chapter_time.setText(infoBook.last_chapter_time);
-            activity_book_info_content_last_chapter.setText(infoBook.last_chapter);
-            titlebar_text.setText(infoBook.name);
-            titlebar_text.setAlpha(0);
-            book_info_titlebar_container_shadow.setAlpha(0);
+            novelMuluFragment.sendData(mBaseBook);
+            novelInfoCommentFragment.senddata(mBaseBook,infoBookItem.comment,infoBookItem.label.get(0),infoBookItem.advert);
             try {
                 Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
                     @Override
@@ -307,121 +305,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                 MyToash.Log("", e.getMessage());
             } catch (Error r) {
                 MyToash.Log("", r.getMessage());
-            }
-            int dp6 = ImageUtil.dp2px(activity, 6);
-            int dp3 = ImageUtil.dp2px(activity, 3);
-            for (BaseTag tag : infoBook.tag) {
-                TextView textView = new TextView(activity);
-                textView.setText(tag.getTab());
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-                textView.setLines(1);
-                textView.setGravity(Gravity.CENTER);
-                textView.setPadding(dp6, dp3, dp6, dp3);
-                textView.setTextColor(Color.parseColor(tag.getColor()));//resources.getColor(R.color.comic_info_tag_text)
-                GradientDrawable drawable = new GradientDrawable();
-                drawable.setCornerRadius(10);
-                drawable.setColor(Color.parseColor("#1A" + tag.getColor().substring(1)));
-                textView.setBackground(drawable);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.rightMargin = ImageUtil.dp2px(activity, 10);
-                layoutParams.gravity = Gravity.CENTER_VERTICAL;
-                activity_book_info_tag.addView(textView, layoutParams);
-            }
-            if (!infoBookItem.comment.isEmpty()) {
-                for (BookInfoComment bookInfoComment : infoBookItem.comment) {
-                    LinearLayout commentView = (LinearLayout) layoutInflater.inflate(R.layout.activity_book_info_content_comment_item, null, false);
-                    CircleImageView activity_book_info_content_comment_item_avatar = commentView.findViewById(R.id.activity_book_info_content_comment_item_avatar);
-                    TextView activity_book_info_content_comment_item_nickname = commentView.findViewById(R.id.activity_book_info_content_comment_item_nickname);
-                    TextView activity_book_info_content_comment_item_content = commentView.findViewById(R.id.activity_book_info_content_comment_item_content);
-                    TextView activity_book_info_content_comment_item_reply = commentView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
-                    TextView activity_book_info_content_comment_item_time = commentView.findViewById(R.id.activity_book_info_content_comment_item_time);
-                    View comment_item_isvip = commentView.findViewById(R.id.comment_item_isvip);
-                    MyPicasso.IoadImage(this, bookInfoComment.getAvatar(), R.mipmap.icon_def_head, activity_book_info_content_comment_item_avatar);
-                    activity_book_info_content_comment_item_nickname.setText(bookInfoComment.getNickname());
-                    activity_book_info_content_comment_item_content.setText(bookInfoComment.getContent());
-                    activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
-                    activity_book_info_content_comment_item_reply.setVisibility(TextUtils.isEmpty(bookInfoComment.getReply_info()) ? View.GONE : View.VISIBLE);
-                    activity_book_info_content_comment_item_time.setText(bookInfoComment.getTime());
-                    comment_item_isvip.setVisibility(bookInfoComment.getIs_vip() == 1 ? View.VISIBLE : View.GONE);
-                    //评论点击的处理
-                    commentView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(BookInfoActivity.this, ReplyCommentActivity.class);
-                            intent.putExtra("book_id", mBookId);
-                            intent.putExtra("comment_id", bookInfoComment.getComment_id());
-                            intent.putExtra("avatar", bookInfoComment.getAvatar());
-                            intent.putExtra("nickname", bookInfoComment.getNickname());
-                            intent.putExtra("origin_content", bookInfoComment.getContent());
-                            startActivity(intent);
-                        }
-                    });
-                    activity_book_info_content_comment_container.addView(commentView);
-                }
-            }
-            String moreText;
-            if (infoBook.total_comment > 0) {
-                moreText = LanguageUtil.getString(activity, R.string.BookInfoActivity_lookpinglun);
-            } else {
-                moreText = LanguageUtil.getString(activity, R.string.BookInfoActivity_nopinglun);
-            }
-            LinearLayout commentMoreView = (LinearLayout) layoutInflater.inflate(R.layout.activity_book_info_content_comment_more, null, false);
-            TextView activity_book_info_content_comment_more_text = commentMoreView.findViewById(R.id.activity_book_info_content_comment_more_text);
-            activity_book_info_content_comment_more_text.setText(String.format(moreText, infoBook.total_comment));
-            TextView activity_book_info_content_add_comment = findViewById(R.id.activity_book_info_content_add_comment);
-            activity_book_info_content_add_comment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //写评论
-                    Intent intent = new Intent(BookInfoActivity.this, AddCommentActivity.class);
-                    intent.putExtra("book_id", mBookId);
-                    startActivity(intent);
-                }
-            });
-            commentMoreView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(BookInfoActivity.this, CommentListActivity.class);
-                    intent.putExtra("book_id", mBookId);
-                    startActivity(intent);
-                }
-            });
-            activity_book_info_content_comment_container.addView(commentMoreView);
-            initWaterfall(infoBookItem.label);
-            if (basebooks != null) {
-                ContentValues values = new ContentValues();
-                values.put("total_chapter", infoBook.total_chapter);
-                values.put("name", infoBook.name);
-                values.put("cover", infoBook.cover);
-                values.put("author", infoBook.author);
-                values.put("description", infoBook.description);
-                LitePal.updateAsync(BaseBook.class, values, basebooks.getId());
-            }
-            if (ReaderConfig.USE_AD && infoBookItem.advert != null) {
-                BaseAd baseAd = infoBookItem.advert;
-                activity_book_info_ad.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                layoutParams.height = layoutParams.width / 3;
-                list_ad_view_img.setLayoutParams(layoutParams);
-                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-                activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(activity, WebViewActivity.class);
-                        intent.putExtra("url", baseAd.ad_skip_url);
-                        intent.putExtra("title", baseAd.ad_title);
-                        intent.putExtra("advert_id", baseAd.advert_id);
-                        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                        activity.startActivity(intent);
-                    }
-                });
-            } else {
-                activity_book_info_ad.setVisibility(View.GONE);
-            }
-            if (mTotalchapter != -1 && !mXSIntroPageEvent) {
-                setXSIntroPageEvent();
             }
         } catch (Exception e) {
             MyToash.Log("", e.getMessage());
@@ -479,7 +362,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     }
                 }
         );
-        getDataCatalogInfo();//获取小说目录
     }
 
     public void addBookToLocalShelf() {
@@ -513,9 +395,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.yijianrushujia));
             activity_book_info_add_shelf.setEnabled(false);
         } else {
-            activity_book_info_content_label_container.removeAllViews();
-            activity_book_info_content_comment_container.removeAllViews();
-            //加载
             initData();
         }
     }
@@ -544,81 +423,8 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
-    public void initWaterfall(List<StroreBookcLable> stroreBookcLables) {
-        activity_book_info_content_label_container.removeAllViews();
-        for (StroreBookcLable stroreComicLable : stroreBookcLables) {
-            int Size = stroreComicLable.list.size();
-            if (Size == 0) {
-                continue;
-            }
-            View type3 = layoutInflater.inflate(R.layout.lable_bookinfo_layout, null, false);
-            TextView fragment_store_gridview3_text = type3.findViewById(R.id.fragment_store_gridview3_text);
-            fragment_store_gridview3_text.setText(stroreComicLable.label);
-            AdaptionGridView fragment_store_gridview3_gridview_first = type3.findViewById(R.id.fragment_store_gridview3_gridview_first);
-            fragment_store_gridview3_gridview_first.setHorizontalSpacing(HorizontalSpacing);
-            fragment_store_gridview3_gridview_first.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (activity != null) {
-                        String bookId = stroreComicLable.list.get(position).getBook_id();
-                        activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_info) + " " + bookId, bookId));
-                    }
-                }
-            });
-            int minSize = 0;
-            int ItemHeigth = 0, start = 0;
-            if (stroreComicLable.style == 2) {
-                minSize = Math.min(Size, 6);
-                if (minSize > 3) {
-                    ItemHeigth = H100 + (HEIGHT + H50) * 2;
-                } else {
-                    ItemHeigth = H100 + HEIGHT + H50;
-                }
-            } else {
-                minSize = Math.min(Size, 3);
-                ItemHeigth = H100 + HEIGHT + H50;
-            }
-            List<StroreBookcLable.Book> firstList = stroreComicLable.list.subList(start, minSize);
-            VerticalAdapter verticalAdapter = new VerticalAdapter(activity, firstList, WIDTH, HEIGHT, false);
-            fragment_store_gridview3_gridview_first.setAdapter(verticalAdapter);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, H20, 0, 0);
-            params.height = ItemHeigth + H20;
-            activity_book_info_content_label_container.addView(type3, params);
-        }
-    }
-
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-    }
-
-    /**
-     * 获取小说目录  神策埋点需要总章节数
-     * 现在小说详细(/book/info)接口服务器说耗性能不返回章节总数了，让在章节目录里面拿
-     */
-    void getDataCatalogInfo() {
-        ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("book_id", mBookId);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterCatalogUrl, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(result);
-                            mTotalchapter = jsonObject.getInt("total_chapter");
-                            if (mInfoBookItem != null && !mXSIntroPageEvent) {
-                                setXSIntroPageEvent();
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
     }
 
     /**

@@ -71,10 +71,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
+                    android:drawablePadding="@dimen/dimens_3dp"
+                    android:drawableLeft="@mipmap/novel_comment_book"
                     android:gravity="center_vertical"
                     android:text="@string/BookInfoActivity_xieshuping"
-                    android:textColor="@color/mainColor"
-                    android:textSize="@dimen/public_12_dp" />
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
             </RelativeLayout>
 
 
