@@ -168,6 +168,11 @@ public class ReaderConfig {
     public static final String mChapterCatalogUrl = "/chapter/catalog";
 
     /**
+     * 作品章节书卷解锁
+     */
+    public static final String mChapterOpenCoupon = "/chapter/unlock-text";
+
+    /**
      * 作品评论列表
      */
     public static final String mCommentListUrl = "/comment/list";

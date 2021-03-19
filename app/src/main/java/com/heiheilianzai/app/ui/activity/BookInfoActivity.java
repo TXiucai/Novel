@@ -1,24 +1,17 @@
 package com.heiheilianzai.app.ui.activity;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,33 +28,25 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
-import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
-import com.heiheilianzai.app.model.BaseAd;
-import com.heiheilianzai.app.model.BaseTag;
-import com.heiheilianzai.app.model.BookInfoComment;
 import com.heiheilianzai.app.model.InfoBook;
 import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.book.BaseBook;
-import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.DownDialog;
 import com.heiheilianzai.app.ui.fragment.book.NovelInfoCommentFragment;
 import com.heiheilianzai.app.ui.fragment.book.NovelMuluFragment;
-import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
-import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
@@ -69,10 +54,7 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
-import com.heiheilianzai.app.view.CircleImageView;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -150,7 +132,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     }
 
     @OnClick(value = {R.id.titlebar_back, R.id.activity_book_info_add_shelf, R.id.activity_book_info_start_read,
-            R.id.activity_book_info_down,  R.id.activity_book_info_content_xiangqing, R.id.activity_book_info_content_mulu})
+            R.id.activity_book_info_down, R.id.activity_book_info_content_xiangqing, R.id.activity_book_info_content_mulu})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -280,10 +262,10 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             activity_comic_info_top_bookname.setText(infoBook.name);
             activity_book_info_content_display_label.setText(infoBook.display_label);
             activity_book_info_content_views.setText(infoBook.hot_num);
-            activity_book_info_content_mulu_flag.setText("("+infoBook.getTag().get(0).getTab()+")");
+            activity_book_info_content_mulu_flag.setText("(" + infoBook.getTag().get(0).getTab() + ")");
             MyPicasso.GlideImageNoSize(activity, infoBook.cover, activity_book_info_content_cover, R.mipmap.book_def_v);
             novelMuluFragment.sendData(mBaseBook);
-            novelInfoCommentFragment.senddata(mBaseBook,infoBookItem.comment,infoBookItem.label.get(0),infoBookItem.advert);
+            novelInfoCommentFragment.senddata(mBaseBook, infoBookItem.comment, infoBookItem.label.get(0), infoBookItem.advert);
             try {
                 Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
                     @Override
@@ -337,11 +319,12 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         }
         if (mBaseBook.isAddBookSelf() == 1) {
             activity_book_info_add_shelf.setText(LanguageUtil.getString(this, R.string.BookInfoActivity_jiarushujias));
-            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.yijianrushujia));
+            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.color_666666));
+            activity_book_info_start_read.setText(getString(R.string.noverfragment_goonread));
             activity_book_info_add_shelf.setEnabled(false);
         } else {
             activity_book_info_add_shelf.setText(LanguageUtil.getString(this, R.string.BookInfoActivity_jiarushujia));
-            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.mainColor));
+            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.color_1a1a1a));
             activity_book_info_add_shelf.setEnabled(true);
         }
         ReaderParams params = new ReaderParams(this);
@@ -369,8 +352,9 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.BookInfoActivity_jiarushujias));
             mBaseBook.saveIsexist(1);
             activity_book_info_add_shelf.setText(LanguageUtil.getString(this, R.string.BookInfoActivity_jiarushujias));
-            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.yijianrushujia));
+            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.color_666666));
             activity_book_info_add_shelf.setEnabled(false);
+            activity_book_info_start_read.setText(getString(R.string.noverfragment_goonread));
             List<BaseBook> list = new ArrayList<>();
             list.add(mBaseBook);
             EventBus.getDefault().post(new RefreshBookSelf(list));
@@ -392,8 +376,9 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         if (refreshBookInfoEvent.isSave && mBaseBook.getCover() != null) {
             mBaseBook.setAddBookSelf(1);
             activity_book_info_add_shelf.setText(LanguageUtil.getString(this, R.string.BookInfoActivity_jiarushujias));
-            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.yijianrushujia));
+            activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.color_666666));
             activity_book_info_add_shelf.setEnabled(false);
+            activity_book_info_start_read.setText(getString(R.string.noverfragment_goonread));
         } else {
             initData();
         }

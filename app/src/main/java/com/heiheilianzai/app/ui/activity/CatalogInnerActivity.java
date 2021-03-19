@@ -21,9 +21,11 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.utils.DialogNovelCoupon;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +52,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
     private int mDisplayOrder;
     private String current_chapter_id;
     public static Activity activity;
+    private String coupon_pay_price;
 
     @Override
     public int initContentView() {
@@ -146,6 +149,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray chapterListArr = jsonObject.getJSONArray("chapter_list");
             initTitleBarView(jsonObject.getString("name"));
+            coupon_pay_price = jsonObject.getString("coupon_pay_price");
             int size = chapterListArr.length();
             for (int i = 0; i < size; i++) {
                 JSONObject jsonObject1 = chapterListArr.getJSONObject(i);
@@ -156,12 +160,14 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                 chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
+                chapterItem1.setIs_book_coupon_pay(jsonObject1.getString("is_book_coupon_pay"));
                 mItemList.add(chapterItem1);
             }
             if (!mItemList.isEmpty()) {
                 mAdapter = new ChapterAdapter(this, mItemList, mItemList.size());
                 mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
                 mAdapter.mDisplayOrder = 0;
+                mAdapter.setCoupon_pay_price(coupon_pay_price);
                 mListView.setAdapter(mAdapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -169,13 +175,28 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                         ReaderConfig.CatalogInnerActivityOpen = true;
                         if (activity != null) {
                             activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
-                            String is_vip = mItemList.get(position).getIs_vip();
+                            ChapterItem chapterItem = mItemList.get(position);
+                            String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+                            if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(CatalogInnerActivity.this)) {
+                                DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
+                                dialogNovelCoupon.getDialogVipPop(activity, chapterItem,false);
+                                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                                    @Override
+                                    public void onOpenCoupon(boolean isBuy) {
+                                        if (isBuy) {
+                                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
+                                        }
+                                    }
+                                });
+                                return;
+                            }
+                            String is_vip = chapterItem.getIs_vip();
                             if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
                                 DialogVip dialogVip = new DialogVip();
                                 dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
                                 return;
                             }
-                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, mItemList.get(position).getChapter_id(), json);
+                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                         }
                     }
                 });

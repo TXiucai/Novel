@@ -667,8 +667,13 @@ public class PageFactory {
     public void prePage() {
         boolean last_chapter = currentPage.getBegin() <= 0;
         mNextPage = false;
+        checkIsCoupon(chapterItem, new IsBuyCoupon() {
+            @Override
+            public void buyCoupon() {
+                prePage();
+            }
+        });
         if (last_chapter) {
-            checkIsVip(chapterItem);
             if (!ChapterManager.getInstance(mActivity).hasPreChapter()) {
                 if (!m_isfirstPage) {
                     MyToash.ToashError(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_startpage));
@@ -748,10 +753,15 @@ public class PageFactory {
         if (currentPage == null) {
             return;
         }
+        checkIsCoupon(chapterItem, new IsBuyCoupon() {
+            @Override
+            public void buyCoupon() {
+                nextPage();
+            }
+        });
         if (nextChapter) {//开启新章节
             if (!m_islastPage) {
             }
-            checkIsVip(chapterItem);
             if (!ChapterManager.getInstance(mActivity).hasNextChapter()) {
                 if (!m_islastPage) {
                     MyToash.ToashError(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_endpage));
@@ -902,7 +912,6 @@ public class PageFactory {
             drawScroll();
         }
         ReadHistory.addReadHistory(true, mActivity, book_id, chapter_id);//阅读历史上传 没看一个新章节都上传一次
-        checkIsVip(chapterItem);
     }
 
     /**
@@ -1660,5 +1669,24 @@ public class PageFactory {
             dialogVip.getDialogVipPop(mActivity, true);
             return;
         }
+    }
+    private void checkIsCoupon(ChapterItem chapterItem,IsBuyCoupon isBuyCoupon){
+        String is_book_coupon_pay =chapterItem.getIs_book_coupon_pay();
+        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
+           DialogNovelCoupon dialogNovelCoupon=new DialogNovelCoupon();
+           dialogNovelCoupon.getDialogVipPop(mActivity,chapterItem,true);
+           dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+               @Override
+               public void onOpenCoupon(boolean isBuy) {
+                   chapterItem.setIs_book_coupon_pay("0");
+                   isBuyCoupon.buyCoupon();
+               }
+           });
+           return;
+        }
+        checkIsVip(chapterItem);
+    }
+    interface IsBuyCoupon{
+        void buyCoupon();
     }
 }

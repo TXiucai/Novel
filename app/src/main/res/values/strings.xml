@@ -436,4 +436,10 @@
     <string name="string_bookself_comic">我的漫画</string>
     <string name="string_bookself_book">我的小说</string>
     <string name="string_top_tittle">榜单排行</string>
+    <string name="coupon_open">书券解锁</string>
+    <string name="dialog_tittle_novel_coupon">书券解锁该章节，开通VIP畅读全本</string>
+    <string name="string_dialog_coupon_total">当前可用书券：</string>
+    <string name="dialog_coupon_open"><u>使用%s书券解锁此章节</u></string>
+    <string name="string_accept_coupon">赚书券</string>
+    <string name="string_accept_coupon_tittle">您的剩余书券不足，解锁章节失败，赶快去赚取书券吧！</string>
 </resources>

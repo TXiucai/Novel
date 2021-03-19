@@ -75,6 +75,7 @@ public class LoginPresenter {
                     if (loginInfo != null) {
                         AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
                         AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
+                        AppPrefs.putSharedInt(activity, PrefConst.COUPON, loginInfo.getSilverRemain());
                         EventBus.getDefault().post(new BuyLoginSuccessEvent());
                         syncDevice(activity);
                         FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {

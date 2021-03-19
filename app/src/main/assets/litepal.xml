@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="book" />
 
-    <version value="19" />
+    <version value="20" />
 
     <list>
         <mapping class="com.heiheilianzai.app.model.book.BaseBook" />

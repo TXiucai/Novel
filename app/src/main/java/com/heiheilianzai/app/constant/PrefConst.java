@@ -28,6 +28,15 @@ public class PrefConst {
      * 用户信息
      */
     public static final String USER_INFO_KAY = "user_info";
+    /**
+     * 书卷
+     */
+    public static final String COUPON = "coupon";
+    /**
+     * 书卷单章价格
+     */
+    public static final String COUPON_PRICE = "coupon_pay_price";
+
     //---------------------- END -----------------------------
 
     //------------------ PreparedDomain -------------------------

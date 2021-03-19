@@ -30,6 +30,15 @@ public class ChapterItem extends LitePalSupport implements Serializable {
     String chaptertab;
     @Column(ignore = true)
     String chaptercolor;
+    String is_book_coupon_pay;
+
+    public String getIs_book_coupon_pay() {
+        return is_book_coupon_pay;
+    }
+
+    public void setIs_book_coupon_pay(String is_book_coupon_pay) {
+        this.is_book_coupon_pay = is_book_coupon_pay;
+    }
 
     public String getIs_new_content() {
         return is_new_content;

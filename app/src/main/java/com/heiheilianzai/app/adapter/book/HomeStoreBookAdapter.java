@@ -259,9 +259,11 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             isHorizontal = false;
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
+            fragment_store_gridview3_gridview_first.setNumColumns(3);
         } else if (style == BOOK_UI_STYLE_2) {
             isHorizontal = false;
             minSize = Math.min(size, 6);
+            fragment_store_gridview3_gridview_first.setNumColumns(3);
             if (minSize > 3) {
                 raw = 2;
                 ItemHeigth = H100 + (HEIGHT + H50) * 2;
@@ -273,6 +275,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             isHorizontal = false;
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
+            fragment_store_gridview3_gridview_first.setNumColumns(3);
             if (size > 3) {
                 ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing + HorizontalHeight) * 3;
                 fragment_store_gridview3_gridview_second.setVisibility(View.VISIBLE);
@@ -293,6 +296,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             start = 1;
             minSize = Math.min(size, 4);
             ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing + HorizontalHeight);
+            fragment_store_gridview3_gridview_first.setNumColumns(3);
             fragment_store_gridview3_gridview_fore.setVisibility(View.VISIBLE);
             if (bookList.size() > 0) {
                 final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);

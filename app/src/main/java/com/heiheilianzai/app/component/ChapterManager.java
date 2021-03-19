@@ -655,6 +655,7 @@ public class ChapterManager {
                     querychapterItem.setChapter_id(jsonObject1.getString("chapter_id"));
                     querychapterItem.setChapter_title(jsonObject1.getString("chapter_title"));
                     querychapterItem.setIs_vip(jsonObject1.getString("is_vip"));
+                    querychapterItem.setIs_book_coupon_pay(jsonObject1.getString("is_book_coupon_pay"));
                     querychapterItem.setIs_preview(jsonObject1.getString("is_preview"));
                     querychapterItem.setUpdate_time(jsonObject1.getString("update_time"));
                     querychapterItem.setDisplay_order(jsonObject1.getInt("display_order"));
@@ -825,6 +826,7 @@ public class ChapterManager {
                     querychapterItem.setChapter_id(jsonObject1.getString("chapter_id"));
                     querychapterItem.setChapter_title(jsonObject1.getString("chapter_title"));
                     querychapterItem.setIs_vip(jsonObject1.getString("is_vip"));
+                    querychapterItem.setIs_book_coupon_pay(jsonObject1.getString("is_book_coupon_pay"));
                     querychapterItem.setIs_preview(jsonObject1.getString("is_preview"));
                     querychapterItem.setUpdate_time(jsonObject1.getString("update_time"));
                     querychapterItem.setDisplay_order(jsonObject1.getInt("display_order"));

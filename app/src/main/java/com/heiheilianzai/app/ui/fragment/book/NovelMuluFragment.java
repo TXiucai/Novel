@@ -1,27 +1,29 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.ChapterAdapter;
+import com.heiheilianzai.app.adapter.ChapterNovelAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
-import com.heiheilianzai.app.ui.activity.CatalogInnerActivity;
+import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.DialogNovelCoupon;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.view.NestedListView;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,11 +36,12 @@ import butterknife.BindView;
 
 public class NovelMuluFragment extends BaseButterKnifeFragment {
     @BindView(R.id.list_novel_mulu)
-    public NestedListView mListView;
+    public RecyclerView mListView;
     private String mBookId;
     private BaseBook baseBook;
     public List<ChapterItem> mItemList;
-    public ChapterAdapter mAdapter;
+    public ChapterNovelAdapter mAdapter;
+    private String coupon_pay_price;
 
     @Override
     public int initContentView() {
@@ -48,6 +51,7 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     public void sendData(BaseBook baseBook) {
@@ -81,6 +85,8 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
         try {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray chapterListArr = jsonObject.getJSONArray("chapter_list");
+            coupon_pay_price = jsonObject.getString("coupon_pay_price");
+            AppPrefs.putSharedString(activity, PrefConst.COUPON_PRICE, coupon_pay_price);
             int size = chapterListArr.length();
             for (int i = 0; i < size; i++) {
                 JSONObject jsonObject1 = chapterListArr.getJSONObject(i);
@@ -91,26 +97,40 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
                 chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
+                chapterItem1.setIs_book_coupon_pay(jsonObject1.getString("is_book_coupon_pay"));
                 mItemList.add(chapterItem1);
             }
             if (!mItemList.isEmpty()) {
-                mAdapter = new ChapterAdapter(getContext(), mItemList, mItemList.size());
+                mAdapter = new ChapterNovelAdapter(getContext(), mItemList);
                 mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
-                mAdapter.mDisplayOrder = 0;
+                mAdapter.setCoupon_pay_price(coupon_pay_price);
                 mListView.setAdapter(mAdapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                mAdapter.setOnChapterListener(new ChapterNovelAdapter.OnChapterListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onChapterSelect(ChapterItem chapterItem, int position) {
                         ReaderConfig.CatalogInnerActivityOpen = true;
                         if (activity != null) {
-                            activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
+                            String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+                            if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(getContext())) {
+                                DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
+                                dialogNovelCoupon.getDialogVipPop(activity, chapterItem,false);
+                                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                                    @Override
+                                    public void onOpenCoupon(boolean isBuy) {
+                                        if (isBuy) {
+                                            ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
+                                        }
+                                    }
+                                });
+                                return;
+                            }
                             String is_vip = mItemList.get(position).getIs_vip();
                             if (is_vip != null && is_vip.equals("1") && !App.isVip(getContext())) {
                                 DialogVip dialogVip = new DialogVip();
                                 dialogVip.getDialogVipPop(getActivity(), false);
                                 return;
                             }
-                            ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, mItemList.get(position).getChapter_id(), json);
+                            ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                         }
                     }
                 });
@@ -120,5 +140,4 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
             e.printStackTrace();
         }
     }
-
 }

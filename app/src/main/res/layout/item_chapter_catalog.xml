@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="15dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/item_chapter"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_50dp">
+        <TextView
+            android:id="@+id/item_chapter_catalog_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimens_20dp"
+            android:layout_marginRight="@dimen/dimens_80dp"
+            android:layout_weight="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/item_chapter_catalog_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="50dp"
-        android:layout_weight="1"
-        android:lines="1"
+        <TextView
+            android:id="@+id/item_chapter_coupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_ff8350"
+            android:textSize="12sp" />
 
-        android:singleLine="true"
-        android:textColor="@color/black"
-        android:textSize="@dimen/public_12_dp" />
-
-    <TextView
-        android:id="@+id/item_chapter_catalog_vip"
-        android:layout_width="@dimen/dimens_32dp"
-        android:layout_height="@dimen/dimens_18dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp" />
+        <TextView
+            android:id="@+id/item_chapter_catalog_vip"
+            android:layout_width="@dimen/dimens_32dp"
+            android:layout_height="@dimen/dimens_18dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimens_6dp"
+            android:layout_marginRight="@dimen/dimens_20dp" />
+    </LinearLayout>
+    <View
+        android:layout_marginLeft="@dimen/dimens_20dp"
+        android:layout_marginRight="@dimen/dimens_20dp"
+        android:background="@color/color_F4F1F7"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
 </LinearLayout>

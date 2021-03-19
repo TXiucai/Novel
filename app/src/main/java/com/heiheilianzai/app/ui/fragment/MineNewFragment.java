@@ -206,6 +206,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             } else {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, true);
             }
+            AppPrefs.putSharedInt(activity, PrefConst.COUPON, mUserInfo.getSilverRemain());
             String sharedUserInfo = StringUtils.isEmpty(info) ? (userInfoItem != null ? gson.toJson(userInfoItem) : "") : info;
             if (!StringUtils.isEmpty(sharedUserInfo)) {
                 AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, sharedUserInfo);
