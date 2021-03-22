@@ -53,6 +53,7 @@ import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.CatalogInnerActivity;
 import com.heiheilianzai.app.ui.activity.CommentListActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.DownDialog;
 import com.heiheilianzai.app.ui.dialog.read.AutoProgressBar;
 import com.heiheilianzai.app.ui.dialog.read.AutoSettingDialog;
@@ -84,6 +85,8 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
@@ -158,6 +161,17 @@ public class ReadActivity extends BaseReadActivity {
     LinearLayout activity_read_purchase_layout;
     @BindView(R.id.activity_read_purchase_layout2)
     public LinearLayout activity_read_purchase_layout2;
+    @BindView(R.id.activity_read_buttom_boyin_item)
+    public RelativeLayout activity_read_buttom_boyin_item;
+    @BindView(R.id.activity_read_buttom_boyin_img)
+    public ImageView activity_read_buttom_boyin_img;
+    @BindView(R.id.activity_read_buttom_boyin_tittle)
+    public TextView activity_read_buttom_boyin_tittle;
+    @BindView(R.id.activity_read_buttom_boyin_go)
+    public TextView activity_read_buttom_boyin_go;
+    @BindView(R.id.titlebar_boyin)
+    public RelativeLayout titlebar_boyin;
+
 
     public static boolean USE_BUTTOM_AD;
     private ReadingConfig config;
@@ -270,6 +284,7 @@ public class ReadActivity extends BaseReadActivity {
         }
         bookpage.setADview(insert_todayone2);
         next();
+        acceptNovelBoyin(activity,chapter.getBook_name());
         getBookInfo();
     }
 
@@ -701,7 +716,9 @@ public class ReadActivity extends BaseReadActivity {
         return pageFactory;
     }
 
-    @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting, R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night})
+    @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
+            R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night,R.id.activity_read_buttom_boyin_close,
+            R.id.activity_read_buttom_boyin_go,R.id.titlebar_boyin})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_directory:
@@ -756,7 +773,24 @@ public class ReadActivity extends BaseReadActivity {
                     }
                 }
                 break;
+            case R.id.activity_read_buttom_boyin_close:
+                activity_read_buttom_boyin_item.setVisibility(View.GONE);
+                break;
+            case R.id.activity_read_buttom_boyin_go:
+                jumpBoyin();
+                break;
+            case R.id.titlebar_boyin:
+                jumpBoyin();
+                break;
         }
+    }
+
+    private void jumpBoyin() {
+        String baseH5Url = App.getBaseH5Url();
+        String url = baseH5Url + "/player?ncid=1&nid=" + baseBook.getBook_id() + "&acname=" + baseBook.getName() + "&platform=native";
+        activity.startActivity(new Intent(activity, AboutActivity.class).
+                putExtra("url", url)
+                .putExtra("title", baseBook.getName()));
     }
 
     public static void handleAnimation() {
@@ -822,6 +856,36 @@ public class ReadActivity extends BaseReadActivity {
                             pageFactory.close_AD = true;
                             EventBus.getDefault().post(new RefreshMine(null));
                             MyToash.ToashSuccess(activity, "广告已关闭");
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    public void acceptNovelBoyin( Activity activity, String name) {
+        MyPicasso.GlideImageNoSize(activity,baseBook.getCover(), activity_read_buttom_boyin_img,R.mipmap.book_def_v);
+        activity_read_buttom_boyin_tittle.setText(String.format(getString(R.string.string_novel_boyin_tittle),name));
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("book_name",name);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BookConfig.novel_boyin, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        try {
+                            JSONObject jsonObject=new JSONObject(result);
+                            if (jsonObject.getJSONObject("sound_book_info").isNull("name")){
+                                activity_read_buttom_boyin_item.setVisibility(View.GONE);
+                                titlebar_boyin.setVisibility(View.GONE);
+                            }else {
+                                activity_read_buttom_boyin_item.setVisibility(View.VISIBLE);
+                                titlebar_boyin.setVisibility(View.VISIBLE);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
 

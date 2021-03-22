@@ -55,6 +55,8 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public static final int COMIC_UI_STYLE_1 = 1;//风格1
     public static final int COMIC_UI_STYLE_2 = 2;//风格2
     public static final int COMIC_UI_STYLE_3 = 3;//风格3
+    public static final int COMIC_UI_STYLE_4 = 4;//横4
+    public static final int COMIC_UI_STYLE_5 = 5;//横6
     private boolean isTopYear;
 
     public HomeStoreComicAdapter(Activity activity, List<StroreComicLable> listData, boolean isTopYear) {
@@ -284,6 +286,22 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     fragment_store_gridview1_gridview.setNumColumns(3);
                     storeComicAdapter = new StoreComicAdapter(comicList.subList(1, Math.min(4, comicList.size())), activity, 2, width, height);
                 }
+                break;
+            case COMIC_UI_STYLE_4:
+                width = WIDTH / 2;
+                height = width * 2 / 3;
+                fragment_store_gridview1_gridview.setNumColumns(2);
+                double size2 = Math.min(4, comicList.size());
+                raw = (int) (Math.ceil(size2 / 2d));
+                storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size2), activity, style, width, height);
+                break;
+            case COMIC_UI_STYLE_5:
+                width = WIDTH / 2;
+                height = width * 2 / 3;
+                fragment_store_gridview1_gridview.setNumColumns(2);
+                double size3 = Math.min(6, comicList.size());
+                raw = (int) (Math.ceil(size3 / 2d));
+                storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size3), activity, style, width, height);
                 break;
         }
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_gridview.getLayoutParams();

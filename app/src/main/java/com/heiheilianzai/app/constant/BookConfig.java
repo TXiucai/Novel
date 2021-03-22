@@ -119,7 +119,10 @@ public class BookConfig {
      */
     public static final String del_ad = "/user/del-ad";
 
-
+    /**
+     * 阅读页同名小说
+     */
+    public static final String novel_boyin = "/auth/sound-novel";
 
     /**
      * 换一换

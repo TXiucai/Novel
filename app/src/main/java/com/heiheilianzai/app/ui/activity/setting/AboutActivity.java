@@ -98,6 +98,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
             settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             settings.setJavaScriptEnabled(true);
             settings.setBlockNetworkImage(false);//解决图片不显示
+            settings.setMediaPlaybackRequiresUserGesture(false);//webview一进去不能自动播放的问题
             mWebView.addJavascriptInterface(new AndroidToJs(), "AndroidClient");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);

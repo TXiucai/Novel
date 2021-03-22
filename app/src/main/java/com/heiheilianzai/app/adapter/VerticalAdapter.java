@@ -108,7 +108,7 @@ public class VerticalAdapter extends BaseAdapter {
             layoutParams11.width = WIDTH;
             imageView.setLayoutParams(layoutParams11);
             if (isHorizontal) {
-                MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_cross);
+                MyPicasso.GlideImageNoSize(activity, book.getH_cover(), imageView, R.mipmap.book_def_cross);
             } else {
                 MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
             }

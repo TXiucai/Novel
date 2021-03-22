@@ -85,6 +85,15 @@ public class StroreBookcLable extends BaseAd {
         public String flag;//"": "更新至32话", //角标
         public List<BaseTag> tag;
         public String jiao_biao;
+        public String h_cover;//横着封面图
+
+        public String getH_cover() {
+            return h_cover;
+        }
+
+        public void setH_cover(String h_cover) {
+            this.h_cover = h_cover;
+        }
 
         public String getJiao_biao() {
             return jiao_biao;
