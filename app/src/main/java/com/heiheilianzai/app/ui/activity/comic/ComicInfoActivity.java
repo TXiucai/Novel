@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.activity.comic;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -14,20 +15,28 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -36,8 +45,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
+import com.heiheilianzai.app.adapter.StoreComicAdapter;
+import com.heiheilianzai.app.adapter.comic.ComicChapterCatalogAdapter;
+import com.heiheilianzai.app.adapter.comic.ComicHChapterCatalogAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseWarmStartActivity;
 import com.heiheilianzai.app.callback.AppBarStateChangeListener;
@@ -56,6 +71,9 @@ import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
+import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
+import com.heiheilianzai.app.ui.activity.TopActivity;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
@@ -69,16 +87,23 @@ import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
+import com.heiheilianzai.app.view.CircleImageView;
+import com.heiheilianzai.app.view.CustomSwipeToRefresh;
+import com.heiheilianzai.app.view.ObservableScrollView;
 import com.heiheilianzai.app.view.UnderlinePageIndicatorHalf;
 import com.jaeger.library.StatusBarUtil;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -88,113 +113,87 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
+
 /**
  * 作品详情
  */
 public class ComicInfoActivity extends BaseWarmStartActivity {
     public static final String COMIC_ID_EXT_KAY = "comic_id";//进小说简介 传入小说id
-    @BindView(R.id.fragment_comicinfo_viewpage)
-    public ViewPager fragment_comicinfo_viewpage;
-    @BindView(R.id.activity_comic_info_topbar_downlayout)
-    public RelativeLayout activity_comic_info_topbar_downlayout;
-    @BindView(R.id.activity_comic_info_topbar_sharelayout)
-    public RelativeLayout activity_comic_info_topbar_sharelayout;
-    @BindView(R.id.fragment_comicinfo_current_chaptername)
-    public TextView fragment_comicinfo_current_chaptername;
-    @BindView(R.id.fragment_comicinfo_current_goonread)
-    public TextView fragment_comicinfo_current_goonread;
-    @BindView(R.id.activity_book_info_content_xiangqing_text)
-    public TextView activity_book_info_content_xiangqing_text;
-    @BindView(R.id.activity_book_info_content_mulu_text)
-    public TextView activity_book_info_content_mulu_text;
-    @BindView(R.id.activity_comic_info_top_bookname)
-    public TextView activity_comic_info_top_bookname;
-    @BindView(R.id.activity_book_info_content_cover)
-    public ImageView activity_book_info_content_cover;
-    @BindView(R.id.activity_book_info_content_name)
-    public TextView activity_book_info_content_name;
-    @BindView(R.id.activity_book_info_content_author)
-    public TextView activity_book_info_content_author;
-    @BindView(R.id.activity_book_info_content_total_hot)
-    public TextView activity_book_info_content_total_hot;
-    @BindView(R.id.activity_book_info_content_shoucang)
-    public TextView activity_book_info_content_shoucang;
-    @BindView(R.id.activity_book_info_content_shoucannum)
-    public TextView activity_book_info_content_shoucannum;
-    @BindView(R.id.activity_book_info_content_tag)
-    public LinearLayout activity_book_info_content_tag;
-    @BindView(R.id.activity_book_info_content_xiangqing)
-    public RelativeLayout activity_book_info_content_xiangqing;
-    @BindView(R.id.activity_book_info_content_mulu)
-    public RelativeLayout activity_book_info_content_mulu;
-    @BindView(R.id.activity_book_info_content_xiangqing_view)
-    public View activity_book_info_content_xiangqing_view;
-    @BindView(R.id.activity_book_info_content_mulu_view)
-    public View activity_book_info_content_mulu_view;
-    @BindView(R.id.channel_bar_indicator)
-    public UnderlinePageIndicatorHalf channel_bar_indicator;
-    @BindView(R.id.activity_book_info_content_cover_bg)
-    public ImageView activity_book_info_content_cover_bg;
-    @BindView(R.id.activity_comic_info_AppBarLayout)
-    public AppBarLayout activity_comic_info_AppBarLayout;
-    @BindView(R.id.activity_comic_info_CollapsingToolbarLayout)
-    public CollapsingToolbarLayout activity_comic_info_CollapsingToolbarLayout;
-    @BindView(R.id.fragment_comicinfo_mulu_dangqian)
-    public LinearLayout fragment_comicinfo_mulu_dangqian;
-    @BindView(R.id.fragment_comicinfo_mulu_zhiding)
-    public LinearLayout fragment_comicinfo_mulu_zhiding;
-    @BindView(R.id.fragment_comicinfo_mulu_zhiding_img)
-    public ImageView fragment_comicinfo_mulu_zhiding_img;
-    @BindView(R.id.fragment_comicinfo_mulu_zhiding_text)
-    public TextView fragment_comicinfo_mulu_zhiding_text;
-    @BindView(R.id.fragment_comicinfo_mulu_dangqian_layout)
-    public RelativeLayout fragment_comicinfo_mulu_dangqian_layout;
-    @BindView(R.id.activity_comic_info_comment_layout)
-    public LinearLayout activity_comic_info_comment_layout;
-    @BindView(R.id.activity_comic_info_topbar)
-    public RelativeLayout activity_comic_info_topbar;
-    Resources resources;
-    FragmentActivity activity;
-    List<Fragment> fragmentList;
-    MyFragmentPagerAdapter myFragmentPagerAdapter;
+    @BindView(R.id.titlebar_share)
+    RelativeLayout titlebar_share;
+    @BindView(R.id.book_info_titlebar_container_shadow)
+    public View book_info_titlebar_container_shadow;
+    @BindView(R.id.book_info_titlebar_container)
+    public RelativeLayout book_info_titlebar_container;
+    @BindView(R.id.activity_book_info_scrollview)
+    public ObservableScrollView activity_book_info_scrollview;
+    @BindView(R.id.titlebar_back)
+    public LinearLayout titlebar_back;
+    @BindView(R.id.back)
+    public ImageView back;
+    @BindView(R.id.titlebar_text)
+    public TextView titlebar_text;
+    @BindView(R.id.activity_comic_cover_bg)
+    public ImageView activity_comic_cover_bg;
+    @BindView(R.id.rl_comic_vip)
+    public RelativeLayout rl_comic_vip;
+    @BindView(R.id.tx_comic_name)
+    public TextView tx_comic_name;
+    @BindView(R.id.tx_comic_description)
+    public TextView tx_comic_description;
+    @BindView(R.id.tx_comic_status)
+    public TextView tx_comic_status;
+    @BindView(R.id.tx_comic_num)
+    public TextView tx_comic_num;
+    @BindView(R.id.ll_comic_category)
+    public LinearLayout ll_comic_category;
+    @BindView(R.id.ry_comic_category)
+    public RecyclerView ry_comic_category;
+    @BindView(R.id.sr_comic_category)
+    public CustomSwipeToRefresh swipeRefreshLayout;
+    @BindView(R.id.tx_add_comment)
+    public TextView tx_add_comment;
+    @BindView(R.id.ll_comment_container)
+    public LinearLayout ll_comment_container;
+    @BindView(R.id.ll_label_container)
+    public LinearLayout ll_label_container;
+    @BindView(R.id.img_comic_collect)
+    public ImageView img_comic_collect;
+    @BindView(R.id.tx_comic_add)
+    public TextView tx_comic_add;
+    @BindView(R.id.tx_comic_start_read)
+    public TextView tx_comic_start_read;
+    @BindView(R.id.tx_comic_down)
+    public TextView tx_comic_down;
+    @BindView(R.id.list_ad_view_layout)
+    FrameLayout activity_book_info_ad;
+    @BindView(R.id.tx_comic_flag)
+    public TextView tx_comic_flag;
+    @BindView(R.id.list_ad_view_img)
+    ImageView list_ad_view_img;
+    Activity activity;
     BaseComic baseComic, baseComicLocal;
     String comic_id;
-    public boolean chooseWho;
     Gson gs = new Gson();
     StroreComicLable stroreComicLable;
     List<BookInfoComment> bookInfoComment;
     StroreComicLable.Comic comic;
     BaseAd baseAd;
-    List<ComicChapter> comicChapter;
-    ComicinfoCommentFragment comicFragment;
-    ComicinfoMuluFragment muluFragment;
+    List<ComicChapter> comicChapter=new ArrayList<>();
     Drawable activity_comic_info_topbarD;
     boolean refreshComment;
     ComicInfo mComicInfo;//漫画具体信息
-    MuluLorded muluLorded = new MuluLorded() {
-        @Override
-        public void getReadChapterItem(List<ComicChapter> comicChapter1) {
-            if (comicChapter1 != null && !comicChapter1.isEmpty()) {
-                comicChapter = comicChapter1;
-                if (baseComic.getCurrent_chapter_name() == null) {
-                    fragment_comicinfo_current_chaptername.setText(comicChapter.get(0).chapter_title);
-                }
-            }
-        }
-    };
+    public int WIDTH, HEIGHT, mPageNum = 1,mTotalPage;
+    ComicHChapterCatalogAdapter comicChapterCatalogAdapter;
+    private int size;
+    private int lastVisibleItemPosition;
 
-    public interface MuluLorded {
-        void getReadChapterItem(List<ComicChapter> comicChapter);
-    }
-
-    @OnClick(value = {R.id.fragment_comicinfo_current_goonread, R.id.titlebar_back,
-            R.id.activity_comic_info_topbar_sharelayout, R.id.activity_comic_info_topbar_downlayout,
-            R.id.activity_book_info_content_xiangqing, R.id.activity_book_info_content_mulu,
-            R.id.fragment_comicinfo_mulu_dangqian, R.id.fragment_comicinfo_mulu_zhiding
-            , R.id.activity_book_info_content_shoucang})
+    @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back,
+            R.id.tx_comic_down, R.id.img_comic_collect})
     public void getEvent(View view) {
         switch (view.getId()) {
-            case R.id.fragment_comicinfo_current_goonread:
+            case R.id.tx_comic_start_read:
                 if (baseComic != null && comicChapter != null) {
                     baseComic.saveIsexist(false);
                     Intent intent = ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(this, R.string.refer_page_info));
@@ -207,44 +206,22 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             case R.id.titlebar_back:
                 finish();
                 break;
-            case R.id.activity_comic_info_topbar_sharelayout:
-                String url = ReaderConfig.getBaseUrl() + "/site/share?uid=" + Utils.getUID(activity) + "&comic_id=" + comic_id + "&osType=2&product=1";
-                UMWeb web = new UMWeb(url);
-                web.setTitle(baseComic.getName());//标题
-                web.setThumb(new UMImage(activity, baseComic.getVertical_cover()));  //缩略图
-                web.setDescription(baseComic.getDescription());//描述
-                MyShare.Share(activity, "", web);
-                break;
-            case R.id.activity_book_info_content_xiangqing:
-                MyToash.Log("activity_book_info_content_xiangqing", "" + chooseWho);
-                if (chooseWho) {
-                    fragment_comicinfo_viewpage.setCurrentItem(0);
-                    chooseWho = false;
-                }
-                break;
-            case R.id.activity_book_info_content_mulu:
-                MyToash.Log("activity_book_info_content_mulu", "" + chooseWho);
-                if (!chooseWho) {
-                    fragment_comicinfo_viewpage.setCurrentItem(1);
-                    chooseWho = true;
-                }
-                break;
-            case R.id.activity_book_info_content_shoucang:
+            case R.id.img_comic_collect:
                 if (!baseComic.isAddBookSelf()) {
                     baseComic.saveIsexist(true);
-                    activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+                    tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     addSelfCollect();
                     EventBus.getDefault().post(new RefreshComic(baseComic, 1));
                 } else {
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_delshoucang));
-                    activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
+                    tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
                     LitePal.delete(BaseComic.class, baseComic.getId());
                     baseComic.setAddBookSelf(false);
                     EventBus.getDefault().post(new RefreshComic(baseComic, 0));
                 }
                 break;
-            case R.id.activity_comic_info_topbar_downlayout:
+            case R.id.tx_comic_down:
                 if (App.isVip(activity)) {
                     if (baseComic != null && comicChapter != null) {
                         baseComic.saveIsexist(false);
@@ -258,12 +235,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     MyToash.Toash(activity, getString(R.string.down_toast_msg));
                 }
                 break;
-            case R.id.fragment_comicinfo_mulu_dangqian://baseComic.getCurrent_chapter_displayOrder()
-                muluFragment.OnclickDangqian(true);
-                break;
-            case R.id.fragment_comicinfo_mulu_zhiding:
-                muluFragment.OnclickDangqian(false);
-                break;
         }
     }
 
@@ -271,6 +242,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
+        WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
+        HEIGHT = ScreenSizeUtils.getInstance(activity).getScreenHeight();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -283,85 +256,57 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
         }
         EventBus.getDefault().register(this);
-        resources = getResources();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        ry_comic_category.setLayoutManager(linearLayoutManager);
+
         init();
     }
 
     public void init() {
         if (!ReaderConfig.USE_SHARE) {
-            activity_comic_info_topbar_sharelayout.setVisibility(View.GONE);
+            titlebar_share.setVisibility(View.GONE);
         }
-        muluFragment = new <Fragment>ComicinfoMuluFragment(muluLorded, fragment_comicinfo_mulu_zhiding_img, fragment_comicinfo_mulu_zhiding_text);
-        comicFragment = new <Fragment>ComicinfoCommentFragment();
-        fragmentList = new ArrayList<>();
-        fragmentList.add(comicFragment);
-        fragmentList.add(muluFragment);
-        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-        fragment_comicinfo_viewpage.setAdapter(myFragmentPagerAdapter);
-        channel_bar_indicator.setViewPager(fragment_comicinfo_viewpage);
-        channel_bar_indicator.setFades(false);
-        bookInfoComment = new ArrayList<>();
-        activity_comic_info_AppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+        activity_book_info_scrollview.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
-            public void onStateChanged(AppBarLayout appBarLayout, State state) {
-                MyToash.Log("appBarLayout", state + "");
-                if (state == State.EXPANDED) {
-                    activity_comic_info_top_bookname.setVisibility(View.GONE);
-                    activity_comic_info_topbar.setBackground(null);
-                } else if (state == State.COLLAPSED) {
-                    activity_comic_info_top_bookname.setVisibility(View.VISIBLE);
-                    activity_comic_info_topbar.setVisibility(View.VISIBLE);
-                    if (activity_comic_info_topbar != null) {
-                        activity_comic_info_topbar.setBackground(activity_comic_info_topbarD);
-                        Drawable drawable = new Drawable() {
-                            @Override
-                            public void draw(Canvas canvas) {
-                            }
-
-                            @Override
-                            public void setAlpha(int i) {
-                            }
-
-                            @Override
-                            public void setColorFilter(ColorFilter colorFilter) {
-                            }
-
-                            @SuppressLint("WrongConstant")
-                            @Override
-                            public int getOpacity() {
-                                return 0;
-                            }
-                        };
-                        drawable.setAlpha(0);
-                        activity_comic_info_CollapsingToolbarLayout.setContentScrim(drawable);
-                    }
+            public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+                if (y <= 0) {
+                    setStatusTextColor(false, activity);
+                    back.setBackgroundResource(R.mipmap.back_white);
                 } else {
-                    activity_comic_info_top_bookname.setVisibility(View.GONE);
-                    activity_comic_info_topbar.setBackground(null);
+                    setStatusTextColor(true, activity);
+                    back.setBackgroundResource(R.mipmap.back_black);
                 }
+                final float ratio = (float) Math.min(Math.max(y, 0), 120) / 120;
+                float alpha = (int) (ratio * 255);
+                book_info_titlebar_container.setBackgroundColor(Color.argb((int) alpha, 255, 255, 255));
+                titlebar_text.setAlpha(ratio);
+                book_info_titlebar_container_shadow.setAlpha(ratio);
             }
         });
-        fragment_comicinfo_viewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onRefresh() {
+                mPageNum = 1;
+                comicChapter.clear();
+                getDataCatalogInfo();
             }
-
+        });
+        ry_comic_category.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onPageSelected(int position) {
-                chooseWho = position == 1;
-                if (!chooseWho) {
-                    activity_book_info_content_mulu_text.setTextColor(Color.BLACK);
-                    activity_book_info_content_xiangqing_text.setTextColor(ContextCompat.getColor(activity, R.color.mainColor));
-                    fragment_comicinfo_mulu_dangqian_layout.setVisibility(View.GONE);
-                } else {
-                    activity_book_info_content_xiangqing_text.setTextColor(Color.BLACK);
-                    activity_book_info_content_mulu_text.setTextColor(ContextCompat.getColor(activity, R.color.mainColor));
-                    fragment_comicinfo_mulu_dangqian_layout.setVisibility(View.VISIBLE);
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager){
+                    lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
                 }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                if (comicChapterCatalogAdapter!=null&&newState==RecyclerView.SCROLL_STATE_IDLE&&lastVisibleItemPosition==comicChapter.size()){
+                    if (mTotalPage >= mPageNum) {
+                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
+                        getDataCatalogInfo();
+                    } else {
+                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
+                    }
+                }
             }
         });
         httpData();
@@ -369,11 +314,11 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
 
     public void handdata() {
         if (!refreshComment) {
-            MyPicasso.GlideImageRoundedCorners(12, activity, comic.vertical_cover, activity_book_info_content_cover, ImageUtil.dp2px(activity, 135), ImageUtil.dp2px(activity, 180), R.mipmap.comic_def_v);
+            MyPicasso.GlideImageRoundedCorners(12, activity, comic.vertical_cover, activity_comic_cover_bg, ImageUtil.dp2px(activity, 135), ImageUtil.dp2px(activity, 180), R.mipmap.comic_def_v);
             if (comic.horizontal_cover.length() > 0) {
-                MyPicasso.GlideImage(activity, comic.horizontal_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
+                MyPicasso.GlideImage(activity, comic.horizontal_cover, activity_comic_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
             } else {
-                MyPicasso.GlideImageRoundedGasoMohu(activity, comic.vertical_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
+                MyPicasso.GlideImageRoundedGasoMohu(activity, comic.vertical_cover, activity_comic_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
             }
             try {
                 Glide.with(this).asBitmap().load(comic.horizontal_cover).into(new SimpleTarget<Bitmap>() {
@@ -384,31 +329,15 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 });
             } catch (Exception e) {
             }
-            activity_book_info_content_name.setText(comic.name);
-            fragment_comicinfo_current_chaptername.setText(baseComic.getCurrent_chapter_name() == null ? "" : baseComic.getCurrent_chapter_name());
-            activity_book_info_content_author.setText(comic.author);
-            activity_book_info_content_total_hot.setText(comic.hot_num);
-            activity_book_info_content_shoucannum.setText(comic.total_favors);
-            activity_comic_info_top_bookname.setText(comic.name);
-            int dp6 = ImageUtil.dp2px(activity, 6);
-            int dp3 = ImageUtil.dp2px(activity, 3);
-            for (BaseTag tag : comic.tag) {
-                TextView textView = new TextView(activity);
-                textView.setText(tag.getTab());
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-                textView.setLines(1);
-                textView.setGravity(Gravity.CENTER);
-                textView.setPadding(dp6, dp3, dp6, dp3);
-                textView.setTextColor(Color.parseColor(tag.getColor()));//resources.getColor(R.color.comic_info_tag_text)
-                GradientDrawable drawable = new GradientDrawable();
-                drawable.setCornerRadius(10);
-                drawable.setColor(Color.parseColor("#1A" + tag.getColor().substring(1)));
-                textView.setBackground(drawable);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.rightMargin = ImageUtil.dp2px(activity, 10);
-                layoutParams.gravity = Gravity.CENTER_VERTICAL;
-                activity_book_info_content_tag.addView(textView, layoutParams);
-            }
+            tx_comic_name.setText(comic.name);
+            tx_comic_num.setText(comic.hot_num);
+            tx_comic_description.setText(comic.description);
+            tx_comic_status.setText(comic.tag.get(0).getTab());
+            tx_comic_flag.setText(comic.flag);
+            titlebar_text.setText(comic.name);
+            titlebar_text.setAlpha(0);
+
+            book_info_titlebar_container_shadow.setAlpha(0);
             baseComic.setVertical_cover(comic.vertical_cover);
             baseComic.setHorizontal_cover(comic.horizontal_cover);
             baseComic.setName(comic.name);
@@ -419,9 +348,121 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             baseComic.setAuthor(comic.author);
             baseComic.setFlag(comic.flag);
             baseComic.setTotal_chapters(comic.total_chapters);
-            muluFragment.senddata(baseComic, comic);
+
+            if (ReaderConfig.USE_AD && baseAd != null) {
+                activity_book_info_ad.setVisibility(View.VISIBLE);
+                ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
+                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+                layoutParams.height = layoutParams.width / 3;
+                list_ad_view_img.setLayoutParams(layoutParams);
+                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setClass(activity, WebViewActivity.class);
+                        intent.putExtra("url", baseAd.ad_skip_url);
+                        intent.putExtra("title", baseAd.ad_title);
+                        intent.putExtra("advert_id", baseAd.advert_id);
+                        intent.putExtra("ad_url_type", baseAd.ad_url_type);
+                        activity.startActivity(intent);
+                    }
+                });
+
+            } else {
+                activity_book_info_ad.setVisibility(View.GONE);
+            }
+            ll_comment_container.removeAllViews();
+            ll_label_container.removeAllViews();
+            try {
+                if (bookInfoComment != null || !bookInfoComment.isEmpty()) {
+                    for (BookInfoComment bookInfoComment : bookInfoComment) {
+                        LinearLayout commentView = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.activity_book_info_content_comment_item, null, false);
+                        CircleImageView activity_book_info_content_comment_item_avatar = commentView.findViewById(R.id.activity_book_info_content_comment_item_avatar);
+                        TextView activity_book_info_content_comment_item_nickname = commentView.findViewById(R.id.activity_book_info_content_comment_item_nickname);
+                        TextView activity_book_info_content_comment_item_content = commentView.findViewById(R.id.activity_book_info_content_comment_item_content);
+                        TextView activity_book_info_content_comment_item_reply = commentView.findViewById(R.id.activity_book_info_content_comment_item_reply_info);
+                        TextView activity_book_info_content_comment_item_time = commentView.findViewById(R.id.activity_book_info_content_comment_item_time);
+                        View comment_item_isvip = commentView.findViewById(R.id.comment_item_isvip);
+                        MyPicasso.IoadImage(activity, bookInfoComment.getAvatar(), R.mipmap.icon_def_head, activity_book_info_content_comment_item_avatar);
+                        activity_book_info_content_comment_item_nickname.setText(bookInfoComment.getNickname());
+                        activity_book_info_content_comment_item_content.setText(bookInfoComment.getContent());
+                        activity_book_info_content_comment_item_reply.setText(bookInfoComment.getReply_info());
+                        activity_book_info_content_comment_item_reply.setVisibility(TextUtils.isEmpty(bookInfoComment.getReply_info()) ? View.GONE : View.VISIBLE);
+                        activity_book_info_content_comment_item_time.setText(bookInfoComment.getTime());
+                        comment_item_isvip.setVisibility(bookInfoComment.getIs_vip() == 1 ? View.VISIBLE : View.GONE);
+                        //评论点击的处理
+                        commentView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(activity, ReplyCommentActivity.class);
+                                intent.putExtra("comic_id", baseComic.getComic_id());
+                                intent.putExtra("comment_id", bookInfoComment.getComment_id());
+                                intent.putExtra("avatar", bookInfoComment.getAvatar());
+                                intent.putExtra("nickname", bookInfoComment.getNickname());
+                                intent.putExtra("origin_content", bookInfoComment.getContent());
+                                startActivity(intent);
+                            }
+                        });
+                        ll_comment_container.addView(commentView);
+                    }
+                }
+                //"查看全部评论"
+                String moreText;
+                if (comic.total_comment > 0) {
+                    moreText = LanguageUtil.getString(activity, R.string.BookInfoActivity_lookpinglun);
+                } else {
+                    moreText = LanguageUtil.getString(activity, R.string.BookInfoActivity_nopinglun);
+                }
+                LinearLayout commentMoreView = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.activity_book_info_content_comment_more, null, false);
+                TextView activity_book_info_content_comment_more_text = commentMoreView.findViewById(R.id.activity_book_info_content_comment_more_text);
+                activity_book_info_content_comment_more_text.setText(String.format(moreText, comic.total_comment + ""));
+                tx_add_comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivityForResult(
+                                new Intent(activity, ComicCommentActivity.class).
+                                        putExtra("comic_id", comic.comic_id).
+                                        putExtra("IsBook", false), 11);
+                    }
+                });
+                commentMoreView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivityForResult(new Intent(activity, ComicCommentActivity.class).putExtra("comic_id", comic.comic_id).putExtra("IsBook", false), 11);
+                    }
+                });
+                ll_comment_container.addView(commentMoreView);
+                if (stroreComicLable != null && !stroreComicLable.list.isEmpty()) {
+                    List<StroreComicLable.Comic> comicList = stroreComicLable.list;
+                    View type1 = LayoutInflater.from(activity).inflate(R.layout.fragment_store_comic_layout, null, false);
+                    TextView lable = type1.findViewById(R.id.fragment_store_gridview1_text);
+                    lable.setText(stroreComicLable.label);
+                    LinearLayout fragment_store_gridview1_huanmore = type1.findViewById(R.id.fragment_store_gridview1_huanmore);
+                    fragment_store_gridview1_huanmore.setVisibility(View.GONE);
+                    AdaptionGridViewNoMargin fragment_store_gridview1_gridview = type1.findViewById(R.id.fragment_store_gridview1_gridview);
+                    StoreComicAdapter storeComicAdapter;
+                    fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String comic_id = comicList.get(position).comic_id;
+                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_info) + " " + comic_id, comic_id));
+                        }
+                    });
+                    fragment_store_gridview1_gridview.setNumColumns(3);
+                    int width = WIDTH / 3;
+                    int height = width * 4 / 3;
+                    double size = Math.min(6, comicList.size());
+                    storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size), activity, 2, width, height);
+                    fragment_store_gridview1_gridview.setAdapter(storeComicAdapter);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 20, 0, 0);
+                    params.height = height * (int) (Math.ceil(size / 3d)) + ImageUtil.dp2px(activity, 170);
+                    ll_label_container.addView(type1, params);
+                }
+            } catch (Exception e) {
+            }
         }
-        comicFragment.senddata(comic, bookInfoComment, stroreComicLable, baseAd);
     }
 
     public void httpData() {
@@ -451,8 +492,12 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 baseComic.setAddBookSelf(false);
             }
         }
+        comicChapterCatalogAdapter = new ComicHChapterCatalogAdapter(baseComic, activity, comicChapter);
+        ry_comic_category.setAdapter(comicChapterCatalogAdapter);
         if (baseComic.isAddBookSelf()) {
-            activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+        }else {
+            tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
         }
         httpData2(false);
     }
@@ -481,19 +526,64 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        if (ex != null && ex.equals("nonet")) {
-                            muluFragment.senddata(baseComic, comic);
-                        }
                     }
                 }
         );
+        getDataCatalogInfo();//获取小说目录
+    }
+
+    private void getDataCatalogInfo() {
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("comic_id", comic_id);
+        params.putExtraParams("page", "" + mPageNum);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_catalog, json, true, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(final String result) {
+                try {
+                    swipeRefreshLayout.setRefreshing(false);
+                    JSONObject jsonObject = new JSONObject(result);
+                    JsonParser jsonParser = new JsonParser();
+                    mTotalPage =jsonObject.getInt("total_page");
+                    JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
+                    for (JsonElement jsonElement : jsonElements) {
+                        ComicChapter comicChapter1 = new Gson().fromJson(jsonElement, ComicChapter.class);
+                        comicChapter1.chapter_id = comic_id;
+                        if (comicChapter1.getAd_image()==null){
+                            comicChapter.add(comicChapter1);
+                        }
+                    }
+                    if (comicChapter != null && !comicChapter.isEmpty()) {
+                        if (mPageNum == 1) {
+                            comicChapterCatalogAdapter.notifyDataSetChanged();
+                        }else {
+                            comicChapterCatalogAdapter.notifyItemRangeRemoved(size,comicChapter.size());
+                        }
+                        mPageNum++;
+                    }
+                    size = comicChapter.size();
+                } catch (Exception E) {
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+                swipeRefreshLayout.setRefreshing(false);
+                if (ex != null && ex.equals("nonet")) {
+                    MyToash.Log("nonet", "11");
+                    if (comicChapter != null && !comicChapter.isEmpty()) {
+                        comicChapterCatalogAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreashComicInfoActivity refreshBookInfo) {
         if (refreshBookInfo.isSave) {
             baseComic.setAddBookSelf(true);
-            activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
             addSelfCollect();
         } else {
             httpData2(true);
@@ -524,17 +614,9 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         baseComic.setCurrent_display_order(baseComic1.getCurrent_display_order());
         baseComic.setCurrent_chapter_id(baseComic1.getCurrent_chapter_id());
         baseComic.setCurrent_chapter_name(baseComic1.getCurrent_chapter_name());
-        fragment_comicinfo_current_chaptername.setText(baseComic1.getCurrent_chapter_name());
-        if (muluFragment.comicChapterCatalogAdapter != null) {
-            muluFragment.comicChapterCatalogAdapter.setCurrentChapterId(baseComic1.getCurrent_chapter_id());
-            if (baseComic1.getCurrent_display_order() < muluFragment.comicChapterCatalogAdapter.comicChapterCatalogList.size()) {
-                muluFragment.comicChapterCatalogAdapter.comicChapterCatalogList.get(baseComic1.getCurrent_display_order()).IsRead = true;
-            }
-            muluFragment.comicChapterCatalogAdapter.notifyDataSetChanged();
-        }
         if (!baseComic.isAddBookSelf() && baseComic1.isAddBookSelf()) {
             baseComic.setAddBookSelf(true);
-            activity_book_info_content_shoucang.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
             addSelfCollect();
         }
     }

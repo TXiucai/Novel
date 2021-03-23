@@ -444,4 +444,5 @@
     <string name="string_accept_coupon_tittle">您的剩余书券不足，解锁章节失败，赶快去赚取书券吧！</string>
     <string name="string_right_now_go">立即前往</string>
     <string name="string_novel_boyin_tittle">同名有声《%s》</string>
+    <string name="string_comic_vip">本作品VIP会员免费看</string>
 </resources>

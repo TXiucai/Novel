@@ -14,7 +14,7 @@
             android:id="@+id/item_comic_ad"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_80dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitXY" />
 
         <View
             android:id="@+id/ban_touch_float"

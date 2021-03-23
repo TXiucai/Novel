@@ -34,6 +34,15 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     private String ad_image;
     private String ad_skip_url;
     private int ad_url_type;
+    private String is_book_coupon_pay;
+
+    public String getIs_book_coupon_pay() {
+        return is_book_coupon_pay;
+    }
+
+    public void setIs_book_coupon_pay(String is_book_coupon_pay) {
+        this.is_book_coupon_pay = is_book_coupon_pay;
+    }
 
     public int getAdvert_id() {
         return advert_id;

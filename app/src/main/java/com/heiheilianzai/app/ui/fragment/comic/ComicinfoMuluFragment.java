@@ -27,6 +27,7 @@ import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.comic.ComicinfoMuluBuy;
+import com.heiheilianzai.app.ui.activity.comic.ComicActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -76,7 +77,7 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
     public XRecyclerView fragment_comicinfo_mulu_list;
     @BindView(R.id.fragment_comicinfo_mulu_layout)
     public RelativeLayout fragment_comicinfo_mulu_layout;
-    ComicInfoActivity.MuluLorded muluLorded;
+    ComicActivity.MuluLorded muluLorded;
     int Current_chapter_displayOrder;
     public ImageView fragment_comicinfo_mulu_zhiding_img;
     public TextView fragment_comicinfo_mulu_zhiding_text;
@@ -122,7 +123,7 @@ public class ComicinfoMuluFragment extends BaseButterKnifeFragment {
     }
 
     @SuppressLint("ValidFragment")
-    public ComicinfoMuluFragment(ComicInfoActivity.MuluLorded muluLorded, ImageView fragment_comicinfo_mulu_zhiding_img, TextView fragment_comicinfo_mulu_zhiding_text) {
+    public ComicinfoMuluFragment(ComicActivity.MuluLorded muluLorded, ImageView fragment_comicinfo_mulu_zhiding_img, TextView fragment_comicinfo_mulu_zhiding_text) {
         this.muluLorded = muluLorded;
         this.fragment_comicinfo_mulu_zhiding_img = fragment_comicinfo_mulu_zhiding_img;
         this.fragment_comicinfo_mulu_zhiding_text = fragment_comicinfo_mulu_zhiding_text;

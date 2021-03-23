@@ -155,7 +155,7 @@ public class NovelActivity extends BaseButterKnifeTransparentActivity {
 
     @Override
     public int initContentView() {
-        return R.layout.activity_book_info;
+        return R.layout.activity_novel_info;
     }
 
     @OnClick(value = {R.id.titlebar_back, R.id.activity_book_info_content_category_layout,

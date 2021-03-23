@@ -276,7 +276,7 @@
                 <ImageView
                     android:layout_width="@dimen/dimens_18dp"
                     android:layout_height="@dimen/dimens_18dp"
-                    android:src="@mipmap/novel_add_book" />
+                    android:src="@mipmap/novel_down_book" />
 
                 <TextView
                     android:id="@+id/activity_book_info_down"
