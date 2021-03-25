@@ -77,6 +77,7 @@ import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
+import com.heiheilianzai.app.utils.DialogComicChapter;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -180,17 +181,17 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     List<BookInfoComment> bookInfoComment;
     StroreComicLable.Comic comic;
     BaseAd baseAd;
-    List<ComicChapter> comicChapter=new ArrayList<>();
+    List<ComicChapter> comicChapter = new ArrayList<>();
     Drawable activity_comic_info_topbarD;
     boolean refreshComment;
     ComicInfo mComicInfo;//漫画具体信息
-    public int WIDTH, HEIGHT, mPageNum = 1,mTotalPage;
+    public int WIDTH, HEIGHT, mPageNum = 1, mTotalPage;
     ComicHChapterCatalogAdapter comicChapterCatalogAdapter;
     private int size;
     private int lastVisibleItemPosition;
 
     @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back,
-            R.id.tx_comic_down, R.id.img_comic_collect})
+            R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.tx_comic_start_read:
@@ -234,6 +235,10 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 } else {
                     MyToash.Toash(activity, getString(R.string.down_toast_msg));
                 }
+                break;
+            case R.id.ll_comic_category:
+                DialogComicChapter dialogComicChapter = new DialogComicChapter();
+                dialogComicChapter.getDialogVipPop(activity, baseComic);
                 break;
         }
     }
@@ -296,10 +301,10 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                if (layoutManager instanceof LinearLayoutManager){
+                if (layoutManager instanceof LinearLayoutManager) {
                     lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
                 }
-                if (comicChapterCatalogAdapter!=null&&newState==RecyclerView.SCROLL_STATE_IDLE&&lastVisibleItemPosition==comicChapter.size()){
+                if (comicChapterCatalogAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == comicChapter.size()) {
                     if (mTotalPage >= mPageNum) {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
                         getDataCatalogInfo();
@@ -496,7 +501,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         ry_comic_category.setAdapter(comicChapterCatalogAdapter);
         if (baseComic.isAddBookSelf()) {
             tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
-        }else {
+        } else {
             tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
         }
         httpData2(false);
@@ -544,20 +549,20 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     swipeRefreshLayout.setRefreshing(false);
                     JSONObject jsonObject = new JSONObject(result);
                     JsonParser jsonParser = new JsonParser();
-                    mTotalPage =jsonObject.getInt("total_page");
+                    mTotalPage = jsonObject.getInt("total_page");
                     JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
                     for (JsonElement jsonElement : jsonElements) {
                         ComicChapter comicChapter1 = new Gson().fromJson(jsonElement, ComicChapter.class);
                         comicChapter1.chapter_id = comic_id;
-                        if (comicChapter1.getAd_image()==null){
+                        if (comicChapter1.getAd_image() == null) {
                             comicChapter.add(comicChapter1);
                         }
                     }
                     if (comicChapter != null && !comicChapter.isEmpty()) {
                         if (mPageNum == 1) {
                             comicChapterCatalogAdapter.notifyDataSetChanged();
-                        }else {
-                            comicChapterCatalogAdapter.notifyItemRangeRemoved(size,comicChapter.size());
+                        } else {
+                            comicChapterCatalogAdapter.notifyItemRangeRemoved(size, comicChapter.size());
                         }
                         mPageNum++;
                     }
