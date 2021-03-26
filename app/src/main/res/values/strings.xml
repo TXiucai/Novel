@@ -446,4 +446,7 @@
     <string name="string_novel_boyin_tittle">同名有声《%s》</string>
     <string name="string_comic_vip">本作品VIP会员免费看</string>
     <string name="string_comic_chapter_tittle">目录/选集</string>
+    <string name="string_dialog_comic_tittle">VIP<font color='#ff8350'>免费</font>会员</string>
+    <string name="string_dialog_comic_subtittle"><![CDATA[开通VIP免费看所有漫画>>]]></string>
+    <string name="string_dialog_comic_vip">开通VIP会员</string>
 </resources>

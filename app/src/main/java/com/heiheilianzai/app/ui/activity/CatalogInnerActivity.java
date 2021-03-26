@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -179,11 +180,14 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                             String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
                             if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(CatalogInnerActivity.this)) {
                                 DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-                                dialogNovelCoupon.getDialogVipPop(activity, chapterItem,false);
+                                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, false);
                                 dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                                     @Override
                                     public void onOpenCoupon(boolean isBuy) {
                                         if (isBuy) {
+                                            if (dialogVipPop != null) {
+                                                dialogVipPop.dismiss();
+                                            }
                                             ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                                         }
                                     }

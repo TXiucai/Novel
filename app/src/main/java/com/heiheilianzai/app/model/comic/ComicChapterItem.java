@@ -14,6 +14,15 @@ public class ComicChapterItem {
     public List<BaseComicImage> image_list;
     public ComicChapterTopAd advert;
     public String is_vip;
+    public String is_book_coupon_pay;
+
+    public String getIs_book_coupon_pay() {
+        return is_book_coupon_pay;
+    }
+
+    public void setIs_book_coupon_pay(String is_book_coupon_pay) {
+        this.is_book_coupon_pay = is_book_coupon_pay;
+    }
 
     public String getIs_vip() {
         return is_vip;

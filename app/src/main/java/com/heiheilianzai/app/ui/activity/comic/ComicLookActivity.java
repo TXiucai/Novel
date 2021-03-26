@@ -61,6 +61,8 @@ import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BrightnessUtil;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.DialogComicLook;
+import com.heiheilianzai.app.utils.DialogNovelCoupon;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -68,6 +70,7 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.PageFactory;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -95,6 +98,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -696,7 +700,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         try {
             this.comicChapterItem = comicChapterItem;
             if (comicChapterItem != null && !comicChapterItem.image_list.isEmpty()) {
-                checkIsVip(comicChapterItem);
+                checkIsCoupon(comicChapterItem);
                 setBigImageImageLoader(comicChapterItem.image_list.get(0));
                 titlebar_text.setText(comicChapterItem.chapter_title);
                 Chapter_title = comicChapterItem.chapter_title;
@@ -718,8 +722,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 baseComicImages.addAll(comicChapterItem.image_list);
                 ComicChapterTopAd advert = comicChapterItem.getAdvert();
-                if (advert!=null){
-                    BaseComicImage baseComicImage=new BaseComicImage();
+                if (advert != null) {
+                    BaseComicImage baseComicImage = new BaseComicImage();
                     baseComicImage.setAd(1);
                     baseComicImage.setAd_skip_url(advert.getAd_skip_url());
                     baseComicImage.setImage(advert.getAd_image());
@@ -728,7 +732,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     baseComicImage.setHeight(advert.getAd_height());
                     baseComicImage.setWidth(advert.getAd_width());
                     baseComicImage.setAdvert_id(advert.getAdvert_id());
-                    baseComicImages.add(0,baseComicImage);
+                    baseComicImages.add(0, baseComicImage);
                 }
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
@@ -788,6 +792,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
 
                 ComicReadHistory.addReadHistory(FORM_READHISTORY, activity, comic_id, chapter_id);
+
             }
         } catch (Exception e) {
         } catch (Error e) {
@@ -1166,12 +1171,36 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         return tagId;
     }
 
-    private void checkIsVip(ComicChapterItem chapterItem){
-        String is_vip =chapterItem.getIs_vip();
+    private void checkIsVip(ComicChapterItem chapterItem) {
+        String is_vip = chapterItem.getIs_vip();
         if (is_vip != null && is_vip.equals("1") && !App.isVip(activity)) {
             DialogVip dialogVip = new DialogVip();
             dialogVip.getDialogVipPop(activity, true);
             return;
         }
+    }
+
+    private void checkIsCoupon(ComicChapterItem chapterItem) {
+        boolean isVip = false;
+        String is_vip = chapterItem.getIs_vip();
+        if (is_vip != null && is_vip.equals("1")) {
+            isVip = true;
+        }
+        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(activity)) {
+            DialogComicLook dialogNovelCoupon = new DialogComicLook();
+            Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isVip);
+            dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                @Override
+                public void onOpenCoupon(boolean isBuy) {
+                    if (dialogVipPop != null) {
+                        dialogVipPop.dismiss();
+                    }
+                    chapterItem.setIs_book_coupon_pay("0");
+                }
+            });
+            return;
+        }
+        checkIsVip(chapterItem);
     }
 }

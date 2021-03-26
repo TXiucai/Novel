@@ -153,7 +153,7 @@
                         <ImageView
                             android:layout_width="@dimen/dimens_10dp"
                             android:layout_height="@dimen/dimens_10dp"
-                            android:background="@mipmap/right_black"
+                            android:background="@mipmap/comic_more"
                             android:scaleType="centerCrop" />
                     </LinearLayout>
 

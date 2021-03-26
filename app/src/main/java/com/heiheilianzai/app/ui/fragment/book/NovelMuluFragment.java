@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -113,11 +114,14 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
                             String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
                             if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(getContext())) {
                                 DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-                                dialogNovelCoupon.getDialogVipPop(activity, chapterItem,false);
+                                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, false);
                                 dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                                     @Override
                                     public void onOpenCoupon(boolean isBuy) {
                                         if (isBuy) {
+                                            if (dialogVipPop!=null){
+                                                dialogVipPop.dismiss();
+                                            }
                                             ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                                         }
                                     }

@@ -50,49 +50,42 @@ public class ComicHChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-            View view = LayoutInflater.from(activity).inflate(R.layout.item_comic_chapter_catalog_h, null);
-            return new ViewHolder(view);
+        View view = LayoutInflater.from(activity).inflate(R.layout.item_comic_chapter_catalog_h, null);
+        return new ViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         final ComicChapter comicChapterCatalog = comicChapterCatalogList.get(i);
-            ViewHolder holder = (ViewHolder) viewHolder;
-            holder.item_comicchaptercatalog_current_bg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (comicChapterCatalog != null) {
-
-                            int is_vip = comicChapterCatalog.getIs_vip();
-                            if ( is_vip==1 && !App.isVip(activity)) {
-                                DialogVip dialogVip = new DialogVip();
-                                dialogVip.getDialogVipPop(activity, false);
-                                return;
-                            }
-                            baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
-                            baseComic.saveIsexist(false);
-                            activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
-                    }
+        ViewHolder holder = (ViewHolder) viewHolder;
+        holder.item_comicchaptercatalog_current_bg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (comicChapterCatalog != null) {
+                    baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
+                    baseComic.saveIsexist(false);
+                    activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
                 }
-            });
-            holder.item_comicchaptercatalog_name.setText(comicChapterCatalog.chapter_title);
-            holder.item_chapter_catalog_time.setText(comicChapterCatalog.updated_at);
-            if (comicChapterCatalog.isRead()) {
-                holder.item_comicchaptercatalog_current_bg.setBackgroundColor(activity.getResources().getColor(R.color.lightgray2));
-            } else {
-                holder.item_comicchaptercatalog_current_bg.setBackgroundColor(Color.WHITE);
             }
-            if (comicChapterCatalog.getIs_vip() == 0) {//免费
-                if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(),"0")) {
-                    MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
-                    holder.item_comic_chapter_lock.setVisibility(View.GONE);
-                } else {
-                    holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
-                }
+        });
+        holder.item_comicchaptercatalog_name.setText(comicChapterCatalog.chapter_title);
+        holder.item_chapter_catalog_time.setText(comicChapterCatalog.updated_at);
+        if (comicChapterCatalog.isRead()) {
+            holder.item_comicchaptercatalog_current_bg.setBackgroundColor(activity.getResources().getColor(R.color.lightgray2));
+        } else {
+            holder.item_comicchaptercatalog_current_bg.setBackgroundColor(Color.WHITE);
+        }
+        if (comicChapterCatalog.getIs_vip() == 0) {//免费
+            if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "0")) {
+                MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+                holder.item_comic_chapter_lock.setVisibility(View.GONE);
             } else {
                 holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
             }
+        } else {
+            holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

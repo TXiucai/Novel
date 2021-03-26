@@ -44,6 +44,9 @@ public class DialogNovelCoupon {
             public void onClick(View v) {
                 if (onOpenCouponListener != null) {
                     if (!Utils.isLogin(activity)) {//登录状态跳个人资料
+                        if (popupWindow != null) {
+                            popupWindow.dismiss();
+                        }
                         MainHttpTask.getInstance().Gotologin(activity);
                     }else {
                         if (couponNum >= Integer.valueOf(couponPrice)) {

@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.utils;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -1674,10 +1675,13 @@ public class PageFactory {
         String is_book_coupon_pay =chapterItem.getIs_book_coupon_pay();
         if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
            DialogNovelCoupon dialogNovelCoupon=new DialogNovelCoupon();
-           dialogNovelCoupon.getDialogVipPop(mActivity,chapterItem,true);
-           dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+            Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+            dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                @Override
                public void onOpenCoupon(boolean isBuy) {
+                   if (dialogVipPop!=null){
+                       dialogVipPop.dismiss();
+                   }
                    chapterItem.setIs_book_coupon_pay("0");
                    isBuyCoupon.buyCoupon();
                }

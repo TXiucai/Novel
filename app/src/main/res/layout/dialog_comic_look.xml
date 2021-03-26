@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/book_info_titlebar_container"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_70dp">
+
+        <LinearLayout
+            android:id="@+id/titlebar_back"
+            android:layout_width="@dimen/dimens_80dp"
+            android:layout_height="@dimen/dimens_40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimens_15dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:background="@mipmap/back_black"
+                android:scaleType="centerCrop" />
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_400dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_265dp"
+            android:layout_marginLeft="@dimen/dimens_30dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="@dimen/dimens_170dp"
+                android:layout_height="@dimen/dimens_80dp"
+                android:background="@mipmap/dialog_look_comic_dialog"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimens_12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_dialog_comic_tittle"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_5dp"
+                    android:text="@string/string_dialog_comic_subtittle"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/dialog_comic_look_bg" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_180dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_ffdbc7"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimens_30dp"
+            android:paddingTop="@dimen/dimens_20dp"
+            android:paddingRight="@dimen/dimens_30dp">
+
+            <LinearLayout
+                android:id="@+id/ll_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_dialog_coupon_total"
+                    android:textColor="@color/color_1a1a1a"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tx_coupon_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_10dp"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="26sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tx_vip"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:background="@mipmap/dialog_comic_vip_bg"
+                android:gravity="center"
+                android:text="@string/string_dialog_comic_vip"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tx_coupon_chapter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_12dp"
+                android:gravity="center"
+                android:text="@string/dialog_coupon_open"
+                android:textColor="@color/color_3b3b3b"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
