@@ -100,7 +100,7 @@
     <string name="MineNewFragment_kaitongVIP">我的VIP</string>
     <string name="MineNewFragment_shuping">我的评论</string>
     <string name="MineNewFragment_share">我要分享</string>
-    <string name="MineNewFragment_friend">邀请好友</string>
+    <string name="MineNewFragment_friend">分享好友</string>
     <string name="MineNewFragment_fankui">意见反馈</string>
     <string name="MineNewFragment_lianxikefu">联系客服</string>
     <string name="MineNewFragment_set">设置</string>
@@ -449,4 +449,10 @@
     <string name="string_dialog_comic_tittle">VIP<font color='#ff8350'>免费</font>会员</string>
     <string name="string_dialog_comic_subtittle"><![CDATA[开通VIP免费看所有漫画>>]]></string>
     <string name="string_dialog_comic_vip">开通VIP会员</string>
+    <string name="string_mine_no_login_tip">登录后享受更多服务</string>
+    <string name="mine_vip_tittle">VIP专享</string>
+    <string name="mine_vip_tip">免费畅听畅读，精品抢先</string>
+    <string name="mine_vip_open">立即开通</string>
+    <string name="mine_vip_continue">立即续费</string>
+    <string name="string_sign_invite_code">填邀请码送好礼</string>
 </resources>

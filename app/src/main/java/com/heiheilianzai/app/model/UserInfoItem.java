@@ -43,6 +43,42 @@ public class UserInfoItem implements Serializable{
 
     private int sign_status;
     private String area_code;
+    private String vip_end_time;
+    private String vip_left_three_days_note;
+    private boolean vip_left_three_days;
+    private Luobo_notice luobo_notice;
+
+    public String getVip_end_time() {
+        return vip_end_time;
+    }
+
+    public void setVip_end_time(String vip_end_time) {
+        this.vip_end_time = vip_end_time;
+    }
+
+    public String getVip_left_three_days_note() {
+        return vip_left_three_days_note;
+    }
+
+    public void setVip_left_three_days_note(String vip_left_three_days_note) {
+        this.vip_left_three_days_note = vip_left_three_days_note;
+    }
+
+    public boolean isVip_left_three_days() {
+        return vip_left_three_days;
+    }
+
+    public void setVip_left_three_days(boolean vip_left_three_days) {
+        this.vip_left_three_days = vip_left_three_days;
+    }
+
+    public Luobo_notice getLuobo_notice() {
+        return luobo_notice;
+    }
+
+    public void setLuobo_notice(Luobo_notice luobo_notice) {
+        this.luobo_notice = luobo_notice;
+    }
 
     public String getArea_code() {
         return area_code;
@@ -79,7 +115,26 @@ public class UserInfoItem implements Serializable{
     public void setTask_list(Task_list task_list) {
         this.task_list = task_list;
     }
+    public static class Luobo_notice{
+        private String title;
+        private String content;
 
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
     public static class Task_list {
         private int mission_num;
         private int finish_num;

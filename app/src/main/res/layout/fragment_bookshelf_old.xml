@@ -44,7 +44,7 @@
                 android:background="@drawable/shape_announce"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dimens_15dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:visibility="visible">
 
                 <TextView
@@ -58,7 +58,7 @@
 
                 <com.heiheilianzai.app.view.MarqueeTextView
                     android:id="@+id/fragment_bookshelf_marquee"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1" />

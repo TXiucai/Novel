@@ -19,6 +19,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.Announce;
 import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
@@ -26,6 +27,7 @@ import com.heiheilianzai.app.model.event.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.AnnounceActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
 import com.heiheilianzai.app.ui.activity.ShareActivity;
@@ -45,12 +47,17 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
+import com.heiheilianzai.app.view.MarqueeTextView;
+import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -76,18 +83,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public TextView fragment_mine_user_info_nickname;
     @BindView(R.id.fragment_mine_user_info_id)
     public TextView fragment_mine_user_info_id;
-    @BindView(R.id.fragment_mine_user_info_nologin)
-    public LinearLayout fragment_mine_user_info_nologin;
     @BindView(R.id.fragment_mine_user_info_gold_unit)
     public TextView fragment_mine_user_info_gold_unit;
     @BindView(R.id.fragment_mine_user_info_shuquan_unit)
     public TextView fragment_mine_user_info_shuquan_unit;
-    @BindView(R.id.fragment_mine_user_info_recharge_song)
-    public TextView fragment_mine_user_info_recharge_song;
-    @BindView(R.id.fragment_mine_user_info_friends_song)
-    public TextView fragment_mine_user_info_friends_song;
-    @BindView(R.id.fragment_mine_user_info_recharge_text)
-    public TextView fragment_mine_user_info_recharge_text;
     @BindView(R.id.fragment_mine_user_info_money_layout)
     public LinearLayout fragment_mine_user_info_money_layout;
     @BindView(R.id.fragment_mine_user_info_paylayout_history)
@@ -102,24 +101,21 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public TextView fragment_mine_user_info_tasklayout_task;
     @BindView(R.id.fragment_mine_user_info_isvip)
     public ImageView fragment_mine_user_info_isvip;
-    @BindView(R.id.fragment_mine_user_info_paylayout)
-    public LinearLayout fragment_mine_user_info_paylayout;
-    @BindView(R.id.fragment_mine_user_info_paylayout_view)
-    public View fragment_mine_user_info_paylayout_view;
     @BindView(R.id.fragment_mine_user_info_gold_layout)
     public View fragment_mine_user_info_gold_layout;
     @BindView(R.id.fragment_mine_user_info_paylayout_recharge)
     public View fragment_mine_user_info_paylayout_recharge;
-    @BindView(R.id.fragment_mine_user_info_paylayout_recharge_lv)
-    public View fragment_mine_user_info_paylayout_recharge_lv;
     @BindView(R.id.fragment_mine_user_info_paylayout_vip)
-    public View fragment_mine_user_info_paylayout_vip;
-    @BindView(R.id.fragment_mine_user_info_paylayout_vip_lv)
-    public View fragment_mine_user_info_paylayout_vip_lv;
-
-    String connect_us;
+    public TextView fragment_mine_user_info_paylayout_vip;
+    @BindView(R.id.fragment_mine_user_info_tip)
+    public TextView fragment_mine_user_info_tip;
+    @BindView(R.id.fragment_mine_marquee)
+    public MarqueeTextView fragment_mine_marquee;
+    @BindView(R.id.fragment_mine_announce_layout)
+    public LinearLayout fragment_mine_announce_layout;
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
+    private UserInfoItem.Luobo_notice luobo_notice;
 
     @Override
     public int initContentView() {
@@ -143,13 +139,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         super.onViewCreated(view, savedInstanceState);
         fragment_mine_user_info_gold_unit.setText(getCurrencyUnit(activity));
         fragment_mine_user_info_shuquan_unit.setText(getSubUnit(activity));
-        fragment_mine_user_info_recharge_song.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_song), getSubUnit(activity)));
-        fragment_mine_user_info_friends_song.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_song), getSubUnit(activity)));
-        fragment_mine_user_info_recharge_text.setText(String.format(LanguageUtil.getString(activity, R.string.MineNewFragment_chongzhi), getCurrencyUnit(activity)));
         if (!ReaderConfig.USE_PAY) {
             fragment_mine_user_info_money_layout.setVisibility(View.GONE);
-            fragment_mine_user_info_paylayout.setVisibility(View.GONE);
-            fragment_mine_user_info_paylayout_view.setVisibility(View.GONE);
         }
         MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
             @Override
@@ -157,10 +148,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 initInfo(result, null);
             }
         });
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_mine_user_info_isvip.getLayoutParams();
-        layoutParams.height = ImageUtil.dp2px(activity, 14);
-        layoutParams.width = layoutParams.height * 138 / 48;
-        fragment_mine_user_info_isvip.setLayoutParams(layoutParams);
         uiFreeCharge();
         setVipView();
     }
@@ -176,27 +163,35 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     public void initInfo(final String info, UserInfoItem userInfoItem) {
         if (!Utils.isLogin(activity)) {
-            fragment_mine_user_info_nologin.setVisibility(View.GONE);
             fragment_mine_user_info_nickname.setText(LanguageUtil.getString(activity, R.string.user_login));
+            fragment_mine_user_info_id.setVisibility(View.GONE);
+            fragment_mine_user_info_isvip.setVisibility(View.GONE);
+            fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
+            fragment_mine_user_info_tip.setText(LanguageUtil.getString(activity, R.string.string_mine_no_login_tip));
             AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
             AppPrefs.putSharedString(activity, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
             AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, "");
             return;
-        } else {
-            fragment_mine_user_info_nologin.setVisibility(View.VISIBLE);
         }
         try {
             if (userInfoItem != null) {
                 mUserInfo = userInfoItem;
-            } else
+            } else{
                 mUserInfo = gson.fromJson(info, UserInfoItem.class);
+            }
+            luobo_notice = mUserInfo.getLuobo_notice();
+            initAnounce();
             if (mUserInfo.getIs_vip() == 1) {
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_isvip);
+                fragment_mine_user_info_tip.setText(userInfoItem.getVip_end_time());
+                fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity,R.string.mine_vip_continue));
+                fragment_mine_user_info_paylayout_vip.setBackground(activity.getDrawable(R.drawable.shape_vip_continue_bg));
                 if (USE_AD_FINAL) {
                     ReaderConfig.USE_AD = false;
                 }
             } else {
-                fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
+                fragment_mine_user_info_isvip.setVisibility(View.GONE);
+                fragment_mine_user_info_tip.setVisibility(View.GONE);
                 if (USE_AD_FINAL) {
                     ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                 }
@@ -230,6 +225,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     public void refreshData() {
         ReaderConfig.REFREASH_USERCENTER = false;
+        initAnounce();
         if (!Utils.isLogin(activity)) {//
             fragment_mine_user_info_nickname.setText(LanguageUtil.getString(activity, R.string.user_login));
             fragment_mine_user_info_id.setText("");
@@ -237,11 +233,11 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_shuquan.setText("--");
             fragment_mine_user_info_tasklayout_task.setText("--");
             fragment_mine_user_info_avatar.setImageResource(R.mipmap.hold_user_avatar);
-            fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
-            fragment_mine_user_info_nologin.setVisibility(View.GONE);
+            fragment_mine_user_info_isvip.setVisibility(View.GONE);
+            fragment_mine_user_info_id.setVisibility(View.GONE);
+            fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
+            fragment_mine_user_info_tip.setText(LanguageUtil.getString(activity, R.string.string_mine_no_login_tip));
             return;
-        } else {
-            fragment_mine_user_info_nologin.setVisibility(View.VISIBLE);
         }
         ReaderParams params = new ReaderParams(activity);
         String json = params.generateParamsJson();
@@ -258,46 +254,38 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         );
     }
 
+    private void initAnounce() {
+        if (luobo_notice != null) {
+            List<Announce> announceList = new ArrayList<>();
+            Announce announce = new Announce();
+            announce.setContent(luobo_notice.getContent());
+            announce.setTitle(luobo_notice.getTitle());
+            announceList.add(announce);
+            fragment_mine_marquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    Intent intent = new Intent(activity, AnnounceActivity.class);
+                    intent.putExtra("announce_content", announceList.get(position).getTitle() + "/-/" + announceList.get(position).getContent());
+                    startActivity(intent);
+                }
+            });
+            fragment_mine_announce_layout.setVisibility(View.VISIBLE);
+        } else {
+            fragment_mine_announce_layout.setVisibility(View.GONE);
+        }
+    }
+
     @OnClick(value = {R.id.fragment_mine_user_info_avatar,
             R.id.fragment_mine_user_info_paylayout_recharge, R.id.fragment_mine_user_info_paylayout_vip,// R.id.fragment_mine_user_info_paylayout_rechargenotes,
             R.id.fragment_mine_user_info_tasklayout_mybookcomment,
             R.id.fragment_mine_user_info_tasklayout_feedback, R.id.fragment_mine_user_info_tasklayout_set,
             R.id.fragment_mine_user_info_tasklayout_friends, R.id.fragment_mine_user_info_nickname,
-            R.id.fragment_mine_user_info_tasklayout_layout, R.id.fragment_mine_user_info_tasklayout_layout2, R.id.fragment_mine_user_info_shuquan_layout,
+            R.id.fragment_mine_user_info_tasklayout_layout, R.id.fragment_mine_user_info_shuquan_layout,
             R.id.fragment_mine_user_info_gold_layout, R.id.fragment_mine_user_info_paylayout_downmanager,
-            R.id.fragment_mine_user_info_paylayout_history, R.id.fragment_mine_user_info_lianxi, R.id.fragment_mine_user_info_tasklayout_share
+            R.id.fragment_mine_user_info_paylayout_history, R.id.fragment_mine_user_info_tasklayout_share
     })
     public void getEvent(View view) {
         switch (view.getId()) {
-            case R.id.fragment_mine_user_info_lianxi:
-                if (connect_us == null) {
-                    ReaderParams params = new ReaderParams(activity);
-                    String json = params.generateParamsJson();
-                    HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + "/user/connect-us", json, true, new HttpUtils.ResponseListener() {
-                                @Override
-                                public void onResponse(final String result) {
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(result);
-                                        connect_us = jsonObject.getString("connect_us");
-                                        startActivity(new Intent(activity, AboutActivity.class).
-                                                putExtra("url", connect_us).
-                                                putExtra("title", "联系我们"));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                @Override
-                                public void onErrorResponse(String ex) {
-                                }
-                            }
-                    );
-                } else {
-                    startActivity(new Intent(activity, AboutActivity.class).
-                            putExtra("url", connect_us).
-                            putExtra("title", "联系我们"));
-                }
-                break;
             case R.id.fragment_mine_user_info_avatar:
 
             case R.id.fragment_mine_user_info_nickname:
@@ -319,7 +307,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             case R.id.fragment_mine_user_info_paylayout_vip:
                 HandleOnclick(view, "fragment_mine_user_info_paylayout_vip");
                 break;
-            case R.id.fragment_mine_user_info_tasklayout_layout2:
             case R.id.fragment_mine_user_info_tasklayout_layout:
                 HandleOnclick(view, "fragment_mine_user_info_tasklayout_layout");
                 break;
@@ -351,7 +338,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
                 break;
             case R.id.fragment_mine_user_info_tasklayout_share:
-                startActivity(new Intent(activity, ShareActivity.class));
+                //startActivity(new Intent(activity, ShareActivity.class));
                 break;
         }
     }
@@ -428,7 +415,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
      * 根据 本地配置 判断是否免费调整UI变化
      */
     private void uiFreeCharge() {
-        uiFreeCharge(fragment_mine_user_info_paylayout_recharge, fragment_mine_user_info_gold_layout, fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+        uiFreeCharge(fragment_mine_user_info_gold_layout, fragment_mine_user_info_isvip);
     }
 
     /**
@@ -450,7 +437,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
      * 根据 后台配置 付费开关判断是否开启
      */
     void setVipView() {
-        uiFreeCharge(ReaderConfig.newInstance().app_free_charge, fragment_mine_user_info_isvip, fragment_mine_user_info_paylayout_recharge_lv, fragment_mine_user_info_paylayout_vip, fragment_mine_user_info_paylayout_vip_lv);
+        uiFreeCharge(ReaderConfig.newInstance().app_free_charge, fragment_mine_user_info_isvip);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
