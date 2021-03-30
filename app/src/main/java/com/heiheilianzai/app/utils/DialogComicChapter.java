@@ -70,8 +70,6 @@ public class DialogComicChapter {
         vipHolder.imgSequence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collections.reverse(comicChapterCatalogs);
-                comicChapterCatalogAdapter.notifyDataSetChanged();
                 if (orderby == 1) {
                     vipHolder.imgSequence.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_down));
                     orderby = 2;
@@ -79,6 +77,7 @@ public class DialogComicChapter {
                     vipHolder.imgSequence.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_up));
                     orderby = 1;
                 }
+                httpData(activity, baseComic.getComic_id(), vipHolder);
             }
         });
         vipHolder.ryChapter.setLoadingListener(new XRecyclerView.LoadingListener() {

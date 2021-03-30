@@ -500,6 +500,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             baseComic = (BaseComic) intent.getSerializableExtra(BASE_COMIC_EXT_KAY);
             comic_id = baseComic.getComic_id();
             current_display_order = baseComic.getCurrent_display_order();
+            comicChapter=new ArrayList<>();
             FORM_INFO = intent.getBooleanExtra(FORM_INFO_EXT_KAY, false);//是否是漫画详情界面过来的
             FORM_READHISTORY = intent.getBooleanExtra(FORM_READHISTORY_EXT_KAY, false);//阅读历史过来的 需要校验 服务端和本地记录
             mReferPage = intent.getStringExtra(REFER_PAGE_EXT_KAY);
@@ -519,7 +520,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 @Override
                 public void GetCOMIC_catalogList(List<ComicChapter> comicChapterList) {
                     if (comicChapterList != null && !comicChapterList.isEmpty()) {
-                        comicChapter = comicChapterList;
+                        for (int i = 0; i < comicChapterList.size(); i++) {
+                            ComicChapter comicChapterTemp = comicChapterList.get(i);
+                            if (comicChapterTemp.getAd_image() == null) {
+                                comicChapter.add(comicChapterTemp);
+                            }
+                        }
                         try {
                             initData();
                         } catch (Exception E) {
@@ -1181,15 +1187,16 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void checkIsCoupon(ComicChapterItem chapterItem) {
-        boolean isVip = false;
-        String is_vip = chapterItem.getIs_vip();
-        if (is_vip != null && is_vip.equals("1")) {
-            isVip = true;
-        }
+        boolean isCoupon = false;
+
         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(activity)) {
+        String is_vip = chapterItem.getIs_vip();
+        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
+            isCoupon = true;
+        }
+        if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1")||is_vip != null && is_vip.equals("1")) && !App.isVip(activity)) {
             DialogComicLook dialogNovelCoupon = new DialogComicLook();
-            Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isVip);
+            Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
             dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                 @Override
                 public void onOpenCoupon(boolean isBuy) {
@@ -1199,8 +1206,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     chapterItem.setIs_book_coupon_pay("0");
                 }
             });
-            return;
         }
-        checkIsVip(chapterItem);
     }
 }

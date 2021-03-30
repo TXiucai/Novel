@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -9,13 +10,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePayAdapter;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
-import com.heiheilianzai.app.base.App;
-import com.heiheilianzai.app.base.BaseActivity;
+import com.heiheilianzai.app.adapter.VipBaoyuePayAdapter;
+import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -30,11 +34,9 @@ import com.heiheilianzai.app.model.AcquirePayItem;
 import com.heiheilianzai.app.model.AcquirePrivilegeItem;
 import com.heiheilianzai.app.model.PaymentWebBean;
 import com.heiheilianzai.app.model.WxPayBean;
-import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
-import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
@@ -45,9 +47,11 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
+import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -71,7 +75,7 @@ import okhttp3.Response;
  * 包月购买页
  * Created by scb on 2018/8/12.
  */
-public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
+public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity implements ShowTitle {
     @BindView(R.id.titlebar_back)
     public LinearLayout mBack;
     @BindView(R.id.titlebar_text)
@@ -82,13 +86,13 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     @BindView(R.id.activity_acquire_avatar_name)
     public TextView activity_acquire_avatar_name;
     @BindView(R.id.activity_acquire_pay_gridview)
-    public AdaptionGridViewNoMargin activity_acquire_pay_gridview;
+    public RecyclerView activity_acquire_pay_gridview;
     @BindView(R.id.activity_acquire_privilege_gridview)
     public AdaptionGridViewNoMargin activity_acquire_privilege_gridview;
     @BindView(R.id.activity_acquire_avatar_desc)
     public TextView activity_acquire_avatar_desc;
     @BindView(R.id.activity_acquire_customer_service)
-    public View activity_acquire_customer_service;
+    public LinearLayout activity_acquire_customer_service;
 
     String mKeFuOnline;//客服链接
     AcquireBaoyuePayAdapter baoyuePayAdapter;
@@ -97,15 +101,23 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     private String ALIPAY = "2";
     private String WECHAT = "1";
     private String mInternetIp;//用户IP
+    private VipBaoyuePayAdapter vipBaoyuePayAdapter;
+    private AcquirePayItem selectAcquirePayItem;
 
     @Override
     public int initContentView() {
         return R.layout.activity_acquire;
     }
 
-    @Override
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.AcquireBaoyueActivity_title));
+        StatusBarUtil.setStatusTextColor(false, AcquireBaoyueActivity.this);
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {//适配华为手机虚拟键遮挡tab的问题
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
+        }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AcquireBaoyueActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        activity_acquire_pay_gridview.setLayoutManager(linearLayoutManager);
     }
 
     @Override
@@ -115,6 +127,12 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     public void initData() {
         getIpTerritory();//获取用户IP
         setVIPConfirmEvent();
@@ -124,7 +142,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BookConfig.mPayBaoyueCenterUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
-                        initInfo(result);
+                        initInfos(result);
                     }
 
                     @Override
@@ -134,9 +152,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         );
     }
 
-    @Override
-    public void initInfo(String json) {
-        super.initInfo(json);
+    public void initInfos(String json) {
         Gson gson = new Gson();
         try {
             JSONObject jsonObj = new JSONObject(json);
@@ -176,12 +192,15 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
                 AcquirePrivilegeItem item = gson.fromJson(privilegeArray.getString(i), AcquirePrivilegeItem.class);
                 privilegeList.add(item);
             }
-            baoyuePayAdapter = new AcquireBaoyuePayAdapter(this, payList, payList.size());
-            baoyuePayAdapter.setOnPayItemClickListener(new AcquireBaoyuePayAdapter.OnPayItemClickListener() {
+            selectAcquirePayItem = payList.get(0);
+            vipBaoyuePayAdapter = new VipBaoyuePayAdapter(this, payList);
+            vipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
+
                 @Override
-                public void onPayItemClick(AcquirePayItem item) {
+                public void onPayItemClick(AcquirePayItem item, int position) {
+                    vipBaoyuePayAdapter.setSelectPosition(position);
                     if (Utils.isLogin(AcquireBaoyueActivity.this)) {
-                        pay(item);
+                        selectAcquirePayItem = item;
                     } else {
                         GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
                             @Override
@@ -192,7 +211,7 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
                     }
                 }
             });
-            activity_acquire_pay_gridview.setAdapter(baoyuePayAdapter);
+             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
             AcquireBaoyuePrivilegeAdapter baoyuePrivilegeAdapter = new AcquireBaoyuePrivilegeAdapter(this, privilegeList, privilegeList.size());
             activity_acquire_privilege_gridview.setAdapter(baoyuePrivilegeAdapter);
         } catch (JSONException e) {
@@ -201,11 +220,16 @@ public class AcquireBaoyueActivity extends BaseActivity implements ShowTitle {
         }
     }
 
-    @OnClick(value = {R.id.activity_acquire_customer_service})
+    @OnClick(value = {R.id.activity_acquire_customer_service, R.id.tx_open_vip})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.activity_acquire_customer_service:
                 skipKeFuOnline();
+                break;
+            case R.id.tx_open_vip:
+                if (selectAcquirePayItem != null) {
+                    pay(selectAcquirePayItem);
+                }
                 break;
         }
     }

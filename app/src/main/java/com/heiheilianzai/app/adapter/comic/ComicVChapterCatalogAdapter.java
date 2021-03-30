@@ -81,17 +81,46 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
             } else {
                 holder.item_comicchaptercatalog_current_bg.setBackgroundColor(Color.WHITE);
             }
-            holder.item_comic_chapter_open.setVisibility(comicChapterCatalog.isIs_buy_status() ? View.VISIBLE : View.GONE);
-            if (comicChapterCatalog.getIs_vip() == 0) {//免费
-                if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "0")) {
 
-                    MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
-                    holder.item_comic_chapter_lock.setVisibility(View.GONE);
-                } else {
+            if (App.isVip(activity)) {
+                MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+                if (comicChapterCatalog.getIs_vip()==1||TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")){
                     holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                    holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
+                }else {
+                    holder.item_comic_chapter_lock.setVisibility(View.GONE);
                 }
+
             } else {
-                holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                if (comicChapterCatalog.getIs_vip() == 0) {//免费
+                    if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "0")) {
+                        MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+                        holder.item_comic_chapter_lock.setVisibility(View.GONE);
+                    } else {
+                        if (comicChapterCatalog.isIs_buy_status()) {
+                            MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+                            holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                            holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
+                        } else {
+                            holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
+                            holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else {
+                    if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")){
+                        if (comicChapterCatalog.isIs_buy_status()) {
+                            MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+                            holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                            holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
+                        } else {
+                            holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
+                            holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                        }
+                    }else {
+                        holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
+                        holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         } else if (viewHolder instanceof MyAdViewHolder) {
             MyAdViewHolder myAdViewHolder = (MyAdViewHolder) viewHolder;
@@ -139,8 +168,6 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
         public RelativeLayout item_comicchaptercatalog_needbuy;
         @BindView(R.id.item_comic_chapter_lock)
         public ImageView item_comic_chapter_lock;
-        @BindView(R.id.item_comic_chapter_open)
-        public ImageView item_comic_chapter_open;
 
         public ViewHolder(View view) {
             super(view);

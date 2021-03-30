@@ -61,6 +61,11 @@ public class ComicConfig {
     public static final String COMIC_chapter = "/comic/chapter";
 
     /**
+     * 漫画章节解锁
+     */
+    public static final String COMIC_chapter_open = "/comic/unlock-content";
+
+    /**
      * 漫画吐槽
      */
     public static final String COMIC_tucao = "/comic/tucao";

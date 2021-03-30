@@ -186,8 +186,8 @@
     <string name="BaoyueActivity_title">会员中心</string>
     <string name="BaoyueActivity_kaitong">立即开通</string>
     <string name="BaoyueActivity_yikaitong">续费充值</string>
-    <string name="BaoyueActivity_nologin">未登录</string>
-    <string name="BaoyueActivity_mianfei">开通会员免费畅读会员书库</string>
+    <string name="BaoyueActivity_nologin">用户/昵称</string>
+    <string name="BaoyueActivity_mianfei"><font color='#989898'>您还</font>未开通VIP</string>
     <string name="BaoyueActivity_baoyueshuku">会员书库</string>
     <string name="BaoyueActivity_baoyueshuku2">开通会员免费读</string>
     <string name="BaoyueActivity_zunxiangtequan">尊享特权</string>
@@ -196,7 +196,7 @@
     <!--会员书库-->
     <!--开通会员-->
     <string name="AcquireBaoyueActivity_title">开通会员</string>
-    <string name="AcquireBaoyueActivity_fore">—— 会员VIP享四大特权 ——</string>
+    <string name="AcquireBaoyueActivity_fore">VIP特权</string>
 
     <!--充值中心-->
     <string name="RechargeActivity_keyongyue">可用余额</string>
@@ -458,4 +458,5 @@
     <string name="feedback_type">投诉类型</string>
     <string name="up_picture">上传图片</string>
     <string name="hint">（最多上传6张）</string>
+    <string name="string_baoyue_vip_tittle">VIP会员</string>
 </resources>
