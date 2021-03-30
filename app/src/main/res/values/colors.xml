@@ -143,5 +143,9 @@
     <color name="color_ffdbc7">#FFDBC7</color>
     <color name="color_fdd59d">#FDD59D</color>
     <color name="color_35363b">#35363B</color>
+    <color name="color_f7f3f7">#F7F3F7</color>
+    <color name="color_f7f7ff">#F7F7FF</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_FF8350">#FF8350</color>
     <!--色值定义END-->
 </resources>

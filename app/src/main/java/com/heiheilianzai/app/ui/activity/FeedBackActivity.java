@@ -18,11 +18,6 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 
-//import com.squareup.okhttp.Request;
-//import com.squareup.okhttp.Response;
-
-//.http.RequestParams;
-
 
 /**
  * 个人中心-意见反馈
@@ -41,11 +36,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
     /**
      * "提交"外层布局
      */
-    private LinearLayout comment_titlebar_add_feedback;
-    /**
-     * "提交"
-     */
-    private TextView titlebar_finish;
+    private TextView mSubmit;
 
     @Override
     public int initContentView() {
@@ -55,9 +46,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
     @Override
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.FeedBackActivity_title));
-        titlebar_finish = findViewById(R.id.titlebar_finish);
-        titlebar_finish.setText(LanguageUtil.getString(this, R.string.FeedBackActivity_tijiao));
-        activity_feedback_content = findViewById(R.id.activity_feedback_content);
+
         activity_feedback_content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,8 +66,8 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
             }
         });
         activity_feedback_percentage = findViewById(R.id.activity_feedback_percentage);
-        comment_titlebar_add_feedback = findViewById(R.id.comment_titlebar_add_comment);
-        comment_titlebar_add_feedback.setOnClickListener(new View.OnClickListener() {
+        mSubmit = findViewById(R.id.submit);
+        mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addFeedback();
@@ -89,7 +78,21 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
 
     @Override
     public void initData() {
+        ReaderParams params = new ReaderParams(this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mFeedBackType, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
 
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+
+                    }
+                }
+
+        );
     }
 
     /**
@@ -97,9 +100,10 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
      */
 
     public void addFeedback() {
-        if(!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)){
+        if (!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)) {
             return;
-        };
+        }
+        ;
         if (TextUtils.isEmpty(activity_feedback_content.getText())) {
             MyToash.ToashError(FeedBackActivity.this, LanguageUtil.getString(this, R.string.FeedBackActivity_some));
             return;
@@ -111,7 +115,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
 
         String json = params.generateParamsJson();
 
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl()+ReaderConfig.mFeedbackUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mFeedbackUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
 
@@ -119,7 +123,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
                     }
 
                     @Override
-                    public void onErrorResponse(String  ex) {
+                    public void onErrorResponse(String ex) {
 
                     }
                 }
@@ -150,6 +154,5 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
         });
         mTitle.setText(text);
     }
-
 
 }
