@@ -353,6 +353,11 @@ public class ReaderConfig {
     public static final String mFeedBackType = "/feedback/index";
 
     /**
+     * 上传图片
+     */
+    public static final String mUpPicture = "/feedback/upload";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

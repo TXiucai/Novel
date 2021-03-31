@@ -1,18 +1,24 @@
 package com.heiheilianzai.app.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.sdk.android.ams.common.util.FileUtil;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.FeedBackTypeAdapter;
@@ -23,6 +29,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ComplaitTypeBean;
+import com.heiheilianzai.app.utils.FileUtils;
 import com.heiheilianzai.app.utils.GlideImageLoader;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -32,6 +39,10 @@ import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +74,8 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     RecyclerView mTbRecycleView;
     @BindView(R.id.recyclerView)
     RecyclerView mPicRecycleView;
+    @BindView(R.id.iv)
+    ImageView iv;
 
     private FeedBackTypeAdapter mTypeAdapter;
     public static final int IMAGE_ITEM_ADD = -1;
@@ -70,6 +83,8 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     private ImagePickerAdapter mImagePickerAdapter;
     private ArrayList<ImageItem> selImageList; //当前选择的所有图片
     private int maxImgCount = 6;               //允许选择图片最大数
+    private int mCount = 0;
+    private String mFaceBackImg;
 
     @Override
     public int initContentView() {
@@ -102,7 +117,10 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFeedback();
+                for (int i = 0; i < selImageList.size(); i++) {
+                    String bitmap = FileUtils.imageToBase64(selImageList.get(i).path);
+                    addFeedback(bitmap);
+                }
             }
         });
 
@@ -147,27 +165,27 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
      * 发请求
      */
 
-    public void addFeedback() {
+    public void addFeedback(String bitmap) {
         if (!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)) {
             return;
         }
-        ;
-        if (TextUtils.isEmpty(mEditTextContent.getText())) {
-            MyToash.ToashError(FeedBackActivity.this, LanguageUtil.getString(this, R.string.FeedBackActivity_some));
-            return;
-        }
-
-
         ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("content", mEditTextContent.getText().toString() + "");
+        params.putExtraParams("feed_back_img ", bitmap);
 
         String json = params.generateParamsJson();
 
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mFeedbackUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUpPicture, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
 
-                        initInfo(result);
+                        MyToash.Log(result);
+                        mCount = mCount + 1;
+                        if (mCount == selImageList.size()) {
+                            mFaceBackImg = result;
+                            Toast.makeText(FeedBackActivity.this, "chenggong", Toast.LENGTH_SHORT);
+                        } else {
+                            mFaceBackImg = result + ",";
+                        }
                     }
 
                     @Override

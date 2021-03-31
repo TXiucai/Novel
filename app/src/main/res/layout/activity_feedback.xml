@@ -58,6 +58,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimens_170dp"
+                    android:orientation="vertical"
                     android:background="@color/color_f7f3f7"
                     android:padding="@dimen/dimens_10dp">
 
@@ -65,7 +66,7 @@
                     <EditText
                         android:id="@+id/activity_feedback_content"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimens_200dp"
+                        android:layout_height="@dimen/dimens_150dp"
                         android:background="@drawable/shape_ffffff_5"
                         android:gravity="left|top"
                         android:hint="@string/FeedBackActivity_des"
@@ -73,6 +74,10 @@
                         android:maxLength="200"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/public_10_dp" />
+                    <ImageView
+                        android:id="@+id/iv"
+                        android:layout_width="@dimen/dimens_50dp"
+                        android:layout_height="@dimen/dimens_50dp" />
                 </LinearLayout>
 
             </ScrollView>
@@ -106,6 +111,8 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
                 android:choiceMode="singleChoice"
                 android:divider="@null"
                 android:fadingEdge="none"
@@ -121,7 +128,8 @@
         android:layout_height="@dimen/dimens_65dp"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/submit"
@@ -132,5 +140,6 @@
             android:text="@string/FeedBackActivity_tijiao"
             android:textColor="@color/white"
             android:textSize="@dimen/dimens_16sp" />
+
     </LinearLayout>
 </LinearLayout>
