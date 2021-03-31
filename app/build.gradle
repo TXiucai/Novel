@@ -342,6 +342,7 @@ dependencies {
     implementation "com.github.liangjingkanji:LogCat:${rootProject.LogCat}"
     //快速查找
     implementation "com.github.Othershe:GroupIndexLib:${rootProject.GroupIndexLib}"
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
 }
 
 /**

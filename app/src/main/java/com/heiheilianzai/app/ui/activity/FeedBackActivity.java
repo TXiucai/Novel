@@ -4,19 +4,30 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.adapter.FeedBackTypeAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.ComplaitTypeBean;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+
+import java.util.List;
+
+import butterknife.BindView;
 
 
 /**
@@ -28,26 +39,34 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
     /**
      * 意见内容
      */
-    private EditText activity_feedback_content;
-    /**
-     * 字数百分比
-     */
-    private TextView activity_feedback_percentage;
+    private EditText mEditTextContent;
+
     /**
      * "提交"外层布局
      */
     private TextView mSubmit;
 
+    /**
+     * "提交"外层布局
+     */
+    private LinearLayout comment_titlebar_add_feedback;
+
+    @BindView(R.id.tabRecycler)
+    RecyclerView mTbRecycleView;
+
+    private FeedBackTypeAdapter mTypeAdapter;
+
     @Override
     public int initContentView() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return R.layout.activity_feedback;
     }
 
     @Override
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.FeedBackActivity_title));
-
-        activity_feedback_content.addTextChangedListener(new TextWatcher() {
+        mEditTextContent = findViewById(R.id.activity_feedback_content);
+        mEditTextContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -60,12 +79,9 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String percentage = "%s/100";
-                int lastWordsNum = 100 - s.length();
-                activity_feedback_percentage.setText(String.format(percentage, lastWordsNum + ""));
             }
         });
-        activity_feedback_percentage = findViewById(R.id.activity_feedback_percentage);
+
         mSubmit = findViewById(R.id.submit);
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +90,12 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
             }
         });
 
+        comment_titlebar_add_feedback = findViewById(R.id.comment_titlebar_add_comment);
+        comment_titlebar_add_feedback.setVisibility(View.GONE);
+
+        mTbRecycleView.setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
+        mTypeAdapter = new FeedBackTypeAdapter(this);
+        mTbRecycleView.setAdapter(mTypeAdapter);
     }
 
     @Override
@@ -83,7 +105,9 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mFeedBackType, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
+                        ComplaitTypeBean complaitTypeBean = new Gson().fromJson(result, ComplaitTypeBean.class);
+                        List<ComplaitTypeBean.ComplaitListBean> typeBeanList = complaitTypeBean.getList();
+                        mTypeAdapter.setNewData(typeBeanList);
                     }
 
                     @Override
@@ -104,14 +128,14 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle {
             return;
         }
         ;
-        if (TextUtils.isEmpty(activity_feedback_content.getText())) {
+        if (TextUtils.isEmpty(mEditTextContent.getText())) {
             MyToash.ToashError(FeedBackActivity.this, LanguageUtil.getString(this, R.string.FeedBackActivity_some));
             return;
         }
 
 
         ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("content", activity_feedback_content.getText().toString() + "");
+        params.putExtraParams("content", mEditTextContent.getText().toString() + "");
 
         String json = params.generateParamsJson();
 
