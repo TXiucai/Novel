@@ -10,7 +10,7 @@
     <com.heiheilianzai.app.view.ConvenientBanner
         android:id="@+id/store_banner_male"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimens_210dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimens_2dp"
         app:canLoop="true" />
 

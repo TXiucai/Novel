@@ -333,7 +333,7 @@
 
 
     <!--漫画详情-->
-    <string name="fragment_comic_info_shoucang">+收藏</string>
+    <string name="fragment_comic_info_shoucang">收藏</string>
     <string name="fragment_comic_info_yishoucang">已收藏</string>
     <string name="fragment_comic_info_delshoucang">已取消收藏</string>
     <string name="fragment_comic_info_xiangqing">详情</string>

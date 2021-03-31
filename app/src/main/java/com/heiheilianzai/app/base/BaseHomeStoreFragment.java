@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.core.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -222,6 +224,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             headerView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_store_comic_content_head, null);
         }
         ConvenientBanner<BannerItemStore> mStoreBannerMale = headerView.findViewById(R.id.store_banner_male);
+        ViewGroup.LayoutParams layoutParams = mStoreBannerMale.getLayoutParams();
+        layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
+        layoutParams.height = ScreenSizeUtils.getInstance(activity).getScreenWidth() * 3 / 5;
         ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, 1);
         RecyclerView recyclerView = headerView.findViewById(R.id.ry_recommend);
         getHomeRecommend(recyclerView);
@@ -325,7 +330,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     /*intent.putExtra("OPTION", PAIHANGINSEX);
                     intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_paihang));
                     startActivity(intent);*/
-                    startActivity(new Intent(activity, TopActivity.class).putExtra("PRODUCT",recommend_type == 0));
+                    startActivity(new Intent(activity, TopActivity.class).putExtra("PRODUCT", recommend_type == 0));
                 } else if (jump_type == 4) {
                     Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
                     myIntent.putExtra("isvip", Utils.isLogin(activity));

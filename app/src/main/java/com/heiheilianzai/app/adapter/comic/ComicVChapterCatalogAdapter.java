@@ -22,8 +22,10 @@ import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.DialogVip;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.ScreenSizeUtils;
 
 import java.util.List;
 
@@ -124,6 +126,10 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         } else if (viewHolder instanceof MyAdViewHolder) {
             MyAdViewHolder myAdViewHolder = (MyAdViewHolder) viewHolder;
+            ViewGroup.LayoutParams layoutParams = myAdViewHolder.ivAD.getLayoutParams();
+            layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+            layoutParams.height = layoutParams.width / 3;
+            myAdViewHolder.ivAD.setLayoutParams(layoutParams);
             MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
             myAdViewHolder.ivAD.setOnClickListener(new View.OnClickListener() {
                 @Override

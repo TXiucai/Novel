@@ -353,8 +353,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             baseComic.setAuthor(comic.author);
             baseComic.setFlag(comic.flag);
             baseComic.setTotal_chapters(comic.total_chapters);
-
-            if (ReaderConfig.USE_AD && baseAd != null) {
+            //漫画详情页广告暂时取消
+           /* if (ReaderConfig.USE_AD && baseAd != null) {
                 activity_book_info_ad.setVisibility(View.VISIBLE);
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
                 layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
@@ -376,7 +376,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
 
             } else {
                 activity_book_info_ad.setVisibility(View.GONE);
-            }
+            }*/
             ll_comment_container.removeAllViews();
             ll_label_container.removeAllViews();
             try {
