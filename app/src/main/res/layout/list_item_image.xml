@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dimens_106dp"
+    android:layout_height="@dimen/dimens_106dp"
+    android:padding="@dimen/dimens_5dp">
+
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="@dimen/dimens_106dp"
+        android:layout_height="@dimen/dimens_106dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/add" />
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="@dimen/dimens_22dp"
+        android:layout_height="@dimen/dimens_22dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/delete" />
+
+</RelativeLayout>
