@@ -43,6 +43,7 @@ import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.InfoBookItem;
+import com.heiheilianzai.app.model.NovelBoyinModel;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.event.CloseAnimationEvent;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
@@ -89,6 +90,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -192,7 +196,7 @@ public class ReadActivity extends BaseReadActivity {
     String mReferPage;//从哪个页面打开小说阅读(神策埋点数据)
     long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
     int visible = -1;//每间隔多少也显示底部广告
-
+    private NovelBoyinModel soundBookInfoBean;
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
@@ -205,6 +209,7 @@ public class ReadActivity extends BaseReadActivity {
             }
         }
     };
+
 
     @Override
     public int initContentView() {
@@ -284,7 +289,7 @@ public class ReadActivity extends BaseReadActivity {
         }
         bookpage.setADview(insert_todayone2);
         next();
-        acceptNovelBoyin(activity,chapter.getBook_name());
+        acceptNovelBoyin(activity, chapter.getBook_name());
         getBookInfo();
     }
 
@@ -717,8 +722,8 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
-            R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night,R.id.activity_read_buttom_boyin_close,
-            R.id.activity_read_buttom_boyin_go,R.id.titlebar_boyin})
+            R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night, R.id.activity_read_buttom_boyin_close,
+            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_directory:
@@ -787,10 +792,18 @@ public class ReadActivity extends BaseReadActivity {
 
     private void jumpBoyin() {
         String baseH5Url = App.getBaseH5Url();
-        String url = baseH5Url + "/player?ncid=1&nid=" + baseBook.getBook_id() + "&acname=" + baseBook.getName() + "&platform=native";
-        activity.startActivity(new Intent(activity, AboutActivity.class).
-                putExtra("url", url)
-                .putExtra("title", baseBook.getName()));
+        String url = null;
+        try {
+            if (soundBookInfoBean != null) {
+                NovelBoyinModel.SoundBookInfoBean sound_book_info = soundBookInfoBean.getSound_book_info();
+                url = baseH5Url + "/player?ncid=" + sound_book_info.getFirst_chapter_id() + "&nid=" + sound_book_info.getNid() + "&acname=" + URLEncoder.encode(sound_book_info.getName(), "UTF-8") + "&platform=native";
+                activity.startActivity(new Intent(activity, AboutActivity.class).
+                        putExtra("url", url).putExtra("type", "boyin").putExtra("title", sound_book_info.getName()));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void handleAnimation() {
@@ -866,21 +879,22 @@ public class ReadActivity extends BaseReadActivity {
         );
     }
 
-    public void acceptNovelBoyin( Activity activity, String name) {
-        MyPicasso.GlideImageNoSize(activity,baseBook.getCover(), activity_read_buttom_boyin_img,R.mipmap.book_def_v);
-        activity_read_buttom_boyin_tittle.setText(String.format(getString(R.string.string_novel_boyin_tittle),name));
+    public void acceptNovelBoyin(Activity activity, String name) {
+        MyPicasso.GlideImageNoSize(activity, baseBook.getCover(), activity_read_buttom_boyin_img, R.mipmap.book_def_v);
+        activity_read_buttom_boyin_tittle.setText(String.format(getString(R.string.string_novel_boyin_tittle), name));
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("book_name",name);
+        params.putExtraParams("book_name", name);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BookConfig.novel_boyin, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                         try {
-                            JSONObject jsonObject=new JSONObject(result);
-                            if (jsonObject.getJSONObject("sound_book_info").isNull("name")){
+                            JSONObject jsonObject = new JSONObject(result);
+                            if (jsonObject.getJSONObject("sound_book_info").isNull("name")) {
                                 activity_read_buttom_boyin_item.setVisibility(View.GONE);
                                 titlebar_boyin.setVisibility(View.GONE);
-                            }else {
+                            } else {
+                                soundBookInfoBean = new Gson().fromJson(result, NovelBoyinModel.class);
                                 activity_read_buttom_boyin_item.setVisibility(View.VISIBLE);
                                 titlebar_boyin.setVisibility(View.VISIBLE);
                             }

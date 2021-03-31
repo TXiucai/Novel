@@ -158,6 +158,16 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             public void toNativeMineAudioDownload() {
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
             }
+
+            @Override
+            public String getH5Cache(String key) {
+                return AppPrefs.getSharedString(activity,key);
+            }
+
+            @Override
+            public void setH5Cache(String key, String value) {
+                AppPrefs.putSharedString(activity, key, value);
+            }
         }, "android");
         mWebView.loadUrl(mBoyinUrl);
         isLoadUrl = true;
@@ -193,6 +203,12 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void toNativeMineAudioDownload();
+
+        @JavascriptInterface
+        String getH5Cache(String key);
+
+        @JavascriptInterface
+        void setH5Cache(String key, String value);
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {

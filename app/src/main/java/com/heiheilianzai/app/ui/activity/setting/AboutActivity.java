@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -26,6 +27,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
@@ -33,6 +35,7 @@ import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.dialog.WaitDialog;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -54,6 +57,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
     private WebView mWebView;
     String flag;
     WaitDialog waitDialog;
+    private String type;
 
     @Override
     public int initContentView() {
@@ -66,6 +70,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         Intent intent = getIntent();
         try {
             flag = intent.getStringExtra("flag");
+            type = intent.getStringExtra("type");
             if (intent != null && intent.getStringExtra("url") != null) {
                 str = intent.getStringExtra("url");
                 String title = intent.getStringExtra("title");
@@ -99,7 +104,12 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
             settings.setJavaScriptEnabled(true);
             settings.setBlockNetworkImage(false);//解决图片不显示
             settings.setMediaPlaybackRequiresUserGesture(false);//webview一进去不能自动播放的问题
-            mWebView.addJavascriptInterface(new AndroidToJs(), "AndroidClient");
+            if (TextUtils.equals(type, "boyin")) {
+                mWebView.addJavascriptInterface(new AndroidToBoyinJs(), "android");
+            } else {
+                mWebView.addJavascriptInterface(new AndroidToJs(), "AndroidClient");
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             }
@@ -298,6 +308,21 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         public void backToHome() {
             finish();
         }
+    }
+
+    public class AndroidToBoyinJs {
+
+        @JavascriptInterface
+        public String getToken() {//h5主动获取客户端保存的波音登录数据
+            String token = AppPrefs.getSharedString(AboutActivity.this, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
+            return token;
+        }
+
+        @JavascriptInterface
+        public String getSaServerAppId() {//获取神策埋点AppId
+            return BuildConfig.sa_server_app_id;
+        }
+
     }
 
     private void initDialog() {
