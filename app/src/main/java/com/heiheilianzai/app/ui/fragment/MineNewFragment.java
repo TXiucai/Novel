@@ -29,19 +29,16 @@ import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
+import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
-import com.heiheilianzai.app.ui.activity.ShareActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.UserInfoActivity;
-import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
-import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -53,8 +50,6 @@ import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -329,7 +324,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 startActivity(new Intent(activity, SettingsActivity.class));
                 break;
             case R.id.fragment_mine_user_info_tasklayout_friends:
-                MyShare.ShareAPP(activity);
+                //MyShare.ShareAPP(activity);
+                startActivity(new Intent(activity, MyShareActivity.class));
                 break;
             case R.id.fragment_mine_user_info_paylayout_history:
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", READHISTORY).putExtra("title", LanguageUtil.getString(activity, R.string.noverfragment_yuedulishi)));

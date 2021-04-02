@@ -160,7 +160,7 @@
     <dimen name="dimens_110px">110px</dimen>
     <dimen name="dimens_38px">38px</dimen>
 
-
+    <dimen name="dimens_10sp">10sp</dimen>
     <dimen name="dimens_12sp">12sp</dimen>
     <dimen name="dimens_14sp">14sp</dimen>
     <dimen name="dimens_16sp">16sp</dimen>

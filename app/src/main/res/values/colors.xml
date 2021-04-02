@@ -103,6 +103,7 @@
     <color name="comic_bg">#B3000000</color>
     <color name="color_60000000">#60000000</color>
     <color name="color_3b3b3b">#3b3b3b</color>
+    <color name="color_bbbbbb">#BBBBBB</color>
 
     <!--自定义图片加载进度-->
     <color name="ProgressPieView_progress_color">#22F7C13B</color>
@@ -153,5 +154,7 @@
     <color name="color_d68547">#D68547</color>
     <color name="color_fff8ef">#FFF8EF</color>
     <color name="color_a9a9a9">#A9A9A9</color>
+    <color name="color_F82658">#F82658</color>
+    <color name="color_38CDBB">#38CDBB</color>
     <!--色值定义END-->
 </resources>
