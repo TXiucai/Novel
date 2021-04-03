@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,9 +20,9 @@
             android:id="@+id/qr_code_layout"
             android:layout_width="@dimen/dimens_180dp"
             android:layout_height="206dp"
-            android:background="@color/white"
-            android:layout_marginTop="@dimen/dimens_15dp"
             android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimens_15dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <ImageView
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dimens_10dp"
-                android:layout_marginBottom="@dimen/dimens_15dp">
+                android:layout_marginBottom="@dimen/dp_10">
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -68,6 +69,7 @@
             android:paddingBottom="@dimen/dimens_14dp">
 
             <TextView
+                android:id="@+id/tv_link"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/color_1a1a1a"
@@ -105,7 +107,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_link"
+            android:id="@+id/tv_shareNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimens_30dp"
@@ -116,32 +118,18 @@
 
         <LinearLayout
             android:layout_width="@dimen/dimens_345dp"
-            android:layout_height="@dimen/dimens_120dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimens_30dp"
+            android:layout_marginTop="@dimen/dimens_20dp"
             android:background="@color/white"
-            android:padding="@dimen/dimens_16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dimens_16dp">
 
             <TextView
-                android:id="@+id/tv_share_friends"
+                android:id="@+id/tv_share_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/share_rule1"
-                android:textColor="@color/color_1a1a1a"
-                android:textSize="@dimen/dimens_14sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/share_rule2"
-                android:textColor="@color/color_1a1a1a"
-                android:textSize="@dimen/dimens_14sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/share_rule3"
+                tools:text="@string/share_rule1"
                 android:textColor="@color/color_1a1a1a"
                 android:textSize="@dimen/dimens_14sp" />
         </LinearLayout>
