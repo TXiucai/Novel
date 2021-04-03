@@ -1,12 +1,12 @@
 package com.heiheilianzai.app.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
@@ -17,6 +17,9 @@ import com.heiheilianzai.app.model.ShareDetailsBean;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.SaveImageUtils;
+import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.utils.ToastUtil;
 import com.heiheilianzai.app.utils.Utils;
 
 import butterknife.BindView;
@@ -26,11 +29,10 @@ import butterknife.BindView;
  * 个人中心-意见反馈
  * Created by scb on 2018/7/14.
  */
-public class MyShareActivity extends BaseActivity implements ShowTitle {
+public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnClickListener {
 
     @BindView(R.id.tv_share_rule)
     TextView mShareRules;
-    @BindView(R.id.titlebar_finish)
     TextView mTitlebarFinish;
     @BindView(R.id.comment_titlebar_add_comment)
     LinearLayout mCommentMenu;
@@ -42,6 +44,10 @@ public class MyShareActivity extends BaseActivity implements ShowTitle {
     TextView mShareLink;
     @BindView(R.id.tv_shareNum)
     TextView mShareNum;
+    @BindView(R.id.share_copy)
+    TextView mShareCopy;
+    @BindView(R.id.share_save)
+    TextView mShareSave;
 
     private ShareDetailsBean mShareDetailsBean;
 
@@ -53,7 +59,7 @@ public class MyShareActivity extends BaseActivity implements ShowTitle {
     @Override
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.ShareActivity_title));
-
+        mTitlebarFinish = findViewById(R.id.titlebar_finish);
         if (Utils.isLogin(this)) {
             mTitlebarFinish.setText(LanguageUtil.getString(this, R.string.share_detail));
             mCommentMenu.setVisibility(View.VISIBLE);
@@ -63,11 +69,36 @@ public class MyShareActivity extends BaseActivity implements ShowTitle {
         } else {
             mCommentMenu.setVisibility(View.GONE);
         }
+
+        mShareSave.setOnClickListener(this);
+        mShareCopy.setOnClickListener(this);
     }
 
     @Override
     public void initData() {
         addShare();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.share_copy:
+                if (mShareDetailsBean.getLink() != null) {
+                    StringUtils.setStringInClipboard(this, mShareDetailsBean.getLink());
+                    ToastUtil.getInstance().showShortT(R.string.ShareActivity_save_toast);
+                }
+                break;
+            case R.id.share_save:
+                new Thread(() -> {
+                    if (mShareDetailsBean.getQrLink() != null) {
+                        Bitmap bp = SaveImageUtils.returnBitMap(ReaderConfig.getBaseUrl() + mShareDetailsBean.getQrLink());
+                        SaveImageUtils.saveImageToGallerys(this, bp);
+                    } else {
+                        ToastUtil.getInstance().showShortT(R.string.save_default);
+                    }
+                }).start();
+                break;
+        }
     }
 
     /**
@@ -81,7 +112,6 @@ public class MyShareActivity extends BaseActivity implements ShowTitle {
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mShareDetails, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
                         initInfo(result);
                     }
 
@@ -90,9 +120,7 @@ public class MyShareActivity extends BaseActivity implements ShowTitle {
 
                     }
                 }
-
         );
-
     }
 
     @Override
@@ -127,12 +155,7 @@ public class MyShareActivity extends BaseActivity implements ShowTitle {
         TextView mTitle;
         mBack = findViewById(R.id.titlebar_back);
         mTitle = findViewById(R.id.titlebar_text);
-        mBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        mBack.setOnClickListener(v -> finish());
         mTitle.setText(text);
     }
 }

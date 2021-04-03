@@ -24,6 +24,7 @@ import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.BooActivityManager;
 import com.heiheilianzai.app.utils.JPushFactory;
 import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
@@ -72,6 +73,7 @@ public class App extends LitePalApplication {
             if (ReaderConfig.USE_QQ) {
                 PlatformConfig.setQQZone(ReaderConfig.QQ_APPID, ReaderConfig.QQ_SECRET);
             }
+            BooActivityManager.addActivityListener(this);
             //初始化神策
             initSensors();
             //初始化BigImageViewer图片加载方式为Glide
