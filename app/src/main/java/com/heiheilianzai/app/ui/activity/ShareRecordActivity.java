@@ -7,14 +7,18 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.ShareRecordAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.ShareRecordBean;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -41,28 +45,32 @@ public class ShareRecordActivity extends BaseActivity implements ShowTitle {
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.ShareActivity_title));
         mTitlebar.setVisibility(View.GONE);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false));
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mAdapter = new ShareRecordAdapter(this);
         mRecycleView.setAdapter(mAdapter);
     }
 
     @Override
     public void initData() {
+        addShareRecord();
     }
 
     /**
      * 发请求
      */
 
-    public void addFeedback() {
+    public void addShareRecord() {
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
-
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mFeedbackUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mShareRecord, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
                         initInfo(result);
+                        ShareRecordBean shareRecordBean = new Gson().fromJson(result, ShareRecordBean.class);
+                        List<ShareRecordBean.ShareRecordList> typeBeanList = shareRecordBean.getList();
+                        if (!typeBeanList.isEmpty()) {
+                            mAdapter.setNewData(typeBeanList);
+                        }
                     }
 
                     @Override

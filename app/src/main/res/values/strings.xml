@@ -183,6 +183,7 @@
     <string name="share_rule3">因。新的系统为了加…</string>
     <string name="share_code">邀请码</string>
     <string name="share_friend">已成功邀请%s位好友</string>
+    <string name="share_success">分享成功</string>
 
     <!--搜索-->
     <string name="SearchActivity_hotsearch">热门搜索</string>

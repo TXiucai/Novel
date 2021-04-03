@@ -39,19 +39,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/dimens_14sp"
+        android:text="@string/share_success"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/user_header"
         android:layout_marginRight="@dimen/dimens_18dp"
-        tools:text="分享成功"/>
+        tools:text="@string/share_success"/>
 
     <ImageView
         android:layout_width="@dimen/dimens_18dp"
         android:layout_height="@dimen/dimens_18dp"
         app:layout_constraintRight_toLeftOf="@id/tv_status"
         app:layout_constraintTop_toTopOf="@id/tv_status"
+        android:background="@mipmap/share_success"
         android:layout_marginRight="@dimen/dimens_5dp"/>
 
     <TextView
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/dimens_10sp"

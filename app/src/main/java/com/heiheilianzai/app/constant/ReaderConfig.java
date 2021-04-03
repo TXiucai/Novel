@@ -198,6 +198,11 @@ public class ReaderConfig {
     public static final String mFeedbackUrl = "/user/post-feedback";
 
     /**
+     * 提交意见反馈
+     */
+    public static final String mShareRecord = "/qrcode/success-list";
+
+    /**
      * 发送短信获取验证码
      */
     public static final String mMessageUrl = "/message/send";
