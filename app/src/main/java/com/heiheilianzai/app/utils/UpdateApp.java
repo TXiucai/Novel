@@ -180,6 +180,8 @@ public class UpdateApp {
         public TextView dialog_updateapp_version;
         @BindView(R.id.img_close)
         public ImageView dialog_close;
+        @BindView(R.id.tv_link)
+        public TextView tv_link;
 
         public UpdateHolder(View view) {
             ButterKnife.bind(this, view);
@@ -231,6 +233,7 @@ public class UpdateApp {
         updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update));
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
+        updateHolder.tv_link.setText(mAppUpdate.website_android);
         if (mAppUpdate.getUpdate() == 1) {
             updateHolder.dialog_close.setVisibility(View.VISIBLE);
             updateHolder.dialog_close.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +249,7 @@ public class UpdateApp {
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isEmpty(mAppUpdate.getWebsite_android())) {
-                    if (mAppUpdate.getUpdate()==1){//强制更新即使去官网下载也不能关闭
+                    if (mAppUpdate.getUpdate() == 1) {//强制更新即使去官网下载也不能关闭
                         dismissPop();
                     }
                     activity.startActivity(new Intent(activity, AboutActivity.class)
@@ -274,10 +277,10 @@ public class UpdateApp {
         return popupWindow;
     }
 
-    private void dismissPop(){
+    private void dismissPop() {
         if (popupWindow != null) {
             popupWindow.dismiss();
-            RecomendApp recomendApp=new RecomendApp(activity);
+            RecomendApp recomendApp = new RecomendApp(activity);
             recomendApp.getRequestData();
         }
     }
