@@ -164,7 +164,10 @@
     <string name="FeedBackActivity_title">意见回馈</string>
     <string name="FeedBackActivity_tijiao">提交</string>
     <string name="FeedBackActivity_some">写点什么吧</string>
+    <string name="FeedBackActivity_some1">请上传图片哦</string>
+    <string name="FeedBackActivity_some2">请选择反馈类型哦</string>
     <string name="FeedBackActivity_des">请详细描述您遇到的问题并告知具体操作步骤，我们会尽快答复您的问题哦～</string>
+    <string name="FeedBackActivity_success">反馈成功</string>
 
     <!--我的评论-->
     <string name="MineCommentListActivity_title">我的评论</string>

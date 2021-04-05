@@ -1,24 +1,20 @@
 package com.heiheilianzai.app.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.sdk.android.ams.common.util.FileUtil;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.FeedBackTypeAdapter;
@@ -34,15 +30,15 @@ import com.heiheilianzai.app.utils.GlideImageLoader;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ToastUtil;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +72,8 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     RecyclerView mPicRecycleView;
     @BindView(R.id.iv)
     ImageView iv;
+    @BindView(R.id.activity_feedback_content)
+    EditText activity_feedback_content;
 
     private FeedBackTypeAdapter mTypeAdapter;
     public static final int IMAGE_ITEM_ADD = -1;
@@ -84,7 +82,9 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     private ArrayList<ImageItem> selImageList; //当前选择的所有图片
     private int maxImgCount = 6;               //允许选择图片最大数
     private int mCount = 0;
-    private String mFaceBackImg;
+    private StringBuffer mFaceBackImg = new StringBuffer();
+    private String mTagId;
+    private List<ComplaitTypeBean.ComplaitListBean> mTypeBeanList;
 
     @Override
     public int initContentView() {
@@ -117,8 +117,9 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 for (int i = 0; i < selImageList.size(); i++) {
-                    String bitmap = FileUtils.imageToBase64(selImageList.get(i).path);
+                    String bitmap = "data:image/jpeg;base64," + FileUtils.imageToBase64(selImageList.get(i).path);
                     addFeedback(bitmap);
                 }
             }
@@ -131,6 +132,13 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mTypeAdapter = new FeedBackTypeAdapter(this);
         mTbRecycleView.setAdapter(mTypeAdapter);
 
+        mTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
+            mTypeAdapter.setCurrentPosition(position);
+            if (!mTypeBeanList.isEmpty()) {
+                mTagId = mTypeBeanList.get(position).getId();
+            }
+        });
+
         //图片
         selImageList = new ArrayList<>();
         mImagePickerAdapter = new ImagePickerAdapter(this, selImageList, maxImgCount);
@@ -142,14 +150,17 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
 
     @Override
     public void initData() {
+        if (!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)) {
+            return;
+        }
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mFeedBackType, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         ComplaitTypeBean complaitTypeBean = new Gson().fromJson(result, ComplaitTypeBean.class);
-                        List<ComplaitTypeBean.ComplaitListBean> typeBeanList = complaitTypeBean.getList();
-                        mTypeAdapter.setNewData(typeBeanList);
+                        mTypeBeanList = complaitTypeBean.getList();
+                        mTypeAdapter.setNewData(mTypeBeanList);
                     }
 
                     @Override
@@ -170,22 +181,25 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
             return;
         }
         ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("feed_back_img ", bitmap);
+        params.putExtraParams("feed_back_img", bitmap);
 
         String json = params.generateParamsJson();
 
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUpPicture, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
-                        MyToash.Log(result);
+                        String results = result.replace("\"", "");
                         mCount = mCount + 1;
-                        if (mCount == selImageList.size()) {
-                            mFaceBackImg = result;
-                            Toast.makeText(FeedBackActivity.this, "chenggong", Toast.LENGTH_SHORT);
+                        if (mCount != selImageList.size()) {
+                            mFaceBackImg.append(results + ",");
                         } else {
-                            mFaceBackImg = result + ",";
+                            mFaceBackImg.append(results);
+                            //提交全部类容
+                            putAllMessage(mFaceBackImg.toString());
+                            mFaceBackImg.delete(0, mFaceBackImg.length());
+                            mCount = 0;
                         }
+
                     }
 
                     @Override
@@ -196,6 +210,57 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
 
         );
 
+    }
+
+    private void putAllMessage(String feedBackImg) {
+        if (!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)) {
+            return;
+        }
+        if (TextUtils.isEmpty(activity_feedback_content.getText())) {
+            ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some);
+            return;
+        }
+
+        if (TextUtils.isEmpty(feedBackImg)) {
+            ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some1);
+            return;
+        }
+
+        if (TextUtils.isEmpty(mTagId)) {
+            ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some2);
+            return;
+        }
+
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("feed_back_img", feedBackImg);
+        params.putExtraParams("question_type", mTagId);
+        params.putExtraParams("content", activity_feedback_content.getText().toString() + "");
+        String json = params.generateParamsJson();
+
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUpAll, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        mFaceBackImg.delete(0, mFaceBackImg.length());
+                        mCount = 0;
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            String status = jsonObject.getString("status");
+                            if (status.equals("1")) {
+                                ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_success);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                        mFaceBackImg.delete(0, mFaceBackImg.length());
+                        mCount = 0;
+                    }
+                }
+
+        );
     }
 
     @Override

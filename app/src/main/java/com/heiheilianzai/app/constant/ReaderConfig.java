@@ -368,6 +368,11 @@ public class ReaderConfig {
     public static final String mUpPicture = "/feedback/upload";
 
     /**
+     * 上传反馈信息
+     */
+    public static final String mUpAll = "/user/post-feedback";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";
