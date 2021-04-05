@@ -471,4 +471,15 @@
     <string name="up_picture">上传图片</string>
     <string name="hint">（最多上传6张）</string>
     <string name="string_baoyue_vip_tittle">VIP会员</string>
+    <string name="string_friend_tip">温馨提示</string>
+    <string name="dialog_close__expired_vip">我再想想</string>
+    <string name="dialog_buy_expired_vip">我要续费</string>
+    <string name="vip_wake_tittle">真的要放弃购买会员吗？</string>
+    <string name="vip_wake_miss">可能会错过</string>
+    <string name="vip_wake_free">免费追番</string>
+    <string name="vip_wake_boyin">爽听有声ASMR</string>
+    <string name="vip_wake_qiang">精品抢先</string>
+    <string name="vip_wake_noad">无广告特权</string>
+    <string name="vip_wake_continue">继续支付</string>
+    <string name="vip_error">支付失败，请重试</string>
 </resources>

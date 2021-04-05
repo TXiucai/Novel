@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.DialogErrorVip;
+import com.heiheilianzai.app.utils.DialogWakeVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -298,6 +301,30 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 @Override
                 public void nativePay(String payType, String jsonData) {//跳入原生支付，（现在H5支付中并没有原生渠道）
                     AcquireBaoyueActivity.this.nativePay(payType, jsonData);
+                }
+
+                @Override
+                public void onWake() {
+                    DialogWakeVip dialogWakeVip = new DialogWakeVip();
+                    dialogWakeVip.getDialogVipPop(AcquireBaoyueActivity.this);
+                    dialogWakeVip.setVipWakeListener(new DialogWakeVip.VipWakeListener() {
+                        @Override
+                        public void vipWakeBack() {
+                            pay(selectAcquirePayItem);
+                        }
+                    });
+                }
+
+                @Override
+                public void onError() {
+                    DialogErrorVip dialogErrorVip = new DialogErrorVip();
+                    dialogErrorVip.getDialogVipPop(AcquireBaoyueActivity.this);
+                    dialogErrorVip.setVipWakeListener(new DialogErrorVip.VipErrorListener() {
+                        @Override
+                        public void vipErrorBack() {
+                            pay(selectAcquirePayItem);
+                        }
+                    });
                 }
             });
         }

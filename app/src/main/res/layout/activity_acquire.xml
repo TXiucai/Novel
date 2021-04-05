@@ -101,6 +101,7 @@
                                 android:id="@+id/activity_acquire_avatar_desc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimens_4dp"
                                 android:gravity="center_vertical"
                                 android:text="@string/BaoyueActivity_mianfei"
                                 android:textColor="@color/color_ef966B"

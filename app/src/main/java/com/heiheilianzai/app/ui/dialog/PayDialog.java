@@ -14,7 +14,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.PopupWindow;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.VipPayItem;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -32,12 +34,14 @@ public class PayDialog {
     PayInterface payInterface;
     View loading;
     boolean isPay;
+    String url;
 
     public void showDialog(final Activity activity, View v, String url) {
         if (popupWindow != null && popupWindow.isShowing()) {
             return;
         }
         isPay = false;
+        this.url = url;
         this.activity = activity;
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_pay, null);
         ReaderWebView webview = view.findViewById(R.id.webview);
@@ -65,13 +69,23 @@ public class PayDialog {
     public class JavaScriptInterface {
         @JavascriptInterface
         public void depositFinish(String depositJson) {//点击左上角返回回调
+            //{"depositIndex":172,"type":1} type 1 关闭   type 2 我已支付    type 3 遇到问题重试
             MyToash.LogE(" depositFinish", depositJson);
+            VipPayItem vipPayItem = new Gson().fromJson(depositJson, VipPayItem.class);
             if (activity != null) {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (popupWindow.isShowing()) {
                             popupWindow.dismiss();
+                        }
+                        if (vipPayItem.getType() == 1 && !isPay && payInterface != null) {
+                            payInterface.onWake();
+                            return;
+                        }
+                        if (vipPayItem.getType() == 3 && payInterface != null) {
+                            payInterface.onError();
+                            return;
                         }
                         if (payInterface != null && isPay) {
                             payInterface.onPayFinish();
@@ -167,6 +181,10 @@ public class PayDialog {
         void onPayFinish();
 
         void nativePay(String payType, String jsonData);
+
+        void onWake();
+
+        void onError();
     }
 
     public void setPayInterface(PayInterface payInterface) {

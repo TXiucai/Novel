@@ -36,6 +36,7 @@ import com.heiheilianzai.app.ui.activity.UserInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.DialogExpirerdVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -178,7 +179,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             initAnounce();
             if (mUserInfo.getIs_vip() == 1) {
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_isvip);
-                fragment_mine_user_info_tip.setText(userInfoItem.getVip_end_time());
+                fragment_mine_user_info_tip.setText(mUserInfo.getVip_end_time());
                 fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity,R.string.mine_vip_continue));
                 fragment_mine_user_info_paylayout_vip.setBackground(activity.getDrawable(R.drawable.shape_vip_continue_bg));
                 if (USE_AD_FINAL) {
@@ -190,6 +191,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 if (USE_AD_FINAL) {
                     ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                 }
+            }
+            if (mUserInfo.isVip_left_three_days()){
+                DialogExpirerdVip dialogExpirerdVip = new DialogExpirerdVip();
+                dialogExpirerdVip.getDialogVipPop(activity,mUserInfo.getVip_left_three_days_note());
             }
             if (mUserInfo.getAuto_sub() == 0) {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, false);
@@ -253,8 +258,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         if (luobo_notice != null) {
             List<Announce> announceList = new ArrayList<>();
             Announce announce = new Announce();
-            announce.setContent(luobo_notice.getContent());
-            announce.setTitle(luobo_notice.getTitle());
+            announce.setContent(luobo_notice.getTitle());
+            announce.setTitle(luobo_notice.getContent());
             announceList.add(announce);
             fragment_mine_marquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
                 @Override
