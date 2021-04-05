@@ -6,7 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
@@ -34,7 +36,6 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
     @BindView(R.id.tv_share_rule)
     TextView mShareRules;
     TextView mTitlebarFinish;
-    @BindView(R.id.comment_titlebar_add_comment)
     LinearLayout mCommentMenu;
     @BindView(R.id.qr_code_img)
     ImageView mQRCodeImg;
@@ -48,6 +49,10 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
     TextView mShareCopy;
     @BindView(R.id.share_save)
     TextView mShareSave;
+    @BindView(R.id.rl_qr_code)
+    RelativeLayout mRlQRCode;
+    @BindView(R.id.qr_code_layout)
+    LinearLayout mQRCodeLayout;
 
     private ShareDetailsBean mShareDetailsBean;
 
@@ -60,6 +65,8 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.ShareActivity_title));
         mTitlebarFinish = findViewById(R.id.titlebar_finish);
+        mCommentMenu = findViewById(R.id.comment_titlebar_add_comment);
+
         if (Utils.isLogin(this)) {
             mTitlebarFinish.setText(LanguageUtil.getString(this, R.string.share_detail));
             mCommentMenu.setVisibility(View.VISIBLE);
@@ -89,9 +96,12 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
                 }
                 break;
             case R.id.share_save:
+                mQRCodeLayout.setDrawingCacheEnabled(true);
+                mQRCodeLayout.buildDrawingCache();
                 new Thread(() -> {
                     if (mShareDetailsBean.getQrLink() != null) {
-                        Bitmap bp = SaveImageUtils.returnBitMap(ReaderConfig.getBaseUrl() + mShareDetailsBean.getQrLink());
+                        //Bitmap bp = SaveImageUtils.returnBitMap(ReaderConfig.getBaseUrl() + mShareDetailsBean.getQrLink());
+                        Bitmap bp = mQRCodeLayout.getDrawingCache();
                         SaveImageUtils.saveImageToGallerys(this, bp);
                     } else {
                         ToastUtil.getInstance().showShortT(R.string.save_default);
@@ -129,13 +139,27 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
         ShareDetailsBean data = new Gson().fromJson(json, ShareDetailsBean.class);
         if (data != null) {
             mShareDetailsBean = data;
-            mShareNum.setText(String.format(LanguageUtil.getString(this, R.string.share_friend), data.getShareSuccessNum()));
-            if (data.getQrLink() != null && !TextUtils.isEmpty(data.getQrLink())) {
-                MyPicasso.GlideImageNoSize(this, ReaderConfig.getBaseUrl() + data.getQrLink(), mQRCodeImg);
+            if (Utils.isLogin(this)) {
+                mShareNum.setVisibility(View.VISIBLE);
+                if (!data.isShareStatus()) {
+                    mQRCode.setVisibility(View.GONE);
+                    mRlQRCode.setVisibility(View.GONE);
+                    mShareNum.setText(String.format(LanguageUtil.getString(this, R.string.share_friend2), data.getShareSuccessNum()));
+                } else {
+                    mQRCode.setVisibility(View.VISIBLE);
+                    mRlQRCode.setVisibility(View.VISIBLE);
+                    mShareNum.setText(String.format(LanguageUtil.getString(this, R.string.share_friend), data.getShareSuccessNum()));
+                    mQRCode.setText(data.getShareCode());
+                }
+
+            } else {
+                mQRCode.setVisibility(View.GONE);
+                mShareNum.setVisibility(View.GONE);
+                mRlQRCode.setVisibility(View.GONE);
             }
 
-            if (data.getShareCode() != null) {
-                mQRCode.setText(data.getShareCode());
+            if (data.getQrLink() != null && !TextUtils.isEmpty(data.getQrLink())) {
+                MyPicasso.GlideImageNoSize(this, ReaderConfig.getBaseUrl() + data.getQrLink(), mQRCodeImg);
             }
 
             if (data.getLink() != null) {
@@ -145,7 +169,6 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
             if (data.getShareRuleContent() != null) {
                 mShareRules.setText(data.getShareRuleContent());
             }
-
         }
     }
 

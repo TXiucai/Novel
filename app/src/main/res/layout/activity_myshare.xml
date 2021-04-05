@@ -19,7 +19,7 @@
         <LinearLayout
             android:id="@+id/qr_code_layout"
             android:layout_width="@dimen/dimens_180dp"
-            android:layout_height="206dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dimens_15dp"
             android:background="@color/white"
@@ -34,6 +34,7 @@
                 android:scaleType="centerCrop" />
 
             <RelativeLayout
+                android:id="@+id/rl_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -88,7 +89,7 @@
                 android:id="@+id/share_save"
                 android:layout_width="@dimen/dimens_140dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/selector_shape_save"
+                android:background="@mipmap/button_blue"
                 android:gravity="center"
                 android:text="@string/save_or_share_pic"
                 android:textColor="@color/white"
@@ -99,7 +100,7 @@
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/selector_shape_save"
+                android:background="@mipmap/button_read"
                 android:gravity="center"
                 android:text="@string/copy_or_share_link"
                 android:textColor="@color/white"

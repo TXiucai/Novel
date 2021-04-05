@@ -183,6 +183,7 @@
     <string name="share_rule3">因。新的系统为了加…</string>
     <string name="share_code">邀请码</string>
     <string name="share_friend">已成功邀请%s位好友</string>
+    <string name="share_friend2">已成功邀请%s位好友,已达上限</string>
     <string name="share_success">分享成功</string>
     <string name="save_default">图片保存失败</string>
     <string name="save_success">图片保存成功</string>
