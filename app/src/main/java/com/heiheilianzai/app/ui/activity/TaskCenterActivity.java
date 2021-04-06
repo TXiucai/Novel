@@ -20,6 +20,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.TaskCenter;
+import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.ui.dialog.MyPoPwindow;
@@ -31,6 +32,8 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,7 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         titlebar_text.setText(LanguageUtil.getString(activity, R.string.TaskCenterActivity_titl));
         titlebar_right.setVisibility(View.VISIBLE);
         titlebar_right_img.setBackgroundResource(R.mipmap.task_guide);
@@ -83,9 +87,13 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                 if (taskCenter2.getTask_state() != 1) {
                     switch (taskCenter2.getTask_action()) {
                         case "finish_info":
-                            intent.setClass(activity, UserInfoActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if (Utils.isLogin(activity)) {
+                                intent.setClass(activity, UserInfoActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                MainHttpTask.getInstance().Gotologin(activity);
+                            }
                             break;
                         case "add_book":
                         case "read_book":
@@ -94,16 +102,28 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                             finish();
                             break;
                         case "recharge":
-                            intent.setClass(activity, RechargeActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if (Utils.isLogin(activity)) {
+                                intent.setClass(activity, RechargeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                MainHttpTask.getInstance().Gotologin(activity);
+                            }
                             break;
                         case "vip":
-                            startActivity(AcquireBaoyueActivity.getMyIntent(activity,LanguageUtil.getString(activity, R.string.refer_page_task)));
-                            finish();
+                            if (Utils.isLogin(activity)) {
+                                startActivity(AcquireBaoyueActivity.getMyIntent(activity,LanguageUtil.getString(activity, R.string.refer_page_task)));
+                                finish();
+                            } else {
+                                MainHttpTask.getInstance().Gotologin(activity);
+                            }
                             break;
                         case "share_app":
-                            MyShare.ShareAPP(activity);
+                            if (Utils.isLogin(activity)) {
+                                MyShare.ShareAPP(activity);
+                            } else {
+                                MainHttpTask.getInstance().Gotologin(activity);
+                            }
                             break;
                     }
                 }
@@ -133,17 +153,27 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
         public ImageView activity_taskcenter_sign;
         @BindView(R.id.activity_taskcenter_getshuquan)
         public TextView activity_taskcenter_getshuquan;
-
+        @BindView(R.id.rl_task_invite)
+        public LinearLayout activity_taskcenter_invite;
+        @BindView(R.id.tx_task_invite_go)
+        public TextView activity_taskcenter_invite_go;
         public Holder(View view) {
             ButterKnife.bind(this, view);
         }
 
-        @OnClick(value = {R.id.activity_taskcenter_sign})
+        @OnClick(value = {R.id.activity_taskcenter_sign,R.id.tx_task_invite_go})
         public void getEvent(View view) {
             switch (view.getId()) {
                 case R.id.activity_taskcenter_sign:
                     if (Utils.isLogin(activity)) {
                         signHttp(activity);
+                    } else {
+                        MainHttpTask.getInstance().Gotologin(activity);
+                    }
+                    break;
+                case R.id.tx_task_invite_go:
+                    if (Utils.isLogin(activity)) {
+                        startActivity( new Intent().setClass(activity, InviteCodeActivity.class));
                     } else {
                         MainHttpTask.getInstance().Gotologin(activity);
                     }
@@ -225,6 +255,16 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                         }
                     }
             );
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void iSInviteCode(InviteCodeEvent inviteCodeEvent){
+        if (inviteCodeEvent.isInvite){
+            if (holder!=null){
+                holder.activity_taskcenter_invite.setVisibility(View.GONE);
+            }
         }
     }
 }

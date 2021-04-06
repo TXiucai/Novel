@@ -60,7 +60,12 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
         tools:targetApi="p">
-        <activity android:name=".ui.activity.TopActivity"></activity>
+        <activity
+            android:name=".ui.activity.InviteCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TopActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.SplashActivity"
             android:configChanges="orientation|screenSize"
@@ -290,11 +295,9 @@
         <activity
             android:name=".ui.activity.TopYearBookActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.MyShareActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.ShareRecordActivity"
             android:screenOrientation="portrait" />
@@ -519,7 +522,7 @@
         </service>
         <service
             android:name=".component.task.DownloadBoyinService"
-            android:enabled="true"></service> <!-- 阿里云推送 -->
+            android:enabled="true" /> <!-- 阿里云推送 -->
         <!-- 请填写你自己的- appKey -->
         <meta-data
             android:name="com.alibaba.app.appkey"

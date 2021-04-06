@@ -58,8 +58,7 @@
             android:layout_height="110dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-         />
+            android:layout_marginRight="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,7 +75,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/TaskCenterActivity_lianxuday_lianxureward"
                 android:textColor="@color/gray3"
-                android:textSize="@dimen/public_11_dp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/activity_taskcenter_getshuquan"
@@ -85,7 +84,48 @@
                 android:layout_gravity="center_vertical"
                 android:text="3书券"
                 android:textColor="#FF9800"
-                android:textSize="@dimen/public_11_dp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/rl_task_invite"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_64dp"
+        android:layout_marginLeft="@dimen/dimens_10dp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_8dp"
+            android:background="@color/gray2" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimens_10dp"
+                android:text="@string/task_invite_code"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tx_task_invite_go"
+                android:layout_width="@dimen/dimens_50dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dimens_25dp"
+                android:background="@drawable/shape_taskcenter_orenge"
+                android:gravity="center"
+                android:text="@string/task_go"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
 </LinearLayout>

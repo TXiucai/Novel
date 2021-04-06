@@ -414,6 +414,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/fragment_mine_user_info_tasklayout_taskcenter"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/dimens_70dp"
                     android:layout_weight="1"

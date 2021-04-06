@@ -235,7 +235,7 @@
 
 
     <!--任务中心-->
-    <string name="TaskCenterActivity_titl">任务中心</string>
+    <string name="TaskCenterActivity_titl">福利中心</string>
     <string name="TaskCenterActivity_lianxuday">您已连续签到</string>
     <string name="TaskCenterActivity_lianxuday_day">天</string>
     <string name="TaskCenterActivity_lianxuday_lianxureward">连续签到最高可获得</string>
@@ -485,4 +485,11 @@
     <string name="vip_wake_noad">无广告特权</string>
     <string name="vip_wake_continue">继续支付</string>
     <string name="vip_error">支付失败，请重试</string>
+    <string name="task_invite_code">填写邀请码送豪礼</string>
+    <string name="task_go">前往</string>
+    <string name="string_invite_tip">邀请码提交之后不允许修改，请注意是否填写正确</string>
+    <string name="stirng_invite_input">请输入好友邀请码</string>
+    <string name="invite_title">请输入邀请码</string>
+    <string name="invite_no_input">您还未填写邀请码</string>
+    <string name="invite_code_sucecess">成功填写邀请码</string>
 </resources>

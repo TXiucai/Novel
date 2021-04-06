@@ -24,6 +24,7 @@ import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.AppUpdateLoadOverEvent;
+import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
@@ -109,6 +110,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public MarqueeTextView fragment_mine_marquee;
     @BindView(R.id.fragment_mine_announce_layout)
     public LinearLayout fragment_mine_announce_layout;
+    @BindView(R.id.fragment_sign_invite_code)
+    public TextView fragment_invite_code;
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
     private UserInfoItem.Luobo_notice luobo_notice;
@@ -138,6 +141,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         if (!ReaderConfig.USE_PAY) {
             fragment_mine_user_info_money_layout.setVisibility(View.GONE);
         }
+        boolean invite_code = ShareUitls.getBoolean(activity, "invite_code", false);
+        fragment_invite_code.setVisibility(invite_code ? View.GONE : View.VISIBLE);
         MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
@@ -172,7 +177,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         try {
             if (userInfoItem != null) {
                 mUserInfo = userInfoItem;
-            } else{
+            } else {
                 mUserInfo = gson.fromJson(info, UserInfoItem.class);
             }
             luobo_notice = mUserInfo.getLuobo_notice();
@@ -180,7 +185,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             if (mUserInfo.getIs_vip() == 1) {
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_isvip);
                 fragment_mine_user_info_tip.setText(mUserInfo.getVip_end_time());
-                fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity,R.string.mine_vip_continue));
+                fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity, R.string.mine_vip_continue));
                 fragment_mine_user_info_paylayout_vip.setBackground(activity.getDrawable(R.drawable.shape_vip_continue_bg));
                 if (USE_AD_FINAL) {
                     ReaderConfig.USE_AD = false;
@@ -192,9 +197,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                 }
             }
-            if (mUserInfo.isVip_left_three_days()){
+            if (mUserInfo.isVip_left_three_days()) {
                 DialogExpirerdVip dialogExpirerdVip = new DialogExpirerdVip();
-                dialogExpirerdVip.getDialogVipPop(activity,mUserInfo.getVip_left_three_days_note());
+                dialogExpirerdVip.getDialogVipPop(activity, mUserInfo.getVip_left_three_days_note());
             }
             if (mUserInfo.getAuto_sub() == 0) {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, false);
@@ -277,7 +282,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     @OnClick(value = {R.id.fragment_mine_user_info_avatar,
             R.id.fragment_mine_user_info_paylayout_recharge, R.id.fragment_mine_user_info_paylayout_vip,// R.id.fragment_mine_user_info_paylayout_rechargenotes,
-            R.id.fragment_mine_user_info_tasklayout_mybookcomment,
+            R.id.fragment_mine_user_info_tasklayout_mybookcomment, R.id.fragment_mine_user_info_tasklayout_taskcenter,
             R.id.fragment_mine_user_info_tasklayout_feedback, R.id.fragment_mine_user_info_tasklayout_set,
             R.id.fragment_mine_user_info_tasklayout_friends, R.id.fragment_mine_user_info_nickname,
             R.id.fragment_mine_user_info_tasklayout_layout, R.id.fragment_mine_user_info_shuquan_layout,
@@ -308,6 +313,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 HandleOnclick(view, "fragment_mine_user_info_paylayout_vip");
                 break;
             case R.id.fragment_mine_user_info_tasklayout_layout:
+                HandleOnclick(view, "fragment_mine_user_info_tasklayout_layout");
+                break;
+            case R.id.fragment_mine_user_info_tasklayout_taskcenter:
                 HandleOnclick(view, "fragment_mine_user_info_tasklayout_layout");
                 break;
             case R.id.fragment_mine_user_info_tasklayout_mybookcomment:
@@ -371,12 +379,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_tasklayout_layout":
-                    if (Utils.isLogin(activity)) {
-                        intent.setClass(activity, TaskCenterActivity.class);
-                        startActivity(intent);
-                    } else {
-                        MainHttpTask.getInstance().Gotologin(activity);
-                    }
+                    intent.setClass(activity, TaskCenterActivity.class);
+                    startActivity(intent);
                     break;
                 case "fragment_mine_user_info_tasklayout_mybookcomment":
                     startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", MYCOMMENT).putExtra("title", LanguageUtil.getString(activity, R.string.MineNewFragment_shuping)));
@@ -410,6 +414,13 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 initInfo(result, null);
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void iSInviteCode(InviteCodeEvent inviteCodeEvent) {
+        if (inviteCodeEvent.isInvite) {
+            fragment_invite_code.setVisibility(View.GONE);
+        }
     }
 
     /**

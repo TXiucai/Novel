@@ -156,6 +156,12 @@ public class ReaderConfig {
     public static final String sIgninhttp = "/user/sign";
 
     /**
+     * 填写邀请码
+     */
+    public static final String sIginInVite = "/qrcode/invite-code";
+
+
+    /**
      * 完本作品列表
      */
     public static final String mFinishUrl = "/book/finish";
