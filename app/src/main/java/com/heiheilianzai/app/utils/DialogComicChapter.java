@@ -18,6 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.ComicVChapterCatalogAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -133,7 +134,13 @@ public class DialogComicChapter {
                             for (JsonElement jsonElement : jsonElements) {
                                 ComicChapter comicChapter = gson.fromJson(jsonElement, ComicChapter.class);
                                 comicChapter.comic_id = comic_id;
-                                comicChapterCatalogs.add(comicChapter);
+                                if (App.isVip(activity)){
+                                    if (comicChapter.getAd_image() == null) {
+                                        comicChapterCatalogs.add(comicChapter);
+                                    }
+                                }else {
+                                    comicChapterCatalogs.add(comicChapter);
+                                }
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {
                                 isLoadingData = comicChapterCatalogs.size() == jsonObject.getInt("total_chapter");

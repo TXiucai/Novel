@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseAd;
@@ -89,7 +90,11 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
         H20 = ImageUtil.dp2px(activity, 12);
         activity_book_info_content_comment_des.setText(baseComic.getDescription());
         if (ReaderConfig.USE_AD && baseAd != null) {
-            activity_book_info_ad.setVisibility(View.VISIBLE);
+            if (App.isVip(activity)){
+                activity_book_info_ad.setVisibility(View.GONE);
+            }else {
+                activity_book_info_ad.setVisibility(View.VISIBLE);
+            }
             ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
             layoutParams.height = layoutParams.width / 3;

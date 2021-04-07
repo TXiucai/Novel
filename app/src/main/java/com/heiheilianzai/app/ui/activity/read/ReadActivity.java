@@ -277,13 +277,17 @@ public class ReadActivity extends BaseReadActivity {
             //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
             layoutParams.height = mScreenHeight;
             bookpage.setLayoutParams(layoutParams);
-            tv_noad.setVisibility(View.VISIBLE);
-            getWebViewAD(activity);
+            if (App.isVip(activity)){
+                activity_read_buttom_ad_layout.setVisibility(View.GONE);
+            }else {
+                getWebViewAD(activity);
+                activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
+            }
             //handler.sendEmptyMessageDelayed(1, 30000);
         } else {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
-        if (!USE_AD) {
+        if (!USE_AD||App.isVip(activity)) {
             insert_todayone2.setVisibility(View.GONE);
             tv_noad.setVisibility(View.GONE);
         }

@@ -729,16 +729,18 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 baseComicImages.addAll(comicChapterItem.image_list);
                 ComicChapterTopAd advert = comicChapterItem.getAdvert();
                 if (advert != null) {
-                    BaseComicImage baseComicImage = new BaseComicImage();
-                    baseComicImage.setAd(1);
-                    baseComicImage.setAd_skip_url(advert.getAd_skip_url());
-                    baseComicImage.setImage(advert.getAd_image());
-                    baseComicImage.setAd_type(advert.getAd_type());
-                    baseComicImage.setAd_url_type(advert.getAd_url_type());
-                    baseComicImage.setHeight(advert.getAd_height());
-                    baseComicImage.setWidth(advert.getAd_width());
-                    baseComicImage.setAdvert_id(advert.getAdvert_id());
-                    baseComicImages.add(0, baseComicImage);
+                    if (!App.isVip(activity)){
+                        BaseComicImage baseComicImage = new BaseComicImage();
+                        baseComicImage.setAd(1);
+                        baseComicImage.setAd_skip_url(advert.getAd_skip_url());
+                        baseComicImage.setImage(advert.getAd_image());
+                        baseComicImage.setAd_type(advert.getAd_type());
+                        baseComicImage.setAd_url_type(advert.getAd_url_type());
+                        baseComicImage.setHeight(advert.getAd_height());
+                        baseComicImage.setWidth(advert.getAd_width());
+                        baseComicImage.setAdvert_id(advert.getAdvert_id());
+                        baseComicImages.add(0, baseComicImage);
+                    }
                 }
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
