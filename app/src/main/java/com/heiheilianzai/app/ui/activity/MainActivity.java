@@ -50,6 +50,7 @@ import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
+import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
@@ -59,6 +60,7 @@ import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.HomeNoticeDialog;
+import com.heiheilianzai.app.ui.dialog.HomeNoticePhotoDialog;
 import com.heiheilianzai.app.ui.dialog.MyPoPwindow;
 import com.heiheilianzai.app.ui.fragment.BookshelfFragment;
 import com.heiheilianzai.app.ui.fragment.DiscoveryNewFragment;
@@ -139,6 +141,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     int send_number;//记录请求支付订单的次数
     Controller controller;
     boolean loadYouSheng;
+    private List<HomeNotice> mHomeNotice;
 
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
@@ -406,6 +409,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             List<HomeNotice> noticeList = gson.fromJson(result, new TypeToken<List<HomeNotice>>() {
                             }.getType());
                             if (noticeList != null && noticeList.size() > 0) {
+                                mHomeNotice = noticeList;
                                 showHomeNotice(noticeList.get(0));
                             }
                         } catch (Exception e) {
@@ -434,10 +438,32 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         }
     }
 
+    /**
+     * 显示首页公告弹框图片
+     */
+    public void showHomeNoticePhoto() {
+        View view = this.getWindow().getDecorView();
+        if (mHomeNotice.size() >= 2) {
+            HomeNotice homeNotice = mHomeNotice.get(1);
+            if (("0".equals(homeNotice.os_type) || "2".equals(homeNotice.os_type)) && homeNotice.getAnnoun_type().equals("3")) {//0、所有，1、IOS，2、Android
+                HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(NoticeEvent.DialogEvent event) {
+        switch (event.action) {
+            case 1:
+                showHomeNoticePhoto();
+                break;
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
