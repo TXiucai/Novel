@@ -218,9 +218,8 @@ public class TopActivity extends BaseActivity {
                 } else {
                     mOptionBeenList.addAll(optionItem.list);
                     int t = Size + optionItem_list_size;
-                    mTopDetailAdapter.notifyItemRangeInserted(Size, optionItem_list_size);
+                    mTopDetailAdapter.notifyItemRangeInserted(Size, t);
                     Size = t;
-                    // optionAdapter.notifyDataSetChanged();
                 }
                 current_page = optionItem.current_page;
                 ++current_page;

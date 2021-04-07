@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -129,6 +130,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
             activity_search_keywords.setHint(mKeyWordHint);
         }
         fragment_option_listview.setPullRefreshEnabled(false);
+        fragment_option_listview.setLoadingMoreEnabled(true);
         fragment_option_listview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -137,7 +139,13 @@ public class SearchActivity extends BaseButterKnifeActivity {
             @Override
             public void onLoadMore() {
                 if (mKeyWord != null) {
-                    gotoSearch(mKeyWord);
+                    if (current_page <= total_page) {
+                        gotoSearch(mKeyWord);
+                    } else {
+                        fragment_option_listview.loadMoreComplete();
+                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
+                    }
+
                 }
             }
         });
@@ -293,9 +301,10 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 fragment_option_listview.setVisibility(View.VISIBLE);
                 activity_search_keywords_scrollview.setVisibility(View.GONE);
             } else {
+                fragment_option_listview.loadMoreComplete();//加载完成必须更改状态不然loadmore不执行
                 optionBeenList.addAll(optionItem.list);
                 int t = Size + optionItem_list_size;
-                optionAdapter.notifyItemRangeInserted(Size + 2, optionItem_list_size);
+                optionAdapter.notifyItemRangeInserted(Size + 1, t);
                 Size = t;
             }
             current_page = optionItem.current_page;
