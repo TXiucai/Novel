@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.dialog;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.PopupWindow;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.HomeNotice;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 
@@ -26,9 +28,14 @@ public class HomeNoticePhotoDialog {
         ImageView homeNoticePhoto = view.findViewById(R.id.home_notice_photo);
         View close = view.findViewById(R.id.home_notice_close);
         MyPicasso.GlideImageNoSize(activity, homeNotice.getImg_content(), homeNoticePhoto);
-        close.setOnClickListener(new View.OnClickListener() {
+        close.setOnClickListener(v1 -> popupWindow.dismiss());
+        homeNoticePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
+                Intent intent = new Intent();
+                intent.setClass(activity, WebViewActivity.class);
+                intent.putExtra("url", homeNotice.getJump_url());
+                activity.startActivity(intent);
             }
         });
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
