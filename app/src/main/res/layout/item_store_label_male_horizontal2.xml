@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@mipmap/home_novel_13_red"
-        android:layout_marginBottom="@dimen/dimens_16dp"
+        android:layout_marginBottom="@dimen/dimens_10dp"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dimens_10dp"
         android:paddingTop="@dimen/dimens_14dp"

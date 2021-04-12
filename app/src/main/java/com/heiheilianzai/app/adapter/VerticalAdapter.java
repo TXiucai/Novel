@@ -123,8 +123,10 @@ public class VerticalAdapter extends BaseAdapter {
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
             if (isBackground) {
                 item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
+                isBackground = false;
             } else {
                 item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_green));
+                isBackground = true;
             }
             ImageView imageView = contentView.findViewById(R.id.item_store_label_male_horizontal_img);
             TextView name = contentView.findViewById(R.id.item_store_label_male_horizontal_name);

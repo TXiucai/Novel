@@ -95,7 +95,18 @@ public class RecomendApp {
         //设置弹出位置
         window.setGravity(Gravity.CENTER);
         final UpdateHolder updateHolder = new UpdateHolder(view);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(activity, 3);
+        RecyclerView.LayoutManager layoutManager;
+        switch (recommendAppBean.getApp_list().size()) {
+            case 1:
+                layoutManager = new GridLayoutManager(activity, 1);
+                break;
+            case 2:
+                layoutManager = new GridLayoutManager(activity, 2);
+                break;
+            default:
+                layoutManager = new GridLayoutManager(activity, 3);
+        }
+
         //设置布局管理器为线性布局管理器
         updateHolder.ry.setLayoutManager(layoutManager);
         RecommendAppAdapter appAdapter = new RecommendAppAdapter(activity, recommendAppBean.getApp_list());

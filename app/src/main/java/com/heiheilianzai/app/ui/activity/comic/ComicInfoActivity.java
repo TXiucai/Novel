@@ -211,12 +211,14 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 if (!baseComic.isAddBookSelf()) {
                     baseComic.saveIsexist(true);
                     tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+                    img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect));
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     addSelfCollect();
                     EventBus.getDefault().post(new RefreshComic(baseComic, 1));
                 } else {
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_delshoucang));
                     tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
+                    img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect_no));
                     LitePal.delete(BaseComic.class, baseComic.getId());
                     baseComic.setAddBookSelf(false);
                     EventBus.getDefault().post(new RefreshComic(baseComic, 0));
@@ -501,8 +503,10 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         ry_comic_category.setAdapter(comicChapterCatalogAdapter);
         if (baseComic.isAddBookSelf()) {
             tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect));
         } else {
             tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_shoucang));
+            img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect_no));
         }
         httpData2(false);
     }
@@ -589,6 +593,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         if (refreshBookInfo.isSave) {
             baseComic.setAddBookSelf(true);
             tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect));
             addSelfCollect();
         } else {
             httpData2(true);
@@ -622,6 +627,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         if (!baseComic.isAddBookSelf() && baseComic1.isAddBookSelf()) {
             baseComic.setAddBookSelf(true);
             tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
+            img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect));
             addSelfCollect();
         }
     }

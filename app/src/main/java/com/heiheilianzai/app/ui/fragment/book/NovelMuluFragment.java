@@ -58,10 +58,10 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
     public void sendData(BaseBook baseBook) {
         this.baseBook = baseBook;
         mBookId = baseBook.getBook_id();
-        initData();
+        getChapters();
     }
 
-    protected void initData() {
+    protected void getChapters() {
         ReaderParams params = new ReaderParams(getContext());
         params.putExtraParams("book_id", mBookId);
         String json = params.generateParamsJson();
