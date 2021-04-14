@@ -88,6 +88,7 @@
 
                             <ImageView
                                 android:id="@+id/fragment_mine_user_info_isvip"
+                                android:visibility="gone"
                                 android:layout_width="@dimen/dimens_18dp"
                                 android:layout_height="@dimen/dimens_18dp"
                                 android:layout_gravity="center_vertical"
@@ -124,6 +125,7 @@
 
                     <LinearLayout
                         android:id="@+id/fragment_mine_user_info_gold_layout"
+                        android:visibility="gone"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="@dimen/dimens_50dp"
                         android:layout_weight="1"

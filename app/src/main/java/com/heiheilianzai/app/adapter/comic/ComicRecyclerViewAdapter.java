@@ -81,9 +81,9 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public int getItemViewType(int position) {
         if (position == size) {
             return 888;
-        }else if(position==0){
+        } else if (position == 0 && list.get(0).getAd() == 1) {
             return ad;
-        }else {
+        } else {
             return super.getItemViewType(position);
         }
     }
@@ -92,10 +92,10 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 888) {
             return new MyViewHolderFoot(activity_comic_look_foot);
-        } else if (viewType ==ad){
+        } else if (viewType == ad) {
             View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_recyclerview_ad, parent, false);
             return new MyAdViewHolder(rootView);
-        }else {
+        } else {
             View rootView = LayoutInflater.from(activity).inflate(R.layout.item_comic_recyclerview_, parent, false);
             return new MyViewHolder(rootView);
         }
@@ -105,7 +105,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holderr, final int position) {
         try {
-            if (holderr instanceof MyViewHolder){
+            if (holderr instanceof MyViewHolder) {
                 if (position < size) {
                     MyViewHolder holder = (MyViewHolder) holderr;
                     final BaseComicImage baseComicImage = list.get(position);
@@ -159,11 +159,11 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                         holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
                     }
                 }
-            } else if (holderr instanceof MyAdViewHolder){
-                MyAdViewHolder holderAd= (MyAdViewHolder) holderr;
+            } else if (holderr instanceof MyAdViewHolder) {
+                MyAdViewHolder holderAd = (MyAdViewHolder) holderr;
                 BaseComicImage comicImage = list.get(position);
                 MyPicasso.GlideImageNoSize(activity, comicImage.getImage(), holderAd.ivAD);
-                if (comicImage.getAd()==1){
+                if (comicImage.getAd() == 1) {
                     holderAd.ivAD.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

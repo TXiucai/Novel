@@ -149,8 +149,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 initInfo(result, null);
             }
         });
-        uiFreeCharge();
-        setVipView();
     }
 
     @Override
@@ -184,6 +182,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             initAnounce();
             if (mUserInfo.getIs_vip() == 1) {
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_isvip);
+                fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
+                fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_tip.setText(mUserInfo.getVip_end_time());
                 fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity, R.string.mine_vip_continue));
                 fragment_mine_user_info_paylayout_vip.setBackground(activity.getDrawable(R.drawable.shape_vip_continue_bg));
@@ -213,6 +213,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 SensorsDataHelper.profileSet(activity);
             }
             MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), fragment_mine_user_info_avatar, R.mipmap.icon_def_head);
+            fragment_mine_user_info_id.setVisibility(View.VISIBLE);
             fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
             fragment_mine_user_info_tasklayout_task.setText(mUserInfo.getTask_list().getFinish_num() + "/" + mUserInfo.getTask_list().getMission_num());
@@ -242,6 +243,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_id.setVisibility(View.GONE);
             fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
             fragment_mine_user_info_tip.setText(LanguageUtil.getString(activity, R.string.string_mine_no_login_tip));
+            fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity, R.string.mine_vip_open));
+            fragment_mine_user_info_paylayout_vip.setBackground(activity.getDrawable(R.drawable.shape_start_bg));
             return;
         }
         ReaderParams params = new ReaderParams(activity);
@@ -399,11 +402,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshMine refreshMine) {
-        if (refreshMine.userInfoItem == null) {
-            refreshData();
-        } else {
-            initInfo(null, refreshMine.userInfoItem);
-        }
+        refreshData();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -424,13 +423,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     }
 
     /**
-     * 根据 本地配置 判断是否免费调整UI变化
-     */
-    private void uiFreeCharge() {
-        uiFreeCharge(fragment_mine_user_info_gold_layout, fragment_mine_user_info_isvip);
-    }
-
-    /**
      * 登录成功 或其他地方改变用户数据 刷新波音数据
      *
      * @param mobile
@@ -445,17 +437,4 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         });
     }
 
-    /**
-     * 根据 后台配置 付费开关判断是否开启
-     */
-    void setVipView() {
-        uiFreeCharge(ReaderConfig.newInstance().app_free_charge, fragment_mine_user_info_isvip);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void eventAppUpdateLoadOver(AppUpdateLoadOverEvent event) {
-        if (event != null) {
-            setVipView();
-        }
-    }
 }

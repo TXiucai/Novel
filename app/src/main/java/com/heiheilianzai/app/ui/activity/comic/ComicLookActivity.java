@@ -740,6 +740,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         baseComicImage.setWidth(advert.getAd_width());
                         baseComicImage.setAdvert_id(advert.getAdvert_id());
                         baseComicImages.add(0, baseComicImage);
+                        ++baseComicImagesSize;
                     }
                 }
                 if (first) {
