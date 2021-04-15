@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -151,7 +152,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     protected void initView() {
         fragmentManager = getChildFragmentManager();
         if (NotchScreen.hasNotchScreen(getActivity())) {
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) (fragment_newbookself_top.getLayoutParams());
+            ViewGroup.LayoutParams layoutParams = fragment_newbookself_top.getLayoutParams();
             layoutParams.height = ImageUtil.dp2px(activity, 90);
             fragment_newbookself_top.setLayoutParams(layoutParams);
         }
