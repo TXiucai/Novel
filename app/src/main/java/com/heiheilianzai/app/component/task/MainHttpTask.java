@@ -239,9 +239,7 @@ public class MainHttpTask {
                     }
                     break;
                 case "Mine":
-                    if (Utils.isLogin(activity)) {
-                        httpSend(activity, ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, Option, getHttpData);
-                    }
+                    httpSend(activity, ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, Option, getHttpData);
                     break;
             }
         } catch (Exception e) {
@@ -251,7 +249,6 @@ public class MainHttpTask {
 
     public boolean Gotologin(Activity activity) {
         if (!Utils.isLogin(activity)) {
-            MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.MineNewFragment_nologin));
             Intent intent = new Intent();
             intent.setClass(activity, LoginActivity.class);
             activity.startActivity(intent);

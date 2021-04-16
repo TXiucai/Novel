@@ -18,6 +18,12 @@ import butterknife.ButterKnife;
 public class DialogExpirerdVip {
 
     public Dialog getDialogVipPop(Activity activity, String note) {
+        long recommendTime = ShareUitls.getExpiredVipTime(activity, "expired_vip", 0);
+        long currentTimeDifferenceSecond = DateUtils.getCurrentTimeDifferenceSecond(recommendTime);
+        long expiredTime = currentTimeDifferenceSecond / 60 / 60 / 24;
+        if (expiredTime <= 1) {
+            return null; //小于1天不进行展示
+        }
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_expired_vip, null);
         Dialog popupWindow = new Dialog(activity, R.style.updateapp);
         Window window = popupWindow.getWindow();
@@ -48,6 +54,7 @@ public class DialogExpirerdVip {
         popupWindow.setCancelable(false);
         popupWindow.setCanceledOnTouchOutside(false);
         popupWindow.show();
+        ShareUitls.putExpiredVipTime(activity, "expired_vip", DateUtils.currentTime());
         return popupWindow;
     }
 
@@ -58,6 +65,7 @@ public class DialogExpirerdVip {
         public TextView dialog_no;
         @BindView(R.id.dialog_yes)
         public TextView dialog_yes;
+
         public VipHolder(View view) {
             ButterKnife.bind(this, view);
         }

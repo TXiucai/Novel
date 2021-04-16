@@ -36,6 +36,10 @@ public class PrefConst {
      * 书卷单章价格
      */
     public static final String COUPON_PRICE = "coupon_pay_price";
+    /**
+     * 漫画书卷单章价格
+     */
+    public static final String COUPON_COMICI_PRICE = "coupon_comic_pay_price";
 
     //---------------------- END -----------------------------
 

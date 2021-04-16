@@ -1198,17 +1198,22 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             isCoupon = true;
         }
         if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1")||is_vip != null && is_vip.equals("1")) && !App.isVip(activity)) {
-            DialogComicLook dialogNovelCoupon = new DialogComicLook();
-            Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
-            dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
-                @Override
-                public void onOpenCoupon(boolean isBuy) {
-                    if (dialogVipPop != null) {
-                        dialogVipPop.dismiss();
+            if (Utils.isLogin(activity)){
+                DialogComicLook dialogNovelCoupon = new DialogComicLook();
+                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
+                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                    @Override
+                    public void onOpenCoupon(boolean isBuy) {
+                        if (dialogVipPop != null) {
+                            dialogVipPop.dismiss();
+                        }
+                        chapterItem.setIs_book_coupon_pay("0");
                     }
-                    chapterItem.setIs_book_coupon_pay("0");
-                }
-            });
+                });
+            }else {
+                MainHttpTask.getInstance().Gotologin(activity);
+                activity.finish();
+            }
         }
     }
 }

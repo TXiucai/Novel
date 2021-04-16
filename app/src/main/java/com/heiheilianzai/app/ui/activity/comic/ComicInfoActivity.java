@@ -58,6 +58,7 @@ import com.heiheilianzai.app.base.BaseWarmStartActivity;
 import com.heiheilianzai.app.callback.AppBarStateChangeListener;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.BaseAd;
@@ -77,6 +78,7 @@ import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DialogComicChapter;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -553,6 +555,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     swipeRefreshLayout.setRefreshing(false);
                     JSONObject jsonObject = new JSONObject(result);
                     JsonParser jsonParser = new JsonParser();
+                    String coupon_pay_price = jsonObject.getString("coupon_pay_price");
+                    AppPrefs.putSharedString(activity, PrefConst.COUPON_COMICI_PRICE, coupon_pay_price);
                     mTotalPage = jsonObject.getInt("total_page");
                     JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
                     for (JsonElement jsonElement : jsonElements) {
@@ -586,6 +590,13 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mPageNum = 0;
+        getDataCatalogInfo();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

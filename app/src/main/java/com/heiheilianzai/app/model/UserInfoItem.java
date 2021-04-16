@@ -47,6 +47,15 @@ public class UserInfoItem implements Serializable{
     private String vip_left_three_days_note;
     private boolean vip_left_three_days;
     private Luobo_notice luobo_notice;
+    private String vip_expire_note;
+
+    public String getVip_expire_note() {
+        return vip_expire_note;
+    }
+
+    public void setVip_expire_note(String vip_expire_note) {
+        this.vip_expire_note = vip_expire_note;
+    }
 
     public String getVip_end_time() {
         return vip_end_time;

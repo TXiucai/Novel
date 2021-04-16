@@ -2,7 +2,7 @@ package com.heiheilianzai.app.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.Dialog;import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -23,6 +23,7 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapterItem;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.comic.RefreashComicInfoActivity;
 
 
@@ -44,7 +45,7 @@ public class DialogComicLook {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_comic_look, null);
         VipHolder vipHolder = new VipHolder(view);
         int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
-        String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_PRICE);
+        String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_COMICI_PRICE);
         vipHolder.txChapter.setText(String.format(activity.getResources().getString(R.string.dialog_coupon_open), couponPrice));
         vipHolder.txNum.setText(String.valueOf(couponNum));
         vipHolder.txChapter.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +69,15 @@ public class DialogComicLook {
                         }
                     }
                 }
+            }
+        });
+        vipHolder.txVip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                myIntent.putExtra("isvip", Utils.isLogin(activity));
+                activity.startActivity(myIntent);
+                activity.finish();
             }
         });
         vipHolder.llBack.setOnClickListener(new View.OnClickListener() {

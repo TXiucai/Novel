@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- *漫画Adapter
+ * 漫画Adapter
  * Created by scb on 2018/10/28.
  */
 public class StoreComicAdapter extends BaseAdapter {
@@ -32,6 +32,7 @@ public class StoreComicAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private int style;
     private int WIDTH, HEIGHT, height;
+
     public StoreComicAdapter(List<StroreComicLable.Comic> taskCenter2s, Activity activity, int style, int WIDTH, int HEIGHT) {
         this.taskCenter2s = taskCenter2s;
         this.layoutInflater = LayoutInflater.from(activity);
@@ -68,7 +69,7 @@ public class StoreComicAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         StroreComicLable.Comic comic = getItem(i);
-        if (style == 1 || style == 3) {
+        if (style == 1 || style == 3 || style == 4 || style == 5) {
             if (comic.horizontal_cover != null && !TextUtils.isEmpty(comic.horizontal_cover))
                 MyPicasso.GlideImageNoSize(activity, comic.horizontal_cover, viewHolder.liem_store_comic_style1_img, R.mipmap.comic_def_v);
             else

@@ -93,6 +93,7 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
                 JSONObject jsonObject1 = chapterListArr.getJSONObject(i);
                 ChapterItem chapterItem1 = new ChapterItem();
                 BaseTag tag = gson.fromJson(jsonObject1.getString("tag"), BaseTag.class);
+                chapterItem1.setBook_id(jsonObject.getString("book_id"));
                 chapterItem1.setChaptertab(tag.getTab());
                 chapterItem1.setChaptercolor(tag.getColor());
                 chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));

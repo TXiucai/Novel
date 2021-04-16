@@ -338,13 +338,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        Intent intent;
                         String book_id;
-                        if (style < 4) {
-                            book_id = bookList.get(position).getBook_id();
-                        } else {
-                            book_id = bookList.get(position + 1).getBook_id();
-                        }
+                        book_id = bookList.get(position).getBook_id();
                         activity.startActivity(BookInfoActivity.getMyIntent(activity, referPage, book_id));
                     } catch (Exception e) {
                     }

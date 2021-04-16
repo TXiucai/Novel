@@ -112,7 +112,7 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                             break;
                         case "vip":
                             if (Utils.isLogin(activity)) {
-                                startActivity(AcquireBaoyueActivity.getMyIntent(activity,LanguageUtil.getString(activity, R.string.refer_page_task)));
+                                startActivity(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_task)));
                                 finish();
                             } else {
                                 MainHttpTask.getInstance().Gotologin(activity);
@@ -157,11 +157,12 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
         public LinearLayout activity_taskcenter_invite;
         @BindView(R.id.tx_task_invite_go)
         public TextView activity_taskcenter_invite_go;
+
         public Holder(View view) {
             ButterKnife.bind(this, view);
         }
 
-        @OnClick(value = {R.id.activity_taskcenter_sign,R.id.tx_task_invite_go})
+        @OnClick(value = {R.id.activity_taskcenter_sign, R.id.tx_task_invite_go})
         public void getEvent(View view) {
             switch (view.getId()) {
                 case R.id.activity_taskcenter_sign:
@@ -173,7 +174,7 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                     break;
                 case R.id.tx_task_invite_go:
                     if (Utils.isLogin(activity)) {
-                        startActivity( new Intent().setClass(activity, InviteCodeActivity.class));
+                        startActivity(new Intent().setClass(activity, InviteCodeActivity.class));
                     } else {
                         MainHttpTask.getInstance().Gotologin(activity);
                     }
@@ -193,6 +194,7 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                             sign_info.sign_status = 1;
                             holder.activity_taskcenter_sign.setImageResource(R.mipmap.icon_sign);
                             ShareUitls.putString(activity, "sign_pop", result);
+                            holder.activity_taskcenter_lianxuday.setText(sign_info.sign_days + 1 + "");
                             new MyPoPwindow().getSignPop(activity);
                             EventBus.getDefault().post(new RefreshMine(null));
                         }
@@ -260,9 +262,9 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void iSInviteCode(InviteCodeEvent inviteCodeEvent){
-        if (inviteCodeEvent.isInvite){
-            if (holder!=null){
+    public void iSInviteCode(InviteCodeEvent inviteCodeEvent) {
+        if (inviteCodeEvent.isInvite) {
+            if (holder != null) {
                 holder.activity_taskcenter_invite.setVisibility(View.GONE);
             }
         }

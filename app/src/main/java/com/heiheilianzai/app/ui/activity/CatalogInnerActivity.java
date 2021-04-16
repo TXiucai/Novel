@@ -158,6 +158,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                 BaseTag tag = gson.fromJson(jsonObject1.getString("tag"), BaseTag.class);
                 chapterItem1.setChaptertab(tag.getTab());
                 chapterItem1.setChaptercolor(tag.getColor());
+                chapterItem1.setBook_id(jsonObject.getString("book_id"));
                 chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));

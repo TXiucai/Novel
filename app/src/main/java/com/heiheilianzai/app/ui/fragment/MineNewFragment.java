@@ -161,17 +161,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     }
 
     public void initInfo(final String info, UserInfoItem userInfoItem) {
-        if (!Utils.isLogin(activity)) {
-            fragment_mine_user_info_nickname.setText(LanguageUtil.getString(activity, R.string.user_login));
-            fragment_mine_user_info_id.setVisibility(View.GONE);
-            fragment_mine_user_info_isvip.setVisibility(View.GONE);
-            fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
-            fragment_mine_user_info_tip.setText(LanguageUtil.getString(activity, R.string.string_mine_no_login_tip));
-            AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
-            AppPrefs.putSharedString(activity, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
-            AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, "");
-            return;
-        }
         try {
             if (userInfoItem != null) {
                 mUserInfo = userInfoItem;
@@ -180,6 +169,17 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             }
             luobo_notice = mUserInfo.getLuobo_notice();
             initAnounce();
+            if (!Utils.isLogin(activity)) {
+                fragment_mine_user_info_nickname.setText(LanguageUtil.getString(activity, R.string.user_login));
+                fragment_mine_user_info_id.setVisibility(View.GONE);
+                fragment_mine_user_info_isvip.setVisibility(View.GONE);
+                fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
+                fragment_mine_user_info_tip.setText(LanguageUtil.getString(activity, R.string.string_mine_no_login_tip));
+                AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
+                AppPrefs.putSharedString(activity, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
+                AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, "");
+                return;
+            }
             if (mUserInfo.getIs_vip() == 1) {
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_isvip);
                 fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
@@ -191,8 +191,15 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     ReaderConfig.USE_AD = false;
                 }
             } else {
-                fragment_mine_user_info_isvip.setVisibility(View.GONE);
-                fragment_mine_user_info_tip.setVisibility(View.GONE);
+                if (mUserInfo.getVip_expire_note() != null && mUserInfo.getVip_expire_note().length() > 0) {
+                    fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
+                    fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
+                    fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
+                    fragment_mine_user_info_tip.setText(mUserInfo.getVip_expire_note());
+                } else {
+                    fragment_mine_user_info_isvip.setVisibility(View.GONE);
+                    fragment_mine_user_info_tip.setVisibility(View.GONE);
+                }
                 if (USE_AD_FINAL) {
                     ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                 }
