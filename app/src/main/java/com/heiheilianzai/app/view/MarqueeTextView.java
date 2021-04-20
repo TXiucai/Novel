@@ -30,6 +30,11 @@ public class MarqueeTextView extends LinearLayout {
     int mWidth;
     int mHeight;
     private Handler mHandler;
+    private boolean isLeftToRight = false;
+
+    public void setLeftToRight(boolean leftToRight) {
+        isLeftToRight = leftToRight;
+    }
 
     public MarqueeTextView(Context context) {
         super(context);
@@ -55,13 +60,20 @@ public class MarqueeTextView extends LinearLayout {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         addView(marqueeTextView, layoutParams);
         viewFlipper = marqueeTextView.findViewById(R.id.viewFlipper);
-        viewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
-        viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_out_top));
-        viewFlipper.startFlipping();
-        viewFlipper.setFlipInterval(3000);
     }
 
     public void initMarqueeTextView(List<Announce> textArrays, final MarqueeTextViewClickListener marqueeTextViewClickListener) {
+        if (!isLeftToRight) {
+            viewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
+            viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_out_top));
+            viewFlipper.setFlipInterval(3000);
+        } else {
+            viewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_left));
+            viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_out_right));
+            viewFlipper.setFlipInterval(3000);
+        }
+
+        viewFlipper.startFlipping();
         if (textArrays.size() == 0) {
             return;
         }

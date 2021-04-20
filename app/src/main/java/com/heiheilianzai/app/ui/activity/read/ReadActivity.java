@@ -277,9 +277,9 @@ public class ReadActivity extends BaseReadActivity {
             //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
             layoutParams.height = mScreenHeight;
             bookpage.setLayoutParams(layoutParams);
-            if (App.isVip(activity)){
+            if (App.isVip(activity)) {
                 activity_read_buttom_ad_layout.setVisibility(View.GONE);
-            }else {
+            } else {
                 getWebViewAD(activity);
                 activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
             }
@@ -287,11 +287,12 @@ public class ReadActivity extends BaseReadActivity {
         } else {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
-        if (!USE_AD||App.isVip(activity)) {
+        if (!USE_AD || App.isVip(activity)) {
             insert_todayone2.setVisibility(View.GONE);
             tv_noad.setVisibility(View.GONE);
+        } else {
+            bookpage.setADview(insert_todayone2);
         }
-        bookpage.setADview(insert_todayone2);
         next();
         acceptNovelBoyin(activity, chapter.getBook_name());
         getBookInfo();
@@ -307,7 +308,7 @@ public class ReadActivity extends BaseReadActivity {
         mReferPage = intent.getStringExtra(REFER_PAGE_EXT_KAY);
         pageFactory = new PageFactory(baseBook, bookpage_scroll, bookpage_scroll_text, insert_todayone2, this);
         pageFactory.setPurchaseLayout(activity_read_purchase_layout, activity_read_purchase_layout2);
-        if (ReaderConfig.USE_AD) {
+        if (ReaderConfig.USE_AD && !App.isVip(activity)) {
             pageFactory.getWebViewAD(ReadActivity.this);//获取广告
         }
         IntentFilter mfilter = new IntentFilter();

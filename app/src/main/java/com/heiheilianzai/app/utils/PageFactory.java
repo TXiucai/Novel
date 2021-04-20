@@ -668,12 +668,7 @@ public class PageFactory {
     public void prePage() {
         boolean last_chapter = currentPage.getBegin() <= 0;
         mNextPage = false;
-        checkIsCoupon(chapterItem, new IsBuyCoupon() {
-            @Override
-            public void buyCoupon() {
-                prePage();
-            }
-        });
+
         if (last_chapter) {
             if (!ChapterManager.getInstance(mActivity).hasPreChapter()) {
                 if (!m_isfirstPage) {
@@ -682,6 +677,12 @@ public class PageFactory {
                 m_isfirstPage = true;
                 return;
             }
+            checkIsCoupon(chapterItem, new IsBuyCoupon() {
+                @Override
+                public void buyCoupon() {
+
+                }
+            });
             if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERFirst) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -754,12 +755,6 @@ public class PageFactory {
         if (currentPage == null) {
             return;
         }
-        checkIsCoupon(chapterItem, new IsBuyCoupon() {
-            @Override
-            public void buyCoupon() {
-                nextPage();
-            }
-        });
         if (nextChapter) {//开启新章节
             if (!m_islastPage) {
             }
@@ -770,6 +765,12 @@ public class PageFactory {
                 m_islastPage = true;
                 return;
             }
+            checkIsCoupon(chapterItem, new IsBuyCoupon() {
+                @Override
+                public void buyCoupon() {
+
+                }
+            });
             if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERLast && mBookPageWidget.Current_Page > 5) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -1663,34 +1664,39 @@ public class PageFactory {
         mBookPageWidget.postInvalidate();
     }
 
-    private void checkIsVip(ChapterItem chapterItem){
-        String is_vip =chapterItem.getIs_vip();
+    private void checkIsVip(ChapterItem chapterItem) {
+        String is_vip = chapterItem.getIs_vip();
         if (is_vip != null && is_vip.equals("1") && !App.isVip(mActivity)) {
             DialogVip dialogVip = new DialogVip();
             dialogVip.getDialogVipPop(mActivity, true);
             return;
         }
     }
-    private void checkIsCoupon(ChapterItem chapterItem,IsBuyCoupon isBuyCoupon){
-        String is_book_coupon_pay =chapterItem.getIs_book_coupon_pay();
-        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
-           DialogNovelCoupon dialogNovelCoupon=new DialogNovelCoupon();
+
+    private void checkIsCoupon(ChapterItem chapterItem, IsBuyCoupon isBuyCoupon) {
+        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+        if ( chapterItem.isIs_buy_status()){
+            return;
+        }
+        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity) ) {
+            DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
             Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
             dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
-               @Override
-               public void onOpenCoupon(boolean isBuy) {
-                   if (dialogVipPop!=null){
-                       dialogVipPop.dismiss();
-                   }
-                   chapterItem.setIs_book_coupon_pay("0");
-                   isBuyCoupon.buyCoupon();
-               }
-           });
-           return;
+                @Override
+                public void onOpenCoupon(boolean isBuy) {
+                    if (dialogVipPop != null) {
+                        dialogVipPop.dismiss();
+                    }
+                    chapterItem.setIs_buy_status(true);
+                    isBuyCoupon.buyCoupon();
+                }
+            });
+            return;
         }
         checkIsVip(chapterItem);
     }
-    interface IsBuyCoupon{
+
+    interface IsBuyCoupon {
         void buyCoupon();
     }
 }

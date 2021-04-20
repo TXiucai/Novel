@@ -596,6 +596,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     protected void onRestart() {
         super.onRestart();
         mPageNum = 0;
+        comicChapter.clear();
         getDataCatalogInfo();
     }
 

@@ -143,6 +143,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         }
         boolean invite_code = ShareUitls.getBoolean(activity, "invite_code", false);
         fragment_invite_code.setVisibility(invite_code ? View.GONE : View.VISIBLE);
+        fragment_mine_marquee.setLeftToRight(true);
         MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {

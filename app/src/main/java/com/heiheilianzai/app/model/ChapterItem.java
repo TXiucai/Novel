@@ -31,6 +31,15 @@ public class ChapterItem extends LitePalSupport implements Serializable {
     @Column(ignore = true)
     String chaptercolor;
     String is_book_coupon_pay;
+     boolean is_buy_status;
+
+    public boolean isIs_buy_status() {
+        return is_buy_status;
+    }
+
+    public void setIs_buy_status(boolean is_buy_status) {
+        this.is_buy_status = is_buy_status;
+    }
 
     public String getIs_book_coupon_pay() {
         return is_book_coupon_pay;
