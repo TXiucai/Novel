@@ -677,12 +677,7 @@ public class PageFactory {
                 m_isfirstPage = true;
                 return;
             }
-            checkIsCoupon(chapterItem, new IsBuyCoupon() {
-                @Override
-                public void buyCoupon() {
-
-                }
-            });
+            checkIsCoupon(chapterItem);
             if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERFirst) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -765,12 +760,7 @@ public class PageFactory {
                 m_islastPage = true;
                 return;
             }
-            checkIsCoupon(chapterItem, new IsBuyCoupon() {
-                @Override
-                public void buyCoupon() {
-
-                }
-            });
+            checkIsCoupon(chapterItem);
             if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERLast && mBookPageWidget.Current_Page > 5) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -1673,30 +1663,43 @@ public class PageFactory {
         }
     }
 
-    private void checkIsCoupon(ChapterItem chapterItem, IsBuyCoupon isBuyCoupon) {
-        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-        if ( chapterItem.isIs_buy_status()){
-            return;
-        }
-        if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity) ) {
-            DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-            Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
-            dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
-                @Override
-                public void onOpenCoupon(boolean isBuy) {
-                    if (dialogVipPop != null) {
-                        dialogVipPop.dismiss();
-                    }
-                    chapterItem.setIs_buy_status(true);
-                    isBuyCoupon.buyCoupon();
-                }
-            });
-            return;
-        }
-        checkIsVip(chapterItem);
+    private void checkIsCoupon(ChapterItem chapterItem) {
+       checkIsBuyCoupon(mActivity,chapterItem);
     }
 
-    interface IsBuyCoupon {
-        void buyCoupon();
+    private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem) {
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("book_id", chapterItem.getBook_id());
+        params.putExtraParams("chapter_id", chapterItem.getChapter_id());
+        String paramString = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, paramString, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
+                        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+                        if (!chapterContent.isIs_buy_status()){
+                            if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity) ) {
+                                DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
+                                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+                                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                                    @Override
+                                    public void onOpenCoupon(boolean isBuy) {
+                                        if (dialogVipPop != null) {
+                                            dialogVipPop.dismiss();
+                                        }
+                                        chapterItem.setIs_buy_status(true);
+                                    }
+                                });
+                                return;
+                            }
+                        }
+                        checkIsVip(chapterItem);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 }

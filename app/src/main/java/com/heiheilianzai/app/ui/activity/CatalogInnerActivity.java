@@ -20,6 +20,7 @@ import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseTag;
+import com.heiheilianzai.app.model.ChapterContent;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.DialogNovelCoupon;
@@ -178,7 +179,32 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                         if (activity != null) {
                             activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
                             ChapterItem chapterItem = mItemList.get(position);
-                            String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+                            checkIsBuyCoupon(activity, chapterItem, json);
+
+                        }
+                    }
+                });
+                if (mDisplayOrder < mItemList.size()) {
+                    mListView.setSelection(mDisplayOrder);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem, String json) {
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("book_id", chapterItem.getBook_id());
+        params.putExtraParams("chapter_id", chapterItem.getChapter_id());
+        String paramString = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, paramString, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
+                        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+                        if (!chapterContent.isIs_buy_status()) {
                             if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(CatalogInnerActivity.this)) {
                                 DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
                                 Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, false);
@@ -195,26 +221,22 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                                 });
                                 return;
                             }
-                            String is_vip = chapterItem.getIs_vip();
-                            if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
-                                DialogVip dialogVip = new DialogVip();
-                                dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
-                                return;
-                            }
-                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                         }
+                        String is_vip = chapterItem.getIs_vip();
+                        if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
+                            DialogVip dialogVip = new DialogVip();
+                            dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
+                            return;
+                        }
+                        ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                     }
-                });
-                if (mDisplayOrder < mItemList.size()) {
-                    mListView.setSelection(mDisplayOrder);
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
                 }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        );
     }
-
 
     @Override
     public void initTitleBarView(String text) {

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.heiheilianzai.app.view.ObservableScrollView
@@ -283,12 +284,17 @@
                     android:layout_marginLeft="@dimen/dimens_20dp"
                     android:background="@mipmap/mine_announce_icon" />
 
-                <com.heiheilianzai.app.view.MarqueeTextView
+                <com.heiheilianzai.app.view.MarqueeView
                     android:id="@+id/fragment_mine_marquee"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/dimens_10dp"
-                    android:layout_weight="1" />
+                    android:layout_marginRight="@dimen/dimens_10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    app:scroll_first_delay="0"
+                    app:scroll_interval="5000"
+                    app:scroll_mode="mode_forever"/>
 
             </LinearLayout>
 

@@ -25,7 +25,10 @@ import com.heiheilianzai.app.model.BookInfoComment;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
+import com.heiheilianzai.app.ui.activity.AddCommentActivity;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
+import com.heiheilianzai.app.ui.activity.CommentListActivity;
+import com.heiheilianzai.app.ui.activity.NovelActivity;
 import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicCommentActivity;
@@ -78,6 +81,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
     public TextView activity_book_info_content_add_comment;
     public int WIDTH, HEIGHT, HorizontalSpacing, H100, H50, H20;
     BaseBook baseComic;
+
     public void senddata(BaseBook baseComic, List<BookInfoComment> bookInfoComments, StroreBookcLable stroreComicLable, BaseAd baseAd) {
         MyToash.Log("http_utaa", bookInfoComments.toString());
         this.baseComic = baseComic;
@@ -90,9 +94,9 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
         H20 = ImageUtil.dp2px(activity, 12);
         activity_book_info_content_comment_des.setText(baseComic.getDescription());
         if (ReaderConfig.USE_AD && baseAd != null) {
-            if (App.isVip(activity)){
+            if (App.isVip(activity)) {
                 activity_book_info_ad.setVisibility(View.GONE);
-            }else {
+            } else {
                 activity_book_info_ad.setVisibility(View.VISIBLE);
             }
             ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
@@ -164,10 +168,10 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
             activity_book_info_content_add_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivityForResult(
-                            new Intent(activity, ComicCommentActivity.class).
-                                    putExtra("book_id", baseComic.getBook_id()).
-                                    putExtra("IsBook", false), 11);
+                    //写评论
+                    Intent intent = new Intent(activity, AddCommentActivity.class);
+                    intent.putExtra("book_id", baseComic.getBook_id());
+                    startActivity(intent);
                 }
             });
             commentMoreView.setOnClickListener(new View.OnClickListener() {

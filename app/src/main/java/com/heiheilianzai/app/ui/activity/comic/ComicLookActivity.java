@@ -1193,7 +1193,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
     private void checkIsCoupon(ComicChapterItem chapterItem) {
         boolean isCoupon = false;
-
+        if (chapterItem.isIs_buy_status()) {
+            return;
+        }
         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
         String is_vip = chapterItem.getIs_vip();
         if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {

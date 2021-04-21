@@ -48,6 +48,7 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.MarqueeTextView;
 import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
+import com.heiheilianzai.app.view.MarqueeView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -107,7 +108,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     @BindView(R.id.fragment_mine_user_info_tip)
     public TextView fragment_mine_user_info_tip;
     @BindView(R.id.fragment_mine_marquee)
-    public MarqueeTextView fragment_mine_marquee;
+    public MarqueeView fragment_mine_marquee;
     @BindView(R.id.fragment_mine_announce_layout)
     public LinearLayout fragment_mine_announce_layout;
     @BindView(R.id.fragment_sign_invite_code)
@@ -143,7 +144,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         }
         boolean invite_code = ShareUitls.getBoolean(activity, "invite_code", false);
         fragment_invite_code.setVisibility(invite_code ? View.GONE : View.VISIBLE);
-        fragment_mine_marquee.setLeftToRight(true);
         MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
             @Override
             public void getHttpData(String result) {
@@ -272,16 +272,14 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     private void initAnounce() {
         if (luobo_notice != null) {
-            List<Announce> announceList = new ArrayList<>();
-            Announce announce = new Announce();
-            announce.setContent(luobo_notice.getTitle());
-            announce.setTitle(luobo_notice.getContent());
-            announceList.add(announce);
-            fragment_mine_marquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
+            fragment_mine_marquee.setText(luobo_notice.getContent());
+            fragment_mine_marquee.startScroll();
+            fragment_mine_marquee.invalidate();
+            fragment_mine_marquee.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view, int position) {
+                public void onClick(View v) {
                     Intent intent = new Intent(activity, AnnounceActivity.class);
-                    intent.putExtra("announce_content", announceList.get(position).getTitle() + "/-/" + announceList.get(position).getContent());
+                    intent.putExtra("announce_content", luobo_notice.getTitle() + "/-/" + luobo_notice.getContent());
                     startActivity(intent);
                 }
             });

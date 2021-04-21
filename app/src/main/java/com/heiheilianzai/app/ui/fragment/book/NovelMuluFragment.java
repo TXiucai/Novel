@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseTag;
+import com.heiheilianzai.app.model.ChapterContent;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -113,34 +115,7 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
                         ReaderConfig.CatalogInnerActivityOpen = true;
                         chapterItemSelect = position;
                         if (activity != null) {
-                            String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-                            if (!chapterItem.isIs_buy_status()){
-                                if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(getContext())) {
-                                    DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-                                    Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, false);
-                                    dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
-                                        @Override
-                                        public void onOpenCoupon(boolean isBuy) {
-                                            if (isBuy) {
-                                                if (dialogVipPop != null) {
-                                                    dialogVipPop.dismiss();
-                                                    mItemList.get(position).setIs_buy_status(true);
-                                                    mAdapter.notifyDataSetChanged();
-                                                }
-                                                ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
-                                            }
-                                        }
-                                    });
-                                    return;
-                                }
-                                String is_vip = mItemList.get(position).getIs_vip();
-                                if (is_vip != null && is_vip.equals("1") && !App.isVip(getContext())) {
-                                    DialogVip dialogVip = new DialogVip();
-                                    dialogVip.getDialogVipPop(getActivity(), false);
-                                    return;
-                                }
-                            }
-                            ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
+                            checkIsBuyCoupon(activity, chapterItem, json);
                         }
                     }
                 });
@@ -149,5 +124,49 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem, String json) {
+        ReaderParams params = new ReaderParams(activity);
+        params.putExtraParams("book_id", chapterItem.getBook_id());
+        params.putExtraParams("chapter_id", chapterItem.getChapter_id());
+        String paramString = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, paramString, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
+                        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+                        if (!chapterContent.isIs_buy_status()) {
+                            if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(getContext())) {
+                                DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
+                                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, false);
+                                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                                    @Override
+                                    public void onOpenCoupon(boolean isBuy) {
+                                        if (isBuy) {
+                                            if (dialogVipPop != null) {
+                                                dialogVipPop.dismiss();
+                                            }
+                                            ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
+                                        }
+                                    }
+                                });
+                                return;
+                            }
+                        }
+                        String is_vip = chapterItem.getIs_vip();
+                        if (is_vip != null && is_vip.equals("1") && !App.isVip(getContext())) {
+                            DialogVip dialogVip = new DialogVip();
+                            dialogVip.getDialogVipPop(getActivity(), false);
+                            return;
+                        }
+                        ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 }

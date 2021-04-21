@@ -25,11 +25,12 @@ import butterknife.ButterKnife;
 
 public class DialogNovelCoupon {
     private OnOpenCouponListener onOpenCouponListener;
+
     public void setOnOpenCouponListener(OnOpenCouponListener onOpenCouponListener) {
         this.onOpenCouponListener = onOpenCouponListener;
     }
 
-    public Dialog getDialogVipPop(Activity activity, ChapterItem chapterItem,boolean isExit) {
+    public Dialog getDialogVipPop(Activity activity, ChapterItem chapterItem, boolean isExit) {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_novel_coupon, null);
         Dialog popupWindow = new Dialog(activity, R.style.updateapp);
         Window window = popupWindow.getWindow();
@@ -48,9 +49,9 @@ public class DialogNovelCoupon {
                             popupWindow.dismiss();
                         }
                         MainHttpTask.getInstance().Gotologin(activity);
-                    }else {
+                    } else {
                         if (couponNum >= Integer.valueOf(couponPrice)) {
-                            openCoupon(activity,chapterItem,couponPrice,couponNum);
+                            openCoupon(activity, chapterItem, couponPrice, couponNum);
                         } else {
                             if (popupWindow != null) {
                                 popupWindow.dismiss();
@@ -67,7 +68,7 @@ public class DialogNovelCoupon {
         vipHolder.dialog_no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isExit){
+                if (isExit) {
                     if (popupWindow != null) {
                         popupWindow.dismiss();
                     }
@@ -116,17 +117,18 @@ public class DialogNovelCoupon {
     public interface OnOpenCouponListener {
         void onOpenCoupon(boolean isBuy);
     }
+
     private void openCoupon(Activity activity, ChapterItem chapterItem, String couponPrice, int couponNum) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("book_id", chapterItem.getBook_id());
-        params.putExtraParams("chapter_id",chapterItem.getChapter_id());
+        params.putExtraParams("chapter_id", chapterItem.getChapter_id());
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterOpenCoupon, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                         EventBus.getDefault().post(new RefreshMine(null));
                         onOpenCouponListener.onOpenCoupon(true);
-                        AppPrefs.putSharedInt(activity, PrefConst.COUPON, couponNum-Integer.valueOf(couponPrice));
+                        AppPrefs.putSharedInt(activity, PrefConst.COUPON, couponNum - Integer.valueOf(couponPrice));
                     }
 
                     @Override
