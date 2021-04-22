@@ -677,7 +677,7 @@ public class PageFactory {
                 m_isfirstPage = true;
                 return;
             }
-            checkIsCoupon(chapterItem);
+
             if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERFirst) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -716,6 +716,7 @@ public class PageFactory {
                             }
                         }
                         drawLastChapter(querychapterItem, preChapterId);
+                        checkIsCoupon(querychapterItem);
                     }
 
                     @Override
@@ -760,7 +761,7 @@ public class PageFactory {
                 m_islastPage = true;
                 return;
             }
-            checkIsCoupon(chapterItem);
+
             if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERLast && mBookPageWidget.Current_Page > 5) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -798,6 +799,7 @@ public class PageFactory {
                                 }
                             }
                             drawNextChapter(querychapterItem, nextChapterId);
+                            checkIsCoupon(querychapterItem);
                         }
 
                         @Override
@@ -1692,8 +1694,8 @@ public class PageFactory {
                                 });
                                 return;
                             }
+                            checkIsVip(chapterItem);
                         }
-                        checkIsVip(chapterItem);
                     }
 
                     @Override

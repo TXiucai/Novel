@@ -117,11 +117,15 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                for (int i = 0; i < selImageList.size(); i++) {
-                    String bitmap = "data:image/jpeg;base64," + FileUtils.imageToBase64(selImageList.get(i).path);
-                    addFeedback(bitmap);
+                if (selImageList.size() > 0) {
+                    for (int i = 0; i < selImageList.size(); i++) {
+                        String bitmap = "data:image/jpeg;base64," + FileUtils.imageToBase64(selImageList.get(i).path);
+                        addFeedback(bitmap);
+                    }
+                } else {
+                    putAllMessage("");
                 }
+
             }
         });
 
@@ -220,26 +224,26 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
             return;
         }
 
-        if (TextUtils.isEmpty(feedBackImg)) {
-            ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some1);
-            return;
-        }
-
         if (TextUtils.isEmpty(mTagId)) {
             ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some2);
             return;
         }
 
         ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("feed_back_img", feedBackImg);
-        params.putExtraParams("question_type", mTagId);
+        if (!TextUtils.isEmpty(feedBackImg)) {
+            params.putExtraParams("feed_back_img", feedBackImg);
+        }
+
+        params.putExtraParams("quesion_type", mTagId);
         params.putExtraParams("content", activity_feedback_content.getText().toString() + "");
         String json = params.generateParamsJson();
 
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUpAll, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        mFaceBackImg.delete(0, mFaceBackImg.length());
+                        if (!TextUtils.isEmpty(feedBackImg)) {
+                            mFaceBackImg.delete(0, mFaceBackImg.length());
+                        }
                         mCount = 0;
                         try {
                             JSONObject jsonObject = new JSONObject(result);

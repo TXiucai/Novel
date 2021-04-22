@@ -221,12 +221,12 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                                 });
                                 return;
                             }
-                        }
-                        String is_vip = chapterItem.getIs_vip();
-                        if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
-                            DialogVip dialogVip = new DialogVip();
-                            dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
-                            return;
+                            String is_vip = chapterItem.getIs_vip();
+                            if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
+                                DialogVip dialogVip = new DialogVip();
+                                dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
+                                return;
+                            }
                         }
                         ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                     }

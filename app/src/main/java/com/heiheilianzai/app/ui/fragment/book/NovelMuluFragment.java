@@ -153,12 +153,12 @@ public class NovelMuluFragment extends BaseButterKnifeFragment {
                                 });
                                 return;
                             }
-                        }
-                        String is_vip = chapterItem.getIs_vip();
-                        if (is_vip != null && is_vip.equals("1") && !App.isVip(getContext())) {
-                            DialogVip dialogVip = new DialogVip();
-                            dialogVip.getDialogVipPop(getActivity(), false);
-                            return;
+                            String is_vip = chapterItem.getIs_vip();
+                            if (is_vip != null && is_vip.equals("1") && !App.isVip(getContext())) {
+                                DialogVip dialogVip = new DialogVip();
+                                dialogVip.getDialogVipPop(getActivity(), false);
+                                return;
+                            }
                         }
                         ChapterManager.getInstance(getActivity()).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
                     }
