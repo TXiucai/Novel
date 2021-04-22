@@ -199,7 +199,6 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
                             mFaceBackImg.delete(0, mFaceBackImg.length());
                             mCount = 0;
                         }
-
                     }
 
                     @Override
@@ -247,6 +246,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
                             String status = jsonObject.getString("status");
                             if (status.equals("1")) {
                                 ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_success);
+                                finish();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
