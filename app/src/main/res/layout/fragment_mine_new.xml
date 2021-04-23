@@ -293,7 +293,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     app:scroll_first_delay="0"
-                    app:scroll_interval="5000"
+                    app:scroll_interval="8000"
                     app:scroll_mode="mode_forever"/>
 
             </LinearLayout>

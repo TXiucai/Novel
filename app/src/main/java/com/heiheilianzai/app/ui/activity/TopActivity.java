@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.activity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,10 +19,12 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.model.OptionItem;
 import com.heiheilianzai.app.model.RankItem;
+import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -64,10 +67,14 @@ public class TopActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mRyTopList.setLayoutManager(new LinearLayoutManager(TopActivity.this));
+        MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(TopActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRyTopList.setLayoutManager(layoutManager);
         mTitle.setText(R.string.string_top_tittle);
         PRODUCT = getIntent().getBooleanExtra("PRODUCT", false);
-        mRyTopDetail.setLayoutManager(new LinearLayoutManager(TopActivity.this));
+        MyContentLinearLayoutManager layoutManagerDetail = new MyContentLinearLayoutManager(TopActivity.this);
+        layoutManagerDetail.setOrientation(LinearLayoutManager.VERTICAL);
+        mRyTopDetail.setLayoutManager(layoutManagerDetail);
         mTopDetailAdapter = new TopDetailAdapter(TopActivity.this, mOptionBeenList, PRODUCT);
         mRyTopDetail.setAdapter(mTopDetailAdapter);
         if (!PRODUCT) {
@@ -81,6 +88,19 @@ public class TopActivity extends BaseActivity {
                 finish();
             }
         });
+        mTopDetailAdapter.setmOnSelectTopListItemListener(new TopDetailAdapter.OnSelectTopListItemListener() {
+            @Override
+            public void onSelctTopListItem(OptionBeen rankItem, int positon) {
+                Intent intent = new Intent();
+                if (PRODUCT) {
+                    intent = BookInfoActivity.getMyIntent(TopActivity.this, "", rankItem.getBook_id());
+                } else {
+                    intent = ComicInfoActivity.getMyIntent(TopActivity.this, "", rankItem.getComic_id());
+                }
+                startActivity(intent);
+            }
+        });
+
         mRyTopDetail.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -147,7 +167,6 @@ public class TopActivity extends BaseActivity {
             @Override
             public void onSelctTopListItem(RankItem rankItem, int positon) {
                 mRankType = rankItem.getRank_type();
-                mOptionBeenList.clear();
                 current_page = 1;
                 requstTopDetailData(mRankType);
                 mTopListAdapter.setmSelect(positon);
@@ -218,7 +237,7 @@ public class TopActivity extends BaseActivity {
                 } else {
                     mOptionBeenList.addAll(optionItem.list);
                     int t = Size + optionItem_list_size;
-                    mTopDetailAdapter.notifyItemRangeInserted(Size, t);
+                    mTopDetailAdapter.notifyItemRangeInserted(Size + 2, optionItem_list_size);
                     Size = t;
                 }
                 current_page = optionItem.current_page;

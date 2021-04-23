@@ -157,14 +157,14 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
             }
             //"查看全部评论"
             String moreText;
-            if (baseComic.getTotal_Chapter() > 0) {
+            if (bookInfoComments.size() > 0) {
                 moreText = LanguageUtil.getString(activity, R.string.BookInfoActivity_lookpinglun);
             } else {
                 moreText = LanguageUtil.getString(activity, R.string.BookInfoActivity_nopinglun);
             }
             LinearLayout commentMoreView = (LinearLayout) LayoutInflater.from(activity).inflate(R.layout.activity_book_info_content_comment_more, null, false);
             TextView activity_book_info_content_comment_more_text = commentMoreView.findViewById(R.id.activity_book_info_content_comment_more_text);
-            activity_book_info_content_comment_more_text.setText(String.format(moreText, baseComic.getTotal_Chapter() + ""));
+            activity_book_info_content_comment_more_text.setText(String.format(moreText, bookInfoComments.size() + ""));
             activity_book_info_content_add_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -177,7 +177,9 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
             commentMoreView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivityForResult(new Intent(activity, ComicCommentActivity.class).putExtra("book_id", baseComic.getBook_id()).putExtra("IsBook", false), 11);
+                    Intent intent = new Intent(activity, CommentListActivity.class);
+                    intent.putExtra("book_id", baseComic.getBook_id());
+                    startActivity(intent);
                 }
             });
             activity_book_info_content_comment_container.addView(commentMoreView);

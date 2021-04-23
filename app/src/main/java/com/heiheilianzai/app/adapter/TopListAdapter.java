@@ -53,7 +53,7 @@ public class TopListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             topViewHolder.mTittle.setTextColor(mContext.getResources().getColor(R.color.white));
         } else {
             topViewHolder.mTittle.setBackground(mContext.getDrawable(R.mipmap.top_white_bg));
-            topViewHolder.mTittle.setTextColor(mContext.getResources().getColor(R.color.color_666666 ));
+            topViewHolder.mTittle.setTextColor(mContext.getResources().getColor(R.color.color_666666));
         }
         topViewHolder.mTittle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class TopListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mRankLists.size();
+        return mRankLists == null ? 0 : mRankLists.size();
     }
 
     class TopViewHolder extends RecyclerView.ViewHolder {

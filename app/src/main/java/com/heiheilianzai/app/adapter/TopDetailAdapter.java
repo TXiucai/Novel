@@ -87,7 +87,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return optionBeenList.size();
+        return optionBeenList == null ? 0 : optionBeenList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
