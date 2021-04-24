@@ -60,6 +60,7 @@ import com.heiheilianzai.app.ui.dialog.read.AutoProgressBar;
 import com.heiheilianzai.app.ui.dialog.read.AutoSettingDialog;
 import com.heiheilianzai.app.ui.dialog.read.BrightnessDialog;
 import com.heiheilianzai.app.ui.dialog.read.SettingDialog;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BookUtil;
 import com.heiheilianzai.app.utils.BrightnessUtil;
 import com.heiheilianzai.app.utils.DateUtils;
@@ -784,6 +785,7 @@ public class ReadActivity extends BaseReadActivity {
                 }
                 break;
             case R.id.activity_read_buttom_boyin_close:
+                AppPrefs.putSharedBoolean(activity, mBookId, true);
                 activity_read_buttom_boyin_item.setVisibility(View.GONE);
                 break;
             case R.id.activity_read_buttom_boyin_go:
@@ -899,9 +901,14 @@ public class ReadActivity extends BaseReadActivity {
                                 activity_read_buttom_boyin_item.setVisibility(View.GONE);
                                 titlebar_boyin.setVisibility(View.GONE);
                             } else {
-                                soundBookInfoBean = new Gson().fromJson(result, NovelBoyinModel.class);
-                                activity_read_buttom_boyin_item.setVisibility(View.VISIBLE);
-                                titlebar_boyin.setVisibility(View.VISIBLE);
+                                boolean isClosed = AppPrefs.getSharedBoolean(activity, mBookId, false);
+                                if (!isClosed) {
+                                    soundBookInfoBean = new Gson().fromJson(result, NovelBoyinModel.class);
+                                    activity_read_buttom_boyin_item.setVisibility(View.VISIBLE);
+                                    titlebar_boyin.setVisibility(View.VISIBLE);
+                                } else {
+                                    activity_read_buttom_boyin_item.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

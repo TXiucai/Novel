@@ -214,7 +214,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     }
                 }
             });
-             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
+            activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
             AcquireBaoyuePrivilegeAdapter baoyuePrivilegeAdapter = new AcquireBaoyuePrivilegeAdapter(this, privilegeList, privilegeList.size());
             activity_acquire_privilege_gridview.setAdapter(baoyuePrivilegeAdapter);
         } catch (JSONException e) {
@@ -258,30 +258,34 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
      * 获取支付渠道url,跳转支付Dialog
      */
     private void pay(AcquirePayItem item) {
-        setVIPChoiceEvent(item.getGoods_id());
-        ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("goods_id", item.getGoods_id());
-        params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
-        params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        if (!cn.jmessage.support.qiniu.android.utils.StringUtils.isNullOrEmpty(result)) {
-                            try {
-                                JSONObject jsonObj = new JSONObject(result);
-                                String pay_url = jsonObj.getString("pay_link");
-                                showPayDialog(pay_url);
-                            } catch (Exception e) {
+        if (Utils.isLogin(this)) {
+            setVIPChoiceEvent(item.getGoods_id());
+            ReaderParams params = new ReaderParams(this);
+            params.putExtraParams("goods_id", item.getGoods_id());
+            params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
+            params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, true, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(final String result) {
+                            if (!cn.jmessage.support.qiniu.android.utils.StringUtils.isNullOrEmpty(result)) {
+                                try {
+                                    JSONObject jsonObj = new JSONObject(result);
+                                    String pay_url = jsonObj.getString("pay_link");
+                                    showPayDialog(pay_url);
+                                } catch (Exception e) {
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onErrorResponse(String ex) {
+                        @Override
+                        public void onErrorResponse(String ex) {
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            MainHttpTask.getInstance().Gotologin(this);
+        }
     }
 
     /**

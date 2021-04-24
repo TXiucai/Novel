@@ -87,6 +87,7 @@ public class StroreComicLable extends BaseAd {
         public String is_hot; // 是否是热门 0否 1 是
         public String is_recommend; // 是否是推荐
         public String sorts; //分类标签
+        public String jiao_biao;
 
         @Override
         public String toString() {

@@ -905,6 +905,7 @@ public class PageFactory {
         } else {
             drawScroll();
         }
+        checkIsCoupon(chapterItem);
         ReadHistory.addReadHistory(true, mActivity, book_id, chapter_id);//阅读历史上传 没看一个新章节都上传一次
     }
 
@@ -1666,7 +1667,12 @@ public class PageFactory {
     }
 
     private void checkIsCoupon(ChapterItem chapterItem) {
-       checkIsBuyCoupon(mActivity,chapterItem);
+        if (Utils.isLogin(mActivity)){
+            checkIsBuyCoupon(mActivity,chapterItem);
+        }else {
+            DialogLogin dialogLogin = new DialogLogin();
+            dialogLogin.getDialogLoginPop(mActivity);
+        }
     }
 
     private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem) {

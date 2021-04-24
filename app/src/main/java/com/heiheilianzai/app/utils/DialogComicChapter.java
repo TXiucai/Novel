@@ -74,9 +74,11 @@ public class DialogComicChapter {
                 if (orderby == 1) {
                     vipHolder.imgSequence.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_down));
                     orderby = 2;
+                    mPageNum = 1;
                 } else {
                     vipHolder.imgSequence.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_up));
                     orderby = 1;
+                    mPageNum = 1;
                 }
                 httpData(activity, baseComic.getComic_id(), vipHolder);
             }
@@ -85,7 +87,6 @@ public class DialogComicChapter {
             @Override
             public void onRefresh() {
                 mPageNum = 1;
-                comicChapterCatalogs.clear();
                 httpData(activity, baseComic.getComic_id(), vipHolder);
             }
 
@@ -131,29 +132,37 @@ public class DialogComicChapter {
                             JsonParser jsonParser = new JsonParser();
                             mTotalPage = jsonObject.getInt("total_page");
                             JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
+                            if (mPageNum == 1) {
+                                comicChapterCatalogs.clear();
+                            }
                             for (JsonElement jsonElement : jsonElements) {
                                 ComicChapter comicChapter = gson.fromJson(jsonElement, ComicChapter.class);
                                 comicChapter.comic_id = comic_id;
-                                if (App.isVip(activity)){
+
+                                if (App.isVip(activity)) {
                                     if (comicChapter.getAd_image() == null) {
                                         comicChapterCatalogs.add(comicChapter);
                                     }
-                                }else {
+                                } else {
                                     comicChapterCatalogs.add(comicChapter);
                                 }
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {
                                 isLoadingData = comicChapterCatalogs.size() == jsonObject.getInt("total_chapter");
+                                int comicCatalogsSize = comicChapterCatalogs.size();
                                 if (mPageNum == 1) {
+                                    size = comicChapterCatalogs.size();
                                     vipHolder.ryChapter.refreshComplete();
                                     comicChapterCatalogAdapter.notifyDataSetChanged();
                                 } else {
+                                    int t = size + comicCatalogsSize;
                                     vipHolder.ryChapter.loadMoreComplete();
-                                    comicChapterCatalogAdapter.notifyItemRangeRemoved(size, comicChapterCatalogs.size());
+                                    comicChapterCatalogAdapter.notifyItemRangeRemoved(size + 2, comicCatalogsSize);
+                                    size = t;
                                 }
                                 mPageNum++;
                             }
-                            size = comicChapterCatalogs.size();
+
                         } catch (Exception E) {
                         }
                     }

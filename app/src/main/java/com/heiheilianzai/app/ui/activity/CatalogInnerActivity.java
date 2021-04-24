@@ -179,7 +179,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                         if (activity != null) {
                             activity.setTitle(LanguageUtil.getString(activity, R.string.refer_page_catalog));
                             ChapterItem chapterItem = mItemList.get(position);
-                            checkIsBuyCoupon(activity, chapterItem, json);
+                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
 
                         }
                     }
@@ -192,50 +192,6 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem, String json) {
-        ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("book_id", chapterItem.getBook_id());
-        params.putExtraParams("chapter_id", chapterItem.getChapter_id());
-        String paramString = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, paramString, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
-                        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-                        if (!chapterContent.isIs_buy_status()) {
-                            if (!StringUtils.isEmpty(is_book_coupon_pay) && is_book_coupon_pay.endsWith("1") && !App.isVip(CatalogInnerActivity.this)) {
-                                DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-                                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, false);
-                                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
-                                    @Override
-                                    public void onOpenCoupon(boolean isBuy) {
-                                        if (isBuy) {
-                                            if (dialogVipPop != null) {
-                                                dialogVipPop.dismiss();
-                                            }
-                                            ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
-                                        }
-                                    }
-                                });
-                                return;
-                            }
-                            String is_vip = chapterItem.getIs_vip();
-                            if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogInnerActivity.this)) {
-                                DialogVip dialogVip = new DialogVip();
-                                dialogVip.getDialogVipPop(CatalogInnerActivity.this, false);
-                                return;
-                            }
-                        }
-                        ChapterManager.getInstance(CatalogInnerActivity.this).openBook(baseBook, mBookId, chapterItem.getChapter_id(), json);
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
     }
 
     @Override

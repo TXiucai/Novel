@@ -43,6 +43,7 @@ public class DialogVip {
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
                 activity.startActivity(myIntent);
+                activity.finish();
             }
         });
         popupWindow.setContentView(view);

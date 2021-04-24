@@ -176,6 +176,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_info_isvip.setVisibility(View.GONE);
                 fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_tip.setText(LanguageUtil.getString(activity, R.string.string_mine_no_login_tip));
+                fragment_mine_user_info_gold.setText("--");
+                fragment_mine_user_info_shuquan.setText("--");
+                fragment_mine_user_info_tasklayout_task.setText("--");
+                fragment_mine_user_info_avatar.setImageResource(R.mipmap.hold_user_avatar);
                 AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
                 AppPrefs.putSharedString(activity, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
                 AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, "");

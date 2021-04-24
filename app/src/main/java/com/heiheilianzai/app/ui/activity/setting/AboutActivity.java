@@ -202,6 +202,9 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
                 if (flag != null && flag.equals("splash")) {
                     startActivity(new Intent(AboutActivity.this, MainActivity.class));
                 }
+                if (TextUtils.equals(type, "boyin")) {
+                    mWebView.loadUrl("javascript:playPause()");
+                }
                 finish();
             }
         });
@@ -214,7 +217,10 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
             if (flag != null && flag.equals("splash")) {
                 startActivity(new Intent(AboutActivity.this, MainActivity.class));
             }
-            finish();
+            if (TextUtils.equals(type, "boyin")) {
+                mWebView.loadUrl("javascript:playPause()");
+            }
+                finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);

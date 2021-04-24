@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-
         android:orientation="vertical">
 
         <FrameLayout
@@ -23,10 +22,8 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/icon_comic_def" />
 
-
             <TextView
                 android:id="@+id/liem_store_comic_style1_flag"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -35,7 +32,8 @@
                 android:background="#1Af7f8f9"
                 android:gravity="right"
                 android:textColor="@color/white"
-                android:textSize="@dimen/public_10_dp" />
+                android:textSize="@dimen/public_10_dp"
+                android:visibility="gone" />
         </FrameLayout>
 
         <TextView
@@ -60,4 +58,17 @@
             android:textColor="@color/gray"
             android:textSize="@dimen/public_11_dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/item_store_corner"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimens_16dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:layout_marginRight="@dimen/dimens_5dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimens_6dp"
+        android:paddingRight="@dimen/dimens_6dp"
+        android:textColor="@color/white"
+        android:textSize="10sp" />
 </RelativeLayout>

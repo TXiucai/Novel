@@ -379,8 +379,6 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             activity_book_info_add_shelf.setTextColor(ContextCompat.getColor(activity, R.color.color_666666));
             activity_book_info_add_shelf.setEnabled(false);
             activity_book_info_start_read.setText(getString(R.string.noverfragment_goonread));
-        } else {
-            initData();
         }
     }
 

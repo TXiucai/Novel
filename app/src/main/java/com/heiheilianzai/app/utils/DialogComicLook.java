@@ -90,8 +90,8 @@ public class DialogComicLook {
             }
         });
         if (!isCoupon){
-            vipHolder.llCounpon.setVisibility(View.GONE);
-            vipHolder.txChapter.setVisibility(View.GONE);
+            vipHolder.llCounpon.setVisibility(View.INVISIBLE);
+            vipHolder.txChapter.setVisibility(View.INVISIBLE);
         }else {
             vipHolder.llCounpon.setVisibility(View.VISIBLE);
             vipHolder.txChapter.setVisibility(View.VISIBLE);

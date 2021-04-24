@@ -3,6 +3,8 @@ package com.heiheilianzai.app.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.text.TextPaint;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,9 @@ public class DialogNovelCoupon {
         VipHolder vipHolder = new VipHolder(view);
         int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
         String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_PRICE);
+        TextPaint paint = vipHolder.dialog_open.getPaint();
+        paint.setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        paint.setAntiAlias(true);
         vipHolder.dialog_open.setText(String.format(activity.getResources().getString(R.string.dialog_coupon_open), couponPrice));
         vipHolder.dialog_open.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,9 +58,6 @@ public class DialogNovelCoupon {
                         if (couponNum >= Integer.valueOf(couponPrice)) {
                             openCoupon(activity, chapterItem, couponPrice, couponNum);
                         } else {
-                            if (popupWindow != null) {
-                                popupWindow.dismiss();
-                            }
                             DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
                             dialogCouponNotMore.getDialogVipPop(activity, isExit);
                         }

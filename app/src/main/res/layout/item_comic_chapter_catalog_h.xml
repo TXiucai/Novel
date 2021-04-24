@@ -21,9 +21,13 @@
                 android:id="@+id/item_comicchaptercatalog_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+            <ImageView
+                android:id="@+id/item_comicchaptercatalog_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/comic_coupon_bg" />
-
+                android:background="@color/color_60000000"  />
             <ImageView
                 android:id="@+id/item_comic_chapter_lock"
                 android:layout_width="@dimen/dimens_22dp"

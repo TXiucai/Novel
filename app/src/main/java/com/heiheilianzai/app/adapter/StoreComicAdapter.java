@@ -16,6 +16,9 @@ import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.StringUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -88,6 +91,19 @@ public class StoreComicAdapter extends BaseAdapter {
         } else {
             viewHolder.liem_store_comic_style1_flag.setVisibility(View.GONE);
         }*/
+        String jiao_biao = comic.jiao_biao;
+        if (jiao_biao != null && !StringUtils.isEmpty(jiao_biao)) {
+            viewHolder.item_corner.setText(jiao_biao);
+            if (jiao_biao.contains("新书")) {
+                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_new));
+            } else if (jiao_biao.contains("乱伦")) {
+                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_luanlun));
+            } else if (jiao_biao.contains("人妻")) {
+                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_wife));
+            } else if (jiao_biao.contains("完结")) {
+                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_finish));
+            }
+        }
         viewHolder.liem_store_comic_style1_name.setText(comic.name);
         if (comic.description != null) {
             viewHolder.liem_store_comic_style1_description.setText(comic.description);
@@ -117,6 +133,8 @@ public class StoreComicAdapter extends BaseAdapter {
         TextView liem_store_comic_style1_name;
         @BindView(R.id.liem_store_comic_style1_description)
         TextView liem_store_comic_style1_description;
+        @BindView(R.id.item_store_corner)
+        TextView item_corner;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

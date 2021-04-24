@@ -26,6 +26,15 @@ public class AcquirePayItem {
     private List<String> pay_channel;
     private List<TagBean> tag;
     private String original_price;
+    private String goods_label;
+
+    public String getGoods_label() {
+        return goods_label;
+    }
+
+    public void setGoods_label(String goods_label) {
+        this.goods_label = goods_label;
+    }
 
     public String getOriginal_price() {
         return original_price;
