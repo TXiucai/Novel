@@ -33,6 +33,7 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -328,6 +329,13 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         public String getSaServerAppId() {//获取神策埋点AppId
             return BuildConfig.sa_server_app_id;
         }
+
+        @JavascriptInterface
+        public void pay(){
+            Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog));
+            intent.putExtra("isvip", true);
+            startActivity(intent);
+        };
 
     }
 

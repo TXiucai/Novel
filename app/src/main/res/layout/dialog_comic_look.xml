@@ -26,6 +26,29 @@
                 android:background="@mipmap/back_black"
                 android:scaleType="centerCrop" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/titlebar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:gravity="center_vertical"
+           android:layout_marginTop="@dimen/dimens_30dp"
+           android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/public_13_dp" />
+
+        <TextView
+            android:id="@+id/tx_quanji"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            android:gravity="center_vertical"
+            android:text="@string/ComicLookActivity_quanji"
+            android:textColor="@color/mainColor2"
+            android:textSize="@dimen/public_13_dp" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_weight="1"

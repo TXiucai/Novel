@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/item_comic_recyclerview_layout"
@@ -15,7 +14,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"
-            app:failureImage="@mipmap/icon_comic_def" />
+            app:initScaleType="fitXY"
+            app:tapToRetry="true"
+            app:failureImage="@mipmap/icon_comic_def"
+            app:failureImageInitScaleType="center"
+            app:optimizeDisplay="true"/>
 
         <com.heiheilianzai.app.view.comic.DanmuRelativeLayout
             android:id="@+id/item_comic_recyclerview_danmu"

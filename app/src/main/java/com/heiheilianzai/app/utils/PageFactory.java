@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -1667,11 +1668,13 @@ public class PageFactory {
     }
 
     private void checkIsCoupon(ChapterItem chapterItem) {
-        if (Utils.isLogin(mActivity)){
-            checkIsBuyCoupon(mActivity,chapterItem);
-        }else {
-            DialogLogin dialogLogin = new DialogLogin();
-            dialogLogin.getDialogLoginPop(mActivity);
+        if (Utils.isLogin(mActivity)) {
+            checkIsBuyCoupon(mActivity, chapterItem);
+        } else {
+            if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
+                DialogLogin dialogLogin = new DialogLogin();
+                dialogLogin.getDialogLoginPop(mActivity);
+            }
         }
     }
 
@@ -1685,8 +1688,8 @@ public class PageFactory {
                     public void onResponse(final String result) {
                         ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
                         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-                        if (!chapterContent.isIs_buy_status()){
-                            if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity) ) {
+                        if (!chapterContent.isIs_buy_status()) {
+                            if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
                                 DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
                                 Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
                                 dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {

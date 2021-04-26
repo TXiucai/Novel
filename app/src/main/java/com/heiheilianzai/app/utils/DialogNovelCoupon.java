@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,10 +44,11 @@ public class DialogNovelCoupon {
         VipHolder vipHolder = new VipHolder(view);
         int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
         String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_PRICE);
-        TextPaint paint = vipHolder.dialog_open.getPaint();
-        paint.setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        paint.setAntiAlias(true);
-        vipHolder.dialog_open.setText(String.format(activity.getResources().getString(R.string.dialog_coupon_open), couponPrice));
+        String format = String.format(activity.getResources().getString(R.string.dialog_coupon_open), couponPrice);
+        SpannableString spannableString = new SpannableString(format);
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        vipHolder.dialog_open.setText(spannableString);
         vipHolder.dialog_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

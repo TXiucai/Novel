@@ -16,6 +16,7 @@ import com.github.piasy.biv.loader.glide.GlideProgressSupport;
 import com.github.piasy.biv.loader.glide.ImageDownloadTarget;
 import com.github.piasy.biv.loader.glide.PrefetchTarget;
 import com.github.piasy.biv.metadata.ImageInfoExtractor;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
 
 import java.io.File;
@@ -129,6 +130,7 @@ public class GlideEncypeImageLoader implements ImageLoader {
         mRequestManager
                 .downloadOnly()
                 .load(uri)
+                .dontAnimate()
                 .into(target);
     }
 

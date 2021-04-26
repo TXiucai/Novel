@@ -202,6 +202,7 @@
     <string name="BaoyueActivity_kaitong">立即开通</string>
     <string name="BaoyueActivity_yikaitong">续费充值</string>
     <string name="BaoyueActivity_nologin">用户/昵称</string>
+    <string name="BaoyueActivity_no_login">未登录</string>
     <string name="BaoyueActivity_mianfei"><font color='#989898'>您还</font>未开通会员</string>
     <string name="BaoyueActivity_baoyueshuku">会员书库</string>
     <string name="BaoyueActivity_baoyueshuku2">开通会员免费读</string>
@@ -454,7 +455,7 @@
     <string name="coupon_open">书券解锁</string>
     <string name="dialog_tittle_novel_coupon">书券解锁该章节，开通VIP畅读全本</string>
     <string name="string_dialog_coupon_total">当前可用书券：</string>
-    <string name="dialog_coupon_open"><u>使用%s书券解锁此章节</u></string>
+    <string name="dialog_coupon_open">使用%s书券解锁此章节</string>
     <string name="string_accept_coupon">赚书券</string>
     <string name="string_accept_coupon_tittle">您的剩余书券不足，解锁章节失败，赶快去赚取书券吧！</string>
     <string name="string_right_now_go">立即前往</string>
@@ -492,6 +493,6 @@
     <string name="invite_title">请输入邀请码</string>
     <string name="invite_no_input">您还未填写邀请码</string>
     <string name="invite_code_sucecess">成功填写邀请码</string>
-    <string name="dialog_vip_islogin">vip章节需要登陆哦</string>
+    <string name="dialog_vip_islogin">vip章节需要登录哦</string>
     <string name="dialog_is_login_cancel">暂不</string>
 </resources>

@@ -87,15 +87,31 @@
                             android:layout_marginLeft="@dimen/dimens_10dp"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/activity_acquire_avatar_name"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:text="@string/BaoyueActivity_nologin"
-                                android:textColor="@color/white"
-                                android:textSize="14sp" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/activity_acquire_avatar_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/BaoyueActivity_no_login"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp" />
+
+                                <ImageView
+                                    android:id="@+id/activity_acquire_avatar_isvip"
+                                    android:visibility="gone"
+                                    android:layout_width="@dimen/dimens_18dp"
+                                    android:layout_height="@dimen/dimens_18dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="@dimen/dimens_6dp"
+                                    android:scaleType="centerCrop"
+                                    android:src="@mipmap/icon_isvip" />
+                            </LinearLayout>
 
                             <TextView
                                 android:id="@+id/activity_acquire_avatar_desc"

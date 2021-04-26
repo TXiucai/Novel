@@ -118,8 +118,6 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                             itemOnclick.onClick(position, baseComicImage);
                         }
                     });
-                    holder.recyclerview_img.setProgressIndicator(new ProgressPieIndicator());//自定义加载进度条
-                    holder.recyclerview_img.setImageViewFactory(new GlideImageViewFactory());//兼容漫画图片内部有GIF编码问题
 
                     Uri uri = getUri(baseComicImage);
                     if (uri != null) {
@@ -206,6 +204,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            recyclerview_img.setProgressIndicator(new ProgressPieIndicator());//自定义加载进度条
+            recyclerview_img.setImageViewFactory(new GlideImageViewFactory());//兼容漫画图片内部有GIF编码问题
         }
     }
 

@@ -99,6 +99,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -202,6 +203,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     String mReferPage;//从哪个页面打开漫画阅读(神策埋点数据)
     long mOpenCurrentTime;//打开漫画阅读页的当前时间
     ComicInfo mComicInfo;//漫画具体信息
+    private Dialog dialogVipPop;
 
     @Override
     public int initContentView() {
@@ -582,6 +584,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         holderFoot = new MyViewHolder(activity_comic_look_foot);
         linearLayoutManager = new LinearLayoutManager(activity);
         activity_comiclook_RecyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerView.RecycledViewPool recycledViewPool = activity_comiclook_RecyclerView.getRecycledViewPool();
+        //图片不加载，滑动后图片恢复的解决办法
+        if (recycledViewPool != null) {
+            recycledViewPool.setMaxRecycledViews(0, 10);
+            activity_comiclook_RecyclerView.setRecycledViewPool(recycledViewPool);
+        }
         activity_comiclook_RecyclerView.setTouchListener(onTouchListener);
         activity_comiclook_RecyclerView.setEnableScale(true);
         activity_comiclook_RecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -870,6 +878,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             activity_comiclook_pinglunshu.setText(total_count + "");
         } else if (requestCode == 222) {
             if (resultCode == 222) {
+                if (dialogVipPop != null) {
+                    dialogVipPop.dismiss();
+                }
                 Chapter_id = data.getStringExtra("currentChapter_id");
                 getData(activity, comic_id, Chapter_id, true);
             }
@@ -1193,20 +1204,20 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void checkIsCoupon(ComicChapterItem chapterItem) {
-        if (Utils.isLogin(activity)){
+        String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
+        String is_vip = chapterItem.getIs_vip();
+        if (Utils.isLogin(activity)) {
             boolean isCoupon = false;
             if (chapterItem.isIs_buy_status()) {
                 return;
             }
-            String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-            String is_vip = chapterItem.getIs_vip();
             if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
                 isCoupon = true;
             }
             if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1") || is_vip != null && is_vip.equals("1")) && !App.isVip(activity)) {
                 if (Utils.isLogin(activity)) {
                     DialogComicLook dialogNovelCoupon = new DialogComicLook();
-                    Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
+                    dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
                     dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                         @Override
                         public void onOpenCoupon(boolean isBuy) {
@@ -1218,9 +1229,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     });
                 }
             }
-        }else {
-            DialogLogin dialogLogin = new DialogLogin();
-            dialogLogin.getDialogLoginPop(activity);
+        } else {
+            if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
+                DialogLogin dialogLogin = new DialogLogin();
+                dialogLogin.getDialogLoginPop(activity);
+            }
         }
     }
 }

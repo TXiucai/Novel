@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -96,6 +97,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public TextView activity_acquire_avatar_desc;
     @BindView(R.id.activity_acquire_customer_service)
     public LinearLayout activity_acquire_customer_service;
+    @BindView(R.id.activity_acquire_avatar_isvip)
+    public ImageView activity_acquire_avatar_isvip;
 
     String mKeFuOnline;//客服链接
     AcquireBaoyuePayAdapter baoyuePayAdapter;
@@ -164,6 +167,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 if (!jsonObj.isNull("user")) {
                     JSONObject userObj = jsonObj.getJSONObject("user");
                     String nickName = userObj.getString("nickname");
+                    String is_vip = userObj.getString("is_vip");
+                    activity_acquire_avatar_isvip.setVisibility(View.VISIBLE);
+                    if (TextUtils.equals(is_vip,"1")){
+                        activity_acquire_avatar_isvip.setImageResource(R.mipmap.icon_isvip);
+                    }else {
+                        activity_acquire_avatar_isvip.setImageResource(R.mipmap.icon_novip);
+                    }
                     activity_acquire_avatar_name.setText(nickName);
                     activity_acquire_avatar_desc.setText(userObj.getString("display_date"));
                     int onlineIsNew = jsonObj.getInt("kefu_online_is_new");
@@ -173,12 +183,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar);
                 } else {
                     activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
-                    activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_nologin));
+                    activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_no_login));
                     resetLogin(this);
                 }
             } else {
                 activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
-                activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_nologin));
+                activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_no_login));
+                activity_acquire_avatar_isvip.setVisibility(View.GONE);
             }
             List<AcquirePayItem> payList = new ArrayList<>();
             JSONArray listArray = jsonObj.getJSONArray("list");
@@ -202,16 +213,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 @Override
                 public void onPayItemClick(AcquirePayItem item, int position) {
                     vipBaoyuePayAdapter.setSelectPosition(position);
-                    if (Utils.isLogin(AcquireBaoyueActivity.this)) {
-                        selectAcquirePayItem = item;
-                    } else {
-                        GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
-                            @Override
-                            public void isOperation() {
-                                MainHttpTask.getInstance().Gotologin(AcquireBaoyueActivity.this);
-                            }
-                        });
-                    }
+                    selectAcquirePayItem = item;
                 }
             });
             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
@@ -231,7 +233,16 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 break;
             case R.id.tx_open_vip:
                 if (selectAcquirePayItem != null) {
-                    pay(selectAcquirePayItem);
+                    if (Utils.isLogin(AcquireBaoyueActivity.this)) {
+                        pay(selectAcquirePayItem);
+                    } else {
+                        GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
+                            @Override
+                            public void isOperation() {
+                                MainHttpTask.getInstance().Gotologin(AcquireBaoyueActivity.this);
+                            }
+                        });
+                    }
                 }
                 break;
         }

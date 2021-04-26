@@ -196,13 +196,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     ReaderConfig.USE_AD = false;
                 }
             } else {
+                fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
+                fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
                 if (mUserInfo.getVip_expire_note() != null && mUserInfo.getVip_expire_note().length() > 0) {
-                    fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                     fragment_mine_user_info_tip.setVisibility(View.VISIBLE);
-                    fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
                     fragment_mine_user_info_tip.setText(mUserInfo.getVip_expire_note());
                 } else {
-                    fragment_mine_user_info_isvip.setVisibility(View.GONE);
                     fragment_mine_user_info_tip.setVisibility(View.GONE);
                 }
                 if (USE_AD_FINAL) {
@@ -226,7 +225,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             }
             MyPicasso.GlideImageNoSize(activity, mUserInfo.getAvatar(), fragment_mine_user_info_avatar, R.mipmap.icon_def_head);
             fragment_mine_user_info_id.setVisibility(View.VISIBLE);
-            fragment_mine_user_info_nickname.setText(mUserInfo.getNickname());
+            fragment_mine_user_info_nickname.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            fragment_mine_user_info_nickname.setText(mUserInfo.getNickname().trim());
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
             fragment_mine_user_info_tasklayout_task.setText(mUserInfo.getTask_list().getFinish_num() + "/" + mUserInfo.getTask_list().getMission_num());
             fragment_mine_user_info_gold.setText(mUserInfo.getGoldRemain() + " ");

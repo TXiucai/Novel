@@ -4,6 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +29,7 @@ import com.heiheilianzai.app.model.comic.ComicChapterItem;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.comic.ComicinfoMuluActivity;
 import com.heiheilianzai.app.ui.activity.comic.RefreashComicInfoActivity;
 
 
@@ -46,8 +52,23 @@ public class DialogComicLook {
         VipHolder vipHolder = new VipHolder(view);
         int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
         String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_COMICI_PRICE);
-        vipHolder.txChapter.setText(String.format(activity.getResources().getString(R.string.dialog_coupon_open), couponPrice));
+        // 使用此方式设置下滑线为了适配华为手机有双下划线
+        String format = String.format(activity.getResources().getString(R.string.dialog_coupon_open), couponPrice);
+        SpannableString spannableString = new SpannableString(format);
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        vipHolder.txTittle.setText(chapterItem.getChapter_title());
+        vipHolder.txChapter.setText(spannableString);
         vipHolder.txNum.setText(String.valueOf(couponNum));
+        vipHolder.txQuanji.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, ComicinfoMuluActivity.class);
+                intent.putExtra("comic_id", chapterItem.comic_id);
+                intent.putExtra("currentChapter_id", chapterItem.getChapter_id());
+                activity.startActivityForResult(intent, 222);
+            }
+        });
         vipHolder.txChapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,9 +82,6 @@ public class DialogComicLook {
                         if (couponNum >= Integer.valueOf(couponPrice)) {
                             openCoupon(activity,chapterItem,couponPrice,couponNum);
                         } else {
-                            if (popupWindow != null) {
-                                popupWindow.dismiss();
-                            }
                             DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
                             dialogCouponNotMore.getDialogVipPop(activity, true);
                         }
@@ -124,6 +142,10 @@ public class DialogComicLook {
         public TextView txChapter;
         @BindView(R.id.titlebar_back)
         public LinearLayout llBack;
+        @BindView(R.id.titlebar_text)
+        public TextView txTittle;
+        @BindView(R.id.tx_quanji)
+        public TextView txQuanji;
 
         public VipHolder(View view) {
             ButterKnife.bind(this, view);

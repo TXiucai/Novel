@@ -313,13 +313,24 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         } else if (style == BOOK_UI_STYLE_5) {
             minSize = Math.min(size, 4);
-            ItemHeigth = H100 + (H50 + HHEIGHT) * 2;
+            if (minSize <= 2) {
+                ItemHeigth = H100 + H50 + HHEIGHT;
+            } else {
+                ItemHeigth = H100 + (H50 + HHEIGHT) * 2;
+            }
             isHorizontal = true;
             fragment_store_gridview3_gridview_first.setNumColumns(2);
         } else if (style == BOOK_UI_STYLE_6) {
             isHorizontal = true;
             minSize = Math.min(size, 6);
-            ItemHeigth = H100 + (H50 + HHEIGHT) * 3;
+            if (minSize <= 2) {
+                ItemHeigth = H100 + (H50 + HHEIGHT) * 1;
+            } else if (minSize <= 4 && minSize > 2) {
+                ItemHeigth = H100 + (H50 + HHEIGHT) * 2;
+            } else {
+                ItemHeigth = H100 + (H50 + HHEIGHT) * 3;
+            }
+
             fragment_store_gridview3_gridview_first.setNumColumns(2);
         }
         if (bookList.size() > 0) {
