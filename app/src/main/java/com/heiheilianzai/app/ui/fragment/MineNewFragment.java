@@ -208,10 +208,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                 }
             }
-            if (mUserInfo.isVip_left_three_days()) {
-                DialogExpirerdVip dialogExpirerdVip = new DialogExpirerdVip();
-                dialogExpirerdVip.getDialogVipPop(activity, mUserInfo.getVip_left_three_days_note());
-            }
             if (mUserInfo.getAuto_sub() == 0) {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, false);
             } else {

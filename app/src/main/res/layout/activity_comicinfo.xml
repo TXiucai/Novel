@@ -6,8 +6,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/dimens_60dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dimens_60dp">
 
         <com.heiheilianzai.app.view.ObservableScrollView
             android:id="@+id/activity_book_info_scrollview"
@@ -16,9 +16,10 @@
             android:background="@color/lightgray2">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimens_265dp"
@@ -28,84 +29,92 @@
                         android:id="@+id/activity_comic_cover_bg"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimens_210dp"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimens_180dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:layout_marginRight="@dimen/dimens_15dp"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/rl_comic_vip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dimens_45dp"
+                                android:background="@mipmap/comic_vip_bg"
+                                android:gravity="center_vertical"
+                                android:paddingLeft="@dimen/dimens_90dp"
+                                android:text="@string/string_comic_vip"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:layout_width="@dimen/dimens_20dp"
+                                android:layout_height="@dimen/dimens_20dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="@dimen/dimens_8dp"
+                                android:src="@mipmap/right_white" />
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/dimens_180dp"
-                            android:layout_marginLeft="@dimen/dimens_15dp"
-                            android:layout_marginRight="@dimen/dimens_15dp"
-                            android:layout_alignParentBottom="true"
-                            android:orientation="vertical">
-                            <RelativeLayout
-                                android:id="@+id/rl_comic_vip"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/dimens_45dp"
-                                    android:paddingLeft="@dimen/dimens_90dp"
-                                    android:background="@mipmap/comic_vip_bg"
-                                    android:gravity="center_vertical"
-                                    android:textColor="@color/white"
-                                    android:text="@string/string_comic_vip"
-                                    android:textSize="16sp" />
-                                <ImageView
-                                    android:layout_marginRight="@dimen/dimens_8dp"
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentRight="true"
-                                    android:src="@mipmap/right_white"
-                                    android:layout_width="@dimen/dimens_20dp"
-                                    android:layout_height="@dimen/dimens_20dp"/>
-                            </RelativeLayout>
+                            android:layout_height="match_parent"
+                            android:background="@color/color_1a2629"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimens_15dp">
 
-                            <LinearLayout
-                                android:padding="@dimen/dimens_15dp"
-                                android:orientation="vertical"
-                                android:background="@color/color_1a2629"
+                            <TextView
+                                android:id="@+id/tx_comic_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tx_comic_description"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-                                <TextView
-                                    android:textSize="16sp"
-                                    android:textColor="@color/white"
-                                    android:id="@+id/tx_comic_name"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                                <TextView
-                                    android:layout_weight="1"
-                                    android:id="@+id/tx_comic_description"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dimens_12dp"
-                                    android:textColor="@color/color_c0c0c0"
-                                    android:lines="2"
-                                    android:lineSpacingExtra="@dimen/dimens_3dp"
-                                    android:textSize="@dimen/public_12_dp" />
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimens_12dp"
+                                android:layout_weight="1"
+                                android:lineSpacingExtra="@dimen/dimens_3dp"
+                                android:lines="2"
+                                android:textColor="@color/color_c0c0c0"
+                                android:textSize="@dimen/public_12_dp" />
+
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
+
                                 <TextView
+                                    android:id="@+id/tx_comic_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/dimens_20dp"
                                     android:background="@drawable/shape_1a290_10"
-                                    android:textColor="@color/color_ff8350"
-                                    android:textSize="12sp"
+                                    android:gravity="center"
                                     android:paddingLeft="@dimen/dimens_10dp"
                                     android:paddingRight="@dimen/dimens_10dp"
-                                    android:id="@+id/tx_comic_status"
-                                    android:gravity="center"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/dimens_20dp"/>
+                                    android:textColor="@color/color_ff8350"
+                                    android:textSize="12sp" />
+
                                 <TextView
-                                    android:layout_alignParentRight="true"
-                                    android:textColor="@color/color_c0c0c0"
-                                    android:textSize="12sp"
-                                    android:gravity="center"
-                                    android:drawableLeft="@mipmap/home_item_eye"
                                     android:id="@+id/tx_comic_num"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/dimens_20dp"/>
+                                    android:layout_height="@dimen/dimens_20dp"
+                                    android:layout_alignParentRight="true"
+                                    android:drawableLeft="@mipmap/home_item_eye"
+                                    android:gravity="center"
+                                    android:textColor="@color/color_c0c0c0"
+                                    android:textSize="12sp" />
                             </RelativeLayout>
-                            </LinearLayout>
                         </LinearLayout>
+                    </LinearLayout>
                 </RelativeLayout>
 
 
@@ -113,8 +122,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/dimens_10dp"
                     android:layout_height="@dimen/dimens_40dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/dimens_15dp"
@@ -135,12 +144,12 @@
                         android:id="@+id/ll_comic_category"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/dimens_20dp"
-                        android:paddingLeft="@dimen/dimens_10dp"
-                        android:paddingRight="@dimen/dimens_6dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dimens_10dp"
+                        android:paddingRight="@dimen/dimens_6dp">
 
                         <TextView
                             android:id="@+id/tx_comic_flag"
@@ -160,12 +169,15 @@
                 </RelativeLayout>
 
                 <include layout="@layout/separator_line" />
+
                 <com.heiheilianzai.app.view.CustomSwipeToRefresh
                     android:id="@+id/sr_comic_category"
-                    android:layout_marginLeft="@dimen/dimens_15dp"
-                    android:layout_marginRight="@dimen/dimens_15dp"
+                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_90dp">
+                    android:layout_height="@dimen/dimens_90dp"
+                    android:paddingLeft="@dimen/dimens_15dp"
+                    android:paddingRight="@dimen/dimens_15dp">
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/ry_comic_category"
                         android:layout_width="match_parent"
@@ -177,6 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -206,17 +219,18 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="20dp"
-                            android:drawablePadding="@dimen/dimens_3dp"
                             android:drawableLeft="@mipmap/novel_comment_book"
+                            android:drawablePadding="@dimen/dimens_3dp"
                             android:gravity="center_vertical"
                             android:text="@string/BookInfoActivity_xieshuping"
                             android:textColor="@color/black"
                             android:textSize="12sp" />
                     </RelativeLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0.3dp"
-                        android:background="@color/gray2"/>
+                        android:background="@color/gray2" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -227,8 +241,8 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-                </LinearLayout>
+                    android:paddingRight="10dp"></LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/ll_label_container"
                     android:layout_width="match_parent"
@@ -239,8 +253,10 @@
                 </LinearLayout>
             </LinearLayout>
         </com.heiheilianzai.app.view.ObservableScrollView>
+
         <include layout="@layout/book_info_titlebar" />
     </FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_60dp"

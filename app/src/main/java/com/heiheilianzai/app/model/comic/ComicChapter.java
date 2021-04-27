@@ -35,7 +35,9 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     private String ad_skip_url;
     private int ad_url_type;
     private String is_book_coupon_pay;
+    private String update_time;
     private boolean is_buy_status;
+
 
     public boolean isIs_buy_status() {
         return is_buy_status;
@@ -183,11 +185,11 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     }*/
 
     public String getUpdate_time() {
-        return updated_at;
+        return update_time;
     }
 
     public void setUpdate_time(String update_time) {
-        this.updated_at = update_time;
+        this.update_time = update_time;
     }
 
     public String getImagesText() {

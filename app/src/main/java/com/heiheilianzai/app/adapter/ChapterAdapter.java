@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.utils.StringUtils;
 
@@ -54,16 +55,22 @@ public class ChapterAdapter extends ReaderBaseAdapter<ChapterItem> {
             viewHolder.title.setTextColor(Color.BLACK);
         }
         viewHolder.title.setText(chapterItem.getChapter_title());
-        if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(),"0")) {//免费
-            viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
-        } else {
-            viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
-        }
         if (!StringUtils.isEmpty(chapterItem.getIs_book_coupon_pay()) && TextUtils.equals(chapterItem.getIs_book_coupon_pay(),"1")) {//免费
             viewHolder.coupon.setVisibility(View.VISIBLE);
             viewHolder.coupon.setText(coupon_pay_price+mContext.getResources().getString(R.string.coupon_open));
         } else {
             viewHolder.coupon.setVisibility(View.GONE);
+        }
+        if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(),"0")) {//免费
+            viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
+        } else {
+            if (App.isVip(mContext)){
+                viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
+                viewHolder.coupon.setVisibility(View.GONE);
+            }else {
+                viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+                viewHolder.coupon.setVisibility(View.VISIBLE);
+            }
         }
         return convertView;
     }

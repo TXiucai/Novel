@@ -108,6 +108,7 @@
     <string name="MineNewFragment_nologin">未登录</string>
     <string name="MineNewFragment_nologin_prompt">登录后才可以购买VIP哦~</string>
     <string name="share_detail">分享记录</string>
+    <string name="share_no_result">你还没有任何分享哦</string>
 
     <!--设置中心-->
     <string name="SettingsActivity_nomark">在手机上没有找到应用市场哦！</string>
@@ -495,4 +496,9 @@
     <string name="invite_code_sucecess">成功填写邀请码</string>
     <string name="dialog_vip_islogin">vip章节需要登录哦</string>
     <string name="dialog_is_login_cancel">暂不</string>
+    <string name="book_loading">连载中</string>
+    <string name="book_finished">已完结</string>
+    <string name="share_url_code">有声爽文H漫，连载不断 复制链接在浏览器中打开下载！%s（您的邀请码是：%s, 注册绑定邀请码可免费拿礼）</string>
+    <string name="share_url">有声爽文H漫，连载不断 复制链接在浏览器中打开下载！%s）</string>
+    <string name="loading_tittle">主人别急，奴家马上就来了....</string>
 </resources>

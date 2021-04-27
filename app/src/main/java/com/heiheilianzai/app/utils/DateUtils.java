@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +44,12 @@ public class DateUtils {
      */
     public static String getFlavourTodayTime(String flavour) {
         return new StringBuffer().append(getTodayTime()).append(flavour).toString();
+    }
+
+    public static String getStringToDate(String time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
+        String format = simpleDateFormat.format(new Date(Long.valueOf(time)));
+        return format;
     }
 
     /**

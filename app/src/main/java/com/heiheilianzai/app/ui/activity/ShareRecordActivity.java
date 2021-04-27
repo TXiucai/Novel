@@ -33,6 +33,8 @@ public class ShareRecordActivity extends BaseActivity implements ShowTitle {
     RecyclerView mRecycleView;
     @BindView(R.id.titlebar_finish)
     TextView mTitlebar;
+    @BindView(R.id.ll_noresult)
+    LinearLayout mLlNoResult;
 
     private ShareRecordAdapter mAdapter;
 
@@ -45,6 +47,7 @@ public class ShareRecordActivity extends BaseActivity implements ShowTitle {
     public void initView() {
         initTitleBarView(LanguageUtil.getString(this, R.string.ShareActivity_title));
         mTitlebar.setVisibility(View.GONE);
+        mLlNoResult.setVisibility(View.VISIBLE);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mAdapter = new ShareRecordAdapter(this);
         mRecycleView.setAdapter(mAdapter);
@@ -70,6 +73,9 @@ public class ShareRecordActivity extends BaseActivity implements ShowTitle {
                         List<ShareRecordBean.ShareRecordList> typeBeanList = shareRecordBean.getList();
                         if (!typeBeanList.isEmpty()) {
                             mAdapter.setNewData(typeBeanList);
+                            mLlNoResult.setVisibility(View.GONE);
+                        }else {
+                            mLlNoResult.setVisibility(View.VISIBLE);
                         }
                     }
 

@@ -78,8 +78,10 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.description.setText(optionBeen.getDescription());
         viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
         String str = "";
-        for (BaseTag tag : optionBeen.tag) {
-            str += tag.tab;
+        if (optionBeen.getIs_finish() == 0) {
+            str = activity.getResources().getString(R.string.book_loading);
+        } else {
+            str = activity.getResources().getString(R.string.book_finished);
         }
         viewHolder.item_store_label_male_horizontal_tag.setText(str);
 

@@ -125,7 +125,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public static final String REFER_PAGE_EXT_KAY = "referPage";
 
     @BindView(R.id.activity_comiclook_lording)
-    public RelativeLayout activity_comiclook_lording;
+    public LinearLayout activity_comiclook_lording;
     @BindView(R.id.activity_comiclook_lording_img)
     public ImageView activity_comiclook_lording_img;
     @BindView(R.id.titlebar_back)

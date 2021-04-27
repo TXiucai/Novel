@@ -282,6 +282,7 @@ public class UpdateApp {
             popupWindow.dismiss();
             RecomendApp recomendApp = new RecomendApp(activity);
             recomendApp.getRequestData();
+            new DialogExpirerdVip().getUserInfo(activity);
         }
     }
 

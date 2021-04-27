@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 
 import butterknife.BindView;
@@ -17,6 +20,17 @@ import butterknife.ButterKnife;
 
 public class DialogExpirerdVip {
 
+    public void getUserInfo(Activity activity){
+        MainHttpTask.getInstance().getResultString(activity, "Mine", new MainHttpTask.GetHttpData() {
+            @Override
+            public void getHttpData(String result) {
+                UserInfoItem userInfoItem = new Gson().fromJson(result, UserInfoItem.class);
+                if (userInfoItem.isVip_left_three_days()) {
+                    getDialogVipPop(activity, userInfoItem.getVip_left_three_days_note());
+                }
+            }
+        });
+    }
     public Dialog getDialogVipPop(Activity activity, String note) {
         long recommendTime = ShareUitls.getExpiredVipTime(activity, "expired_vip", 0);
         long currentTimeDifferenceSecond = DateUtils.getCurrentTimeDifferenceSecond(recommendTime);

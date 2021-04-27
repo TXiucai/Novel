@@ -281,8 +281,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 fragment_store_gridview3_gridview_second.setVisibility(View.VISIBLE);
                 final List<StroreBookcLable.Book> secondList = bookList.subList(3, Math.min(size, 6));
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
-                horizontalAdapter.setBackground(isBackground);
-                isBackground = !isBackground;
+                horizontalAdapter.setNeedBackground(false);
                 fragment_store_gridview3_gridview_second.setAdapter(horizontalAdapter);
                 fragment_store_gridview3_gridview_second.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -302,6 +301,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
                 horizontalAdapter.setBackground(isBackground);
+                horizontalAdapter.setNeedBackground(true);
                 isBackground = !isBackground;
                 fragment_store_gridview3_gridview_fore.setAdapter(horizontalAdapter);
                 fragment_store_gridview3_gridview_fore.setOnItemClickListener(new AdapterView.OnItemClickListener() {

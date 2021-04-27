@@ -24,6 +24,7 @@ import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.CatalogActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -107,7 +108,12 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
             });
             holder.item_comicchaptercatalog_name.setText(comicChapterCatalog.chapter_title);
-            holder.item_chapter_catalog_time.setText(comicChapterCatalog.updated_at);
+            holder.item_chapter_catalog_time.setText(DateUtils.getStringToDate(comicChapterCatalog.getUpdate_time()));
+            if (comicChapterCatalog.isRead()) {
+                holder.item_comicchaptercatalog_name.setTextColor(activity.getResources().getColor(R.color.color_9a9a9a));
+            } else {
+                holder.item_comicchaptercatalog_name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));
+            }
             MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
             if (App.isVip(activity)) {
                 if (comicChapterCatalog.getIs_vip() == 1 || TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {

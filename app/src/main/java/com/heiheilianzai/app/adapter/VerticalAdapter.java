@@ -33,6 +33,11 @@ public class VerticalAdapter extends BaseAdapter {
     boolean orientation;
     boolean isBackground;
     private boolean isHorizontal;
+    boolean isNeedBackground;
+
+    public void setNeedBackground(boolean needBackground) {
+        isNeedBackground = needBackground;
+    }
 
     public void setHorizontal(boolean horizontal) {
         isHorizontal = horizontal;
@@ -117,23 +122,29 @@ public class VerticalAdapter extends BaseAdapter {
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
         } else {
             contentView = layoutInflater.inflate(R.layout.item_store_label_male_horizontal2, null, false);
-            LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
-            layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
-            item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
-            if (isBackground) {
-                item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
-                isBackground = false;
-            } else {
-                item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_green));
-                isBackground = true;
-            }
             ImageView imageView = contentView.findViewById(R.id.item_store_label_male_horizontal_img);
             TextView name = contentView.findViewById(R.id.item_store_label_male_horizontal_name);
             TextView flag = contentView.findViewById(R.id.item_store_label_male_horizontal_flag);
             TextView description = contentView.findViewById(R.id.item_store_label_male_horizontal_description);
             TextView author = contentView.findViewById(R.id.item_store_label_male_horizontal_author);
             TextView item_store_label_male_horizontal_tag = contentView.findViewById(R.id.item_store_label_male_horizontal_tag);
+            LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
+            layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
+            item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
+            if (isNeedBackground){
+                if (isBackground) {
+                    item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
+                    isBackground = false;
+                } else {
+                    item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_green));
+                    isBackground = true;
+                }
+                description.setTextColor(activity.getResources().getColor(R.color.white));
+            }else {
+                item_store_label_male_vertical_layout.setBackground(null);
+                description.setTextColor(activity.getResources().getColor(R.color.color_666666));
+            }
             LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
             layoutParamsIm.height = HEIGHT;
             layoutParamsIm.width = WIDTH;

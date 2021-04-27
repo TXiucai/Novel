@@ -20,6 +20,7 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -50,7 +51,7 @@ public class ComicHChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(activity).inflate(R.layout.item_comic_chapter_catalog_h, null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.item_comic_chapter_catalog_h, viewGroup,false);
         return new ViewHolder(view);
 
     }
@@ -69,13 +70,14 @@ public class ComicHChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         });
         holder.item_comicchaptercatalog_name.setText(comicChapterCatalog.chapter_title);
-        holder.item_chapter_catalog_time.setText(comicChapterCatalog.updated_at);
+        holder.item_chapter_catalog_time.setText(DateUtils.getStringToDate(comicChapterCatalog.getUpdate_time()));
         if (comicChapterCatalog.isRead()) {
-            holder.item_comicchaptercatalog_current_bg.setBackgroundColor(activity.getResources().getColor(R.color.lightgray2));
+            holder.item_comicchaptercatalog_name.setTextColor(activity.getResources().getColor(R.color.color_9a9a9a));
         } else {
-            holder.item_comicchaptercatalog_current_bg.setBackgroundColor(Color.WHITE);
+            holder.item_comicchaptercatalog_name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));
         }
-        MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+        //MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
+        MyPicasso.GlideImageRoundedCorners(6, activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, 110, 60, R.mipmap.comic_def_cross);
         if (App.isVip(activity)) {
             if (comicChapterCatalog.getIs_vip() == 1 || TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {
                 holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);

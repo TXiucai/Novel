@@ -69,6 +69,7 @@ import com.heiheilianzai.app.ui.fragment.MineNewFragment;
 import com.heiheilianzai.app.ui.fragment.book.StroeNewFragmentBook;
 import com.heiheilianzai.app.ui.fragment.comic.StroeNewFragmentComic;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.DialogExpirerdVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -336,6 +337,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         if (StringUtils.isEmpty(str)) {
             RecomendApp recomendApp = new RecomendApp(activity);
             recomendApp.getRequestData();
+
+            new DialogExpirerdVip().getUserInfo(activity);
             return;
         }
         if (str.length() > 0) {

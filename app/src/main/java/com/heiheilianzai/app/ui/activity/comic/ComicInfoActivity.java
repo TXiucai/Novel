@@ -70,6 +70,7 @@ import com.heiheilianzai.app.model.comic.ComicInfo;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
@@ -193,7 +194,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     private int lastVisibleItemPosition;
 
     @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back,
-            R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category})
+            R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category, R.id.rl_comic_vip})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.tx_comic_start_read:
@@ -243,6 +244,11 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             case R.id.ll_comic_category:
                 DialogComicChapter dialogComicChapter = new DialogComicChapter();
                 dialogComicChapter.getDialogVipPop(activity, baseComic);
+                break;
+            case R.id.rl_comic_vip:
+                Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                myIntent.putExtra("isvip", Utils.isLogin(activity));
+                activity.startActivity(myIntent);
                 break;
         }
     }
@@ -339,7 +345,12 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             } catch (Exception e) {
             }
             tx_comic_name.setText(comic.name);
-            tx_comic_num.setText(comic.hot_num);
+            String[] split = comic.hot_num.split(" ");
+            if (split.length > 1) {
+                tx_comic_num.setText(split[1]);
+            } else {
+                tx_comic_num.setText(comic.hot_num);
+            }
             tx_comic_description.setText(comic.description);
             tx_comic_status.setText(comic.tag.get(0).getTab());
             tx_comic_flag.setText(comic.flag);

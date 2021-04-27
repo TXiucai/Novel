@@ -9,7 +9,7 @@ public class OptionBeen  extends  BaseAd {
     public String cover;//水平封面
     public String author;//"": "黎明C", //作者
     public String description;//"": "美貌千金与帅气王爷", //描述
-   // public int is_finish;//"": 1, //是否完结 1已完结 0连载中
+    public int is_finish;//"": 1, //是否完结 1已完结 0连载中
     public String flag;//"": "更新至32话", //角标
     public List<BaseTag> tag;
     public int total_views;
@@ -18,6 +18,14 @@ public class OptionBeen  extends  BaseAd {
  //   public int is_baoyue;//": 0,
  //   public String enable_time;//": "06月11日",
   //  public String expire_time;//": "06月30日"
+
+    public int getIs_finish() {
+        return is_finish;
+    }
+
+    public void setIs_finish(int is_finish) {
+        this.is_finish = is_finish;
+    }
 
     public int getTotal_views() {
         return total_views;

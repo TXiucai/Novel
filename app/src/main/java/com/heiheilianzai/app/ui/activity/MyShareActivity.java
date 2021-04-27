@@ -91,7 +91,11 @@ public class MyShareActivity extends BaseActivity implements ShowTitle, View.OnC
         switch (v.getId()) {
             case R.id.share_copy:
                 if (mShareDetailsBean.getLink() != null) {
-                    StringUtils.setStringInClipboard(this, mShareDetailsBean.getLink());
+                    if (!mShareDetailsBean.isShareStatus()) {
+                        StringUtils.setStringInClipboard(this, String.format(getString(R.string.share_url), mShareDetailsBean.getLink()));
+                    } else {
+                        StringUtils.setStringInClipboard(this, String.format(getString(R.string.share_url_code), mShareDetailsBean.getLink(), mShareDetailsBean.getShareCode()));
+                    }
                     ToastUtil.getInstance().showShortT(R.string.ShareActivity_save_toast);
                 }
                 break;
