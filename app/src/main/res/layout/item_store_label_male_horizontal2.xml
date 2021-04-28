@@ -109,8 +109,8 @@
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:background="@drawable/shape_ff8350_20"
-                    android:paddingLeft="@dimen/dimens_15dp"
-                    android:paddingRight="@dimen/dimens_15dp"
+                    android:paddingLeft="@dimen/dimens_8dp"
+                    android:paddingRight="@dimen/dimens_8dp"
                     android:textSize="10sp" />
 
             </RelativeLayout>

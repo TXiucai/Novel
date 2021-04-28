@@ -199,7 +199,6 @@ public class ReadHistory {
                         if (FORM_READHISTORY) {
                             EventBus.getDefault().post(new RefreshReadHistory(true));
                         }
-
                     }
 
                     @Override

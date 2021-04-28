@@ -130,9 +130,9 @@ public class VerticalAdapter extends BaseAdapter {
             TextView item_store_label_male_horizontal_tag = contentView.findViewById(R.id.item_store_label_male_horizontal_tag);
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
-            layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
-            item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
             if (isNeedBackground){
+                layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
+                item_store_label_male_vertical_layout.setPadding(20,14,20,14);
                 if (isBackground) {
                     item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
                     isBackground = false;
@@ -142,9 +142,12 @@ public class VerticalAdapter extends BaseAdapter {
                 }
                 description.setTextColor(activity.getResources().getColor(R.color.white));
             }else {
+                layoutParams.height = HEIGHT;
+                item_store_label_male_vertical_layout.setPadding(20,4,4,14);
                 item_store_label_male_vertical_layout.setBackground(null);
                 description.setTextColor(activity.getResources().getColor(R.color.color_666666));
             }
+            item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
             LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
             layoutParamsIm.height = HEIGHT;
             layoutParamsIm.width = WIDTH;

@@ -277,7 +277,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             ItemHeigth = H100 + HEIGHT + H50;
             fragment_store_gridview3_gridview_first.setNumColumns(3);
             if (size > 3) {
-                ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing + HorizontalHeight) * 3;
+                ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing * 2) * 3;
                 fragment_store_gridview3_gridview_second.setVisibility(View.VISIBLE);
                 final List<StroreBookcLable.Book> secondList = bookList.subList(3, Math.min(size, 6));
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
