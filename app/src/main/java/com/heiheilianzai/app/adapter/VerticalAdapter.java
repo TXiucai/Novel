@@ -141,11 +141,13 @@ public class VerticalAdapter extends BaseAdapter {
                     isBackground = true;
                 }
                 description.setTextColor(activity.getResources().getColor(R.color.white));
+                name.setTextColor(activity.getResources().getColor(R.color.white));
             }else {
                 layoutParams.height = HEIGHT;
                 item_store_label_male_vertical_layout.setPadding(20,4,4,14);
                 item_store_label_male_vertical_layout.setBackground(null);
                 description.setTextColor(activity.getResources().getColor(R.color.color_666666));
+                name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));
             }
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
             LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
