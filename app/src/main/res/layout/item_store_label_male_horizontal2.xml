@@ -72,19 +72,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/LinearLayout"
-                android:layout_marginTop="@dimen/dimens_10dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
                 android:ellipsize="end"
-                android:lineSpacingExtra="@dimen/dimens_2dp"
+                android:lineSpacingExtra="@dimen/dimens_1dp"
                 android:lines="4"
                 android:textColor="@color/color_c0c0c0"
-                android:textSize="12sp" />
+                android:textSize="11sp" />
 
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="2dp"
                 android:orientation="horizontal">
 
                 <TextView

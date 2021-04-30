@@ -158,7 +158,6 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
             @Override
             public void onLoadMore() {
                 if (mTotalPage >= mPageNum) {
-                    MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
                     httpData(activity, comic_id);
                 } else {
                     fragment_comicinfo_mulu_list.loadMoreComplete();
@@ -210,7 +209,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                                 } else {
                                     int t = size + comicCatalogsSize;
                                     fragment_comicinfo_mulu_list.loadMoreComplete();
-                                    comicChapterCatalogAdapter.notifyItemRangeRemoved(size + 2, comicCatalogsSize);
+                                    comicChapterCatalogAdapter.notifyItemChanged(size + 2, comicCatalogsSize);
                                     size = t;
                                 }
                                 mPageNum++;

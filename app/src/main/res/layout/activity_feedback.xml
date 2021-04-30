@@ -22,7 +22,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_150dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/dimens_10dp">
 
@@ -37,7 +37,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tabRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_74dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_12dp" />
 
                 <TextView

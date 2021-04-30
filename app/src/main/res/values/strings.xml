@@ -472,7 +472,7 @@
     <string name="mine_vip_open">立即开通</string>
     <string name="mine_vip_continue">立即续费</string>
     <string name="string_sign_invite_code">填邀请码送好礼</string>
-    <string name="feedback_type">投诉类型</string>
+    <string name="feedback_type">反馈类型</string>
     <string name="up_picture">上传图片</string>
     <string name="hint">（最多上传6张）</string>
     <string name="string_baoyue_vip_tittle">VIP会员</string>

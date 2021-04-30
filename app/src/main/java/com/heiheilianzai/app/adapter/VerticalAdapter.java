@@ -132,7 +132,7 @@ public class VerticalAdapter extends BaseAdapter {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
             if (isNeedBackground){
                 layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
-                item_store_label_male_vertical_layout.setPadding(20,14,20,14);
+                item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10),ImageUtil.dp2px(activity, 14),ImageUtil.dp2px(activity, 18),ImageUtil.dp2px(activity, 14));
                 if (isBackground) {
                     item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
                     isBackground = false;
@@ -144,7 +144,7 @@ public class VerticalAdapter extends BaseAdapter {
                 name.setTextColor(activity.getResources().getColor(R.color.white));
             }else {
                 layoutParams.height = HEIGHT;
-                item_store_label_male_vertical_layout.setPadding(20,4,4,14);
+                item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10),ImageUtil.dp2px(activity, 4),ImageUtil.dp2px(activity, 18),ImageUtil.dp2px(activity, 4));
                 item_store_label_male_vertical_layout.setBackground(null);
                 description.setTextColor(activity.getResources().getColor(R.color.color_666666));
                 name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));

@@ -93,7 +93,6 @@ public class DialogComicChapter {
             @Override
             public void onLoadMore() {
                 if (mTotalPage >= mPageNum) {
-                    MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
                     httpData(activity, baseComic.getComic_id(), vipHolder);
                 } else {
                     vipHolder.ryChapter.loadMoreComplete();
@@ -157,7 +156,7 @@ public class DialogComicChapter {
                                 } else {
                                     int t = size + comicCatalogsSize;
                                     vipHolder.ryChapter.loadMoreComplete();
-                                    comicChapterCatalogAdapter.notifyItemRangeRemoved(size + 2, comicCatalogsSize);
+                                    comicChapterCatalogAdapter.notifyItemChanged(size + 2, comicCatalogsSize);
                                     size = t;
                                 }
                                 mPageNum++;

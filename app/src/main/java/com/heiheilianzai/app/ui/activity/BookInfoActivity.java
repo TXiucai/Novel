@@ -261,7 +261,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             mBaseBook.setUid(Utils.getUID(activity));
             activity_comic_info_top_bookname.setText(infoBook.name);
             activity_book_info_content_display_label.setText(infoBook.display_label);
-            activity_book_info_content_views.setText(infoBook.hot_num);
+            activity_book_info_content_views.setText(infoBook.total_favors);
             activity_book_info_content_mulu_flag.setText("(" + infoBook.getTag().get(0).getTab() + ")");
             MyPicasso.GlideImageNoSize(activity, infoBook.cover, activity_book_info_content_cover, R.mipmap.book_def_v);
             novelMuluFragment.sendData(mBaseBook);
