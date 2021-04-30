@@ -353,7 +353,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             }
             tx_comic_description.setText(comic.description);
             tx_comic_status.setText(comic.tag.get(0).getTab());
-            tx_comic_flag.setText(comic.flag);
+            tx_comic_flag.setText(String.format(getString(R.string.comicinfo_total_chapter), comic.total_chapters));
             titlebar_text.setText(comic.name);
             titlebar_text.setAlpha(0);
 
@@ -572,7 +572,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
                     for (JsonElement jsonElement : jsonElements) {
                         ComicChapter comicChapter1 = new Gson().fromJson(jsonElement, ComicChapter.class);
-                        comicChapter1.chapter_id = comic_id;
                         if (comicChapter1.getAd_image() == null) {
                             comicChapter.add(comicChapter1);
                         }

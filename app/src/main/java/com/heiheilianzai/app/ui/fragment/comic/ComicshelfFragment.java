@@ -263,6 +263,8 @@ public class ComicshelfFragment extends Fragment {
                     bookLists.remove(s.baseComic);
                 }
                 adapter.deleteBook(s.baseComic.getComic_id());
+            } else if (s.ADD == 2) {//刷新阅读记录
+                reflushComicRecord(s.baseComic);
             } else {//添加
                 if (!bookLists.contains(s.baseComic)) {
                     bookLists.add(s.baseComic);
@@ -274,6 +276,15 @@ public class ComicshelfFragment extends Fragment {
                 fragment_bookshelf_noresult.setVisibility(View.GONE);
                 bookShelf.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    private void reflushComicRecord(BaseComic baseComic) {
+        bookLists.clear();
+        bookLists = LitePal.where("isAddBookSelf = ?", "1").find(BaseComic.class);
+        Collections.sort(bookLists);// 排序
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
     }
 

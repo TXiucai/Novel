@@ -63,6 +63,7 @@
     <string name="ReadHistoryFragment_loginlook">登录后查看阅读历史</string>
     <string name="ReadHistoryFragment_gologin">去登录</string>
     <string name="ReadHistoryFragment_total_chapter">更新至第%s章</string>
+    <string name="comicinfo_total_chapter">更新至第%d话</string>
     <string name="ReadHistoryFragment_noread">还未阅读任何书籍</string>
 
     <!--书城-->

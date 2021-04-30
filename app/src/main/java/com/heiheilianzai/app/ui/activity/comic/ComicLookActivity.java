@@ -194,7 +194,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     int Last_read_img_order;//当前可见的最后一张图
     String comic_id;
     String Chapter_id, Chapter_title = "";
-    int current_display_order, ComicChapterSize;
+    int ComicChapterSize;
     boolean first = true;
     ComicChapter CurrentComicChapter;//无网时候 当前的阅读章节
     LinearLayoutManager linearLayoutManager;
@@ -502,7 +502,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             tocao_bgcolor = Color.parseColor("#4d000000");
             baseComic = (BaseComic) intent.getSerializableExtra(BASE_COMIC_EXT_KAY);
             comic_id = baseComic.getComic_id();
-            current_display_order = baseComic.getCurrent_display_order();
+            String current_chapter_id = baseComic.getCurrent_chapter_id();
+            if (current_chapter_id != null && !TextUtils.isEmpty(current_chapter_id)) {
+                Chapter_id = current_chapter_id;
+            }
             comicChapter = new ArrayList<>();
             FORM_INFO = intent.getBooleanExtra(FORM_INFO_EXT_KAY, false);//是否是漫画详情界面过来的
             FORM_READHISTORY = intent.getBooleanExtra(FORM_READHISTORY_EXT_KAY, false);//阅读历史过来的 需要校验 服务端和本地记录
@@ -555,9 +558,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private void initData() {
         if (comicChapter != null) {
             ComicChapterSize = comicChapter.size();
-            CurrentComicChapter = getCurrentComicChapter(current_display_order);
+            if (TextUtils.isEmpty(Chapter_id)) {
+                Chapter_id = getCurrentComicChapter(0).getChapter_id();
+            }
+            CurrentComicChapter = getCurrentComicChapter(Chapter_id);
             if (CurrentComicChapter != null) {
-                Chapter_id = CurrentComicChapter.getChapter_id();
                 current_read_img_order = CurrentComicChapter.current_read_img_order;//本章最近阅读图片
             }
         }
@@ -606,7 +611,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         int current_read_img_orderr = (FirstCompletelyVisibleItemPosition <= 0) ? FirstVisibleItemPosition : FirstCompletelyVisibleItemPosition;
                         if (current_read_img_orderr <= baseComicImagesSize) {
                             current_read_img_order = current_read_img_orderr;
-                            baseComicImage = baseComicImages.get(current_display_order);
+                            baseComicImage = baseComicImages.get(current_read_img_order);
                         }
                         Last_read_img_order = (LastCompletelyVisibleItemPosition <= 0) ? LastVisibleItemPosition : LastCompletelyVisibleItemPosition;
                         if (Last_read_img_order == baseComicImagesSize) {
@@ -655,7 +660,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                             } else {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
                                 map.put(chapter_id, comicChapterItem);
-                                ComicChapter CurrentComicChapter = getCurrentComicChapter(current_display_order + 1);
+                                ComicChapter CurrentComicChapter = getCurrentComicChapter(chapter_id);
                                 if (CurrentComicChapter != null) {
                                     CurrentComicChapter.setImagesText(result);
                                     ContentValues values = new ContentValues();
@@ -719,15 +724,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 setBigImageImageLoader(comicChapterItem.image_list.get(0));
                 titlebar_text.setText(comicChapterItem.chapter_title);
                 Chapter_title = comicChapterItem.chapter_title;
-                current_display_order = comicChapterItem.display_order;
-                CurrentComicChapter = getCurrentComicChapter(current_display_order);
+                CurrentComicChapter = getCurrentComicChapter(comicChapterItem.chapter_id);
                 Chapter_id = comicChapterItem.chapter_id;
                 if (comicChapterItem.is_preview == 1) {
                     getBuy();
                 }
                 baseComic.setCurrent_chapter_name(Chapter_title);
                 baseComic.setCurrent_chapter_id(Chapter_id);
-                baseComic.setCurrent_display_order(current_display_order);
                 baseComicImages.clear();
                 baseComicImagesSize = 0;
                 for (BaseComicImage baseComicImage : comicChapterItem.image_list) {
@@ -773,10 +776,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 //更新该本书的阅读记录
                 ContentValues values = new ContentValues();
                 values.put("current_chapter_id", chapter_id);
-                values.put("current_display_order", current_display_order);
                 values.put("current_chapter_name", Chapter_title);
                 LitePal.update(BaseComic.class, values, baseComic.getId());
                 EventBus.getDefault().post(baseComic);
+                if (baseComic.isAddBookSelf()) {
+                    EventBus.getDefault().post(new RefreshComic(baseComic, 2));
+                }
                 //更新数据库该章节已读
                 ContentValues CurrentComicChapterIsRead = new ContentValues();
                 CurrentComicChapterIsRead.put("IsRead", true);

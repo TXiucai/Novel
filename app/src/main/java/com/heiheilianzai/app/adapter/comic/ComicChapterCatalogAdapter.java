@@ -95,7 +95,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
                 public void onClick(View v) {
                     if (comicChapterCatalog != null) {
                         if (flag) {
-                            baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
+                            baseComic.setCurrent_chapter_id(comicChapterCatalog.getChapter_id());
                             baseComic.saveIsexist(false);
                             activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
                         } else {

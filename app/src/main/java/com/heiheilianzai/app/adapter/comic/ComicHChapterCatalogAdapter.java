@@ -64,7 +64,7 @@ public class ComicHChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void onClick(View v) {
                 if (comicChapterCatalog != null) {
-                    baseComic.setCurrent_display_order(comicChapterCatalog.getDisplay_order());
+                    baseComic.setCurrent_chapter_id(comicChapterCatalog.getChapter_id());
                     activity.startActivity(ComicLookActivity.getMyIntent(activity, baseComic, LanguageUtil.getString(activity, R.string.refer_page_info_catalog)));
                 }
             }
@@ -76,7 +76,6 @@ public class ComicHChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
         } else {
             holder.item_comicchaptercatalog_name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));
         }
-        //MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
         MyPicasso.GlideImageRoundedCorners(6, activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, 110, 60, R.mipmap.comic_def_cross);
         if (App.isVip(activity)) {
             if (comicChapterCatalog.getIs_vip() == 1 || TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {

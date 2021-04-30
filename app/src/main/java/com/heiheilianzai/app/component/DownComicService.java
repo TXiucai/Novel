@@ -73,7 +73,8 @@ public class DownComicService extends IntentService {
         id = baseComic.getId();
         down_chapters = baseComic.getDown_chapters();
         TotalChapter = 0;
-        List<ComicChapterItem> comicChapterItemList = gson.fromJson(result, new TypeToken<List<ComicChapterItem>>() {}.getType());
+        List<ComicChapterItem> comicChapterItemList = gson.fromJson(result, new TypeToken<List<ComicChapterItem>>() {
+        }.getType());
         for (ComicChapterItem comicChapterItem : comicChapterItemList) {
             ++TotalChapter;
             String s = gson.toJson(comicChapterItem);
@@ -120,7 +121,7 @@ public class DownComicService extends IntentService {
                                         .load(baseComicImage.image)
                                         .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                         .get();
-                                if( baseComicImage.image.substring(baseComicImage.image.length() -2,baseComicImage.image.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)){//是否解密文件
+                                if (baseComicImage.image.substring(baseComicImage.image.length() - 2, baseComicImage.image.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)) {//是否解密文件
                                     InputStream inputStream = new FileInputStream(filee);
                                     filee = AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + filee.getName());
                                 }
@@ -147,6 +148,7 @@ public class DownComicService extends IntentService {
             ++down_chapters;
             ContentValues values1 = new ContentValues();
             values1.put("down_chapters", down_chapters);
+            values1.put("current_chapter_id", comicChapterItem.getChapter_id());
             LitePal.update(BaseComic.class, values1, id);
             if (DownMangerComicFragment) {
                 baseComic.setDown_chapters(down_chapters);
@@ -155,11 +157,11 @@ public class DownComicService extends IntentService {
             ContentValues values = new ContentValues();
             values.put("ImagesText", s);
             values.put("ISDown", "1");
-            if(comicChapterItem.display_order<comicChapterCatalogs.size()){//如果服务器display_order参数有问题会导致Bounds
+            if (comicChapterItem.display_order < comicChapterCatalogs.size()) {//如果服务器display_order参数有问题会导致Bounds
                 long chapterid = comicChapterCatalogs.get(comicChapterItem.display_order).getId();
                 int i;
                 if (id == 0) {
-                    i = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?",comicChapterItem.getComic_id(), chapter_id);
+                    i = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?", comicChapterItem.getComic_id(), chapter_id);
                 } else {
                     i = LitePal.update(ComicChapter.class, values, chapterid);
                 }
