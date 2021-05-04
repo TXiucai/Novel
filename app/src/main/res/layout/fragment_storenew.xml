@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/fragment_store_top"
         android:layout_width="match_parent"
@@ -16,15 +17,6 @@
             android:layout_height="@dimen/dimens_45dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/dimens_10dp">
-
-            <ImageView
-                android:id="@+id/fragment_store_fili"
-                android:layout_width="@dimen/dimens_55dp"
-                android:layout_height="@dimen/dimens_23dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dimens_15dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/fuli" />
 
             <RelativeLayout
                 android:id="@+id/fragment_store_search"
@@ -65,11 +57,48 @@
                     android:layout_marginRight="@dimen/dimens_12dp"
                     android:src="@mipmap/search" />
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="@dimen/dimens_28dp"
+                android:layout_height="@dimen/dimens_28dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dimens_15dp">
+
+                <ImageView
+                    android:id="@+id/fragment_store_fili"
+                    android:layout_width="@dimen/dimens_28dp"
+                    android:layout_height="@dimen/dimens_28dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_gift" />
+
+                <ImageView
+                    android:id="@+id/fragment_store_point"
+                    android:layout_width="@dimen/dimens_7dp"
+                    android:layout_height="@dimen/dimens_7dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/red_point" />
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
-    <FrameLayout
-        android:id="@+id/fragment_store_fragment"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fragment_store_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/main_float_img"
+            android:layout_width="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            android:layout_marginBottom="@dimen/dimens_170dp" />
+    </RelativeLayout>
+
 </LinearLayout>
 

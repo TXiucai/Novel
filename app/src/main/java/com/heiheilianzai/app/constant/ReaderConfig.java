@@ -364,6 +364,11 @@ public class ReaderConfig {
     public static final String mHomeRecomment = "/home-recommen/index";
 
     /**
+     * 首页悬浮图标
+     */
+    public static final String mHomeFloat = "/user/index-window";
+
+    /**
      * 读取意见反馈类型
      */
     public static final String mFeedBackType = "/feedback/index";

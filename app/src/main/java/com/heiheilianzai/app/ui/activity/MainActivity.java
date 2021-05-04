@@ -98,7 +98,6 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.APP_SHARE;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
