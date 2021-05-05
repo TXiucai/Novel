@@ -43,7 +43,7 @@ public class ChapterAdapter extends ReaderBaseAdapter<ChapterItem> {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chapter_catalog, null, false);
             viewHolder.title = convertView.findViewById(R.id.item_chapter_catalog_title);
             viewHolder.vip = convertView.findViewById(R.id.item_chapter_catalog_vip);
-            viewHolder.coupon=convertView.findViewById(R.id.item_chapter_coupon);
+            viewHolder.coupon = convertView.findViewById(R.id.item_chapter_coupon);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -55,23 +55,30 @@ public class ChapterAdapter extends ReaderBaseAdapter<ChapterItem> {
             viewHolder.title.setTextColor(Color.BLACK);
         }
         viewHolder.title.setText(chapterItem.getChapter_title());
-        if (!StringUtils.isEmpty(chapterItem.getIs_book_coupon_pay()) && TextUtils.equals(chapterItem.getIs_book_coupon_pay(),"1")) {//免费
-            viewHolder.coupon.setVisibility(View.VISIBLE);
-            viewHolder.coupon.setText(coupon_pay_price+mContext.getResources().getString(R.string.coupon_open));
-        } else {
+        //限时免费
+        if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
+            viewHolder.vip.setBackgroundResource(R.mipmap.limited_free);
             viewHolder.coupon.setVisibility(View.GONE);
-        }
-        if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(),"0")) {//免费
-            viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
         } else {
-            if (App.isVip(mContext)){
-                viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
-                viewHolder.coupon.setVisibility(View.GONE);
-            }else {
-                viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+            if (!StringUtils.isEmpty(chapterItem.getIs_book_coupon_pay()) && TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1")) {//免费
                 viewHolder.coupon.setVisibility(View.VISIBLE);
+                viewHolder.coupon.setText(coupon_pay_price + mContext.getResources().getString(R.string.coupon_open));
+            } else {
+                viewHolder.coupon.setVisibility(View.GONE);
+            }
+            if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(), "0")) {//免费
+                viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
+            } else {
+                if (App.isVip(mContext)) {
+                    viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
+                    viewHolder.coupon.setVisibility(View.GONE);
+                } else {
+                    viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+                    viewHolder.coupon.setVisibility(View.VISIBLE);
+                }
             }
         }
+
         return convertView;
     }
 

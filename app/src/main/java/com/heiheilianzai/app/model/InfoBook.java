@@ -21,6 +21,15 @@ public class InfoBook extends StroreBookcLable.Book {
     public String is_yy;//是否是爽文 1:是 0:否
     public String is_greatest;//是否是精选 1:是 0:否
     public String is_god;//是否是大神 1:是 0:否
+    public String is_limited_free;
+
+    public String getIs_limited_free() {
+        return is_limited_free;
+    }
+
+    public void setIs_limited_free(String is_limited_free) {
+        this.is_limited_free = is_limited_free;
+    }
 
     public String getViews() {
         return views;

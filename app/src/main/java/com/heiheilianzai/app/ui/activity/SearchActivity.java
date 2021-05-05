@@ -105,6 +105,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
     OptionRecyclerViewAdapter.OnItemClick onItemClick = new OptionRecyclerViewAdapter.OnItemClick() {
         @Override
         public void OnItemClick(int position, OptionBeen optionBeen) {
+            upHotWord(optionBeen);
             Intent intent;
             int stringId = mIsHotSearch ? R.string.refer_page_hot_search : R.string.refer_page_search;
             if (PRODUCT) {
@@ -115,6 +116,29 @@ public class SearchActivity extends BaseButterKnifeActivity {
             startActivity(intent);
         }
     };
+
+    private void upHotWord(OptionBeen optionBeen) {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("hot_word", optionBeen.getName());
+        String json = params.generateParamsJson();
+        String url;
+        if (PRODUCT) {
+            url = ReaderConfig.getBaseUrl() + BookConfig.mUpBookWord;
+        } else {
+            url = ReaderConfig.getBaseUrl() + ComicConfig.mUpComicWord;
+        }
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
 
     public void initView() {
         optionBeenList = new ArrayList<>();

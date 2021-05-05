@@ -1668,12 +1668,16 @@ public class PageFactory {
     }
 
     private void checkIsCoupon(ChapterItem chapterItem) {
-        if (Utils.isLogin(mActivity)) {
-            checkIsBuyCoupon(mActivity, chapterItem);
+        if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
+            return;
         } else {
-            if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
-                DialogLogin dialogLogin = new DialogLogin();
-                dialogLogin.getDialogLoginPop(mActivity);
+            if (Utils.isLogin(mActivity)) {
+                checkIsBuyCoupon(mActivity, chapterItem);
+            } else {
+                if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
+                    DialogLogin dialogLogin = new DialogLogin();
+                    dialogLogin.getDialogLoginPop(mActivity);
+                }
             }
         }
     }

@@ -91,6 +91,11 @@ public class ComicConfig {
     public static final String COMIC_search = "/comic/search";
 
     /**
+     * 上次漫画热词
+     */
+    public static final String mUpComicWord =  "/comic/add-hotwords";
+
+    /**
      * 漫画搜索首页
      */
     public static final String COMIC_search_index = "/comic/search-index";

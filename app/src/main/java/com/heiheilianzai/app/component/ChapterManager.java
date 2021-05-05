@@ -634,6 +634,7 @@ public class ChapterManager {
             JSONObject jsonObj = new JSONObject(result);
             String bookName = jsonObj.getString("name");
             mTotalChapter = jsonObj.getInt("total_chapter");
+            String is_limited_free = jsonObj.getString("is_limited_free");
             JSONArray chapterListArr = jsonObj.getJSONArray("chapter_list");
             size = chapterListArr.length();
             if (size == 0) {
@@ -659,6 +660,7 @@ public class ChapterManager {
                     querychapterItem.setIs_preview(jsonObject1.getString("is_preview"));
                     querychapterItem.setUpdate_time(jsonObject1.getString("update_time"));
                     querychapterItem.setDisplay_order(jsonObject1.getInt("display_order"));
+                    querychapterItem.setIs_limited_free(is_limited_free);
                     querychapterItem.setChapteritem_begin(0);
                     querychapterItem.setBook_id(mBookId);
                     querychapterItem.setBook_name(bookName);

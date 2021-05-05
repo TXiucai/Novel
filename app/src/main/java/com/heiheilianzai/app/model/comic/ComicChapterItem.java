@@ -16,6 +16,15 @@ public class ComicChapterItem {
     public String is_vip;
     public String is_book_coupon_pay;
     private boolean is_buy_status;
+    String is_limited_free;//0否1是
+
+    public String getIs_limited_free() {
+        return is_limited_free;
+    }
+
+    public void setIs_limited_free(String is_limited_free) {
+        this.is_limited_free = is_limited_free;
+    }
 
     public boolean isIs_buy_status() {
         return is_buy_status;

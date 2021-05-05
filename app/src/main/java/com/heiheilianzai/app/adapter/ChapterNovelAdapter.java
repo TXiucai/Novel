@@ -60,21 +60,26 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.title.setTextColor(Color.BLACK);
         }
         viewHolder.title.setText(chapterItem.getChapter_title());
-        if (!StringUtils.isEmpty(chapterItem.getIs_book_coupon_pay()) && TextUtils.equals(chapterItem.getIs_book_coupon_pay(),"1")) {
-            viewHolder.coupon.setVisibility(View.VISIBLE);
-            viewHolder.coupon.setText(coupon_pay_price+mContext.getResources().getString(R.string.coupon_open));
-        } else {
+        if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
+            viewHolder.vip.setBackgroundResource(R.mipmap.limited_free);
             viewHolder.coupon.setVisibility(View.GONE);
-        }
-        if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(),"0")) {//免费
-            viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
-        } else {
-            if (App.isVip(mContext)){
-                viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
-                viewHolder.coupon.setVisibility(View.GONE);
-            }else {
-                viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+        }else {
+            if (!StringUtils.isEmpty(chapterItem.getIs_book_coupon_pay()) && TextUtils.equals(chapterItem.getIs_book_coupon_pay(),"1")) {
                 viewHolder.coupon.setVisibility(View.VISIBLE);
+                viewHolder.coupon.setText(coupon_pay_price+mContext.getResources().getString(R.string.coupon_open));
+            } else {
+                viewHolder.coupon.setVisibility(View.GONE);
+            }
+            if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(),"0")) {//免费
+                viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
+            } else {
+                if (App.isVip(mContext)){
+                    viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
+                    viewHolder.coupon.setVisibility(View.GONE);
+                }else {
+                    viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+                    viewHolder.coupon.setVisibility(View.VISIBLE);
+                }
             }
         }
         viewHolder.itemChapter.setOnClickListener(new View.OnClickListener() {

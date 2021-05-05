@@ -23,6 +23,7 @@ import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.TopActivity;
 import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
 import com.heiheilianzai.app.ui.activity.TopYearComicActivity;
@@ -293,7 +294,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     private void initRecommend(RecyclerView recyclerView, List<HomeRecommendBean.RecommeListBean> recomme_list) {
-        recyclerView.setLayoutManager(new GridLayoutManager(activity,5));
+        recyclerView.setLayoutManager(new GridLayoutManager(activity, 5));
         HomeRecommendAdapter homeRecommendAdapter = new HomeRecommendAdapter(activity, recomme_list);
         recyclerView.setAdapter(homeRecommendAdapter);
         homeRecommendAdapter.setOnItemRecommendListener(new HomeRecommendAdapter.OnItemRecommendListener() {
@@ -342,6 +343,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     activity.startActivity(new Intent(activity, TopYearBookActivity.class));
                 } else if (jump_type == 8) {
                     activity.startActivity(new Intent(activity, TopYearComicActivity.class));
+                } else if (jump_type == 9) {
+                    activity.startActivity(new Intent(activity, MyShareActivity.class));
                 }
             }
         });

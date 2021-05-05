@@ -130,12 +130,14 @@ public class DialogComicChapter {
                             JSONObject jsonObject = new JSONObject(result);
                             JsonParser jsonParser = new JsonParser();
                             mTotalPage = jsonObject.getInt("total_page");
+                            String is_limited_free = jsonObject.getString("is_limited_free");
                             JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
                             if (mPageNum == 1) {
                                 comicChapterCatalogs.clear();
                             }
                             for (JsonElement jsonElement : jsonElements) {
                                 ComicChapter comicChapter = gson.fromJson(jsonElement, ComicChapter.class);
+                                comicChapter.setIs_limited_free(is_limited_free);
                                 comicChapter.comic_id = comic_id;
 
                                 if (App.isVip(activity)) {

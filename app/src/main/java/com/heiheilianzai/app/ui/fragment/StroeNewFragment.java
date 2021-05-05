@@ -248,6 +248,11 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 mFloatImg.setVisibility(View.GONE);
                 return; //小于一天不进行展示
             }
+            //内置应用且已签到不显示
+            if (TextUtils.equals(mFloatMainBean.getUrl_type(), "3") && mFloatMainBean.getToday_sign_status() == 1) {
+                mFloatImg.setVisibility(View.GONE);
+                return;
+            }
             mFloatImg.setVisibility(View.VISIBLE);
             String icon_img = mFloatMainBean.getIcon_img();
             if (!TextUtils.isEmpty(icon_img)) {

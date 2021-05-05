@@ -151,6 +151,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray chapterListArr = jsonObject.getJSONArray("chapter_list");
             initTitleBarView(jsonObject.getString("name"));
+            String is_limited_free = jsonObject.getString("is_limited_free");
             coupon_pay_price = jsonObject.getString("coupon_pay_price");
             int size = chapterListArr.length();
             for (int i = 0; i < size; i++) {
@@ -163,6 +164,7 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                 chapterItem1.setIs_vip(jsonObject1.getString("is_vip"));
                 chapterItem1.setChapter_title(jsonObject1.getString("chapter_title"));
                 chapterItem1.setChapter_id(jsonObject1.getString("chapter_id"));
+                chapterItem1.setIs_limited_free(is_limited_free);
                 chapterItem1.setIs_book_coupon_pay(jsonObject1.getString("is_book_coupon_pay"));
                 mItemList.add(chapterItem1);
             }

@@ -77,6 +77,10 @@ public class BookConfig {
      */
     public static final String mSearchUrl =  "/book/search";
 
+    /**
+     * 上次小说热词
+     */
+    public static final String mUpBookWord =  "/book/add-hotwords";
 
     public static final String mDiscoveryUrl =  "/book/new-featured";
 

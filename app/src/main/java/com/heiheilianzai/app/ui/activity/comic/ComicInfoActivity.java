@@ -567,11 +567,13 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     JSONObject jsonObject = new JSONObject(result);
                     JsonParser jsonParser = new JsonParser();
                     String coupon_pay_price = jsonObject.getString("coupon_pay_price");
+                    String is_limited_free = jsonObject.getString("is_limited_free");
                     AppPrefs.putSharedString(activity, PrefConst.COUPON_COMICI_PRICE, coupon_pay_price);
                     mTotalPage = jsonObject.getInt("total_page");
                     JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
                     for (JsonElement jsonElement : jsonElements) {
                         ComicChapter comicChapter1 = new Gson().fromJson(jsonElement, ComicChapter.class);
+                        comicChapter1.setIs_limited_free(is_limited_free);
                         if (comicChapter1.getAd_image() == null) {
                             comicChapter.add(comicChapter1);
                         }
