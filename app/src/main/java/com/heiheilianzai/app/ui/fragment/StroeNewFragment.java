@@ -152,7 +152,11 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                             }
                         }
                         mFloatImg.setVisibility(View.GONE);
-                        ShareUitls.putRecommendAppTime(activity, "floatTime", DateUtils.currentTime());
+                        if (getProduct()) {
+                            ShareUitls.putRecommendAppTime(activity, "floatTimeBook", DateUtils.currentTime());
+                        } else {
+                            ShareUitls.putRecommendAppTime(activity, "floatTimeComic", DateUtils.currentTime());
+                        }
                     }
                 }
                 break;
@@ -197,7 +201,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             layoutParams.height = ImageUtil.dp2px(activity, 90);
             fragment_newbookself_top.setLayoutParams(layoutParams);
         }
-        getFloat(activity);
+        getFloat(activity, getProduct());
         showIsGiftPoint();
         try {
             initOption();
@@ -222,13 +226,18 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         transaction.add(R.id.fragment_store_fragment, fragment).commit();
     }
 
-    private void getFloat(Activity activity) {
+    private void getFloat(Activity activity, boolean product) {
         ReaderParams params = new ReaderParams(activity);
+        if (product) {
+            params.putExtraParams("window_type", "1");
+        } else {
+            params.putExtraParams("window_type", "2");
+        }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mHomeFloat, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        showFloat(result);
+                        showFloat(result, product);
                     }
 
                     @Override
@@ -238,10 +247,16 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         );
     }
 
-    private void showFloat(String result) {
+    private void showFloat(String result, boolean product) {
         try {
             mFloatMainBean = new Gson().fromJson(result, FloatMainBean.class);
-            long floatTime = ShareUitls.getRecommendAppTime(activity, "floatTime", 0);
+            long floatTime;
+            if (product) {
+                floatTime = ShareUitls.getRecommendAppTime(activity, "floatTimeBook", 0);
+            } else {
+                floatTime = ShareUitls.getRecommendAppTime(activity, "floatTimeComic", 0);
+            }
+
             long currentTimeDifferenceSecond = DateUtils.getCurrentTimeDifferenceSecond(floatTime);
             long expiredTime = currentTimeDifferenceSecond / 60 / 60;
             if (expiredTime <= 24) {
@@ -256,7 +271,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             mFloatImg.setVisibility(View.VISIBLE);
             String icon_img = mFloatMainBean.getIcon_img();
             if (!TextUtils.isEmpty(icon_img)) {
-                MyPicasso.GlideImageNoSize(activity, App.getBaseUrl() + icon_img, mFloatImg);
+                MyPicasso.GlideImageNoSize(activity, icon_img, mFloatImg);
             }
         } catch (Exception e) {
 
