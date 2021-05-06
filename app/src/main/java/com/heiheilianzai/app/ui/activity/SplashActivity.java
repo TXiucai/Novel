@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.github.dfqin.grantor.PermissionListener;
@@ -22,6 +23,7 @@ import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.H5UrlBean;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.UserInfoItem;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.ConcurrentUrlhelpterKt;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.FileManager;
@@ -47,13 +49,16 @@ import java.io.File;
 import androidx.annotation.NonNull;
 
 
+import butterknife.BindView;
+
 import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 
 /**
  * 开屏页
- *
  */
 public class SplashActivity extends BaseAdvertisementActivity {
+    @BindView(R.id.activity_splash_website)
+    public TextView mTxWebsite;
     public static final String OPEN_TIME_KAY = "open_time";//传参首页打开app时间戳KAY
     private String isfirst;
     private int reconnect_num = 0;
@@ -74,6 +79,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
         saAppLogin();//神策登录
         mOpenCurrentTime = DateUtils.currentTime();
         isfirst = ShareUitls.getString(activity, "isfirst", "yes");
+        showWebsite();
         compatibleOldUpdate();
         if (isfirst.equals("yes")) {//首次使用删除文件
             FileManager.deleteFile(FileManager.getSDCardRoot());
@@ -88,6 +94,21 @@ public class SplashActivity extends BaseAdvertisementActivity {
             public void onThirdCError() {
                 checkHost();
             }
+        });
+    }
+
+    private void showWebsite() {
+        String website = ShareUitls.getString(activity, "website", "");
+        if (!StringUtils.isEmpty(website)) {
+            mTxWebsite.setVisibility(View.VISIBLE);
+            mTxWebsite.setText(String.format(getString(R.string.splash_website), website));
+        } else {
+            mTxWebsite.setVisibility(View.GONE);
+        }
+        mTxWebsite.setOnClickListener(v -> {
+            startActivity(new Intent(activity, AboutActivity.class).
+                    putExtra("url", website)
+                    .putExtra("style", "4"));
         });
     }
 
@@ -113,12 +134,12 @@ public class SplashActivity extends BaseAdvertisementActivity {
     private void getDomainHost() {
         ReaderParams params = new ReaderParams(activity);
         String json = params.generateParamsJson();
-        String url =ReaderConfig.getBaseUrl() + AppConfig.SERVER_DYNAMIC_DOMAIN;
+        String url = ReaderConfig.getBaseUrl() + AppConfig.SERVER_DYNAMIC_DOMAIN;
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
             @Override
             public void onResponse(String response) throws JSONException {
                 ApiDomainBean apiDomainBean = new Gson().fromJson(response, ApiDomainBean.class);
-                ShareUitls.putDominString(activity,"Donmain",new Gson().toJson(apiDomainBean.getApi_domins()));
+                ShareUitls.putDominString(activity, "Donmain", new Gson().toJson(apiDomainBean.getApi_domins()));
             }
 
             @Override
@@ -175,6 +196,9 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 try {
                     if (response.length() != 0) {
                         AppUpdate dataBean = new Gson().fromJson(response, AppUpdate.class);
+                        if (!StringUtils.isEmpty(dataBean.getWebsite_android())) {
+                            ShareUitls.putString(SplashActivity.this, "website", dataBean.getWebsite_android());
+                        }
                         if (dataBean.getUnit_tag() != null) {
                             ReaderConfig.currencyUnit = dataBean.getUnit_tag().getCurrencyUnit();
                             ReaderConfig.subUnit = dataBean.getUnit_tag().getSubUnit();
