@@ -503,4 +503,12 @@
     <string name="share_url">有声爽文H漫，连载不断 复制链接在浏览器中打开下载！%s）</string>
     <string name="loading_tittle">主人别急，奴家马上就来了....</string>
     <string name="splash_website">官方网址：%s</string>
+    <string name="string_coupon_description">书券说明</string>
+    <string name="string_coupon">书券</string>
+    <string name="string_coupon_my">我的书券</string>
+    <string name="string_coupon_accept">获取记录</string>
+    <string name="string_coupon_use">使用记录</string>
+    <string name="string_coupon_day">近七天</string>
+    <string name="string_coupon_month">一个月</string>
+    <string name="string_coupon_all">全部</string>
 </resources>

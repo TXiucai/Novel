@@ -272,18 +272,24 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     private void initAnounce() {
         if (luobo_notice != null) {
-            fragment_mine_marquee.setText(luobo_notice.getContent());
-            fragment_mine_marquee.startScroll();
-            fragment_mine_marquee.invalidate();
-            fragment_mine_marquee.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(activity, AnnounceActivity.class);
-                    intent.putExtra("announce_content", luobo_notice.getTitle() + "/-/" + luobo_notice.getContent());
-                    startActivity(intent);
-                }
-            });
-            fragment_mine_announce_layout.setVisibility(View.VISIBLE);
+            final String content = luobo_notice.getContent();
+            if (content != null && !StringUtils.isEmpty(content)) {
+                fragment_mine_marquee.setText(content);
+                fragment_mine_marquee.startScroll();
+                fragment_mine_marquee.invalidate();
+                fragment_mine_marquee.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(activity, AnnounceActivity.class);
+                        intent.putExtra("announce_content", luobo_notice.getTitle() + "/-/" + content);
+                        startActivity(intent);
+                    }
+                });
+                fragment_mine_announce_layout.setVisibility(View.VISIBLE);
+            } else {
+                fragment_mine_announce_layout.setVisibility(View.GONE);
+            }
+
         } else {
             fragment_mine_announce_layout.setVisibility(View.GONE);
         }

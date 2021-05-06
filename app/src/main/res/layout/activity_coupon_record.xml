@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main_vitualkey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_250dp"
+        android:background="@mipmap/coupon_list_bg"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dimens_25dp">
+
+        <RelativeLayout
+            android:id="@+id/book_info_titlebar_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_centerInParent="true"
+            android:paddingRight="@dimen/dimens_10dp">
+
+            <LinearLayout
+                android:id="@+id/titlebar_back"
+                android:layout_width="@dimen/dimens_80dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginBottom="1dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimens_15dp">
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="@dimen/dimens_20dp"
+                    android:layout_height="@dimen/dimens_20dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/back_white" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical"
+                android:text="@string/string_coupon"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/activity_coupon_description"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical"
+                android:text="@string/string_coupon_description"
+                android:textColor="@color/color_b57979"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_40"
+            android:text="@string/string_coupon_my"
+            android:textColor="@color/color_b57979"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/activity_coupon_my"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:text="@string/string_coupon_my"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_50dp"
+        android:layout_marginTop="-15dp"
+        android:background="@drawable/shape_comicinfo_bg2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/activity_coupon_accept"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/activity_coupon_accept_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
+                    android:text="@string/string_coupon_accept"
+                    android:textColor="@color/color_1a1a1a"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/activity_coupon_accept_view"
+                    android:layout_width="@dimen/dimens_32dp"
+                    android:layout_height="@dimen/dimens_3dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/shape_comicinfo_shoucang" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_coupon_use"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/activity_coupon_use_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
+                    android:text="@string/string_coupon_use"
+                    android:textColor="@color/color_666666"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/activity_coupon_use_view"
+                    android:layout_width="@dimen/dimens_32dp"
+                    android:layout_height="@dimen/dimens_3dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/shape_comicinfo_shoucang"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_1dp"
+            android:background="@color/color_dfdfdf" />
+    </RelativeLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/fragment_comicinfo_viewpage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
+
+</LinearLayout>
