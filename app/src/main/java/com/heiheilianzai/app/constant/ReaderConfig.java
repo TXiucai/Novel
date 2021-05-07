@@ -384,6 +384,21 @@ public class ReaderConfig {
     public static final String mUpAll = "/user/post-feedback";
 
     /**
+     * 书券获取记录
+     */
+    public static final String COUPON_ACCEPT = "/user/shuquan-gethistory";
+
+    /**
+     * 书券消费
+     */
+    public static final String COUPON_USE = "/user/shuquan-usehistory";
+
+    /**
+     * 书券说明
+     */
+    public static final String COUPON_DESCRIPTION= "/user/book-description";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

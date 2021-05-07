@@ -29,6 +29,7 @@ import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
+import com.heiheilianzai.app.ui.activity.CouponRecordActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
@@ -390,7 +391,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_rechargenotes2":
-                    intent.setClass(activity, BaseOptionActivity.class).putExtra("title", LanguageUtil.getString(activity, R.string.liushuijilu_title)).putExtra("OPTION", LIUSHUIJIELU).putExtra("Extra", true);
+                    intent.setClass(activity, CouponRecordActivity.class).putExtra("COUPON", mUserInfo.getSilverRemain() + "");
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_tasklayout_layout":

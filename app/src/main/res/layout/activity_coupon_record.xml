@@ -78,7 +78,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimens_5dp"
-            android:text="@string/string_coupon_my"
             android:textColor="@color/white"
             android:textSize="36sp" />
     </LinearLayout>
@@ -152,11 +151,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_1dp"
+            android:layout_alignParentBottom="true"
             android:background="@color/color_dfdfdf" />
     </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/fragment_comicinfo_viewpage"
+        android:id="@+id/activity_coupon_vp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white" />

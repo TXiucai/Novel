@@ -301,6 +301,9 @@
         <activity
             android:name=".ui.activity.ShareRecordActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CouponRecordActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
