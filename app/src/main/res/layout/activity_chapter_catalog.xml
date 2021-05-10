@@ -4,24 +4,20 @@
     android:id="@+id/activity_main_vitualkey"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-    >
 
-    <include layout="@layout/common_titlebar_order"/>
-
-    <ListView
-        android:id="@+id/activity_chapter_catalog_listview"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-                android:divider="@color/gray2"
-        android:dividerHeight="0.5dp"
-        android:listSelector="@drawable/selector_listview_item"/>
+        android:orientation="vertical">
 
+        <include layout="@layout/common_titlebar_order" />
 
-</LinearLayout>
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/activity_chapter_catalog_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" />
+
+    </LinearLayout>
 </RelativeLayout>

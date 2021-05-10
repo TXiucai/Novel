@@ -52,7 +52,7 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ViewHolderChapter viewHolder= (ViewHolderChapter) holder;
+        ViewHolderChapter viewHolder = (ViewHolderChapter) holder;
         ChapterItem chapterItem = mList.get(position);
         if (chapterItem.getChapter_id().equals(current_chapter_id)) {
             viewHolder.title.setTextColor(mContext.getResources().getColor(R.color.color_ff8350));
@@ -60,33 +60,55 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.title.setTextColor(Color.BLACK);
         }
         viewHolder.title.setText(chapterItem.getChapter_title());
+        viewHolder.coupon.setText(coupon_pay_price + mContext.getResources().getString(R.string.coupon_open));
         if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
             viewHolder.vip.setBackgroundResource(R.mipmap.limited_free);
             viewHolder.coupon.setVisibility(View.GONE);
-        }else {
-            if (!StringUtils.isEmpty(chapterItem.getIs_book_coupon_pay()) && TextUtils.equals(chapterItem.getIs_book_coupon_pay(),"1")) {
-                viewHolder.coupon.setVisibility(View.VISIBLE);
-                viewHolder.coupon.setText(coupon_pay_price+mContext.getResources().getString(R.string.coupon_open));
-            } else {
-                viewHolder.coupon.setVisibility(View.GONE);
-            }
-            if (!StringUtils.isEmpty(chapterItem.getIs_vip()) && TextUtils.equals(chapterItem.getIs_vip(),"0")) {//免费
-                viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
-            } else {
-                if (App.isVip(mContext)){
+        } else {
+            if (App.isVip(mContext)) {
+                if (TextUtils.equals(chapterItem.getIs_vip(), "1") || TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1")) {
                     viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
                     viewHolder.coupon.setVisibility(View.GONE);
-                }else {
-                    viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
-                    viewHolder.coupon.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
+                    viewHolder.coupon.setVisibility(View.GONE);
                 }
+            } else {
+                if (TextUtils.equals(chapterItem.getIs_vip(), "0")) {
+                    if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "0")) {
+                        viewHolder.vip.setBackgroundResource(R.mipmap.category_free);
+                        viewHolder.coupon.setVisibility(View.GONE);
+                    } else {
+                        if (chapterItem.isIs_buy_status()) {
+                            viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
+                            viewHolder.coupon.setVisibility(View.VISIBLE);
+                        } else {
+                            viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+                            viewHolder.coupon.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else {
+                    if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1")) {
+                        if (chapterItem.isIs_buy_status()) {
+                            viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
+                            viewHolder.coupon.setVisibility(View.VISIBLE);
+                        } else {
+                            viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+                            viewHolder.coupon.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
+                        viewHolder.coupon.setVisibility(View.VISIBLE);
+                    }
+                }
+
             }
         }
         viewHolder.itemChapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onChapterListener!=null){
-                    onChapterListener.onChapterSelect(chapterItem,position);
+                if (onChapterListener != null) {
+                    onChapterListener.onChapterSelect(chapterItem, position);
                 }
             }
         });
@@ -97,7 +119,7 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mList.size();
     }
 
-    class ViewHolderChapter extends RecyclerView.ViewHolder{
+    class ViewHolderChapter extends RecyclerView.ViewHolder {
         @BindView(R.id.item_chapter_catalog_title)
         TextView title;
         @BindView(R.id.item_chapter_catalog_vip)
@@ -106,12 +128,14 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView coupon;
         @BindView(R.id.item_chapter)
         LinearLayout itemChapter;
+
         public ViewHolderChapter(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
-    public interface OnChapterListener{
-        void onChapterSelect(ChapterItem chapterItem,int position);
+
+    public interface OnChapterListener {
+        void onChapterSelect(ChapterItem chapterItem, int position);
     }
 }
