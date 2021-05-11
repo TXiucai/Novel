@@ -4,19 +4,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/activity_taskcenter_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:divider="@color/lightgray2"
+        android:dividerHeight="0.3dp" />
 
-        <include layout="@layout/common_titlebar" />
+    <RelativeLayout
+        android:id="@+id/book_info_titlebar_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_50dp"
+        android:layout_marginTop="@dimen/dimens_25dp">
 
-
-        <ListView
-            android:id="@+id/activity_taskcenter_listview"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/titlebar_back"
+            android:layout_width="@dimen/dimens_80dp"
             android:layout_height="match_parent"
-            android:divider="@color/lightgray2"
-            android:dividerHeight="0.3dp" />
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_10">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:background="@mipmap/back_white" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/titlebar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/titlebar_right"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:id="@+id/titlebar_right_img"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

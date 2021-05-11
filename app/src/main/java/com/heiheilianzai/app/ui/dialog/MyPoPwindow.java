@@ -1,6 +1,9 @@
 package com.heiheilianzai.app.ui.dialog;
 
 import android.app.Activity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,15 +64,20 @@ public class MyPoPwindow {
             popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
             if (size == 0) {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holderSign.popwindow_sign_layout.getLayoutParams();
-                layoutParams.height = ImageUtil.dp2px(activity, 223);
+                layoutParams.height = ImageUtil.dp2px(activity, 283);
                 layoutParams.width = ImageUtil.dp2px(activity, 160);
                 holderSign.popwindow_sign_layout.setLayoutParams(layoutParams);
             } else {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holderSign.popwindow_sign_layout.getLayoutParams();
-                layoutParams.height = ImageUtil.dp2px(activity, 300);
+                layoutParams.height = ImageUtil.dp2px(activity, 360);
                 layoutParams.width = ImageUtil.dp2px(activity, 260);
                 holderSign.popwindow_sign_layout.setLayoutParams(layoutParams);
             }
+            SpannableString spannableString = new SpannableString(activity.getResources().getString(R.string.SigninActivity_no));
+            UnderlineSpan underlineSpan = new UnderlineSpan();
+            spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holderSign.popwindow_sign_no.setText(spannableString);
+            spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             holderSign.popwindow_sign_golds.setText(signinSuccess.getAward());
             holderSign.popwindow_sign_golds_tomorrow.setText(signinSuccess.getTomorrow_award());
             if (signBookList != null) {

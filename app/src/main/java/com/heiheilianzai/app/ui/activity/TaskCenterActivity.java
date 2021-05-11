@@ -2,6 +2,8 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.TaskCenterAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
+import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -30,10 +33,15 @@ import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.view.AndroidWorkaround;
+import com.jaeger.library.StatusBarUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +50,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
+
 /**
  * 任务中心
  * Created by abc on 2016/11/4.
  */
-public class TaskCenterActivity extends BaseButterKnifeActivity {
+public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
     @BindView(R.id.titlebar_back)
     public LinearLayout titlebar_back;
     @BindView(R.id.titlebar_text)
@@ -61,6 +71,8 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
     public Holder holder;
     List<TaskCenter.TaskCenter2.Taskcenter> task_list = new ArrayList();
     TaskCenter taskCenter;
+    private List<String> mCouponLists = new ArrayList<>();
+    public Activity activity;
 
     @Override
     public int initContentView() {
@@ -70,10 +82,13 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {//适配华为手机虚拟键遮挡tab的问题
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
+        }
+        setStatusTextColor(false, activity);
         EventBus.getDefault().register(this);
         titlebar_text.setText(LanguageUtil.getString(activity, R.string.TaskCenterActivity_titl));
-        titlebar_right.setVisibility(View.VISIBLE);
-        titlebar_right_img.setBackgroundResource(R.mipmap.task_guide);
         View view = LayoutInflater.from(this).inflate(R.layout.listview_item_taskcenter_head_new, null);
         holder = new Holder(view);
         activity_taskcenter_listview.addHeaderView(view, null, false);
@@ -213,6 +228,7 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.taskcenter, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
+                        initSignData(result);
                         TaskCenter taskCenter = new Gson().fromJson(result, TaskCenter.class);
                         setData(taskCenter);
                     }
@@ -222,6 +238,22 @@ public class TaskCenterActivity extends BaseButterKnifeActivity {
                     }
                 }
         );
+    }
+
+    private void initSignData(String result) {
+        try {
+            mCouponLists.clear();
+            JSONObject jsonObject = new JSONObject(result);
+            JSONObject sign_info = jsonObject.getJSONObject("sign_info");
+            JSONArray sign_day_score_list = sign_info.getJSONArray("sign_day_score_list");
+            for (int i = 0; i < 7; i++) {
+                String temp = "day_" + (i + 1);
+                String coupon = sign_day_score_list.getJSONObject(i).getString(temp);
+                mCouponLists.add("+" + coupon);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setData(TaskCenter taskCenter) {

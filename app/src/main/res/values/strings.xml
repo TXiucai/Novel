@@ -232,7 +232,7 @@
     <!--签到-->
     <string name="SigninActivity_title">签到</string>
     <string name="SigninActivity_dengluqiandao">登录后才能签到哦</string>
-    <string name="SigninActivity_no">不用了</string>
+    <string name="SigninActivity_no">不用了,谢谢</string>
     <string name="SigninActivity_yes">全部加入书架</string>
     <string name="SigninActivity_rule">签到规则</string>
 
