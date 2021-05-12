@@ -2,13 +2,10 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -17,7 +14,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.TaskCenterAdapter;
-import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -34,7 +30,7 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
-import com.jaeger.library.StatusBarUtil;
+import com.heiheilianzai.app.view.StepView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -162,10 +158,10 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
     }
 
     public class Holder {
-        @BindView(R.id.activity_taskcenter_lianxuday)
-        public TextView activity_taskcenter_lianxuday;
+        @BindView(R.id.activity_task_sign_view)
+        public StepView mStepView;
         @BindView(R.id.activity_taskcenter_sign)
-        public ImageView activity_taskcenter_sign;
+        public TextView activity_taskcenter_sign;
         @BindView(R.id.activity_taskcenter_getshuquan)
         public TextView activity_taskcenter_getshuquan;
         @BindView(R.id.rl_task_invite)
@@ -207,9 +203,9 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                         @Override
                         public void onResponse(final String result) {
                             sign_info.sign_status = 1;
-                            holder.activity_taskcenter_sign.setImageResource(R.mipmap.icon_sign);
+                            signTextChage();
+                            holder.mStepView.setStepNum(mCouponLists, sign_info.sign_days + 1);
                             ShareUitls.putString(activity, "sign_pop", result);
-                            holder.activity_taskcenter_lianxuday.setText(sign_info.sign_days + 1 + "");
                             new MyPoPwindow().getSignPop(activity);
                             EventBus.getDefault().post(new RefreshMine(null));
                         }
@@ -219,6 +215,19 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                         }
                     }
             );
+        }
+    }
+
+    private void signTextChage() {
+        if (sign_info.sign_status == 1) {
+            holder.activity_taskcenter_sign.setText(getString(R.string.string_sign));
+            holder.activity_taskcenter_sign.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+            holder.activity_taskcenter_sign.setTextColor(getResources().getColor(R.color.color_9a9a9a));
+            holder.activity_taskcenter_sign.setClickable(false);
+        } else {
+            holder.activity_taskcenter_sign.setText(getString(R.string.string_un_sign));
+            holder.activity_taskcenter_sign.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+            holder.activity_taskcenter_sign.setTextColor(getResources().getColor(R.color.white));
         }
     }
 
@@ -260,13 +269,13 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
         this.taskCenter = taskCenter;
         if (taskCenter != null) {
             sign_info = taskCenter.sign_info;
-            if (sign_info.sign_status == 1) {
-                holder.activity_taskcenter_sign.setImageResource(R.mipmap.icon_sign);
-            } else {
-                holder.activity_taskcenter_sign.setImageResource(R.mipmap.icon_unsign);
+            signTextChage();
+            String rules = "";
+            for (int i = 0; i < sign_info.sign_rules.length; i++) {
+                rules = rules + "\n" + sign_info.sign_rules[i];
             }
-            holder.activity_taskcenter_lianxuday.setText(sign_info.sign_days + "");
-            holder.activity_taskcenter_getshuquan.setText(sign_info.max_award + "" + sign_info.unit);
+            holder.activity_taskcenter_getshuquan.setText(String.format(rules));
+            holder.mStepView.setStepNum(mCouponLists, sign_info.sign_days);
             task_list.addAll(taskCenter.getTask_menu().get(0).getTask_list());
             task_list.addAll(taskCenter.getTask_menu().get(1).getTask_list());
             TaskCenterAdapter taskCenterAdapter = new TaskCenterAdapter(task_list, this, taskCenter.getTask_menu().get(0).getTask_list().size(), taskCenter.getTask_menu().get(0).getTask_title(), taskCenter.getTask_menu().get(1).getTask_title());
