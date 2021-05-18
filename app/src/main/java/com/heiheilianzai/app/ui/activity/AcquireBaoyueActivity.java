@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.ui.activity;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +43,8 @@ import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DialogErrorVip;
+import com.heiheilianzai.app.utils.DialogVipComfirm;
+import com.heiheilianzai.app.utils.DialogVipOrderError;
 import com.heiheilianzai.app.utils.DialogWakeVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -169,9 +170,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     String nickName = userObj.getString("nickname");
                     String is_vip = userObj.getString("is_vip");
                     activity_acquire_avatar_isvip.setVisibility(View.VISIBLE);
-                    if (TextUtils.equals(is_vip,"1")){
+                    if (TextUtils.equals(is_vip, "1")) {
                         activity_acquire_avatar_isvip.setImageResource(R.mipmap.icon_isvip);
-                    }else {
+                    } else {
                         activity_acquire_avatar_isvip.setImageResource(R.mipmap.icon_novip);
                     }
                     activity_acquire_avatar_name.setText(nickName);
@@ -291,6 +292,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
 
                         @Override
                         public void onErrorResponse(String ex) {
+                            DialogVipOrderError dialogVipOrderError = new DialogVipOrderError();
+                            dialogVipOrderError.getDialogVipPop(AcquireBaoyueActivity.this);
+                            dialogVipOrderError.setmOnRepeatListener(() -> pay(selectAcquirePayItem));
                         }
                     }
             );
@@ -359,17 +363,10 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
      */
     private void showPayFinishDialog() {
         EventBus.getDefault().post(new CreateVipPayOuderEvent());
-        GetDialog.IsOperationPositiveNegative(AcquireBaoyueActivity.this, getString(R.string.PayActivity_order_remind), "", getString(R.string.MineNewFragment_lianxikefu), new GetDialog.IsOperationInterface() {
-            @Override
-            public void isOperation() {
-            }
-        }, new GetDialog.IsNegativeInterface() {
-
-            @Override
-            public void isNegative() {
-                skipKeFuOnline();
-            }
-        }, true, true);
+        DialogVipComfirm dialogVipComfirm = new DialogVipComfirm();
+        dialogVipComfirm.getDialogVipPop(this);
+        dialogVipComfirm.setmOnOpenKefuListener(() -> skipKeFuOnline());
+        dialogVipComfirm.setmOnRepeatListener(() -> pay(selectAcquirePayItem));
     }
 
     /**

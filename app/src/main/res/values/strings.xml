@@ -514,4 +514,9 @@
     <string name="string_coupon_no_result">书签流水仅可查询进三个月内的获取与使用记录，请见谅。</string>
     <string name="string_un_sign">点击签到</string>
     <string name="string_sign">已签到</string>
+    <string name="dialog_vip_comfirm_tittle">充值确认中...</string>
+    <string name="string_dialog_comfirm_tip">若在30分钟内未到账，请联系客服查询</string>
+    <string name="string_yes">好的</string>
+    <string name="dialog_vip_order_error">由于某些原因无法唤起支付，请重试</string>
+    <string name="dialog_vip_repeat">重试</string>
 </resources>

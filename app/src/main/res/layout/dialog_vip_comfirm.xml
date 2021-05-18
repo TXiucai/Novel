@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:ignore="NamespaceTypo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimens_15dp"
+        android:background="@drawable/shape_ffffff_20"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dimens_15dp"
+        android:paddingRight="@dimen/dimens_15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:gravity="center"
+            android:text="@string/dialog_vip_comfirm_tittle"
+            android:textColor="@color/color_35363b"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_22dp"
+            android:gravity="center"
+            android:text="@string/string_dialog_comfirm_tip"
+            android:textColor="@color/color_444444"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dialog_yes"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_32dp"
+            android:layout_marginTop="@dimen/dimens_22dp"
+            android:background="@drawable/shape_update_blue"
+            android:gravity="center"
+            android:text="@string/string_yes"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/dialog_kefu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:text="@string/MineNewFragment_lianxikefu"
+            android:textColor="@color/color_196cf2"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/dialog_repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_22dp"
+            android:layout_marginBottom="@dimen/dimens_26dp"
+            android:text="@string/vip_error"
+            android:textColor="@color/color_196cf2"
+            android:textSize="12sp" />
+    </LinearLayout>
+</RelativeLayout>
