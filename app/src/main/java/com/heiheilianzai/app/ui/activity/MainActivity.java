@@ -50,9 +50,9 @@ import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
+import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
-import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -68,6 +68,7 @@ import com.heiheilianzai.app.ui.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.ui.fragment.MineNewFragment;
 import com.heiheilianzai.app.ui.fragment.book.StroeNewFragmentBook;
 import com.heiheilianzai.app.ui.fragment.comic.StroeNewFragmentComic;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.DialogExpirerdVip;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -309,6 +310,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     void setChangedView(int possition, boolean useDart) {
         setStatusTextColor(useDart, activity);
         IntentFragment(possition);
+        getVipPayOrder();
         if (homeBoYinFragment != null) {
             if (possition == 3) {
                 homeBoYinFragment.onMyResume();
@@ -317,6 +319,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             }
         }
     }
+
 
     /**
      * 记录退出前选择的位置再次进入还原
@@ -490,17 +493,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     /**
-     * 支付页面关闭接收该Event。
-     *
-     * @param toStore
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void createVipPayOuder(CreateVipPayOuderEvent toStore) {//支付Vip订单创建完成
-        send_number = 0;
-        getVipPayOuder();
-    }
-
-    /**
      * bannen 点击切换有声fragment
      *
      * @param skipToBoYinEvent
@@ -513,11 +505,16 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     /**
      * 由于现在支付跳转浏览器，没有回调可以告诉客户端用户已经支付成功。经过与产品协商使用下面方案：
      * 用户发起支付生成订单退出页面后，客户端通过拿订单信息，判断该订单有没有支付成功；
-     * 由于第三方支付成功后服务器还需要一个处理时间。客户端需要每30秒请求一次，最多请求4次；
-     * 4次之后就不再处理。如果其中有一次订单已支付成功，发送刷新个人中心Event。退出递归。
-     * status： 2支付成功  1待支付  3支付失败
+     * 由于第三方支付成功后服务器还需要一个处理时间。
+     * 发送刷新个人中心Event。退出递归。
+     * 切换tab，获取一次信息，如果未支付显示在小说漫画，成功则显示在mainactivity
+     * status： 2支付成功  1待支付
      */
-    public void getVipPayOuder() {
+    public void getVipPayOrder() {
+        boolean sharedBoolean = AppPrefs.getSharedBoolean(activity, PrefConst.ORDER, false);
+        if (!sharedBoolean) {
+            return;
+        }
         ReaderParams params = new ReaderParams(MainActivity.this);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(MainActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mPayLastOrder, json, false, new HttpUtils.ResponseListener() {
@@ -532,16 +529,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                                     MyToash.ToashSuccess(activity, "您的支付订单已处理哦~");
                                 }
                                 EventBus.getDefault().post(new RefreshMine(null));
-                            } else {
-                                send_number += 1;
-                                if (send_number < 4) {
-                                    Timer timer = new Timer();
-                                    timer.schedule(new TimerTask() {
-                                        public void run() {
-                                            getVipPayOuder();
-                                        }
-                                    }, 3000);
-                                }
+                            } else if (code == 1) {
+                                CreateVipPayOuderEvent createVipPayOuderEvent = new CreateVipPayOuderEvent();
+                                createVipPayOuderEvent.setCloseFlag(false);
+                                EventBus.getDefault().post(createVipPayOuderEvent);
                             }
 
                         } catch (Exception e) {

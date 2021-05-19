@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,33 +21,37 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.FloatMainBean;
+import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.StoreEvent;
-import com.heiheilianzai.app.ui.activity.LoginActivity;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.SearchActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.book.NewStoreBookFragment;
 import com.heiheilianzai.app.ui.fragment.comic.NewStoreComicFragment;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.REFRESH_HEIGHT;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
@@ -63,7 +69,13 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     @BindView(R.id.fragment_store_point)
     public ImageView mRedPointImg;
     @BindView(R.id.main_float_img)
-    ImageView mFloatImg;
+    public ImageView mFloatImg;
+    @BindView(R.id.fragment_order)
+    public RelativeLayout mRlOrder;
+    @BindView(R.id.fragment_order_go)
+    public TextView mTxOrderGo;
+    @BindView(R.id.fragment_order_close)
+    public ImageView mImgOrderClose;
     FragmentManager fragmentManager;
     public String hot_word[];
     int hot_word_size, hot_word_position;
@@ -114,7 +126,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         }
     }
 
-    @OnClick(value = {R.id.fragment_store_fili, R.id.fragment_store_search, R.id.main_float_img})
+    @OnClick(value = {R.id.fragment_store_fili, R.id.fragment_store_search, R.id.main_float_img, R.id.fragment_order_close, R.id.fragment_order_go})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.fragment_store_fili:
@@ -160,7 +172,24 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                     }
                 }
                 break;
+            case R.id.fragment_order_close:
+                closeVipOrder();
+                break;
+            case R.id.fragment_order_go:
+                closeVipOrder();
+                Intent intentVip = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                intentVip.putExtra("isvip", Utils.isLogin(activity));
+                startActivity(intentVip);
+                break;
         }
+    }
+
+    private void closeVipOrder() {
+        CreateVipPayOuderEvent createVipPayOuderEvent = new CreateVipPayOuderEvent();
+        createVipPayOuderEvent.setCloseFlag(true);
+        EventBus.getDefault().post(createVipPayOuderEvent);
+        mRlOrder.setVisibility(View.GONE);
+        AppPrefs.putSharedBoolean(activity, PrefConst.ORDER, false);
     }
 
     protected void setStoreSearchView(StoreEvent storeEvent) {
@@ -201,6 +230,10 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             layoutParams.height = ImageUtil.dp2px(activity, 90);
             fragment_newbookself_top.setLayoutParams(layoutParams);
         }
+        SpannableString spannableString = new SpannableString(activity.getResources().getString(R.string.string_order_go));
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        mTxOrderGo.setText(spannableString);
         getFloat(activity, getProduct());
         showIsGiftPoint();
         try {
@@ -224,6 +257,18 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         fragment = getProduct() ? new NewStoreBookFragment() : new NewStoreComicFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fragment_store_fragment, fragment).commit();
+    }
+
+    /**
+     * 未完成order显示在小说漫画页面
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showOrderUndeal(CreateVipPayOuderEvent createVipPayOuderEvent) {
+        if (!createVipPayOuderEvent.isCloseFlag()) {
+            mRlOrder.setVisibility(View.VISIBLE);
+        } else {
+            mRlOrder.setVisibility(View.GONE);
+        }
     }
 
     private void getFloat(Activity activity, boolean product) {

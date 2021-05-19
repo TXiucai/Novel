@@ -519,4 +519,7 @@
     <string name="string_yes">好的</string>
     <string name="dialog_vip_order_error">由于某些原因无法唤起支付，请重试</string>
     <string name="dialog_vip_repeat">重试</string>
+    <string name="string_order_create">订单生成中...</string>
+    <string name="string_ordeer_undeal">您有1笔订单尚未支付哦~</string>
+    <string name="string_order_go">前往</string>
 </resources>

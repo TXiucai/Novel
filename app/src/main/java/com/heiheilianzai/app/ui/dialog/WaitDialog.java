@@ -35,9 +35,23 @@ public class WaitDialog extends Dialog implements Serializable {
         waitDialog.setCanceledOnTouchOutside(false);
         waitDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         tv = waitDialog.findViewById(R.id.id_tv_loadingmsg);
-        AVLoadingIndicatorView avLoadingIndicatorView= waitDialog.findViewById(R.id.dialog_httping_AVLoadingIndicatorView);
+        AVLoadingIndicatorView avLoadingIndicatorView = waitDialog.findViewById(R.id.dialog_httping_AVLoadingIndicatorView);
         avLoadingIndicatorView.setIndicator(new BallSpinFadeLoaderIndicator());
         avLoadingIndicatorView.setVisibility(View.VISIBLE);
+    }
+
+    public WaitDialog(Context context, String isText) {
+        super(context);
+        if (waitDialog == null) {
+            waitDialog = new Dialog(context, R.style.updateapp);
+        }
+        waitDialog.setContentView(R.layout.dialog_httping);
+        waitDialog.setCanceledOnTouchOutside(false);
+        tv = waitDialog.findViewById(R.id.id_tv_loadingmsg);
+        AVLoadingIndicatorView avLoadingIndicatorView = waitDialog.findViewById(R.id.dialog_httping_AVLoadingIndicatorView);
+        avLoadingIndicatorView.setIndicator(new BallSpinFadeLoaderIndicator());
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
+        tv.setVisibility(View.VISIBLE);
     }
 
     public WaitDialog(Context context, boolean flag) {
@@ -53,7 +67,6 @@ public class WaitDialog extends Dialog implements Serializable {
         waitDialog.setCancelable(flag);
 
     }
-
 
 
     public void setMessage(String message) {
@@ -84,7 +97,7 @@ public class WaitDialog extends Dialog implements Serializable {
             } catch (Exception E) {
             }
         }
-        waitDialog=null;
+        waitDialog = null;
     }
 
     public void ShowDialog(boolean isShow) {

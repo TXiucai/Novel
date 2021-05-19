@@ -304,7 +304,7 @@ public class ReaderConfig {
     /**
      * 获取当期最新一条充值订单
      */
-    public static final String mPayLastOrder = "/pay/last-order";
+    public static final String mPayLastOrder = "/user/lastpay-order";
 
 
     public static final String payUrl = "/pay/common-pay";

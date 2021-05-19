@@ -5,30 +5,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@color/transparent">
+        android:background="@color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/dialog_httping_AVLoadingIndicatorView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_50dp"
             android:layout_centerInParent="true"
             android:visibility="gone"
             app:indicatorColor="@color/lightgray1"
             app:indicatorName="BallPulseIndicator" />
 
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/id_tv_loadingmsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="8.0dip"
-        android:textColor="#ffffff"
-        android:textSize="16.0dip"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/id_tv_loadingmsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </LinearLayout>
 </RelativeLayout>

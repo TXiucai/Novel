@@ -162,5 +162,6 @@
     <color name="color_eeeeee">#EEEEEE</color>
     <color name="color_196cf2">#196CF2</color>
     <color name="color_4b4242">#4B4242</color>
+    <color name="color_ff000000">#99000000</color>
     <!--色值定义END-->
 </resources>

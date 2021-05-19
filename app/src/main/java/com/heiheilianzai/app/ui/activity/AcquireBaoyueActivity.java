@@ -35,12 +35,12 @@ import com.heiheilianzai.app.model.AcquirePayItem;
 import com.heiheilianzai.app.model.AcquirePrivilegeItem;
 import com.heiheilianzai.app.model.PaymentWebBean;
 import com.heiheilianzai.app.model.WxPayBean;
-import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
+import com.heiheilianzai.app.ui.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DialogErrorVip;
 import com.heiheilianzai.app.utils.DialogVipComfirm;
@@ -110,6 +110,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private String mInternetIp;//用户IP
     private VipBaoyuePayAdapter vipBaoyuePayAdapter;
     private AcquirePayItem selectAcquirePayItem;
+    private WaitDialog mWaitDialog;
 
     @Override
     public int initContentView() {
@@ -270,6 +271,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
      * 获取支付渠道url,跳转支付Dialog
      */
     private void pay(AcquirePayItem item) {
+        initDialog();
+        mWaitDialog.setMessage(getString(R.string.string_order_create));
+        mWaitDialog.showDailog();
         if (Utils.isLogin(this)) {
             setVIPChoiceEvent(item.getGoods_id());
             ReaderParams params = new ReaderParams(this);
@@ -277,9 +281,12 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
             params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
             String json = params.generateParamsJson();
-            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, true, new HttpUtils.ResponseListener() {
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, false, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(final String result) {
+                            if (mWaitDialog != null) {
+                                mWaitDialog.dismissDialog();
+                            }
                             if (!cn.jmessage.support.qiniu.android.utils.StringUtils.isNullOrEmpty(result)) {
                                 try {
                                     JSONObject jsonObj = new JSONObject(result);
@@ -292,6 +299,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
 
                         @Override
                         public void onErrorResponse(String ex) {
+                            if (mWaitDialog != null) {
+                                mWaitDialog.dismissDialog();
+                            }
                             DialogVipOrderError dialogVipOrderError = new DialogVipOrderError();
                             dialogVipOrderError.getDialogVipPop(AcquireBaoyueActivity.this);
                             dialogVipOrderError.setmOnRepeatListener(() -> pay(selectAcquirePayItem));
@@ -301,6 +311,16 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         } else {
             MainHttpTask.getInstance().Gotologin(this);
         }
+    }
+
+
+    private void initDialog() {
+        if (mWaitDialog != null) {
+            mWaitDialog.dismissDialog();
+        }
+        mWaitDialog = null;
+        mWaitDialog = new WaitDialog(AcquireBaoyueActivity.this, "");
+        mWaitDialog.setCancleable(true);
     }
 
     /**
@@ -362,7 +382,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
      * 完成支付订单，关闭支付Dialog后显示该提示弹框 根据订单刷新用户信息
      */
     private void showPayFinishDialog() {
-        EventBus.getDefault().post(new CreateVipPayOuderEvent());
+        AppPrefs.putSharedBoolean(AcquireBaoyueActivity.this, PrefConst.ORDER, true);
         DialogVipComfirm dialogVipComfirm = new DialogVipComfirm();
         dialogVipComfirm.getDialogVipPop(this);
         dialogVipComfirm.setmOnOpenKefuListener(() -> skipKeFuOnline());

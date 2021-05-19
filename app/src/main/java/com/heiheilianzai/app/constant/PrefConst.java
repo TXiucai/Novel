@@ -33,6 +33,10 @@ public class PrefConst {
      */
     public static final String COUPON = "coupon";
     /**
+     * 订单
+     */
+    public static final String ORDER = "order";
+    /**
      * 书卷单章价格
      */
     public static final String COUPON_PRICE = "coupon_pay_price";
