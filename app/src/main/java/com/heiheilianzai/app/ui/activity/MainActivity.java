@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -137,10 +139,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     HomeBoYinFragment homeBoYinFragment;
     DiscoveryNewFragment discoveryFragment;
     MineNewFragment mineFragment;
-    int send_number;//记录请求支付订单的次数
     Controller controller;
     boolean loadYouSheng;
     private List<HomeNotice> mHomeNotice;
+    private boolean mIsShowTwoNotice = true;
 
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
@@ -413,7 +415,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             }.getType());
                             if (noticeList != null && noticeList.size() > 0) {
                                 mHomeNotice = noticeList;
-                                showHomeNotice(noticeList.get(0));
+                                showHomeOneNotice(noticeList.get(0));
                             }
                         } catch (Exception e) {
                             MyToash.LogE("noticelist", e.getMessage());
@@ -432,11 +434,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      *
      * @param homeNotice
      */
-    public void showHomeNotice(HomeNotice homeNotice) {
+    public void showHomeOneNotice(HomeNotice homeNotice) {
         if ("0".equals(homeNotice.os_type) || "2".equals(homeNotice.os_type)) {//0、所有，1、IOS，2、Android
             View view = this.getWindow().getDecorView();
             if (view != null) {
-                HomeNoticeDialog.showDialog(MainActivity.this, view, homeNotice);
+                if (TextUtils.equals(homeNotice.getAnnoun_type(), "1")) {
+                    HomeNoticeDialog.showDialog(MainActivity.this, view, homeNotice);
+                } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
+                    HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
+                }
             }
         }
     }
@@ -444,12 +450,20 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     /**
      * 显示首页公告弹框图片
      */
-    public void showHomeNoticePhoto() {
+    public void showHomeTwoNotice() {
         View view = this.getWindow().getDecorView();
-        if (mHomeNotice.size() >= 2) {
+        if (mHomeNotice.size() >= 2 && mIsShowTwoNotice) {
             HomeNotice homeNotice = mHomeNotice.get(1);
-            if (("0".equals(homeNotice.os_type) || "2".equals(homeNotice.os_type)) && homeNotice.getAnnoun_type().equals("3")) {//0、所有，1、IOS，2、Android
-                HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
+            if (("0".equals(homeNotice.os_type) || "2".equals(homeNotice.os_type))) {//0、所有，1、IOS，2、Android
+                if (view != null) {
+                    if (TextUtils.equals(homeNotice.getAnnoun_type(), "1")) {
+                        HomeNoticeDialog.showDialog(MainActivity.this, view, homeNotice);
+                        mIsShowTwoNotice = false;
+                    } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
+                        HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
+                        mIsShowTwoNotice = false;
+                    }
+                }
             }
         }
     }
@@ -464,7 +478,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public void onEventReceived(NoticeEvent.DialogEvent event) {
         switch (event.action) {
             case 1:
-                showHomeNoticePhoto();
+                showHomeTwoNotice();
                 break;
         }
     }

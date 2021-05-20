@@ -11,9 +11,12 @@ import android.widget.PopupWindow;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.HomeNotice;
+import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class HomeNoticePhotoDialog {
     static PopupWindow popupWindow;
@@ -28,7 +31,15 @@ public class HomeNoticePhotoDialog {
         ImageView homeNoticePhoto = view.findViewById(R.id.home_notice_photo);
         View close = view.findViewById(R.id.home_notice_close);
         MyPicasso.GlideImageNoSize(activity, homeNotice.getImg_content(), homeNoticePhoto);
-        close.setOnClickListener(v1 -> popupWindow.dismiss());
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NoticeEvent.DialogEvent dialogEvent = new NoticeEvent.DialogEvent();
+                dialogEvent.action = NoticeEvent.ACTION_DIALOG_HOME;
+                EventBus.getDefault().post(dialogEvent);
+                popupWindow.dismiss();
+            }
+        });
         homeNoticePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
