@@ -522,4 +522,5 @@
     <string name="string_order_create">订单生成中...</string>
     <string name="string_ordeer_undeal">您有1笔订单尚未支付哦~</string>
     <string name="string_order_go">前往</string>
+    <string name="vip_become_vip">恭喜您成为VIP</string>
 </resources>

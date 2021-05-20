@@ -70,11 +70,11 @@ import com.heiheilianzai.app.ui.fragment.book.StroeNewFragmentBook;
 import com.heiheilianzai.app.ui.fragment.comic.StroeNewFragmentComic;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.DialogBecomeVip;
 import com.heiheilianzai.app.utils.DialogExpirerdVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
-import com.heiheilianzai.app.utils.MyActivityManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.RecomendApp;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
@@ -94,8 +94,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 
@@ -523,14 +521,13 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         try {
                             JSONObject jsonObj = new JSONObject(result);
                             int code = jsonObj.getInt("status");
+                            CreateVipPayOuderEvent createVipPayOuderEvent = new CreateVipPayOuderEvent();
                             if (code == 2) {
-                                Activity activity = MyActivityManager.getInstance().getCurrentActivity();
-                                if (activity != null) {//获取栈顶activity为了在任何页面都可以弹出该提示。
-                                    MyToash.ToashSuccess(activity, "您的支付订单已处理哦~");
-                                }
+                                new DialogBecomeVip().getDialogVipPop(activity);
+                                createVipPayOuderEvent.setCloseFlag(true);
+                                EventBus.getDefault().post(createVipPayOuderEvent);
                                 EventBus.getDefault().post(new RefreshMine(null));
                             } else if (code == 1) {
-                                CreateVipPayOuderEvent createVipPayOuderEvent = new CreateVipPayOuderEvent();
                                 createVipPayOuderEvent.setCloseFlag(false);
                                 EventBus.getDefault().post(createVipPayOuderEvent);
                             }

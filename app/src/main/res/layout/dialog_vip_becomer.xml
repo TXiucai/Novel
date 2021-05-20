@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="@dimen/dimens_200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/dialog_close"
+            android:layout_width="@dimen/dimens_22dp"
+            android:layout_height="@dimen/dimens_22dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dimens_30dp"
+            android:src="@mipmap/close_red" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="@dimen/dimens_200dp"
+        android:layout_height="@dimen/dimens_200dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_vip_become" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimens_12dp"
+        android:gravity="center"
+        android:text="@string/vip_become_vip"
+        android:textColor="@color/white" />
+</LinearLayout>
