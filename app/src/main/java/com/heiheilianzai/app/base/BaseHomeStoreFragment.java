@@ -307,7 +307,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
                 intent.putExtra("PRODUCT", recommend_type == 0);
                 if (jump_type == 0 || jump_type == 5) {
-                    if (jump_type == 5 && Utils.isLogin(activity)) {
+                    if (Utils.isLogin(activity)) {
                         jump_url += "&uid=" + Utils.getUID(activity);
                     }
                     if (redirect_type == 0) {

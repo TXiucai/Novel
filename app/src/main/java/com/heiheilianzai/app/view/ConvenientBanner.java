@@ -41,6 +41,7 @@ import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -463,22 +464,24 @@ public class ConvenientBanner<T> extends LinearLayout {
             }
         }
         mStoreBannerMale.startTurning(time);
+
     }
 
     private static void Onclick(BannerItemStore bannerItemStore, Activity activity, int flag) {
+        String content = bannerItemStore.getContent();
         switch (bannerItemStore.getAction()) {
             case 1:
                 Intent intent;
                 if (flag == 2 || flag == 0) {
-                    intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), bannerItemStore.getContent());
+                    intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
                 } else {
-                    intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), bannerItemStore.getContent());
+                    intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
                 }
                 activity.startActivity(intent);
                 break;
             case 2:
                 Intent scheme = new Intent();
-                switch (bannerItemStore.getContent()) {
+                switch (content) {
                     case "sigin":  //     => '',
                         scheme.setClass(activity, TaskCenterActivity.class);
                         break;
@@ -506,16 +509,24 @@ public class ConvenientBanner<T> extends LinearLayout {
                 activity.startActivity(scheme);
                 break;
             case 3:
-                activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", bannerItemStore.getContent()));
+                if (Utils.isLogin(activity)) {
+                    content += "&uid=" + Utils.getUID(activity);
+                }
+                activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", content));
                 break;
+                //4.5行为一致的
             case 4:
+            case 5:
+                if (Utils.isLogin(activity)) {
+                    content += "&uid=" + Utils.getUID(activity);
+                }
                 activity.startActivity(new Intent(activity, AboutActivity.class).
-                        putExtra("url", bannerItemStore.getContent())
+                        putExtra("url", content)
                         .putExtra("style", "4")
                 );
                 break;
             case 6:
-                EventBus.getDefault().post(new SkipToBoYinEvent(bannerItemStore.getContent()));
+                EventBus.getDefault().post(new SkipToBoYinEvent(content));
                 break;
         }
     }
