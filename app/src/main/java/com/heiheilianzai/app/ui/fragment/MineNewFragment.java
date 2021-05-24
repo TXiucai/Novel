@@ -84,8 +84,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public TextView fragment_mine_user_info_id;
     @BindView(R.id.fragment_mine_user_info_gold_unit)
     public TextView fragment_mine_user_info_gold_unit;
-    @BindView(R.id.fragment_mine_user_info_shuquan_unit)
-    public TextView fragment_mine_user_info_shuquan_unit;
     @BindView(R.id.fragment_mine_user_info_money_layout)
     public LinearLayout fragment_mine_user_info_money_layout;
     @BindView(R.id.fragment_mine_user_info_paylayout_history)
@@ -139,7 +137,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fragment_mine_user_info_gold_unit.setText(getCurrencyUnit(activity));
-        fragment_mine_user_info_shuquan_unit.setText(getSubUnit(activity));
         if (!ReaderConfig.USE_PAY) {
             fragment_mine_user_info_money_layout.setVisibility(View.GONE);
         }

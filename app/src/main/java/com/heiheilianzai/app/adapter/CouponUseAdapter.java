@@ -39,8 +39,8 @@ public class CouponUseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         CouponUseBean.ListBean listBean = mUseLists.get(position);
         viewHolder.tittle.setText(listBean.getTitle_name());
         viewHolder.time.setText(listBean.getDate_name());
-        viewHolder.num.setText("-" + listBean.getSilver_cost());
-        viewHolder.type.setText(listBean.getNote());
+        viewHolder.num.setText("-" + listBean.getSilver_cost() + mActivity.getResources().getString(R.string.string_coupon));
+        viewHolder.type.setText(listBean.getData_type_name() + " | " + listBean.getNote());
     }
 
     @Override

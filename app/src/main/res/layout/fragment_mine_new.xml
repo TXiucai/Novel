@@ -171,7 +171,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/MineNewFragment_fuli"
-                            android:textColor="@color/white"
+                            android:textColor="@color/lightgray"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -197,8 +197,8 @@
                             android:id="@+id/fragment_mine_user_info_shuquan_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="书券余额"
-                            android:textColor="@color/white"
+                            android:text="@string/string_coupon_my"
+                            android:textColor="@color/lightgray"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>

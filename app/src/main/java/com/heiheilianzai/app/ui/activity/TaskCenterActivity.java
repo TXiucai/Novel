@@ -204,7 +204,7 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                         public void onResponse(final String result) {
                             sign_info.sign_status = 1;
                             signTextChage();
-                            holder.mStepView.setStepNum(mCouponLists, sign_info.sign_days + 1);
+                            getData();
                             ShareUitls.putString(activity, "sign_pop", result);
                             new MyPoPwindow().getSignPop(activity);
                             EventBus.getDefault().post(new RefreshMine(null));
@@ -270,12 +270,9 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
         if (taskCenter != null) {
             sign_info = taskCenter.sign_info;
             signTextChage();
-            String rules = "";
-            for (int i = 0; i < sign_info.sign_rules.length; i++) {
-                rules = rules + "\n" + sign_info.sign_rules[i];
-            }
-            holder.activity_taskcenter_getshuquan.setText(String.format(rules));
+            holder.activity_taskcenter_getshuquan.setText(String.format(getString(R.string.sign_rules)));
             holder.mStepView.setStepNum(mCouponLists, sign_info.sign_days);
+            task_list.clear();
             task_list.addAll(taskCenter.getTask_menu().get(0).getTask_list());
             task_list.addAll(taskCenter.getTask_menu().get(1).getTask_list());
             TaskCenterAdapter taskCenterAdapter = new TaskCenterAdapter(task_list, this, taskCenter.getTask_menu().get(0).getTask_list().size(), taskCenter.getTask_menu().get(0).getTask_title(), taskCenter.getTask_menu().get(1).getTask_title());

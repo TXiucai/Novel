@@ -67,7 +67,7 @@ public class HomeRecommendAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return mRecommendLists.size();
+        return mRecommendLists.size() > 10 ? 10 : mRecommendLists.size();
     }
 
     public class RecommendViewHolder extends RecyclerView.ViewHolder {
