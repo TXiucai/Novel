@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -292,6 +293,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             params.putExtraParams("goods_id", item.getGoods_id());
             params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
             params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
+            params.putExtraParams("phoneModel", Build.MANUFACTURER + "-" + Build.MODEL);
             String json = params.generateParamsJson();
             HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, false, new HttpUtils.ResponseListener() {
                         @Override
