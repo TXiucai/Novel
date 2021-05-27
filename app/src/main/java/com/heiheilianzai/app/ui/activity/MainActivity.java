@@ -535,6 +535,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         try {
                             JSONObject jsonObj = new JSONObject(result);
                             int code = jsonObj.getInt("status");
+                            int goodes_id = jsonObj.getInt("goods_id");
                             CreateVipPayOuderEvent createVipPayOuderEvent = new CreateVipPayOuderEvent();
                             if (code == 2) {
                                 new DialogBecomeVip().getDialogVipPop(activity);
@@ -543,6 +544,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                                 EventBus.getDefault().post(new RefreshMine(null));
                             } else if (code == 1) {
                                 createVipPayOuderEvent.setCloseFlag(false);
+                                createVipPayOuderEvent.setGoods_id(goodes_id);
                                 EventBus.getDefault().post(createVipPayOuderEvent);
                             }
 

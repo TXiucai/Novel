@@ -105,7 +105,7 @@
     <string name="MineNewFragment_fankui">意见反馈</string>
     <string name="MineNewFragment_lianxikefu">联系客服</string>
     <string name="MineNewFragment_set">设置</string>
-    <string name="MineNewFragment_fuli">福利中心</string>
+    <string name="MineNewFragment_fuli">福利任务</string>
     <string name="MineNewFragment_nologin">未登录</string>
     <string name="MineNewFragment_nologin_prompt">登录后才可以购买VIP哦~</string>
     <string name="share_detail">分享记录</string>

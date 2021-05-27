@@ -83,7 +83,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     public StroeNewFragment.MyHotWord myHotWord = new MyHotWord();
     BaseButterKnifeFragment fragment;
     private FloatMainBean mFloatMainBean;
-
+    private int mGoodId;
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -99,6 +99,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             }
         }
     };
+
 
     @Override
     public int initContentView() {
@@ -179,6 +180,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 closeVipOrder();
                 Intent intentVip = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
                 intentVip.putExtra("isvip", Utils.isLogin(activity));
+                intentVip.putExtra("goodsId", mGoodId);
                 startActivity(intentVip);
                 break;
         }
@@ -266,6 +268,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     public void showOrderUndeal(CreateVipPayOuderEvent createVipPayOuderEvent) {
         if (!createVipPayOuderEvent.isCloseFlag()) {
             mRlOrder.setVisibility(View.VISIBLE);
+            mGoodId = createVipPayOuderEvent.getGoods_id();
         } else {
             mRlOrder.setVisibility(View.GONE);
         }

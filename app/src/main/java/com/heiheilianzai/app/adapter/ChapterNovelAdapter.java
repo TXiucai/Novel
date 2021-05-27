@@ -81,7 +81,7 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     } else {
                         if (chapterItem.isIs_buy_status()) {
                             viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
-                            viewHolder.coupon.setVisibility(View.VISIBLE);
+                            viewHolder.coupon.setVisibility(View.GONE);
                         } else {
                             viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
                             viewHolder.coupon.setVisibility(View.VISIBLE);
@@ -91,7 +91,7 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1")) {
                         if (chapterItem.isIs_buy_status()) {
                             viewHolder.vip.setBackgroundResource(R.mipmap.comic_chapter_open);
-                            viewHolder.coupon.setVisibility(View.VISIBLE);
+                            viewHolder.coupon.setVisibility(View.GONE);
                         } else {
                             viewHolder.vip.setBackgroundResource(R.mipmap.category_vip);
                             viewHolder.coupon.setVisibility(View.VISIBLE);

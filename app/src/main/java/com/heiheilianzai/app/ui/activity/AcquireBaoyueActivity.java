@@ -111,6 +111,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private VipBaoyuePayAdapter vipBaoyuePayAdapter;
     private AcquirePayItem selectAcquirePayItem;
     private WaitDialog mWaitDialog;
+    private int mGoodsId;
+    private int mSelectPayItemPos;
 
     @Override
     public int initContentView() {
@@ -123,6 +125,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {//适配华为手机虚拟键遮挡tab的问题
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
+        mGoodsId = getIntent().getIntExtra("goodsId", 0);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AcquireBaoyueActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         activity_acquire_pay_gridview.setLayoutManager(linearLayoutManager);
@@ -197,6 +200,10 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             JSONArray listArray = jsonObj.getJSONArray("list");
             for (int i = 0; i < listArray.length(); i++) {
                 AcquirePayItem item = gson.fromJson(listArray.getString(i), AcquirePayItem.class);
+                if (TextUtils.equals(item.getGoods_id(), String.valueOf(mGoodsId))) {
+                    selectAcquirePayItem = item;
+                    mSelectPayItemPos = i;
+                }
                 payList.add(item);
             }
             if (!StringUtils.isEmpty(mKeFuOnline)) {
@@ -208,8 +215,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 AcquirePrivilegeItem item = gson.fromJson(privilegeArray.getString(i), AcquirePrivilegeItem.class);
                 privilegeList.add(item);
             }
-            selectAcquirePayItem = payList.get(0);
             vipBaoyuePayAdapter = new VipBaoyuePayAdapter(this, payList);
+            if (selectAcquirePayItem == null) {
+                selectAcquirePayItem = payList.get(0);
+                vipBaoyuePayAdapter.setSelectPosition(0);
+            } else {
+                vipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
+            }
             vipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
 
                 @Override

@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/fragment_store_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimens_70dp"
+        android:layout_height="@dimen/dimens_80dp"
         android:paddingRight="@dimen/dimens_15dp">
 
         <LinearLayout
