@@ -92,7 +92,7 @@ public class DialogComicLook {
         vipHolder.txVip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 4);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
                 activity.startActivity(myIntent);
                 activity.finish();

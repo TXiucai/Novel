@@ -331,8 +331,8 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         }
 
         @JavascriptInterface
-        public void pay(){
-            Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog));
+        public void pay(int fromspot){
+            Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog), fromspot);
             intent.putExtra("isvip", true);
             startActivity(intent);
         };

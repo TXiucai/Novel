@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import androidx.annotation.Nullable;
+
 import butterknife.BindView;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
@@ -104,9 +105,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @JavascriptInterface
             @Override
-            public void pay() {//h5跳转原生支付
+            public void pay(int fromspot) {//h5跳转原生支付
                 if (activity != null) {
-                    Intent intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_vip_dialog));
+                    Intent intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_vip_dialog), fromspot);
                     intent.putExtra("isvip", true);
                     startActivity(intent);
                 }
@@ -161,7 +162,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @Override
             public String getH5Cache(String key) {
-                return AppPrefs.getSharedString(activity,key);
+                return AppPrefs.getSharedString(activity, key);
             }
 
             @Override
@@ -181,7 +182,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
         String getToken();
 
         @JavascriptInterface
-        void pay();
+        void pay(int fromspot);
 
         @JavascriptInterface
         void callExplorer(String url);

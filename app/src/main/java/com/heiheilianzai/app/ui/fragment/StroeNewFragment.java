@@ -178,7 +178,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 break;
             case R.id.fragment_order_go:
                 closeVipOrder();
-                Intent intentVip = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                Intent intentVip = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 12);
                 intentVip.putExtra("isvip", Utils.isLogin(activity));
                 intentVip.putExtra("goodsId", mGoodId);
                 startActivity(intentVip);

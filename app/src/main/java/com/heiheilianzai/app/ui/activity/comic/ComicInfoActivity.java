@@ -246,7 +246,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 dialogComicChapter.getDialogVipPop(activity, baseComic);
                 break;
             case R.id.rl_comic_vip:
-                Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 5);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
                 activity.startActivity(myIntent);
                 break;

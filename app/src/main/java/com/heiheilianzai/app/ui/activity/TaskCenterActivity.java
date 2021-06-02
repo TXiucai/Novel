@@ -123,7 +123,7 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                             break;
                         case "vip":
                             if (Utils.isLogin(activity)) {
-                                startActivity(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_task)));
+                                startActivity(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_task), 13));
                                 finish();
                             } else {
                                 MainHttpTask.getInstance().Gotologin(activity);

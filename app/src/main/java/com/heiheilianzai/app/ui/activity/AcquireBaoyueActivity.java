@@ -105,6 +105,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     String mKeFuOnline;//客服链接
     AcquireBaoyuePayAdapter baoyuePayAdapter;
     private static final int SDK_PAY_FLAG = 1;
+    private static final String ORIGIN_CODE = "origin_code";
     private String ALIPAY_SUCCESS = "9000";//支付宝支付成功回调
     private String ALIPAY = "2";
     private String WECHAT = "1";
@@ -114,6 +115,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private WaitDialog mWaitDialog;
     private int mGoodsId;
     private int mSelectPayItemPos;
+    private int mOriginCode = 13;
 
     @Override
     public int initContentView() {
@@ -148,7 +150,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public void initData() {
         getIpTerritory();//获取用户IP
         setVIPConfirmEvent();
-        mAvatar = getIntent().getStringExtra("avatar");
+        Intent intent = getIntent();
+        mAvatar = intent.getStringExtra("avatar");
+        mOriginCode = intent.getIntExtra(ORIGIN_CODE, 13);
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BookConfig.mPayBaoyueCenterUrl, json, true, new HttpUtils.ResponseListener() {
@@ -294,6 +298,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
             params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
             params.putExtraParams("phoneModel", Build.MANUFACTURER + "-" + Build.MODEL);
+            params.putExtraParams("payment_source_id", String.valueOf(mOriginCode));
             String json = params.generateParamsJson();
             HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, false, new HttpUtils.ResponseListener() {
                         @Override
@@ -491,9 +496,27 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
      * @param referPage 神策埋点数据从哪个页面进入
      * @return Intent
      */
-    public static Intent getMyIntent(Context context, String referPage) {
+    public static Intent getMyIntent(Context context, String referPage, int originCode) {
+
+        /*
+        originCode
+        小说首页开通icon   ==》  1
+        漫画首页开通icon  ==》  2
+        小说章节开通弹窗  ==》  3
+        漫画章节开通弹窗  ==》  4
+        漫画简介页开通引导  ==》 5
+        有声首页开通icon  ==》 6
+        有声简介页开通按钮  ==》  7
+        有声章节开通弹窗  ==》  8
+        有声播放页下载开通弹窗  ==》  9
+        有声播放页试听次数用完引导开通弹窗  ==》  10
+        个人中心-开通按钮  ==》  11
+        小说、漫画首页引导提示  ==》  12
+        未知  ==》  13*/
+
         Intent intent = new Intent(context, AcquireBaoyueActivity.class);
         intent.putExtra(SaVarConfig.REFER_PAGE_VAR, referPage);
+        intent.putExtra(ORIGIN_CODE,originCode);
         return intent;
     }
 

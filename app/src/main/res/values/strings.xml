@@ -511,7 +511,7 @@
     <string name="string_coupon_day">近七天</string>
     <string name="string_coupon_month">1个月</string>
     <string name="string_coupon_all">全部</string>
-    <string name="string_coupon_no_result">书签流水仅可查询进三个月内的获取与使用记录，请见谅。</string>
+    <string name="string_coupon_no_result">书券流水仅可查询进三个月内的获取与使用记录，请见谅。</string>
     <string name="string_un_sign">点击签到</string>
     <string name="string_sign">已签到</string>
     <string name="dialog_vip_comfirm_tittle">充值确认中...</string>

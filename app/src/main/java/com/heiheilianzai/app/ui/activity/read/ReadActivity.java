@@ -779,7 +779,7 @@ public class ReadActivity extends BaseReadActivity {
                 if (ReaderConfig.USE_AD) {
                     if (activity != null) {
                         if (MainHttpTask.getInstance().Gotologin(activity)) {
-                            startActivityForResult(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_book_read)), 301);
+                            startActivityForResult(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_book_read), 3), 301);
                         }
                     }
                 }

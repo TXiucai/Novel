@@ -332,7 +332,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     startActivity(intent);*/
                     startActivity(new Intent(activity, TopActivity.class).putExtra("PRODUCT", recommend_type == 0));
                 } else if (jump_type == 4) {
-                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine));
+                    int originCode = recommend_type == 0 ? 1 : 2;
+                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), originCode);
                     myIntent.putExtra("isvip", Utils.isLogin(activity));
                     startActivity(myIntent);
                 } else if (jump_type == 6) {
