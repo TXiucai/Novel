@@ -35,6 +35,7 @@ public class DialogWakeVip {
             public void onClick(View v) {
                 if (popupWindow != null) {
                     popupWindow.dismiss();
+                    SensorsDataHelper.setVIPSecondEvent(activity.getResources().getString(R.string.string_pay_close));
                 }
             }
         });
@@ -46,6 +47,7 @@ public class DialogWakeVip {
                 }
                 if (vipWakeListener != null) {
                     vipWakeListener.vipWakeBack();
+                    SensorsDataHelper.setVIPSecondEvent(activity.getResources().getString(R.string.vip_wake_continue));
                 }
             }
         });

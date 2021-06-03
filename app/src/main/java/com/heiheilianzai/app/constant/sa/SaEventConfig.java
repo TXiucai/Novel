@@ -60,6 +60,11 @@ public class SaEventConfig {
     public static final String VIP_CONFIRM_EVENT = "VIP_confirm";
 
     /**
+     * VIP订单成功上报
+     */
+    public static final String VIP_ORDER_EVENT = "VIP_sus";
+
+    /**
      * 选购vip套餐类型
      */
     public static final String VIP_CHOICE_EVENT = "VIP_choice";
@@ -103,4 +108,19 @@ public class SaEventConfig {
      * 漫画获取失败
      */
     public static final String COMIC_FAIL_EVENT = "MH_Fail_Interface";
+
+    /**
+     * 二次确认支付弹窗
+     */
+    public static final String PAY_POP_CHECK = "SecondCheckPaymentPopup";
+
+    /**
+     * 重新支付弹窗
+     */
+    public static final String PAY_POP_RE = "RepayPopup";
+
+    /**
+     * 待支付提示
+     */
+    public static final String PAY_POP_WAIT = "PaymentReminder";
 }

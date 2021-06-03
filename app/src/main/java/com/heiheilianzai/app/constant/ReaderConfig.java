@@ -306,6 +306,11 @@ public class ReaderConfig {
      */
     public static final String mPayLastOrder = "/user/lastpay-order";
 
+    /**
+     * 获取充值订单
+     */
+    public static final String mPayOrder = "/user/get-today-success-pay";
+
 
     public static final String payUrl = "/pay/common-pay";
 

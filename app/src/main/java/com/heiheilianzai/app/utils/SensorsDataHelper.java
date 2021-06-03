@@ -207,7 +207,7 @@ public class SensorsDataHelper {
      *
      * @param fail 失败string
      */
-    public static void setMHFailEvent(String fail){
+    public static void setMHFailEvent(String fail) {
         try {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.FAIL_REASON, fail);
@@ -276,6 +276,66 @@ public class SensorsDataHelper {
             JSONObject properties = new JSONObject();
             properties.put(SaVarConfig.REFER_PAGE_VAR, refer_page);
             SensorsDataAPI.sharedInstance().track(SaEventConfig.VIP_CONFIRM_EVENT, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 神策埋点 二次确认支付弹窗
+     *
+     * @param
+     */
+    public static void setVIPSecondEvent(String clickType) {
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(SaVarConfig.VIP_ORDER_CLICK, clickType);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.PAY_POP_CHECK, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 神策埋点 重新支付弹窗
+     *
+     * @param
+     */
+    public static void setVIPRePayEvent(String clickType) {
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(SaVarConfig.VIP_ORDER_CLICK, clickType);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.PAY_POP_RE, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 神策埋点 待支付提示
+     *
+     * @param
+     */
+    public static void setVIPWaitEvent(String clickType) {
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(SaVarConfig.VIP_ORDER_CLICK, clickType);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.PAY_POP_WAIT, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 神策埋点 进入VIP订单成功
+     *
+     * @param originCode 浏览会员页入口
+     */
+    public static void setVIPOrderSuccessEvent(int originCode) {
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(SaVarConfig.VIP_PAGE_ENTRANCE, originCode);
+            SensorsDataAPI.sharedInstance().track(SaEventConfig.VIP_ORDER_EVENT, properties);
         } catch (JSONException e) {
             e.printStackTrace();
         }

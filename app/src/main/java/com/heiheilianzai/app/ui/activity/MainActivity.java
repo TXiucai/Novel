@@ -49,6 +49,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
+import com.heiheilianzai.app.model.VipOrderBean;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
@@ -92,6 +93,7 @@ import com.umeng.socialize.UMShareAPI;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -540,6 +542,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             if (code == 2) {
                                 new DialogBecomeVip().getDialogVipPop(activity);
                                 createVipPayOuderEvent.setCloseFlag(true);
+                                getCurrentVIPOrder();
                                 EventBus.getDefault().post(createVipPayOuderEvent);
                                 EventBus.getDefault().post(new RefreshMine(null));
                             } else if (code == 1) {
@@ -557,6 +560,44 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     }
                 }
         );
+    }
+
+    private void getCurrentVIPOrder() {
+        ReaderParams params = new ReaderParams(MainActivity.this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(MainActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mPayOrder, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        Gson gson = new Gson();
+                        try {
+                            JSONArray jsonArray = new JSONArray(result);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                VipOrderBean vipOrderBean = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), VipOrderBean.class);
+                                setVIPSuccessOrderEvent(vipOrderBean);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    /**
+     * 神策埋点 vip订单成功
+     *
+     * @param vipOrderBean
+     */
+    private void setVIPSuccessOrderEvent(VipOrderBean vipOrderBean) {
+        String sharedString = AppPrefs.getSharedString(activity, PrefConst.VIP_SUCCESS_ORDER, "");
+        if (!sharedString.contains(vipOrderBean.getTrade_no())) {
+            sharedString = sharedString + vipOrderBean.getTrade_no();
+            SensorsDataHelper.setVIPOrderSuccessEvent(vipOrderBean.getPayment_source_id());
+            AppPrefs.putSharedString(activity, PrefConst.VIP_SUCCESS_ORDER, sharedString);
+        }
     }
 
     //为了解决弹出PopupWindow后外部的事件不会分发,既外部的界面不可以点击

@@ -65,6 +65,12 @@ public class SaVarConfig {
     public static final String SUBPAGES_TYPE_VAR = "Subpages_type";//子页类型
     /******************  END  ****************/
 
+
+    /*****************支付**************/
+    public static final String VIP_PAGE_ENTRANCE = "viewmemberpage_entrance";//VIP订单购买成功，浏览会员页入口
+    public static final String VIP_ORDER_CLICK = "click_type";//VIP订单点击类型
+    /******************  END  ****************/
+
     /****************其他**************/
     public static final String WORKS_TYPE_BOOK = "XS";
     public static final String WORKS_TYPE_COMICS = "MH";

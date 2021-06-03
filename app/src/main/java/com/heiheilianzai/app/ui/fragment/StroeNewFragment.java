@@ -42,6 +42,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.NotchScreen;
+import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 
@@ -174,9 +175,11 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 }
                 break;
             case R.id.fragment_order_close:
+                SensorsDataHelper.setVIPWaitEvent(getString(R.string.string_pay_close));
                 closeVipOrder();
                 break;
             case R.id.fragment_order_go:
+                SensorsDataHelper.setVIPWaitEvent(getString(R.string.string_pay_go));
                 closeVipOrder();
                 Intent intentVip = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 12);
                 intentVip.putExtra("isvip", Utils.isLogin(activity));

@@ -44,6 +44,10 @@ public class PrefConst {
      * 漫画书卷单章价格
      */
     public static final String COUPON_COMICI_PRICE = "coupon_comic_pay_price";
+    /**
+     * vip订单成功的订单号
+     */
+    public static final String VIP_SUCCESS_ORDER = "vip_order_success_num";
 
     //---------------------- END -----------------------------
 

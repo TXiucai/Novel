@@ -53,6 +53,7 @@ public class DialogVipComfirm {
                 }
                 if (mOnOpenKefuListener != null) {
                     mOnOpenKefuListener.onOpenKefu();
+                    SensorsDataHelper.setVIPRePayEvent(activity.getResources().getString(R.string.MineNewFragment_lianxikefu));
                 }
             }
         });
@@ -65,6 +66,7 @@ public class DialogVipComfirm {
                 }
                 if (mOnRepeatListener != null) {
                     mOnRepeatListener.onRepeat();
+                    SensorsDataHelper.setVIPRePayEvent(activity.getResources().getString(R.string.vip_error));
                 }
 
             }
@@ -76,6 +78,7 @@ public class DialogVipComfirm {
                 if (popupWindow != null) {
                     popupWindow.dismiss();
                 }
+                SensorsDataHelper.setVIPRePayEvent(activity.getResources().getString(R.string.string_yes));
             }
         });
         popupWindow.setContentView(view);
