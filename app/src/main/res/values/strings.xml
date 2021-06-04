@@ -526,4 +526,7 @@
     <string name="sign_rules">1.签到周为自然周，每周日为大奖日\n2.每自然周后，系统重置一次\n3.中断签到必须重新开始，没有补签</string>
     <string name="string_pay_close">关闭</string>
     <string name="string_pay_go">前往</string>
+    <string name="string_splash_tips">禁 止 中 国 大 陆 未 满 18 岁 用 户 使 用</string>
+    <string name="string_splash_tittle">每天更新 精彩不断</string>
+    <string name="string_splash_search">正在探测路线，请稍后...</string>
 </resources>

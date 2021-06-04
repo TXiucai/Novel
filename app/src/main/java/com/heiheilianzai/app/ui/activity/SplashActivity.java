@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,8 @@ import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 public class SplashActivity extends BaseAdvertisementActivity {
     @BindView(R.id.activity_splash_website)
     public TextView mTxWebsite;
+    @BindView(R.id.activity_splash_bottom)
+    public LinearLayout mLlBottom;
     public static final String OPEN_TIME_KAY = "open_time";//传参首页打开app时间戳KAY
     private String isfirst;
     private int reconnect_num = 0;
@@ -291,6 +294,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 public void onAnimationEnd() {
                     findViewById(R.id.findchannel).setVisibility(View.GONE);
                     activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                    mLlBottom.setVisibility(View.VISIBLE);
                     handler.sendEmptyMessageDelayed(1, time == 5 ? 0 : 1000);
                     startPage();
                 }
