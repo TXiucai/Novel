@@ -166,7 +166,6 @@ public class DialogComicLook {
         TextView cancel = view.findViewById(R.id.cancel);
         TextView confirm = view.findViewById(R.id.confirm);
         dialog.setContentView(view);
-        dialog.setCanceledOnTouchOutside(true);
         //设置对话框的大小
         view.setMinimumHeight((int) (ScreenSizeUtils.getInstance(activity).getScreenHeight() * 0.2f));
         Window dialogWindow = dialog.getWindow();
@@ -193,6 +192,8 @@ public class DialogComicLook {
                 activity.finish();
             }
         });
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
     public interface OnOpenCouponListener {
