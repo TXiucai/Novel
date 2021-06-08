@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
 import android.content.Intent;
+import android.view.View;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
@@ -21,11 +22,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
+import java.util.List;
+
 /**
  * 阅读历史-小说
  * Created by scb on 2018/12/21.
  */
 public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory.ReadHistoryBook> {
+    private List<ReadHistory.ReadHistoryBook> mSelectLists;
 
     @Override
     protected void initData() {
@@ -36,10 +40,40 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
     @Override
     protected void initView() {
         mSonType = BOOK_SON_TYPE;
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
         optionAdapter = new ReadHistoryRecyclerViewAdapter(activity, optionBeenList, getPosition);
+        optionAdapter.setmGetSelectItems(new BaseReadHistoryAdapter.getSelectItems() {
+            @Override
+            public void getSelectItems(List selectLists) {
+                if (selectLists != null) {
+                    if (selectLists.size() > 0) {
+                        setLlDeleteView(true);
+                        mSelectLists = selectLists;
+                        if (selectLists.size() == optionBeenList.size()) {
+                            setLlSelectAllView(true);
+                        } else {
+                            setLlSelectAllView(false);
+                        }
+                    } else {
+                        setLlDeleteView(false);
+                    }
+                }
+            }
+        });
+        mLlDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectLists != null && mSelectLists.size() > 0) {
+                    for (int i = 0; i < mSelectLists.size(); i++) {
+                        String book_id = mSelectLists.get(i).getBook_id();
+                        if (i != mSelectLists.size() - 1) {
+                            book_id += ",";
+                        }
+                        mSelectID += book_id;
+                    }
+                }
+                deleteMoreHistory(mSelectID, BookConfig.del_read_log_MORE);
+            }
+        });
         super.initView();
     }
 
@@ -87,12 +121,6 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
             }
         }
     };
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshReadHistory refreshMine) {

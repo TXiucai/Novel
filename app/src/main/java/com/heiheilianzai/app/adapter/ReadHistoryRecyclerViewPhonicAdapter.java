@@ -30,6 +30,20 @@ public class ReadHistoryRecyclerViewPhonicAdapter extends BaseReadHistoryAdapter
         holder.recyclerview_item_readhistory_time.setText(phonicInfo.getLast_chapter_time() + "  " + String.format(LanguageUtil.getString(activity, R.string.ReadHistoryFragment_total_chapter), phonicInfo.getTotal_numbers()));
         MyPicasso.GlideImageNoSize(activity, phonicInfo.getImg(), holder.recyclerview_item_readhistory_img, R.mipmap.comic_def_v);
         holder.recyclerview_item_readhistory_goon.setText(LanguageUtil.getString(activity, R.string.boyin_continue_play));
+        setIsEditView(holder, mIsEditOpen);
+        setIsSelectAllView(holder, mIsSelectAll);
+        holder.mRlCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.mCheckBox.setChecked(!holder.mCheckBox.isChecked());
+                if (holder.mCheckBox.isChecked()) {
+                    mSelectList.add(phonicInfo);
+                } else {
+                    mSelectList.remove(phonicInfo);
+                }
+                mGetSelectItems.getSelectItems(mSelectList);
+            }
+        });
         holder.recyclerview_item_readhistory_book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,5 +62,17 @@ public class ReadHistoryRecyclerViewPhonicAdapter extends BaseReadHistoryAdapter
                 getPosition.getPosition(2, phonicInfo, position);
             }
         });
+    }
+
+    @Override
+    public void setmIsEditOpen(boolean mIsEditOpen) {
+        this.mIsEditOpen = mIsEditOpen;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void setmSelectAll(boolean mIsSelectAll) {
+        this.mIsSelectAll = mIsSelectAll;
+        notifyDataSetChanged();
     }
 }

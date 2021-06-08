@@ -529,4 +529,8 @@
     <string name="string_splash_tips">禁 止 中 国 大 陆 未 满 18 岁 用 户 使 用</string>
     <string name="string_splash_tittle">每天更新 精彩不断</string>
     <string name="string_splash_search">正在探测路线，请稍后...</string>
+    <string name="string_edit">编辑</string>
+    <string name="string_all_select">全选</string>
+    <string name="string_cancel_all">取消全选</string>
+    <string name="string_delete_success">删除成功</string>
 </resources>

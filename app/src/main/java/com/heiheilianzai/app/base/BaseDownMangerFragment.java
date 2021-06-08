@@ -55,6 +55,8 @@ public abstract class BaseDownMangerFragment<T> extends BaseButterKnifeFragment 
 
     protected abstract BaseAdapter getAeAdapter();
 
+    protected abstract void getIsEditOpen(boolean isEditOpen);
+
     @Override
     public void onDestroy() {
         super.onDestroy();

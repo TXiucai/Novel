@@ -51,6 +51,11 @@ public class DownMangerComicFragment extends BaseDownMangerFragment<BaseComic> {
         return new DownMangerComicAdapter(activity, baseList, fragment_bookshelf_noresult);
     }
 
+    @Override
+    protected void getIsEditOpen(boolean isEditOpen) {
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshProcess(BaseComic baseComic) {
         if (!baseList.isEmpty()) {

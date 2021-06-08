@@ -47,6 +47,11 @@ public class DownMangerBookFragment extends BaseDownMangerFragment<Downoption> {
         return new DownMangerAdapter(activity, baseList, fragment_bookshelf_noresult);
     }
 
+    @Override
+    protected void getIsEditOpen(boolean isEditOpen) {
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshProcess(Downoption downoption) {
         if (!baseList.isEmpty()) {

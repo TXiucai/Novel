@@ -4,16 +4,20 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.BoyinConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.event.EditEvent;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -24,11 +28,14 @@ import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import butterknife.BindView;
 
 /**
@@ -47,6 +54,21 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
     public Button fragment_bookshelf_go_shelf;
     @BindView(R.id.fragment_bookshelf_text)
     public TextView fragment_bookshelf_text;
+    @BindView(R.id.ll_edit)
+    public LinearLayout mLlEdit;
+    @BindView(R.id.img_select)
+    public ImageView mImgSelect;
+    @BindView(R.id.tx_select)
+    public TextView mTxSelect;
+    @BindView(R.id.img_delete)
+    public ImageView mImgDelete;
+    @BindView(R.id.tx_delete)
+    public TextView mTxDelete;
+    @BindView(R.id.ll_select)
+    public LinearLayout mLlSelect;
+    @BindView(R.id.ll_delete)
+    public LinearLayout mLlDelete;
+
     public Gson gson = new Gson();
     public BaseReadHistoryAdapter<T> optionAdapter;
     public List<T> optionBeenList = new ArrayList<>();
@@ -58,7 +80,10 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
     public int current_page = 1;//页数
     public int size;//总条数
     public String dataUrl;
+    public String mSelectID = "";
     public int mSonType;//1小说 2漫画 3有声
+    public boolean mIsSelectAll = false;
+    private boolean mIsEditOpen = false;
 
     @Override
     public int initContentView() {
@@ -68,11 +93,21 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
     @Override
     protected void initView() {
         layoutInflater = LayoutInflater.from(activity);
+        EventBus.getDefault().register(this);
         temphead = (LinearLayout) layoutInflater.inflate(R.layout.item_list_head, null);
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragment_option_listview.setLayoutManager(layoutManager);
         fragment_option_listview.addHeaderView(temphead);
+        mLlSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsSelectAll = !mIsSelectAll;
+                optionAdapter.setmSelectAll(mIsSelectAll);
+                setLlSelectAllView(mIsSelectAll);
+                setLlDeleteView(mIsSelectAll);
+            }
+        });
         fragment_bookshelf_go_shelf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +134,28 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
             }
         });
         fragment_option_listview.setAdapter(optionAdapter);
+    }
+
+    public void setLlSelectAllView(boolean isSelectAll) {
+        if (isSelectAll) {
+            mImgSelect.setImageDrawable(activity.getDrawable(R.mipmap.check_all_no));
+            mTxSelect.setText(activity.getResources().getString(R.string.string_cancel_all));
+        } else {
+            mImgSelect.setImageDrawable(activity.getDrawable(R.mipmap.check_all_yes));
+            mTxSelect.setText(activity.getResources().getString(R.string.string_all_select));
+        }
+    }
+
+    public void setLlDeleteView(boolean isDelete) {
+        if (isDelete) {
+            mImgDelete.setImageDrawable(activity.getDrawable(R.mipmap.delet_yes));
+            mTxDelete.setTextColor(activity.getResources().getColor(R.color.color_3b3b3b));
+            mLlDelete.setClickable(true);
+        } else {
+            mImgDelete.setImageDrawable(activity.getDrawable(R.mipmap.delete_no));
+            mTxDelete.setTextColor(activity.getResources().getColor(R.color.color_9a9a9a));
+            mLlDelete.setClickable(false);
+        }
     }
 
     @Override
@@ -199,6 +256,35 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
         );
     }
 
+    public void deleteMoreHistory(String log_id, String url) {
+        ReaderParams params = new ReaderParams(activity);
+        if (BoyinConfig.PHONIC_REMOVE_AUDIO_READ_LOG_MORE.equals(url)) { //有声删除接口多个
+            params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
+            params.putExtraParams("user_source", BuildConfig.app_source_boyin);
+            params.putExtraParams("nid", log_id);
+        } else if (BookConfig.del_read_log_MORE.equals(url)) { //小说
+            params.putExtraParams("book_id", log_id);
+        } else { //漫画
+            params.putExtraParams("comic_id", log_id);
+        }
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        mSelectID = "";
+                        MyToash.ToashSuccess(activity, activity.getResources().getString(R.string.string_delete_success));
+                        current_page = 1;
+                        initData(dataUrl);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+
     protected void setNullDataView() {
         if (optionBeenList.isEmpty()) {
             fragment_bookshelf_text.setText("还未阅读任何" + getTitle());
@@ -213,6 +299,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
     private void setBeenListEmptyView(boolean isEmpty) {
         fragment_option_listview.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         fragment_readhistory_pop.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        mLlEdit.setVisibility(!isEmpty && mIsEditOpen ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -230,6 +317,19 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
                 setNullDataView();
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getIsEditOpen(EditEvent editEvent) {
+        mIsEditOpen = editEvent.isEditOpen();
+        mLlEdit.setVisibility(mIsEditOpen ? View.VISIBLE : View.GONE);
+        optionAdapter.setmIsEditOpen(mIsEditOpen);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 
     /**

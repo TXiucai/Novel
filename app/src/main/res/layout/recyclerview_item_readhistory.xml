@@ -16,6 +16,22 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <RelativeLayout
+                android:id="@+id/recyclerview_item_readhistory_check_rl"
+                android:layout_width="@dimen/dimens_54dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/recyclerview_item_readhistory_check"
+                    android:layout_width="@dimen/dimens_16dp"
+                    android:layout_height="@dimen/dimens_16dp"
+                    android:button="@drawable/selector_history_checkbox"
+                    android:clickable="false"
+                    android:gravity="center" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/recyclerview_item_readhistory_book"
                 android:layout_width="match_parent"
@@ -32,57 +48,53 @@
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerCrop" />
 
-                <RelativeLayout
-
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/recyclerview_item_readhistory_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
                         android:lines="1"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/public_13_dp" />
+                        android:textColor="@color/color_1a1a1a"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/recyclerview_item_readhistory_des"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-
+                        android:layout_marginTop="@dimen/dimens_3dp"
                         android:lines="1"
-                        android:textColor="@color/gray3"
-                        android:textSize="@dimen/public_10_dp" />
-
+                        android:textColor="@color/color_9a9a9a"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/recyclerview_item_readhistory_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="@dimen/dimens_3dp"
                         android:layout_marginBottom="10dp"
-
                         android:lines="1"
-                        android:textColor="@color/gray"
-                        android:textSize="@dimen/public_10_dp" />
-                </RelativeLayout>
+                        android:textColor="@color/color_9a9a9a"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
 
                 <Button
                     android:id="@+id/recyclerview_item_readhistory_goon"
-                    android:layout_width="60dp"
-                    android:layout_height="25dp"
+                    android:layout_width="@dimen/dimens_60dp"
+                    android:layout_height="@dimen/dimens_25dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/shape_login_weixin_bg"
+                    android:background="@drawable/shape_ff8350_20"
                     android:gravity="center"
                     android:text="继续阅读"
-                    android:textColor="@color/mainColor"
-                    android:textSize="@dimen/public_9_dp" />
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
 
             </LinearLayout>
 
@@ -98,11 +110,11 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <include layout="@layout/list_ad_view"/>
+    <include layout="@layout/list_ad_view" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/lightgray2" />
+        android:background="@color/color_F5F5F5" />
 </RelativeLayout>

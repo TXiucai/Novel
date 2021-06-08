@@ -16,6 +16,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.event.EditEvent;
 import com.heiheilianzai.app.ui.fragment.LiushuijiluFragment;
 import com.heiheilianzai.app.ui.fragment.MyCommentFragment;
 import com.heiheilianzai.app.ui.fragment.OptionFragment;
@@ -30,6 +31,8 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.view.UnderlinePageIndicatorHalf;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +77,8 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     public UnderlinePageIndicatorHalf channel_bar_indicator;
     @BindView(R.id.activity_baseoption_viewpage)
     public ViewPager activity_baseoption_viewpage;
+    @BindView(R.id.activity_baseoption_edit)
+    public TextView mTxEdit;
 
     FragmentManager fragmentManager;
     List<Fragment> fragmentList;
@@ -83,26 +88,58 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     boolean PRODUCT;// false 漫画  true  小说
     Intent IntentFrom;
     private boolean is_top_year;
-
+    private boolean mIsEditOpen = false;
     @Override
     public int initContentView() {
         return R.layout.activity_baseoption;
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text})
+    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text, R.id.activity_baseoption_edit})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
                 finish();
                 break;
             case R.id.channel_bar_male_text:
+                setTabColor(0);
                 activity_baseoption_viewpage.setCurrentItem(0);
                 break;
             case R.id.channel_bar_female_text:
+                setTabColor(1);
                 activity_baseoption_viewpage.setCurrentItem(1);
                 break;
             case R.id.channel_bar_yousheng_text:
+                setTabColor(2);
                 activity_baseoption_viewpage.setCurrentItem(2);
+                break;
+            case R.id.activity_baseoption_edit:
+                mIsEditOpen = !mIsEditOpen;
+                if (mIsEditOpen) {
+                    mTxEdit.setText(getString(R.string.splashactivity_permissions_cancle));
+                } else {
+                    mTxEdit.setText(getString(R.string.string_edit));
+                }
+                EventBus.getDefault().post(new EditEvent(mIsEditOpen));
+                break;
+        }
+    }
+
+    private void setTabColor(int i) {
+        switch (i) {
+            case 0:
+                channel_bar_male_text.setTextColor(getResources().getColor(R.color.mainColor));
+                channel_bar_female_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.color_606060));
+                break;
+            case 1:
+                channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_female_text.setTextColor(getResources().getColor(R.color.mainColor));
+                channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.color_606060));
+                break;
+            case 2:
+                channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_female_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.mainColor));
                 break;
         }
     }
@@ -117,6 +154,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         is_top_year = IntentFrom.getBooleanExtra("IS_TOP_YEAR", false);
         if (OPTION != LOOKMORE) {
             String title = IntentFrom.getStringExtra("title");
+            titlebar_text.setTextColor(getResources().getColor(R.color.color_3b3b3b));
             titlebar_text.setText(title);
         }
         init();
@@ -176,6 +214,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                         channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                         break;
                 }
+                mTxEdit.setVisibility(View.VISIBLE);
                 break;
             case READHISTORY:
                 switch (GETPRODUCT_TYPE(activity)) {
@@ -202,6 +241,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                         channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                         break;
                 }
+                mTxEdit.setVisibility(View.VISIBLE);
                 break;
             case LIUSHUIJIELU:
                 channel_bar_male_text.setText(getCurrencyUnit(activity));
@@ -265,11 +305,29 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
             if (Extra) {
                 activity_baseoption_viewpage.setCurrentItem(1);
             }
+        } else if (OPTION == READHISTORY || OPTION == DOWN) {
+            setTabColor(0);
         }
         if (baseButterKnifeFragment2 != null) {
             channel_bar_indicator.setViewPager(activity_baseoption_viewpage);
             channel_bar_indicator.setFades(false);
         }
+        activity_baseoption_viewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setTabColor(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override

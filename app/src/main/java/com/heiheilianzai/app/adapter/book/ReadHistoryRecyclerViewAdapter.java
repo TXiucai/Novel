@@ -34,6 +34,20 @@ public class ReadHistoryRecyclerViewAdapter extends BaseReadHistoryAdapter<ReadH
             holder.recyclerview_item_readhistory_des.setText(readHistoryBook.chapter_title);
             holder.recyclerview_item_readhistory_time.setText(readHistoryBook.getLast_chapter_time() + "  " + String.format(LanguageUtil.getString(activity, R.string.ReadHistoryFragment_total_chapter), readHistoryBook.getTotal_Chapter()));
             MyPicasso.GlideImageNoSize(activity, readHistoryBook.getCover(), holder.recyclerview_item_readhistory_img, R.mipmap.book_def_v);
+            setIsEditView(holder, mIsEditOpen);
+            setIsSelectAllView(holder, mIsSelectAll);
+            holder.mRlCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.mCheckBox.setChecked(!holder.mCheckBox.isChecked());
+                    if (holder.mCheckBox.isChecked()) {
+                        mSelectList.add(readHistoryBook);
+                    } else {
+                        mSelectList.remove(readHistoryBook);
+                    }
+                    mGetSelectItems.getSelectItems(mSelectList);
+                }
+            });
             holder.recyclerview_item_readhistory_book.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -68,6 +82,18 @@ public class ReadHistoryRecyclerViewAdapter extends BaseReadHistoryAdapter<ReadH
                 }
             });
         }
+    }
+
+    @Override
+    public void setmIsEditOpen(boolean mIsEditOpen) {
+        this.mIsEditOpen = mIsEditOpen;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void setmSelectAll(boolean mIsSelectAll) {
+        this.mIsSelectAll = mIsSelectAll;
+        notifyDataSetChanged();
     }
 }
 

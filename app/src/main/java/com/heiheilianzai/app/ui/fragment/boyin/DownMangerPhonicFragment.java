@@ -44,6 +44,11 @@ public class DownMangerPhonicFragment extends BaseDownMangerFragment<BoyinInfoBe
         return new DownMangerPhonicAdapter(activity, baseList, fragment_bookshelf_noresult);
     }
 
+    @Override
+    protected void getIsEditOpen(boolean isEditOpen) {
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshProcess(DownMangerDeleteAllChapterEvent downoption) {
         if (downoption.type == PhONIC_SON_TYPE) {

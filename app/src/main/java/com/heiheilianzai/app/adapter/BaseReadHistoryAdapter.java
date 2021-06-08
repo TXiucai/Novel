@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,8 +33,15 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected List<T> list;
+    protected List<T> mSelectList;
     protected GetPosition<T> getPosition;
     protected Activity activity;
+    public getSelectItems mGetSelectItems;
+    public boolean mIsEditOpen;
+    public boolean mIsSelectAll;
+    public void setmGetSelectItems(getSelectItems mGetSelectItems) {
+        this.mGetSelectItems = mGetSelectItems;
+    }
 
     @NonNull
     @Override
@@ -47,7 +57,13 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
 
     protected abstract void onMyBindViewHolder(@NonNull MyViewHolder holder, int position);
 
+    public abstract void setmIsEditOpen(boolean mIsEditOpen);
+
+    public abstract void setmSelectAll(boolean mIsSelectAll);
+
+
     public BaseReadHistoryAdapter(Activity activity, List<T> list, GetPosition<T> getPosition) {
+        mSelectList = new ArrayList<>();
         this.list = list;
         this.activity = activity;
         this.getPosition = getPosition;
@@ -79,6 +95,10 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
         public TextView recyclerview_item_readhistory_del;
         @BindView(R.id.recyclerview_item_readhistory_HorizontalScrollView)
         public HorizontalScrollView recyclerview_item_readhistory_HorizontalScrollView;
+        @BindView(R.id.recyclerview_item_readhistory_check)
+        public CheckBox mCheckBox;
+        @BindView(R.id.recyclerview_item_readhistory_check_rl)
+        public RelativeLayout mRlCheckBox;
 
         public MyViewHolder(View view) {
             super(view);
@@ -105,7 +125,32 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
         holder.list_ad_view_img.setLayoutParams(layoutParams);
     }
 
+    protected void setIsEditView(MyViewHolder holder, boolean isEditOpen) {
+        if (isEditOpen) {
+            holder.mRlCheckBox.setVisibility(View.VISIBLE);
+            holder.recyclerview_item_readhistory_goon.setVisibility(View.GONE);
+        } else {
+            holder.mRlCheckBox.setVisibility(View.GONE);
+            holder.recyclerview_item_readhistory_goon.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void setIsSelectAllView(MyViewHolder holder, boolean isSelectAll) {
+        mSelectList.clear();
+        if (isSelectAll) {
+            mSelectList.addAll(list);
+        } else {
+            mSelectList.clear();
+        }
+        holder.mCheckBox.setChecked(isSelectAll);
+        mGetSelectItems.getSelectItems(mSelectList);
+    }
+
     public interface GetPosition<T> {
         void getPosition(int falg, T t, int position);
+    }
+
+    public interface getSelectItems<T>{
+        void getSelectItems(List<T> selectLists);
     }
 }

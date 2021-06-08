@@ -21,7 +21,7 @@
             android:gravity="center"
             android:text="@string/storeFragment_boy"
             android:textColor="@color/black"
-            android:textSize="@dimen/public_12_dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/channel_bar_female_text"
@@ -31,7 +31,7 @@
             android:gravity="center"
             android:text="@string/storeFragment_gril"
             android:textColor="@color/black"
-            android:textSize="@dimen/public_12_dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/channel_bar_yousheng_text"
@@ -41,7 +41,7 @@
             android:gravity="center"
             android:text="@string/MainActivity_boyin"
             android:textColor="@color/black"
-            android:textSize="@dimen/public_12_dp"
+            android:textSize="15sp"
             android:visibility="gone" />
     </LinearLayout>
 

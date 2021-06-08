@@ -1,11 +1,13 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
 import android.content.Intent;
+import android.view.View;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.adapter.comic.ReadHistoryRecyclerViewComicAdapter;
 import com.heiheilianzai.app.base.BaseReadHistoryFragment;
+import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicReadHistory;
@@ -16,12 +18,14 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.Utils;
 
+import java.util.List;
+
 /**
  * 阅读历史-漫画
  * Created by scb on 2018/12/21.
  */
 public class ReadHistoryComicFragment extends BaseReadHistoryFragment<ComicReadHistory.ReadHistoryComic> {
-
+    private List<ComicReadHistory.ReadHistoryComic> mSelectLists;
     @Override
     protected void initData() {
         dataUrl = ComicConfig.COMIC_read_log;
@@ -32,6 +36,40 @@ public class ReadHistoryComicFragment extends BaseReadHistoryFragment<ComicReadH
     protected void initView() {
         mSonType = COMIC_SON_TYPE;
         optionAdapter = new ReadHistoryRecyclerViewComicAdapter(activity, optionBeenList, getPosition);
+        optionAdapter.setmGetSelectItems(new BaseReadHistoryAdapter.getSelectItems() {
+            @Override
+            public void getSelectItems(List selectLists) {
+                if (selectLists != null) {
+                    if (selectLists.size() > 0) {
+                        setLlDeleteView(true);
+                        mSelectLists = selectLists;
+                        if (selectLists.size() == optionBeenList.size()) {
+                            setLlSelectAllView(true);
+                        } else {
+                            setLlSelectAllView(false);
+                        }
+                    } else {
+                        setLlDeleteView(false);
+                    }
+                }
+            }
+
+        });
+        mLlDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectLists != null && mSelectLists.size() > 0) {
+                    for (int i = 0; i < mSelectLists.size(); i++) {
+                        String book_id = mSelectLists.get(i).getComic_id();
+                        if (i != mSelectLists.size() - 1) {
+                            book_id += ",";
+                        }
+                        mSelectID += book_id;
+                    }
+                }
+                deleteMoreHistory(mSelectID, ComicConfig.COMIC_read_log_del_MORE);
+            }
+        });
         super.initView();
     }
 

@@ -115,6 +115,10 @@ public class BookConfig {
      */
     public static final String del_read_log =  "/user/del-read-log";
     /**
+     * 删除阅读历史多个
+     */
+    public static final String del_read_log_MORE =  "/user/batch-del-read-log";
+    /**
      * 新增阅读历史
      */
     public static final String add_read_log =  "/user/add-read-log";

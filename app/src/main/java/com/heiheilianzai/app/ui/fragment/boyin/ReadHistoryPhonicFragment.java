@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.boyin;
 
+import android.view.View;
+
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.adapter.ReadHistoryRecyclerViewPhonicAdapter;
@@ -14,11 +16,13 @@ import com.heiheilianzai.app.utils.Utils;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * 有声阅读历史 Fragment
  */
 public class ReadHistoryPhonicFragment extends BaseReadHistoryFragment<PhonicReadHistory.PhonicInfo> {
-
+    private List<PhonicReadHistory.PhonicInfo> mSelectLists;
     @Override
     protected void initData() {
         dataUrl = BoyinConfig.PHONIC_AUDIO_READ_LOG;
@@ -29,6 +33,40 @@ public class ReadHistoryPhonicFragment extends BaseReadHistoryFragment<PhonicRea
     protected void initView() {
         mSonType = PhONIC_SON_TYPE;
         optionAdapter = new ReadHistoryRecyclerViewPhonicAdapter(activity, optionBeenList, getPosition);
+        optionAdapter.setmGetSelectItems(new BaseReadHistoryAdapter.getSelectItems() {
+            @Override
+            public void getSelectItems(List selectLists) {
+                if (selectLists != null) {
+                    if (selectLists.size() > 0) {
+                        setLlDeleteView(true);
+                        mSelectLists = selectLists;
+                        if (selectLists.size() == optionBeenList.size()) {
+                            setLlSelectAllView(true);
+                        } else {
+                            setLlSelectAllView(false);
+                        }
+                    } else {
+                        setLlDeleteView(false);
+                    }
+                }
+            }
+
+        });
+        mLlDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectLists != null && mSelectLists.size() > 0) {
+                    for (int i = 0; i < mSelectLists.size(); i++) {
+                        String book_id = String.valueOf(mSelectLists.get(i).getId());
+                        if (i != mSelectLists.size() - 1) {
+                            book_id += ",";
+                        }
+                        mSelectID += book_id;
+                    }
+                }
+                deleteMoreHistory(mSelectID, BoyinConfig.PHONIC_REMOVE_AUDIO_READ_LOG_MORE);
+            }
+        });
         super.initView();
     }
 

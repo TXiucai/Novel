@@ -16,4 +16,11 @@ public class BoyinConfig {
      * 有声历史播放记录删除
      */
     public static final String PHONIC_REMOVE_AUDIO_READ_LOG = "/auth/remove-audio";
+
+    /**
+     * 有声历史播放记录删除多个
+     */
+    public static final String PHONIC_REMOVE_AUDIO_READ_LOG_MORE= "/auth/removeall-audio";
+
+
 }

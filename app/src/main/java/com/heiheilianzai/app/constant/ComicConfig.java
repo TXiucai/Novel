@@ -146,6 +146,11 @@ public class ComicConfig {
     public static final String COMIC_read_log_del = "/user/del-comic-read-log";
 
     /**
+     * 漫画删除阅读历史多个
+     */
+    public static final String COMIC_read_log_del_MORE = "/user/batch-del-comic-read-log";
+
+    /**
      * 漫画 新增阅读历史
      */
     public static final String COMIC_read_log_add = "/user/add-comic-read-log";
