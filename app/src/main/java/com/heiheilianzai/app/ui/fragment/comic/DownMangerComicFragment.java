@@ -1,14 +1,23 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
+import android.content.ContentValues;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.DownMangerComicAdapter;
 import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.model.comic.BaseComic;
+import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
+import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.ShareUitls;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -23,16 +32,55 @@ import butterknife.BindView;
  * 下载缓存页面 漫画
  */
 public class DownMangerComicFragment extends BaseDownMangerFragment<BaseComic> {
-    @BindView(R.id.activity_downmanger_list)
-    public ListView activity_downmanger_list;
-    @BindView(R.id.fragment_bookshelf_noresult)
-    public LinearLayout fragment_bookshelf_noresult;
-
     public static boolean DownMangerComicFragment;
+    private List<BaseComic> mSelectLists;
 
     @Override
-    public int initContentView() {
-        return R.layout.fragment_downmanger;
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        DownMangerComicAdapter downMangerAdapter = (DownMangerComicAdapter) this.downMangerAdapter;
+        downMangerAdapter.setmGetSelectItems(new DownMangerComicAdapter.GetSelectItems() {
+            @Override
+            public void getSelectItems(List<BaseComic> selectLists) {
+                if (selectLists != null) {
+                    if (selectLists.size() > 0) {
+                        setLlDeleteView(true);
+                        mSelectLists = selectLists;
+                        if (selectLists.size() == baseList.size()) {
+                            setLlSelectAllView(true);
+                        } else {
+                            setLlSelectAllView(false);
+                        }
+                    } else {
+                        setLlDeleteView(false);
+                    }
+                }
+            }
+        });
+        mLlDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectLists != null && mSelectLists.size() > 0) {
+                    for (int i = 0; i < mSelectLists.size(); i++) {
+                        BaseComic baseComic = mSelectLists.get(i);
+                        ContentValues values1 = new ContentValues();
+                        values1.put("down_chapters", 0);
+                        LitePal.update(BaseComic.class, values1, baseComic.getId());
+                        List<ComicChapter> comicChapterList = LitePal.where().find(ComicChapter.class);
+                        for (ComicChapter comicChapter : comicChapterList) {
+                            ShareUitls.putComicDownStatus(activity, comicChapter.chapter_id, 0);
+                        }
+                        String localPath = FileManager.getManhuaSDCardRoot().concat(baseComic.getComic_id());
+                        FileManager.deleteFile(localPath);
+                        baseList.remove(baseComic);
+                    }
+                    downMangerAdapter.notifyDataSetChanged();
+                    if (baseList.isEmpty()) {
+                        fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -47,13 +95,20 @@ public class DownMangerComicFragment extends BaseDownMangerFragment<BaseComic> {
     }
 
     @Override
-    protected BaseAdapter getAeAdapter() {
+    protected RecyclerView.Adapter<RecyclerView.ViewHolder> getAeAdapter() {
         return new DownMangerComicAdapter(activity, baseList, fragment_bookshelf_noresult);
     }
 
     @Override
     protected void getIsEditOpen(boolean isEditOpen) {
+        DownMangerComicAdapter aeAdapter = (DownMangerComicAdapter) this.downMangerAdapter;
+        aeAdapter.setmIsEditOpen(isEditOpen);
+    }
 
+    @Override
+    protected void setClickSeleckAll(boolean mIsSelectAll) {
+        DownMangerComicAdapter aeAdapter = (DownMangerComicAdapter)this.downMangerAdapter;
+        aeAdapter.setmIsSelectAll(mIsSelectAll);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -6,15 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.adapter.DownMangerAdapter;
+import com.heiheilianzai.app.adapter.comic.DownMangerComicAdapter;
+import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
 import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
+import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.ui.activity.boyin.BoyinDownActivity;
 import com.heiheilianzai.app.ui.activity.boyin.BoyinPlayerActivity;
 import com.heiheilianzai.app.utils.FileManager;
@@ -26,6 +34,7 @@ import com.heiheilianzai.app.utils.StringUtils;
 
 import org.litepal.LitePal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,46 +43,65 @@ import butterknife.ButterKnife;
 /**
  * 有声小说下载管理 Adapter
  */
-public class DownMangerPhonicAdapter extends BaseAdapter {
+public class DownMangerPhonicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<BoyinInfoBean> list;
     private Activity activity;
     private LinearLayout fragment_bookshelf_noresult;
     private int WIDTH;
+    private List<BoyinInfoBean> mSelectList;
+    private GetSelectItems mGetSelectItems;
+    private boolean mIsSelectAll = false;
+    private boolean mIsEditOpen = false;
+
+    public void setmIsSelectAll(boolean mIsSelectAll) {
+        this.mIsSelectAll = mIsSelectAll;
+        notifyDataSetChanged();
+    }
+
+    public void setmIsEditOpen(boolean mIsEditOpen) {
+        this.mIsEditOpen = mIsEditOpen;
+        notifyDataSetChanged();
+    }
+
+    public void setmGetSelectItems(GetSelectItems mGetSelectItems) {
+        this.mGetSelectItems = mGetSelectItems;
+    }
 
     public DownMangerPhonicAdapter(Activity activity, List<BoyinInfoBean> list, LinearLayout fragment_bookshelf_noresult) {
+        mSelectList=new ArrayList<>();
         this.list = list;
         this.fragment_bookshelf_noresult = fragment_bookshelf_noresult;
         this.activity = activity;
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return list.size();
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View inflate = LayoutInflater.from(activity).inflate(R.layout.item_downmangercomic, null, false);
+        return new ViewHolder(inflate);
     }
 
     @Override
-    public BoyinInfoBean getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View contentView, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
-        if (contentView == null) {
-            contentView = LayoutInflater.from(activity).inflate(R.layout.item_downmangercomic, null, false);
-            viewHolder = new ViewHolder(contentView);
-            contentView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) contentView.getTag();
-        }
-        final BoyinInfoBean boyinInfoBean = getItem(i);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ViewHolder viewHolder= (ViewHolder) holder;
+        BoyinInfoBean boyinInfoBean = list.get(position);
         viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = WIDTH;
+        setIsEditView(viewHolder, mIsEditOpen);
+        setIsSelectAllView(viewHolder, mIsSelectAll);
+        viewHolder.mRlCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHolder.mCheckBox.setChecked(!viewHolder.mCheckBox.isChecked());
+                if (viewHolder.mCheckBox.isChecked()) {
+                    mSelectList.add(boyinInfoBean);
+                } else {
+                    mSelectList.remove(boyinInfoBean);
+                }
+                mGetSelectItems.getSelectItems(mSelectList);
+            }
+        });
+
         viewHolder.item_dowmmanger_open.setOnClickListener(new View.OnClickListener() {//下载播放
             @Override
             public void onClick(View view) {
@@ -115,10 +143,19 @@ public class DownMangerPhonicAdapter extends BaseAdapter {
         MyPicasso.GlideImageRoundedCorners(15, activity, boyinInfoBean.getImg(), viewHolder.item_dowmmanger_cover, ImageUtil.dp2px(activity, 113), ImageUtil.dp2px(activity, 150), R.mipmap.comic_def_v);
         viewHolder.item_dowmmanger_name.setText(boyinInfoBean.getName());
         viewHolder.item_dowmmanger_xiazaiprocess.setText(String.format(LanguageUtil.getString(activity, R.string.ComicDownActivity_downprocess), boyinInfoBean.getDown_chapter() + "/" + boyinInfoBean.getNumbers()));
-        return contentView;
     }
 
-    class ViewHolder {
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.item_dowmmanger_HorizontalScrollView)
         HorizontalScrollView item_dowmmanger_HorizontalScrollView;
         @BindView(R.id.item_dowmmanger_LinearLayout2)
@@ -135,8 +172,13 @@ public class DownMangerPhonicAdapter extends BaseAdapter {
         public TextView item_dowmmanger_xiazaiprocess;
         @BindView(R.id.item_dowmmanger_info)
         public RelativeLayout item_dowmmanger_info;
+        @BindView(R.id.recyclerview_item_readhistory_check)
+        public CheckBox mCheckBox;
+        @BindView(R.id.recyclerview_item_readhistory_check_rl)
+        public RelativeLayout mRlCheckBox;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }
@@ -145,5 +187,29 @@ public class DownMangerPhonicAdapter extends BaseAdapter {
         Intent intent = new Intent(activity, BoyinPlayerActivity.class);
         intent.putExtra("nid", nid);
         activity.startActivity(intent);
+    }
+    protected void setIsEditView(ViewHolder holder, boolean isEditOpen) {
+        if (isEditOpen) {
+            holder.mRlCheckBox.setVisibility(View.VISIBLE);
+            holder.item_dowmmanger_open.setVisibility(View.GONE);
+        } else {
+            holder.mRlCheckBox.setVisibility(View.GONE);
+            holder.item_dowmmanger_open.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void setIsSelectAllView(ViewHolder holder, boolean isSelectAll) {
+        mSelectList.clear();
+        if (isSelectAll) {
+            mSelectList.addAll(list);
+        } else {
+            mSelectList.clear();
+        }
+        holder.mCheckBox.setChecked(isSelectAll);
+        mGetSelectItems.getSelectItems(mSelectList);
+    }
+
+    public interface GetSelectItems {
+        void getSelectItems(List<BoyinInfoBean> selectLists);
     }
 }

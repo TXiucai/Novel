@@ -7,12 +7,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,7 +52,7 @@ public class DownMangerActivity extends BaseButterKnifeActivity {
     @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
     @BindView(R.id.activity_downmanger_list)
-    public ListView activity_downmanger_list;
+    public XRecyclerView activity_downmanger_list;
     @BindView(R.id.fragment_bookshelf_noresult)
     public LinearLayout fragment_bookshelf_noresult;
 
@@ -63,9 +68,10 @@ public class DownMangerActivity extends BaseButterKnifeActivity {
 
 
         View temphead = LayoutInflater.from(this).inflate(R.layout.item_list_head, null);
-        activity_downmanger_list.addHeaderView(temphead, null, false);
-        activity_downmanger_list.setHeaderDividersEnabled(true);
-
+        MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        activity_downmanger_list.setLayoutManager(layoutManager);
+        activity_downmanger_list.addHeaderView(temphead);
         titlebar_text.setText(LanguageUtil.getString(this, R.string.BookInfoActivity_down_manger));
         downoptions = LitePal.where().find(Downoption.class);
         List<String> list = new ArrayList<>();

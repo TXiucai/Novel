@@ -5,10 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -29,48 +34,70 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DownMangerAdapter extends BaseAdapter {
+public class DownMangerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Downoption> list;
     Activity activity;
     LinearLayout fragment_bookshelf_noresult;
     List<String> stringList;
+    private List<Downoption> mSelectList;
+    private GetSelectItems mGetSelectItems;
+    private boolean mIsSelectAll = false;
+    private boolean mIsEditOpen = false;
+
+    public void setmIsSelectAll(boolean mIsSelectAll) {
+        this.mIsSelectAll = mIsSelectAll;
+        notifyDataSetChanged();
+    }
+
+    public void setmIsEditOpen(boolean mIsEditOpen) {
+        this.mIsEditOpen = mIsEditOpen;
+        notifyDataSetChanged();
+    }
+
+    public void setmGetSelectItems(GetSelectItems mGetSelectItems) {
+        this.mGetSelectItems = mGetSelectItems;
+    }
 
     public DownMangerAdapter(Activity activity, List<Downoption> list, LinearLayout fragment_bookshelf_noresult) {
+        mSelectList = new ArrayList<>();
         this.list = list;
         this.fragment_bookshelf_noresult = fragment_bookshelf_noresult;
         this.activity = activity;
         stringList = new ArrayList<>();
     }
 
+
+    @NonNull
     @Override
-    public int getCount() {
-        return list.size();
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View inflate = LayoutInflater.from(activity).inflate(R.layout.item_downmanger, null, false);
+        return new ViewHolder(inflate);
     }
 
     @Override
-    public Downoption getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View contentView, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
-        contentView = LayoutInflater.from(activity).inflate(R.layout.item_downmanger, null, false);
-        viewHolder = new ViewHolder(contentView);
-        contentView.setTag(viewHolder);
-        final Downoption downoption = getItem(i);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ViewHolder viewHolder= (ViewHolder) holder;
+        final Downoption downoption =list.get(position);
         if (!downoption.showHead) {
             viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.GONE);
         } else {
             viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.VISIBLE);
         }
-        viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = ScreenSizeUtils.getInstance(activity).getScreenWidth(); /*+ holder.rl_left.getLayoutParams().width*/
-        ;
+        setIsEditView(viewHolder, mIsEditOpen);
+        setIsSelectAllView(viewHolder, mIsSelectAll);
+        viewHolder.mRlCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHolder.mCheckBox.setChecked(!viewHolder.mCheckBox.isChecked());
+                if (viewHolder.mCheckBox.isChecked()) {
+                    mSelectList.add(downoption);
+                } else {
+                    mSelectList.remove(downoption);
+                }
+                mGetSelectItems.getSelectItems(mSelectList);
+            }
+        });
+        viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         viewHolder.item_dowmmanger_LinearLayout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,11 +150,19 @@ public class DownMangerAdapter extends BaseAdapter {
             BigDecimal b = new BigDecimal(((float) downoption.down_cunrrent_num / (float) downoption.down_num));
             viewHolder.item_dowmmanger_Downoption_yixizai.setText(b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue() + "%");
         }
-        viewHolder.item_dowmmanger_open.setVisibility(View.VISIBLE);
-        return contentView;
     }
 
-    class ViewHolder {
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.item_dowmmanger_HorizontalScrollView)
         public HorizontalScrollView item_dowmmanger_HorizontalScrollView;
         @BindView(R.id.item_dowmmanger_LinearLayout1)
@@ -150,9 +185,40 @@ public class DownMangerAdapter extends BaseAdapter {
         public TextView item_dowmmanger_Downoption_size;
         @BindView(R.id.item_dowmmanger_Downoption_yixizai)
         public TextView item_dowmmanger_Downoption_yixizai;
+        @BindView(R.id.recyclerview_item_readhistory_check)
+        public CheckBox mCheckBox;
+        @BindView(R.id.recyclerview_item_readhistory_check_rl)
+        public RelativeLayout mRlCheckBox;
+
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
+    }
+
+    protected void setIsEditView(ViewHolder holder, boolean isEditOpen) {
+        if (isEditOpen) {
+            holder.mRlCheckBox.setVisibility(View.VISIBLE);
+            holder.item_dowmmanger_open.setVisibility(View.GONE);
+        } else {
+            holder.mRlCheckBox.setVisibility(View.GONE);
+            holder.item_dowmmanger_open.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void setIsSelectAllView(ViewHolder holder, boolean isSelectAll) {
+        mSelectList.clear();
+        if (isSelectAll) {
+            mSelectList.addAll(list);
+        } else {
+            mSelectList.clear();
+        }
+        holder.mCheckBox.setChecked(isSelectAll);
+        mGetSelectItems.getSelectItems(mSelectList);
+    }
+
+    public interface GetSelectItems {
+        void getSelectItems(List<Downoption> selectLists);
     }
 }

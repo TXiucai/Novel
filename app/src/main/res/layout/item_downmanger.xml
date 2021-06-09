@@ -17,6 +17,22 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <RelativeLayout
+                android:id="@+id/recyclerview_item_readhistory_check_rl"
+                android:layout_width="@dimen/dimens_54dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/recyclerview_item_readhistory_check"
+                    android:layout_width="@dimen/dimens_16dp"
+                    android:layout_height="@dimen/dimens_16dp"
+                    android:button="@drawable/selector_history_checkbox"
+                    android:clickable="false"
+                    android:gravity="center" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/item_dowmmanger_LinearLayout2"
                 android:layout_width="wrap_content"

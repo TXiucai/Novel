@@ -1,10 +1,21 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
+import android.content.ContentValues;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.BaseAdapter;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
 import com.heiheilianzai.app.base.BaseDownMangerFragment;
+import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.model.Downoption;
+import com.heiheilianzai.app.model.comic.BaseComic;
+import com.heiheilianzai.app.model.comic.ComicChapter;
+import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.ShareUitls;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -19,6 +30,54 @@ import java.util.List;
  * 下载缓存页面 小说
  */
 public class DownMangerBookFragment extends BaseDownMangerFragment<Downoption> {
+    private List<Downoption> mSelectLists;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        DownMangerAdapter downMangerAdapter = (DownMangerAdapter) this.downMangerAdapter;
+        downMangerAdapter.setmGetSelectItems(new DownMangerAdapter.GetSelectItems() {
+            @Override
+            public void getSelectItems(List<Downoption> selectLists) {
+                if (selectLists != null) {
+                    if (selectLists.size() > 0) {
+                        setLlDeleteView(true);
+                        mSelectLists = selectLists;
+                        if (selectLists.size() == baseList.size()) {
+                            setLlSelectAllView(true);
+                        } else {
+                            setLlSelectAllView(false);
+                        }
+                    } else {
+                        setLlDeleteView(false);
+                    }
+                }
+            }
+        });
+        mLlDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSelectLists != null && mSelectLists.size() > 0) {
+                    for (int i = 0; i < mSelectLists.size(); i++) {
+                        Downoption downoption = mSelectLists.get(i);
+                        LitePal.deleteAll(Downoption.class, "book_id=?", downoption.book_id);
+                        ShareUitls.putDown(activity, downoption.book_id, "0-0");
+                        List<Downoption> downoptions = new ArrayList<>();
+                        for (Downoption downoption1 : baseList) {
+                            if (downoption1.book_id.equals(downoption.book_id)) {
+                                downoptions.add(downoption1);
+                            }
+                        }
+                        baseList.removeAll(downoptions);
+                    }
+                    downMangerAdapter.notifyDataSetChanged();
+                    if (baseList.size() == 0) {
+                        fragment_bookshelf_noresult.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     protected void initData() {
@@ -43,13 +102,20 @@ public class DownMangerBookFragment extends BaseDownMangerFragment<Downoption> {
     }
 
     @Override
-    protected BaseAdapter getAeAdapter() {
+    protected RecyclerView.Adapter<RecyclerView.ViewHolder> getAeAdapter() {
         return new DownMangerAdapter(activity, baseList, fragment_bookshelf_noresult);
     }
 
     @Override
     protected void getIsEditOpen(boolean isEditOpen) {
+        DownMangerAdapter downMangerAdapter = (DownMangerAdapter) this.downMangerAdapter;
+        downMangerAdapter.setmIsEditOpen(isEditOpen);
+    }
 
+    @Override
+    protected void setClickSeleckAll(boolean mIsSelectAll) {
+        DownMangerAdapter downMangerAdapter = (DownMangerAdapter) this.downMangerAdapter;
+        downMangerAdapter.setmIsSelectAll(mIsSelectAll);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
