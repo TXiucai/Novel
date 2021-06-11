@@ -3,31 +3,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/item_store_label_male_vertical_layout"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="10dp">
+        android:layout_marginLeft="@dimen/dimens_20dp"
+        android:layout_marginTop="@dimen/dimens_12dp"
+        android:layout_marginRight="@dimen/dimens_20dp"
+        android:layout_marginBottom="@dimen/dimens_12dp">
 
         <ImageView
             android:id="@+id/item_store_label_male_horizontal_img"
-            android:layout_width="90dp"
-            android:layout_height="120dp"
+            android:layout_width="@dimen/dimens_66dp"
+            android:layout_height="@dimen/dimens_88dp"
             android:layout_gravity="center_vertical"
             android:src="@mipmap/ic_launcher" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="@dimen/dimens_88dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:orientation="vertical"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp">
+            android:layout_marginLeft="@dimen/dp_10"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/LinearLayout"
@@ -39,11 +40,11 @@
                 <TextView
                     android:id="@+id/item_store_label_male_horizontal_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:text="我真不是开玩笑"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/public_12_dp" />
+                    android:textColor="@color/color_3b3b3b"
+                    android:textSize="14sp" />
 
                 <!--   <TextView
                        android:id="@+id/item_store_label_male_horizontal_flag"
@@ -59,22 +60,18 @@
                        android:text="免费"
                        android:textColor="@color/white"
                        android:textSize="@dimen/public_10_dp" />-->
-
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/item_store_label_male_horizontal_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/LinearLayout"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dimens_2dp"
                 android:ellipsize="end"
-                android:lineSpacingExtra="5dp"
-                android:lines="3"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/public_10_dp" />
-
+                android:lines="2"
+                android:textColor="@color/color_9a9a9a"
+                android:textSize="12sp" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -87,27 +84,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:drawableLeft="@mipmap/home_item_eye"
+                    android:drawablePadding="@dimen/dimens_5dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:singleLine="true"
-                    android:text="作者"
                     android:textColor="@color/gray3"
-                    android:textSize="@dimen/public_10_dp" />
+                    android:textSize="12sp" />
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/item_store_label_male_horizontal_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:textSize="11dp" />
-
+                    android:orientation="horizontal" />
             </RelativeLayout>
         </RelativeLayout>
-
     </LinearLayout>
-
 
     <FrameLayout
         android:id="@+id/list_ad_view_layout"
@@ -115,8 +108,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@color/white"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingLeft="@dimen/dimens_20dp"
+        android:paddingRight="@dimen/dimens_20dp">
+
         <ImageView
             android:id="@+id/list_ad_view_img"
             android:layout_width="match_parent"
@@ -127,7 +121,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="@dimen/dimens_1dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/dimens_15dp"
+        android:layout_marginRight="@dimen/dimens_15dp"
         android:background="@color/lightgray2" />
 </RelativeLayout>

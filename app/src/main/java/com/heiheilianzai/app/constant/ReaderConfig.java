@@ -307,6 +307,11 @@ public class ReaderConfig {
     public static final String mPayLastOrder = "/user/lastpay-order";
 
     /**
+     * 用户最后登录时间
+     */
+    public static final String mLastTime = "/user/edit-last-login-time";
+
+    /**
      * 获取充值订单
      */
     public static final String mPayOrder = "/user/get-today-success-pay";

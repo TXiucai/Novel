@@ -533,4 +533,6 @@
     <string name="string_all_select">全选</string>
     <string name="string_cancel_all">取消全选</string>
     <string name="string_delete_success">删除成功</string>
+    <string name="string_hide">收起</string>
+    <string name="string_fold">展开</string>
 </resources>

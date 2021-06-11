@@ -7,16 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.OptionRecyclerViewAdapter;
+import com.heiheilianzai.app.adapter.SearchFirstHeadAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -36,6 +40,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
@@ -85,6 +90,9 @@ import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
 public class OptionFragment extends BaseButterKnifeFragment {
 
 
+    private List<SearchBox.SearchBoxLabe> mFirstSearchBoxLableLists;
+    private SearchFirstHeadAdapter mSearchFirstHeadAdapter;
+
     @Override
     public int initContentView() {
         return R.layout.fragment_option;
@@ -111,6 +119,10 @@ public class OptionFragment extends BaseButterKnifeFragment {
     LinearLayout temphead;
     LayoutInflater layoutInflater;
     Map<String, String> map;
+    private boolean mIsFold = true;
+    private String mSelectID = "";
+    int LoadingListener = 0;
+    boolean isRefarshHead;
 
     //普通列表
     @SuppressLint("ValidFragment")
@@ -296,9 +308,6 @@ public class OptionFragment extends BaseButterKnifeFragment {
         HttpData();
     }
 
-    int LoadingListener = 0;
-    boolean isRefarshHead;
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -307,7 +316,6 @@ public class OptionFragment extends BaseButterKnifeFragment {
             @Override
             public void onRefresh() {
                 if (OPTION == BAOYUE_SEARCH || OPTION == SHUKU) {
-                    isRefarshHead = true;
                     map.clear();
                 }
                 LoadingListener = -1;
@@ -368,8 +376,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
             optionBeenList.addAll(baoyueItem.list);
 
             optionAdapter.notifyDataSetChanged();
-        }
-        else if (OPTION == BAOYUE_SEARCH || SHUKU == OPTION) {
+        } else if (OPTION == BAOYUE_SEARCH || SHUKU == OPTION) {
             CategoryItem categoryItem = gson.fromJson(result, CategoryItem.class);
             int optionItem_list_size = categoryItem.list.list.size();
             if (current_page == 1) {
@@ -378,59 +385,111 @@ public class OptionFragment extends BaseButterKnifeFragment {
                         temphead.removeAllViews();
                     }
                     int raw = 0;
-                    for (SearchBox searchBox : categoryItem.search_box) {
-                        ++raw;
-                        LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.serach_head, null, false);
-                        RadioGroup srach_head_RadioGroup = linearLayout.findViewById(R.id.srach_head_RadioGroup);
-                        int id = 0;
-                        for (SearchBox.SearchBoxLabe searchBoxLabe : searchBox.list) {
-                            final MyRadioButton radioButton = (MyRadioButton) layoutInflater.inflate(R.layout.activity_radiobutton, null, false);
-                            radioButton.setId(id);
-
-                            radioButton.setfield(searchBox.field);
-                            radioButton.setRaw(raw);
-                            radioButton.setBackgroundResource(R.drawable.selector_search_box_item);
-                            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, ImageUtil.dp2px(activity, 25));
-                            params.rightMargin = 30;
-                            radioButton.setText(searchBoxLabe.getDisplay());
-                            srach_head_RadioGroup.addView(radioButton, params);
-                            if (PRODUCT) {
-                                if (searchBoxLabe.checked == 1) {
-                                    map.put(searchBox.field, searchBoxLabe.value);
-                                    radioButton.setChecked(true);
-                                }
+                    for (int i = 0; i < categoryItem.search_box.size(); i++) {
+                        SearchBox searchBox = categoryItem.search_box.get(i);
+                        if (SHUKU == OPTION && i == 0 && searchBox.list.size() > 0) { //漫画小说 第一种分类改为网格形式
+                            View inflate = layoutInflater.inflate(R.layout.search_first_head, null, false);
+                            RecyclerView rySearch = inflate.findViewById(R.id.ry_search_first);
+                            TextView txFold = inflate.findViewById(R.id.tx_fold);
+                            ImageView imgFold = inflate.findViewById(R.id.img_fold);
+                            LinearLayout llFold = inflate.findViewById(R.id.ll_fold);
+                            rySearch.setLayoutManager(new GridLayoutManager(activity, 6));
+                            //原数据源
+                            mFirstSearchBoxLableLists = searchBox.list;
+                            if (mFirstSearchBoxLableLists.size() > 18) { //超过三排需要折叠
+                                llFold.setVisibility(View.VISIBLE);
                             } else {
-                                if (id == 0) {
-                                    map.put(searchBox.field, searchBoxLabe.value);
-                                    radioButton.setChecked(true);
-                                }
+                                llFold.setVisibility(View.GONE);
                             }
-                            srach_head_RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            mSearchFirstHeadAdapter = new SearchFirstHeadAdapter(activity, mFirstSearchBoxLableLists);
+                            rySearch.setAdapter(mSearchFirstHeadAdapter);
+                            llFold.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                    MyToash.Log("RadioGroup", radioButton.getField() + "  ");
-                                    if (PRODUCT) {//小说 男女频道下 分类选项不一样 要重新刷新
-                                        if (radioButton.getField().equals("channel_id")) {
-                                            isRefarshHead = true;
-                                            map.clear();
-                                        } else {
-                                            isRefarshHead = false;
-                                        }
+                                public void onClick(View v) {
+                                    llFold.setClickable(false);
+                                    mIsFold = !mIsFold;
+                                    if (mIsFold) {
+                                        txFold.setText(getText(R.string.string_fold));
+                                        imgFold.setImageDrawable(getResources().getDrawable(R.mipmap.fold_down));
+                                    } else {
+                                        txFold.setText(getText(R.string.string_hide));
+                                        imgFold.setImageDrawable(getResources().getDrawable(R.mipmap.fold_up));
                                     }
-                                    map.put(searchBox.field, searchBox.list.get(checkedId).value);
+                                    llFold.setClickable(true);
+                                    mSearchFirstHeadAdapter.setmIsFold(mIsFold);
+                                    mSearchFirstHeadAdapter.notifyDataSetChanged();
+                                }
+                            });
+                            mSearchFirstHeadAdapter.setmOnBackSelectHeadLists(new SearchFirstHeadAdapter.OnBackSelectHeadLists() {
+                                @Override
+                                public void onBackSelectHeadLists(List<SearchBox.SearchBoxLabe> selectLists) {
+                                    mSelectID = "";
+                                    for (int j = 0; j < selectLists.size(); j++) {
+                                        SearchBox.SearchBoxLabe searchBoxLabe = selectLists.get(j);
+                                        String value = searchBoxLabe.getValue();
+                                        if (j != selectLists.size() - 1) {
+                                            value += ",";
+                                        }
+                                        mSelectID += value;
+                                    }
                                     current_page = 1;
                                     LoadingListener = 0;
                                     HttpData();
                                 }
                             });
-                            ++id;
-                        }
+                            temphead.addView(inflate);
+                        } else {
+                            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.serach_head, null, false);
+                            RadioGroup srach_head_RadioGroup = linearLayout.findViewById(R.id.srach_head_RadioGroup);
+                            int id = 0;
+                            for (SearchBox.SearchBoxLabe searchBoxLabe : searchBox.list) {
+                                final MyRadioButton radioButton = (MyRadioButton) layoutInflater.inflate(R.layout.activity_radiobutton, null, false);
+                                radioButton.setId(id);
 
+                                radioButton.setfield(searchBox.field);
+                                radioButton.setRaw(raw);
+                                //radioButton.setBackgroundResource(R.drawable.selector_search_box_item);
+                                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, ImageUtil.dp2px(activity, 25));
+                                params.rightMargin = 30;
+                                radioButton.setText(searchBoxLabe.getDisplay());
+                                srach_head_RadioGroup.addView(radioButton, params);
+                                if (PRODUCT) {
+                                    if (searchBoxLabe.checked == 1) {
+                                        map.put(searchBox.field, searchBoxLabe.value);
+                                        radioButton.setChecked(true);
+                                    }
+                                } else {
+                                    if (id == 0) {
+                                        map.put(searchBox.field, searchBoxLabe.value);
+                                        radioButton.setChecked(true);
+                                    }
+                                }
+                                srach_head_RadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                        MyToash.Log("RadioGroup", radioButton.getField() + "  ");
+                                        if (PRODUCT) {//小说 男女频道下 分类选项不一样 要重新刷新
+                                            if (radioButton.getField().equals("channel_id")) {
+                                                isRefarshHead = true;
+                                                map.clear();
+                                            } else {
+                                                isRefarshHead = false;
+                                            }
+                                        }
+                                        map.put(searchBox.field, searchBox.list.get(checkedId).value);
+                                        current_page = 1;
+                                        LoadingListener = 0;
+                                        HttpData();
+                                    }
+                                });
+                                ++id;
+                            }
+                            temphead.addView(linearLayout);
+                        }
+                        ++raw;
                         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fragment_option_noresult.getLayoutParams();
                         layoutParams.topMargin = ImageUtil.dp2px(activity, 55) * raw;
                         fragment_option_noresult.setLayoutParams(layoutParams);
-
-                        temphead.addView(linearLayout);
                     }
                     optionBeenList.clear();
                     optionBeenList.addAll(categoryItem.list.list);
@@ -447,6 +506,10 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     }
 
                 } else {
+                    mFirstSearchBoxLableLists.clear();
+                    mFirstSearchBoxLableLists.addAll(categoryItem.getSearch_box().get(0).list);
+                    mSearchFirstHeadAdapter.setmIsFold(mIsFold);
+                    mSearchFirstHeadAdapter.notifyDataSetChanged();
                     optionBeenList.clear();
                     optionBeenList.addAll(categoryItem.list.list);
                     optionAdapter.notifyDataSetChanged();
@@ -560,6 +623,9 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     params.putExtraParams(entry.getKey(), entry.getValue());
                 }
                 params.putExtraParams("page_num", current_page + "");
+                if (!mSelectID.equals("")) {
+                    params.putExtraParams("cat", mSelectID);
+                }
                 break;
             default:
                 params.putExtraParams("channel_id", SEX + "");

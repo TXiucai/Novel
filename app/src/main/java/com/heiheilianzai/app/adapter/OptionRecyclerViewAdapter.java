@@ -52,13 +52,13 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
         this.PRODUCT = PRODUCT;
         this.onItemClick = onItemClick;
         this.layoutInflater = layoutInflater;
-        WIDTH = ImageUtil.dp2px(activity, 90);
+        WIDTH = ImageUtil.dp2px(activity, 66);
         HEIGHT = WIDTH * 4 / 3;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View convertView = layoutInflater.inflate(R.layout.item_option, null, false);
+        View convertView = layoutInflater.inflate(R.layout.item_option, parent, false);
         return new ViewHolder(convertView);
     }
 
@@ -84,16 +84,26 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
             }
             viewHolder.name.setText(optionBeen.getName());
             viewHolder.description.setText(optionBeen.getDescription());
-            viewHolder.author.setText(optionBeen.getAuthor());
-            String str = "";
-            for (BaseTag tag : optionBeen.tag) {
-                str += "&nbsp&nbsp<font color='" + tag.color + "'>" + tag.tab + "</font>";
+            viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
+            viewHolder.item_store_label_male_horizontal_tag.removeAllViews();
+            for (int i = 0; i < optionBeen.tag.size(); i++) {
+                if (i < 3) {
+                    BaseTag baseTag = optionBeen.tag.get(i);
+                    String str = "&nbsp&nbsp<font color='" + baseTag.color + "'>" + baseTag.tab.trim() + "</font>";
+                    TextView textView = new TextView(activity);
+                    textView.setTextSize(10);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(10, 0, 10, 0);
+                    textView.setPadding(10, 5, 20, 10);
+                    textView.setLayoutParams(layoutParams);
+                    textView.setText(Html.fromHtml(str));
+                    textView.setBackground(activity.getDrawable(R.drawable.shape_announce));
+                    viewHolder.item_store_label_male_horizontal_tag.addView(textView);
+                }
             }
-            viewHolder.item_store_label_male_horizontal_tag.setText(Html.fromHtml(str));
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewHolder.item_store_label_male_vertical_layout.getLayoutParams();
             layoutParams.height = HEIGHT;
             viewHolder.item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
-
         } else {
             viewHolder.item_store_label_male_vertical_layout.setVisibility(View.GONE);
             viewHolder.list_ad_view_layout.setVisibility(View.VISIBLE);
@@ -110,14 +120,12 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
             viewHolder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent intent = new Intent();
                     intent.setClass(activity, WebViewActivity.class);
                     intent.putExtra("url", optionBeen.ad_skip_url);
                     intent.putExtra("title", optionBeen.ad_title);
                     intent.putExtra("advert_id", optionBeen.advert_id);
                     intent.putExtra("ad_url_type", optionBeen.ad_url_type);
-
                     activity.startActivity(intent);
                 }
             });
@@ -143,7 +151,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
         @BindView(R.id.item_store_label_male_horizontal_author)
         TextView author;
         @BindView(R.id.item_store_label_male_horizontal_tag)
-        TextView item_store_label_male_horizontal_tag;
+        LinearLayout item_store_label_male_horizontal_tag;
         @BindView(R.id.item_store_label_male_vertical_layout)
         LinearLayout item_store_label_male_vertical_layout;
         @BindView(R.id.item_layout)

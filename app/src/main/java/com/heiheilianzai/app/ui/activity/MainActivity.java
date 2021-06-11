@@ -313,6 +313,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setStatusTextColor(useDart, activity);
         IntentFragment(possition);
         getVipPayOrder();
+        upLastTime();
         if (homeBoYinFragment != null) {
             if (possition == 3) {
                 homeBoYinFragment.onMyResume();
@@ -320,6 +321,21 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 homeBoYinFragment.onMyPause();
             }
         }
+    }
+
+    private void upLastTime() {
+        ReaderParams params = new ReaderParams(MainActivity.this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(MainActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mLastTime, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
 
