@@ -25,6 +25,7 @@ import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.TopActivity;
+import com.heiheilianzai.app.ui.activity.TopNewActivity;
 import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
 import com.heiheilianzai.app.ui.activity.TopYearComicActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
@@ -330,7 +331,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     /*intent.putExtra("OPTION", PAIHANGINSEX);
                     intent.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_paihang));
                     startActivity(intent);*/
-                    startActivity(new Intent(activity, TopActivity.class).putExtra("PRODUCT", recommend_type == 0));
+                    startActivity(new Intent(activity, TopNewActivity.class).putExtra("PRODUCT", recommend_type == 0));
                 } else if (jump_type == 4) {
                     int originCode = recommend_type == 0 ? 1 : 2;
                     Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), originCode);

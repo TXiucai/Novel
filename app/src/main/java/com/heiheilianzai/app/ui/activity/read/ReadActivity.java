@@ -37,6 +37,7 @@ import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
@@ -395,7 +396,7 @@ public class ReadActivity extends BaseReadActivity {
                             SettingDialog.scroll = true;
                         }
                     } else {
-                        ChapterManager.notfindChapter(pageFactory.chapterItem, mBookId, pageFactory.chapterItem.getChapter_id(), new ChapterManager.ChapterDownload() {
+                        ChapterManager.notfindChapter(ShareUitls.getString(activity, PrefConst.NOVEL_API, "")+ ReaderConfig.chapter_text, pageFactory.chapterItem, mBookId, pageFactory.chapterItem.getChapter_id(), new ChapterManager.ChapterDownload() {
                             @Override
                             public void finish() {
                                 if (SettingDialog.scroll) {

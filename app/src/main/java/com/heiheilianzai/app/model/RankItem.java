@@ -9,7 +9,16 @@ public class RankItem {
     String rank_type;
     String list_name;
     String description;
+    String bg_img;
     List<String> icon;
+
+    public String getBg_img() {
+        return bg_img;
+    }
+
+    public void setBg_img(String bg_img) {
+        this.bg_img = bg_img;
+    }
 
     public String getRank_type() {
         return rank_type;

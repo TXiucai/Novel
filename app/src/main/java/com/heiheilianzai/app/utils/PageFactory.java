@@ -30,6 +30,7 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.BaseAd;
@@ -707,7 +708,7 @@ public class PageFactory {
                                 LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, preChapterId);
                                 querychapterItem.setChapter_path(path);
                             } else {
-                                ChapterManager.notfindChapter(querychapterItem, book_id, preChapterId, new ChapterManager.ChapterDownload() {
+                                ChapterManager.notfindChapter(ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text, querychapterItem, book_id, preChapterId, new ChapterManager.ChapterDownload() {
                                     @Override
                                     public void finish() {
                                         drawLastChapter(querychapterItem, preChapterId);
@@ -790,7 +791,7 @@ public class PageFactory {
                                     LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, nextChapterId);
                                     querychapterItem.setChapter_path(path);
                                 } else {
-                                    ChapterManager.notfindChapter(querychapterItem, book_id, nextChapterId, new ChapterManager.ChapterDownload() {
+                                    ChapterManager.notfindChapter(ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text, querychapterItem, book_id, nextChapterId, new ChapterManager.ChapterDownload() {
                                         @Override
                                         public void finish() {
                                             drawNextChapter(querychapterItem, nextChapterId);
@@ -926,7 +927,7 @@ public class PageFactory {
                     @Override
                     public void onResponse(final String result) {
                         ReaderConfig.REFREASH_USERCENTER = true;
-                        downloadWithoutAutoBuy(book_id, chapter_id);
+                        downloadWithoutAutoBuy(book_id, chapter_id,ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.mChapterDownUrl);
                         ReaderConfig.integerList.add(1);
                     }
 
@@ -937,13 +938,13 @@ public class PageFactory {
         );
     }
 
-    public void downloadWithoutAutoBuy(final String book_id, final String chapter_id) {
+    public void downloadWithoutAutoBuy(final String book_id, final String chapter_id, String api) {
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("book_id", book_id);
         params.putExtraParams("chapter_id", chapter_id);
         params.putExtraParams("num", "1");
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterDownUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(api, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
@@ -977,6 +978,7 @@ public class PageFactory {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        downloadWithoutAutoBuy(book_id, chapter_id, ReaderConfig.getBaseUrl() + ReaderConfig.mChapterDownUrl);
                     }
                 }
         );
@@ -1672,7 +1674,7 @@ public class PageFactory {
             return;
         } else {
             if (Utils.isLogin(mActivity)) {
-                checkIsBuyCoupon(mActivity, chapterItem);
+                checkIsBuyCoupon(mActivity, chapterItem, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
             } else {
                 if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
                     DialogLogin dialogLogin = new DialogLogin();
@@ -1682,12 +1684,12 @@ public class PageFactory {
         }
     }
 
-    private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem) {
+    private void checkIsBuyCoupon(Activity activity, ChapterItem chapterItem, String api) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("book_id", chapterItem.getBook_id());
         params.putExtraParams("chapter_id", chapterItem.getChapter_id());
         String paramString = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, paramString, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(api, paramString, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
@@ -1713,6 +1715,7 @@ public class PageFactory {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        checkIsBuyCoupon(mActivity, chapterItem, ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text);
                     }
                 }
         );

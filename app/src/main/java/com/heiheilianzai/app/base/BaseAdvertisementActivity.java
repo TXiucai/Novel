@@ -35,6 +35,7 @@ import com.umeng.analytics.MobclickAgent;
 import org.json.JSONObject;
 
 import androidx.fragment.app.FragmentActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -187,6 +188,10 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(result);
                             String start_pag = jsonObject.getString("start_page");
+                            String book_text_api = jsonObject.getString("book_text_api");
+                            if (!StringUtils.isEmpty(book_text_api)) {
+                                ShareUitls.putString(App.getContext(), PrefConst.NOVEL_API, book_text_api);
+                            }
                             if (!StringUtils.isEmpty(start_pag)) {
                                 ShareUitls.putString(App.getContext(), PrefConst.ADVERTISING_JSON_KAY, start_pag);
                                 Startpage startpage = new Gson().fromJson(start_pag, Startpage.class);

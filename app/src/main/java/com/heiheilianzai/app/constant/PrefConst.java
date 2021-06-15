@@ -48,6 +48,10 @@ public class PrefConst {
      * vip订单成功的订单号
      */
     public static final String VIP_SUCCESS_ORDER = "vip_order_success_num";
+    /**
+     * 小说单独的api接口
+     */
+    public static final String NOVEL_API = "novel_api";
 
     //---------------------- END -----------------------------
 

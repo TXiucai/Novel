@@ -7,7 +7,16 @@ public class OptionItem {
     public int current_page;//": 2,
     public int page_size;//": 2,
     public int total_count;//,
+    public String bg_img;
     public List<OptionBeen> list;
+
+    public String getBg_img() {
+        return bg_img;
+    }
+
+    public void setBg_img(String bg_img) {
+        this.bg_img = bg_img;
+    }
 
     public int getTotal_page() {
         return total_page;

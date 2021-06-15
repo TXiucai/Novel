@@ -23,6 +23,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.ChapterContent;
@@ -37,6 +38,7 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.zcw.togglebutton.ToggleButton;
 
 import org.json.JSONArray;
@@ -266,7 +268,7 @@ public class PurchaseDialog extends Dialog {
                             for (String chapter_id : strings) {
                                 ContentValues values = new ContentValues();
                                 values.put("is_preview", "0");
-                                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id,chapter_id);
+                                LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                                 if (DownDialog.isreaderbook || !isdown) {
                                     ChapterManager.getInstance(mContext).getChapter(chapter_id, new ChapterManager.QuerychapterItemInterface() {
 
@@ -282,10 +284,10 @@ public class PurchaseDialog extends Dialog {
                                 }
                             }
                             if (!isdown) {
-                                downloadWithoutAutoBuy(book_id, chapter_id);
+                                downloadWithoutAutoBuy(book_id, chapter_id, ShareUitls.getString(mContext, PrefConst.NOVEL_API, "") + ReaderConfig.mChapterDownUrl);
                             } else {
                                 if (DownDialog.isreaderbook) {
-                                    downloadWithoutAutoBuy(book_id, chapter_id);
+                                    downloadWithoutAutoBuy(book_id, chapter_id, ShareUitls.getString(mContext, PrefConst.NOVEL_API, "") + ReaderConfig.mChapterDownUrl);
                                 }
                                 MyToash.ToashSuccess(mContext, LanguageUtil.getString(mContext, R.string.ReadActivity_buysuccessyidown));
                                 new DownDialog().getdown_url(mContext, downoption);
@@ -303,13 +305,13 @@ public class PurchaseDialog extends Dialog {
         );
     }
 
-    public void downloadWithoutAutoBuy(final String book_id, final String chapter_id) {
+    public void downloadWithoutAutoBuy(final String book_id, final String chapter_id, String api) {
         ReaderParams params = new ReaderParams(mContext);
         params.putExtraParams("book_id", book_id);
         params.putExtraParams("chapter_id", chapter_id);
         params.putExtraParams("num", "1");
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(mContext).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterDownUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(mContext).sendRequestRequestParams3(api, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
@@ -319,7 +321,7 @@ public class PurchaseDialog extends Dialog {
                             ChapterManager.getInstance(mContext).getCurrentChapter().setIs_preview(chapterContent.getIs_preview());
                             ChapterManager.getInstance(mContext).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
                             ContentValues values = new ContentValues();
-                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getIs_new_content()+"/").concat(chapterContent.getUpdate_time()).concat(".txt");
+                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getIs_new_content() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
                             FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                             values.put("chapteritem_begin", 0);
                             values.put("chapter_path", filepath);
@@ -327,7 +329,7 @@ public class PurchaseDialog extends Dialog {
                             values.put("is_preview", "0");
                             ChapterManager.getInstance(mContext).getCurrentChapter().setIs_preview("0");
                             ChapterManager.getInstance(mContext).getCurrentChapter().setChapter_path(filepath);
-                            LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id,chapter_id);
+                            LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
                             ChapterManager.getInstance(mContext).openCurrentChapter(chapter_id);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -336,6 +338,7 @@ public class PurchaseDialog extends Dialog {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        downloadWithoutAutoBuy(book_id, chapter_id, ReaderConfig.getBaseUrl() + ReaderConfig.mChapterDownUrl);
                     }
                 }
         );

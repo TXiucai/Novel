@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.OptionBeen;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.StringUtils;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View convertView = LayoutInflater.from(activity).inflate(R.layout.item_top_detail, null, false);
+        View convertView = LayoutInflater.from(activity).inflate(R.layout.item_top_detail, parent, false);
         return new ViewHolder(convertView);
     }
 
@@ -76,7 +78,29 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         viewHolder.name.setText(optionBeen.getName());
         viewHolder.description.setText(optionBeen.getDescription());
-        viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
+        String total_favors = optionBeen.getTotal_favors();
+        long updated_at = optionBeen.getUpdated_at();
+        int total_views = optionBeen.getTotal_views();
+        int total_downs = optionBeen.getTotal_downs();
+        if (total_downs != 0) {
+            viewHolder.author.setText(String.valueOf(total_downs));
+            viewHolder.imgType.setVisibility(View.VISIBLE);
+            viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_down));
+        } else if (total_favors != null && !StringUtils.isEmpty(total_favors)) {
+            viewHolder.author.setText(total_favors);
+            viewHolder.imgType.setVisibility(View.VISIBLE);
+            viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_collect));
+        } else if (total_views != 0) {
+            viewHolder.author.setText(String.valueOf(total_views));
+            viewHolder.imgType.setVisibility(View.VISIBLE);
+            viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_eye));
+        } else if (updated_at!=0){
+            viewHolder.author.setText("更新于" + DateUtils.timeStampToDate(updated_at, "yyyy-MM-dd"));
+            viewHolder.imgType.setVisibility(View.GONE);
+        }else {
+            viewHolder.author.setVisibility(View.GONE);
+            viewHolder.imgType.setVisibility(View.GONE);
+        }
         String str = "";
         if (optionBeen.getIs_finish() == 0) {
             str = activity.getResources().getString(R.string.book_loading);
@@ -107,6 +131,8 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         LinearLayout item_store_label_male_vertical_layout;
         @BindView(R.id.item_top_img)
         ImageView imgTop;
+        @BindView(R.id.img_type)
+        ImageView imgType;
 
         public ViewHolder(View view) {
             super(view);

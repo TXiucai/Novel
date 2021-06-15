@@ -535,4 +535,6 @@
     <string name="string_delete_success">删除成功</string>
     <string name="string_hide">收起</string>
     <string name="string_fold">展开</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -13,11 +13,39 @@ public class OptionBeen  extends  BaseAd {
     public String flag;//"": "更新至32话", //角标
     public List<BaseTag> tag;
     public int total_views;
+    public int total_downs;
+    public String total_favors;
+    public long updated_at;
   //  public String finished;
    // public int is_vip;//": 1,
  //   public int is_baoyue;//": 0,
  //   public String enable_time;//": "06月11日",
   //  public String expire_time;//": "06月30日"
+
+
+    public int getTotal_downs() {
+        return total_downs;
+    }
+
+    public void setTotal_downs(int total_downs) {
+        this.total_downs = total_downs;
+    }
+
+    public long getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(long updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public String getTotal_favors() {
+        return total_favors;
+    }
+
+    public void setTotal_favors(String total_favors) {
+        this.total_favors = total_favors;
+    }
 
     public int getIs_finish() {
         return is_finish;

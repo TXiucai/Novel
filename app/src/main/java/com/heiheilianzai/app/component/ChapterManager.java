@@ -13,6 +13,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.DownloadTask;
 import com.heiheilianzai.app.component.task.InstructTask;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterContent;
 import com.heiheilianzai.app.model.ChapterItem;
@@ -23,6 +24,7 @@ import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 
 import org.json.JSONArray;
@@ -261,7 +263,7 @@ public class ChapterManager {
                 if (flag) {
                     Next_chapter = 0;
                     Last_chapter = 0;
-                    downloadWithoutAutoBuy(flag, mBookId, chapter_id, download);
+                    downloadWithoutAutoBuy(flag, mBookId, chapter_id, download, ShareUitls.getString(mContext, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
                 }
                 return null;
             }
@@ -274,7 +276,7 @@ public class ChapterManager {
         mDownloadTask.addQueueTask(new InstructTask<String, String>(null) {
             @Override
             public String doRun(String s) {
-                downloadWithoutAutoBuy2(flag, mBookId, chapter_id);
+                downloadWithoutAutoBuy2(flag, mBookId, chapter_id, ShareUitls.getString(mContext, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
                 return null;
             }
         });
@@ -287,18 +289,18 @@ public class ChapterManager {
 
             @Override
             public String doRun(String s) {
-                downloadWithoutAutoBuy(mBookId, chapterItem, download);
+                downloadWithoutAutoBuy(mBookId, chapterItem, download, ShareUitls.getString(mContext, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
                 return null;
             }
         });
     }
 
-    public void downloadWithoutAutoBuy(final boolean flag, final String book_id, final String chapter_id, final ChapterDownload download) {
+    public void downloadWithoutAutoBuy(final boolean flag, final String book_id, final String chapter_id, final ChapterDownload download, String api) {
 
         getChapter(chapter_id, new QuerychapterItemInterface() {
             @Override
             public void success(final ChapterItem querychapterItem) {
-                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                 if (FileManager.isExist(path)) {
                     querychapterItem.setChapter_path(path);
                     ContentValues values = new ContentValues();
@@ -310,13 +312,13 @@ public class ChapterManager {
                 params.putExtraParams("book_id", book_id);
                 params.putExtraParams("chapter_id", chapter_id);
                 String json = params.generateParamsJson();
-                HttpUtils.getInstance(mContext).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, json, false, new HttpUtils.ResponseListener() {
+                HttpUtils.getInstance(mContext).sendRequestRequestParams3(api, json, false, new HttpUtils.ResponseListener() {
                             @Override
                             public void onResponse(final String result) {
                                 ChapterContent chapterContent = gson.fromJson(result, ChapterContent.class);
                                 querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
                                 querychapterItem.setIs_preview(chapterContent.getIs_preview());
-                                String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                                String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                                 FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                                 querychapterItem.setChapteritem_begin(0);
                                 querychapterItem.setChapter_path(filepath);
@@ -336,6 +338,7 @@ public class ChapterManager {
 
                             @Override
                             public void onErrorResponse(String ex) {
+                                downloadWithoutAutoBuy(flag, mBookId, chapter_id, download, ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text);
                             }
                         }
                 );
@@ -351,11 +354,11 @@ public class ChapterManager {
 
     int Next_chapter = 0, Last_chapter = 0;
 
-    public void downloadWithoutAutoBuy2(final boolean onretiation, final String book_id, final String chapter_id) {
+    public void downloadWithoutAutoBuy2(final boolean onretiation, final String book_id, final String chapter_id, String api) {
         getChapter(chapter_id, new QuerychapterItemInterface() {
             @Override
             public void success(final ChapterItem querychapterItem) {
-                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                 if (FileManager.isExist(path)) {
                     querychapterItem.setChapter_path(path);
                     ContentValues values = new ContentValues();
@@ -367,13 +370,13 @@ public class ChapterManager {
                 params.putExtraParams("book_id", book_id);
                 params.putExtraParams("chapter_id", chapter_id);
                 String json = params.generateParamsJson();
-                HttpUtils.getInstance(mContext).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, json, false, new HttpUtils.ResponseListener() {
+                HttpUtils.getInstance(mContext).sendRequestRequestParams3(api, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         ChapterContent chapterContent = gson.fromJson(result, ChapterContent.class);
                         querychapterItem.setIs_preview(chapterContent.getIs_preview());
                         querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
-                        String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                        String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                         FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                         querychapterItem.setChapteritem_begin(0);
                         querychapterItem.setChapter_path(filepath);
@@ -399,6 +402,7 @@ public class ChapterManager {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        downloadWithoutAutoBuy2(onretiation, mBookId, chapter_id, ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text);
                     }
                 });
             }
@@ -409,9 +413,9 @@ public class ChapterManager {
         });
     }
 
-    public void downloadWithoutAutoBuy(final String book_id, final ChapterItem querychapterItem, final ChapterDownload download) {
+    public void downloadWithoutAutoBuy(final String book_id, final ChapterItem querychapterItem, final ChapterDownload download, String api) {
         final String chapter_id = querychapterItem.getChapter_id();
-        String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+        String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
         if (FileManager.isExist(path)) {
             querychapterItem.setChapter_path(path);
             ContentValues values = new ContentValues();
@@ -428,13 +432,13 @@ public class ChapterManager {
         params.putExtraParams("book_id", book_id);
         params.putExtraParams("chapter_id", chapter_id);
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(mContext).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, json, false, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(mContext).sendRequestRequestParams3(api, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         ChapterContent chapterContent = gson.fromJson(result, ChapterContent.class);
                         querychapterItem.setIs_preview(chapterContent.getIs_preview());
                         querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
-                        String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                        String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                         FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                         querychapterItem.setChapteritem_begin(0);
                         querychapterItem.setChapter_path(filepath);
@@ -457,6 +461,7 @@ public class ChapterManager {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        downloadWithoutAutoBuy(mBookId, querychapterItem, download, ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text);
                     }
                 }
         );
@@ -675,7 +680,7 @@ public class ChapterManager {
                     } else {
                         querychapterItem.setPre_chapter_id(updateList.get(i - 1).getChapter_id());
                     }
-                    String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                    String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                     querychapterItem.setChapter_path(filepath);
                     updateList.add(querychapterItem);
                 }
@@ -748,18 +753,18 @@ public class ChapterManager {
         void finish();
     }
 
-    public static void notfindChapter(final ChapterItem querychapterItem, final String book_id, final String chapter_id, final ChapterDownload download) {//找不到章节重新下载
+    public static void notfindChapter(String api, final ChapterItem querychapterItem, final String book_id, final String chapter_id, final ChapterDownload download) {//找不到章节重新下载
         ReaderParams params = new ReaderParams(mContext);
         params.putExtraParams("book_id", book_id);
         params.putExtraParams("chapter_id", chapter_id);
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(mContext).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, json, false, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(mContext).sendRequestRequestParams3(api, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
                         querychapterItem.setIs_preview(chapterContent.getIs_preview());
                         querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
-                        String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                        String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                         FileManager.createFile(filepath, chapterContent.getContent().getBytes());
                         ContentValues values = new ContentValues();
                         values.put("chapteritem_begin", 0);
@@ -773,6 +778,7 @@ public class ChapterManager {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        notfindChapter(ReaderConfig.getBaseUrl() + ReaderConfig.chapter_text, querychapterItem, book_id, chapter_id, download);
                     }
                 }
         );
@@ -836,7 +842,7 @@ public class ChapterManager {
                     querychapterItem.setBook_id(mBookId);
                     querychapterItem.setBook_name(bookName);
                     querychapterItem.setCharset("utf-8");
-                    String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content()+"/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                    String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(querychapterItem.getBook_id() + "/").concat(querychapterItem.getChapter_id() + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
                     querychapterItem.setChapter_path(filepath);
                     if (i + 1 == size) {
                         querychapterItem.setNext_chapter_id("-2");

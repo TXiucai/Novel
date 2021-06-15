@@ -71,6 +71,12 @@ public class DateUtils {
         return simpleDateFormat.format(date);
     }
 
+    public static String timeStampToDate(long time, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        Date date = new Date(time);
+        return simpleDateFormat.format(date);
+    }
+
     /**
      * 获取系统时间戳
      *

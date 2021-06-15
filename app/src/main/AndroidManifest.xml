@@ -67,6 +67,9 @@
             android:name=".ui.activity.TopActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.TopNewActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
