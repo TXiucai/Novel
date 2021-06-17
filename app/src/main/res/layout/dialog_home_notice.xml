@@ -12,15 +12,15 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimens_90dp"
             android:scaleType="fitXY"
             android:src="@mipmap/home_notice_top_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-1dp"
             android:background="@drawable/shape_home_notice_bg"
-            android:minHeight="@dimen/dimens_100dp"
             android:orientation="vertical">
 
             <TextView
@@ -28,25 +28,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimens_20dp"
-                android:layout_marginTop="@dimen/dimens_7dp"
+                android:layout_marginTop="@dimen/public_14_dp"
                 android:layout_marginRight="@dimen/dimens_20dp"
                 android:gravity="center_horizontal"
                 android:singleLine="true"
-                android:textColor="@color/fileSearcherBlack"
-                android:textSize="@dimen/dimens_18dp" />
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/home_notice_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimens_165dp"
                 android:layout_marginLeft="@dimen/dimens_20dp"
-                android:layout_marginTop="@dimen/dimens_10dp"
+                android:layout_marginTop="@dimen/public_14_dp"
                 android:layout_marginRight="@dimen/dimens_20dp"
-                android:layout_marginBottom="@dimen/dimens_20dp"
+                android:layout_marginBottom="@dimen/dimens_16dp"
                 android:lineSpacingExtra="@dimen/dimens_2dp"
-                android:minHeight="@dimen/dimens_100dp"
-                android:textColor="@color/nightColorPrimary"
-                android:textSize="@dimen/dimens_14dp" />
+                android:scrollbars="vertical"
+                android:textColor="@color/color_4c4c4c"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/ll_more"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_36dp"
+                android:layout_marginLeft="@dimen/dimens_20dp"
+                android:layout_marginRight="@dimen/dimens_20dp"
+                android:layout_marginBottom="@dimen/dimens_16dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tx_pre"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_f6f6f6_20"
+                    android:gravity="center"
+                    android:text="@string/string_pre"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tx_last"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimens_14dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_f6f6f6_20"
+                    android:gravity="center"
+                    android:text="@string/string_last"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <View

@@ -537,4 +537,8 @@
     <string name="string_fold">展开</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="string_pre">上一则</string>
+    <string name="string_last">下一则</string>
+    <string name="string_no_pre">没有上一则啦！</string>
+    <string name="string_no_last">没有下一则啦！</string>
 </resources>

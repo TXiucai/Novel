@@ -143,9 +143,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     MineNewFragment mineFragment;
     Controller controller;
     boolean loadYouSheng;
-    private List<HomeNotice> mHomeNotice;
+    private List<HomeNotice> mHomeNoticeText =new ArrayList<>();
+    private List<HomeNotice> mHomeNoticePhoto=new ArrayList<>();
     private boolean mIsShowTwoNotice = true;
-
+    private boolean mIsFirstTextNotice;
     private Dialog popupWindow;
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
@@ -432,7 +433,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             List<HomeNotice> noticeList = gson.fromJson(result, new TypeToken<List<HomeNotice>>() {
                             }.getType());
                             if (noticeList != null && noticeList.size() > 0) {
-                                mHomeNotice = noticeList;
+                                for (int i = 0; i < noticeList.size(); i++) {
+                                    HomeNotice homeNotice = noticeList.get(i);
+                                    if (TextUtils.equals(homeNotice.getAnnoun_type(), "1")) {
+                                        mHomeNoticeText.add(homeNotice);
+                                        ;
+                                    } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
+                                        mHomeNoticePhoto.add(homeNotice);
+                                    }
+                                }
                                 showHomeOneNotice(noticeList.get(0));
                             }
                         } catch (Exception e) {
@@ -457,8 +466,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             View view = this.getWindow().getDecorView();
             if (view != null) {
                 if (TextUtils.equals(homeNotice.getAnnoun_type(), "1")) {
-                    HomeNoticeDialog.showDialog(MainActivity.this, view, homeNotice);
+                    mIsFirstTextNotice = true;
+                    HomeNoticeDialog.showDialog(MainActivity.this, view, mHomeNoticeText);
                 } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
+                    mIsFirstTextNotice = false;
                     HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
                 }
             }
@@ -470,18 +481,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      */
     public void showHomeTwoNotice() {
         View view = this.getWindow().getDecorView();
-        if (mHomeNotice.size() >= 2 && mIsShowTwoNotice) {
-            HomeNotice homeNotice = mHomeNotice.get(1);
-            if (("0".equals(homeNotice.os_type) || "2".equals(homeNotice.os_type))) {//0、所有，1、IOS，2、Android
-                if (view != null) {
-                    if (TextUtils.equals(homeNotice.getAnnoun_type(), "1")) {
-                        HomeNoticeDialog.showDialog(MainActivity.this, view, homeNotice);
-                        mIsShowTwoNotice = false;
-                    } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
-                        HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
-                        mIsShowTwoNotice = false;
-                    }
-                }
+        if (mIsFirstTextNotice){
+            if (mHomeNoticePhoto.size()>0){
+                HomeNoticePhotoDialog.showDialog(MainActivity.this, view, mHomeNoticePhoto.get(0));
+                mIsShowTwoNotice = false;
+            }
+        }else {
+            if (mHomeNoticeText.size()>0){
+                HomeNoticeDialog.showDialog(MainActivity.this, view, mHomeNoticeText);
+                mIsShowTwoNotice = false;
             }
         }
     }

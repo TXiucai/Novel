@@ -10,6 +10,15 @@ public class HomeNotice {
     private String img_content;
     private String jump_url;
     private String announ_type;
+    private String text_content;
+
+    public String getText_content() {
+        return text_content;
+    }
+
+    public void setText_content(String text_content) {
+        this.text_content = text_content;
+    }
 
     public String getImg_content() {
         return img_content;
