@@ -16,7 +16,16 @@ public class ComicChapterItem {
     public String is_vip;
     public String is_book_coupon_pay;
     private boolean is_buy_status;
-    String is_limited_free;//0否1是
+    private String is_limited_free;//0否1是
+    private String is_album; //0,1不是写真  2为写真
+
+    public String getIs_album() {
+        return is_album;
+    }
+
+    public void setIs_album(String is_album) {
+        this.is_album = is_album;
+    }
 
     public String getIs_limited_free() {
         return is_limited_free;

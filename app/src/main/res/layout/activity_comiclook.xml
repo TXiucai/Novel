@@ -140,21 +140,85 @@
             android:src="@mipmap/comic_top" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/img_big"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
+
+    <RelativeLayout
+        android:id="@+id/rl_comic_small"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_120dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/comic_rg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimens_65dp"
+            android:background="@mipmap/comic_small_background">
+
+            <RadioButton
+                android:id="@+id/comic_rb_small"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimens_20dp"
+                android:background="@drawable/selector_radiobutton_small"
+                android:button="@null"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/comic_rb_mid"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/selector_radiobutton_mid"
+                android:button="@null"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/comic_rb_big"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimens_18dp"
+                android:background="@drawable/selector_radiobutton_big"
+                android:button="@null"
+                android:checked="true" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/comic_big_back"
+            android:layout_width="@dimen/dimens_45dp"
+            android:layout_height="@dimen/dimens_45dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dimens_65dp"
+            android:src="@mipmap/comic_big_back"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/activity_comiclook_foot"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_110dp"
         android:layout_gravity="bottom"
         android:background="@color/lightgray2"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/dimens_25dp"
-        android:paddingRight="@dimen/dimens_15dp">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_30dp"
             android:layout_marginTop="@dimen/dimens_10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dimens_25dp"
+            android:paddingRight="@dimen/dimens_15dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,10 +259,13 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_foot_set"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_40dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/dimens_20dp">
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:paddingLeft="@dimen/dimens_15dp"
+            android:paddingRight="@dimen/dimens_15dp">
 
             <RelativeLayout
                 android:layout_width="@dimen/dimens_110dp"
@@ -373,4 +440,5 @@
             android:textColor="@color/color_ff8350"
             android:textSize="14sp" />
     </LinearLayout>
+
 </FrameLayout>

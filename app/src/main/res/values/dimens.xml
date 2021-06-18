@@ -146,6 +146,7 @@
     <dimen name="dimens_240dp">240dp</dimen>
     <dimen name="dimens_250dp">250dp</dimen>
     <dimen name="dimens_265dp">265dp</dimen>
+    <dimen name="dimens_280dp">280dp</dimen>
     <dimen name="dimens_290dp">290dp</dimen>
     <dimen name="dimens_300dp">300dp</dimen>
     <dimen name="dimens_302dp">302dp</dimen>

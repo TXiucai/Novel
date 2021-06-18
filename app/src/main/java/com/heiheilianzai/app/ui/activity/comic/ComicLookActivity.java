@@ -25,9 +25,13 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.github.piasy.biv.BigImageViewer;
@@ -54,6 +58,7 @@ import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
+import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.dialog.comic.LookComicSetDialog;
 import com.heiheilianzai.app.ui.dialog.comic.PurchaseDialog;
@@ -172,6 +177,20 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public FrameLayout activity_comiclook_tucao_layout;
     @BindView(R.id.activity_comiclook_share)
     public RelativeLayout activity_comiclook_share;
+    @BindView(R.id.rl_foot_set)
+    public RelativeLayout mRlFootSet;
+    @BindView(R.id.rl_comic_small)
+    public RelativeLayout mRlSmall;
+    @BindView(R.id.comic_big_back)
+    public ImageView mImgBigBack;
+    @BindView(R.id.comic_rb_small)
+    public RadioButton mRbSmall;
+    @BindView(R.id.comic_rb_mid)
+    public RadioButton mRbMid;
+    @BindView(R.id.comic_rb_big)
+    public RadioButton mRbBig;
+    @BindView(R.id.img_big)
+    public ImageView mImgBig;
 
     Map<String, ComicChapterItem> map = new HashMap();//临时存储章节数据
     PurchaseDialog purchaseDialog;
@@ -204,6 +223,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     long mOpenCurrentTime;//打开漫画阅读页的当前时间
     ComicInfo mComicInfo;//漫画具体信息
     private Dialog dialogVipPop;
+    private boolean mIsSmall;
 
     @Override
     public int initContentView() {
@@ -264,7 +284,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @OnClick(value = {R.id.titlebar_back, R.id.activity_comiclook_shoucang, R.id.activity_comiclook_refresh, R.id.activity_comiclook_dingbu, R.id.activity_comiclook_danmu_layout,
             R.id.activity_comiclook_danmu_fashe, R.id.activity_comiclook_xiayihua_layout, R.id.activity_comiclook_shangyihua_layout, R.id.activity_comiclook_set,
             R.id.activity_comiclook_tucao_layout, R.id.activity_comiclook_share, R.id.activity_comiclook_xiazai, R.id.activity_comiclook_quanji,
-            R.id.activity_comiclook_danmu_img2, R.id.activity_comiclook_foot})
+            R.id.activity_comiclook_danmu_img2, R.id.activity_comiclook_foot, R.id.comic_rb_small, R.id.comic_rb_mid, R.id.comic_rb_big, R.id.comic_big_back})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -401,6 +421,26 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.activity_comiclook_set:
                 LookComicSetDialog.getLookComicSetDialog(activity);
+                LookComicSetDialog.setmOnBackSmallTypeListener(new LookComicSetDialog.OnBackSmallTypeListener() {
+                    @Override
+                    public void backSmallType(boolean isOn) {
+                        if (isOn) {
+                            mRlSmall.setVisibility(View.VISIBLE);
+                            activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.color_0e0705));
+                            comicChapterCatalogAdapter.setmSmall(3);
+                            mRbMid.setChecked(false);
+                            mRbBig.setChecked(false);
+                            mRbSmall.setChecked(true);
+                            activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                            mIsSmall = true;
+                        } else {
+                            comicChapterCatalogAdapter.setmSmall(0);
+                            mRlSmall.setVisibility(View.GONE);
+                            activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.white));
+                            mIsSmall = false;
+                        }
+                    }
+                });
                 showMenu(false);
                 break;
             case R.id.activity_comiclook_xiazai:
@@ -432,6 +472,37 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 startActivityForResult(intent, 222);
                 showMenu(false);
                 break;
+            case R.id.comic_rb_big:
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                    comicChapterCatalogAdapter.setmSmall(1);
+                    mRbMid.setChecked(false);
+                    mRbBig.setChecked(true);
+                    mRbSmall.setChecked(false);
+                    activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                }
+                break;
+            case R.id.comic_rb_mid:
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                    comicChapterCatalogAdapter.setmSmall(2);
+                    mRbMid.setChecked(true);
+                    mRbBig.setChecked(false);
+                    mRbSmall.setChecked(false);
+                    activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                }
+                break;
+            case R.id.comic_rb_small:
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                    comicChapterCatalogAdapter.setmSmall(3);
+                    mRbMid.setChecked(false);
+                    mRbBig.setChecked(false);
+                    mRbSmall.setChecked(true);
+                    activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                }
+                break;
+            case R.id.comic_big_back:
+                mImgBig.setVisibility(View.GONE);
+                mImgBigBack.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -444,6 +515,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         public void onClick(int position, BaseComicImage baseComicImagee) {
             current_read_img_order = position;
             baseComicImage = baseComicImagee;
+            int i = comicChapterCatalogAdapter.getmSmall();
+            if (i == 2 || i == 3) {
+                mImgBig.setVisibility(View.VISIBLE);
+                mImgBigBack.setVisibility(View.VISIBLE);
+                MyPicasso.GlideImageNoSize(activity, baseComicImagee.getImage(), mImgBig);
+            }
         }
     };
     boolean isclickScreen = true;
@@ -457,14 +534,18 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             MyToash.Log("clickScreen", HEIGHT + "  " + y + "  " + RawY);
             if (y <= HEIGHT / 3) {
                 if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
-                    activity_comiclook_RecyclerView.smoothScrollBy(0, -800);
+                    if (!mIsSmall){
+                        activity_comiclook_RecyclerView.smoothScrollBy(0, -800);
+                    }
                     showMenu(false);
                 }
             } else if (y <= HEIGHT * 2 / 3) {
                 showMenu(!MenuSHOW);
             } else {
                 if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
-                    activity_comiclook_RecyclerView.smoothScrollBy(0, 800);
+                    if (!mIsSmall){
+                        activity_comiclook_RecyclerView.smoothScrollBy(0, 800);
+                    }
                     showMenu(false);
                 }
             }
@@ -479,6 +560,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 activity_comiclook_foot.setVisibility(View.VISIBLE);
                 activity_comiclook_danmu_layout.setVisibility(View.VISIBLE);
                 fragment_comicinfo_mulu_dangqian_layout.setVisibility(View.VISIBLE);
+                showComicGuide();
             }
         } else {
             if (activity_comiclook_head.getVisibility() == View.VISIBLE) {
@@ -491,6 +573,16 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         }
     }
 
+    private void showComicGuide() {
+        NewbieGuide.with(activity)
+                .setLabel("guideComic")
+                .setShowCounts(1)//控制次数
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(mRlFootSet)
+                        .setLayoutRes(R.layout.comic_look_guide, R.id.img_know)
+                        .setEverywhereCancelable(false)).show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -498,6 +590,18 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             EventBus.getDefault().register(this);
             initViews();
             showMenu(true);
+            if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                mRlSmall.setVisibility(View.VISIBLE);
+                mRbMid.setChecked(false);
+                mRbBig.setChecked(false);
+                mRbSmall.setChecked(true);
+                mIsSmall = true;
+                activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.color_0e0705));
+            } else {
+                mRlSmall.setVisibility(View.GONE);
+                activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.white));
+                mIsSmall = false;
+            }
             Intent intent = getIntent();
             tocao_bgcolor = Color.parseColor("#4d000000");
             baseComic = (BaseComic) intent.getSerializableExtra(BASE_COMIC_EXT_KAY);
@@ -757,7 +861,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
+                    comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
                     activity_comiclook_RecyclerView.setAdapter(comicChapterCatalogAdapter);
+                    if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                        comicChapterCatalogAdapter.setmSmall(3);//默认开启小图模式
+                    }
                     activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
                     activity_comiclook_lording.setVisibility(View.GONE);
                     if (comicChapterItem.total_comment != 0) {
@@ -770,6 +878,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     showMenu(false);
                     first = false;
                 } else {
+                    comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
                     comicChapterCatalogAdapter.NotifyDataSetChanged(baseComicImagesSize);
                     linearLayoutManager.scrollToPositionWithOffset(0, 0);
                 }

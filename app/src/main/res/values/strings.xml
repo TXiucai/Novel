@@ -541,4 +541,6 @@
     <string name="string_last">下一则</string>
     <string name="string_no_pre">没有上一则啦！</string>
     <string name="string_no_last">没有下一则啦！</string>
+    <string name="dialog_lookcomicset_small_text1">小图模式</string>
+    <string name="dialog_lookcomicset_small_text2">打开后可点击查看大图</string>
 </resources>

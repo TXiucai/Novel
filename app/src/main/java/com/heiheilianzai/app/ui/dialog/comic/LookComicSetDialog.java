@@ -14,12 +14,18 @@ import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.zcw.togglebutton.ToggleButton;
 
 public class LookComicSetDialog {
+    public static OnBackSmallTypeListener mOnBackSmallTypeListener;
+
+    public static void setmOnBackSmallTypeListener(OnBackSmallTypeListener smallTypeListener) {
+        mOnBackSmallTypeListener = smallTypeListener;
+    }
 
     public static void getLookComicSetDialog(Activity activity) {
         Dialog bottomDialog = new Dialog(activity, R.style.BottomDialog);
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_lookcomicset, null);
         ToggleButton dialog_lookcomicset_fanye_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_fanye_ToggleButton);
         ToggleButton dialog_lookcomicset_yejian_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_yejian_ToggleButton);
+        ToggleButton dialog_lookcomicset_small_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_small_ToggleButton);
 
         if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
             dialog_lookcomicset_fanye_ToggleButton.setToggleOn();
@@ -31,6 +37,20 @@ public class LookComicSetDialog {
         } else {
             dialog_lookcomicset_yejian_ToggleButton.setToggleOff();
         }
+        if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+            dialog_lookcomicset_small_ToggleButton.setToggleOn();
+        } else {
+            dialog_lookcomicset_small_ToggleButton.setToggleOff();
+        }
+        dialog_lookcomicset_small_ToggleButton.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                AppPrefs.putSharedBoolean(activity, "small_ToggleButton", on);
+                if (mOnBackSmallTypeListener != null) {
+                    mOnBackSmallTypeListener.backSmallType(on);
+                }
+            }
+        });
         dialog_lookcomicset_fanye_ToggleButton.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
@@ -41,9 +61,9 @@ public class LookComicSetDialog {
             @Override
             public void onToggle(boolean on) {
                 AppPrefs.putSharedBoolean(activity, "yejian_ToggleButton", on);
-                if(on){
+                if (on) {
                     BrightnessUtil.setBrightness(activity, 0);
-                }else {
+                } else {
                     BrightnessUtil.setBrightness(activity, 255);
                 }
             }
@@ -58,6 +78,10 @@ public class LookComicSetDialog {
         bottomDialog.onWindowFocusChanged(false);
         bottomDialog.setCanceledOnTouchOutside(true);
 
+    }
+
+    public interface OnBackSmallTypeListener {
+        void backSmallType(boolean isOn);
     }
 
 }

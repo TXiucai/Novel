@@ -25,6 +25,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
+import com.heiheilianzai.app.utils.CommonUtil;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -58,6 +59,21 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     View activity_comic_look_foot;
     ComicLookActivity.ItemOnclick itemOnclick;
     public List<DanmuRelativeLayout> relativeLayoutsDanmu = new ArrayList<>();
+    private boolean mIsAlbum;
+    private int mSmall;//0未开启小图模式，1为大图，2为中图，3为小图
+
+    public int getmSmall() {
+        return mSmall;
+    }
+
+    public void setmSmall(int mSmall) {
+        this.mSmall = mSmall;
+        notifyDataSetChanged();
+    }
+
+    public void setmIsAlbum(boolean mIsAlbum) {
+        this.mIsAlbum = mIsAlbum;
+    }
 
     public ComicRecyclerViewAdapter(Activity activity, int WIDTH, int HEIGHT, List<BaseComicImage> list, View activity_comic_look_foot, int Size, ComicLookActivity.ItemOnclick itemOnclick) {
         this.list = list;
@@ -110,9 +126,32 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     MyViewHolder holder = (MyViewHolder) holderr;
                     final BaseComicImage baseComicImage = list.get(position);
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.item_comic_recyclerview_layout.getLayoutParams();
-                    int trueHeigth = Math.min(MAXheigth, WIDTH * baseComicImage.height / baseComicImage.width);
-                    layoutParams.height = trueHeigth;//默认
-                    holder.item_comic_recyclerview_layout.setOnClickListener(new View.OnClickListener() {
+                    if (mSmall == 0) {
+                        int trueHeigth = Math.min(MAXheigth, WIDTH * baseComicImage.height / baseComicImage.width);
+                        layoutParams.setMargins(0, 0, 0, 0);
+                        layoutParams.height = trueHeigth;//默认
+                        layoutParams.width = WIDTH;
+                    } else if (mSmall == 1) {
+                        int trueHeigth = Math.min(MAXheigth, WIDTH * baseComicImage.height / baseComicImage.width);
+                        layoutParams.setMargins(0, 0, 0, 0);
+                        layoutParams.height = trueHeigth;//默认
+                        layoutParams.width = WIDTH;
+                    } else if (mSmall == 2) {
+                        int trueHeigth = (HEIGHT - (int) CommonUtil.convertDpToPixel(activity, 20)) / 2;
+                        layoutParams.setMargins(0, 0, 0, (int) CommonUtil.convertDpToPixel(activity, 10));
+                        layoutParams.height = trueHeigth;
+                        layoutParams.width = trueHeigth;
+                    } else if (mSmall == 3) {
+                        int trueHeigth = (HEIGHT - (int) CommonUtil.convertDpToPixel(activity, 30)) / 3;
+                        layoutParams.setMargins(0, 0, 0, (int) CommonUtil.convertDpToPixel(activity, 10));
+                        layoutParams.height = trueHeigth;
+                        layoutParams.width = trueHeigth;
+                    }
+
+                    if (mIsAlbum) {
+                        layoutParams.setMargins(0, 0, 0, (int) CommonUtil.convertDpToPixel(activity, 7));
+                    }
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             itemOnclick.onClick(position, baseComicImage);
