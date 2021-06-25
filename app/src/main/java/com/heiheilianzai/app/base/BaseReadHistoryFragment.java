@@ -150,11 +150,9 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
         if (isDelete) {
             mImgDelete.setImageDrawable(activity.getDrawable(R.mipmap.delet_yes));
             mTxDelete.setTextColor(activity.getResources().getColor(R.color.color_3b3b3b));
-            mLlDelete.setClickable(true);
         } else {
             mImgDelete.setImageDrawable(activity.getDrawable(R.mipmap.delete_no));
             mTxDelete.setTextColor(activity.getResources().getColor(R.color.color_9a9a9a));
-            mLlDelete.setClickable(false);
         }
     }
 

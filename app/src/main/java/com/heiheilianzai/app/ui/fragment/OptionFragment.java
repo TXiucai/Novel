@@ -393,10 +393,10 @@ public class OptionFragment extends BaseButterKnifeFragment {
                             TextView txFold = inflate.findViewById(R.id.tx_fold);
                             ImageView imgFold = inflate.findViewById(R.id.img_fold);
                             LinearLayout llFold = inflate.findViewById(R.id.ll_fold);
-                            rySearch.setLayoutManager(new GridLayoutManager(activity, 6));
+                            rySearch.setLayoutManager(new GridLayoutManager(activity, 5));
                             //原数据源
                             mFirstSearchBoxLableLists = searchBox.list;
-                            if (mFirstSearchBoxLableLists.size() > 18) { //超过三排需要折叠
+                            if (mFirstSearchBoxLableLists.size() > 15) { //超过三排需要折叠
                                 llFold.setVisibility(View.VISIBLE);
                             } else {
                                 llFold.setVisibility(View.GONE);

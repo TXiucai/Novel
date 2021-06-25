@@ -92,7 +92,7 @@ public class HomeNoticeDialog {
     private static void setContentView(Activity activity, List<HomeNotice> homeNotice, TextView homeNoticeTitle, TextView homeNoticeContent) {
         homeNoticeTitle.setText(homeNotice.get(mPosition).getTitle());
         String text_content = homeNotice.get(mPosition).getText_content();
-        String content = homeNotice.get(mPosition).getContent() + "'\n'";
+        String content = homeNotice.get(mPosition).getContent() + "\n";
         SpannableStringBuilder style = new SpannableStringBuilder();
         //设置文字
         style.append(content + text_content);

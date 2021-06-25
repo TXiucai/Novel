@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
 import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.constant.BookConfig;
@@ -15,6 +16,7 @@ import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -69,6 +71,7 @@ public class DownMangerBookFragment extends BaseDownMangerFragment<Downoption> {
                             }
                         }
                         baseList.removeAll(downoptions);
+                        MyToash.ToashSuccess(activity, activity.getResources().getString(R.string.string_delete_success));
                     }
                     downMangerAdapter.notifyDataSetChanged();
                     if (baseList.size() == 0) {

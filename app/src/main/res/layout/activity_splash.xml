@@ -97,6 +97,21 @@
             android:textSize="@dimen/dimens_14dp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/activity_splash_website_pre"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimens_36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dimens_120dp"
+        android:background="@drawable/shape_ff8350_20"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimens_15dp"
+        android:paddingRight="@dimen/dimens_15dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/activity_splash_im"
         android:layout_width="match_parent"

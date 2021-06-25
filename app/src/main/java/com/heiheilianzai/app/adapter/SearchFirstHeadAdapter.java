@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.adapter;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +53,6 @@ public class SearchFirstHeadAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         SearchBox.SearchBoxLabe searchBoxLabe = mLists.get(position);
         viewHolder.txItem.setText(searchBoxLabe.getDisplay().trim());
         boolean select = searchBoxLabe.getChecked() == 1 ? true : false;
-        if (select) {
-            //mSelectLists.add(searchBoxLabe);
-        }
         setSelectView(viewHolder, select, position);
         viewHolder.txItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,15 +66,21 @@ public class SearchFirstHeadAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     if (select) {
                         if (mSelectLists.size() >= 3) {
                             mSelectLists.remove(0);
-                            mSelectLists.add(searchBoxLabe);
                         } else {
                             if (mSelectLists.size() > 0 && mSelectLists.get(0).getValue().equals("0")) {
                                 mSelectLists.remove(0);
                             }
-                            mSelectLists.add(searchBoxLabe);
                         }
+                        mSelectLists.add(searchBoxLabe);
                     } else {
-                        mSelectLists.remove(searchBoxLabe);
+                        if (mSelectLists != null && mSelectLists.size() > 0) {
+                            for (int i = 0; i < mSelectLists.size(); i++) {
+                                SearchBox.SearchBoxLabe searchBoxLabe1 = mSelectLists.get(i);
+                                if (TextUtils.equals(searchBoxLabe.getValue(), searchBoxLabe1.getValue())) {
+                                    mSelectLists.remove(i);
+                                }
+                            }
+                        }
                     }
                 }
                 mOnBackSelectHeadLists.onBackSelectHeadLists(mSelectLists);
@@ -102,11 +106,11 @@ public class SearchFirstHeadAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         if (mIsFold) {
-            if (mLists.size() > 18) {
-                return 17;
+            if (mLists.size() > 15) {
+                return 14;
             }
         } else {
-            if (mLists.size() > 18 && mLists.size() % 6 == 0) {
+            if (mLists.size() > 15 && mLists.size() % 5 == 0) {
                 return mLists.size() - 1;
             }
         }

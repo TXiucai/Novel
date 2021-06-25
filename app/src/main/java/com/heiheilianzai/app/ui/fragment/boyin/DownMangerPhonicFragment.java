@@ -14,6 +14,7 @@ import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
 import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
 import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -67,6 +68,7 @@ public class DownMangerPhonicFragment extends BaseDownMangerFragment<BoyinInfoBe
                         LitePal.deleteAll(BoyinChapterBean.class, "nid = ?", String.valueOf(boyinInfoBean.getId()));//删除有声章节数据
                         LitePal.deleteAll(BoyinInfoBean.class, "nid = ?", String.valueOf(boyinInfoBean.getId()));//删除有声小说数据
                         baseList.remove(boyinInfoBean);
+                        MyToash.ToashSuccess(activity, activity.getResources().getString(R.string.string_delete_success));
                     }
                     downMangerAdapter.notifyDataSetChanged();
                     if (baseList.isEmpty()) {

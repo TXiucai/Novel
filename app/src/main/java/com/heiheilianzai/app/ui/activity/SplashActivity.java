@@ -60,6 +60,8 @@ import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 public class SplashActivity extends BaseAdvertisementActivity {
     @BindView(R.id.activity_splash_website)
     public TextView mTxWebsite;
+    @BindView(R.id.activity_splash_website_pre)
+    public TextView mTxWebsitePre;
     @BindView(R.id.activity_splash_bottom)
     public LinearLayout mLlBottom;
     public static final String OPEN_TIME_KAY = "open_time";//传参首页打开app时间戳KAY
@@ -105,10 +107,18 @@ public class SplashActivity extends BaseAdvertisementActivity {
         if (!StringUtils.isEmpty(website)) {
             mTxWebsite.setVisibility(View.VISIBLE);
             mTxWebsite.setText(String.format(getString(R.string.splash_website), website));
+            mTxWebsitePre.setVisibility(View.VISIBLE);
+            mTxWebsitePre.setText(String.format(getString(R.string.splash_website), website));
         } else {
             mTxWebsite.setVisibility(View.GONE);
+            mTxWebsitePre.setVisibility(View.GONE);
         }
         mTxWebsite.setOnClickListener(v -> {
+            startActivity(new Intent(activity, AboutActivity.class).
+                    putExtra("url", website)
+                    .putExtra("style", "4"));
+        });
+        mTxWebsitePre.setOnClickListener(v -> {
             startActivity(new Intent(activity, AboutActivity.class).
                     putExtra("url", website)
                     .putExtra("style", "4"));

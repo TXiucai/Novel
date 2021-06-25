@@ -191,6 +191,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public RadioButton mRbBig;
     @BindView(R.id.img_big)
     public ImageView mImgBig;
+    @BindView(R.id.rl_comic_rb)
+    public RelativeLayout mRlRb;
 
     Map<String, ComicChapterItem> map = new HashMap();//临时存储章节数据
     PurchaseDialog purchaseDialog;
@@ -502,6 +504,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             case R.id.comic_big_back:
                 mImgBig.setVisibility(View.GONE);
                 mImgBigBack.setVisibility(View.GONE);
+                mRlRb.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -519,6 +522,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             if (i == 2 || i == 3) {
                 mImgBig.setVisibility(View.VISIBLE);
                 mImgBigBack.setVisibility(View.VISIBLE);
+                mRlRb.setVisibility(View.GONE);
                 MyPicasso.GlideImageNoSize(activity, baseComicImagee.getImage(), mImgBig);
             }
         }
@@ -534,7 +538,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             MyToash.Log("clickScreen", HEIGHT + "  " + y + "  " + RawY);
             if (y <= HEIGHT / 3) {
                 if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
-                    if (!mIsSmall){
+                    if (!mIsSmall) {
                         activity_comiclook_RecyclerView.smoothScrollBy(0, -800);
                     }
                     showMenu(false);
@@ -543,7 +547,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 showMenu(!MenuSHOW);
             } else {
                 if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
-                    if (!mIsSmall){
+                    if (!mIsSmall) {
                         activity_comiclook_RecyclerView.smoothScrollBy(0, 800);
                     }
                     showMenu(false);
@@ -590,7 +594,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             EventBus.getDefault().register(this);
             initViews();
             showMenu(true);
-            if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+            if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
                 mRlSmall.setVisibility(View.VISIBLE);
                 mRbMid.setChecked(false);
                 mRbBig.setChecked(false);

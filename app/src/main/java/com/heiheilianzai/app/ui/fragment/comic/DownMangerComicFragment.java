@@ -17,6 +17,7 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -73,6 +74,7 @@ public class DownMangerComicFragment extends BaseDownMangerFragment<BaseComic> {
                         String localPath = FileManager.getManhuaSDCardRoot().concat(baseComic.getComic_id());
                         FileManager.deleteFile(localPath);
                         baseList.remove(baseComic);
+                        MyToash.ToashSuccess(activity, activity.getResources().getString(R.string.string_delete_success));
                     }
                     downMangerAdapter.notifyDataSetChanged();
                     if (baseList.isEmpty()) {

@@ -66,8 +66,8 @@ public class ReadHistoryComicFragment extends BaseReadHistoryFragment<ComicReadH
                         }
                         mSelectID += book_id;
                     }
+                    deleteMoreHistory(mSelectID, ComicConfig.COMIC_read_log_del_MORE);
                 }
-                deleteMoreHistory(mSelectID, ComicConfig.COMIC_read_log_del_MORE);
             }
         });
         super.initView();

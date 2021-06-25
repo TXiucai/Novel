@@ -63,8 +63,8 @@ public class ReadHistoryPhonicFragment extends BaseReadHistoryFragment<PhonicRea
                         }
                         mSelectID += book_id;
                     }
+                    deleteMoreHistory(mSelectID, BoyinConfig.PHONIC_REMOVE_AUDIO_READ_LOG_MORE);
                 }
-                deleteMoreHistory(mSelectID, BoyinConfig.PHONIC_REMOVE_AUDIO_READ_LOG_MORE);
             }
         });
         super.initView();

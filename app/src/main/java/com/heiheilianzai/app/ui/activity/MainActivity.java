@@ -437,7 +437,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                                     HomeNotice homeNotice = noticeList.get(i);
                                     if (TextUtils.equals(homeNotice.getAnnoun_type(), "1")) {
                                         mHomeNoticeText.add(homeNotice);
-                                        ;
                                     } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
                                         mHomeNoticePhoto.add(homeNotice);
                                     }

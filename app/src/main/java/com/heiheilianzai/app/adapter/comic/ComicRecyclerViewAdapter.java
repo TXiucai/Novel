@@ -151,13 +151,6 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     if (mIsAlbum) {
                         layoutParams.setMargins(0, 0, 0, (int) CommonUtil.convertDpToPixel(activity, 7));
                     }
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            itemOnclick.onClick(position, baseComicImage);
-                        }
-                    });
-
                     Uri uri = getUri(baseComicImage);
                     if (uri != null) {
                         holder.recyclerview_img.showImage(uri);
@@ -195,6 +188,15 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     } else {
                         holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
                     }
+                    holder.recyclerview_img.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (itemOnclick != null && mSmall > 0) {
+                                itemOnclick.onClick(position, baseComicImage);
+                            }
+                        }
+                    });
+
                 }
             } else if (holderr instanceof MyAdViewHolder) {
                 MyAdViewHolder holderAd = (MyAdViewHolder) holderr;

@@ -70,8 +70,8 @@ public class ReadHistoryBookFragment extends BaseReadHistoryFragment<ReadHistory
                         }
                         mSelectID += book_id;
                     }
+                    deleteMoreHistory(mSelectID, BookConfig.del_read_log_MORE);
                 }
-                deleteMoreHistory(mSelectID, BookConfig.del_read_log_MORE);
             }
         });
         super.initView();
