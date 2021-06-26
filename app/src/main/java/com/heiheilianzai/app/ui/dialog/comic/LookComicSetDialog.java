@@ -37,7 +37,7 @@ public class LookComicSetDialog {
         } else {
             dialog_lookcomicset_yejian_ToggleButton.setToggleOff();
         }
-        if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+        if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
             dialog_lookcomicset_small_ToggleButton.setToggleOn();
         } else {
             dialog_lookcomicset_small_ToggleButton.setToggleOff();

@@ -11,6 +11,15 @@ public class RankItem {
     String description;
     String bg_img;
     List<String> icon;
+    String statist_way;//1浏览量 2下载量 3收藏量 4更新时间
+
+    public String getStatist_way() {
+        return statist_way;
+    }
+
+    public void setStatist_way(String statist_way) {
+        this.statist_way = statist_way;
+    }
 
     public String getBg_img() {
         return bg_img;

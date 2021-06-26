@@ -271,6 +271,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
                     public void onResponse(String result) {
                         mSelectID = "";
                         MyToash.ToashSuccess(activity, activity.getResources().getString(R.string.string_delete_success));
+                        optionBeenList.clear();
                         current_page = 1;
                         initData(dataUrl);
                     }

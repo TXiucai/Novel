@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.adapter;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -28,15 +28,17 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private List<OptionBeen> optionBeenList;
     private boolean PRODUCT;
     private OnSelectTopListItemListener mOnSelectTopListItemListener;
+    private String mShowType; // 1浏览量(默认) 2下载量 3收藏量 4更新时间 5手动模式（默认浏览量）
 
     public void setmOnSelectTopListItemListener(OnSelectTopListItemListener mOnSelectTopListItemListener) {
         this.mOnSelectTopListItemListener = mOnSelectTopListItemListener;
     }
 
-    public TopDetailAdapter(Activity activity, List<OptionBeen> optionBeenList, boolean PRODUCT) {
+    public TopDetailAdapter(Activity activity, List<OptionBeen> optionBeenList, boolean PRODUCT, String showType) {
         this.activity = activity;
         this.optionBeenList = optionBeenList;
         this.PRODUCT = PRODUCT;
+        this.mShowType = showType;
     }
 
     @NonNull
@@ -82,24 +84,27 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         long updated_at = optionBeen.getUpdated_at();
         int total_views = optionBeen.getTotal_views();
         int total_downs = optionBeen.getTotal_downs();
-        if (total_downs != 0) {
-            viewHolder.author.setText(String.valueOf(total_downs));
-            viewHolder.imgType.setVisibility(View.VISIBLE);
-            viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_down));
-        } else if (total_favors != null && !StringUtils.isEmpty(total_favors)) {
-            viewHolder.author.setText(total_favors);
-            viewHolder.imgType.setVisibility(View.VISIBLE);
-            viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_collect));
-        } else if (total_views != 0) {
+        if (mShowType != null) {
+            if (TextUtils.equals(mShowType, "2")) {
+                viewHolder.author.setText(String.valueOf(total_downs));
+                viewHolder.imgType.setVisibility(View.VISIBLE);
+                viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_down));
+            } else if (TextUtils.equals(mShowType, "3") && total_favors != null && !StringUtils.isEmpty(total_favors)) {
+                viewHolder.author.setText(total_favors);
+                viewHolder.imgType.setVisibility(View.VISIBLE);
+                viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_collect));
+            } else if (updated_at != 0 && TextUtils.equals(mShowType, "4")) {
+                viewHolder.author.setText("更新于" + DateUtils.timeStampToDate(updated_at, "yyyy-MM-dd"));
+                viewHolder.imgType.setVisibility(View.GONE);
+            } else {
+                viewHolder.author.setText(String.valueOf(total_views));
+                viewHolder.imgType.setVisibility(View.VISIBLE);
+                viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_eye));
+            }
+        } else {
             viewHolder.author.setText(String.valueOf(total_views));
             viewHolder.imgType.setVisibility(View.VISIBLE);
             viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_eye));
-        } else if (updated_at!=0){
-            viewHolder.author.setText("更新于" + DateUtils.timeStampToDate(updated_at, "yyyy-MM-dd"));
-            viewHolder.imgType.setVisibility(View.GONE);
-        }else {
-            viewHolder.author.setVisibility(View.GONE);
-            viewHolder.imgType.setVisibility(View.GONE);
         }
         String str = "";
         if (optionBeen.getIs_finish() == 0) {

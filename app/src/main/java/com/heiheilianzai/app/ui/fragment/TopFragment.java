@@ -42,8 +42,10 @@ public class TopFragment extends BaseButterKnifeFragment {
     public LinearLayout mLlNoResult;
     private static final String ARG_PARAM = "itemType";
     private static final String ARG_PARAM2 = "type";
+    private static final String ARG_PARAM3 = "showType";
     private String mParam;
     private boolean mType;
+    private String mShowType;
     private int mCurrentPage = 1;
     int mLoadingListener = 0;
     private String httpTopUrlList;
@@ -55,11 +57,12 @@ public class TopFragment extends BaseButterKnifeFragment {
     public TopFragment() {
     }
 
-    public static TopFragment newInstance(String typeItem, boolean type) {
+    public static TopFragment newInstance(String typeItem, boolean type, String showType) {
         TopFragment fragment = new TopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM, typeItem);
         args.putBoolean(ARG_PARAM2, type);
+        args.putString(ARG_PARAM3, showType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,6 +73,7 @@ public class TopFragment extends BaseButterKnifeFragment {
         if (getArguments() != null) {
             mParam = getArguments().getString(ARG_PARAM);
             mType = getArguments().getBoolean(ARG_PARAM2);
+            mShowType = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -84,7 +88,7 @@ public class TopFragment extends BaseButterKnifeFragment {
         MyContentLinearLayoutManager layoutManagerDetail = new MyContentLinearLayoutManager(activity);
         layoutManagerDetail.setOrientation(LinearLayoutManager.VERTICAL);
         mRyTopDetail.setLayoutManager(layoutManagerDetail);
-        mTopDetailAdapter = new TopDetailAdapter(activity, mOptionBeenList, mType);
+        mTopDetailAdapter = new TopDetailAdapter(activity, mOptionBeenList, mType, mShowType);
         mRyTopDetail.setAdapter(mTopDetailAdapter);
         requstTopDetailData(mParam);
         mTopDetailAdapter.setmOnSelectTopListItemListener(new TopDetailAdapter.OnSelectTopListItemListener() {

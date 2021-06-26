@@ -75,7 +75,7 @@ public class TopActivity extends BaseActivity {
         MyContentLinearLayoutManager layoutManagerDetail = new MyContentLinearLayoutManager(TopActivity.this);
         layoutManagerDetail.setOrientation(LinearLayoutManager.VERTICAL);
         mRyTopDetail.setLayoutManager(layoutManagerDetail);
-        mTopDetailAdapter = new TopDetailAdapter(TopActivity.this, mOptionBeenList, PRODUCT);
+        mTopDetailAdapter = new TopDetailAdapter(TopActivity.this, mOptionBeenList, PRODUCT,"0");
         mRyTopDetail.setAdapter(mTopDetailAdapter);
         if (!PRODUCT) {
             httpTopUrlList = ReaderConfig.getBaseUrl() + COMIC_rank_index;

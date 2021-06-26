@@ -75,6 +75,7 @@ public class ZoomRecyclerView extends RecyclerView {
     // control param
     boolean isScaling = false;    // 是否正在缩放
     boolean isEnableScale = false;// 是否支持缩放
+    boolean isDoubleClick = false;
 
     // zoom param
     ValueAnimator mScaleAnimator; //缩放动画
@@ -92,7 +93,6 @@ public class ZoomRecyclerView extends RecyclerView {
     private OnTouchListener touchListener;
     private Handler mHandler = new Handler(getContext().getMainLooper());
     private boolean isMoving = false;
-
 
     public void setTouchListener(OnTouchListener touchListener) {
         this.touchListener = touchListener;
@@ -173,9 +173,9 @@ public class ZoomRecyclerView extends RecyclerView {
         setTouch(ev);
 
 
-        if(isMoving){
-            if(mScaleFactor > 1){
-                if ((mDx!=0&&mDy!=0)) {
+        if (isMoving) {
+            if (mScaleFactor > 1) {
+                if ((mDx != 0 && mDy != 0)) {
                     return false;
                 }
                 return false;
@@ -184,8 +184,9 @@ public class ZoomRecyclerView extends RecyclerView {
         return super.onInterceptTouchEvent(ev);
     }
 
-   float mDx=0;
-    float mDy=0;
+    float mDx = 0;
+    float mDy = 0;
+
     private Boolean setTouch(@NonNull MotionEvent ev) {
         mScaleDetector.onTouchEvent(ev);
         mGestureDetector.onTouchEvent(ev);
@@ -195,8 +196,7 @@ public class ZoomRecyclerView extends RecyclerView {
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
-                            if (!isScaling && !isMoving) {//ev.getX()/ DisplayUtil.getScreenHeight(getContext())
+                            if (!isScaling && !isMoving && !isDoubleClick) {//ev.getX()/ DisplayUtil.getScreenHeight(getContext())
                                 touchListener.clickScreen(0, ev.getY(), ev.getRawY());
                             }
                         }
@@ -214,8 +214,8 @@ public class ZoomRecyclerView extends RecyclerView {
             }
             case ACTION_MOVE: {
                 isMoving = true;
-                mDx=0;
-                mDy=0;
+                mDx = 0;
+                mDy = 0;
                 try {
                     // Find the index of the active pointer and fetch its position
                     final int pointerIndex = ev.findPointerIndex(mActivePointerId);
@@ -229,8 +229,8 @@ public class ZoomRecyclerView extends RecyclerView {
                         final float dy = y - mLastTouchY;
                         setTranslateXY(mTranX + dx, mTranY + dy);
                         correctTranslateXY();
-                        mDx=dx;
-                        mDy=dy;
+                        mDx = dx;
+                        mDy = dy;
                     }
 
                     invalidate();
@@ -444,24 +444,32 @@ public class ZoomRecyclerView extends RecyclerView {
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            float startFactor = mScaleFactor;
-            float endFactor;
+            isDoubleClick = true;
+            if (isEnableScale) {
+                float startFactor = mScaleFactor;
+                float endFactor;
 
-            if (mScaleFactor == mDefaultScaleFactor) {
-                mScaleCenterX = e.getX();
-                mScaleCenterY = e.getY();
-                endFactor = mMaxScaleFactor;
-            } else {
-                mScaleCenterX = mScaleFactor == 1 ? e.getX() : -mTranX / (mScaleFactor - 1);
-                mScaleCenterY = mScaleFactor == 1 ? e.getY() : -mTranY / (mScaleFactor - 1);
-                endFactor = mDefaultScaleFactor;
+                if (mScaleFactor == mDefaultScaleFactor) {
+                    mScaleCenterX = e.getX();
+                    mScaleCenterY = e.getY();
+                    endFactor = mMaxScaleFactor;
+                } else {
+                    mScaleCenterX = mScaleFactor == 1 ? e.getX() : -mTranX / (mScaleFactor - 1);
+                    mScaleCenterY = mScaleFactor == 1 ? e.getY() : -mTranY / (mScaleFactor - 1);
+                    endFactor = mDefaultScaleFactor;
+                }
+                zoom(startFactor, endFactor);
             }
-            zoom(startFactor, endFactor);
             boolean retVal = super.onDoubleTap(e);
             return retVal;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            isDoubleClick = false;
+            return super.onSingleTapUp(e);
         }
     }
 
@@ -489,17 +497,20 @@ public class ZoomRecyclerView extends RecyclerView {
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-        if(scrollViewListener!=null){
-            LinearLayoutManager linearLayoutManager= (LinearLayoutManager) getLayoutManager();
-            if(linearLayoutManager!=null){
-                scrollViewListener.onScroll(linearLayoutManager.findFirstCompletelyVisibleItemPosition(),linearLayoutManager.findFirstVisibleItemPosition(),  linearLayoutManager.findLastCompletelyVisibleItemPosition(),linearLayoutManager.findLastVisibleItemPosition());
+        if (scrollViewListener != null) {
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
+            if (linearLayoutManager != null) {
+                scrollViewListener.onScroll(linearLayoutManager.findFirstCompletelyVisibleItemPosition(), linearLayoutManager.findFirstVisibleItemPosition(), linearLayoutManager.findLastCompletelyVisibleItemPosition(), linearLayoutManager.findLastVisibleItemPosition());
             }
         }
     }
+
     public interface ScrollViewListener {
-        void onScroll(int FirstCompletelyVisibleItemPosition, int FirstVisibleItemPosition,int LastCompletelyVisibleItemPosition, int LastVisibleItemPosition);
+        void onScroll(int FirstCompletelyVisibleItemPosition, int FirstVisibleItemPosition, int LastCompletelyVisibleItemPosition, int LastVisibleItemPosition);
     }
+
     private ScrollViewListener scrollViewListener;
+
     public void setScrollViewListener(ScrollViewListener scrollViewListener) {
         this.scrollViewListener = scrollViewListener;
     }

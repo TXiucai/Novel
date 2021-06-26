@@ -22,6 +22,7 @@ import com.heiheilianzai.app.adapter.TopListAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BannerItem;
 import com.heiheilianzai.app.model.RankItem;
 import com.heiheilianzai.app.ui.fragment.TopFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -123,7 +124,7 @@ public class TopNewActivity extends BaseButterKnifeTransparentActivity {
                 RankItem rankItem = mRankItemList.get(i);
                 mTittlesList.add(rankItem.getList_name());
                 mImgList.add(rankItem.getBg_img());
-                TopFragment topFragment = TopFragment.newInstance(rankItem.getRank_type(), PRODUCT);
+                TopFragment topFragment = TopFragment.newInstance(rankItem.getRank_type(), PRODUCT, rankItem.getStatist_way());
                 mFragmentList.add(topFragment);
             }
             mVp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {

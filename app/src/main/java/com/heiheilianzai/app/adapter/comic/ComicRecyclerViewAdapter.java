@@ -29,9 +29,9 @@ import com.heiheilianzai.app.utils.CommonUtil;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.view.DoubleClickListener;
 import com.heiheilianzai.app.view.comic.DanmuRelativeLayout;
 import com.heiheilianzai.app.view.comic.ProgressPieIndicator;
-import com.liulishuo.filedownloader.i.IFileDownloadIPCCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +61,6 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public List<DanmuRelativeLayout> relativeLayoutsDanmu = new ArrayList<>();
     private boolean mIsAlbum;
     private int mSmall;//0未开启小图模式，1为大图，2为中图，3为小图
-
     public int getmSmall() {
         return mSmall;
     }
@@ -156,7 +155,14 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                         holder.recyclerview_img.showImage(uri);
                     }
                     //阻隔BigImageView控件与父控件事件冲突
-                    holder.ban_touch_float.setOnClickListener(null);
+                    holder.ban_touch_float.setOnClickListener(new DoubleClickListener() {
+                        @Override
+                        public void onDoubleClick(View v) {
+                            if (itemOnclick != null && mSmall > 0) {
+                                itemOnclick.onClick(position, baseComicImage);
+                            }
+                        }
+                    });
                     holder.item_comic_recyclerview_layout.setLayoutParams(layoutParams);
                     holder.item_comic_recyclerview_danmu.setPosition(position);
                     relativeLayoutsDanmu.add(holder.item_comic_recyclerview_danmu);
@@ -188,15 +194,6 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     } else {
                         holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
                     }
-                    holder.recyclerview_img.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (itemOnclick != null && mSmall > 0) {
-                                itemOnclick.onClick(position, baseComicImage);
-                            }
-                        }
-                    });
-
                 }
             } else if (holderr instanceof MyAdViewHolder) {
                 MyAdViewHolder holderAd = (MyAdViewHolder) holderr;
@@ -241,6 +238,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         FrameLayout item_comic_recyclerview_layout;
         @BindView(R.id.ban_touch_float)
         View ban_touch_float;
+        @BindView(R.id.rl_item)
+        RelativeLayout rl_item;
 
         public MyViewHolder(View itemView) {
             super(itemView);

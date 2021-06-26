@@ -1,6 +1,8 @@
 package com.heiheilianzai.app.ui.activity;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -10,16 +12,21 @@ import com.heiheilianzai.app.base.BaseAdvertisementActivity;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.Startpage;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 
 import java.io.File;
 
+import butterknife.BindView;
+
 /**
  * 热启动广告（根据后台配置是否显示）
  */
 public class AdvertisementActivity extends BaseAdvertisementActivity {
+    @BindView(R.id.activity_splash_website)
+    public TextView mTxWebsite;
 
     @Override
     public int initContentView() {
@@ -33,6 +40,22 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
             Glide.with(activity).load(new File(flieName)).into(activity_splash_im);
         }
         startPage();
+        showWebsite();
+    }
+
+    private void showWebsite() {
+        String website = ShareUitls.getString(activity, "website", "");
+        if (!StringUtils.isEmpty(website)) {
+            mTxWebsite.setVisibility(View.VISIBLE);
+            mTxWebsite.setText(String.format(getString(R.string.splash_website), website));
+        } else {
+            mTxWebsite.setVisibility(View.GONE);
+        }
+        mTxWebsite.setOnClickListener(v -> {
+            startActivity(new Intent(activity, AboutActivity.class).
+                    putExtra("url", website)
+                    .putExtra("style", "4"));
+        });
     }
 
     @Override

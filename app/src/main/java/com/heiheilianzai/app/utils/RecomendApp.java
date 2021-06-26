@@ -80,7 +80,7 @@ public class RecomendApp {
 
     public Dialog getAppUpdatePop(final Activity activity, RecommendAppBean recommendAppBean) {
         this.activity = activity;
-        if (recommendAppBean.getApp_list() == null && recommendAppBean.getApp_list().size() == 0) {
+        if (recommendAppBean.getApp_list() == null || recommendAppBean.getApp_list().size() == 0) {
             return null;
         }
         long recommendTime = ShareUitls.getRecommendAppTime(activity, "recommendTime", 0);

@@ -140,13 +140,25 @@
             android:src="@mipmap/comic_top" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/img_big"
+    <ScrollView
+        android:id="@+id/sv_big"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_0e0705"
-        android:scaleType="centerCrop"
-        android:visibility="gone" />
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl_big"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_big"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/rl_comic_small"
@@ -167,18 +179,18 @@
 
             <RadioButton
                 android:id="@+id/comic_rb_small"
-                android:layout_width="@dimen/dimens_18dp"
-                android:layout_height="@dimen/dimens_18dp"
+                android:layout_width="@dimen/dimens_12dp"
+                android:layout_height="@dimen/dimens_12dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dimens_18dp"
+                android:layout_marginLeft="@dimen/dimens_22dp"
                 android:background="@drawable/selector_radiobutton_small"
                 android:button="@null"
                 android:checked="true" />
 
             <RadioButton
                 android:id="@+id/comic_rb_mid"
-                android:layout_width="@dimen/dimens_18dp"
-                android:layout_height="@dimen/dimens_18dp"
+                android:layout_width="@dimen/dimens_12dp"
+                android:layout_height="@dimen/dimens_12dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/selector_radiobutton_mid"
                 android:button="@null"
@@ -186,11 +198,11 @@
 
             <RadioButton
                 android:id="@+id/comic_rb_big"
-                android:layout_width="@dimen/dimens_18dp"
-                android:layout_height="@dimen/dimens_18dp"
+                android:layout_width="@dimen/dimens_12dp"
+                android:layout_height="@dimen/dimens_12dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dimens_17dp"
+                android:layout_marginRight="@dimen/dimens_22dp"
                 android:background="@drawable/selector_radiobutton_big"
                 android:button="@null"
                 android:checked="true" />
