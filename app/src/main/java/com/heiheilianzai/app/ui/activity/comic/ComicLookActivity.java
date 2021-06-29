@@ -454,9 +454,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.activity_comiclook_xiazai:
                 if (App.isVip(activity)) {
+                    baseComic.saveIsexist(false);
                     Intent intentxiazai = new Intent(activity, ComicDownActivity.class);
                     intentxiazai.putExtra("baseComic", baseComic);
-                    intentxiazai.putExtra("comicChapter", (Serializable) comicChapter);
                     startActivity(intentxiazai);
                 } else {
                     MyToash.Toash(activity, getString(R.string.down_toast_msg));
@@ -482,7 +482,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 showMenu(false);
                 break;
             case R.id.comic_rb_big:
-                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
                     comicChapterCatalogAdapter.setmSmall(1);
                     mRbMid.setChecked(false);
                     mRbBig.setChecked(true);
@@ -491,7 +491,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case R.id.comic_rb_mid:
-                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
                     comicChapterCatalogAdapter.setmSmall(2);
                     mRbMid.setChecked(true);
                     mRbBig.setChecked(false);
@@ -500,7 +500,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case R.id.comic_rb_small:
-                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
                     comicChapterCatalogAdapter.setmSmall(3);
                     mRbMid.setChecked(false);
                     mRbBig.setChecked(false);
@@ -600,7 +600,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 .addGuidePage(GuidePage.newInstance()
                         .addHighLight(mRlFootSet)
                         .setLayoutRes(R.layout.comic_look_guide, R.id.img_know)
-                        .setEverywhereCancelable(false)).show();
+                        .setEverywhereCancelable(false))
+                .addGuidePage(GuidePage.newInstance()
+                        .setLayoutRes(R.layout.comic_look_guide_two, R.id.img_know)
+                        .setEverywhereCancelable(false))
+                .show();
     }
 
     @Override

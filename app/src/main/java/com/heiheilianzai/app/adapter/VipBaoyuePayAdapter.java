@@ -70,6 +70,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.txTip.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             viewHolder.txTip.setText("¥"+acquirePayItem.getOriginal_price());
         }else {
+            viewHolder.txTip.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
             viewHolder.txTip.setText(acquirePayItem.getNote());
         }
         if (onPayItemClickListener!=null){

@@ -90,6 +90,7 @@ public class TopFragment extends BaseButterKnifeFragment {
         mRyTopDetail.setLayoutManager(layoutManagerDetail);
         mTopDetailAdapter = new TopDetailAdapter(activity, mOptionBeenList, mType, mShowType);
         mRyTopDetail.setAdapter(mTopDetailAdapter);
+        mCurrentPage = 1;
         requstTopDetailData(mParam);
         mTopDetailAdapter.setmOnSelectTopListItemListener(new TopDetailAdapter.OnSelectTopListItemListener() {
             @Override
@@ -182,27 +183,32 @@ public class TopFragment extends BaseButterKnifeFragment {
             mRyTopDetail.setVisibility(View.VISIBLE);
             mLlNoResult.setVisibility(View.GONE);
             mTotalPage = optionItem.total_page;
-            int optionItem_list_size = optionItem.list.size();
-            if (mCurrentPage <= mTotalPage && optionItem_list_size != 0) {
-                if (mCurrentPage == 1) {
-                    mOptionBeenList.clear();
-                    mOptionBeenList.addAll(optionItem.list);
-                    mSize = optionItem_list_size;
-                    mTopDetailAdapter.notifyDataSetChanged();
+            List<OptionBeen> list = optionItem.list;
+            if (list != null) {
+                int optionItem_list_size = list.size();
+                if (mCurrentPage <= mTotalPage && optionItem_list_size != 0) {
+                    if (mCurrentPage == 1) {
+                        mOptionBeenList.clear();
+                        mOptionBeenList.addAll(list);
+                        mSize = optionItem_list_size;
+                        mTopDetailAdapter.notifyDataSetChanged();
+                    } else {
+                        mOptionBeenList.addAll(list);
+                        int t = mSize + optionItem_list_size;
+                        mTopDetailAdapter.notifyItemRangeInserted(mSize + 2, optionItem_list_size);
+                        mSize = t;
+                    }
+                    mCurrentPage = optionItem.current_page;
                 } else {
-                    mOptionBeenList.addAll(optionItem.list);
-                    int t = mSize + optionItem_list_size;
-                    mTopDetailAdapter.notifyItemRangeInserted(mSize + 2, optionItem_list_size);
-                    mSize = t;
+                    if (mOptionBeenList.isEmpty()) {
+                        mLlNoResult.setVisibility(View.VISIBLE);
+                    }
+                    if (mCurrentPage > 1) {
+                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
+                    }
                 }
-                mCurrentPage = optionItem.current_page;
             } else {
-                if (mOptionBeenList.isEmpty()) {
-                    mLlNoResult.setVisibility(View.VISIBLE);
-                }
-                if (mCurrentPage > 1) {
-                    MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
-                }
+                MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
             }
         } catch (Exception E) {
             mRyTopDetail.setVisibility(View.GONE);

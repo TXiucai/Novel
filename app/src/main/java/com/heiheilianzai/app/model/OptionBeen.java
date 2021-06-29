@@ -15,13 +15,22 @@ public class OptionBeen  extends  BaseAd {
     public int total_views;
     public int total_downs;
     public String total_favors;
-    public long updated_at;
+    public String updated_at;
+    public int views;
   //  public String finished;
    // public int is_vip;//": 1,
  //   public int is_baoyue;//": 0,
  //   public String enable_time;//": "06月11日",
   //  public String expire_time;//": "06月30日"
 
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
 
     public int getTotal_downs() {
         return total_downs;
@@ -31,11 +40,11 @@ public class OptionBeen  extends  BaseAd {
         this.total_downs = total_downs;
     }
 
-    public long getUpdated_at() {
+    public String getUpdated_at() {
         return updated_at;
     }
 
-    public void setUpdated_at(long updated_at) {
+    public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
     }
 

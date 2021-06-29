@@ -79,12 +79,13 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
             });
             if (PRODUCT) {
                 MyPicasso.GlideImage(activity, optionBeen.getCover(), viewHolder.imageView, WIDTH, HEIGHT, R.mipmap.book_def_v);
+                viewHolder.author.setText(String.valueOf(optionBeen.getViews()));
             } else {
                 MyPicasso.GlideImage(activity, optionBeen.getCover(), viewHolder.imageView, WIDTH, HEIGHT, R.mipmap.comic_def_v);
+                viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
             }
             viewHolder.name.setText(optionBeen.getName());
             viewHolder.description.setText(optionBeen.getDescription());
-            viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
             viewHolder.item_store_label_male_horizontal_tag.removeAllViews();
             for (int i = 0; i < optionBeen.tag.size(); i++) {
                 if (i < 3) {

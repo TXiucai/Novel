@@ -10,7 +10,10 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@mipmap/book_def_v" />
-
+    <View
+        android:background="@color/color_990C0200"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

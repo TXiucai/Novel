@@ -81,7 +81,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.name.setText(optionBeen.getName());
         viewHolder.description.setText(optionBeen.getDescription());
         String total_favors = optionBeen.getTotal_favors();
-        long updated_at = optionBeen.getUpdated_at();
+        String updated_at = optionBeen.getUpdated_at();
         int total_views = optionBeen.getTotal_views();
         int total_downs = optionBeen.getTotal_downs();
         if (mShowType != null) {
@@ -93,8 +93,8 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.author.setText(total_favors);
                 viewHolder.imgType.setVisibility(View.VISIBLE);
                 viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_collect));
-            } else if (updated_at != 0 && TextUtils.equals(mShowType, "4")) {
-                viewHolder.author.setText("更新于" + DateUtils.timeStampToDate(updated_at, "yyyy-MM-dd"));
+            } else if (TextUtils.equals(mShowType, "4") && updated_at != null && !StringUtils.isEmpty(updated_at)) {
+                viewHolder.author.setText("更新于" + updated_at);
                 viewHolder.imgType.setVisibility(View.GONE);
             } else {
                 viewHolder.author.setText(String.valueOf(total_views));

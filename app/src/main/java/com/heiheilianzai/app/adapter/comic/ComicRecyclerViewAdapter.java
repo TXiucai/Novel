@@ -61,6 +61,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     public List<DanmuRelativeLayout> relativeLayoutsDanmu = new ArrayList<>();
     private boolean mIsAlbum;
     private int mSmall;//0未开启小图模式，1为大图，2为中图，3为小图
+
     public int getmSmall() {
         return mSmall;
     }
@@ -136,12 +137,12 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                         layoutParams.height = trueHeigth;//默认
                         layoutParams.width = WIDTH;
                     } else if (mSmall == 2) {
-                        int trueHeigth = (HEIGHT - (int) CommonUtil.convertDpToPixel(activity, 20)) / 2;
+                        int trueHeigth = WIDTH * 3 / 4;
                         layoutParams.setMargins(0, 0, 0, (int) CommonUtil.convertDpToPixel(activity, 10));
                         layoutParams.height = trueHeigth;
                         layoutParams.width = trueHeigth;
                     } else if (mSmall == 3) {
-                        int trueHeigth = (HEIGHT - (int) CommonUtil.convertDpToPixel(activity, 30)) / 3;
+                        int trueHeigth = WIDTH / 2;
                         layoutParams.setMargins(0, 0, 0, (int) CommonUtil.convertDpToPixel(activity, 10));
                         layoutParams.height = trueHeigth;
                         layoutParams.width = trueHeigth;

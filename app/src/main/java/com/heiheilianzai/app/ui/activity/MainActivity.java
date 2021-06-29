@@ -143,8 +143,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     MineNewFragment mineFragment;
     Controller controller;
     boolean loadYouSheng;
-    private List<HomeNotice> mHomeNoticeText =new ArrayList<>();
-    private List<HomeNotice> mHomeNoticePhoto=new ArrayList<>();
+    private List<HomeNotice> mHomeNoticeText = new ArrayList<>();
+    private List<HomeNotice> mHomeNoticePhoto = new ArrayList<>();
     private boolean mIsShowTwoNotice = true;
     private boolean mIsFirstTextNotice;
     private Dialog popupWindow;
@@ -314,6 +314,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setStatusTextColor(useDart, activity);
         IntentFragment(possition);
         getVipPayOrder();
+        getCurrentVIPOrder();
         upLastTime();
         if (homeBoYinFragment != null) {
             if (possition == 3) {
@@ -325,6 +326,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     private void upLastTime() {
+        if (!Utils.isLogin(activity)) {
+            return;
+        }
         ReaderParams params = new ReaderParams(MainActivity.this);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(MainActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mLastTime, json, false, new HttpUtils.ResponseListener() {
@@ -480,13 +484,13 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      */
     public void showHomeTwoNotice() {
         View view = this.getWindow().getDecorView();
-        if (mIsFirstTextNotice){
-            if (mHomeNoticePhoto.size()>0){
+        if (mIsFirstTextNotice) {
+            if (mHomeNoticePhoto.size() > 0) {
                 HomeNoticePhotoDialog.showDialog(MainActivity.this, view, mHomeNoticePhoto.get(0));
                 mIsShowTwoNotice = false;
             }
-        }else {
-            if (mHomeNoticeText.size()>0){
+        } else {
+            if (mHomeNoticeText.size() > 0) {
                 HomeNoticeDialog.showDialog(MainActivity.this, view, mHomeNoticeText);
                 mIsShowTwoNotice = false;
             }
@@ -565,7 +569,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             if (code == 2) {
                                 new DialogBecomeVip().getDialogVipPop(activity);
                                 createVipPayOuderEvent.setCloseFlag(true);
-                                getCurrentVIPOrder();
                                 EventBus.getDefault().post(createVipPayOuderEvent);
                                 EventBus.getDefault().post(new RefreshMine(null));
                             } else if (code == 1) {
