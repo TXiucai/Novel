@@ -82,6 +82,7 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.decode.GlideEncypeImageLoader;
+import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.comic.DanmuRelativeLayout;
 import com.heiheilianzai.app.view.comic.ZoomRecyclerView;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
@@ -657,7 +658,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             ComicinfoMuluFragment.GetCOMIC_catalog(activity, comic_id, new ComicinfoMuluFragment.GetCOMIC_catalogList() {
                 @Override
                 public void GetCOMIC_catalogList(List<ComicChapter> comicChapterList) {
-                    if (comicChapterList != null && !comicChapterList.isEmpty()) {
+                    if (comicChapterList != null && !comicChapterList.isEmpty() && comicChapterList.size() > 0) {
                         for (int i = 0; i < comicChapterList.size(); i++) {
                             ComicChapter comicChapterTemp = comicChapterList.get(i);
                             if (comicChapterTemp.getAd_image() == null) {
@@ -691,7 +692,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (comicChapter != null) {
             ComicChapterSize = comicChapter.size();
             if (TextUtils.isEmpty(Chapter_id)) {
-                Chapter_id = getCurrentComicChapter(0).getChapter_id();
+                ComicChapter currentComicChapter = getCurrentComicChapter(0);
+                if (currentComicChapter != null) {
+                    Chapter_id = currentComicChapter.getChapter_id();
+                }
             }
             CurrentComicChapter = getCurrentComicChapter(Chapter_id);
             if (CurrentComicChapter != null) {
@@ -719,7 +723,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private void initRecyclerview() {
         activity_comic_look_foot = LayoutInflater.from(this).inflate(R.layout.activity_comic_look_foot, null);
         holderFoot = new MyViewHolder(activity_comic_look_foot);
-        linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager = new MyContentLinearLayoutManager(activity);
         activity_comiclook_RecyclerView.setLayoutManager(linearLayoutManager);
         RecyclerView.RecycledViewPool recycledViewPool = activity_comiclook_RecyclerView.getRecycledViewPool();
         //图片不加载，滑动后图片恢复的解决办法
@@ -827,7 +831,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
     private ComicChapter getCurrentComicChapter(int comicChapterSize) {
         ComicChapter comicChaptertemp = null;
-        if (comicChapter != null) {
+        if (comicChapter != null && ComicChapterSize > 0) {
             if (comicChapterSize < ComicChapterSize && comicChapter.size() > comicChapterSize) {
                 comicChaptertemp = comicChapter.get(comicChapterSize);
             } else {

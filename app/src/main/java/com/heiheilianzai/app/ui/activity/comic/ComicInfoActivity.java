@@ -1,27 +1,19 @@
 package com.heiheilianzai.app.ui.activity.comic;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -31,38 +23,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
-import com.heiheilianzai.app.adapter.comic.ComicChapterCatalogAdapter;
 import com.heiheilianzai.app.adapter.comic.ComicHChapterCatalogAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseWarmStartActivity;
-import com.heiheilianzai.app.callback.AppBarStateChangeListener;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.BaseAd;
-import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.BookInfoComment;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
@@ -71,21 +53,14 @@ import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
-import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
-import com.heiheilianzai.app.ui.activity.TopActivity;
-import com.heiheilianzai.app.ui.activity.WebViewActivity;
-import com.heiheilianzai.app.ui.activity.read.ReadActivity;
-import com.heiheilianzai.app.ui.fragment.comic.ComicinfoCommentFragment;
-import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DialogComicChapter;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
@@ -96,17 +71,13 @@ import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.CustomSwipeToRefresh;
+import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.ObservableScrollView;
-import com.heiheilianzai.app.view.UnderlinePageIndicatorHalf;
 import com.jaeger.library.StatusBarUtil;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
@@ -271,7 +242,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
         }
         EventBus.getDefault().register(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ry_comic_category.setLayoutManager(linearLayoutManager);
 
@@ -582,7 +553,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                         if (mPageNum == 1) {
                             comicChapterCatalogAdapter.notifyDataSetChanged();
                         } else {
-                            comicChapterCatalogAdapter.notifyItemRangeRemoved(size, comicChapter.size());
+                            comicChapterCatalogAdapter.notifyItemRangeInserted(size, comicChapter.size());
                         }
                         mPageNum++;
                     }

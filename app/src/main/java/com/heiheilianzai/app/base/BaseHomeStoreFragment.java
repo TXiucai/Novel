@@ -40,6 +40,7 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.ViewUtils;
 import com.heiheilianzai.app.view.ConvenientBanner;
+import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -107,7 +108,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         fragment_newbookself_top = ((StroeNewFragment) getParentFragment()).fragment_newbookself_top;
         hot_word = ((StroeNewFragment) getParentFragment()).myHotWord;
         fragment_newbookself_top.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
-        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new MyContentLinearLayoutManager(getContext());
         smartRecyclerAdapter = new SmartRecyclerAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(smartRecyclerAdapter);
