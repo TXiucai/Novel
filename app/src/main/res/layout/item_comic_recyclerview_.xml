@@ -8,20 +8,20 @@
     <FrameLayout
         android:id="@+id/item_comic_recyclerview_layout"
         android:layout_width="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
 
         <com.github.piasy.biv.view.BigImageView
             android:id="@+id/item_comic_recyclerview_photoview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="false"
             android:layout_gravity="center_horizontal"
-            app:initScaleType="centerCrop"
-            app:tapToRetry="true"
+            android:clickable="false"
             app:failureImage="@mipmap/icon_comic_def"
             app:failureImageInitScaleType="center"
-            app:optimizeDisplay="true"/>
+            app:initScaleType="custom"
+            app:optimizeDisplay="true"
+            app:tapToRetry="true" />
 
         <com.heiheilianzai.app.view.comic.DanmuRelativeLayout
             android:id="@+id/item_comic_recyclerview_danmu"

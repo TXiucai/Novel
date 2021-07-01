@@ -47,7 +47,6 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
-import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
@@ -58,7 +57,6 @@ import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
-import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.dialog.comic.LookComicSetDialog;
 import com.heiheilianzai.app.ui.dialog.comic.PurchaseDialog;
@@ -76,7 +74,6 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.PageFactory;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -96,7 +93,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -536,10 +532,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 mImgBigBack.setVisibility(View.VISIBLE);
                 mRlRb.setVisibility(View.GONE);
                 mSvBig.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams layoutParams = mImgBig.getLayoutParams();
-                layoutParams.width = WIDTH;
-                layoutParams.height = baseComicImage.width / baseComicImage.height * WIDTH;
-                mImgBig.setLayoutParams(layoutParams);
                 MyPicasso.GlideImageNoSize(activity, baseComicImagee.getImage(), mImgBig);
             }
         }
@@ -614,7 +606,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         try {
             EventBus.getDefault().register(this);
             initViews();
-            showMenu(true);
+            showMenu(false);
             if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
                 mRlSmall.setVisibility(View.VISIBLE);
                 mRlRb.setVisibility(View.VISIBLE);
@@ -752,10 +744,14 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         if (Last_read_img_order == baseComicImagesSize) {
                             showMenu(true);
                         }
+                        showMenu(false);
+                    } else {
+                        showMenu(true);
+                        first = false;
                     }
                 } catch (Exception e) {
                 }
-                showMenu(false);
+
             }
         });
     }
@@ -906,8 +902,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     } else {
                         activity_comiclook_pinglunshu.setVisibility(View.GONE);
                     }
-                    showMenu(false);
-                    first = false;
                 } else {
                     comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
                     comicChapterCatalogAdapter.NotifyDataSetChanged(baseComicImagesSize);
