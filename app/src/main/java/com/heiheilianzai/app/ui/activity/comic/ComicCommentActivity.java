@@ -277,7 +277,7 @@ public class ComicCommentActivity extends BaseButterKnifeActivity {
         // TODO Auto-generated method stub
         super.finish();
         //关闭窗体动画显示
-        this.overridePendingTransition(R.anim.activity_close, 0);
+        //this.overridePendingTransition(R.anim.activity_close, 0);
     }
 
     /**
