@@ -32,6 +32,7 @@ import com.heiheilianzai.app.ui.activity.AnnounceActivity;
 import com.heiheilianzai.app.ui.activity.CouponRecordActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
+import com.heiheilianzai.app.ui.activity.ReadTimeActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.UserInfoActivity;
@@ -360,7 +361,11 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 startActivity(new Intent(activity, BaseOptionActivity.class).putExtra("OPTION", DOWN).putExtra("title", LanguageUtil.getString(activity, R.string.BookInfoActivity_down_manger)));
                 break;
             case R.id.fragment_mine_user_info_tasklayout_share:
-                //startActivity(new Intent(activity, ShareActivity.class));
+                if (!Utils.isLogin(activity)) {//登录状态跳个人资料
+                    MainHttpTask.getInstance().Gotologin(activity);
+                }else {
+                    startActivity(new Intent(activity, ReadTimeActivity.class));
+                }
                 break;
         }
     }

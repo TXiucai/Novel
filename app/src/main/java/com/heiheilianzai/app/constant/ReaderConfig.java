@@ -409,6 +409,21 @@ public class ReaderConfig {
     public static final String COUPON_DESCRIPTION= "/user/book-description";
 
     /**
+     * 阅读时长
+     */
+    public static final String READ_TIME= "/read-daily-task/index";
+
+    /**
+     * 阅读时长领奖
+     */
+    public static final String READ_TIME_ACCEPT= "/read-daily-task/add";
+
+    /**
+     * 兑换周边
+     */
+    public static final String EXCHANGE_GIFT= "/exchange-manage-info/list";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

@@ -101,6 +101,7 @@
     <string name="MineNewFragment_kaitongVIP">我的VIP</string>
     <string name="MineNewFragment_shuping">我的评论</string>
     <string name="MineNewFragment_share">我要分享</string>
+    <string name="MineNewFragment_read">阅读领奖</string>
     <string name="MineNewFragment_friend">分享好友</string>
     <string name="MineNewFragment_fankui">意见反馈</string>
     <string name="MineNewFragment_lianxikefu">联系客服</string>
@@ -535,12 +536,22 @@
     <string name="string_delete_success">删除成功</string>
     <string name="string_hide">收起</string>
     <string name="string_fold">展开</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="string_pre">上一则</string>
     <string name="string_last">下一则</string>
     <string name="string_no_pre">没有上一则啦！</string>
     <string name="string_no_last">没有下一则啦！</string>
     <string name="dialog_lookcomicset_small_text1">小图模式</string>
     <string name="dialog_lookcomicset_small_text2">打开后可点击查看大图</string>
+    <string name="string_read_time_tittle">阅读领奖</string>
+    <string name="string_read_time_today">今日已阅读</string>
+    <string name="string_read_time_min">分钟</string>
+    <string name="string_read_time_coupon">通过阅读已领取%s书券，再接再厉</string>
+    <string name="string_read_time_coupon_accept">领取%s书券</string>
+    <string name="string_rules">活动规则</string>
+    <string name="string_exchage_gift">兑换福利</string>
+    <string name="string_accept_coupon_success">书券领取成功</string>
+    <string name="string_zero_min">0分钟</string>
+    <string name="string_continue_accept_coupon">再看%s分钟可领取</string>
+    <string name="string_exchage_gift_tittle">书券兑换好物</string>
+    <string name="string_exchange_go"><![CDATA[前往>]]></string>
 </resources>

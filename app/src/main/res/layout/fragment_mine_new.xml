@@ -461,19 +461,18 @@
                     android:layout_height="@dimen/dimens_70dp"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="invisible">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="@dimen/dimens_25dp"
                         android:layout_height="@dimen/dimens_25dp"
-                        android:src="@mipmap/ic_home_share" />
+                        android:src="@mipmap/ic_home_read" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_6dp"
-                        android:text="@string/MineNewFragment_share"
+                        android:text="@string/MineNewFragment_read"
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
