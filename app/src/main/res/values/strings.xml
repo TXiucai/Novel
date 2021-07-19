@@ -554,4 +554,16 @@
     <string name="string_continue_accept_coupon">再看%s分钟可领取</string>
     <string name="string_exchage_gift_tittle">书券兑换好物</string>
     <string name="string_exchange_go"><![CDATA[前往>]]></string>
+    <string name="string_name">姓名</string>
+    <string name="string_adrress_name">收货人</string>
+    <string name="string_phone_num">手机号码</string>
+    <string name="string_hint_phone">+86</string>
+    <string name="string_detail_address">详细地址</string>
+    <string name="string_hint_address">如道路、门牌号、小区、单元等</string>
+    <string name="string_postal_num">邮政编码</string>
+    <string name="string_address">收货地区</string>
+    <string name="string_address_save">保存并使用</string>
+    <string name="string_address_fail">数据解析失败</string>
+    <string name="AddressActivity_title">收货地址</string>
+    <string name="string_edit_address_error">编辑地址信息有问题，请检查</string>
 </resources>

@@ -33,6 +33,8 @@ import com.heiheilianzai.app.view.ReadTimeView;
 import com.heiheilianzai.app.view.StepView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -91,6 +93,13 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.EXCHANGE_GIFT, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            String roue_content = jsonObject.getString("roue_content");
+                            mTxRules.setText(roue_content);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         ShareUitls.putString(mActivity, "exchange_gift", result);
                     }
 

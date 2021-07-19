@@ -28,6 +28,7 @@ import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.AddressActivity;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
 import com.heiheilianzai.app.ui.activity.CouponRecordActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
@@ -321,7 +322,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 HandleOnclick(view, "fragment_mine_user_info_paylayout_rechargenotes2");
                 break;
             case R.id.fragment_mine_user_info_paylayout_recharge:
-                HandleOnclick(view, "fragment_mine_user_info_paylayout_recharge");
+                //HandleOnclick(view, "fragment_mine_user_info_paylayout_recharge");
+                if (!Utils.isLogin(activity)) {//登录状态跳个人资料
+                    MainHttpTask.getInstance().Gotologin(activity);
+                }else {
+                    startActivity(new Intent(activity, AddressActivity.class));
+                }
                 break;
             case R.id.fragment_mine_user_info_paylayout_vip:
                 HandleOnclick(view, "fragment_mine_user_info_paylayout_vip");

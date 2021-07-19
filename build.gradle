@@ -112,4 +112,5 @@ ext {
     GroupIndexLib = '1.0.1'
     BaseRecyclerViewAdapterHelper = '2.9.50'
     imagepicker = '0.6.1'
+    pickView = '4.1.9'
 }
