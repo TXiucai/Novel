@@ -189,6 +189,7 @@ public class PageFactory {
     public boolean IS_CHAPTERFirst = true;
     public boolean mNextPage = true;//变化是否向后翻页
     private String is_new_content;
+    private Dialog mDialogVip;
 
     public enum Status {
         OPENING,
@@ -1697,12 +1698,26 @@ public class PageFactory {
                         if (!chapterContent.isIs_buy_status()) {
                             if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
                                 DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-                                Dialog dialogVipPop = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+                                if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
+                                    if (AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false)){
+                                        int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
+                                        String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_PRICE);
+                                        if (couponNum >= Integer.valueOf(couponPrice)) {
+                                            dialogNovelCoupon.openCoupon(mActivity,chapterItem,couponPrice,couponNum);
+                                        } else {
+                                            DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
+                                            dialogCouponNotMore.getDialogVipPop(activity, true);
+                                        }
+                                    }else {
+                                        mDialogVip = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+                                    }
+                                }
+
                                 dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                                     @Override
                                     public void onOpenCoupon(boolean isBuy) {
-                                        if (dialogVipPop != null) {
-                                            dialogVipPop.dismiss();
+                                        if (mDialogVip != null) {
+                                            mDialogVip.dismiss();
                                         }
                                         chapterItem.setIs_buy_status(true);
                                     }

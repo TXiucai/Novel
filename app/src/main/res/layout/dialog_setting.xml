@@ -405,16 +405,17 @@
 
         <LinearLayout
             android:id="@+id/auto_read_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
                 android:layout_gravity="center_vertical"
                 android:background="@mipmap/auto_read_icon" />
 
@@ -424,10 +425,42 @@
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:text="@string/ReadActivity_autoread"
-                android:textColor="@color/black"
-                android:textSize="@dimen/public_12_dp" />
+                android:textColor="@color/color_323334"
+                android:textSize="14sp" />
         </LinearLayout>
 
+        <View
+            android:layout_width="@dimen/dimens_2dp"
+            android:layout_height="@dimen/dimens_24dp"
+            android:background="@color/lightgray3" />
+
+        <LinearLayout
+            android:id="@+id/auto_read_close_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:id="@+id/img_open"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/auto_read_icon" />
+
+            <TextView
+                android:id="@+id/tx_open"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/ReadActivity_autoread_close"
+                android:textColor="@color/color_323334"
+                android:textSize="14sp" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

@@ -566,4 +566,8 @@
     <string name="string_address_fail">数据解析失败</string>
     <string name="AddressActivity_title">收货地址</string>
     <string name="string_edit_address_error">编辑地址信息有问题，请检查</string>
+    <string name="dialog_lookcomicset_open_text">自动解锁</string>
+    <string name="dialog_lookcomicset_open_text2">打开后自动扣除书券解锁章节</string>
+    <string name="ReadActivity_autoread_close">开启自动解锁章节</string>
+    <string name="ReadActivity_autoread_open">关闭自动解锁章节</string>
 </resources>

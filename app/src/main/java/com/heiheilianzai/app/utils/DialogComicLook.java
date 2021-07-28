@@ -2,7 +2,8 @@ package com.heiheilianzai.app.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;import android.content.Intent;
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.SpannableString;
@@ -18,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -31,6 +33,7 @@ import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicinfoMuluActivity;
 import com.heiheilianzai.app.ui.activity.comic.RefreashComicInfoActivity;
+import com.zcw.togglebutton.ToggleButton;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,11 +44,13 @@ import butterknife.ButterKnife;
 
 public class DialogComicLook {
     private DialogNovelCoupon.OnOpenCouponListener onOpenCouponListener;
+
     public void setOnOpenCouponListener(DialogNovelCoupon.OnOpenCouponListener onOpenCouponListener) {
         this.onOpenCouponListener = onOpenCouponListener;
     }
+
     @SuppressLint("UseCompatLoadingForDrawables")
-    public Dialog getDialogVipPop(Activity activity, ComicChapterItem chapterItem,BaseComic baseComic,boolean isCoupon) {
+    public Dialog getDialogVipPop(Activity activity, ComicChapterItem chapterItem, BaseComic baseComic, boolean isCoupon) {
         Dialog popupWindow = new Dialog(activity, R.style.fullScreen);
 
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_comic_look, null);
@@ -60,6 +65,32 @@ public class DialogComicLook {
         vipHolder.txTittle.setText(chapterItem.getChapter_title());
         vipHolder.txChapter.setText(spannableString);
         vipHolder.txNum.setText(String.valueOf(couponNum));
+        if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false)) {
+            vipHolder.tbOpen.setToggleOn();
+        } else {
+            vipHolder.tbOpen.setToggleOff();
+        }
+        vipHolder.tbOpen.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                AppPrefs.putSharedBoolean(activity, "comicOpen_ToggleButton", on);
+                if (onOpenCouponListener != null && on) {
+                    if (!Utils.isLogin(activity)) {//登录状态跳个人资料
+                        if (popupWindow != null) {
+                            popupWindow.dismiss();
+                        }
+                        MainHttpTask.getInstance().Gotologin(activity);
+                    } else {
+                        if (couponNum >= Integer.valueOf(couponPrice)) {
+                            openCoupon(activity, chapterItem, couponPrice, couponNum);
+                        } else {
+                            DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
+                            dialogCouponNotMore.getDialogVipPop(activity, true);
+                        }
+                    }
+                }
+            }
+        });
         vipHolder.txQuanji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,9 +109,9 @@ public class DialogComicLook {
                             popupWindow.dismiss();
                         }
                         MainHttpTask.getInstance().Gotologin(activity);
-                    }else {
+                    } else {
                         if (couponNum >= Integer.valueOf(couponPrice)) {
-                            openCoupon(activity,chapterItem,couponPrice,couponNum);
+                            openCoupon(activity, chapterItem, couponPrice, couponNum);
                         } else {
                             DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
                             dialogCouponNotMore.getDialogVipPop(activity, true);
@@ -101,16 +132,16 @@ public class DialogComicLook {
         vipHolder.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (popupWindow!=null){
+                if (popupWindow != null) {
                     popupWindow.dismiss();
-                    askIsNeedToAddShelf(activity,baseComic);
+                    askIsNeedToAddShelf(activity, baseComic);
                 }
             }
         });
-        if (!isCoupon){
+        if (!isCoupon) {
             vipHolder.llCounpon.setVisibility(View.INVISIBLE);
             vipHolder.txChapter.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             vipHolder.llCounpon.setVisibility(View.VISIBLE);
             vipHolder.txChapter.setVisibility(View.VISIBLE);
         }
@@ -119,8 +150,8 @@ public class DialogComicLook {
         //全屏放在setcontentview后面才有效果
         Window window = popupWindow.getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();
-        attributes.width=WindowManager.LayoutParams.MATCH_PARENT;
-        attributes.height=WindowManager.LayoutParams.MATCH_PARENT;
+        attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+        attributes.height = WindowManager.LayoutParams.MATCH_PARENT;
         //设置弹出位置
         window.setGravity(Gravity.CENTER);
         window.setAttributes(attributes);
@@ -146,13 +177,17 @@ public class DialogComicLook {
         public TextView txTittle;
         @BindView(R.id.tx_quanji)
         public TextView txQuanji;
+        @BindView(R.id.tb_open)
+        public ToggleButton tbOpen;
 
         public VipHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
+
     /**
      * 询问是否加入书架
+     *
      * @param activity
      * @param baseComic
      */
@@ -196,20 +231,22 @@ public class DialogComicLook {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
+
     public interface OnOpenCouponListener {
         void onOpenCoupon(boolean isBuy);
     }
-    private void openCoupon(Activity activity, ComicChapterItem chapterItem, String couponPrice, int couponNum) {
+
+    public void openCoupon(Activity activity, ComicChapterItem chapterItem, String couponPrice, int couponNum) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("comic_id", chapterItem.getComic_id());
-        params.putExtraParams("chapter_id",chapterItem.getChapter_id());
+        params.putExtraParams("chapter_id", chapterItem.getChapter_id());
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_chapter_open, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                         EventBus.getDefault().post(new RefreshMine(null));
                         onOpenCouponListener.onOpenCoupon(true);
-                        AppPrefs.putSharedInt(activity, PrefConst.COUPON, couponNum-Integer.valueOf(couponPrice));
+                        AppPrefs.putSharedInt(activity, PrefConst.COUPON, couponNum - Integer.valueOf(couponPrice));
                     }
 
                     @Override

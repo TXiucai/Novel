@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.nfc.cardemulation.OffHostApduService;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,6 +45,7 @@ import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ComicConfig;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
@@ -65,6 +67,7 @@ import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BrightnessUtil;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.DialogComicLook;
+import com.heiheilianzai.app.utils.DialogCouponNotMore;
 import com.heiheilianzai.app.utils.DialogLogin;
 import com.heiheilianzai.app.utils.DialogNovelCoupon;
 import com.heiheilianzai.app.utils.DialogVip;
@@ -479,7 +482,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 showMenu(false);
                 break;
             case R.id.comic_rb_big:
-                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
                     comicChapterCatalogAdapter.setmSmall(1);
                     mRbMid.setChecked(false);
                     mRbBig.setChecked(true);
@@ -488,7 +491,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case R.id.comic_rb_mid:
-                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
                     comicChapterCatalogAdapter.setmSmall(2);
                     mRbMid.setChecked(true);
                     mRbBig.setChecked(false);
@@ -497,7 +500,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case R.id.comic_rb_small:
-                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
+                if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
                     comicChapterCatalogAdapter.setmSmall(3);
                     mRbMid.setChecked(false);
                     mRbBig.setChecked(false);
@@ -588,15 +591,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
     private void showComicGuide() {
         NewbieGuide.with(activity)
-                .setLabel("guideComic")
+                .setLabel("guideComicOpen")
                 .setShowCounts(1)//控制次数
                 .addGuidePage(GuidePage.newInstance()
                         .addHighLight(mRlFootSet)
                         .setLayoutRes(R.layout.comic_look_guide, R.id.img_know)
                         .setEverywhereCancelable(false))
-                .addGuidePage(GuidePage.newInstance()
-                        .setLayoutRes(R.layout.comic_look_guide_two, R.id.img_know)
-                        .setEverywhereCancelable(false))
+//                .addGuidePage(GuidePage.newInstance()
+//                        .setLayoutRes(R.layout.comic_look_guide_two, R.id.img_know)
+//                        .setEverywhereCancelable(false))
                 .show();
     }
 
@@ -607,7 +610,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             EventBus.getDefault().register(this);
             initViews();
             showMenu(false);
-            if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
+            if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
                 mRlSmall.setVisibility(View.VISIBLE);
                 mRlRb.setVisibility(View.VISIBLE);
                 mImgBigBack.setVisibility(View.GONE);
@@ -746,7 +749,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         }
                         showMenu(false);
                     } else {
-                        showMenu(true);
                         first = false;
                     }
                 } catch (Exception e) {
@@ -890,7 +892,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
                     comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
                     activity_comiclook_RecyclerView.setAdapter(comicChapterCatalogAdapter);
-                    if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
+                    if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
                         comicChapterCatalogAdapter.setmSmall(3);//默认开启小图模式
                     }
                     activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
@@ -1361,7 +1363,19 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1") || is_vip != null && is_vip.equals("1")) && !App.isVip(activity)) {
                 if (Utils.isLogin(activity)) {
                     DialogComicLook dialogNovelCoupon = new DialogComicLook();
-                    dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
+                    //开启自动解锁并需要书券时
+                    if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false) && isCoupon) {
+                        int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
+                        String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_COMICI_PRICE);
+                        if (couponNum >= Integer.valueOf(couponPrice)) {
+                            dialogNovelCoupon.openCoupon(activity, chapterItem, couponPrice, couponNum);
+                        } else {
+                            DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
+                            dialogCouponNotMore.getDialogVipPop(activity, true);
+                        }
+                    } else {
+                        dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
+                    }
                     dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                         @Override
                         public void onOpenCoupon(boolean isBuy) {

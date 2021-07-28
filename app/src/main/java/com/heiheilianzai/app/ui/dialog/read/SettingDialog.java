@@ -11,6 +11,8 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.PageFactory;
 
@@ -75,6 +78,12 @@ public class SettingDialog extends Dialog {
     View auto_read_layout;
     @BindView(R.id.tv_jianfan)
     View tv_jianfan;
+    @BindView(R.id.auto_read_close_layout)
+    View open_layout;
+    @BindView(R.id.img_open)
+    ImageView open_img;
+    @BindView(R.id.tx_open)
+    TextView open_tv;
 
     private ReadActivity mContext;
     private ReadingConfig config;
@@ -177,6 +186,15 @@ public class SettingDialog extends Dialog {
         selectBg(config.getBookBgType());
         selectPageMode(ReadingConfig.getInstance().getPageMode());
         selectLineSpacing(config.getLineSpacingMode());
+        if (AppPrefs.getSharedBoolean(mContext, "novelOpen_ToggleButton", false)) {
+            open_img.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.auto_close_read_icon));
+            open_tv.setText(mContext.getResources().getString(R.string.ReadActivity_autoread_open));
+            open_tv.setTextColor(mContext.getResources().getColor(R.color.color_ff8350));
+        } else {
+            open_img.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.auto_read_icon));
+            open_tv.setText(mContext.getResources().getString(R.string.ReadActivity_autoread_close));
+            open_tv.setTextColor(mContext.getResources().getColor(R.color.color_323334));
+        }
     }
 
     public void selectFontSize(float size) {
@@ -329,9 +347,22 @@ public class SettingDialog extends Dialog {
             R.id.iv_bg_7, R.id.iv_bg_8, R.id.tv_simulation,
             R.id.tv_cover, R.id.tv_slide, R.id.tv_none, R.id.tv_shangxia,
             R.id.margin_big, R.id.margin_medium, R.id.margin_small,
-            R.id.auto_read_layout, R.id.tv_jianfan})
+            R.id.auto_read_layout, R.id.tv_jianfan,R.id.auto_read_close_layout})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.auto_read_close_layout:
+                if (AppPrefs.getSharedBoolean(mContext, "novelOpen_ToggleButton", false)) {
+                    open_img.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.auto_read_icon));
+                    open_tv.setText(mContext.getResources().getString(R.string.ReadActivity_autoread_close));
+                    open_tv.setTextColor(mContext.getResources().getColor(R.color.color_323334));
+                    AppPrefs.putSharedBoolean(mContext, "novelOpen_ToggleButton", false);
+                } else {
+                    open_img.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.auto_close_read_icon));
+                    open_tv.setText(mContext.getResources().getString(R.string.ReadActivity_autoread_open));
+                    open_tv.setTextColor(mContext.getResources().getColor(R.color.color_ff8350));
+                    AppPrefs.putSharedBoolean(mContext, "novelOpen_ToggleButton", true);
+                }
+                break;
             case R.id.tv_jianfan:
                 mSettingListener.changeTypeFace(null);
                 break;

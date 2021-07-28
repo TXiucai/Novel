@@ -30,6 +30,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
@@ -698,6 +700,16 @@ public class ReadActivity extends BaseReadActivity {
         config.setDayOrNight(mDayOrNight);
         pageFactory.setDayOrNight(mDayOrNight);
     }
+    private void showNovelGuide() {
+        NewbieGuide.with(activity)
+                .setLabel("guideNovelOpen")
+                .setShowCounts(1)//控制次数
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(bookpop_bottom)
+                        .setLayoutRes(R.layout.comic_look_guide, R.id.img_know)
+                        .setEverywhereCancelable(false))
+                .show();
+    }
 
     //设置菜单
     private void showReadSetting() {
@@ -708,6 +720,7 @@ public class ReadActivity extends BaseReadActivity {
         activity_read_top_menu.startAnimation(bottomAnim);
         activity_read_bottom_view.setVisibility(View.VISIBLE);
         activity_read_top_menu.setVisibility(View.VISIBLE);
+        showNovelGuide();
     }
 
     private void hideReadSetting() {

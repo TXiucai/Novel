@@ -22,6 +22,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.zcw.togglebutton.ToggleButton;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -49,6 +50,32 @@ public class DialogNovelCoupon {
         UnderlineSpan underlineSpan = new UnderlineSpan();
         spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         vipHolder.dialog_open.setText(spannableString);
+        if (AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false)) {
+            vipHolder.tbOpen.setToggleOn();
+        } else {
+            vipHolder.tbOpen.setToggleOff();
+        }
+        vipHolder.tbOpen.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                AppPrefs.putSharedBoolean(activity, "novelOpen_ToggleButton", on);
+                if (onOpenCouponListener != null && on) {
+                    if (!Utils.isLogin(activity)) {//登录状态跳个人资料
+                        if (popupWindow != null) {
+                            popupWindow.dismiss();
+                        }
+                        MainHttpTask.getInstance().Gotologin(activity);
+                    } else {
+                        if (couponNum >= Integer.valueOf(couponPrice)) {
+                            openCoupon(activity, chapterItem, couponPrice, couponNum);
+                        } else {
+                            DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
+                            dialogCouponNotMore.getDialogVipPop(activity, true);
+                        }
+                    }
+                }
+            }
+        });
         vipHolder.dialog_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +141,8 @@ public class DialogNovelCoupon {
         public TextView dialog_num;
         @BindView(R.id.dialog_coupon_open)
         public TextView dialog_open;
+        @BindView(R.id.tb_open)
+        public ToggleButton tbOpen;
 
         public VipHolder(View view) {
             ButterKnife.bind(this, view);
@@ -124,7 +153,7 @@ public class DialogNovelCoupon {
         void onOpenCoupon(boolean isBuy);
     }
 
-    private void openCoupon(Activity activity, ChapterItem chapterItem, String couponPrice, int couponNum) {
+    public void openCoupon(Activity activity, ChapterItem chapterItem, String couponPrice, int couponNum) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("book_id", chapterItem.getBook_id());
         params.putExtraParams("chapter_id", chapterItem.getChapter_id());

@@ -26,7 +26,12 @@ public class LookComicSetDialog {
         ToggleButton dialog_lookcomicset_fanye_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_fanye_ToggleButton);
         ToggleButton dialog_lookcomicset_yejian_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_yejian_ToggleButton);
         ToggleButton dialog_lookcomicset_small_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_small_ToggleButton);
-
+        ToggleButton dialog_lookcomicset_open_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_open_ToggleButton);
+        if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false)) {
+            dialog_lookcomicset_open_ToggleButton.setToggleOn();
+        } else {
+            dialog_lookcomicset_open_ToggleButton.setToggleOff();
+        }
         if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
             dialog_lookcomicset_fanye_ToggleButton.setToggleOn();
         } else {
@@ -37,11 +42,17 @@ public class LookComicSetDialog {
         } else {
             dialog_lookcomicset_yejian_ToggleButton.setToggleOff();
         }
-        if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", true)) {
+        if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
             dialog_lookcomicset_small_ToggleButton.setToggleOn();
         } else {
             dialog_lookcomicset_small_ToggleButton.setToggleOff();
         }
+        dialog_lookcomicset_open_ToggleButton.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                AppPrefs.putSharedBoolean(activity, "comicOpen_ToggleButton", on);
+            }
+        });
         dialog_lookcomicset_small_ToggleButton.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {

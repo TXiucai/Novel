@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/book_info_titlebar_container"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimens_70dp">
+        android:layout_height="@dimen/dimens_70dp"
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/titlebar_back"
             android:layout_width="@dimen/dimens_80dp"
             android:layout_height="@dimen/dimens_40dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="@dimen/dimens_15dp">
@@ -26,14 +28,15 @@
                 android:background="@mipmap/back_black"
                 android:scaleType="centerCrop" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/titlebar_text"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_40"
-            android:gravity="center_vertical"
-           android:layout_marginTop="@dimen/dimens_30dp"
-           android:layout_alignParentBottom="true"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimens_30dp"
+            android:gravity="center_vertical"
             android:textColor="@color/black"
             android:textSize="@dimen/public_13_dp" />
 
@@ -41,8 +44,8 @@
             android:id="@+id/tx_quanji"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_40"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/dimens_15dp"
             android:gravity="center_vertical"
@@ -50,13 +53,16 @@
             android:textColor="@color/mainColor2"
             android:textSize="@dimen/public_13_dp" />
     </RelativeLayout>
+
     <RelativeLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_400dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_265dp"
@@ -107,7 +113,8 @@
             <LinearLayout
                 android:id="@+id/ll_coupon"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,8 +128,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimens_10dp"
+                    android:layout_weight="1"
                     android:textColor="@color/color_ff8350"
                     android:textSize="26sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_lookcomicset_open_text"
+                    android:textColor="@color/color_9a9a9a"
+                    android:textSize="16sp" />
+
+                <com.zcw.togglebutton.ToggleButton
+                    android:id="@+id/tb_open"
+                    android:layout_width="@dimen/dimens_35dp"
+                    android:layout_height="@dimen/dimens_20dp"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    toggle:tbBorderWidth="1dp"
+                    toggle:tbOffBorderColor="@color/gray"
+                    toggle:tbOffColor="@color/gray"
+                    toggle:tbOnColor="@color/mainColor2" />
+
             </LinearLayout>
 
             <TextView
