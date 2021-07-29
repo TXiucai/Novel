@@ -29,6 +29,7 @@ import com.heiheilianzai.app.utils.GetJsonDataUtil;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ShareUitls;
 
 import org.json.JSONArray;
 
@@ -239,6 +240,7 @@ public class AddressActivity extends BaseButterKnifeActivity {
                         public void onResponse(final String result) {
                             mTxSave.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
                             mTxSave.setClickable(false);
+                            getAddress();
                         }
 
                         @Override
@@ -259,6 +261,7 @@ public class AddressActivity extends BaseButterKnifeActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
+                            ShareUitls.putString(mActivity, "address", result);
                             AddressBean addressBean = new Gson().fromJson(result, AddressBean.class);
                             initAddress(addressBean);
                         } catch (Exception e) {

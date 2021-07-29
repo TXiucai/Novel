@@ -471,7 +471,7 @@
     <string name="string_mine_no_login_tip">登录后享受更多服务</string>
     <string name="mine_vip_tittle">VIP专享</string>
     <string name="mine_vip_tip">免费畅听畅读，精品抢先</string>
-    <string name="mine_vip_open">立即开通</string>
+    <string name="mine_vip_open">立即支付</string>
     <string name="mine_vip_continue">立即续费</string>
     <string name="string_sign_invite_code">填邀请码送好礼</string>
     <string name="feedback_type">反馈类型</string>
@@ -545,13 +545,13 @@
     <string name="string_read_time_tittle">阅读领奖</string>
     <string name="string_read_time_today">今日已阅读</string>
     <string name="string_read_time_min">分钟</string>
-    <string name="string_read_time_coupon">通过阅读已领取%s书券，再接再厉</string>
+    <string name="string_read_time_coupon">通过阅读已领取%s书券!</string>
     <string name="string_read_time_coupon_accept">领取%s书券</string>
     <string name="string_rules">活动规则</string>
     <string name="string_exchage_gift">兑换福利</string>
     <string name="string_accept_coupon_success">书券领取成功</string>
     <string name="string_zero_min">0分钟</string>
-    <string name="string_continue_accept_coupon">再看%s分钟可领取</string>
+    <string name="string_continue_accept_coupon">再看%d分钟可领取</string>
     <string name="string_exchage_gift_tittle">书券兑换好物</string>
     <string name="string_exchange_go"><![CDATA[前往>]]></string>
     <string name="string_name">姓名</string>
@@ -570,4 +570,9 @@
     <string name="dialog_lookcomicset_open_text2">打开后自动扣除书券解锁章节</string>
     <string name="ReadActivity_autoread_close">开启自动解锁章节</string>
     <string name="ReadActivity_autoread_open">关闭自动解锁章节</string>
+    <string name="string_comment">精品推荐</string>
+    <string name="string_success_vip_marquee">恭喜%s开通vip套餐</string>
+    <string name="string_vip_price">实付：¥</string>
+    <string name="string_vip_price_tip">(标价￥%s，已优惠￥%d)</string>
+    <string name="string_accept_gift_success">恭喜您，兑换成功，待系统审核成功之后，我们将及时邮寄物品给您！</string>
 </resources>

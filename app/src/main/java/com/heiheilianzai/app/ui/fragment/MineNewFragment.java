@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
@@ -114,6 +116,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public LinearLayout fragment_mine_announce_layout;
     @BindView(R.id.fragment_sign_invite_code)
     public TextView fragment_invite_code;
+    @BindView(R.id.fragment_mine_user_info_tasklayout_share)
+    public LinearLayout mLlRead;
+
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
     private UserInfoItem.Luobo_notice luobo_notice;
@@ -150,6 +155,18 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 initInfo(result, null);
             }
         });
+    }
+
+    private void showGuide() {
+        NewbieGuide.with(activity)
+                .setLabel("guideMine")
+                .setShowCounts(1)//控制次数
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(mLlRead)
+                        .addHighLight(fragment_mine_user_info_paylayout_recharge)
+                        .setLayoutRes(R.layout.mine_guide, R.id.img_know)
+                        .setEverywhereCancelable(false))
+                .show();
     }
 
     @Override
@@ -325,7 +342,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 //HandleOnclick(view, "fragment_mine_user_info_paylayout_recharge");
                 if (!Utils.isLogin(activity)) {//登录状态跳个人资料
                     MainHttpTask.getInstance().Gotologin(activity);
-                }else {
+                } else {
                     startActivity(new Intent(activity, AddressActivity.class));
                 }
                 break;
@@ -369,7 +386,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             case R.id.fragment_mine_user_info_tasklayout_share:
                 if (!Utils.isLogin(activity)) {//登录状态跳个人资料
                     MainHttpTask.getInstance().Gotologin(activity);
-                }else {
+                } else {
                     startActivity(new Intent(activity, ReadTimeActivity.class));
                 }
                 break;
@@ -432,6 +449,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             @Override
             public void getHttpData(String result) {
                 initInfo(result, null);
+                showGuide();
             }
         });
     }

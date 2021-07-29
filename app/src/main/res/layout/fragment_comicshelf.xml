@@ -41,11 +41,11 @@
                 android:layout_height="@dimen/dimens_30dp"
                 android:layout_marginTop="@dimen/dimens_10dp"
                 android:layout_marginRight="@dimen/dimens_15dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:layout_marginBottom="@dimen/dimens_10dp"
                 android:background="@drawable/shape_announce"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dimens_15dp"
                 android:visibility="visible">
 
 

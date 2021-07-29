@@ -228,6 +228,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     ComicInfo mComicInfo;//漫画具体信息
     private Dialog dialogVipPop;
     private boolean mIsSmall;
+    private long mReadStarTime;
 
     @Override
     public int initContentView() {
@@ -608,6 +609,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         super.onCreate(savedInstanceState);
         try {
             EventBus.getDefault().register(this);
+            mReadStarTime = System.currentTimeMillis();
             initViews();
             showMenu(false);
             if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
@@ -1026,6 +1028,28 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 getData(activity, comic_id, Chapter_id, true);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        long mReadEndTime = System.currentTimeMillis();
+        long readTime = (mReadEndTime - mReadStarTime) / 1000 / 60;
+        if (readTime >= 1 && Utils.isLogin(this)) {
+            ReaderParams params = new ReaderParams(this);
+            params.putExtraParams("read_minute", String.valueOf(readTime));
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadTime, json, false, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(String result) {
+                        }
+
+                        @Override
+                        public void onErrorResponse(String ex) {
+                        }
+                    }
+            );
+        }
+        super.onStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -22,6 +22,7 @@ import com.heiheilianzai.app.model.TaskCenter;
 import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.ToStore;
+import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.MyPoPwindow;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -135,6 +136,9 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                             } else {
                                 MainHttpTask.getInstance().Gotologin(activity);
                             }
+                            break;
+                        case "daily_read_times":
+                            startActivity(new Intent(activity, ReadActivity.class));
                             break;
                     }
                 }

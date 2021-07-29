@@ -27,18 +27,25 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
+import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AcceptGiftHeadBean;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.AddressActivity;
+import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 
 import java.io.File;
@@ -221,7 +228,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
             if (TextUtils.equals(type, "boyin")) {
                 mWebView.loadUrl("javascript:playPause()");
             }
-                finish();
+            finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -318,6 +325,17 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
     }
 
     public class AndroidToBoyinJs {
+        @JavascriptInterface
+        public String getAddressData() {
+            String address = ShareUitls.getString(AboutActivity.this, "address", "");
+            return address;
+        }
+
+        @JavascriptInterface
+        public String getGiftData() {
+            String exchange_gift = ShareUitls.getString(AboutActivity.this, "exchange_gift", "");
+            return exchange_gift;
+        }
 
         @JavascriptInterface
         public String getToken() {//h5主动获取客户端保存的波音登录数据
@@ -331,12 +349,54 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
         }
 
         @JavascriptInterface
-        public void pay(int fromspot){
+        public void pay(int fromspot) {
             Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog), fromspot);
             intent.putExtra("isvip", true);
             startActivity(intent);
-        };
+        }
 
+        @JavascriptInterface
+        public void toLogin() {
+            Intent intent = new Intent(AboutActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
+        @JavascriptInterface
+        public void toAddress() {
+            Intent intent = new Intent(AboutActivity.this, AddressActivity.class);
+            startActivity(intent);
+        }
+
+        @JavascriptInterface
+        public void acceptGift(String info) {
+            acceptGiftInfo(info);
+        }
+    }
+
+    private void acceptGiftInfo(String info) {
+        try {
+            AcceptGiftHeadBean acceptGiftHeadBean = new Gson().fromJson(info, AcceptGiftHeadBean.class);
+            final ReaderParams params = new ReaderParams(this);
+            params.putExtraParams("receiver_name", acceptGiftHeadBean.getReceiver_name());
+            params.putExtraParams("receiver_mobile", acceptGiftHeadBean.getReceiver_mobile());
+            params.putExtraParams("exchange_id", acceptGiftHeadBean.getExchange_id());
+            params.putExtraParams("product_id", acceptGiftHeadBean.getProduct_id());
+            params.putExtraParams("address_details", acceptGiftHeadBean.getAddress_details());
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.EXCHANGE_GIFT_ACCEPT, json, true, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(final String result) {
+                            MyToash.ToashSuccess(AboutActivity.this, getString(R.string.string_accept_gift_success));
+                        }
+
+                        @Override
+                        public void onErrorResponse(String ex) {
+                        }
+                    }
+            );
+        } catch (Exception e) {
+
+        }
     }
 
     private void initDialog() {

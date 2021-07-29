@@ -31,6 +31,11 @@ public class MarqueeTextView extends LinearLayout {
     int mHeight;
     private Handler mHandler;
     private boolean isLeftToRight = false;
+    private boolean isSelectColor = false;
+
+    public void setSelectColor(boolean selectColor) {
+        isSelectColor = selectColor;
+    }
 
     public void setLeftToRight(boolean leftToRight) {
         isLeftToRight = leftToRight;
@@ -97,6 +102,9 @@ public class MarqueeTextView extends LinearLayout {
                         textView.setText(textArrays.get(i).getTitle());
                         textView.setTextSize(12);
                         textView.setGravity(Gravity.CENTER_VERTICAL);
+                        if (isSelectColor) {
+                            textView.setTextColor(mContext.getResources().getColor(R.color.color_ff8350));
+                        }
                         textView.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {

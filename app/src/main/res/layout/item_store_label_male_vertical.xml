@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/color_666666"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:visibility="gone" />
     </LinearLayout>
 

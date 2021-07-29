@@ -302,6 +302,19 @@ public class ReaderConfig {
     public static final String mNewPayVip = "/paynew/start-pay";
 
     /**
+     * 订单成功的跑马灯
+     */
+    public static final String mMarqueeVip = "/success-order/index";
+    /**
+     * vip猜你喜欢
+     */
+    public static final String mCommentVip = "/guessuserlike/index";
+    /**
+     * 上传阅读时间
+     */
+    public static final String mReadTime = "/usergrandtotalread/minute";
+
+    /**
      * 获取当期最新一条充值订单
      */
     public static final String mPayLastOrder = "/user/lastpay-order";
@@ -422,6 +435,11 @@ public class ReaderConfig {
      * 兑换周边
      */
     public static final String EXCHANGE_GIFT = "/exchange-manage-info/list";
+
+    /**
+     * 兑换周边
+     */
+    public static final String EXCHANGE_GIFT_ACCEPT = "/exchange-manage-info/add-exchange";
 
     /**
      * 查看地址

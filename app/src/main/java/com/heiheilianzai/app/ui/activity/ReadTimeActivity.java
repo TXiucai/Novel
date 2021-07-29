@@ -20,6 +20,8 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ReadTimeBean;
 import com.heiheilianzai.app.model.TaskCenter;
 import com.heiheilianzai.app.model.UserInfoItem;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -28,6 +30,7 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.ToastUtil;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
+import com.heiheilianzai.app.view.ArcView;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.ReadTimeView;
 import com.heiheilianzai.app.view.StepView;
@@ -63,10 +66,15 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
     public TextView mTxAccept;
     @BindView(R.id.read_rules)
     public TextView mTxRules;
+    @BindView(R.id.av_time)
+    public ArcView mAvTime;
+    @BindView(R.id.tx_read_time_tip)
+    public TextView mTxReadTip;
     private Activity mActivity;
     private int mAward;
     private int mMin;
     private List<ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean> mListAwards;
+    private String mH5Url;
 
     @Override
     public int initContentView() {
@@ -95,12 +103,11 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
                     public void onResponse(final String result) {
                         try {
                             JSONObject jsonObject = new JSONObject(result);
-                            String roue_content = jsonObject.getString("roue_content");
-                            mTxRules.setText(roue_content);
+                            mH5Url = jsonObject.getString("exchange_h5_url");
+                            ShareUitls.putString(mActivity, "exchange_gift", result);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        ShareUitls.putString(mActivity, "exchange_gift", result);
                     }
 
                     @Override
@@ -134,7 +141,7 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
         if (readTimeBean != null) {
             ReadTimeBean.ListBean.AwardInfoBean award_info = readTimeBean.getList().getAward_info();
             String desc = readTimeBean.getList().getDesc();
-            mMin = readTimeBean.getUser_history_award();
+            mMin = readTimeBean.getUser_today_read_total();
             mListAwards = award_info.getTask_daily_list();
             for (int i = 0; i < mListAwards.size(); i++) {
                 ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean taskDailyListBean = mListAwards.get(i);
@@ -149,36 +156,40 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
                     taskDailyListBean = mListAwards.get(mAward);
                 }
                 int current_task_status = taskDailyListBean.getCurrent_task_status();
-                if (current_task_status == 0) {
+                if (current_task_status == 0 && taskDailyListBean.getAward() != null && Integer.valueOf(taskDailyListBean.getAward()) > 0) {
                     mTxAccept.setClickable(true);
                     mTxAccept.setBackground(getDrawable(R.drawable.shape_ff8350_20));
                 } else {
                     mTxAccept.setClickable(false);
                     mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
                 }
+                mTxReadTip.setVisibility(View.GONE);
             } else {
                 mTxAccept.setClickable(false);
                 mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
                 taskDailyListBean = mListAwards.get(mAward);
+                mTxReadTip.setText(String.format(getResources().getString(R.string.string_continue_accept_coupon), 10 - mMin));
+                mTxReadTip.setVisibility(View.VISIBLE);
             }
             ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean zeroBean = new ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean();
             zeroBean.setMinute(getString(R.string.string_zero_min));
             mListAwards.add(0, zeroBean);
             mReadTime.setStepNum(mListAwards, mAward, mMin);
             mTxAccept.setText(String.format(getResources().getString(R.string.string_read_time_coupon_accept), taskDailyListBean.getAward()));
+            mTxCoupon.setText(String.format(getResources().getString(R.string.string_read_time_coupon), readTimeBean.getUser_history_award()));
             mTxMin.setText(String.valueOf(mMin));
             mTxRules.setText(desc);
             UserInfoItem userInfoItem = App.getUserInfoItem(mActivity);
             if (userInfoItem != null) {
                 MyPicasso.IoadImage(this, userInfoItem.getAvatar(), R.mipmap.hold_user_avatar, mImg);
-                mTxName.setText(userInfoItem.getNickname());
+                mTxName.setText(String.valueOf(userInfoItem.getUid()));
             }
+            mAvTime.setValues(1, 62, mMin, "");
         }
-
     }
 
 
-    @OnClick(value = {R.id.read_coupon_accept, R.id.titlebar_back})
+    @OnClick(value = {R.id.read_coupon_accept, R.id.titlebar_back, R.id.read_exchange_go})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -187,6 +198,14 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
             case R.id.read_coupon_accept:
                 if (Utils.isLogin(mActivity)) {
                     acceptCoupon();
+                } else {
+                    MainHttpTask.getInstance().Gotologin(mActivity);
+                }
+                break;
+            case R.id.read_exchange_go:
+                if (Utils.isLogin(mActivity) && mH5Url != null) {
+                    startActivity(new Intent(mActivity, AboutActivity.class).
+                            putExtra("url", mH5Url).putExtra("type", "boyin").putExtra("title", getString(R.string.string_exchage_gift)));
                 } else {
                     MainHttpTask.getInstance().Gotologin(mActivity);
                 }

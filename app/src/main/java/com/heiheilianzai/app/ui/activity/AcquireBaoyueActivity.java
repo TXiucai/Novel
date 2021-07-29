@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePayAdapter;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
+import com.heiheilianzai.app.adapter.CommentVipAdapter;
+import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.adapter.VipBaoyuePayAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
@@ -29,15 +32,22 @@ import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.component.pay.alipay.PayResult;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.model.AcquirePayItem;
 import com.heiheilianzai.app.model.AcquirePrivilegeItem;
+import com.heiheilianzai.app.model.Announce;
+import com.heiheilianzai.app.model.MarqueeVipBean;
+import com.heiheilianzai.app.model.OptionBeen;
+import com.heiheilianzai.app.model.OptionItem;
 import com.heiheilianzai.app.model.PaymentWebBean;
 import com.heiheilianzai.app.model.WxPayBean;
+import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.ui.dialog.PayDialog;
@@ -48,17 +58,22 @@ import com.heiheilianzai.app.utils.DialogVipComfirm;
 import com.heiheilianzai.app.utils.DialogVipOrderError;
 import com.heiheilianzai.app.utils.DialogWakeVip;
 import com.heiheilianzai.app.utils.HttpUtils;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CircleImageView;
+import com.heiheilianzai.app.view.MarqueeTextView;
+import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -101,6 +116,16 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public LinearLayout activity_acquire_customer_service;
     @BindView(R.id.activity_acquire_avatar_isvip)
     public ImageView activity_acquire_avatar_isvip;
+    @BindView(R.id.marquee)
+    public MarqueeTextView mMarquee;
+    @BindView(R.id.ll_announce_layout)
+    public LinearLayout mLlMarquee;
+    @BindView(R.id.tx_price)
+    public TextView mTxPrice;
+    @BindView(R.id.tx_price_tip)
+    public TextView mTxPriceTip;
+    @BindView(R.id.gv)
+    public AdaptionGridView mGv;
 
     String mKeFuOnline;//客服链接
     AcquireBaoyuePayAdapter baoyuePayAdapter;
@@ -116,6 +141,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private int mGoodsId;
     private int mSelectPayItemPos;
     private int mOriginCode = 13;
+    private int WIDTH, HEIGHT;
 
     @Override
     public int initContentView() {
@@ -132,6 +158,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AcquireBaoyueActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         activity_acquire_pay_gridview.setLayoutManager(linearLayoutManager);
+        WIDTH = ScreenSizeUtils.getInstance(this).getScreenWidth();
+        WIDTH = (WIDTH - ImageUtil.dp2px(this, 50)) / 3;//横向排版 图片宽度
+        HEIGHT = (int) (((float) WIDTH * 4f / 3f));//
     }
 
     @Override
@@ -143,8 +172,29 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initView();
         initData();
+        initComentData();
+    }
+
+    private void initComentData() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("channel_id", "1");
+        params.putExtraParams("page_num", "1");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mCommentVip, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        initComment(result);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                        mGv.setVisibility(View.GONE);
+                    }
+                }
+        );
     }
 
     public void initData() {
@@ -166,6 +216,72 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     }
                 }
         );
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mMarqueeVip, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                        initMarquee(result);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                        mLlMarquee.setVisibility(View.GONE);
+                    }
+                }
+        );
+    }
+
+    private void initComment(String result) {
+        try {
+            OptionItem optionItem = new Gson().fromJson(result, OptionItem.class);
+            List<OptionBeen> list = optionItem.getList();
+            List<OptionBeen> firstList = list.subList(0, 6);
+            CommentVipAdapter verticalAdapter = new CommentVipAdapter(this, firstList, WIDTH, HEIGHT);
+            mGv.setAdapter(verticalAdapter);
+            mGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String comic_id = list.get(position).comic_id;
+                    String book_id = list.get(position).book_id;
+                    if (comic_id != null) {
+                        startActivity(ComicInfoActivity.getMyIntent(AcquireBaoyueActivity.this, LanguageUtil.getString(AcquireBaoyueActivity.this, R.string.refer_page_info) + " " + comic_id, comic_id));
+                    } else {
+                        startActivity(BookInfoActivity.getMyIntent(AcquireBaoyueActivity.this, LanguageUtil.getString(AcquireBaoyueActivity.this, R.string.refer_page_info) + " " + book_id, book_id));
+                    }
+                }
+            });
+        } catch (Exception e) {
+            mGv.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void initMarquee(String result) {
+        try {
+            MarqueeVipBean marqueeVipBean = new Gson().fromJson(result, MarqueeVipBean.class);
+            List<MarqueeVipBean.ListBean> list = marqueeVipBean.getList();
+            if (list != null && list.size() > 0) {
+                mLlMarquee.setVisibility(View.VISIBLE);
+                mMarquee.setSelectColor(true);
+                final List<Announce> announceList = new ArrayList<>();
+                for (int i = 0; i < list.size(); i++) {
+                    Announce announce = new Announce();
+                    announce.setTitle(String.format(getString(R.string.string_success_vip_marquee), list.get(i).getMobile()) + list.get(i).getGood_title());
+                    announceList.add(announce);
+                }
+                mMarquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        Intent intent = new Intent(AcquireBaoyueActivity.this, AnnounceActivity.class);
+                        intent.putExtra("announce_content", announceList.get(position).getTitle() + "/-/" + announceList.get(position).getContent());
+                        startActivity(intent);
+                    }
+                });
+            } else {
+                mLlMarquee.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            mLlMarquee.setVisibility(View.GONE);
+        }
     }
 
     public void initInfos(String json) {
@@ -227,12 +343,14 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             } else {
                 vipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
             }
+            initBottomPay(selectAcquirePayItem);
             vipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
 
                 @Override
                 public void onPayItemClick(AcquirePayItem item, int position) {
                     vipBaoyuePayAdapter.setSelectPosition(position);
                     selectAcquirePayItem = item;
+                    initBottomPay(selectAcquirePayItem);
                 }
             });
             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
@@ -242,6 +360,19 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             e.printStackTrace();
             resetLogin(this);
         }
+    }
+
+    private void initBottomPay(AcquirePayItem selectAcquirePayItem) {
+        String original_price = selectAcquirePayItem.getOriginal_price();
+        String price = selectAcquirePayItem.getPrice();
+        int i = Integer.parseInt(original_price) - Integer.parseInt(price);
+        if (original_price != null && !TextUtils.equals(original_price, "0")) {
+            mTxPriceTip.setText(String.format(getString(R.string.string_vip_price_tip), original_price, i));
+            mTxPriceTip.setVisibility(View.VISIBLE);
+        } else {
+            mTxPriceTip.setVisibility(View.GONE);
+        }
+        mTxPrice.setText(price);
     }
 
     @OnClick(value = {R.id.activity_acquire_customer_service, R.id.tx_open_vip})
@@ -516,7 +647,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
 
         Intent intent = new Intent(context, AcquireBaoyueActivity.class);
         intent.putExtra(SaVarConfig.REFER_PAGE_VAR, referPage);
-        intent.putExtra(ORIGIN_CODE,originCode);
+        intent.putExtra(ORIGIN_CODE, originCode);
         return intent;
     }
 

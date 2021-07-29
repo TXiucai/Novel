@@ -69,9 +69,15 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (acquirePayItem.getOriginal_price()!=null&& !TextUtils.equals(acquirePayItem.getOriginal_price(),"0")){
             viewHolder.txTip.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             viewHolder.txTip.setText("¥"+acquirePayItem.getOriginal_price());
+            viewHolder.txTip.setVisibility(View.VISIBLE);
         }else {
-            viewHolder.txTip.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
-            viewHolder.txTip.setText(acquirePayItem.getNote());
+            viewHolder.txTip.setVisibility(View.GONE);
+        }
+        if (acquirePayItem.getNote()!=null){
+            viewHolder.txBottomTip.setVisibility(View.VISIBLE);
+            viewHolder.txBottomTip.setText(acquirePayItem.getNote());
+        }else {
+            viewHolder.txBottomTip.setVisibility(View.GONE);
         }
         if (onPayItemClickListener!=null){
             viewHolder.ryItem.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +111,8 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public TextView txTip;
         @BindView(R.id.rl_vip_item)
         public LinearLayout ryItem;
+        @BindView(R.id.tx_bottom_tip)
+        public TextView txBottomTip;
 
         public ViewHolder(View view) {
             super(view);

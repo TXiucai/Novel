@@ -10,7 +10,7 @@ public class ReadTimeBean {
      * list : {"desc":"1.决定是否就打架大家看法是你们，梵蒂冈\r\n2.决定是否就打架大家看法是你们，梵蒂冈\r\n3.决定是否就打架大家看法是你们，梵蒂冈\r\n4.决定是否就打架大家看法是你们，梵蒂冈\r\n5.决定是否就打架大家看法是你们，梵蒂冈\r\n6.决定是否就打架大家看法是你们，梵蒂冈","award_info":{"task_daily_list":[{"minute":"10","award":"1"},{"minute":"20","award":"2"},{"minute":"30","award":"3"},{"minute":"40","award":"4"},{"minute":"50","award":"5"},{"minute":"60","award":"6"}]}}
      */
 
-    private int user_history_award;
+    private String user_history_award;
     /**
      * desc : 1.决定是否就打架大家看法是你们，梵蒂冈
      2.决定是否就打架大家看法是你们，梵蒂冈
@@ -20,15 +20,23 @@ public class ReadTimeBean {
      6.决定是否就打架大家看法是你们，梵蒂冈
      * award_info : {"task_daily_list":[{"minute":"10","award":"1"},{"minute":"20","award":"2"},{"minute":"30","award":"3"},{"minute":"40","award":"4"},{"minute":"50","award":"5"},{"minute":"60","award":"6"}]}
      */
-
+    private int user_today_read_total;
     private ListBean list;
     private List<?> user_read_daily;
 
-    public int getUser_history_award() {
+    public int getUser_today_read_total() {
+        return user_today_read_total;
+    }
+
+    public void setUser_today_read_total(int user_today_read_total) {
+        this.user_today_read_total = user_today_read_total;
+    }
+
+    public String getUser_history_award() {
         return user_history_award;
     }
 
-    public void setUser_history_award(int user_history_award) {
+    public void setUser_history_award(String user_history_award) {
         this.user_history_award = user_history_award;
     }
 

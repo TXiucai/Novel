@@ -39,6 +39,7 @@ import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
@@ -213,6 +214,8 @@ public class ReadActivity extends BaseReadActivity {
             }
         }
     };
+    private long mReadStarTime;
+    private long mReadEndTime;
 
 
     @Override
@@ -247,6 +250,7 @@ public class ReadActivity extends BaseReadActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mReadStarTime = System.currentTimeMillis();
         //首次阅读 显示引导图
         if (ShareUitls.getString(ReadActivity.this, "FirstRead", "yes").equals("yes")) {
             ShareUitls.putString(ReadActivity.this, "FirstRead", "no");
@@ -398,7 +402,7 @@ public class ReadActivity extends BaseReadActivity {
                             SettingDialog.scroll = true;
                         }
                     } else {
-                        ChapterManager.notfindChapter(ShareUitls.getString(activity, PrefConst.NOVEL_API, "")+ ReaderConfig.chapter_text, pageFactory.chapterItem, mBookId, pageFactory.chapterItem.getChapter_id(), new ChapterManager.ChapterDownload() {
+                        ChapterManager.notfindChapter(ShareUitls.getString(activity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text, pageFactory.chapterItem, mBookId, pageFactory.chapterItem.getChapter_id(), new ChapterManager.ChapterDownload() {
                             @Override
                             public void finish() {
                                 if (SettingDialog.scroll) {
@@ -571,6 +575,23 @@ public class ReadActivity extends BaseReadActivity {
 
     @Override
     protected void onStop() {
+        long mReadEndTime = System.currentTimeMillis();
+        long readTime = (mReadEndTime - mReadStarTime) / 1000 / 60;
+        if (readTime >= 1 && Utils.isLogin(this)) {
+            ReaderParams params = new ReaderParams(this);
+            params.putExtraParams("read_minute", String.valueOf(readTime));
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadTime, json, false, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(String result) {
+                        }
+
+                        @Override
+                        public void onErrorResponse(String ex) {
+                        }
+                    }
+            );
+        }
         super.onStop();
     }
 
@@ -700,6 +721,7 @@ public class ReadActivity extends BaseReadActivity {
         config.setDayOrNight(mDayOrNight);
         pageFactory.setDayOrNight(mDayOrNight);
     }
+
     private void showNovelGuide() {
         NewbieGuide.with(activity)
                 .setLabel("guideNovelOpen")
