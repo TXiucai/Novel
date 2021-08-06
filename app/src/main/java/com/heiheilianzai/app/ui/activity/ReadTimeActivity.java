@@ -17,6 +17,7 @@ import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AddressBean;
 import com.heiheilianzai.app.model.ReadTimeBean;
 import com.heiheilianzai.app.model.TaskCenter;
 import com.heiheilianzai.app.model.UserInfoItem;
@@ -75,6 +76,7 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
     private int mMin;
     private List<ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean> mListAwards;
     private String mH5Url;
+    private String mMinute;
 
     @Override
     public int initContentView() {
@@ -92,6 +94,24 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
         mTittle.setText(LanguageUtil.getString(mActivity, R.string.string_read_time_tittle));
         getData();
         getGiftData();
+        getAddress();
+    }
+
+    private void getAddress() {
+        final ReaderParams params = new ReaderParams(this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.ACCEPT_ADDRESS, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        ShareUitls.putString(mActivity, "address", result);
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+
+                    }
+                }
+        );
     }
 
     private void getGiftData() {
@@ -143,17 +163,13 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
             String desc = readTimeBean.getList().getDesc();
             mMin = readTimeBean.getUser_today_read_total();
             mListAwards = award_info.getTask_daily_list();
-            for (int i = 0; i < mListAwards.size(); i++) {
-                ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean taskDailyListBean = mListAwards.get(i);
-                taskDailyListBean.setMinute(taskDailyListBean.getMinute() + "分钟");
-            }
-            mAward = mMin % 10;
+            mAward = mMin / 10;
             ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean taskDailyListBean;
             if (mAward > 0) {
                 if (mAward > 5) {
                     taskDailyListBean = mListAwards.get(5);
                 } else {
-                    taskDailyListBean = mListAwards.get(mAward);
+                    taskDailyListBean = mListAwards.get(mAward - 1);
                 }
                 int current_task_status = taskDailyListBean.getCurrent_task_status();
                 if (current_task_status == 0 && taskDailyListBean.getAward() != null && Integer.valueOf(taskDailyListBean.getAward()) > 0) {
@@ -162,6 +178,7 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
                 } else {
                     mTxAccept.setClickable(false);
                     mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+                    taskDailyListBean = mListAwards.get(mAward);
                 }
                 mTxReadTip.setVisibility(View.GONE);
             } else {
@@ -171,10 +188,7 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
                 mTxReadTip.setText(String.format(getResources().getString(R.string.string_continue_accept_coupon), 10 - mMin));
                 mTxReadTip.setVisibility(View.VISIBLE);
             }
-            ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean zeroBean = new ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean();
-            zeroBean.setMinute(getString(R.string.string_zero_min));
-            mListAwards.add(0, zeroBean);
-            mReadTime.setStepNum(mListAwards, mAward, mMin);
+            mMinute = taskDailyListBean.getMinute();
             mTxAccept.setText(String.format(getResources().getString(R.string.string_read_time_coupon_accept), taskDailyListBean.getAward()));
             mTxCoupon.setText(String.format(getResources().getString(R.string.string_read_time_coupon), readTimeBean.getUser_history_award()));
             mTxMin.setText(String.valueOf(mMin));
@@ -216,22 +230,13 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
 
     private void acceptCoupon() {
         final ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("read_minute", String.valueOf(mMin));
+        params.putExtraParams("read_minute", mMinute);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.READ_TIME_ACCEPT, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            mTxAccept.setClickable(false);
-                            mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
-                            mAward++;
-                            ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean taskDailyListBean;
-                            if (mAward > 5) {
-                                taskDailyListBean = mListAwards.get(5);
-                            } else {
-                                taskDailyListBean = mListAwards.get(mAward);
-                            }
-                            mTxAccept.setText(String.format(getResources().getString(R.string.string_read_time_coupon_accept), taskDailyListBean.getAward()));
+                            getData();
                             MyToash.Toash(mActivity, getString(R.string.string_accept_coupon_success));
                         } catch (Exception e) {
                         }

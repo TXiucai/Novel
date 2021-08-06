@@ -126,6 +126,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public TextView mTxPriceTip;
     @BindView(R.id.gv)
     public AdaptionGridView mGv;
+    @BindView(R.id.tx_bottom_tip)
+    public TextView mTxBottomTip;
 
     String mKeFuOnline;//客服链接
     AcquireBaoyuePayAdapter baoyuePayAdapter;
@@ -261,6 +263,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             List<MarqueeVipBean.ListBean> list = marqueeVipBean.getList();
             if (list != null && list.size() > 0) {
                 mLlMarquee.setVisibility(View.VISIBLE);
+                mMarquee.setLeftToRight(true);
                 mMarquee.setSelectColor(true);
                 final List<Announce> announceList = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
@@ -340,6 +343,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             if (selectAcquirePayItem == null) {
                 selectAcquirePayItem = payList.get(0);
                 vipBaoyuePayAdapter.setSelectPosition(0);
+                initBottomTip();
             } else {
                 vipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
             }
@@ -350,6 +354,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 public void onPayItemClick(AcquirePayItem item, int position) {
                     vipBaoyuePayAdapter.setSelectPosition(position);
                     selectAcquirePayItem = item;
+                    initBottomTip();
                     initBottomPay(selectAcquirePayItem);
                 }
             });
@@ -359,6 +364,15 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         } catch (JSONException e) {
             e.printStackTrace();
             resetLogin(this);
+        }
+    }
+
+    private void initBottomTip() {
+        if (selectAcquirePayItem.getNote_text() != null && !TextUtils.equals(selectAcquirePayItem.getNote_text(), "")) {
+            mTxBottomTip.setText(selectAcquirePayItem.getNote_text());
+            mTxBottomTip.setVisibility(View.VISIBLE);
+        } else {
+            mTxBottomTip.setVisibility(View.GONE);
         }
     }
 

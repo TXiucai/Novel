@@ -75,7 +75,7 @@ public class MarqueeTextView extends LinearLayout {
         } else {
             viewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_left));
             viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_out_right));
-            viewFlipper.setFlipInterval(3000);
+            viewFlipper.setFlipInterval(6000);
         }
 
         viewFlipper.startFlipping();

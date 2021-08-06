@@ -138,7 +138,7 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                             }
                             break;
                         case "daily_read_times":
-                            startActivity(new Intent(activity, ReadActivity.class));
+                            startActivity(new Intent(activity, ReadTimeActivity.class));
                             break;
                     }
                 }

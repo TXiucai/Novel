@@ -488,7 +488,7 @@
                     <ImageView
                         android:layout_width="@dimen/dimens_25dp"
                         android:layout_height="@dimen/dimens_25dp"
-                        android:src="@mipmap/ic_shubi" />
+                        android:src="@mipmap/mine_address_bg" />
 
                     <TextView
                         android:layout_width="wrap_content"

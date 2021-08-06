@@ -105,7 +105,6 @@
                     android:layout_height="wrap_content"
                     android:background="@color/color_f6f6f6"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/color_ff8350"
                     android:textSize="36sp" />
 

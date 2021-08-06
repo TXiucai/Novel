@@ -574,28 +574,6 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     @Override
-    protected void onStop() {
-        long mReadEndTime = System.currentTimeMillis();
-        long readTime = (mReadEndTime - mReadStarTime) / 1000 / 60;
-        if (readTime >= 1 && Utils.isLogin(this)) {
-            ReaderParams params = new ReaderParams(this);
-            params.putExtraParams("read_minute", String.valueOf(readTime));
-            String json = params.generateParamsJson();
-            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadTime, json, false, new HttpUtils.ResponseListener() {
-                        @Override
-                        public void onResponse(String result) {
-                        }
-
-                        @Override
-                        public void onErrorResponse(String ex) {
-                        }
-                    }
-            );
-        }
-        super.onStop();
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (AutoProgressBar.getInstance().isStarted()) {
@@ -678,6 +656,23 @@ public class ReadActivity extends BaseReadActivity {
         }
         if (mSettingDialog.isShowing()) {
             mSettingDialog.dismiss();
+        }
+        long mReadEndTime = System.currentTimeMillis();
+        long readTime = (mReadEndTime - mReadStarTime) / 1000 / 60;
+        if (readTime >= 1 && Utils.isLogin(this)) {
+            ReaderParams params = new ReaderParams(this);
+            params.putExtraParams("minutes", String.valueOf(readTime));
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadTime, json, false, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(String result) {
+                        }
+
+                        @Override
+                        public void onErrorResponse(String ex) {
+                        }
+                    }
+            );
         }
     }
 

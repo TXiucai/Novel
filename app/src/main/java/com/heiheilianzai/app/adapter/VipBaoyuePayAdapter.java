@@ -26,7 +26,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     private List<AcquirePayItem> list;
     private OnPayItemClickListener onPayItemClickListener;
-    private int selectPosition=0;
+    private int selectPosition = 0;
 
     public int getSelectPosition() {
         return selectPosition;
@@ -52,10 +52,10 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         AcquirePayItem acquirePayItem = list.get(position);
-        ViewHolder viewHolder= (ViewHolder) holder;
-        if (selectPosition==position){
+        ViewHolder viewHolder = (ViewHolder) holder;
+        if (selectPosition == position) {
             viewHolder.ryItem.setBackground(context.getDrawable(R.drawable.shape_d69547_10));
-        }else {
+        } else {
             viewHolder.ryItem.setBackground(context.getDrawable(R.drawable.shape_e6e6e6_10));
         }
         if (!TextUtils.isEmpty(acquirePayItem.getGoods_label())) {
@@ -66,24 +66,18 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         viewHolder.txTittle.setText(acquirePayItem.getTitle());
         viewHolder.txPrice.setText(acquirePayItem.getPrice());
-        if (acquirePayItem.getOriginal_price()!=null&& !TextUtils.equals(acquirePayItem.getOriginal_price(),"0")){
+        if (acquirePayItem.getOriginal_price() != null && !TextUtils.equals(acquirePayItem.getOriginal_price(), "0")) {
             viewHolder.txTip.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            viewHolder.txTip.setText("¥"+acquirePayItem.getOriginal_price());
-            viewHolder.txTip.setVisibility(View.VISIBLE);
-        }else {
-            viewHolder.txTip.setVisibility(View.GONE);
+            viewHolder.txTip.setText("¥" + acquirePayItem.getOriginal_price());
+        } else {
+            viewHolder.txTip.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
+            viewHolder.txTip.setText(acquirePayItem.getNote());
         }
-        if (acquirePayItem.getNote()!=null){
-            viewHolder.txBottomTip.setVisibility(View.VISIBLE);
-            viewHolder.txBottomTip.setText(acquirePayItem.getNote());
-        }else {
-            viewHolder.txBottomTip.setVisibility(View.GONE);
-        }
-        if (onPayItemClickListener!=null){
+        if (onPayItemClickListener != null) {
             viewHolder.ryItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onPayItemClickListener.onPayItemClick(acquirePayItem,position);
+                    onPayItemClickListener.onPayItemClick(acquirePayItem, position);
                 }
             });
         }
@@ -93,13 +87,15 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemCount() {
         return list.size();
     }
+
     public interface OnPayItemClickListener {
-        void onPayItemClick(AcquirePayItem item,int positon);
+        void onPayItemClick(AcquirePayItem item, int positon);
     }
 
     public void setOnPayItemClickListener(OnPayItemClickListener onPayItemClickListener) {
         this.onPayItemClickListener = onPayItemClickListener;
     }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tx_vip_flag)
         public TextView txFlag;
@@ -111,8 +107,6 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public TextView txTip;
         @BindView(R.id.rl_vip_item)
         public LinearLayout ryItem;
-        @BindView(R.id.tx_bottom_tip)
-        public TextView txBottomTip;
 
         public ViewHolder(View view) {
             super(view);

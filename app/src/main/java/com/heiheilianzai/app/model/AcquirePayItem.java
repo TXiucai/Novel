@@ -27,6 +27,15 @@ public class AcquirePayItem {
     private List<TagBean> tag;
     private String original_price;
     private String goods_label;
+    private String note_text;
+
+    public String getNote_text() {
+        return note_text;
+    }
+
+    public void setNote_text(String note_text) {
+        this.note_text = note_text;
+    }
 
     public String getGoods_label() {
         return goods_label;
