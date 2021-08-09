@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class BaseWarmStartActivity extends FragmentActivity {
     public boolean isActive = true; //是否从后台唤醒
+    public boolean isNeedToAdvertisement = false; //是否跳转到广告
 
     @Override
     protected void onResume() {
@@ -23,6 +24,7 @@ public class BaseWarmStartActivity extends FragmentActivity {
         if (!isActive && App.getValidBackgroundTime() > 0) {
             if (Utils.getTimeDifference(App.getBackgroundTime()) >= App.getValidBackgroundTime()) {
                 if (App.getDailyStartPageMax() == 0 || App.getDailyStartPage() < App.getDailyStartPageMax()) {
+                    isNeedToAdvertisement = true;
                     startActivity(new Intent(this, AdvertisementActivity.class));
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }

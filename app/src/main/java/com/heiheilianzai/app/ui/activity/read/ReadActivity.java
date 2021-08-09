@@ -571,6 +571,7 @@ public class ReadActivity extends BaseReadActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mReadStarTime = System.currentTimeMillis();
     }
 
     @Override

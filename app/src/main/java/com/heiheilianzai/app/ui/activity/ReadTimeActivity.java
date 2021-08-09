@@ -3,11 +3,8 @@ package com.heiheilianzai.app.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -17,33 +14,26 @@ import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.AddressBean;
 import com.heiheilianzai.app.model.ReadTimeBean;
-import com.heiheilianzai.app.model.TaskCenter;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
-import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
-import com.heiheilianzai.app.utils.ToastUtil;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.ArcView;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.ReadTimeView;
-import com.heiheilianzai.app.view.StepView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
@@ -77,6 +67,7 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
     private List<ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean> mListAwards;
     private String mH5Url;
     private String mMinute;
+
 
     @Override
     public int initContentView() {
@@ -165,7 +156,24 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
             mListAwards = award_info.getTask_daily_list();
             mAward = mMin / 10;
             ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean taskDailyListBean;
+            String award = "";
+            int awardAll = 0;
             if (mAward > 0) {
+                for (int i = 0; i < Math.min(6, mAward); i++) {
+                    ReadTimeBean.ListBean.AwardInfoBean.TaskDailyListBean taskDailyListBean1 = mListAwards.get(i);
+                    if (taskDailyListBean1.getCurrent_task_status() == 0 && taskDailyListBean1.getAward() != null && Integer.valueOf(taskDailyListBean1.getAward()) > 0) {
+                        String award1 = taskDailyListBean1.getAward();
+                        awardAll = awardAll + Integer.valueOf(award1);
+                        if (mMinute != null && !mMinute.equals("")) {
+                            mMinute = mMinute + "," + taskDailyListBean1.getMinute();
+                        } else {
+                            mMinute = taskDailyListBean1.getMinute();
+                        }
+                    }
+                }
+                if (awardAll > 0) {
+                    award = String.valueOf(awardAll);
+                }
                 if (mAward > 5) {
                     taskDailyListBean = mListAwards.get(5);
                 } else {
@@ -178,18 +186,17 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
                 } else {
                     mTxAccept.setClickable(false);
                     mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
-                    taskDailyListBean = mListAwards.get(mAward);
+                    award = mListAwards.get(mAward).getAward();
                 }
                 mTxReadTip.setVisibility(View.GONE);
             } else {
                 mTxAccept.setClickable(false);
                 mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
-                taskDailyListBean = mListAwards.get(mAward);
+                award = mListAwards.get(mAward).getAward();
                 mTxReadTip.setText(String.format(getResources().getString(R.string.string_continue_accept_coupon), 10 - mMin));
                 mTxReadTip.setVisibility(View.VISIBLE);
             }
-            mMinute = taskDailyListBean.getMinute();
-            mTxAccept.setText(String.format(getResources().getString(R.string.string_read_time_coupon_accept), taskDailyListBean.getAward()));
+            mTxAccept.setText(String.format(getResources().getString(R.string.string_read_time_coupon_accept), award));
             mTxCoupon.setText(String.format(getResources().getString(R.string.string_read_time_coupon), readTimeBean.getUser_history_award()));
             mTxMin.setText(String.valueOf(mMin));
             mTxRules.setText(desc);

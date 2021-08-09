@@ -263,7 +263,6 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             List<MarqueeVipBean.ListBean> list = marqueeVipBean.getList();
             if (list != null && list.size() > 0) {
                 mLlMarquee.setVisibility(View.VISIBLE);
-                mMarquee.setLeftToRight(true);
                 mMarquee.setSelectColor(true);
                 final List<Announce> announceList = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {

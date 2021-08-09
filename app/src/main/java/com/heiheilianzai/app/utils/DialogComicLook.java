@@ -80,14 +80,14 @@ public class DialogComicLook {
                             popupWindow.dismiss();
                         }
                         MainHttpTask.getInstance().Gotologin(activity);
-                    } else {
+                    }/*else {//开启之后，第一次需手动解锁
                         if (couponNum >= Integer.valueOf(couponPrice)) {
                             openCoupon(activity, chapterItem, couponPrice, couponNum);
                         } else {
                             DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
                             dialogCouponNotMore.getDialogVipPop(activity, true);
                         }
-                    }
+                    }*/
                 }
             }
         });

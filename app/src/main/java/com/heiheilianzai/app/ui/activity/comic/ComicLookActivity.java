@@ -1034,7 +1034,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     protected void onPause() {
         long mReadEndTime = System.currentTimeMillis();
         long readTime = (mReadEndTime - mReadStarTime) / 1000 / 60;
-        if (readTime >= 1 && Utils.isLogin(this)) {
+        if (readTime >= 1 && Utils.isLogin(this) && !isNeedToAdvertisement) {
             ReaderParams params = new ReaderParams(this);
             params.putExtraParams("minutes", String.valueOf(readTime));
             String json = params.generateParamsJson();
@@ -1049,7 +1049,14 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     }
             );
         }
+        isNeedToAdvertisement = !isNeedToAdvertisement;
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mReadStarTime = System.currentTimeMillis();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
