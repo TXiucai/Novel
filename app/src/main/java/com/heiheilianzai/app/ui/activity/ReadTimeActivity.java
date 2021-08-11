@@ -84,6 +84,11 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
         setStatusTextColor(false, mActivity);
         mTittle.setText(LanguageUtil.getString(mActivity, R.string.string_read_time_tittle));
         getData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getGiftData();
         getAddress();
     }
@@ -186,7 +191,11 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
                 } else {
                     mTxAccept.setClickable(false);
                     mTxAccept.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
-                    award = mListAwards.get(mAward).getAward();
+                    if (mAward >= 5) {
+                        award = mListAwards.get(5).getAward();
+                    } else {
+                        award = mListAwards.get(mAward).getAward();
+                    }
                 }
                 mTxReadTip.setVisibility(View.GONE);
             } else {

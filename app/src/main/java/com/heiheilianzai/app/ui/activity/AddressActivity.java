@@ -238,6 +238,7 @@ public class AddressActivity extends BaseButterKnifeActivity {
             HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, true, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(final String result) {
+                            MyToash.Toash(mActivity, getString(R.string.string_edit_address_success));
                             mTxSave.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
                             mTxSave.setClickable(false);
                             getAddress();

@@ -575,4 +575,5 @@
     <string name="string_vip_price">实付：¥</string>
     <string name="string_vip_price_tip">(标价￥%s，已优惠￥%d)</string>
     <string name="string_accept_gift_success">恭喜您，兑换成功，待系统审核成功之后，我们将及时邮寄物品给您！</string>
+    <string name="string_edit_address_success">收货地址修改成功</string>
 </resources>
