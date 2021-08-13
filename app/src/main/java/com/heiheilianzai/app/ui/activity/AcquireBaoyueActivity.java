@@ -235,8 +235,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private void initComment(String result) {
         try {
             OptionItem optionItem = new Gson().fromJson(result, OptionItem.class);
+            List<OptionBeen> firstList;
             List<OptionBeen> list = optionItem.getList();
-            List<OptionBeen> firstList = list.subList(0, 6);
+            if (list.size() > 6) {
+                firstList = list.subList(0, 6);
+            } else {
+                firstList = list;
+            }
             CommentVipAdapter verticalAdapter = new CommentVipAdapter(this, firstList, WIDTH, HEIGHT);
             mGv.setAdapter(verticalAdapter);
             mGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

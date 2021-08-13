@@ -724,7 +724,7 @@ public class ReadActivity extends BaseReadActivity {
                 .setShowCounts(1)//控制次数
                 .addGuidePage(GuidePage.newInstance()
                         .addHighLight(bookpop_bottom)
-                        .setLayoutRes(R.layout.comic_look_guide, R.id.img_know)
+                        .setLayoutRes(R.layout.novel_look_guide, R.id.img_know)
                         .setEverywhereCancelable(false))
                 .show();
     }

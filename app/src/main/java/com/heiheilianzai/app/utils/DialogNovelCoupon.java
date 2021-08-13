@@ -116,9 +116,6 @@ public class DialogNovelCoupon {
         vipHolder.dialog_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (popupWindow != null) {
-                    popupWindow.dismiss();
-                }
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
                 activity.startActivity(myIntent);

@@ -5,12 +5,12 @@
 
     <ImageView
         android:id="@+id/img_window"
-        android:layout_width="@dimen/dimens_180dp"
-        android:layout_height="@dimen/dimens_200dp"
-       android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_180dp"
+        android:layout_marginLeft="@dimen/dimens_100dp"
+        android:layout_marginRight="@dimen/dimens_60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="@dimen/dimens_15dp"
-        android:layout_marginBottom="@dimen/dimens_45dp"
+        android:layout_marginBottom="@dimen/dimens_65dp"
         android:scaleType="fitXY"
         android:src="@mipmap/novel_guide_window" />
 
@@ -18,8 +18,8 @@
         android:id="@+id/img_know"
         android:layout_width="@dimen/dimens_140dp"
         android:layout_height="@dimen/dimens_54dp"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimens_70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dimens_100dp"
         android:src="@mipmap/comic_guide_know" />
 </RelativeLayout>
