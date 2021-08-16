@@ -9,7 +9,7 @@
         android:layout_height="@dimen/dimens_76dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dimens_100dp"
+        android:layout_marginBottom="@dimen/dimens_90dp"
         android:scaleType="fitXY"
         android:src="@mipmap/mine_guide" />
 
@@ -19,6 +19,6 @@
         android:layout_height="@dimen/dimens_54dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dimens_30dp"
+        android:layout_marginBottom="@dimen/dimens_20dp"
         android:src="@mipmap/comic_guide_know" />
 </RelativeLayout>

@@ -165,12 +165,6 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                                 MainHttpTask.getInstance().Gotologin(activity);
                             }
                         }
-                        mFloatImg.setVisibility(View.GONE);
-                        if (getProduct()) {
-                            ShareUitls.putRecommendAppTime(activity, "floatTimeBook", DateUtils.currentTime());
-                        } else {
-                            ShareUitls.putRecommendAppTime(activity, "floatTimeComic", DateUtils.currentTime());
-                        }
                     }
                 }
                 break;
@@ -288,7 +282,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mHomeFloat, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        showFloat(result, product);
+                        showFloat(result);
                     }
 
                     @Override
@@ -298,22 +292,9 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         );
     }
 
-    private void showFloat(String result, boolean product) {
+    private void showFloat(String result) {
         try {
             mFloatMainBean = new Gson().fromJson(result, FloatMainBean.class);
-            long floatTime;
-            if (product) {
-                floatTime = ShareUitls.getRecommendAppTime(activity, "floatTimeBook", 0);
-            } else {
-                floatTime = ShareUitls.getRecommendAppTime(activity, "floatTimeComic", 0);
-            }
-
-            long currentTimeDifferenceSecond = DateUtils.getCurrentTimeDifferenceSecond(floatTime);
-            long expiredTime = currentTimeDifferenceSecond / 60 / 60;
-            if (expiredTime <= 24) {
-                mFloatImg.setVisibility(View.GONE);
-                return; //小于一天不进行展示
-            }
             //内置应用且已签到不显示
             if (TextUtils.equals(mFloatMainBean.getUrl_type(), "3") && mFloatMainBean.getToday_sign_status() == 1) {
                 mFloatImg.setVisibility(View.GONE);
@@ -325,7 +306,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 MyPicasso.GlideImageNoSize(activity, icon_img, mFloatImg);
             }
         } catch (Exception e) {
-
+            mFloatImg.setVisibility(View.GONE);
         }
     }
 }

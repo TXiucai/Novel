@@ -291,7 +291,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         if (luobo_notice != null) {
             final String content = luobo_notice.getContent();
             if (content != null && !StringUtils.isEmpty(content)) {
-                fragment_mine_marquee.setRndDuration(10000);
+                fragment_mine_marquee.setRndDuration(15000);
                 fragment_mine_marquee.setText(content);
                 fragment_mine_marquee.startScroll();
                 fragment_mine_marquee.invalidate();
