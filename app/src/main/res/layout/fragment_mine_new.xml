@@ -264,7 +264,7 @@
                     android:layout_height="@dimen/dimens_30dp"
                     android:background="@drawable/shape_start_bg"
                     android:gravity="center"
-                    android:text="@string/mine_vip_open"
+                    android:text="@string/BaoyueActivity_kaitong"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>

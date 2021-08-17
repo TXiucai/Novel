@@ -148,16 +148,21 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 break;
             case R.id.main_float_img:
                 if (mFloatMainBean != null) {
-                    String url_type = mFloatMainBean.getUrl_type();// 1 内置浏览器  2外部浏览器  3 内置应用
+                    String url_type = mFloatMainBean.getUrl_type();// 1 内置浏览器  2外部浏览器（活动中心）  3 内置应用
                     String link_url = mFloatMainBean.getLink_url();
                     if (!TextUtils.isEmpty(url_type)) {
                         if (!TextUtils.isEmpty(link_url) && TextUtils.equals(url_type, "1")) {
                             startActivity(new Intent(activity, AboutActivity.class).
                                     putExtra("url", link_url));
                         } else if (!TextUtils.isEmpty(link_url) && TextUtils.equals(url_type, "2")) {
-                            startActivity(new Intent(activity, AboutActivity.class).
-                                    putExtra("url", link_url)
-                                    .putExtra("style", "4"));
+                            if (Utils.isLogin(activity)) {
+                                link_url += "&uid=" + Utils.getUID(activity);
+                                startActivity(new Intent(activity, AboutActivity.class).
+                                        putExtra("url", link_url)
+                                        .putExtra("style", "4"));
+                            } else {
+                                MainHttpTask.getInstance().Gotologin(activity);
+                            }
                         } else {
                             if (Utils.isLogin(activity)) {
                                 startActivity(new Intent(activity, TaskCenterActivity.class));
