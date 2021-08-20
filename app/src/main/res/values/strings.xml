@@ -576,4 +576,10 @@
     <string name="string_vip_price_tip">(标价￥%s，已优惠￥%d)</string>
     <string name="string_accept_gift_success">恭喜您，兑换成功！</string>
     <string name="string_edit_address_success">收货地址修改成功</string>
+    <string name="string_registe_fast">快速注册</string>
+    <string name="string_register_fast">一键注册</string>
+    <string name="string_registe_have">已有账号？</string>
+    <string name="string_registe_login">立即登陆</string>
+    <string name="string_register_error">用户名不符合规定，请重新输入</string>
+    <string name="string_register_success">恭喜您，注册成功，您的默认登录密码为：%s</string>
 </resources>

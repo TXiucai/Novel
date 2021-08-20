@@ -70,6 +70,7 @@ import com.heiheilianzai.app.utils.DialogComicLook;
 import com.heiheilianzai.app.utils.DialogCouponNotMore;
 import com.heiheilianzai.app.utils.DialogLogin;
 import com.heiheilianzai.app.utils.DialogNovelCoupon;
+import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -1420,8 +1421,16 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             }
         } else {
             if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
-                DialogLogin dialogLogin = new DialogLogin();
-                dialogLogin.getDialogLoginPop(activity);
+                DialogRegister dialogRegister = new DialogRegister();
+                dialogRegister.getDialogLoginPop(activity);
+                dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
+                    @Override
+                    public void onRegisterBack(boolean isSuccess) {
+                        if (isSuccess){
+                            checkIsCoupon(chapterItem);
+                        }
+                    }
+                });
             }
         }
     }

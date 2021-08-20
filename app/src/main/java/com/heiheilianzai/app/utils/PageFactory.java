@@ -1678,8 +1678,16 @@ public class PageFactory {
                 checkIsBuyCoupon(mActivity, chapterItem, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
             } else {
                 if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
-                    DialogLogin dialogLogin = new DialogLogin();
-                    dialogLogin.getDialogLoginPop(mActivity);
+                    DialogRegister dialogRegister = new DialogRegister();
+                    dialogRegister.getDialogLoginPop(mActivity);
+                    dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
+                        @Override
+                        public void onRegisterBack(boolean isSuccess) {
+                            if (isSuccess){
+                                checkIsCoupon(chapterItem);
+                            }
+                        }
+                    });
                 }
             }
         }

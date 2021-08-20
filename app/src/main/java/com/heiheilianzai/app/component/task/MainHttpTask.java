@@ -12,6 +12,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
@@ -248,6 +249,14 @@ public class MainHttpTask {
     }
 
     public boolean Gotologin(Activity activity) {
+        if (!Utils.isLogin(activity)) {
+            DialogRegister dialogRegister = new DialogRegister();
+            dialogRegister.getDialogLoginPop(activity);
+            return false;
+        }
+        return true;
+    }
+    public boolean GoLogin(Activity activity) {
         if (!Utils.isLogin(activity)) {
             Intent intent = new Intent();
             intent.setClass(activity, LoginActivity.class);

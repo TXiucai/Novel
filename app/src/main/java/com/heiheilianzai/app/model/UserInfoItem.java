@@ -48,6 +48,15 @@ public class UserInfoItem implements Serializable{
     private boolean vip_left_three_days;
     private Luobo_notice luobo_notice;
     private String vip_expire_note;
+    private String user_default_password;
+
+    public String getUser_default_password() {
+        return user_default_password;
+    }
+
+    public void setUser_default_password(String user_default_password) {
+        this.user_default_password = user_default_password;
+    }
 
     public String getVip_expire_note() {
         return vip_expire_note;

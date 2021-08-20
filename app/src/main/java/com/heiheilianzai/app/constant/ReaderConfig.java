@@ -457,6 +457,16 @@ public class ReaderConfig {
     public static final String ADD_ADDRESS = "/user-receiver-info/user-add-address";
 
     /**
+     * 一键注册 name
+     */
+    public static final String REGISTERNAME = "/user-new/auto-user-name";
+
+    /**
+     * 一键注册
+     */
+    public static final String REGISTERFAST = "/user-new/quick-register";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";
