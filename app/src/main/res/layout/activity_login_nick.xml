@@ -10,10 +10,10 @@
         android:id="@+id/activity_login_phone_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimens_20dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/dimens_20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,28 +24,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tx_code"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+86"
-                    android:textColor="@color/login_black"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="@dimen/dimens_10dp"
-                    android:layout_height="@dimen/dimens_10dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimens_5dp"
-                    android:src="@mipmap/login_down" />
-
-                <View
-                    android:layout_width="@dimen/dimens_1dp"
-                    android:layout_height="@dimen/dimens_12dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dimens_8dp"
-                    android:layout_marginRight="@dimen/dimens_8dp"
-                    android:background="@color/login_gray" />
 
                 <EditText
                     android:id="@+id/activity_login_phone_username"
@@ -53,8 +31,7 @@
                     android:layout_height="50dp"
                     android:layout_marginBottom="1dp"
                     android:background="@null"
-                    android:hint="@string/UserInfoActivity_phone"
-                    android:inputType="phone"
+                    android:hint="@string/UserInfoActivity_nicheng"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColorHint="@color/login_input_tip"
@@ -87,26 +64,23 @@
                 android:layout_height="@dimen/dimens_70dp">
 
                 <EditText
-                    android:id="@+id/activity_login_phone_message"
+                    android:id="@+id/activity_login_nick_password"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
                     android:background="@null"
-                    android:hint="@string/LoginActivity_code"
-                    android:inputType="number"
+                    android:hint="@string/UserInfoActivity_password"
+                    android:inputType="textPassword"
                     android:textColorHint="@color/login_input_tip"
                     android:textSize="@dimen/public_12_dp" />
 
-                <Button
-                    android:id="@+id/activity_login_phone_get_message_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/activity_login_nick_password_eye"
+                    android:layout_width="@dimen/dimens_16dp"
+                    android:layout_height="@dimen/dimens_16dp"
+                    android:src="@mipmap/login_password_eye_off"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:text="@string/LoginActivity_getcode"
-                    android:textColor="@color/login_input_tip"
-                    android:textSize="@dimen/public_12_dp" />
+                    android:layout_marginRight="@dimen/dp_10" />
             </RelativeLayout>
 
             <View

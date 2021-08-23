@@ -105,22 +105,15 @@ public class LoginModel {
 
     /**
      * 波音登录
-     *
-     * @param phoneNum
      * @param callback
      */
-    public void loginBoYin(String phoneNum, final LoginResultCallback callback) {
-        if (!isMobileNO(phoneNum))
-            return;
-        phoneNum = phoneNum.replaceAll(" ", "");
+    public void loginBoYin( final LoginResultCallback callback) {
         ReaderParams params = new ReaderParams(mActivity);
-        params.putExtraParams("mobile", phoneNum);
         params.putExtraParams("platform", "1");//1安卓  2iOS  3苹果商店
         params.putExtraParams("user_source", BuildConfig.app_source_boyin);
         UserInfoItem userInfo = App.getUserInfoItem(mActivity);
         if (userInfo != null) {
             params.putExtraParams("hhlz_uid", String.valueOf(userInfo.getUid()));
-            params.putExtraParams("area_code",userInfo.getArea_code());
         }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBoYinLoginUrl, json, false, new HttpUtils.ResponseListener() {
@@ -151,9 +144,9 @@ public class LoginModel {
     public void loginUser(String userName, String password, final LoginResultCallback callback) {
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("user_name", userName);
-        params.putExtraParams("password", password);
+        params.putExtraParams("user_password", password);
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUsernameLoginUrl, json, true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUsernameLoginUrlNew, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                         if (callback != null) {

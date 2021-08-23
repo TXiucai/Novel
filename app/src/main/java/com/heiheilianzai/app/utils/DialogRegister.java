@@ -84,7 +84,6 @@ public class DialogRegister {
                     popupWindow.dismiss();
                 }
                 MainHttpTask.getInstance().GoLogin(activity);
-                activity.finish();
             }
         });
         popupWindow.setContentView(view);

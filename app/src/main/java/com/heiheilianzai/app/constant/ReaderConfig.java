@@ -232,6 +232,10 @@ public class ReaderConfig {
      * 用户名登录
      */
     public static final String mUsernameLoginUrl = "/user/account-login";
+     /**
+     * 新用户名登录
+     */
+    public static final String mUsernameLoginUrlNew = "/user-new/user-name-login";
 
     /**
      * 添加书架作品

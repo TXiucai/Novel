@@ -589,4 +589,7 @@
     <string name="string_password_hint_sure">确认密码</string>
     <string name="string_password_error">格式错误，4-20位数字或字母组成</string>
     <string name="string_password_error_sure">输入的密码不一致</string>
+    <string name="string_login_phone">手机号登陆</string>
+    <string name="string_login_nick">用户名登陆</string>
+    <string name="string_login_register">未注册用户，登录后自动创建帐户</string>
 </resources>

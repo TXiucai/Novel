@@ -244,13 +244,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_tasklayout_task.setText(mUserInfo.getTask_list().getFinish_num() + "/" + mUserInfo.getTask_list().getMission_num());
             fragment_mine_user_info_gold.setText(mUserInfo.getGoldRemain() + " ");
             fragment_mine_user_info_shuquan.setText(mUserInfo.getSilverRemain() + " ");
-            String mobile = mUserInfo.getMobile();
-            if (!StringUtils.isEmpty(mobile)) {
-                loginBoYin(mobile);
-                ShareUitls.putString(activity, PrefConst.USER_MOBILE_KAY, mobile);
-            }else {
-                loginBoYin(mUserInfo.getNickname());
-            }
+            loginBoYin();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -466,12 +460,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
 
     /**
      * 登录成功 或其他地方改变用户数据 刷新波音数据
-     *
-     * @param mobile
      */
-    void loginBoYin(String mobile) {
+    void loginBoYin() {
         LoginModel loginModel = new LoginModel(getActivity());
-        loginModel.loginBoYin(mobile, new LoginResultCallback() {
+        loginModel.loginBoYin(new LoginResultCallback() {
             @Override
             public void getResult(String jsonStr) {
                 EventBus.getDefault().post(new LoginBoYinEvent(jsonStr));

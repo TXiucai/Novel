@@ -60,6 +60,46 @@ public class LoginPresenter {
             }
         });
     }
+    public void loginUser(final LoginActivity.LoginSuccess loginSuccess){
+        mLoginModel.loginUser(mLoginView.getUserName(), mLoginView.getPassword(), new LoginResultCallback() {
+            @Override
+            public void getResult(String jsonStr) {
+                initLoginData(jsonStr, loginSuccess);
+            }
+        });
+    }
+
+    private void initLoginData(String jsonStr, LoginActivity.LoginSuccess loginSuccess) {
+        try {
+            Gson gson = new Gson();
+            LoginInfo loginInfo = gson.fromJson(jsonStr, LoginInfo.class);
+            AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, jsonStr);
+            if (loginInfo != null) {
+                AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
+                AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
+                AppPrefs.putSharedInt(activity, PrefConst.COUPON, loginInfo.getSilverRemain());
+                EventBus.getDefault().post(new BuyLoginSuccessEvent());
+                syncDevice(activity);
+                FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
+                    @Override
+                    public void saveSuccess() {
+                    }
+                });
+                EventBus.getDefault().post(new RefreshMine(loginInfo));
+                if (GETPRODUCT_TYPE(activity) != 2) {
+                    EventBus.getDefault().post(new RefreshBookSelf(null));
+                }
+                if (GETPRODUCT_TYPE(activity) != 1) {
+                    EventBus.getDefault().post(new RefreshComic(null));
+                }
+                SensorsDataHelper.profileSet(DateUtils.getTodayTimeHMS());
+                loginSuccess.success();
+                JPushUtil.setAlias(activity);
+                activity.finish();
+            }
+        } catch (Exception e) {
+        }
+    }
 
     /**
      * 登录请求:刷新我的页面;刷新用户数据,及登录有声用户数据;根据配置刷新书架小说、漫画
@@ -68,35 +108,7 @@ public class LoginPresenter {
         mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(),mLoginView.getCountryCode(), new LoginResultCallback() {
             @Override
             public void getResult(final String loginStr) {
-                try {
-                    Gson gson = new Gson();
-                    LoginInfo loginInfo = gson.fromJson(loginStr, LoginInfo.class);
-                    AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, loginStr);
-                    if (loginInfo != null) {
-                        AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
-                        AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
-                        AppPrefs.putSharedInt(activity, PrefConst.COUPON, loginInfo.getSilverRemain());
-                        EventBus.getDefault().post(new BuyLoginSuccessEvent());
-                        syncDevice(activity);
-                        FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
-                            @Override
-                            public void saveSuccess() {
-                            }
-                        });
-                        EventBus.getDefault().post(new RefreshMine(loginInfo));
-                        if (GETPRODUCT_TYPE(activity) != 2) {
-                            EventBus.getDefault().post(new RefreshBookSelf(null));
-                        }
-                        if (GETPRODUCT_TYPE(activity) != 1) {
-                            EventBus.getDefault().post(new RefreshComic(null));
-                        }
-                        SensorsDataHelper.profileSet(DateUtils.getTodayTimeHMS());
-                        loginSuccess.success();
-                        JPushUtil.setAlias(activity);
-                        activity.finish();
-                    }
-                } catch (Exception e) {
-                }
+                initLoginData(loginStr, loginSuccess);
             }
         });
     }
