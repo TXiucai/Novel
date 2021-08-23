@@ -271,6 +271,14 @@ public class ReaderConfig {
      * 修改昵称
      */
     public static final String mUserSetNicknameUrl = "/user/set-nickname";
+    /**
+     * 新修改昵称
+     */
+    public static final String mUserSetNickname = "/user-new/edit-user-name";
+    /**
+     * 新修密码
+     */
+    public static final String mUserSetPassword = "/user-new/edit-user-password";
 
     /**
      * 修改性别

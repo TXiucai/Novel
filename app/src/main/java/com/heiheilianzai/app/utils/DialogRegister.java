@@ -38,6 +38,7 @@ import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 
 public class DialogRegister {
     private RegisterBackListener mRegisterBackListener;
+    private String mMath = "[\\u4e00-\\u9fa5_a-zA-Z0-9_]{2,20}";
 
     public void setmRegisterBackListener(RegisterBackListener mRegisterBackListener) {
         this.mRegisterBackListener = mRegisterBackListener;
@@ -64,8 +65,10 @@ public class DialogRegister {
 
             @Override
             public void afterTextChanged(Editable s) {
-                vipHolder.mTxRegister.setClickable(true);
-                vipHolder.mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_ff8350_20));
+                if (s.toString().matches(mMath)) {
+                    vipHolder.mTxRegister.setClickable(true);
+                    vipHolder.mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_ff8350_20));
+                }
             }
         });
         vipHolder.mTxRegister.setOnClickListener(new View.OnClickListener() {
@@ -95,8 +98,8 @@ public class DialogRegister {
         mTxRegister.setClickable(false);
         mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_e6e6e6_20));
         String name = mEdName.getText().toString();
-        String math = "[\\u4e00-\\u9fa5_a-zA-Z0-9_]{2,20}";
-        if (name != null && !TextUtils.equals(name, "") && name.matches(math)) {
+
+        if (name != null && !TextUtils.equals(name, "") && name.matches(mMath)) {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("user_name", name);
             String json = params.generateParamsJson();
@@ -146,7 +149,6 @@ public class DialogRegister {
                             }
                         }
                     }
-
             );
         } else {
             MyToash.Toash(activity, activity.getResources().getString(R.string.string_register_error));

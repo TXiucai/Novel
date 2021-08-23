@@ -15,15 +15,15 @@
         <RelativeLayout
             android:id="@+id/user_info_avatar_container"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="@dimen/dimens_70dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:gravity="center"
                 android:text="@string/UserInfoActivity_touxiang"
                 android:textSize="@dimen/public_12_dp" />
@@ -36,20 +36,20 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="@dimen/dimens_15dp">
 
 
                 <com.heiheilianzai.app.view.CircleImageView
                     android:id="@+id/user_info_avatar"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/dimens_50dp"
+                    android:layout_height="@dimen/dimens_50dp"
                     android:src="@color/lightgray2" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/dimens_5dp"
                     android:background="@mipmap/right_arrow" />
             </LinearLayout>
         </RelativeLayout>
@@ -57,20 +57,20 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.3dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/dimens_15dp"
             android:background="@color/gray2" />
 
         <RelativeLayout
             android:id="@+id/user_info_nickname_container"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="@dimen/dimens_70dp"
             android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:gravity="center"
                 android:text="@string/UserInfoActivity_nicheng"
                 android:textSize="@dimen/public_12_dp" />
@@ -83,7 +83,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="@dimen/dimens_15dp">
 
 
                 <TextView
@@ -98,7 +98,50 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/dimens_5dp"
+                    android:background="@mipmap/right_arrow" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/user_info_password_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_70dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:gravity="center"
+                android:text="@string/UserInfoActivity_password"
+                android:textSize="@dimen/public_12_dp" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingRight="@dimen/dimens_15dp">
+
+
+                <TextView
+                    android:id="@+id/user_info_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/public_10_dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dimens_5dp"
                     android:background="@mipmap/right_arrow" />
             </LinearLayout>
         </RelativeLayout>
@@ -106,14 +149,14 @@
         <RelativeLayout
             android:id="@+id/user_info_nickname_sex"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="@dimen/dimens_70dp"
             android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:gravity="center"
                 android:text="@string/UserInfoActivity_sex"
                 android:textSize="@dimen/public_12_dp" />
@@ -126,7 +169,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="@dimen/dimens_15dp">
 
 
                 <TextView
@@ -141,22 +184,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/dimens_5dp"
                     android:background="@mipmap/right_arrow" />
             </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="@dimen/dimens_70dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:gravity="center"
                 android:text="ID"
                 android:textSize="@dimen/public_12_dp" />
@@ -169,7 +212,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="@dimen/dimens_15dp">
 
 
                 <TextView
@@ -186,15 +229,15 @@
         <RelativeLayout
             android:id="@+id/user_info_phone_container"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="@dimen/dimens_70dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:gravity="center"
                 android:text="@string/UserInfoActivity_phone"
                 android:textSize="@dimen/public_12_dp" />
@@ -207,7 +250,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="@dimen/dimens_15dp">
 
 
                 <TextView
@@ -223,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/dimens_5dp"
                     android:background="@mipmap/right_arrow" />
             </LinearLayout>
         </RelativeLayout>
@@ -231,21 +274,21 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.3dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/dimens_15dp"
             android:background="@color/gray2" />
 
         <RelativeLayout
 
             android:id="@+id/user_info_weixin_container"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="@dimen/dimens_70dp"
             android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
                 android:gravity="center"
                 android:text="@string/UserInfoActivity_weixin"
                 android:textSize="@dimen/public_12_dp" />
@@ -259,7 +302,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingRight="10dp">
+                android:paddingRight="@dimen/dimens_15dp">
 
 
                 <TextView
@@ -274,7 +317,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/dimens_5dp"
                     android:background="@mipmap/right_arrow" />
             </LinearLayout>
         </RelativeLayout>

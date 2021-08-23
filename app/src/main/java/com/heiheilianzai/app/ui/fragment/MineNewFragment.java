@@ -248,6 +248,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             if (!StringUtils.isEmpty(mobile)) {
                 loginBoYin(mobile);
                 ShareUitls.putString(activity, PrefConst.USER_MOBILE_KAY, mobile);
+            }else {
+                loginBoYin(mUserInfo.getNickname());
             }
         } catch (Exception e) {
             e.printStackTrace();

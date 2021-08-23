@@ -14,7 +14,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
@@ -77,6 +79,8 @@ import static com.heiheilianzai.app.constant.ReaderConfig.USE_WEIXIN;
 public class UserInfoActivity extends BaseActivity implements View.OnClickListener, ShowTitle {
     @BindView(R.id.user_info_avatar_container)
     View user_info_avatar_container;
+    @BindView(R.id.user_info_password_container)
+    View user_info_password_container;
     @BindView(R.id.user_info_avatar)
     CircleImageView user_info_avatar;
     @BindView(R.id.user_info_nickname_container)
@@ -99,6 +103,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     TextView user_info_sex;
     @BindView(R.id.user_info_nickname_sex)
     RelativeLayout user_info_nickname_sex;
+    @BindView(R.id.user_info_password)
+    TextView user_info_password;
     private EditText mEdit;
     private UserInfoItem mUserInfo;
     Gson gson = new Gson();
@@ -113,6 +119,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
      */
     private final int GALLERY = 1111;
     private final int CAMERA = 1112;
+    private EditText mEtPassword;
 
     @Override
     public int initContentView() {
@@ -134,6 +141,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         user_info_phone_container.setOnClickListener(this);
         user_info_weixin_container.setOnClickListener(this);
         user_info_nickname_sex.setOnClickListener(this);
+        user_info_password_container.setOnClickListener(this);
     }
 
 
@@ -153,6 +161,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             }
             //昵称
             user_info_nickname.setText(mUserInfo.getNickname());
+            user_info_password.setText(mUserInfo.getUser_default_password());
             if (mUserInfo.getGender() == 0) {
                 user_info_sex.setText(LanguageUtil.getString(activity, R.string.UserInfoActivity_weizhi));
             } else if (mUserInfo.getGender() == 2) {
@@ -214,7 +223,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                         checkFromGallery();
                     }
                 } else {
-                    modifyNickname(1);
+                    modify(1);
                 }
             }
         });
@@ -225,7 +234,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 if (flag) {
                     checkFromCamera();
                 } else {
-                    modifyNickname(2);
+                    modify(2);
                 }
             }
         });
@@ -287,6 +296,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 if (user_info_weixin.getText().length() == 0) {
                     UMShareAPI.get(activity).getPlatformInfo(activity, SHARE_MEDIA.WEIXIN, authListener);
                 }
+                break;
+            case R.id.user_info_password_container:
+                //修改密码
+                modifyPasswordDialog();
                 break;
         }
     }
@@ -445,6 +458,111 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         );
     }
 
+    private void modifyPasswordDialog() {
+        final Dialog dialog = new Dialog(this, R.style.NormalDialogStyle);
+        View view = View.inflate(this, R.layout.dialog_modify_password, null);
+        TextView cancel = view.findViewById(R.id.cancel);
+        TextView confirm = view.findViewById(R.id.confirm);
+        mEtPassword = view.findViewById(R.id.modify_password_edit);
+        EditText etPasswordSure = view.findViewById(R.id.modify_password_edit_sure);
+        TextView txPasswordError = view.findViewById(R.id.modify_password_error);
+        TextView txPasswordErrorSure = view.findViewById(R.id.modify_password_error_sure);
+        dialog.setContentView(view);
+        dialog.setCanceledOnTouchOutside(true);
+        //设置对话框的大小
+        view.setMinimumHeight((int) (ScreenSizeUtils.getInstance(this).getScreenHeight() * 0.23f));
+        Window dialogWindow = dialog.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = (int) (ScreenSizeUtils.getInstance(this).getScreenWidth() * 0.75f);
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.CENTER;
+        dialogWindow.setAttributes(lp);
+        String math = "[a-zA-Z\\d]{4,20}";
+        mEtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().matches(math) && etPasswordSure.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
+                    confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                    confirm.setClickable(true);
+                    txPasswordError.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        etPasswordSure.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().matches(math) && mEtPassword.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
+                    confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                    confirm.setClickable(true);
+                    txPasswordErrorSure.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        mEtPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (!mEtPassword.getText().toString().matches(math)) {
+                        txPasswordError.setVisibility(View.VISIBLE);
+                        txPasswordError.setText(activity.getResources().getString(R.string.string_password_error));
+                    }
+                }
+            }
+        });
+        etPasswordSure.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (!TextUtils.equals(etPasswordSure.getText().toString(), mEtPassword.getText().toString())) {
+                        txPasswordErrorSure.setVisibility(View.VISIBLE);
+                        txPasswordErrorSure.setText(activity.getResources().getString(R.string.string_password_error_sure));
+                    }
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
+                    txPasswordErrorSure.setVisibility(View.VISIBLE);
+                    txPasswordErrorSure.setText(activity.getResources().getString(R.string.string_password_error_sure));
+                    confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+                    confirm.setClickable(false);
+                    return;
+                }
+                modify(3);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     /**
      * 修改昵称对话框
      */
@@ -464,6 +582,42 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.CENTER;
         dialogWindow.setAttributes(lp);
+        String name = mEdit.getText().toString();
+        String math = "[\\u4e00-\\u9fa5_a-zA-Z0-9_]{2,20}";
+        mEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().matches(math)) {
+                    confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                    confirm.setClickable(true);
+                }
+            }
+        });
+        mEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (name.matches(math)) {
+                        confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                        confirm.setClickable(true);
+                    } else {
+                        confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+                        confirm.setClickable(false);
+                        MyToash.Toash(activity, activity.getResources().getString(R.string.string_register_error));
+                    }
+                }
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -477,7 +631,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.UserInfoActivity_namenonull));
                     return;
                 }
-                modifyNickname(0);
+                modify(0);
                 dialog.dismiss();
             }
         });
@@ -487,16 +641,20 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     /**
      * 修改昵称
      */
-    public void modifyNickname(final int flag) {
+    public void modify(final int flag) {
         String requestParams;
         if (flag == 0) {
-            requestParams = ReaderConfig.getBaseUrl() + ReaderConfig.mUserSetNicknameUrl;
+            requestParams = ReaderConfig.getBaseUrl() + ReaderConfig.mUserSetNickname;
+        } else if (flag == 3) {
+            requestParams = ReaderConfig.getBaseUrl() + ReaderConfig.mUserSetPassword;
         } else {
             requestParams = ReaderConfig.getBaseUrl() + ReaderConfig.mUserSetGender;
         }
         ReaderParams params = new ReaderParams(this);
         if (flag == 0) {
-            params.putExtraParams("nickname", mEdit.getText().toString());
+            params.putExtraParams("user_name", mEdit.getText().toString());
+        } else if (flag == 3) {
+            params.putExtraParams("user_password", mEtPassword.getText().toString());
         } else {
             params.putExtraParams("gender", flag + "");
         }

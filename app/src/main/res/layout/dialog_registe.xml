@@ -26,6 +26,7 @@
             android:layout_marginTop="@dimen/dimens_25dp"
             android:background="@null"
             android:lines="1"
+            android:hint="@string/string_register_hint"
             android:textColor="@color/color_929292"
             android:textSize="14sp" />
 
