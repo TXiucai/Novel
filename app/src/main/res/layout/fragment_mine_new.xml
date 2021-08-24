@@ -300,6 +300,16 @@
 
             </LinearLayout>
 
+            <com.heiheilianzai.app.view.ConvenientBannerBookShelf
+                android:id="@+id/fragment_mine_banner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_88dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:visibility="gone"
+                app:canLoop="true" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -508,6 +518,42 @@
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_mine_user_info_ad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dimens_90dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dimens_20dp">
+
+                    <ImageView
+                        android:id="@+id/img_ad"
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp" />
+
+                    <TextView
+                        android:id="@+id/tx_ad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_6dp"
+                        android:textColor="@color/color_35363b"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="@dimen/dimens_90dp"
+                    android:layout_weight="3" />
             </LinearLayout>
         </LinearLayout>
     </com.heiheilianzai.app.view.ObservableScrollView>

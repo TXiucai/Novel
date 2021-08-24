@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,11 +18,14 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.callback.LoginResultCallback;
+import com.heiheilianzai.app.callback.OnItemClickListener;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.holder.CBViewHolderCreator;
 import com.heiheilianzai.app.model.Announce;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
@@ -39,6 +43,7 @@ import com.heiheilianzai.app.ui.activity.ReadTimeActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.UserInfoActivity;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -51,9 +56,11 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
+import com.heiheilianzai.app.view.ConvenientBannerBookShelf;
 import com.heiheilianzai.app.view.MarqueeTextView;
 import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
 import com.heiheilianzai.app.view.MarqueeView;
+import com.heiheilianzai.app.view.MineAdBannerHolderView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -118,7 +125,14 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public TextView fragment_invite_code;
     @BindView(R.id.fragment_mine_user_info_tasklayout_share)
     public LinearLayout mLlRead;
-
+    @BindView(R.id.fragment_mine_user_info_ad)
+    public LinearLayout mLlAd;
+    @BindView(R.id.img_ad)
+    public ImageView mImgAd;
+    @BindView(R.id.tx_ad)
+    public TextView mTxAd;
+    @BindView(R.id.fragment_mine_banner)
+    public ConvenientBannerBookShelf mBanner;
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
     private UserInfoItem.Luobo_notice luobo_notice;
@@ -187,6 +201,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             }
             luobo_notice = mUserInfo.getLuobo_notice();
             initAnounce();
+            initAD();
             if (!Utils.isLogin(activity)) {
                 fragment_mine_user_info_nickname.setText(LanguageUtil.getString(activity, R.string.user_login));
                 fragment_mine_user_info_id.setVisibility(View.GONE);
@@ -283,6 +298,55 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         );
     }
 
+    private void initAD() {
+        if (mUserInfo != null) {
+            UserInfoItem.My_center_ad my_center_ad = mUserInfo.getMy_center_ad();
+            UserInfoItem.My_center_small_icon_ad my_center_small_icon_ad = mUserInfo.getMy_center_small_icon_ad();
+            if (my_center_ad != null && !my_center_ad.getList().isEmpty()) {
+                mBanner.setVisibility(View.VISIBLE);
+                mBanner.setPages(new CBViewHolderCreator<MineAdBannerHolderView>() {
+                    @Override
+                    public MineAdBannerHolderView createHolder() {
+                        return new MineAdBannerHolderView(activity);
+                    }
+                }, my_center_ad.getList()).setPointViewVisible(true).setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        JumpAd(my_center_ad.getList().get(position));
+                    }
+                });
+                mBanner.startTurning(2000);
+            } else {
+                mBanner.setVisibility(View.GONE);
+            }
+            if (my_center_small_icon_ad != null && !my_center_small_icon_ad.getList().isEmpty()) {
+                mLlAd.setVisibility(View.VISIBLE);
+                BaseAd baseAd = my_center_small_icon_ad.getList().get(0);
+                MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgAd);
+                mTxAd.setText(baseAd.getAd_title());
+                mLlAd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        JumpAd(baseAd);
+                    }
+                });
+            } else {
+                mLlAd.setVisibility(View.GONE);
+            }
+
+        }
+    }
+
+    private void JumpAd(BaseAd baseAd) {
+        Intent intent = new Intent();
+        intent.setClass(activity, WebViewActivity.class);
+        intent.putExtra("url", baseAd.ad_skip_url);
+        intent.putExtra("title", baseAd.ad_title);
+        intent.putExtra("advert_id", baseAd.advert_id);
+        intent.putExtra("ad_url_type", baseAd.ad_url_type);
+        activity.startActivity(intent);
+    }
+
     private void initAnounce() {
         if (luobo_notice != null) {
             final String content = luobo_notice.getContent();
@@ -303,7 +367,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             } else {
                 fragment_mine_announce_layout.setVisibility(View.GONE);
             }
-
         } else {
             fragment_mine_announce_layout.setVisibility(View.GONE);
         }

@@ -7,7 +7,7 @@ import java.util.List;
  * 个人中心的用户bean
  * Created by scb on 2018/7/13.
  */
-public class UserInfoItem implements Serializable{
+public class UserInfoItem implements Serializable {
 
     /**
      * uid : 20
@@ -125,6 +125,48 @@ public class UserInfoItem implements Serializable{
 
     private List<BindListBean> bind_list;
     private Task_list task_list;
+    private My_center_ad my_center_ad;
+    private My_center_small_icon_ad my_center_small_icon_ad;
+
+    public My_center_ad getMy_center_ad() {
+        return my_center_ad;
+    }
+
+    public void setMy_center_ad(My_center_ad my_center_ad) {
+        this.my_center_ad = my_center_ad;
+    }
+
+    public My_center_small_icon_ad getMy_center_small_icon_ad() {
+        return my_center_small_icon_ad;
+    }
+
+    public void setMy_center_small_icon_ad(My_center_small_icon_ad my_center_small_icon_ad) {
+        this.my_center_small_icon_ad = my_center_small_icon_ad;
+    }
+
+    public static class My_center_ad {
+        private List<BaseAd> list;
+
+        public List<BaseAd> getList() {
+            return list;
+        }
+
+        public void setList(List<BaseAd> list) {
+            this.list = list;
+        }
+    }
+
+    public static class My_center_small_icon_ad {
+        private List<BaseAd> list;
+
+        public List<BaseAd> getList() {
+            return list;
+        }
+
+        public void setList(List<BaseAd> list) {
+            this.list = list;
+        }
+    }
 
     public Task_list getTask_list() {
         return task_list;
@@ -133,7 +175,8 @@ public class UserInfoItem implements Serializable{
     public void setTask_list(Task_list task_list) {
         this.task_list = task_list;
     }
-    public static class Luobo_notice{
+
+    public static class Luobo_notice {
         private String title;
         private String content;
 
@@ -153,6 +196,7 @@ public class UserInfoItem implements Serializable{
             this.content = content;
         }
     }
+
     public static class Task_list {
         private int mission_num;
         private int finish_num;
@@ -173,6 +217,7 @@ public class UserInfoItem implements Serializable{
             this.finish_num = finish_num;
         }
     }
+
     public int getUid() {
         return uid;
     }
