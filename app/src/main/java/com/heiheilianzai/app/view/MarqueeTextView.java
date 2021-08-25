@@ -99,7 +99,7 @@ public class MarqueeTextView extends LinearLayout {
                         final int j = i;
                         TextView textView = new TextView(mContext);
                         textView.setLines(1);
-                        textView.setText(textArrays.get(i).getTitle());
+                        textView.setText(textArrays.get(i).getContent());
                         textView.setTextSize(12);
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         if (isSelectColor) {

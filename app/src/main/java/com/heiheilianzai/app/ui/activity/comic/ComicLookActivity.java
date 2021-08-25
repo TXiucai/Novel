@@ -138,7 +138,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public LinearLayout titlebar_back;
     @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R.id.activity_comiclook_RecyclerView)
+    @BindView(R.id.activity_comiclook_recyclerView)
     public ZoomRecyclerView activity_comiclook_RecyclerView;
     @BindView(R.id.activity_comiclook_head)
     public RelativeLayout activity_comiclook_head;
@@ -170,7 +170,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public ImageView activity_comiclook_xiayihua;
     @BindView(R.id.activity_comiclook_shangyihua)
     public ImageView activity_comiclook_shangyihua;
-    @BindView(R.id.item_dialog_downadapter_RotationLoadingView)
+    @BindView(R.id.item_dialog_downadapter_rotationLoadingView)
     public AVLoadingIndicatorView item_dialog_downadapter_RotationLoadingView;
     @BindView(R.id.activity_comiclook_danmu_dangqianhua)
     public TextView activity_comiclook_danmu_dangqianhua;
@@ -431,23 +431,27 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     @Override
                     public void backSmallType(boolean isOn) {
                         if (isOn) {
-                            mRlSmall.setVisibility(View.VISIBLE);
-                            mRlRb.setVisibility(View.VISIBLE);
-                            mImgBigBack.setVisibility(View.GONE);
-                            activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.color_0e0705));
-                            comicChapterCatalogAdapter.setmSmall(3);
-                            mRbMid.setChecked(false);
-                            mRbBig.setChecked(false);
-                            mRbSmall.setChecked(true);
-                            activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
-                            mIsSmall = true;
-                            activity_comiclook_RecyclerView.setEnableScale(false);
+                            if (comicChapterCatalogAdapter != null) {
+                                comicChapterCatalogAdapter.setmSmall(3);
+                                mRlSmall.setVisibility(View.VISIBLE);
+                                mRlRb.setVisibility(View.VISIBLE);
+                                mImgBigBack.setVisibility(View.GONE);
+                                activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.color_0e0705));
+                                mRbMid.setChecked(false);
+                                mRbBig.setChecked(false);
+                                mRbSmall.setChecked(true);
+                                activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                                mIsSmall = true;
+                                activity_comiclook_RecyclerView.setEnableScale(false);
+                            }
                         } else {
-                            comicChapterCatalogAdapter.setmSmall(0);
-                            mRlSmall.setVisibility(View.GONE);
-                            activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.white));
-                            activity_comiclook_RecyclerView.setEnableScale(true);
-                            mIsSmall = false;
+                            if (comicChapterCatalogAdapter != null) {
+                                comicChapterCatalogAdapter.setmSmall(0);
+                                mRlSmall.setVisibility(View.GONE);
+                                activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.white));
+                                activity_comiclook_RecyclerView.setEnableScale(true);
+                                mIsSmall = false;
+                            }
                         }
                         mSvBig.setVisibility(View.GONE);
                     }
@@ -485,29 +489,35 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 break;
             case R.id.comic_rb_big:
                 if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
-                    comicChapterCatalogAdapter.setmSmall(1);
-                    mRbMid.setChecked(false);
-                    mRbBig.setChecked(true);
-                    mRbSmall.setChecked(false);
-                    activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                    if (comicChapterCatalogAdapter != null) {
+                        comicChapterCatalogAdapter.setmSmall(1);
+                        mRbMid.setChecked(false);
+                        mRbBig.setChecked(true);
+                        mRbSmall.setChecked(false);
+                        activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                    }
                 }
                 break;
             case R.id.comic_rb_mid:
                 if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
-                    comicChapterCatalogAdapter.setmSmall(2);
-                    mRbMid.setChecked(true);
-                    mRbBig.setChecked(false);
-                    mRbSmall.setChecked(false);
-                    activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                    if (comicChapterCatalogAdapter != null) {
+                        comicChapterCatalogAdapter.setmSmall(2);
+                        mRbMid.setChecked(true);
+                        mRbBig.setChecked(false);
+                        mRbSmall.setChecked(false);
+                        activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                    }
                 }
                 break;
             case R.id.comic_rb_small:
                 if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
-                    comicChapterCatalogAdapter.setmSmall(3);
-                    mRbMid.setChecked(false);
-                    mRbBig.setChecked(false);
-                    mRbSmall.setChecked(true);
-                    activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                    if (comicChapterCatalogAdapter != null) {
+                        comicChapterCatalogAdapter.setmSmall(3);
+                        mRbMid.setChecked(false);
+                        mRbBig.setChecked(false);
+                        mRbSmall.setChecked(true);
+                        activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                    }
                 }
                 break;
             case R.id.comic_big_back:
@@ -1426,7 +1436,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
                     @Override
                     public void onRegisterBack(boolean isSuccess) {
-                        if (isSuccess){
+                        if (isSuccess) {
                             checkIsCoupon(chapterItem);
                         }
                     }

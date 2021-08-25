@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <com.heiheilianzai.app.view.comic.ZoomRecyclerView
-        android:id="@+id/activity_comiclook_RecyclerView"
+        android:id="@+id/activity_comiclook_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -319,7 +319,7 @@
                     android:textSize="@dimen/public_10_dp" />
 
                 <com.wang.avi.AVLoadingIndicatorView
-                    android:id="@+id/item_dialog_downadapter_RotationLoadingView"
+                    android:id="@+id/item_dialog_downadapter_rotationLoadingView"
                     style="@style/AVLoadingIndicatorView.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

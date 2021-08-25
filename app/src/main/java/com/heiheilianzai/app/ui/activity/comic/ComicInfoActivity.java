@@ -553,7 +553,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                         if (mPageNum == 1) {
                             comicChapterCatalogAdapter.notifyDataSetChanged();
                         } else {
-                            comicChapterCatalogAdapter.notifyItemRangeInserted(size, comicChapter.size());
+                            comicChapterCatalogAdapter.notifyItemRangeInserted(size + 2, comicChapter.size());
                         }
                         mPageNum++;
                     }
