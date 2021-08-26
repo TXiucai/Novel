@@ -86,6 +86,14 @@ public class DialogRegister {
                 MainHttpTask.getInstance().GoLogin(activity);
             }
         });
+        vipHolder.mVClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (popupWindow != null) {
+                    popupWindow.dismiss();
+                }
+            }
+        });
         popupWindow.setContentView(view);
         popupWindow.setCancelable(false);
         popupWindow.setCanceledOnTouchOutside(false);
@@ -188,6 +196,8 @@ public class DialogRegister {
         public TextView mTxRegister;
         @BindView(R.id.tx_login)
         public TextView mTxLogin;
+        @BindView(R.id.home_notice_close)
+        public View mVClose;
 
         public VipHolder(View view) {
             ButterKnife.bind(this, view);

@@ -279,6 +279,12 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        initData();
+    }
+
+    @Override
     public void initData() {
         if (USE_BUTTOM_AD) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
