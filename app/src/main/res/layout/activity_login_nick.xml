@@ -32,6 +32,8 @@
                     android:layout_marginBottom="1dp"
                     android:background="@null"
                     android:hint="@string/UserInfoActivity_nicheng"
+                    android:lines="1"
+                    android:singleLine="true"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColorHint="@color/login_input_tip"
@@ -69,7 +71,8 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:hint="@string/UserInfoActivity_password"
-                    android:inputType="textPassword"
+                    android:lines="1"
+                    android:singleLine="true"
                     android:textColorHint="@color/login_input_tip"
                     android:textSize="@dimen/public_12_dp" />
 
@@ -77,10 +80,10 @@
                     android:id="@+id/activity_login_nick_password_eye"
                     android:layout_width="@dimen/dimens_16dp"
                     android:layout_height="@dimen/dimens_16dp"
-                    android:src="@mipmap/login_password_eye_off"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_10" />
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:src="@mipmap/login_password_eye" />
             </RelativeLayout>
 
             <View

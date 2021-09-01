@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,5 +129,18 @@ public class FileUtils {
 
         }
         return result;
+    }
+
+    public static boolean isSimpleOrComplex(String str){
+        try {
+            if (str.equals(new String(str.getBytes("GB2312"),"GB2312"))){
+                return true;
+            }else {
+                return false;
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

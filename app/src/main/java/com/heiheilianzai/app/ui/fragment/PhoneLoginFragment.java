@@ -82,9 +82,9 @@ public class PhoneLoginFragment extends BaseButterKnifeFragment implements Login
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s)) {
+                if (!TextUtils.isEmpty(s) && s.toString().length() > 5 && s.toString().length() < 12) {
                     activity_login_phone_get_message_btn.setEnabled(true);
-                    activity_login_phone_get_message_btn.setTextColor(Color.parseColor("#E7554F"));
+                    activity_login_phone_get_message_btn.setTextColor(Color.parseColor("#FF8350"));
                     activity_login_phone_message.setEnabled(true);
                     activity_login_phone_clear.setVisibility(View.VISIBLE);
                     if (!TextUtils.isEmpty(activity_login_phone_message.getText().toString())) {

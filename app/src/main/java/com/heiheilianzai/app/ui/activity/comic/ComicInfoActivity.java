@@ -591,7 +591,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect));
             addSelfCollect();
         } else {
-            httpData2(true);
+            httpData2(false);
         }
     }
 

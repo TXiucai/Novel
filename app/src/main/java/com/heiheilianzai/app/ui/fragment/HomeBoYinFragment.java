@@ -19,6 +19,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
+import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.BoyinPlayerEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
@@ -90,9 +91,7 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
                     if (Utils.isLogin(getActivity())) {
                         MyToash.ToashSuccess(getActivity(), getString(R.string.boyin_login_warn));
                     }
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    intent.putExtra(LoginActivity.BOYIN_LOGIN_KAY, true);
-                    getActivity().startActivity(intent);
+                    MainHttpTask.getInstance().Gotologin(activity);
                 }
             }
 

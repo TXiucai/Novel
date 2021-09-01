@@ -25,16 +25,14 @@ import butterknife.BindView;
  */
 public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginView, View.OnClickListener {
 
-  @BindView(R.id.activity_bind_phone_text)
+    @BindView(R.id.activity_bind_phone_text)
     EditText activity_bind_phone_text;
     @BindView(R.id.activity_bind_phone_clear)
     ImageView activity_bind_phone_clear;
-
     @BindView(R.id.activity_bind_phone_message)
     EditText activity_bind_phone_message;
     @BindView(R.id.activity_bind_phone_get_message_btn)
     Button activity_bind_phone_get_message_btn;
-
     @BindView(R.id.activity_bind_phone_btn)
     Button activity_bind_phone_btn;
 
@@ -61,9 +59,9 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s)) {
+                if (!TextUtils.isEmpty(s) && s.toString().length() > 5 && s.toString().length() < 12) {
                     activity_bind_phone_get_message_btn.setEnabled(true);
-                    activity_bind_phone_get_message_btn.setTextColor(Color.RED);
+                    activity_bind_phone_get_message_btn.setTextColor(Color.parseColor("#FF8350"));
                     activity_bind_phone_message.setEnabled(true);
                     activity_bind_phone_clear.setVisibility(View.VISIBLE);
 
@@ -76,8 +74,6 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
                         activity_bind_phone_btn.setBackgroundResource(R.drawable.shape_login_bg);
                         activity_bind_phone_btn.setTextColor(Color.GRAY);
                     }
-
-
                 } else {
                     activity_bind_phone_get_message_btn.setEnabled(false);
                     activity_bind_phone_get_message_btn.setTextColor(Color.parseColor("#D3D3D3"));
@@ -135,12 +131,9 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
                 }
             }
         });
-
-
         activity_bind_phone_get_message_btn.setOnClickListener(this);
         activity_bind_phone_clear.setOnClickListener(this);
         activity_bind_phone_btn.setOnClickListener(this);
-
     }
 
     @Override
@@ -175,8 +168,6 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
             case R.id.activity_bind_phone_clear:
                 activity_bind_phone_text.setText("");
                 break;
-
-
         }
     }
 

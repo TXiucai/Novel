@@ -43,6 +43,7 @@ import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.RefreshUserInfo;
+import com.heiheilianzai.app.utils.FileUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -288,9 +289,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.user_info_phone_container:
                 //绑定手机号
-                if (user_info_phone.getText().length() == 0) {
-                    bindPhone();
-                }
+                bindPhone();
                 break;
             case R.id.user_info_weixin_container:
                 if (user_info_weixin.getText().length() == 0) {
@@ -321,6 +320,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         MyToash.Log("onActivityResult", requestCode + "  " + resultCode);
         if (requestCode == 111) {
             initData();
@@ -491,10 +491,15 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().matches(math) && etPasswordSure.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
-                    confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
-                    confirm.setClickable(true);
+                if (s.toString().matches(math)) {
                     txPasswordError.setVisibility(View.INVISIBLE);
+                    if (etPasswordSure.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
+                        confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                        confirm.setClickable(true);
+                    } else {
+                        confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+                        confirm.setClickable(false);
+                    }
                 }
             }
         });
@@ -511,10 +516,15 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().matches(math) && mEtPassword.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
-                    confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
-                    confirm.setClickable(true);
+                if (s.toString().matches(math)) {
                     txPasswordErrorSure.setVisibility(View.INVISIBLE);
+                    if (mEtPassword.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
+                        confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                        confirm.setClickable(true);
+                    } else {
+                        confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+                        confirm.setClickable(false);
+                    }
                 }
             }
         });
@@ -597,7 +607,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().matches(math)) {
+                if (s.toString().matches(math) && FileUtils.isSimpleOrComplex(name)) {
                     confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
                     confirm.setClickable(true);
                 }
@@ -607,7 +617,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (name.matches(math)) {
+                    if (name.matches(math) && FileUtils.isSimpleOrComplex(name)) {
                         confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
                         confirm.setClickable(true);
                     } else {

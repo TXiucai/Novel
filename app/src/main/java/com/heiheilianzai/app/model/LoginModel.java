@@ -54,18 +54,20 @@ public class LoginModel {
     public void getMessage(String phoneNum, int code, final LoginResultCallback callback) {
         if (!isMobileNO(phoneNum))
             return;
-        //开启倒计时
-        time.start();
         ReaderParams params = new ReaderParams(mActivity);
         String formattedPhoneNum = phoneNum.replaceAll(" ", "");
         params.putExtraParams("mobile", formattedPhoneNum);
-        params.putExtraParams("area_code", String.valueOf(code));
+        if (code != 0) {
+            params.putExtraParams("area_code", String.valueOf(code));
+        }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mMessageUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                         if (callback != null) {
                             callback.getResult(result);
+                            //开启倒计时
+                            time.start();
                         }
                     }
 
@@ -76,15 +78,15 @@ public class LoginModel {
         );
     }
 
-    public void loginPhone(String userName, String message,int areaCode,  final LoginResultCallback callback) {
+    public void loginPhone(String userName, String message, int areaCode, final LoginResultCallback callback) {
         if (!isMobileNO(userName) || isEmpty(message))
             return;
         ReaderParams params = new ReaderParams(mActivity);
         String phoneNum = userName.replaceAll(" ", "");
         params.putExtraParams("mobile", phoneNum);
         params.putExtraParams("code", message);
-        params.putExtraParams("ver",BuildConfig.VERSION_NAME);
-        params.putExtraParams("area_code",String.valueOf(areaCode));
+        params.putExtraParams("ver", BuildConfig.VERSION_NAME);
+        params.putExtraParams("area_code", String.valueOf(areaCode));
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mMobileLoginUrl, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -105,9 +107,10 @@ public class LoginModel {
 
     /**
      * 波音登录
+     *
      * @param callback
      */
-    public void loginBoYin( final LoginResultCallback callback) {
+    public void loginBoYin(final LoginResultCallback callback) {
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("platform", "1");//1安卓  2iOS  3苹果商店
         params.putExtraParams("user_source", BuildConfig.app_source_boyin);

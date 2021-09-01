@@ -34,7 +34,7 @@ public class NickNameLoginFragment extends BaseButterKnifeFragment implements Lo
     Button mBtLogin;
     @BindView(R.id.activity_login_phone_clear)
     ImageView mImgClear;
-    boolean mIsEye = false;
+    boolean mIsEye = true;
     private LoginPresenter mPresenter;
 
     @Override
@@ -49,11 +49,11 @@ public class NickNameLoginFragment extends BaseButterKnifeFragment implements Lo
         mImgEye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsEye){
+                if (mIsEye) {
                     mEtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     mImgEye.setImageDrawable(activity.getResources().getDrawable(R.mipmap.login_password_eye_off));
                     mIsEye = false;
-                }else {
+                } else {
                     mEtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     mImgEye.setImageDrawable(activity.getResources().getDrawable(R.mipmap.login_password_eye));
                     mIsEye = true;
@@ -95,7 +95,7 @@ public class NickNameLoginFragment extends BaseButterKnifeFragment implements Lo
                     mImgClear.setVisibility(View.GONE);
                 } else {
                     if (!TextUtils.isEmpty(mEtNickName.getText().toString())) {
-                        if (!mEtNickName.getText().toString().matches(name)){
+                        if (!mEtNickName.getText().toString().matches(name)) {
                             MyToash.Toash(activity, activity.getResources().getString(R.string.string_register_error));
                         }
                         mImgClear.setVisibility(View.VISIBLE);
@@ -128,8 +128,8 @@ public class NickNameLoginFragment extends BaseButterKnifeFragment implements Lo
         mEtPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus){
-                    if (!mEtPassword.getText().toString().matches(password)){
+                if (!hasFocus) {
+                    if (!mEtPassword.getText().toString().matches(password)) {
                         MyToash.Toash(activity, activity.getResources().getString(R.string.string_password_error));
                     }
                 }
@@ -138,6 +138,10 @@ public class NickNameLoginFragment extends BaseButterKnifeFragment implements Lo
         mBtLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!mEtPassword.getText().toString().matches(password)) {
+                    MyToash.Toash(activity, activity.getResources().getString(R.string.string_password_error));
+                    return;
+                }
                 mPresenter.loginUser(new LoginActivity.LoginSuccess() {
                     @Override
                     public void success() {

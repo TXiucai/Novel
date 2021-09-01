@@ -124,7 +124,7 @@ public class HttpUtils {
                                         responseListener.onResponse(ReaderConfig.API_CRYPTOGRAPHY.equals(capi) ? AESUtil.decrypt(jsonObj.getString("data"), AESUtil.API_ASE_KEY, AESUtil.API_IV) : jsonObj.getString("data"));
                                         break;
                                     case 315:
-                                        MyToash.ToashSuccess(context, msg);
+                                        MyToash.ToashError(context, msg);
                                         responseListener.onResponse(code + "");
                                         break;
                                     case 301://登录已过期

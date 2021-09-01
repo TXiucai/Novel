@@ -65,7 +65,7 @@ public class DialogRegister {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().matches(mMath)) {
+                if (s.toString().matches(mMath) && FileUtils.isSimpleOrComplex(s.toString())) {
                     vipHolder.mTxRegister.setClickable(true);
                     vipHolder.mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_ff8350_20));
                 }
@@ -106,7 +106,7 @@ public class DialogRegister {
         mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_e6e6e6_20));
         String name = mEdName.getText().toString();
 
-        if (name != null && !TextUtils.equals(name, "") && name.matches(mMath)) {
+        if (name != null && !TextUtils.equals(name, "") && name.matches(mMath) && FileUtils.isSimpleOrComplex(name)) {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("user_name", name);
             String json = params.generateParamsJson();

@@ -8,6 +8,15 @@ public class BaseAd {
     public String ad_skip_url;//skip_url":"http://www.baidu.com", // 跳转地址
     public int ad_url_type;//'//'":1   // 跳转地址类型（1-内部跳转，2-外部跳转）
     public int advert_interval;//小说底部广告每间隔多少页显示
+    public String ad_subtitle;
+
+    public String getAd_subtitle() {
+        return ad_subtitle;
+    }
+
+    public void setAd_subtitle(String ad_subtitle) {
+        this.ad_subtitle = ad_subtitle;
+    }
 
     public int getAdvert_interval() {
         return advert_interval;

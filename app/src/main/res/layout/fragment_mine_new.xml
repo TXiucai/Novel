@@ -548,6 +548,13 @@
                         android:layout_marginTop="@dimen/dimens_6dp"
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tx_ad_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_ff8350"
+                        android:textSize="9sp" />
                 </LinearLayout>
 
                 <View

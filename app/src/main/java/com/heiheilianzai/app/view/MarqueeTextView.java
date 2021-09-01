@@ -3,6 +3,7 @@ package com.heiheilianzai.app.view;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -98,7 +99,8 @@ public class MarqueeTextView extends LinearLayout {
                     while (i < textArrays.size()) {
                         final int j = i;
                         TextView textView = new TextView(mContext);
-                        textView.setLines(1);
+                        textView.setSingleLine(true);
+                        textView.setEllipsize(TextUtils.TruncateAt.END);
                         textView.setText(textArrays.get(i).getContent());
                         textView.setTextSize(12);
                         textView.setGravity(Gravity.CENTER_VERTICAL);

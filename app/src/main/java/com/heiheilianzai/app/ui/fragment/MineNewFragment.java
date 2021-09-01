@@ -131,6 +131,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public ImageView mImgAd;
     @BindView(R.id.tx_ad)
     public TextView mTxAd;
+    @BindView(R.id.tx_ad_sub)
+    public TextView mTxAdSub;
     @BindView(R.id.fragment_mine_banner)
     public ConvenientBannerBookShelf mBanner;
     Gson gson = new Gson();
@@ -324,6 +326,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 BaseAd baseAd = my_center_small_icon_ad.getList().get(0);
                 MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgAd);
                 mTxAd.setText(baseAd.getAd_title());
+                if (baseAd.getAd_subtitle() != null) {
+                    mTxAdSub.setText(baseAd.getAd_subtitle());
+                }
                 mLlAd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

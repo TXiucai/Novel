@@ -25,6 +25,7 @@ public class MyToash {
     }
 
     public static void ToashError(Context activity, String Message) {
+        ZToast.setTextColor(activity.getResources().getColor(R.color.red));
         ZToast.MakeText((Activity) activity, Message, 1500, R.mipmap.tips_error).show();
     }
 
