@@ -272,15 +272,16 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 final List<Announce> announceList = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
                     Announce announce = new Announce();
-                    announce.setTitle(String.format(getString(R.string.string_success_vip_marquee), list.get(i).getMobile()) + list.get(i).getGood_title());
+                    announce.setContent(String.format(getString(R.string.string_success_vip_marquee), list.get(i).getMobile()) + list.get(i).getGood_title());
                     announceList.add(announce);
                 }
                 mMarquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        Intent intent = new Intent(AcquireBaoyueActivity.this, AnnounceActivity.class);
+                        //不需要点击
+                       /* Intent intent = new Intent(AcquireBaoyueActivity.this, AnnounceActivity.class);
                         intent.putExtra("announce_content", announceList.get(position).getTitle() + "/-/" + announceList.get(position).getContent());
-                        startActivity(intent);
+                        startActivity(intent);*/
                     }
                 });
             } else {

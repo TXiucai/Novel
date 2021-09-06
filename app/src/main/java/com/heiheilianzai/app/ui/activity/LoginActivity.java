@@ -12,7 +12,9 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -143,6 +145,18 @@ public class LoginActivity extends BaseActivity {
                 startActivity(new Intent(activity, AboutActivity.class).putExtra("url", ReaderConfig.getBaseUrl() + ReaderConfig.privacy).putExtra("flag", "privacy"));
                 break;
         }
+    }
+
+    /**
+     * 点击空白位置 隐藏软键盘
+     */
+    public boolean onTouchEvent(MotionEvent event) {
+        if (null != this.getCurrentFocus()) {
+
+            InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.onTouchEvent(event);
     }
 
     public interface LoginSuccess {

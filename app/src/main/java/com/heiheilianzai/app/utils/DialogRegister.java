@@ -39,6 +39,11 @@ import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 public class DialogRegister {
     private RegisterBackListener mRegisterBackListener;
     private String mMath = "[\\u4e00-\\u9fa5_a-zA-Z0-9_]{2,20}";
+    private boolean isFinish = false;
+
+    public void setFinish(boolean finish) {
+        isFinish = finish;
+    }
 
     public void setmRegisterBackListener(RegisterBackListener mRegisterBackListener) {
         this.mRegisterBackListener = mRegisterBackListener;
@@ -91,6 +96,9 @@ public class DialogRegister {
             public void onClick(View v) {
                 if (popupWindow != null) {
                     popupWindow.dismiss();
+                }
+                if (isFinish) {
+                    activity.finish();
                 }
             }
         });

@@ -1679,6 +1679,7 @@ public class PageFactory {
             } else {
                 if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
                     DialogRegister dialogRegister = new DialogRegister();
+                    dialogRegister.setFinish(true);
                     dialogRegister.getDialogLoginPop(mActivity);
                     dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
                         @Override
@@ -1690,6 +1691,7 @@ public class PageFactory {
                     });
                 }
             }
+
         }
     }
 

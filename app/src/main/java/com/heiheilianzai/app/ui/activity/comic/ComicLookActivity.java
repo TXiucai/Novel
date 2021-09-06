@@ -1432,6 +1432,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         } else {
             if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
                 DialogRegister dialogRegister = new DialogRegister();
+                dialogRegister.setFinish(true);
                 dialogRegister.getDialogLoginPop(activity);
                 dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
                     @Override

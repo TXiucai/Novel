@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -131,8 +132,8 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
         return R.layout.activity_book_info;
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.activity_book_info_add_shelf, R.id.activity_book_info_start_read,
-            R.id.activity_book_info_down, R.id.activity_book_info_content_xiangqing, R.id.activity_book_info_content_mulu})
+    @OnClick(value = {R.id.titlebar_back, R.id.ll_add, R.id.activity_book_info_start_read,
+            R.id.ll_down, R.id.activity_book_info_content_xiangqing, R.id.activity_book_info_content_mulu})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -151,7 +152,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     onclickTwo = false;
                 }
                 break;
-            case R.id.activity_book_info_add_shelf:
+            case R.id.ll_add:
                 addBookToLocalShelf();
                 break;
             case R.id.activity_book_info_start_read:
@@ -166,7 +167,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     ReaderConfig.integerList.add(1);
                 }
                 break;
-            case R.id.activity_book_info_down:
+            case R.id.ll_down:
                 if (App.isVip(activity)) {
                     DownDialog downDialog = new DownDialog();
                     downDialog.getDownoption(BookInfoActivity.this, mBaseBook, null);
