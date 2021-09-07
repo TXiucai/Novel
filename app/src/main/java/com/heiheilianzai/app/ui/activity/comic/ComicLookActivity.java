@@ -1070,6 +1070,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         mReadStarTime = System.currentTimeMillis();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initData();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshComicChapterList(ComicChapterEventbus comicChapterte) {//更新当前目录集合的 最近阅读图片记录
         ComicChapter comicChaptert = comicChapterte.comicChapter;

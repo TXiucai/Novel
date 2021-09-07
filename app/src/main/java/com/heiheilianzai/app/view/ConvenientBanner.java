@@ -25,6 +25,7 @@ import com.heiheilianzai.app.adapter.banner.CBPageAdapter;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.callback.CBPageChangeListener;
 import com.heiheilianzai.app.callback.OnItemClickListener;
+import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.holder.CBViewHolderCreator;
 import com.heiheilianzai.app.holder.DiscoverBannerHolderViewBook;
 import com.heiheilianzai.app.holder.DiscoveryBannerHolderViewComic;
@@ -484,42 +485,42 @@ public class ConvenientBanner<T> extends LinearLayout {
                 switch (content) {
                     case "sigin":  //     => '',
                         scheme.setClass(activity, TaskCenterActivity.class);
+                        activity.startActivity(scheme);
                         break;
                     case "task":  //     => '',
                         scheme.setClass(activity, TaskCenterActivity.class);
+                        activity.startActivity(scheme);
                         break;
                     case "recharge":  //     => '''',
                         scheme.setClass(activity, RechargeActivity.class);
+                        activity.startActivity(scheme);
                         break;
                     case "feedback":  //     => '''',
                         scheme.setClass(activity, FeedBackActivity.class);
+                        activity.startActivity(scheme);
                         break;
                     case "setting":  //     => '''',
                         scheme.setClass(activity, SettingsActivity.class);
+                        activity.startActivity(scheme);
                         break;
                     case "vip":  //     => '''',
                         scheme.setClass(activity, BaseOptionActivity.class);
                         scheme.putExtra("OPTION", BAOYUE);
                         scheme.putExtra("title", LanguageUtil.getString(activity, R.string.BaoyueActivity_title));
+                        activity.startActivity(scheme);
                         break;
                     case "login":  //     => '''',
-                        scheme.setClass(activity, LoginActivity.class);
+                        //scheme.setClass(activity, LoginActivity.class);
+                        MainHttpTask.getInstance().Gotologin(activity);
                         break;
                 }
-                activity.startActivity(scheme);
                 break;
             case 3:
-                if (Utils.isLogin(activity)) {
-                    content += "&uid=" + Utils.getUID(activity);
-                }
                 activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", content));
                 break;
                 //4.5行为一致的
             case 4:
             case 5:
-                if (Utils.isLogin(activity)) {
-                    content += "&uid=" + Utils.getUID(activity);
-                }
                 activity.startActivity(new Intent(activity, AboutActivity.class).
                         putExtra("url", content)
                         .putExtra("style", "4")

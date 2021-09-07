@@ -312,7 +312,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     if (Utils.isLogin(activity)) {
                         jump_url += "&uid=" + Utils.getUID(activity);
                     }
-                    if (redirect_type == 0) {
+                    if (redirect_type == 1) {
                         activity.startActivity(new Intent(activity, AboutActivity.class).
                                 putExtra("url", jump_url));
                     } else {

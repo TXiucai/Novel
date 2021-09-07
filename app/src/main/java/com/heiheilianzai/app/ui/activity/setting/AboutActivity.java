@@ -34,6 +34,7 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AcceptGiftHeadBean;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
@@ -357,8 +358,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
 
         @JavascriptInterface
         public void toLogin() {
-            Intent intent = new Intent(AboutActivity.this, LoginActivity.class);
-            startActivity(intent);
+            MainHttpTask.getInstance().Gotologin(AboutActivity.this);
         }
 
         @JavascriptInterface
