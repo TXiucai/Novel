@@ -22,6 +22,7 @@ android {
         versionCode gradle.ext.VERSION_CODE
         versionName gradle.ext.VERSION_NAME
         manifestPlaceholders = gradle.ext.MANIFESTPLACEHOLDERS
+
         buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
         buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
         buildConfigField "String", "app_wx_id", gradle.ext.APP_WX_ID
@@ -53,7 +54,43 @@ android {
         buildConfigField "String", "sa_server_url_uat", gradle.ext.SA_SERVER_URL_UAT
         buildConfigField "String", "sa_server_app_id", gradle.ext.SA_SERVER_APP_ID
         resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
+        buildConfigField "String", "XAD_ENV_APP_ID_DEBUG", gradle.ext.XAD_ENV_APP_ID_DEBUG
+        buildConfigField "String", "XAD_EVN_APP_SECRET_DEBUG", gradle.ext.XAD_EVN_APP_SECRET_DEBUG
+        buildConfigField "String", "XAD_ENV_APP_ID", gradle.ext.XAD_ENV_APP_ID
+        buildConfigField "String", "XAD_EVN_APP_SECRET", gradle.ext.XAD_EVN_APP_SECRET
+        buildConfigField "String", "XAD_EVN_APP_CHANNEL", gradle.ext.XAD_EVN_APP_CHANNEL
 
+        buildConfigField "String", "XAD_EVN_POS_SPLASH", gradle.ext.XAD_EVN_POS_SPLASH
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON", gradle.ext.XAD_EVN_POS_HOME_ICON
+        buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG", gradle.ext.XAD_EVN_POS_HOME_DIALOG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM
+        buildConfigField "String", "XAD_EVN_POS_COMIC_TOP", gradle.ext.XAD_EVN_POS_COMIC_TOP
+        buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND", gradle.ext.XAD_EVN_POS_APP_RECOMMEND
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_END", gradle.ext.XAD_EVN_POS_NOVEL_END
+        buildConfigField "String", "XAD_EVN_POS_COMIC_END", gradle.ext.XAD_EVN_POS_COMIC_END
+        buildConfigField "String", "XAD_EVN_POS_COMIC_DETAIL", gradle.ext.XAD_EVN_POS_COMIC_DETAIL
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL
+        buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC", gradle.ext.XAD_EVN_POS_BANNER_COMIC
+        buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL", gradle.ext.XAD_EVN_POS_BANNER_NOVEL
+
+        buildConfigField "String", "XAD_EVN_POS_SPLASH_DEBUG", gradle.ext.XAD_EVN_POS_SPLASH_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG_DEBUG", gradle.ext.XAD_EVN_POS_HOME_DIALOG_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_TOP_DEEBUG", gradle.ext.XAD_EVN_POS_COMIC_TOP_DEEBUG
+        buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND_DEBUG", gradle.ext.XAD_EVN_POS_APP_RECOMMEND_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_END_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_END_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_END_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_END_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_DETAIL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_NOVEL_DEBUG
         ndk {
             //选择要添加的对应cpu类型的.so库。为了兼容cpu，查看官网SDK的libs多添加几个
             abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'x86', 'x86_64'
@@ -181,6 +218,45 @@ def getAppConfig() {
         versionCode gradle.ext.VERSION_CODE
         versionName gradle.ext.VERSION_NAME
         manifestPlaceholders = gradle.ext.MANIFESTPLACEHOLDERS
+
+        buildConfigField "String", "XAD_ENV_APP_ID_DEBUG", gradle.ext.XAD_ENV_APP_ID_DEBUG
+        buildConfigField "String", "XAD_EVN_APP_SECRET_DEBUG", gradle.ext.XAD_EVN_APP_SECRET_DEBUG
+        buildConfigField "String", "XAD_ENV_APP_ID", gradle.ext.XAD_ENV_APP_ID
+        buildConfigField "String", "XAD_EVN_APP_SECRET", gradle.ext.XAD_EVN_APP_SECRET
+        buildConfigField "String", "XAD_EVN_APP_CHANNEL", gradle.ext.XAD_EVN_APP_CHANNEL
+
+        buildConfigField "String", "XAD_EVN_POS_SPLASH", gradle.ext.XAD_EVN_POS_SPLASH
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON", gradle.ext.XAD_EVN_POS_HOME_ICON
+        buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG", gradle.ext.XAD_EVN_POS_HOME_DIALOG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM
+        buildConfigField "String", "XAD_EVN_POS_COMIC_TOP", gradle.ext.XAD_EVN_POS_COMIC_TOP
+        buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND", gradle.ext.XAD_EVN_POS_APP_RECOMMEND
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_END", gradle.ext.XAD_EVN_POS_NOVEL_END
+        buildConfigField "String", "XAD_EVN_POS_COMIC_END", gradle.ext.XAD_EVN_POS_COMIC_END
+        buildConfigField "String", "XAD_EVN_POS_COMIC_DETAIL", gradle.ext.XAD_EVN_POS_COMIC_DETAIL
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL
+        buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC", gradle.ext.XAD_EVN_POS_BANNER_COMIC
+        buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL", gradle.ext.XAD_EVN_POS_BANNER_NOVEL
+
+        buildConfigField "String", "XAD_EVN_POS_SPLASH_DEBUG", gradle.ext.XAD_EVN_POS_SPLASH_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG_DEBUG", gradle.ext.XAD_EVN_POS_HOME_DIALOG_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_TOP_DEEBUG", gradle.ext.XAD_EVN_POS_COMIC_TOP_DEEBUG
+        buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND_DEBUG", gradle.ext.XAD_EVN_POS_APP_RECOMMEND_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_END_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_END_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_END_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_END_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_DETAIL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_NOVEL_DEBUG
+
         buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
         buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
         buildConfigField "String", "app_wx_id", gradle.ext.APP_WX_ID
@@ -216,7 +292,7 @@ def getAppConfig() {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     implementation "androidx.legacy:legacy-support-v4:${rootProject.xLegacy}"
     implementation "junit:junit:${rootProject.junit}"
     implementation "androidx.cardview:cardview:${rootProject.xCardview}"
@@ -267,7 +343,6 @@ dependencies {
     implementation "com.google.code.gson:gson:${rootProject.gson}"
     implementation "cn.jzvd:jiaozivideoplayer:${rootProject.jiaozivideoplayer}"
     implementation "com.danikula:videocache:${rootProject.videocache}"
-    implementation name: 'XAD_comm_1001009_release', ext: 'aar'
 
     // ==================================UI==================================
     // 进度条

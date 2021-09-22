@@ -40,6 +40,7 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
+import com.mobi.xad.XAdManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -132,6 +133,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 requestReadPhoneState();
                 getH5Domins();
                 getDomainHost();
+                initXad(api);
             }
         }, new OnError() {
             @Override
@@ -139,6 +141,11 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 handler.sendEmptyMessageDelayed(0, 500);
             }
         });
+    }
+
+    private void initXad(String api) {
+        XAdManager.INSTANCE.init(activity.getApplication(), BuildConfig.XAD_ENV_APP_ID, BuildConfig.XAD_EVN_APP_SECRET,
+                BuildConfig.XAD_EVN_APP_CHANNEL, api, BuildConfig.DEBUG);
     }
 
     /**

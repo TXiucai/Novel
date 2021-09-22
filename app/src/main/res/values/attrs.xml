@@ -32,7 +32,7 @@
     </declare-styleable>
 
     <declare-styleable name="CustomLayout">
-        <attr name="backgroundColor" format="reference" />
+        <attr name="backgroundColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ZoomRecyclerView">

@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.adsdk.xad.common.adapter.BaseRecyclerAdapter;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.event.EditEvent;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;

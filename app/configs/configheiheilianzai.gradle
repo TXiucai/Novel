@@ -87,4 +87,46 @@ gradle.ext {
     SA_SERVER_URL_UAT = "\"https://shence.jiushengliye.com/sa?project=YSA27TEST\""
     SA_SERVER_URL = "\"https://shence.jiushengliye.com/sa?project=YDA44\""
     SA_SERVER_APP_ID = "\"A44\""
+    //XAD广告配置
+
+    //uat
+    XAD_ENV_APP_ID_DEBUG = "\"k75b488bb7d834da8b3e0e3739247b977\""//APP_id
+    XAD_EVN_APP_SECRET_DEBUG = "\"s10ba9fcfac0c48d097754302651268f3\""//APP_Secret
+    //release
+    XAD_ENV_APP_ID = "\"ka66275dc1b0044288bd1db8874c2c9ac\""//APP_id
+    XAD_EVN_APP_SECRET = "\"seb7fa2ea25a1422e95c969bbda460cae\""//APP_Secret
+    XAD_EVN_APP_CHANNEL = "\"heihei\""//APP_Secret
+    XAD_EVN_POS_SPLASH = "\"313\""//闪屏页广告id
+    XAD_EVN_POS_HOME_ICON = "\"602554\""//首页Icon推荐
+    XAD_EVN_POS_HOME_DIALOG = "\"602553\""//首页弹窗广告
+    XAD_EVN_POS_HOME_COLUMN_NOVLE = "\"602556\""//小说栏目间广告
+    XAD_EVN_POS_HOME_COLUMN_COMIC = "\"602559\""//漫画栏目间广告
+    XAD_EVN_POS_NOVEL_BOTTOM = "\"602557\""//小说底部广告
+    XAD_EVN_POS_COMIC_TOP = "\"602558\""//漫画顶部广告
+    XAD_EVN_POS_APP_RECOMMEND = "\"602560\""//首页推荐APP
+    XAD_EVN_POS_COMIC_CHAPTER = "\"602561\""//漫画章节间广告
+    XAD_EVN_POS_NOVEL_END = "\"311\""//小说阅读末尾广告
+    XAD_EVN_POS_COMIC_END = "\"309\""//漫画阅读末尾广告
+    XAD_EVN_POS_COMIC_DETAIL = "\"307\""//漫画详情广告
+    XAD_EVN_POS_NOVEL_DETAIL = "\"305\""//小说详情广告
+    XAD_EVN_POS_BANNER_COMIC = "\"351\""//漫画轮播图广告
+    XAD_EVN_POS_BANNER_NOVEL = "\"293\""//小说轮播图广告
+
+    // 测试环境的广告位id
+    XAD_EVN_POS_SPLASH_DEBUG = "\"313\""//闪屏页广告id
+    XAD_EVN_POS_HOME_ICON_DEBUG = "\"602554\""//首页Icon推荐
+    XAD_EVN_POS_HOME_DIALOG_DEBUG = "\"602553\""//首页弹窗广告
+    XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG = "\"602556\""//小说栏目间广告
+    XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG = "\"602559\""//漫画栏目间广告
+    XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG = "\"602557\""//小说底部广告
+    XAD_EVN_POS_COMIC_TOP_DEEBUG = "\"602558\""//漫画顶部广告
+    XAD_EVN_POS_APP_RECOMMEND_DEBUG = "\"602560\""//首页推荐APP
+    XAD_EVN_POS_COMIC_CHAPTER_DEBUG = "\"602561\""//漫画章节间广告
+    XAD_EVN_POS_NOVEL_END_DEBUG = "\"311\""//小说阅读末尾广告
+    XAD_EVN_POS_COMIC_END_DEBUG = "\"309\""//漫画阅读末尾广告
+    XAD_EVN_POS_COMIC_DETAIL_DEBUG = "\"307\""//漫画详情广告
+    XAD_EVN_POS_NOVEL_DETAIL_DEBUG = "\"305\""//小说详情广告
+    XAD_EVN_POS_BANNER_COMIC_DEBUG = "\"351\""//漫画轮播图广告
+    XAD_EVN_POS_BANNER_NOVEL_DEBUG = "\"293\""//小说轮播图广告
+
 }
