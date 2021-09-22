@@ -26,10 +26,10 @@
                 android:id="@+id/tv_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dimens_12sp"
-                android:textColor="@color/white"
                 android:layout_marginLeft="@dimen/dimens_90dp"
-                android:layout_marginTop="@dimen/dimens_35dp"/>
+                android:layout_marginTop="@dimen/dimens_35dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_12sp" />
         </RelativeLayout>
 
         <TextView
@@ -79,6 +79,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimens_20dp"
                     android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/dialog_ll_website"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_10"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/string_no_down"
+                        android:textColor="@color/color_1a1a1a"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_tx_web"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/string_go_web"
+                        android:textColor="@color/color_196cf2"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/dialog_updateapp_layout"

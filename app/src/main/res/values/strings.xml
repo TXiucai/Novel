@@ -524,7 +524,7 @@
     <string name="dialog_vip_repeat">重试</string>
     <string name="string_order_create">订单生成中...</string>
     <string name="string_ordeer_undeal">您有1笔订单尚未支付哦~</string>
-    <string name="string_order_go">前往</string>
+    <string name="string_order_go">立即前往</string>
     <string name="vip_become_vip">恭喜您成为VIP</string>
     <string name="sign_rules">1.签到周为自然周，每周日为大奖日\n2.每自然周后，系统重置一次\n3.中断签到必须重新开始，没有补签</string>
     <string name="string_pay_close">关闭</string>
@@ -592,4 +592,6 @@
     <string name="string_login_phone">手机号登陆</string>
     <string name="string_login_nick">用户名登陆</string>
     <string name="string_login_register">未注册用户，登录后自动创建帐户</string>
+    <string name="string_no_down">无法下载？</string>
+    <string name="string_go_web">前往官网</string>
 </resources>

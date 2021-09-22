@@ -252,6 +252,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
         params.putExtraParams("nid", nid);
         params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
         params.putExtraParams("user_source", BuildConfig.app_source_boyin);
+        params.putExtraParams("hhlz_uid", String.valueOf(App.getUserInfoItem(activity).getUid()));
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BoyinConfig.DOWN_BOYIN, json, true, new HttpUtils.ResponseListener() {
             @Override

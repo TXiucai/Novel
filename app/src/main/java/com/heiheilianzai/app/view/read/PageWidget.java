@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -59,6 +60,7 @@ public class PageWidget extends View {
     boolean onTouchEventing;
     private BackPage backPage;
     private int page = 0;
+    private VolumClickListener mVolumClickListener;
 
     public void setBackPage(BackPage backPage) {
         this.backPage = backPage;
@@ -163,6 +165,36 @@ public class PageWidget extends View {
         } else {
             mAnimationProvider.drawStatic(canvas);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {//音量向上
+            Boolean isPre = mVolumClickListener.preVolumPage();
+            mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
+            if (isPre) {
+                page--;
+                backPage.backPage(page);
+            }
+            if (!isPre) {
+                noNext = true;
+                onTouchEventing = false;
+            }
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {//音量向下
+            Boolean isNext = mVolumClickListener.nextVolumPage();
+            mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+            if (isNext) {
+                page++;
+                backPage.backPage(page);
+            }
+            if (!isNext) {
+                onTouchEventing = false;
+                noNext = true;
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -413,5 +445,14 @@ public class PageWidget extends View {
 
     public interface BackPage {
         void backPage(int page);
+    }
+
+    public void setmVolumClickListener(VolumClickListener mVolumClickListener) {
+        this.mVolumClickListener = mVolumClickListener;
+    }
+
+    public interface VolumClickListener{
+        Boolean preVolumPage();
+        Boolean nextVolumPage();
     }
 }

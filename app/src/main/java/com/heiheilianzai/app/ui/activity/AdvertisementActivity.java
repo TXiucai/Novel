@@ -45,9 +45,10 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
     private void showWebsite() {
         String website = ShareUitls.getString(activity, "website", "");
-        if (!StringUtils.isEmpty(website)) {
+        String website_title = ShareUitls.getString(activity, "website_title", "");
+        if (!StringUtils.isEmpty(website_title)) {
             mTxWebsite.setVisibility(View.VISIBLE);
-            mTxWebsite.setText(String.format(getString(R.string.splash_website), website));
+            mTxWebsite.setText(String.format(getString(R.string.splash_website), website_title));
         } else {
             mTxWebsite.setVisibility(View.GONE);
         }

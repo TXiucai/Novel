@@ -101,25 +101,31 @@
 
         <RelativeLayout
             android:id="@+id/fragment_order"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimens_64dp"
-            android:layout_marginTop="@dimen/dimens_265dp"
-            android:layout_marginRight="@dimen/dp_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:gravity="center"
             android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimens_32dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:background="@drawable/shape_ff000000_20"
                 android:gravity="center"
-                android:paddingLeft="@dimen/dimens_20dp"
+                android:paddingLeft="@dimen/dimens_15dp"
                 android:paddingRight="@dimen/dimens_20dp">
+
+                <ImageView
+                    android:id="@+id/fragment_order_close"
+                    android:layout_width="@dimen/dimens_22dp"
+                    android:layout_height="@dimen/dimens_22dp"
+                    android:src="@mipmap/ic_home_notice_close" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
                     android:text="@string/string_ordeer_undeal"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
@@ -128,19 +134,13 @@
                     android:id="@+id/fragment_order_go"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/dimens_5dp"
+                    android:paddingLeft="@dimen/dimens_25dp"
                     android:text="@string/string_order_go"
                     android:textColor="@color/color_ff8350"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/fragment_order_close"
-                android:layout_width="@dimen/dimens_22dp"
-                android:layout_height="@dimen/dimens_22dp"
-                android:layout_alignParentRight="true"
-                android:src="@mipmap/close_red" />
         </RelativeLayout>
 
     </RelativeLayout>

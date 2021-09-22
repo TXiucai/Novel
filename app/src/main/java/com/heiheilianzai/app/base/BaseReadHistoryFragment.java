@@ -180,6 +180,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
         if (BoyinConfig.PHONIC_AUDIO_READ_LOG.equals(url)) {// 有声阅读历史
             params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
             params.putExtraParams("user_source", BuildConfig.app_source_boyin);
+            params.putExtraParams("hhlz_uid", String.valueOf(App.getUserInfoItem(activity).getUid()));
         }
         params.putExtraParams("page_num", current_page + "");
         String json = params.generateParamsJson();
@@ -236,6 +237,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
         if (BoyinConfig.PHONIC_REMOVE_AUDIO_READ_LOG.equals(url)) {//有声删除接口
             params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
             params.putExtraParams("user_source", BuildConfig.app_source_boyin);
+            params.putExtraParams("hhlz_uid", String.valueOf(App.getUserInfoItem(activity).getUid()));
             params.putExtraParams("nid", nid);
             params.putExtraParams("chapter_id", chapter_id);
         } else {//小说 漫画
@@ -260,6 +262,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
             params.putExtraParams("mobile", App.getUserInfoItem(activity).getMobile());
             params.putExtraParams("user_source", BuildConfig.app_source_boyin);
             params.putExtraParams("nid", log_id);
+            params.putExtraParams("hhlz_uid", String.valueOf(App.getUserInfoItem(activity).getUid()));
         } else if (BookConfig.del_read_log_MORE.equals(url)) { //小说
             params.putExtraParams("book_id", log_id);
         } else { //漫画

@@ -109,11 +109,12 @@ public class SplashActivity extends BaseAdvertisementActivity {
 
     private void showWebsite() {
         String website = ShareUitls.getString(activity, "website", "");
-        if (!StringUtils.isEmpty(website)) {
+        String website_title = ShareUitls.getString(activity, "website_title", "");
+        if (!StringUtils.isEmpty(website_title)) {
             mTxWebsite.setVisibility(View.VISIBLE);
-            mTxWebsite.setText(String.format(getString(R.string.splash_website), website));
+            mTxWebsite.setText(String.format(getString(R.string.splash_website), website_title));
             mTxWebsitePre.setVisibility(View.VISIBLE);
-            mTxWebsitePre.setText(String.format(getString(R.string.splash_website), website));
+            mTxWebsitePre.setText(String.format(getString(R.string.splash_website), website_title));
         } else {
             mTxWebsite.setVisibility(View.GONE);
             mTxWebsitePre.setVisibility(View.GONE);
@@ -223,6 +224,9 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         AppUpdate dataBean = new Gson().fromJson(response, AppUpdate.class);
                         if (!StringUtils.isEmpty(dataBean.getWebsite_android())) {
                             ShareUitls.putString(SplashActivity.this, "website", dataBean.getWebsite_android());
+                        }
+                        if (!StringUtils.isEmpty(dataBean.getWebsite_android_title())) {
+                            ShareUitls.putString(SplashActivity.this, "website_title", dataBean.getWebsite_android_title());
                         }
                         if (dataBean.getUnit_tag() != null) {
                             ReaderConfig.currencyUnit = dataBean.getUnit_tag().getCurrencyUnit();

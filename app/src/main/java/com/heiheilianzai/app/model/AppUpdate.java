@@ -61,6 +61,16 @@ public class AppUpdate {
         this.ad_position_other = ad_position_other;
     }
 
+    public String website_android_title;
+
+    public String getWebsite_android_title() {
+        return website_android_title;
+    }
+
+    public void setWebsite_android_title(String website_android_title) {
+        this.website_android_title = website_android_title;
+    }
+
     public String getWebsite_android() {
         return website_android;
     }

@@ -8,7 +8,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -182,6 +185,10 @@ public class UpdateApp {
         public ImageView dialog_close;
         @BindView(R.id.tv_link)
         public TextView tv_link;
+        @BindView(R.id.dialog_ll_website)
+        public LinearLayout dialog_ll_website;
+        @BindView(R.id.dialog_tx_web)
+        public TextView dialog_tx_web;
 
         public UpdateHolder(View view) {
             ButterKnife.bind(this, view);
@@ -233,7 +240,11 @@ public class UpdateApp {
         updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update));
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
-        updateHolder.tv_link.setText(mAppUpdate.website_android);
+        updateHolder.tv_link.setText(mAppUpdate.website_android_title);
+        SpannableString spannableString = new SpannableString(activity.getResources().getString(R.string.string_go_web));
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        updateHolder.dialog_tx_web.setText(spannableString);
         if (mAppUpdate.getUpdate() == 1) {
             updateHolder.dialog_close.setVisibility(View.VISIBLE);
             updateHolder.dialog_close.setOnClickListener(new View.OnClickListener() {
@@ -263,10 +274,21 @@ public class UpdateApp {
             public void onClick(View v) {
                 updateHolder.materialSeekBar.setVisibility(View.VISIBLE);
                 updateHolder.dialog_updateapp_layout.setVisibility(View.GONE);
+                updateHolder.dialog_ll_website.setVisibility(View.VISIBLE);
                 MyToash.Log("onDownloading", "111 " + flag);
                 if (!flag) {
                     flag = true;
                     downloadApk(activity, mAppUpdate, updateHolder);
+                }
+            }
+        });
+        updateHolder.dialog_tx_web.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!StringUtils.isEmpty(mAppUpdate.getWebsite_android())) {
+                    activity.startActivity(new Intent(activity, AboutActivity.class)
+                            .putExtra("url", mAppUpdate.getWebsite_android())
+                            .putExtra("style", "4"));
                 }
             }
         });

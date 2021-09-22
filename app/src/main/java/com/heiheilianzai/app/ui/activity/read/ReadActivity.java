@@ -491,6 +491,37 @@ public class ReadActivity extends BaseReadActivity {
                 }
             }
         });
+        bookpage.setmVolumClickListener(new PageWidget.VolumClickListener() {
+            @Override
+            public Boolean preVolumPage() {
+                if (AutoProgressBar.getInstance().isStarted()) {
+                    AutoProgressBar.getInstance().pause();
+                }
+                if (isShow || isSpeaking) {
+                    return false;
+                }
+                try {
+                    pageFactory.prePage();
+                } catch (Exception e) {
+                }
+                return !pageFactory.isfirstPage();
+            }
+
+            @Override
+            public Boolean nextVolumPage() {
+                if (AutoProgressBar.getInstance().isStarted()) {
+                    AutoProgressBar.getInstance().pause();
+                }
+                if (isShow || isSpeaking) {
+                    return false;
+                }
+                try {
+                    pageFactory.nextPage();
+                } catch (Exception e) {
+                }
+                return !pageFactory.islastPage();
+            }
+        });
         bookpage.setTouchListener(new PageWidget.TouchListener() {
             @Override
             public void center() {
