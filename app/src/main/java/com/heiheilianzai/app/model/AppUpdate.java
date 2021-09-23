@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.model;
 
+import java.util.List;
+
 /**
  * 系统参数
  */
@@ -22,6 +24,51 @@ public class AppUpdate {
     public String boyin_h5;
     public Version update_version;
     public String website_android;
+    public AdPositionBookBean ad_position_book;
+    public AdPositionComicBean ad_position_comic;
+    public AdPositionOtherBean ad_position_other;
+    public int sdk_ad_switch;//1为关闭中   2为开启了加载第三方
+    public String book_text_api;
+
+    public String getBook_text_api() {
+        return book_text_api;
+    }
+
+    public void setBook_text_api(String book_text_api) {
+        this.book_text_api = book_text_api;
+    }
+
+    public AdPositionBookBean getAd_position_book() {
+        return ad_position_book;
+    }
+
+    public void setAd_position_book(AdPositionBookBean ad_position_book) {
+        this.ad_position_book = ad_position_book;
+    }
+
+    public AdPositionComicBean getAd_position_comic() {
+        return ad_position_comic;
+    }
+
+    public void setAd_position_comic(AdPositionComicBean ad_position_comic) {
+        this.ad_position_comic = ad_position_comic;
+    }
+
+    public AdPositionOtherBean getAd_position_other() {
+        return ad_position_other;
+    }
+
+    public void setAd_position_other(AdPositionOtherBean ad_position_other) {
+        this.ad_position_other = ad_position_other;
+    }
+
+    public int getSdk_ad_switch() {
+        return sdk_ad_switch;
+    }
+
+    public void setSdk_ad_switch(int sdk_ad_switch) {
+        this.sdk_ad_switch = sdk_ad_switch;
+    }
 
     public String getWebsite_android() {
         return website_android;
@@ -192,6 +239,186 @@ public class AppUpdate {
 
         public void setMoney_unit(String money_unit) {
             this.money_unit = money_unit;
+        }
+    }
+
+    public static class AdPositionBookBean {
+        /**
+         * id : 1
+         * type : 1
+         * ad_type : 1
+         * position : 1
+         * product : 1
+         * sdk_switch : 2
+         */
+
+        private List<AppUpdate.ListBean> list;
+
+        public List<AppUpdate.ListBean> getList() {
+            return list;
+        }
+
+        public void setList(List<AppUpdate.ListBean> list) {
+            this.list = list;
+        }
+
+    }
+
+    public static class AdPositionComicBean {
+        /**
+         * id : 25
+         * type : 2
+         * ad_type : 1
+         * position : 1
+         * product : 1
+         * sdk_switch : 2
+         */
+
+        private List<AppUpdate.ListBean> list;
+
+        public List<AppUpdate.ListBean> getList() {
+            return list;
+        }
+
+        public void setList(List<AppUpdate.ListBean> list) {
+            this.list = list;
+        }
+
+
+    }
+
+    public static class ListBean {
+        private String id;
+        private String type;
+        private String ad_type;
+        private String position;
+        private String product;
+        private String sdk_switch;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getAd_type() {
+            return ad_type;
+        }
+
+        public void setAd_type(String ad_type) {
+            this.ad_type = ad_type;
+        }
+
+        public String getPosition() {
+            return position;
+        }
+
+        public void setPosition(String position) {
+            this.position = position;
+        }
+
+        public String getProduct() {
+            return product;
+        }
+
+        public void setProduct(String product) {
+            this.product = product;
+        }
+
+        public String getSdk_switch() {
+            return sdk_switch;
+        }
+
+        public void setSdk_switch(String sdk_switch) {
+            this.sdk_switch = sdk_switch;
+        }
+    }
+
+    public static class AdPositionOtherBean {
+        /**
+         * icon_index : 2
+         * app_index : 2
+         * start_page_index : 2
+         * alert_index : 2
+         * book_banner_index : 2
+         * comic_banner_index : 2
+         */
+
+        private AdPositionOtherBean.ListBean list;
+
+        public AdPositionOtherBean.ListBean getList() {
+            return list;
+        }
+
+        public void setList(AdPositionOtherBean.ListBean list) {
+            this.list = list;
+        }
+
+        public static class ListBean {
+            private int icon_index;
+            private int app_index;
+            private int start_page_index;
+            private int alert_index;
+            private int book_banner_index;
+            private int comic_banner_index;
+
+            public int getIcon_index() {
+                return icon_index;
+            }
+
+            public void setIcon_index(int icon_index) {
+                this.icon_index = icon_index;
+            }
+
+            public int getApp_index() {
+                return app_index;
+            }
+
+            public void setApp_index(int app_index) {
+                this.app_index = app_index;
+            }
+
+            public int getStart_page_index() {
+                return start_page_index;
+            }
+
+            public void setStart_page_index(int start_page_index) {
+                this.start_page_index = start_page_index;
+            }
+
+            public int getAlert_index() {
+                return alert_index;
+            }
+
+            public void setAlert_index(int alert_index) {
+                this.alert_index = alert_index;
+            }
+
+            public int getBook_banner_index() {
+                return book_banner_index;
+            }
+
+            public void setBook_banner_index(int book_banner_index) {
+                this.book_banner_index = book_banner_index;
+            }
+
+            public int getComic_banner_index() {
+                return comic_banner_index;
+            }
+
+            public void setComic_banner_index(int comic_banner_index) {
+                this.comic_banner_index = comic_banner_index;
+            }
         }
     }
 }

@@ -11,6 +11,15 @@ public class HomeNotice {
     private String jump_url;
     private String announ_type;
     private String text_content;
+    private String user_parame_need;;
+
+    public String getUser_parame_need() {
+        return user_parame_need;
+    }
+
+    public void setUser_parame_need(String user_parame_need) {
+        this.user_parame_need = user_parame_need;
+    }
 
     public String getText_content() {
         return text_content;

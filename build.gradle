@@ -113,4 +113,6 @@ ext {
     BaseRecyclerViewAdapterHelper = '2.9.50'
     imagepicker = '0.6.1'
     pickView = '4.1.9'
+    nanohttpd = '2.3.1'
+    retrofit2 = '2.7.0'
 }

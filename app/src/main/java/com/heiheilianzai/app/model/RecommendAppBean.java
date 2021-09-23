@@ -44,6 +44,15 @@ public class RecommendAppBean {
         private String display_order;
         private String created_at;
         private String updated_at;
+        private String user_parame_need;
+
+        public String getUser_parame_need() {
+            return user_parame_need;
+        }
+
+        public void setUser_parame_need(String user_parame_need) {
+            this.user_parame_need = user_parame_need;
+        }
 
         public String getId() {
             return id;

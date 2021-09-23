@@ -292,7 +292,7 @@ def getAppConfig() {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.legacy:legacy-support-v4:${rootProject.xLegacy}"
     implementation "junit:junit:${rootProject.junit}"
     implementation "androidx.cardview:cardview:${rootProject.xCardview}"
@@ -320,6 +320,10 @@ dependencies {
     implementation files('libs/umeng-share-QQ-simplify-6.9.8.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.8.jar')
     implementation files('libs/umeng-sharetool-6.9.8.jar')
+    implementation (name: 'XAD_comm_1210709_release', ext: 'aar')
+    implementation "org.nanohttpd:nanohttpd:${rootProject.nanohttpd}"
+
+
     // --- 极光
     implementation "cn.jiguang.sdk:jpush:${rootProject.jiguang_jpush}"  // 此处以JPush 3.3.2 版本为例。
     implementation "cn.jiguang.sdk:jcore:${rootProject.jiguang_jcore}"  // 此处以JCore 2.1.0 版本为例。
@@ -404,6 +408,10 @@ dependencies {
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:${rootProject.rxjava}"
     implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxandroid}"
+
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofit2}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.retrofit2}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofit2}"
     // 添加 Sensors Analytics SDK 依赖
     implementation "com.sensorsdata.analytics.android:SensorsAnalyticsSDK:${rootProject.SensorsAnalyticsSDK}"
     // 下载库

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.PrefConst;
@@ -30,11 +31,17 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
 import androidx.fragment.app.FragmentActivity;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -180,6 +187,38 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
      * 获取开屏广告加载内容，并将数据缓存。图片下载到本地。
      */
     public void getOpenScreen() {
+        if (ReaderConfig.OTHER_SDK_AD.getStart_page_index() == 2 && (ReaderConfig.ad_switch == 2)) {
+            SdkSplashAd();
+        } else {
+            LocalSplashAd();
+        }
+    }
+
+    private void SdkSplashAd() {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.XAD_EVN_POS_SPLASH_DEBUG, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    Startpage startpage = new Startpage();
+                    startpage.setCountdown_second(String.valueOf(list.get(0).getCountDown()));
+                    startpage.setImage(list.get(0).getMaterial().getImageUrl());
+                    startpage.setContent(list.get(0).getAdExtra().get("content"));
+                    startpage.setSkip_type(Integer.valueOf(list.get(0).getAdExtra().get("skip_type")));
+                    ShareUitls.putString(App.getContext(), PrefConst.ADVERTISING_JSON_KAY, new Gson().toJson(startpage));
+                    preloadAdvertisingImg(startpage);
+                } catch (Exception e) {
+                    LocalSplashAd();
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                LocalSplashAd();
+            }
+        });
+    }
+
+    private void LocalSplashAd() {
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mOpenScreen, json, false, new HttpUtils.ResponseListener() {

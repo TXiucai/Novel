@@ -111,6 +111,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
     public void setStartpageView(Startpage startpage) {
         if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
+            time = Integer.valueOf(startpage.getCountdown_second());
             setAdImageView(activity_splash_im, startpage, activity, new OnAdImageListener() {
                 @Override
                 public void onAnimationEnd() {

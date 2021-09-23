@@ -5,6 +5,7 @@ import android.app.Dialog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,12 +150,17 @@ public class RecomendApp {
             RecommendAppBean.AppListBean appListBean = appListBeans.get(position);
             MyPicasso.GlideImageNoSize(context, appListBean.getApp_logo(), appHolder.ivLogo);
             appHolder.tvName.setText(appListBean.getApp_name());
+            String user_parame_need = appListBean.getUser_parame_need();
             appHolder.tvInstall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!StringUtils.isEmpty(appListBean.getDown_link())) {
+                    String down_link = appListBean.getDown_link();
+                    if (!StringUtils.isEmpty(down_link)) {
+                        if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need,"2") && !down_link.contains("&uid=")) {
+                            down_link += "&uid=" + Utils.getUID(activity);
+                        }
                         activity.startActivity(new Intent(activity, AboutActivity.class).
-                                putExtra("url", appListBean.getDown_link())
+                                putExtra("url", down_link)
                                 .putExtra("style", "4"));
                     }
                 }

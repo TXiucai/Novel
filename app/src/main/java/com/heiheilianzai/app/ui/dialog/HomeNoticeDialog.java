@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -22,6 +23,7 @@ import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -100,9 +102,14 @@ public class HomeNoticeDialog {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
+                String user_parame_need = homeNotice.get(mPosition).getUser_parame_need();
+                String jump_url = homeNotice.get(mPosition).getJump_url();
+                if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need,"2") && !jump_url.contains("&uid=")) {
+                    jump_url += "&uid=" + Utils.getUID(activity);
+                }
                 Intent intent = new Intent();
                 intent.setClass(activity, WebViewActivity.class);
-                intent.putExtra("url", homeNotice.get(mPosition).getJump_url());
+                intent.putExtra("url", jump_url);
                 activity.startActivity(intent);
             }
         };

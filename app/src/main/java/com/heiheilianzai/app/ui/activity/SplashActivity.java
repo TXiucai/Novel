@@ -41,15 +41,21 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.mobi.xad.XAdManager;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import androidx.annotation.NonNull;
-
 
 import butterknife.BindView;
 
@@ -130,10 +136,10 @@ public class SplashActivity extends BaseAdvertisementActivity {
         ConcurrentUrlhelpterKt.getFastUrl(new OnCompletUrl() {
             @Override
             public void onComplteApi(@NotNull String api) {
+                initXad(api);
                 requestReadPhoneState();
                 getH5Domins();
                 getDomainHost();
-                initXad(api);
             }
         }, new OnError() {
             @Override
@@ -144,9 +150,10 @@ public class SplashActivity extends BaseAdvertisementActivity {
     }
 
     private void initXad(String api) {
-        XAdManager.INSTANCE.init(activity.getApplication(), BuildConfig.XAD_ENV_APP_ID, BuildConfig.XAD_EVN_APP_SECRET,
-                BuildConfig.XAD_EVN_APP_CHANNEL, api, BuildConfig.DEBUG);
+        XAdManager.INSTANCE.init(activity.getApplication(), BuildConfig.XAD_ENV_APP_ID,
+                BuildConfig.XAD_EVN_APP_SECRET, BuildConfig.XAD_EVN_APP_CHANNEL, api, BuildConfig.DEBUG);
     }
+
 
     /**
      * 获取服务端url
@@ -223,9 +230,17 @@ public class SplashActivity extends BaseAdvertisementActivity {
                             ReaderConfig.currencyUnit = dataBean.getUnit_tag().getCurrencyUnit();
                             ReaderConfig.subUnit = dataBean.getUnit_tag().getSubUnit();
                         }
+                        if (!StringUtils.isEmpty(dataBean.getBook_text_api())) {
+                            ShareUitls.putString(App.getContext(), PrefConst.NOVEL_API, dataBean.getBook_text_api());
+                        }
                         if (USE_AD_FINAL) {
-                            ReaderConfig.ad_switch = dataBean.ad_switch;
-                            ReaderConfig.USE_AD = dataBean.ad_switch == 1;
+                            ReaderConfig.ad_switch = dataBean.sdk_ad_switch;
+                            ReaderConfig.USE_AD = dataBean.sdk_ad_switch == 1;
+                            ReaderConfig.NOVEL_SDK_AD.clear();
+                            ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());
+                            ReaderConfig.COMIC_SDK_AD.clear();
+                            ReaderConfig.COMIC_SDK_AD.addAll(dataBean.getAd_position_comic().getList());
+                            ReaderConfig.OTHER_SDK_AD = dataBean.getAd_position_other().getList();
                         }
                         App.putDailyStartPageMax(dataBean.daily_max_start_page);
                         getOpenScreen();
@@ -302,6 +317,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
     public void setOpenScreenView(Startpage startpage) {
         this.startpage = startpage;
         if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
+            time = Integer.valueOf(startpage.getCountdown_second());
             String flieName = ShareUitls.getString(getApplicationContext(), PrefConst.ADVERTISING_IMG_KAY, "");
             if (!StringUtils.isEmpty(flieName)) {
                 Glide.with(activity).load(new File(flieName)).into(activity_splash_im);

@@ -8,6 +8,7 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.http.ResultCallback;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.ShareUitls;
 
@@ -101,6 +102,9 @@ public class ReaderConfig {
     //是否使用广告
     public static boolean USE_AD = true;
     public static final boolean USE_AD_FINAL = true;
+    public static List<AppUpdate.ListBean> NOVEL_SDK_AD = new ArrayList<>();
+    public static List<AppUpdate.ListBean> COMIC_SDK_AD = new ArrayList<>();
+    public static AppUpdate.AdPositionOtherBean.ListBean OTHER_SDK_AD = new AppUpdate.AdPositionOtherBean.ListBean();
     public static final int READBUTTOM_HEIGHT = 55;//yeudulibu AD
     public static final String BASE_PAY = "";
     public static final String IMG_CRYPTOGRAPHIC_POSTFIX = "?c";
@@ -232,7 +236,7 @@ public class ReaderConfig {
      * 用户名登录
      */
     public static final String mUsernameLoginUrl = "/user/account-login";
-     /**
+    /**
      * 新用户名登录
      */
     public static final String mUsernameLoginUrlNew = "/user-new/user-name-login";

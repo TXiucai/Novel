@@ -8,6 +8,15 @@ public class Startpage {
     public String content;
     public int skip_type;
     public String title;
+    public  String countdown_second;
+
+    public String getCountdown_second() {
+        return countdown_second;
+    }
+
+    public void setCountdown_second(String countdown_second) {
+        this.countdown_second = countdown_second;
+    }
 
     public String getImage() {
         return image;

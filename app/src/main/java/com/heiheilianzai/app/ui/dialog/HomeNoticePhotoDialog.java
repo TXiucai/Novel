@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.dialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,9 +45,14 @@ public class HomeNoticePhotoDialog {
         homeNoticePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String user_parame_need =homeNotice.getUser_parame_need();
+                String jump_url =homeNotice.getJump_url();
+                if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need,"2") && !jump_url.contains("&uid=")) {
+                    jump_url += "&uid=" + Utils.getUID(activity);
+                }
                 Intent intent = new Intent();
                 intent.setClass(activity, WebViewActivity.class);
-                intent.putExtra("url", homeNotice.getJump_url());
+                intent.putExtra("url", jump_url);
                 activity.startActivity(intent);
             }
         });

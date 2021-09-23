@@ -151,7 +151,8 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                     String url_type = mFloatMainBean.getUrl_type();// 1 内置浏览器  2外部浏览器（活动中心）  3 内置应用
                     String link_url = mFloatMainBean.getLink_url();
                     String link_type = mFloatMainBean.getLink_type();//1 配置连接 2活动中心  3福利中心
-                    if (Utils.isLogin(activity) && TextUtils.equals(link_type, "2")) {
+                    String user_parame_need = mFloatMainBean.getUser_parame_need();
+                    if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !link_url.contains("&uid=")) {
                         link_url += "&uid=" + Utils.getUID(activity);
                     }
                     if (!TextUtils.isEmpty(url_type)) {

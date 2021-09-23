@@ -306,10 +306,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 String jump_url = recommeListBean.getJump_url();
                 int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  小说   1为漫画',
                 int redirect_type = Integer.valueOf(recommeListBean.getRedirect_type());//默认为0  内置应用  1为内置浏览器   2为外部浏览器
+                int user_parame_need = Integer.valueOf(recommeListBean.getUser_parame_need());//用户参数是否需要拼接 1为不需要   2为强制需要拼接
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
                 intent.putExtra("PRODUCT", recommend_type == 0);
                 if (jump_type == 0 || jump_type == 5) {
-                    if (Utils.isLogin(activity)) {
+                    if (Utils.isLogin(activity) && user_parame_need == 2 && !jump_url.contains("&uid=")) {
                         jump_url += "&uid=" + Utils.getUID(activity);
                     }
                     if (redirect_type == 1) {

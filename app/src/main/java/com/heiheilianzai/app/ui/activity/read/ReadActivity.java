@@ -281,7 +281,9 @@ public class ReadActivity extends BaseReadActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        initData();
+        if (!Utils.isAppOnForeground(activity)) {
+            initData();
+        }
     }
 
     @Override
