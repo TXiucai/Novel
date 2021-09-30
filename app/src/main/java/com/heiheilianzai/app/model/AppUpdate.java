@@ -27,7 +27,6 @@ public class AppUpdate {
     public AdPositionBookBean ad_position_book;
     public AdPositionComicBean ad_position_comic;
     public AdPositionOtherBean ad_position_other;
-    public int sdk_ad_switch;//1为关闭中   2为开启了加载第三方
     public String book_text_api;
 
     public String getBook_text_api() {
@@ -60,14 +59,6 @@ public class AppUpdate {
 
     public void setAd_position_other(AdPositionOtherBean ad_position_other) {
         this.ad_position_other = ad_position_other;
-    }
-
-    public int getSdk_ad_switch() {
-        return sdk_ad_switch;
-    }
-
-    public void setSdk_ad_switch(int sdk_ad_switch) {
-        this.sdk_ad_switch = sdk_ad_switch;
     }
 
     public String getWebsite_android() {
@@ -288,6 +279,7 @@ public class AppUpdate {
     }
 
     public static class ListBean {
+        //1为关闭中   2为开启了加载第三方
         private String id;
         private String type;
         private String ad_type;
@@ -365,6 +357,7 @@ public class AppUpdate {
         }
 
         public static class ListBean {
+            //1为关闭中   2为开启了加载第三方
             private int icon_index;
             private int app_index;
             private int start_page_index;

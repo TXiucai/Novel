@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.base;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.headerfooter.songhang.library.SmartRecyclerAdapter;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.HomeRecommendBean;
+import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
@@ -41,6 +45,10 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.ViewUtils;
 import com.heiheilianzai.app.view.ConvenientBanner;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -99,7 +107,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     @Override
     protected void initData() {
         getData();
-        getCacheData();
     }
 
     protected void initViews() {
@@ -277,6 +284,20 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     protected abstract void getHomeRecommend(RecyclerView recyclerView);
 
     protected void getHomeRecommend(RecyclerView recyclerView, int recommendType) {
+        String type;
+        if (recommendType == 0) {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL;
+        } else {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC;
+        }
+        if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2) {
+            sdkIconAd(recyclerView, recommendType, type);
+        } else {
+            localIconAd(recyclerView, recommendType);
+        }
+    }
+
+    private void localIconAd(RecyclerView recyclerView, int recommendType) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_type", String.valueOf(recommendType));//男频
         String json = params.generateParamsJson();
@@ -291,6 +312,37 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             @Override
             public void onErrorResponse(String ex) {
 
+            }
+        });
+    }
+
+    private void sdkIconAd(RecyclerView recyclerView, int recommendType, String type) {
+        XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    List<HomeRecommendBean.RecommeListBean> recomme_list = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        HomeRecommendBean.RecommeListBean recommeListBean = new HomeRecommendBean.RecommeListBean();
+                        AdInfo adInfo = list.get(i);
+                        recommeListBean.setImg_icon(adInfo.getMaterial().getImageUrl());
+                        recommeListBean.setJump_url(adInfo.getAdExtra().get("jump_url"));
+                        recommeListBean.setJump_type(adInfo.getAdExtra().get("jump_type"));
+                        recommeListBean.setRecommend_type(adInfo.getAdExtra().get("recommend_type"));
+                        recommeListBean.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
+                        recommeListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                        recommeListBean.setTitle(adInfo.getAdExtra().get("title"));
+                        recomme_list.add(recommeListBean);
+                        initRecommend(recyclerView, recomme_list);
+                    }
+                } catch (Exception e) {
+                    localIconAd(recyclerView, recommendType);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localIconAd(recyclerView, recommendType);
             }
         });
     }
@@ -463,6 +515,51 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 加载Banner数据并写入缓存
      */
     protected void getBannerData(String kayCache, String url) {
+        String type;
+        if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER))
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_NOVEL;
+        else {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_COMIC;
+        }
+        if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2 || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2) {
+            sdkBannerAd(kayCache, url, type);
+        } else {
+            localBannerAd(kayCache, url);
+        }
+    }
+
+    private void sdkBannerAd(String kayCache, String url, String type) {
+        XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    List<BannerItemStore> bannerItemStores = new ArrayList<>();
+                    for (int i = 0; i < list.size(); i++) {
+                        BannerItemStore bannerItemStore = new BannerItemStore();
+                        AdInfo adInfo = list.get(i);
+                        bannerItemStore.setAction(Integer.valueOf(adInfo.getAdExtra().get("action")));
+                        bannerItemStore.setContent(adInfo.getAdExtra().get("content"));
+                        bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
+                        bannerItemStores.add(bannerItemStore);
+                    }
+                    String json = new Gson().toJson(bannerItemStores);
+                    if (!StringUtils.isEmpty(json)) {
+                        ShareUitls.putMainHttpTaskString(activity, kayCache, json);
+                        getHeaderView(json);
+                    }
+                } catch (Exception e) {
+                    localBannerAd(kayCache, url);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localBannerAd(kayCache, url);
+            }
+        });
+    }
+
+    private void localBannerAd(String kayCache, String url) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("channel_id", "1");
         String json = params.generateParamsJson();

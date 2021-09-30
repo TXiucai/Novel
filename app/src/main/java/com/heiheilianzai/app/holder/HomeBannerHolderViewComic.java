@@ -48,9 +48,10 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
 
     @Override
     public void UpdateUI(Context context, int position, BannerItemStore data) {//- ImageUtil.dp2px(activity, 20)
-        int[] colors = {0xE6FFFFFF, Color.parseColor(data.color)};
-        GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
-        item_store_entrance_comic_bgVIEW.setBackground(g);
+        //取消背景颜色
+        // int[] colors = {0xE6FFFFFF, Color.parseColor(data.color)};
+        //GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
+        //item_store_entrance_comic_bgVIEW.setBackground(g);
         if (flag == 0) {
             MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
             MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.book_def_cross);

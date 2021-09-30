@@ -97,7 +97,8 @@ gradle.ext {
     XAD_EVN_APP_SECRET = "\"s10ba9fcfac0c48d097754302651268f3\""//APP_Secret
     XAD_EVN_APP_CHANNEL = "\"heihei\""//APP_Secret
     XAD_EVN_POS_SPLASH = "\"313\""//闪屏页广告id
-    XAD_EVN_POS_HOME_ICON = "\"602554\""//首页Icon推荐
+    XAD_EVN_POS_HOME_ICON_NOVEL = "\"602563\""//首页Icon推荐
+    XAD_EVN_POS_HOME_ICON_COMIC = "\"602554\""//首页Icon推荐
     XAD_EVN_POS_HOME_DIALOG = "\"602553\""//首页弹窗广告
     XAD_EVN_POS_HOME_COLUMN_NOVLE = "\"602556\""//小说栏目间广告
     XAD_EVN_POS_HOME_COLUMN_COMIC = "\"602559\""//漫画栏目间广告
@@ -114,7 +115,8 @@ gradle.ext {
 
     // 测试环境的广告位id
     XAD_EVN_POS_SPLASH_DEBUG = "\"313\""//闪屏页广告id
-    XAD_EVN_POS_HOME_ICON_DEBUG = "\"602554\""//首页Icon推荐
+    XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG = "\"602554\""//首页Icon推荐
+    XAD_EVN_POS_HOME_ICON_COMIC_DEBUG = "\"602563\""//首页Icon推荐
     XAD_EVN_POS_HOME_DIALOG_DEBUG = "\"602553\""//首页弹窗广告
     XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG = "\"602556\""//小说栏目间广告
     XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG = "\"602559\""//漫画栏目间广告

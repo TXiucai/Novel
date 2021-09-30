@@ -187,15 +187,15 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
      * 获取开屏广告加载内容，并将数据缓存。图片下载到本地。
      */
     public void getOpenScreen() {
-        if (ReaderConfig.OTHER_SDK_AD.getStart_page_index() == 2 && (ReaderConfig.ad_switch == 2)) {
-            SdkSplashAd();
+        if (ReaderConfig.OTHER_SDK_AD.getStart_page_index() == 2) {
+            sdkSplashAd();
         } else {
-            LocalSplashAd();
+            localSplashAd();
         }
     }
 
-    private void SdkSplashAd() {
-        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.XAD_EVN_POS_SPLASH_DEBUG, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+    private void sdkSplashAd() {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_SPLASH_DEBUG : BuildConfig.XAD_EVN_POS_SPLASH, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
             @Override
             public void onRequestOk(List<AdInfo> list) {
                 try {
@@ -207,18 +207,18 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
                     ShareUitls.putString(App.getContext(), PrefConst.ADVERTISING_JSON_KAY, new Gson().toJson(startpage));
                     preloadAdvertisingImg(startpage);
                 } catch (Exception e) {
-                    LocalSplashAd();
+                    localSplashAd();
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                LocalSplashAd();
+                localSplashAd();
             }
         });
     }
 
-    private void LocalSplashAd() {
+    private void localSplashAd() {
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mOpenScreen, json, false, new HttpUtils.ResponseListener() {
