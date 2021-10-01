@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.activity.comic;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.ComicChapterCatalogAdapter;
 import com.heiheilianzai.app.base.App;
@@ -23,6 +25,8 @@ import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
 import com.heiheilianzai.app.utils.DialogComicChapter;
@@ -32,6 +36,10 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
 import org.json.JSONObject;
 
@@ -70,6 +78,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
     private int mPageNum = 1;//页数
     private int orderby = 1;//1 正序 2 倒序
     private int mTotalPage, size;
+    private ComicChapter mChapterAd;
 
     @OnClick(value = {R.id.titlebar_back,
             R.id.fragment_comicinfo_mulu_dangqian, R.id.fragment_comicinfo_mulu_zhiding
@@ -165,10 +174,44 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                 }
             }
         });
-        comicChapterCatalogs =new ArrayList<>();
+        comicChapterCatalogs = new ArrayList<>();
         comicChapterCatalogAdapter = new ComicChapterCatalogAdapter(false, null, activity, currentChapter_id, comicChapterCatalogs, ImageUtil.dp2px(activity, 96));
         fragment_comicinfo_mulu_list.setAdapter(comicChapterCatalogAdapter);
-        httpData(activity,comic_id);
+        getSdkChapterAd(activity, comic_id);
+    }
+
+    private void getSdkChapterAd(Activity activity, String comic_id) {
+
+        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+                    @Override
+                    public void onRequestOk(List<AdInfo> list) {
+                        try {
+                            //先拿第三方广告然后替换原数据
+                            httpData(activity, comic_id);
+                            AdInfo adInfo = list.get(0);
+                            mChapterAd = new ComicChapter();
+                            mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                            mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
+                            mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                            mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        } catch (Exception e) {
+                            httpData(activity, comic_id);
+                        }
+                    }
+
+                    @Override
+                    public void onRequestFailed(int i, String s) {
+                        httpData(activity, comic_id);
+                    }
+                })1
+                return;
+            } else {
+                httpData(activity, comic_id);
+            }
+        }
     }
 
     public void httpData(Activity activity, String comic_id) {
@@ -199,7 +242,11 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                                         comicChapterCatalogs.add(comicChapter);
                                     }
                                 } else {
-                                    comicChapterCatalogs.add(comicChapter);
+                                    if (comicChapter.getAd_image() != null && mChapterAd != null) {
+                                        comicChapterCatalogs.add(mChapterAd);
+                                    } else {
+                                        comicChapterCatalogs.add(comicChapter);
+                                    }
                                 }
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {

@@ -38,6 +38,15 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     private String update_time;
     private boolean is_buy_status;
     private String is_limited_free;//0否1是
+    private String user_parame_need;
+
+    public String getUser_parame_need() {
+        return user_parame_need;
+    }
+
+    public void setUser_parame_need(String user_parame_need) {
+        this.user_parame_need = user_parame_need;
+    }
 
     public String getIs_limited_free() {
         return is_limited_free;

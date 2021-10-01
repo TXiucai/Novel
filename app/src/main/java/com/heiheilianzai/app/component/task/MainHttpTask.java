@@ -127,8 +127,6 @@ public class MainHttpTask {
                                         AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, mUserInfo.getUser_token());
                                         if (mUserInfo.getIs_vip() == 1) {
                                             ReaderConfig.USE_AD = false;
-                                        } else {
-                                            ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                                         }
                                     }
                                     break;

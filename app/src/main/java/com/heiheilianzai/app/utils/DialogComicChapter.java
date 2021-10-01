@@ -3,6 +3,7 @@ package com.heiheilianzai.app.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +17,22 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.ComicVChapterCatalogAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
 import org.json.JSONObject;
 
@@ -44,6 +51,7 @@ public class DialogComicChapter {
     private int mTotalPage, size;
     public ComicVChapterCatalogAdapter comicChapterCatalogAdapter;
     List<ComicChapter> comicChapterCatalogs;
+    public ComicChapter mChapterAd;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public Dialog getDialogVipPop(Activity activity, BaseComic baseComic) {
@@ -56,7 +64,7 @@ public class DialogComicChapter {
         //设置弹出位置
         window.setGravity(Gravity.BOTTOM);
         VipHolder vipHolder = new VipHolder(view);
-        httpData(activity, baseComic.getComic_id(), vipHolder);
+        getSdkChapterAd(activity, baseComic, vipHolder);
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         vipHolder.ryChapter.setLayoutManager(layoutManager);
@@ -117,6 +125,40 @@ public class DialogComicChapter {
         return popupWindow;
     }
 
+    private void getSdkChapterAd(Activity activity, BaseComic baseComic, VipHolder vipHolder) {
+
+        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+                    @Override
+                    public void onRequestOk(List<AdInfo> list) {
+                        try {
+                            //先拿第三方广告然后替换原数据
+                            httpData(activity, baseComic.getComic_id(), vipHolder);
+                            AdInfo adInfo = list.get(0);
+                            mChapterAd = new ComicChapter();
+                            mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                            mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
+                            mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                            mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        } catch (Exception e) {
+                            httpData(activity, baseComic.getComic_id(), vipHolder);
+                        }
+                    }
+
+                    @Override
+                    public void onRequestFailed(int i, String s) {
+                        httpData(activity, baseComic.getComic_id(), vipHolder);
+                    }
+                });
+                return;
+            } else {
+                httpData(activity, baseComic.getComic_id(), vipHolder);
+            }
+        }
+    }
+
     public void httpData(Activity activity, String comic_id, VipHolder vipHolder) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("comic_id", comic_id);
@@ -145,7 +187,11 @@ public class DialogComicChapter {
                                         comicChapterCatalogs.add(comicChapter);
                                     }
                                 } else {
-                                    comicChapterCatalogs.add(comicChapter);
+                                    if (comicChapter.getAd_image() != null && mChapterAd != null) {
+                                        comicChapterCatalogs.add(mChapterAd);
+                                    } else {
+                                        comicChapterCatalogs.add(comicChapter);
+                                    }
                                 }
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {

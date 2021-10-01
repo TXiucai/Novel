@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -34,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
 import com.heiheilianzai.app.adapter.comic.ComicHChapterCatalogAdapter;
@@ -44,6 +46,7 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BookInfoComment;
 import com.heiheilianzai.app.model.comic.BaseComic;
@@ -55,6 +58,7 @@ import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DialogComicChapter;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -74,6 +78,10 @@ import com.heiheilianzai.app.view.CustomSwipeToRefresh;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.ObservableScrollView;
 import com.jaeger.library.StatusBarUtil;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -339,20 +347,49 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             baseComic.setAuthor(comic.author);
             baseComic.setFlag(comic.flag);
             baseComic.setTotal_chapters(comic.total_chapters);
-            //漫画详情页广告暂时取消
-           /* if (ReaderConfig.USE_AD && baseAd != null) {
+            if (ReaderConfig.USE_AD && baseAd != null) {
                 activity_book_info_ad.setVisibility(View.VISIBLE);
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
                 layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
                 layoutParams.height = layoutParams.width / 3;
                 list_ad_view_img.setLayoutParams(layoutParams);
                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                //替换第三方广告
+                for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+                    AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                    if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+                            @Override
+                            public void onRequestOk(List<AdInfo> list) {
+                                try {
+                                    AdInfo adInfo = list.get(0);
+                                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                                } catch (Exception e) {
+                                }
+                            }
+
+                            @Override
+                            public void onRequestFailed(int i, String s) {
+
+                            }
+                        });
+                        return;
+                    }
+                }
                 activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent();
                         intent.setClass(activity, WebViewActivity.class);
-                        intent.putExtra("url", baseAd.ad_skip_url);
+                        String ad_skip_url = baseAd.ad_skip_url;
+                        if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
+                            ad_skip_url += "&uid=" + Utils.getUID(activity);
+                        }
+                        intent.putExtra("url", ad_skip_url);
                         intent.putExtra("title", baseAd.ad_title);
                         intent.putExtra("advert_id", baseAd.advert_id);
                         intent.putExtra("ad_url_type", baseAd.ad_url_type);
@@ -362,7 +399,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
 
             } else {
                 activity_book_info_ad.setVisibility(View.GONE);
-            }*/
+            }
             ll_comment_container.removeAllViews();
             ll_label_container.removeAllViews();
             try {

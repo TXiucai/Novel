@@ -28,6 +28,7 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import java.util.List;
 
@@ -153,6 +154,10 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setClass(activity, WebViewActivity.class);
+                    String ad_skip_url = comicChapterCatalog.getAd_skip_url();
+                    if (Utils.isLogin(activity) && TextUtils.equals(comicChapterCatalog.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
+                        ad_skip_url += "&uid=" + Utils.getUID(activity);
+                    }
                     intent.putExtra("url", comicChapterCatalog.getAd_skip_url());
                     intent.putExtra("ad_url_type", comicChapterCatalog.getAd_url_type());
                     activity.startActivity(intent);

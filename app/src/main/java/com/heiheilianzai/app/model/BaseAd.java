@@ -9,6 +9,15 @@ public class BaseAd {
     public int ad_url_type;//'//'":1   // 跳转地址类型（1-内部跳转，2-外部跳转）
     public int advert_interval;//小说底部广告每间隔多少页显示
     public String ad_subtitle;
+    public String user_parame_need;
+
+    public String getUser_parame_need() {
+        return user_parame_need;
+    }
+
+    public void setUser_parame_need(String user_parame_need) {
+        this.user_parame_need = user_parame_need;
+    }
 
     public String getAd_subtitle() {
         return ad_subtitle;

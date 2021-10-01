@@ -234,7 +234,6 @@ public class SplashActivity extends BaseAdvertisementActivity {
                             ShareUitls.putString(App.getContext(), PrefConst.NOVEL_API, dataBean.getBook_text_api());
                         }
                         if (USE_AD_FINAL) {
-                            ReaderConfig.USE_AD = dataBean.ad_switch == 1;
                             ReaderConfig.NOVEL_SDK_AD.clear();
                             ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());
                             ReaderConfig.COMIC_SDK_AD.clear();

@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.headerfooter.songhang.library.SmartRecyclerAdapter;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
@@ -22,9 +25,12 @@ import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.Startpage;
+import com.heiheilianzai.app.model.book.StroreBookcLable;
+import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
@@ -265,6 +271,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getCacheStockData();
     }
 
+    protected abstract void getSdkLableAd();
+
+    protected abstract void initLable(Object type);
+
     protected abstract void getBannerData();
 
     protected abstract void getStockData();
@@ -283,18 +293,71 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void getHomeRecommend(RecyclerView recyclerView);
 
-    protected void getHomeRecommend(RecyclerView recyclerView, int recommendType) {
+    protected void getSdkLableAd(int recommendType) {
+        if (App.isVip(activity.getApplicationContext())) {
+            return;
+        }
         String type;
         if (recommendType == 0) {
-            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL;
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_NOVLE;
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//小说栏目间广告 第三方打开
+                    sdkLableAd(recommendType, type);
+                }
+            }
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//小说栏目间广告 第三方打开
+                    sdkLableAd(recommendType, type);
+                    return;
+                }
+            }
         } else {
-            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC;
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_COMIC;
+            for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
+                    sdkLableAd(recommendType, type);
+                    return;
+                }
+            }
         }
-        if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2) {
-            sdkIconAd(recyclerView, recommendType, type);
-        } else {
-            localIconAd(recyclerView, recommendType);
-        }
+    }
+
+    private void sdkLableAd(int recommendType, String type) {
+        XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    if (recommendType == 0) {//小说
+                        StroreBookcLable lableAd = new StroreBookcLable();
+                        lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                        lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                        initLable(lableAd);
+                    } else {//漫画
+                        StroreComicLable lableAd = new StroreComicLable();
+                        lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                        lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                        initLable(lableAd);
+                    }
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+            }
+        });
+    }
+
+    protected void getHomeRecommend(RecyclerView recyclerView, int recommendType) {
+        localIconAd(recyclerView, recommendType);
     }
 
     private void localIconAd(RecyclerView recyclerView, int recommendType) {
@@ -306,7 +369,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(String response) throws JSONException {
                 HomeRecommendBean homeRecommendBean = new Gson().fromJson(response, HomeRecommendBean.class);
                 List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
-                initRecommend(recyclerView, recomme_list);
+                if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2) {
+                    sdkIconAd(recyclerView, recommendType, recomme_list);
+                }else {
+                    initRecommend(recyclerView, recomme_list);
+                }
             }
 
             @Override
@@ -316,7 +383,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         });
     }
 
-    private void sdkIconAd(RecyclerView recyclerView, int recommendType, String type) {
+    private void sdkIconAd(RecyclerView recyclerView, int recommendType, List<HomeRecommendBean.RecommeListBean> localList) {
+        String type;
+        if (recommendType == 0) {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL;
+        } else {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC;
+        }
         XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
             @Override
             public void onRequestOk(List<AdInfo> list) {
@@ -332,17 +405,25 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         recommeListBean.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
                         recommeListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                         recommeListBean.setTitle(adInfo.getAdExtra().get("title"));
+                        recommeListBean.setWeight(adInfo.getAdExtra().get("weight"));
                         recomme_list.add(recommeListBean);
-                        initRecommend(recyclerView, recomme_list);
                     }
+                    for (int i = 0; i < recomme_list.size(); i++) {
+                        HomeRecommendBean.RecommeListBean sdkRecomenBean = recomme_list.get(i);
+                        Integer position = Integer.valueOf(sdkRecomenBean.getWeight());
+                        if (recomme_list.size() > position) {
+                            localList.add(position, sdkRecomenBean);
+                        } else {
+                            localList.add(sdkRecomenBean);
+                        }
+                    }
+                    initRecommend(recyclerView, recomme_list);
                 } catch (Exception e) {
-                    localIconAd(recyclerView, recommendType);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                localIconAd(recyclerView, recommendType);
             }
         });
     }
@@ -447,6 +528,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(final String result) {
                 if (!StringUtils.isEmpty(result)) {
                     try {
+                        getSdkLableAd();//获取第三方广告
                         setIsLoadMore(result);
                         JSONObject jsonObject = new JSONObject(result);
                         String edit_time = jsonObject.getString("max_edit_time");//获取服务器修改时间戳
@@ -515,24 +597,21 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      * 加载Banner数据并写入缓存
      */
     protected void getBannerData(String kayCache, String url) {
+        localBannerAd(kayCache, url);
+    }
+
+    private void sdkBannerAd(String kayCache, String url, String json) {
         String type;
         if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER))
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_NOVEL;
         else {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_COMIC;
         }
-        if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2 || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2) {
-            sdkBannerAd(kayCache, url, type);
-        } else {
-            localBannerAd(kayCache, url);
-        }
-    }
-
-    private void sdkBannerAd(String kayCache, String url, String type) {
         XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
             @Override
             public void onRequestOk(List<AdInfo> list) {
                 try {
+
                     List<BannerItemStore> bannerItemStores = new ArrayList<>();
                     for (int i = 0; i < list.size(); i++) {
                         BannerItemStore bannerItemStore = new BannerItemStore();
@@ -540,21 +619,37 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         bannerItemStore.setAction(Integer.valueOf(adInfo.getAdExtra().get("action")));
                         bannerItemStore.setContent(adInfo.getAdExtra().get("content"));
                         bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
+                        bannerItemStore.setWeight(adInfo.getAdExtra().get("weight"));
                         bannerItemStores.add(bannerItemStore);
                     }
-                    String json = new Gson().toJson(bannerItemStores);
+                    List<BannerItemStore> localList = new ArrayList<>();
+                    JsonParser jsonParser = new JsonParser();
+                    JsonArray jsonElements = jsonParser.parse(json).getAsJsonArray();//获取JsonArray对象
+                    for (JsonElement jsonElement : jsonElements) {
+                        BannerItemStore bannerItemStore = gson.fromJson(jsonElement, BannerItemStore.class);//解析
+                        localList.add(bannerItemStore);
+                    }
+                    for (int i = 0; i < bannerItemStores.size(); i++) {
+                        BannerItemStore sdkItemBean = bannerItemStores.get(i);
+                        Integer positon = Integer.valueOf(sdkItemBean.getWeight());
+                        if (localList.size() > positon) {
+                            localList.add(positon, sdkItemBean);
+                        } else {
+                            localList.add(sdkItemBean);
+                        }
+                    }
+                    String json = new Gson().toJson(localList);
                     if (!StringUtils.isEmpty(json)) {
                         ShareUitls.putMainHttpTaskString(activity, kayCache, json);
                         getHeaderView(json);
                     }
                 } catch (Exception e) {
-                    localBannerAd(kayCache, url);
+
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                localBannerAd(kayCache, url);
             }
         });
     }
@@ -568,7 +663,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     public void onResponse(final String result) {
                         if (!StringUtils.isEmpty(result)) {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
-                            getHeaderView(result);
+                            if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2 || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2) {
+                                sdkBannerAd(kayCache, url, result);
+                            }else {
+                                getHeaderView(result);
+                            }
                         }
                     }
 

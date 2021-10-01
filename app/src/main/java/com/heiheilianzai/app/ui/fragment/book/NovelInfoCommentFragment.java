@@ -14,14 +14,17 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.StoreComicAdapter;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BookInfoComment;
+import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
@@ -33,16 +36,23 @@ import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicCommentActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
+import com.heiheilianzai.app.ui.dialog.HomeNoticePhotoDialog;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.ObservableScrollView;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -104,12 +114,42 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
             layoutParams.height = layoutParams.width / 3;
             list_ad_view_img.setLayoutParams(layoutParams);
             MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+            //替换第三方广告
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                    XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+                        @Override
+                        public void onRequestOk(List<AdInfo> list) {
+                            try {
+                                AdInfo adInfo = list.get(0);
+                                baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                                baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                                baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                            } catch (Exception e) {
+                            }
+                        }
+
+                        @Override
+                        public void onRequestFailed(int i, String s) {
+
+                        }
+                    });
+                    return;
+                }
+            }
             activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setClass(activity, WebViewActivity.class);
-                    intent.putExtra("url", baseAd.ad_skip_url);
+                    String ad_skip_url = baseAd.ad_skip_url;
+                    if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
+                        ad_skip_url += "&uid=" + Utils.getUID(activity);
+                    }
+                    intent.putExtra("url", ad_skip_url);
                     intent.putExtra("title", baseAd.ad_title);
                     intent.putExtra("advert_id", baseAd.advert_id);
                     intent.putExtra("ad_url_type", baseAd.ad_url_type);

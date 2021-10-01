@@ -3,7 +3,6 @@ package com.heiheilianzai.app.utils;
 import android.app.Activity;
 import android.app.Dialog;
 
-import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -19,15 +18,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.RecommendAppBean;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,6 +52,45 @@ public class RecomendApp {
      * 获取数据
      */
     public void getRequestData() {
+        if (ReaderConfig.OTHER_SDK_AD.getApp_index() == 2) {
+            sdkAppAd();
+        } else {
+            localAppAd();
+        }
+    }
+
+    private void sdkAppAd() {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_APP_RECOMMEND_DEBUG : BuildConfig.XAD_EVN_POS_APP_RECOMMEND, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    List<RecommendAppBean.AppListBean> appListBeans = new ArrayList<>();
+                    RecommendAppBean recommendAppBean = new RecommendAppBean();
+                    for (int i = 0; i < list.size(); i++) {
+                        RecommendAppBean.AppListBean appListBean = new RecommendAppBean.AppListBean();
+                        AdInfo adInfo = list.get(i);
+                        appListBean.setApp_logo(adInfo.getMaterial().getImageUrl());
+                        appListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                        appListBean.setDown_link(adInfo.getAdExtra().get("down_link"));
+                        appListBean.setApp_name(adInfo.getMaterial().getTitle());
+                        appListBeans.add(appListBean);
+                    }
+                    recommendAppBean.setApp_list(appListBeans);
+                    getAppUpdatePop(activity, recommendAppBean);
+                } catch (Exception e) {
+                    localAppAd();
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localAppAd();
+            }
+        });
+    }
+
+
+    private void localAppAd() {
         ReaderParams readerParams = new ReaderParams(activity);
         String json = readerParams.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mRecommendApp, json, false, new HttpUtils.ResponseListener() {
@@ -156,7 +198,7 @@ public class RecomendApp {
                 public void onClick(View v) {
                     String down_link = appListBean.getDown_link();
                     if (!StringUtils.isEmpty(down_link)) {
-                        if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need,"2") && !down_link.contains("&uid=")) {
+                        if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !down_link.contains("&uid=")) {
                             down_link += "&uid=" + Utils.getUID(activity);
                         }
                         activity.startActivity(new Intent(activity, AboutActivity.class).

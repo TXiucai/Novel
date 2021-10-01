@@ -41,6 +41,15 @@ public class HomeRecommendBean {
         private String updated_at;
         private String redirect_type;
         private String user_parame_need;
+        private String weight;//第三方广告插入位置
+
+        public String getWeight() {
+            return weight;
+        }
+
+        public void setWeight(String weight) {
+            this.weight = weight;
+        }
 
         public String getUser_parame_need() {
             return user_parame_need;

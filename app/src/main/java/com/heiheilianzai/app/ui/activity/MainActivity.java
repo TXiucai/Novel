@@ -37,6 +37,7 @@ import com.app.hubert.guide.model.GuidePage;
 import com.app.hubert.guide.model.RelativeGuide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.App;
@@ -49,6 +50,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
+import com.heiheilianzai.app.model.RecommendAppBean;
 import com.heiheilianzai.app.model.VipOrderBean;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
@@ -87,6 +89,10 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CustomScrollViewPager;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
@@ -385,8 +391,40 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     private void initData() {
         syncDevice(activity);
-        getNotice(activity);
+        getSdkAndLocalNotice(activity);
         getReadButtomWebViewAD(activity);
+    }
+
+    private void getSdkAndLocalNotice(Activity activity) {
+        if (ReaderConfig.OTHER_SDK_AD.getAlert_index() == 2) {
+            XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_DIALOG_DEBUG : BuildConfig.XAD_EVN_POS_HOME_DIALOG, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
+                @Override
+                public void onRequestOk(List<AdInfo> list) {
+                    try {
+                        List<HomeNotice> homeNotices = new ArrayList<>();
+                        for (int i = 0; i < list.size(); i++) {
+                            HomeNotice homeNotice = new HomeNotice();
+                            AdInfo adInfo = list.get(i);
+                            homeNotice.setImg_content(adInfo.getMaterial().getImageUrl());
+                            homeNotice.setTitle(adInfo.getMaterial().getTitle());
+                            homeNotice.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                            homeNotice.setJump_url(adInfo.getAdExtra().get("jump_url"));
+                            homeNotices.add(homeNotice);
+                        }
+                        HomeNoticePhotoDialog.showDialog(activity, activity.getWindow().getDecorView(), homeNotices, true);
+                    } catch (Exception e) {
+                        getNotice(activity);
+                    }
+                }
+
+                @Override
+                public void onRequestFailed(int i, String s) {
+                    getNotice(activity);
+                }
+            });
+        } else {
+            getNotice(activity);
+        }
     }
 
     /**
@@ -473,7 +511,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     HomeNoticeDialog.showDialog(MainActivity.this, view, mHomeNoticeText);
                 } else if (TextUtils.equals(homeNotice.getAnnoun_type(), "3")) {
                     mIsFirstTextNotice = false;
-                    HomeNoticePhotoDialog.showDialog(MainActivity.this, view, homeNotice);
+                    HomeNoticePhotoDialog.showDialog(MainActivity.this, view, mHomeNoticePhoto, false);
                 }
             }
         }
@@ -486,7 +524,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         View view = this.getWindow().getDecorView();
         if (mIsFirstTextNotice) {
             if (mHomeNoticePhoto.size() > 0) {
-                HomeNoticePhotoDialog.showDialog(MainActivity.this, view, mHomeNoticePhoto.get(0));
+                HomeNoticePhotoDialog.showDialog(MainActivity.this, view, mHomeNoticePhoto, false);
                 mIsShowTwoNotice = false;
             }
         } else {
@@ -508,6 +546,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         switch (event.action) {
             case 1:
                 showHomeTwoNotice();
+                break;
+            case 2:
+                getNotice(activity);
                 break;
         }
     }

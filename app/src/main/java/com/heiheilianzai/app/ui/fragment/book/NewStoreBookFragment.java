@@ -35,8 +35,29 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     public void initViews() {
-        adapter = new HomeStoreBookAdapter(activity, listData,false);
+        adapter = new HomeStoreBookAdapter(activity, listData, false);
         super.initViews();
+    }
+
+    @Override
+    protected void getSdkLableAd() {
+        getSdkLableAd(0);
+    }
+
+    @Override
+    protected void initLable(Object type) {
+        if (type != null) {
+            StroreBookcLable stroreBookcLable = (StroreBookcLable) type;
+            for (StroreBookcLable bookcLable : listData) {
+                if (bookcLable.ad_type == 1) {
+                    bookcLable.setAd_image(stroreBookcLable.getAd_image());
+                    bookcLable.setAd_skip_url(stroreBookcLable.getAd_skip_url());
+                    bookcLable.setAd_title(stroreBookcLable.getAd_title());
+                    bookcLable.setAd_url_type(stroreBookcLable.getAd_url_type());
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
