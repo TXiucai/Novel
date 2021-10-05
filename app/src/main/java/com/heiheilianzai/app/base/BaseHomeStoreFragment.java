@@ -304,12 +304,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
                 if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//小说栏目间广告 第三方打开
                     sdkLableAd(recommendType, type);
-                }
-            }
-            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-                if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//小说栏目间广告 第三方打开
-                    sdkLableAd(recommendType, type);
                     return;
                 }
             }
@@ -411,7 +405,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     for (int i = 0; i < recomme_list.size(); i++) {
                         HomeRecommendBean.RecommeListBean sdkRecomenBean = recomme_list.get(i);
                         Integer position = Integer.valueOf(sdkRecomenBean.getWeight());
-                        if (recomme_list.size() > position) {
+                        if (localList.size() > position) {
                             localList.add(position, sdkRecomenBean);
                         } else {
                             localList.add(sdkRecomenBean);
@@ -419,11 +413,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     }
                     initRecommend(recyclerView, recomme_list);
                 } catch (Exception e) {
+                    initRecommend(recyclerView,localList);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
+                initRecommend(recyclerView,localList);
             }
         });
     }
@@ -611,7 +607,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             @Override
             public void onRequestOk(List<AdInfo> list) {
                 try {
-
                     List<BannerItemStore> bannerItemStores = new ArrayList<>();
                     for (int i = 0; i < list.size(); i++) {
                         BannerItemStore bannerItemStore = new BannerItemStore();
@@ -638,18 +633,19 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                             localList.add(sdkItemBean);
                         }
                     }
-                    String json = new Gson().toJson(localList);
-                    if (!StringUtils.isEmpty(json)) {
-                        ShareUitls.putMainHttpTaskString(activity, kayCache, json);
-                        getHeaderView(json);
+                    String sdkJson = new Gson().toJson(localList);
+                    if (!StringUtils.isEmpty(sdkJson)) {
+                        ShareUitls.putMainHttpTaskString(activity, kayCache, sdkJson);
+                        getHeaderView(sdkJson);
                     }
                 } catch (Exception e) {
-
+                    getHeaderView(json);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
+                getHeaderView(json);
             }
         });
     }

@@ -79,7 +79,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
     private int orderby = 1;//1 正序 2 倒序
     private int mTotalPage, size;
     private ComicChapter mChapterAd;
-
+    private boolean isSdkAd = false;
     @OnClick(value = {R.id.titlebar_back,
             R.id.fragment_comicinfo_mulu_dangqian, R.id.fragment_comicinfo_mulu_zhiding
             , R.id.fragment_comicinfo_mulu_layout})
@@ -181,10 +181,10 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
     }
 
     private void getSdkChapterAd(Activity activity, String comic_id) {
-
         for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                isSdkAd = true;
                 XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
                     @Override
                     public void onRequestOk(List<AdInfo> list) {
@@ -195,6 +195,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                             mChapterAd = new ComicChapter();
                             mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
                             mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
+                            mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
                             mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                             mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                         } catch (Exception e) {
@@ -206,11 +207,12 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                     public void onRequestFailed(int i, String s) {
                         httpData(activity, comic_id);
                     }
-                })1
+                });
                 return;
-            } else {
-                httpData(activity, comic_id);
             }
+        }
+        if (!isSdkAd){
+            httpData(activity,comic_id);
         }
     }
 

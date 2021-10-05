@@ -25,6 +25,15 @@ public class ComicChapterTopAd {
     private int ad_url_type;
     private int ad_width;
     private int ad_height;
+    private String user_parame_need;
+
+    public String getUser_parame_need() {
+        return user_parame_need;
+    }
+
+    public void setUser_parame_need(String user_parame_need) {
+        this.user_parame_need = user_parame_need;
+    }
 
     public int getAdvert_id() {
         return advert_id;

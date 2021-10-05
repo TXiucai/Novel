@@ -125,6 +125,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
                                 AdInfo adInfo = list.get(0);
                                 baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
                                 baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                                baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
                                 baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                                 baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);

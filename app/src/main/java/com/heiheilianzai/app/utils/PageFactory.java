@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -33,6 +34,7 @@ import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterContent;
 import com.heiheilianzai.app.model.ChapterItem;
@@ -46,6 +48,10 @@ import com.heiheilianzai.app.ui.dialog.read.PurchaseDialog;
 import com.heiheilianzai.app.view.BorderTextView;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.read.PageWidget;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -190,6 +196,7 @@ public class PageFactory {
     public boolean mNextPage = true;//变化是否向后翻页
     private String is_new_content;
     private Dialog mDialogVip;
+    private boolean mIsSdkAd = false;
 
     public enum Status {
         OPENING,
@@ -928,7 +935,7 @@ public class PageFactory {
                     @Override
                     public void onResponse(final String result) {
                         ReaderConfig.REFREASH_USERCENTER = true;
-                        downloadWithoutAutoBuy(book_id, chapter_id,ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.mChapterDownUrl);
+                        downloadWithoutAutoBuy(book_id, chapter_id, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.mChapterDownUrl);
                         ReaderConfig.integerList.add(1);
                     }
 
@@ -1557,52 +1564,17 @@ public class PageFactory {
     //加载webview 广告
     public void getWebViewAD(Activity activity) {
         if (baseAd == null) {
-            ReaderParams params = new ReaderParams(activity);
-            String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
-            params.putExtraParams("type", XIAOSHUO + "");
-            params.putExtraParams("position", "8");
-            String json = params.generateParamsJson();
-            HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
-                        @Override
-                        public void onResponse(final String result) {
-                            try {
-                                baseAd = new Gson().fromJson(result, BaseAd.class);
-                                if (baseAd.ad_type == 1) {
-                                    close_AD = false;
-                                    insert_todayone2.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent intent = new Intent();
-                                            intent.setClass(activity, WebViewActivity.class);
-                                            intent.putExtra("url", baseAd.ad_skip_url);
-                                            intent.putExtra("title", baseAd.ad_title);
-                                            intent.putExtra("advert_id", baseAd.advert_id);
-                                            intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                                            activity.startActivity(intent);
-                                        }
-                                    });
-                                    if (list_ad_view_img == null) {
-                                        list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
-                                        ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-                                        layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                                        layoutParams.height = layoutParams.width;
-                                        Insert_todayone2 = layoutParams.width;
-                                        list_ad_view_img.setLayoutParams(layoutParams);
-                                    }
-                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-                                } else {
-                                    close_AD = true;
-                                }
-                            } catch (Exception e) {
-                                close_AD = true;
-                            }
-                        }
-
-                        @Override
-                        public void onErrorResponse(String ex) {
-                        }
-                    }
-            );
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "8") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                    mIsSdkAd = true;
+                    sdkAd(activity);
+                    return;
+                }
+            }
+            if (!mIsSdkAd) {
+                localAd(activity);
+            }
         } else {
             if (baseAd.ad_type == 1) {
                 insert_todayone2.setOnClickListener(new View.OnClickListener() {
@@ -1626,6 +1598,90 @@ public class PageFactory {
                 }
                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
             }
+        }
+    }
+
+    private void sdkAd(Activity activity) {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_END_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_END, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    baseAd = new BaseAd();
+                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                    baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                    baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
+                    baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                    clickAd(activity);
+                } catch (Exception e) {
+                    close_AD = true;
+                    localAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localAd(activity);
+            }
+        });
+    }
+
+    private void localAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", XIAOSHUO + "");
+        params.putExtraParams("position", "8");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            baseAd = new Gson().fromJson(result, BaseAd.class);
+                            clickAd(activity);
+                        } catch (Exception e) {
+                            close_AD = true;
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    private void clickAd(Activity activity) {
+        if (baseAd != null && baseAd.ad_type == 1) {
+            close_AD = false;
+            insert_todayone2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, WebViewActivity.class);
+                    String ad_skip_url = baseAd.ad_skip_url;
+                    if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
+                        ad_skip_url += "&uid=" + Utils.getUID(activity);
+                    }
+                    intent.putExtra("title", baseAd.ad_title);
+                    intent.putExtra("advert_id", baseAd.advert_id);
+                    intent.putExtra("ad_url_type", baseAd.ad_url_type);
+                    activity.startActivity(intent);
+                }
+            });
+            if (list_ad_view_img == null) {
+                list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
+                ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
+                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+                layoutParams.height = layoutParams.width;
+                Insert_todayone2 = layoutParams.width;
+                list_ad_view_img.setLayoutParams(layoutParams);
+            }
+            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+        } else {
+            close_AD = true;
         }
     }
 
@@ -1684,7 +1740,7 @@ public class PageFactory {
                     dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
                         @Override
                         public void onRegisterBack(boolean isSuccess) {
-                            if (isSuccess){
+                            if (isSuccess) {
                                 checkIsCoupon(chapterItem);
                             }
                         }
@@ -1709,16 +1765,16 @@ public class PageFactory {
                             if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
                                 DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
                                 if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
-                                    if (AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false)){
+                                    if (AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false)) {
                                         int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
                                         String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_PRICE);
                                         if (couponNum >= Integer.valueOf(couponPrice)) {
-                                            dialogNovelCoupon.openCoupon(mActivity,chapterItem,couponPrice,couponNum);
+                                            dialogNovelCoupon.openCoupon(mActivity, chapterItem, couponPrice, couponNum);
                                         } else {
                                             DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
                                             dialogCouponNotMore.getDialogVipPop(activity, true);
                                         }
-                                    }else {
+                                    } else {
                                         mDialogVip = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
                                     }
                                 }

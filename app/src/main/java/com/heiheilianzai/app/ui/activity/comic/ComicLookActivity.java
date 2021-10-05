@@ -38,6 +38,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.ComicRecyclerViewAdapter;
 import com.heiheilianzai.app.base.App;
@@ -48,6 +49,7 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
@@ -86,6 +88,10 @@ import com.heiheilianzai.app.utils.decode.GlideEncypeImageLoader;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.comic.DanmuRelativeLayout;
 import com.heiheilianzai.app.view.comic.ZoomRecyclerView;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
@@ -230,6 +236,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private Dialog dialogVipPop;
     private boolean mIsSmall;
     private long mReadStarTime;
+    private boolean mIsSdkAd = false;
+    private boolean mIsSdkBottomAd = false;
+    private ComicChapterTopAd mSdkTopAd;
 
     @Override
     public int initContentView() {
@@ -714,7 +723,43 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             activity_comiclook_shoucang.setVisibility(View.GONE);
         }
         baseComicImages = new ArrayList<>();
-        getData(activity, comic_id, Chapter_id, true);
+        for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkAd = true;
+                sdkAd(activity, comic_id, Chapter_id, true);
+                return;
+            }
+        }
+        if (!mIsSdkAd) {
+            getData(activity, comic_id, Chapter_id, true);
+        }
+    }
+
+    private void sdkAd(Activity activity, String comic_id, String chapter_id, boolean b) {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_TOP_DEEBUG : BuildConfig.XAD_EVN_POS_COMIC_TOP, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    getData(activity, comic_id, Chapter_id, true);
+                    AdInfo adInfo = list.get(0);
+                    mSdkTopAd = new ComicChapterTopAd();
+                    mSdkTopAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                    mSdkTopAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                    mSdkTopAd.setAd_title(adInfo.getMaterial().getTitle());
+                    mSdkTopAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                    mSdkTopAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                    mSdkTopAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                } catch (Exception e) {
+                    getData(activity, comic_id, Chapter_id, true);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                getData(activity, comic_id, Chapter_id, true);
+            }
+        });
     }
 
     public void initViews() {
@@ -885,22 +930,36 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     ++baseComicImagesSize;
                 }
                 baseComicImages.addAll(comicChapterItem.image_list);
-                ComicChapterTopAd advert = comicChapterItem.getAdvert();
-                if (advert != null) {
-                    if (!App.isVip(activity)) {
+                if (mIsSdkAd) {
+                    if (mSdkTopAd != null && !App.isVip(activity)) {
                         BaseComicImage baseComicImage = new BaseComicImage();
                         baseComicImage.setAd(1);
-                        baseComicImage.setAd_skip_url(advert.getAd_skip_url());
-                        baseComicImage.setImage(advert.getAd_image());
-                        baseComicImage.setAd_type(advert.getAd_type());
-                        baseComicImage.setAd_url_type(advert.getAd_url_type());
-                        baseComicImage.setHeight(advert.getAd_height());
-                        baseComicImage.setWidth(advert.getAd_width());
-                        baseComicImage.setAdvert_id(advert.getAdvert_id());
+                        baseComicImage.setAd_skip_url(mSdkTopAd.getAd_skip_url());
+                        baseComicImage.setImage(mSdkTopAd.getAd_image());
+                        baseComicImage.setAd_type(mSdkTopAd.getAd_type());
+                        baseComicImage.setAd_url_type(mSdkTopAd.getAd_url_type());
                         baseComicImages.add(0, baseComicImage);
                         ++baseComicImagesSize;
                     }
+                } else {
+                    ComicChapterTopAd advert = comicChapterItem.getAdvert();
+                    if (advert != null) {
+                        if (!App.isVip(activity)) {
+                            BaseComicImage baseComicImage = new BaseComicImage();
+                            baseComicImage.setAd(1);
+                            baseComicImage.setAd_skip_url(advert.getAd_skip_url());
+                            baseComicImage.setImage(advert.getAd_image());
+                            baseComicImage.setAd_type(advert.getAd_type());
+                            baseComicImage.setAd_url_type(advert.getAd_url_type());
+                            baseComicImage.setHeight(advert.getAd_height());
+                            baseComicImage.setWidth(advert.getAd_width());
+                            baseComicImage.setAdvert_id(advert.getAdvert_id());
+                            baseComicImages.add(0, baseComicImage);
+                            ++baseComicImagesSize;
+                        }
+                    }
                 }
+
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
                     comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
@@ -1121,6 +1180,65 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void getWebViewAD(Activity activity) {
+        for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "8") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkBottomAd = true;
+                sdkBottomAd();
+                return;
+            }
+        }
+        if (!mIsSdkBottomAd) {
+            localBotoomAd(activity);
+        }
+    }
+
+    private void sdkBottomAd() {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_END_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_END, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    BaseAd baseAd = new BaseAd();
+                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                    baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                    baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                    if (baseAd != null) {
+                        holderFoot.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent();
+                                intent.setClass(activity, WebViewActivity.class);
+                                intent.putExtra("url", baseAd.ad_skip_url);
+                                intent.putExtra("title", baseAd.ad_title);
+                                intent.putExtra("advert_id", baseAd.advert_id);
+                                intent.putExtra("ad_url_type", baseAd.ad_url_type);
+                                activity.startActivity(intent);
+                            }
+                        });
+                        ViewGroup.LayoutParams layoutParams = holderFoot.list_ad_view_img.getLayoutParams();
+                        layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+                        layoutParams.height = layoutParams.width / 3;
+                        holderFoot.list_ad_view_img.setLayoutParams(layoutParams);
+                        MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, holderFoot.list_ad_view_img);
+                    }
+                } catch (Exception e) {
+                    localBotoomAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localBotoomAd(activity);
+            }
+        });
+    }
+
+
+    private void localBotoomAd(Activity activity) {
         ReaderParams params = new ReaderParams(activity);
         String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
         params.putExtraParams("type", MANHAU + "");

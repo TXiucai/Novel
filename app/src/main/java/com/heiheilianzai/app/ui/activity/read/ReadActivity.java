@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -44,11 +46,13 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
+import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.NovelBoyinModel;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.event.CloseAnimationEvent;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
@@ -85,6 +89,10 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
 import com.heiheilianzai.app.view.read.PageWidget;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.AdType;
+import com.mobi.xad.net.XAdRequestListener;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.media.UMImage;
@@ -216,6 +224,7 @@ public class ReadActivity extends BaseReadActivity {
     };
     private long mReadStarTime;
     private long mReadEndTime;
+    private boolean mIsSdkAd = false;
 
 
     @Override
@@ -1000,52 +1009,17 @@ public class ReadActivity extends BaseReadActivity {
 
     public void getWebViewAD(Activity activity) {
         if (baseAd == null) {
-            ReaderParams params = new ReaderParams(activity);
-            String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
-            params.putExtraParams("type", XIAOSHUO + "");
-            params.putExtraParams("position", "12");
-            String json = params.generateParamsJson();
-            HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
-                        @Override
-                        public void onResponse(final String result) {
-                            try {
-                                baseAd = new Gson().fromJson(result, BaseAd.class);
-                                visible = baseAd.getAdvert_interval();
-                                if (baseAd.ad_type == 1) {
-                                    ReadActivity.USE_BUTTOM_AD = true;
-                                    insert_todayone2.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            JumpBookAd(activity);
-                                        }
-                                    });
-                                    mIvAd.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            JumpBookAd(activity);
-                                        }
-                                    });
-                                    mIvClose.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                                        }
-                                    });
-                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mIvAd);
-
-                                } else {
-                                    ReadActivity.USE_BUTTOM_AD = false;
-                                }
-                            } catch (Exception e) {
-                                ReadActivity.USE_BUTTOM_AD = false;
-                            }
-                        }
-
-                        @Override
-                        public void onErrorResponse(String ex) {
-                        }
-                    }
-            );
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                    mIsSdkAd = true;
+                    sdkAd(activity);
+                    return;
+                }
+            }
+            if (!mIsSdkAd) {
+                localAd(activity);
+            }
         } else {
             if (baseAd.ad_type == 1) {
                 insert_todayone2.setOnClickListener(new View.OnClickListener() {
@@ -1065,14 +1039,100 @@ public class ReadActivity extends BaseReadActivity {
         }
     }
 
+    private void sdkAd(Activity activity) {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG : BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    baseAd = new BaseAd();
+                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                    baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                    baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
+                    baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                    adClick(activity);
+                } catch (Exception e) {
+                    localAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localAd(activity);
+            }
+        });
+    }
+
+    private void localAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", XIAOSHUO + "");
+        params.putExtraParams("position", "12");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            baseAd = new Gson().fromJson(result, BaseAd.class);
+                            visible = baseAd.getAdvert_interval();
+                            adClick(activity);
+                        } catch (Exception e) {
+                            ReadActivity.USE_BUTTOM_AD = false;
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    private void adClick(Activity activity) {
+        if (baseAd != null && baseAd.ad_type == 1) {
+            ReadActivity.USE_BUTTOM_AD = true;
+            insert_todayone2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    JumpBookAd(activity);
+                }
+            });
+            mIvAd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    JumpBookAd(activity);
+                }
+            });
+            mIvClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                }
+            });
+            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mIvAd);
+
+        } else {
+            ReadActivity.USE_BUTTOM_AD = false;
+        }
+    }
+
     private void JumpBookAd(Activity activity) {
-        Intent intent = new Intent();
-        intent.setClass(activity, WebViewActivity.class);
-        intent.putExtra("url", baseAd.ad_skip_url);
-        intent.putExtra("title", baseAd.ad_title);
-        intent.putExtra("advert_id", baseAd.advert_id);
-        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-        activity.startActivity(intent);
+        if (baseAd != null) {
+            Intent intent = new Intent();
+            intent.setClass(activity, WebViewActivity.class);
+            String ad_skip_url = baseAd.ad_skip_url;
+            if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
+                ad_skip_url += "&uid=" + Utils.getUID(activity);
+            }
+            intent.putExtra("url", ad_skip_url);
+            intent.putExtra("title", baseAd.ad_title);
+            intent.putExtra("advert_id", baseAd.advert_id);
+            intent.putExtra("ad_url_type", baseAd.ad_url_type);
+            activity.startActivity(intent);
+        }
     }
 
     /**
