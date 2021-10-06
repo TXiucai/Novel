@@ -163,7 +163,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                             startActivity(new Intent(activity, AboutActivity.class).
                                     putExtra("url", link_url)
                                     .putExtra("style", "4"));
-                        } else {
+                        } else if (!TextUtils.isEmpty(link_url) && TextUtils.equals(url_type, "3")) {
                             if (Utils.isLogin(activity)) {
                                 startActivity(new Intent(activity, TaskCenterActivity.class));
                             } else {

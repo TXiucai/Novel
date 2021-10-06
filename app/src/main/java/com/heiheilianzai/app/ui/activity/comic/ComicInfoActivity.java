@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.activity.comic;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -171,6 +172,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     ComicHChapterCatalogAdapter comicChapterCatalogAdapter;
     private int size;
     private int lastVisibleItemPosition;
+    private boolean isCanShow = false;
 
     @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back,
             R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category, R.id.rl_comic_vip})
@@ -221,8 +223,12 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
                 break;
             case R.id.ll_comic_category:
+                if (!isCanShow) {
+                    return;
+                }
                 DialogComicChapter dialogComicChapter = new DialogComicChapter();
-                dialogComicChapter.getDialogVipPop(activity, baseComic);
+                Dialog dialogVipPop = dialogComicChapter.getDialogVipPop(activity, baseComic);
+
                 break;
             case R.id.rl_comic_vip:
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 5);
@@ -255,6 +261,19 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         ry_comic_category.setLayoutManager(linearLayoutManager);
 
         init();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isCanShow = false;
+        ;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isCanShow = true;
     }
 
     public void init() {

@@ -10,11 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.adapter.MineIconAdAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.callback.LoginResultCallback;
@@ -24,12 +28,10 @@ import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.holder.CBViewHolderCreator;
-import com.heiheilianzai.app.model.Announce;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
-import com.heiheilianzai.app.model.event.AppUpdateLoadOverEvent;
 import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -57,17 +59,12 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.ConvenientBannerBookShelf;
-import com.heiheilianzai.app.view.MarqueeTextView;
-import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
 import com.heiheilianzai.app.view.MarqueeView;
 import com.heiheilianzai.app.view.MineAdBannerHolderView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -78,7 +75,6 @@ import static com.heiheilianzai.app.constant.ReaderConfig.MYCOMMENT;
 import static com.heiheilianzai.app.constant.ReaderConfig.READHISTORY;
 import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 import static com.heiheilianzai.app.constant.ReaderConfig.getCurrencyUnit;
-import static com.heiheilianzai.app.constant.ReaderConfig.getSubUnit;
 
 /**
  * 我的
@@ -125,16 +121,10 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public TextView fragment_invite_code;
     @BindView(R.id.fragment_mine_user_info_tasklayout_share)
     public LinearLayout mLlRead;
-    @BindView(R.id.fragment_mine_user_info_ad)
-    public LinearLayout mLlAd;
-    @BindView(R.id.img_ad)
-    public ImageView mImgAd;
-    @BindView(R.id.tx_ad)
-    public TextView mTxAd;
-    @BindView(R.id.tx_ad_sub)
-    public TextView mTxAdSub;
     @BindView(R.id.fragment_mine_banner)
     public ConvenientBannerBookShelf mBanner;
+    @BindView(R.id.ry_icon_ad)
+    public RecyclerView mRyIconAd;
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
     private UserInfoItem.Luobo_notice luobo_notice;
@@ -305,6 +295,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             UserInfoItem.My_center_ad my_center_ad = mUserInfo.getMy_center_ad();
             UserInfoItem.My_center_small_icon_ad my_center_small_icon_ad = mUserInfo.getMy_center_small_icon_ad();
             if (my_center_ad != null && !my_center_ad.getList().isEmpty()) {
+                if (my_center_ad.getList().size() > 12) {
+                    my_center_ad.getList().subList(0, 12);
+                }
                 mBanner.setVisibility(View.VISIBLE);
                 mBanner.setPages(new CBViewHolderCreator<MineAdBannerHolderView>() {
                     @Override
@@ -322,24 +315,27 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 mBanner.setVisibility(View.GONE);
             }
             if (my_center_small_icon_ad != null && !my_center_small_icon_ad.getList().isEmpty()) {
-                mLlAd.setVisibility(View.VISIBLE);
-                BaseAd baseAd = my_center_small_icon_ad.getList().get(0);
-                MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgAd);
-                mTxAd.setText(baseAd.getAd_title());
-                if (baseAd.getAd_subtitle() != null) {
-                    mTxAdSub.setText(baseAd.getAd_subtitle());
-                }
-                mLlAd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        JumpAd(baseAd);
-                    }
-                });
+                initIconAd(my_center_small_icon_ad);
+                mRyIconAd.setVisibility(View.VISIBLE);
             } else {
-                mLlAd.setVisibility(View.GONE);
+                mRyIconAd.setVisibility(View.GONE);
             }
 
         }
+    }
+
+    private void initIconAd(UserInfoItem.My_center_small_icon_ad smallIconAd) {
+        mRyIconAd.setLayoutManager(new GridLayoutManager(activity, 4));
+        MineIconAdAdapter mineIconAdAdapter = new MineIconAdAdapter(activity);
+        mRyIconAd.setAdapter(mineIconAdAdapter);
+        mineIconAdAdapter.setNewData(smallIconAd.getList());
+        mineIconAdAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseAd baseAd = (BaseAd) adapter.getData().get(position);
+                JumpAd(baseAd);
+            }
+        });
     }
 
     private void JumpAd(BaseAd baseAd) {

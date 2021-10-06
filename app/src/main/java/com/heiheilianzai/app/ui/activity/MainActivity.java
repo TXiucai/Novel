@@ -402,6 +402,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 public void onRequestOk(List<AdInfo> list) {
                     try {
                         List<HomeNotice> homeNotices = new ArrayList<>();
+                        if (list != null && list.size() > 10) {
+                            list.subList(0, 10);
+                        }
                         for (int i = 0; i < list.size(); i++) {
                             HomeNotice homeNotice = new HomeNotice();
                             AdInfo adInfo = list.get(i);

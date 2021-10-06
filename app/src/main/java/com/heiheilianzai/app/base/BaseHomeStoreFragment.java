@@ -329,6 +329,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         StroreBookcLable lableAd = new StroreBookcLable();
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                        lableAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
                         lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                         lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
                         initLable(lableAd);
@@ -336,6 +337,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         StroreComicLable lableAd = new StroreComicLable();
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                        lableAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
                         lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                         lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
                         initLable(lableAd);
@@ -365,7 +367,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
                 if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2) {
                     sdkIconAd(recyclerView, recommendType, recomme_list);
-                }else {
+                } else {
                     initRecommend(recyclerView, recomme_list);
                 }
             }
@@ -405,21 +407,21 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     for (int i = 0; i < recomme_list.size(); i++) {
                         HomeRecommendBean.RecommeListBean sdkRecomenBean = recomme_list.get(i);
                         Integer position = Integer.valueOf(sdkRecomenBean.getWeight());
-                        if (localList.size() > position) {
-                            localList.add(position, sdkRecomenBean);
+                        if (localList.size() >= position) {
+                            localList.add(position - 1, sdkRecomenBean);
                         } else {
                             localList.add(sdkRecomenBean);
                         }
                     }
-                    initRecommend(recyclerView, recomme_list);
+                    initRecommend(recyclerView, localList);
                 } catch (Exception e) {
-                    initRecommend(recyclerView,localList);
+                    initRecommend(recyclerView, localList);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                initRecommend(recyclerView,localList);
+                initRecommend(recyclerView, localList);
             }
         });
     }
@@ -627,8 +629,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     for (int i = 0; i < bannerItemStores.size(); i++) {
                         BannerItemStore sdkItemBean = bannerItemStores.get(i);
                         Integer positon = Integer.valueOf(sdkItemBean.getWeight());
-                        if (localList.size() > positon) {
-                            localList.add(positon, sdkItemBean);
+                        if (localList.size() >= positon) {
+                            localList.add(positon - 1, sdkItemBean);
                         } else {
                             localList.add(sdkItemBean);
                         }
@@ -661,7 +663,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
                             if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2 || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2) {
                                 sdkBannerAd(kayCache, url, result);
-                            }else {
+                            } else {
                                 getHeaderView(result);
                             }
                         }
