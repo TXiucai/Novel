@@ -80,6 +80,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
     private int mTotalPage, size;
     private ComicChapter mChapterAd;
     private boolean isSdkAd = false;
+
     @OnClick(value = {R.id.titlebar_back,
             R.id.fragment_comicinfo_mulu_dangqian, R.id.fragment_comicinfo_mulu_zhiding
             , R.id.fragment_comicinfo_mulu_layout})
@@ -192,12 +193,14 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                             //先拿第三方广告然后替换原数据
                             httpData(activity, comic_id);
                             AdInfo adInfo = list.get(0);
-                            mChapterAd = new ComicChapter();
-                            mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                            mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
-                            mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                            mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                            mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                                mChapterAd = new ComicChapter();
+                                mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
+                                mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                                mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                                mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                            }
                         } catch (Exception e) {
                             httpData(activity, comic_id);
                         }
@@ -211,8 +214,8 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                 return;
             }
         }
-        if (!isSdkAd){
-            httpData(activity,comic_id);
+        if (!isSdkAd) {
+            httpData(activity, comic_id);
         }
     }
 
@@ -238,17 +241,10 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                                 ComicChapter comicChapter = new Gson().fromJson(jsonElement, ComicChapter.class);
                                 comicChapter.setIs_limited_free(is_limited_free);
                                 comicChapter.comic_id = comic_id;
-
-                                if (App.isVip(activity)) {
-                                    if (comicChapter.getAd_image() == null) {
-                                        comicChapterCatalogs.add(comicChapter);
-                                    }
+                                if (comicChapter.getAd_image() != null && mChapterAd != null) {
+                                    comicChapterCatalogs.add(mChapterAd);
                                 } else {
-                                    if (comicChapter.getAd_image() != null && mChapterAd != null) {
-                                        comicChapterCatalogs.add(mChapterAd);
-                                    } else {
-                                        comicChapterCatalogs.add(comicChapter);
-                                    }
+                                    comicChapterCatalogs.add(comicChapter);
                                 }
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {

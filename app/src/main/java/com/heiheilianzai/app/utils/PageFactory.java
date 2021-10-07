@@ -67,9 +67,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
-import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
-import static com.heiheilianzai.app.ui.activity.read.ReadActivity.USE_BUTTOM_AD;
 
 /**
  * 小说翻页核心类。 重绘与监听都在这里实现
@@ -271,6 +269,13 @@ public class PageFactory {
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));//注册广播,随时获取到电池电量信息
         initBg(config.getDayOrNight());
         measureMarginWidth();
+        if (list_ad_view_img == null) {
+            list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
+            ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
+            layoutParams.width = ScreenSizeUtils.getInstance(context).getScreenWidth() - ImageUtil.dp2px(context, 20);
+            layoutParams.height = layoutParams.width;
+            list_ad_view_img.setLayoutParams(layoutParams);
+        }
     }
 
     private void measureMarginWidth() {
@@ -515,12 +520,10 @@ public class PageFactory {
             return;
         }
         String AD_text = resources.getString(R.string.app_name);
-        if (ReaderConfig.USE_AD) {
-            if (AD_text_WIDTH == 0) {
-                AD_text_WIDTH = (int) (mBatteryPaint.measureText(AD_text));//;
-            }
-            c.drawText(AD_text, (mWidth - AD_text_WIDTH) / 2, mHeight - statusMarginBottom, mBatteryPaint);
+        if (AD_text_WIDTH == 0) {
+            AD_text_WIDTH = (int) (mBatteryPaint.measureText(AD_text));//;
         }
+        c.drawText(AD_text, (mWidth - AD_text_WIDTH) / 2, mHeight - statusMarginBottom, mBatteryPaint);
         int dateWith = (int) (mBatteryPaint.measureText(date) + mBorderWidth);//时间宽度
         c.drawText(date, marginWidth, mHeight - statusMarginBottom, mBatteryPaint);
         // 画电池
@@ -650,7 +653,7 @@ public class PageFactory {
         mSupport.setVisibility(View.GONE);
         mPurchaseLayout.setVisibility(View.GONE);
         if (ADview2 != null) {
-            if (ReaderConfig.USE_AD && !close_AD) {
+            if (!close_AD) {
                 ADview2.setVisibility(View.VISIBLE);
             } else {
                 ADview2.setVisibility(View.GONE);
@@ -688,7 +691,7 @@ public class PageFactory {
                 return;
             }
 
-            if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERFirst) {
+            if (!close_AD && IS_CHAPTERFirst) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
                 drawAD(mBookPageWidget.getNextPage());
@@ -772,7 +775,7 @@ public class PageFactory {
                 return;
             }
 
-            if (ReaderConfig.USE_AD && !close_AD && IS_CHAPTERLast && mBookPageWidget.Current_Page > 5) {
+            if (!close_AD && IS_CHAPTERLast && mBookPageWidget.Current_Page > 5) {
                 cancelPage = currentPage;
                 onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
                 prePage = currentPage;
@@ -846,7 +849,7 @@ public class PageFactory {
 
     public void cancelPage() {
         currentPage = cancelPage;
-        if (ReaderConfig.USE_AD && !close_AD) {
+        if (!close_AD) {
             if (IS_CHAPTERLast && IS_CHAPTERFirst) {
                 insert_todayone2.setVisibility(View.INVISIBLE);
             } else {
@@ -1114,7 +1117,7 @@ public class PageFactory {
 
     //绘制当前页面
     public void currentPage(Boolean updateChapter) {
-        if (ReaderConfig.USE_AD && !close_AD && (!IS_CHAPTERFirst || !IS_CHAPTERLast)) {
+        if (!close_AD && (!IS_CHAPTERFirst || !IS_CHAPTERLast)) {
         } else {
             onDraw(mBookPageWidget.getNextPage(), currentPage.getLines(), updateChapter);
         }
@@ -1485,7 +1488,7 @@ public class PageFactory {
                 }
             }
         });
-        if (!close_AD && USE_AD) {
+        if (!close_AD) {
             drawAD(mBookPageWidget.getCurPage());
         } else
             onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -1542,13 +1545,13 @@ public class PageFactory {
                     openBook(2, nextChapter, bookUtil);
                     ChapterManager.getInstance(mActivity).setCurrentChapter(nextChapter);
                     IS_CHAPTERLast = true;
-                    if (ReaderConfig.USE_AD && !close_AD) {
+                    if (!close_AD) {
                         getWebViewAD(mActivity);//获取广告
                     }
                 }
             }
         });
-        if (!close_AD && USE_AD) {
+        if (!close_AD) {
             drawAD(mBookPageWidget.getCurPage());
         } else
             onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
@@ -1576,28 +1579,7 @@ public class PageFactory {
                 localAd(activity);
             }
         } else {
-            if (baseAd.ad_type == 1) {
-                insert_todayone2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(activity, WebViewActivity.class);
-                        intent.putExtra("url", baseAd.ad_skip_url);
-                        intent.putExtra("title", baseAd.ad_title);
-                        intent.putExtra("advert_id", baseAd.advert_id);
-                        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                        activity.startActivity(intent);
-                    }
-                });
-                if (list_ad_view_img == null) {
-                    list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
-                    ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-                    layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                    layoutParams.height = layoutParams.width;
-                    list_ad_view_img.setLayoutParams(layoutParams);
-                }
-                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-            }
+            clickAd(activity);
         }
     }
 
@@ -1607,17 +1589,20 @@ public class PageFactory {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    baseAd = new BaseAd();
-                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
-                    baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                    baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
-                    baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
-                    clickAd(activity);
+                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        baseAd = new BaseAd();
+                        baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                        baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                        baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                        baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
+                        baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                        clickAd(activity);
+                    } else {
+                        close_AD = true;
+                    }
                 } catch (Exception e) {
-                    close_AD = true;
                     localAd(activity);
                 }
             }
@@ -1648,6 +1633,7 @@ public class PageFactory {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        close_AD = true;
                     }
                 }
         );
@@ -1671,14 +1657,6 @@ public class PageFactory {
                     activity.startActivity(intent);
                 }
             });
-            if (list_ad_view_img == null) {
-                list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
-                ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                layoutParams.height = layoutParams.width;
-                Insert_todayone2 = layoutParams.width;
-                list_ad_view_img.setLayoutParams(layoutParams);
-            }
             MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
         } else {
             close_AD = true;

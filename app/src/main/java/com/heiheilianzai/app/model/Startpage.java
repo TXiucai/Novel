@@ -8,7 +8,16 @@ public class Startpage {
     public String content;
     public int skip_type;
     public String title;
-    public  String countdown_second;
+    public String countdown_second;
+    public String ad_show_type;
+
+    public String getAd_show_type() {
+        return ad_show_type;
+    }
+
+    public void setAd_show_type(String ad_show_type) {
+        this.ad_show_type = ad_show_type;
+    }
 
     public String getCountdown_second() {
         return countdown_second;

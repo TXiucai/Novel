@@ -59,8 +59,6 @@ import androidx.annotation.NonNull;
 
 import butterknife.BindView;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
-
 /**
  * 开屏页
  */
@@ -233,13 +231,11 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         if (!StringUtils.isEmpty(dataBean.getBook_text_api())) {
                             ShareUitls.putString(App.getContext(), PrefConst.NOVEL_API, dataBean.getBook_text_api());
                         }
-                        if (USE_AD_FINAL) {
-                            ReaderConfig.NOVEL_SDK_AD.clear();
-                            ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());
-                            ReaderConfig.COMIC_SDK_AD.clear();
-                            ReaderConfig.COMIC_SDK_AD.addAll(dataBean.getAd_position_comic().getList());
-                            ReaderConfig.OTHER_SDK_AD = dataBean.getAd_position_other().getList();
-                        }
+                        ReaderConfig.NOVEL_SDK_AD.clear();
+                        ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());
+                        ReaderConfig.COMIC_SDK_AD.clear();
+                        ReaderConfig.COMIC_SDK_AD.addAll(dataBean.getAd_position_comic().getList());
+                        ReaderConfig.OTHER_SDK_AD = dataBean.getAd_position_other().getList();
                         App.putDailyStartPageMax(dataBean.daily_max_start_page);
                         getOpenScreen();
                         if (!isfirst.equals("yes")) {
@@ -247,14 +243,22 @@ public class SplashActivity extends BaseAdvertisementActivity {
                                 String json = ShareUitls.getString(getApplicationContext(), PrefConst.ADVERTISING_JSON_KAY, "");
                                 if (!StringUtils.isEmpty(json)) {
                                     Startpage startpage = new Gson().fromJson(json, Startpage.class);
-                                    setOpenScreenView(startpage);
+                                    if (App.isShowSdkAd(activity, startpage.getAd_show_type())) {
+                                        setOpenScreenView(startpage);
+                                    } else {
+                                        handler.sendEmptyMessageDelayed(0, 500);
+                                    }
                                 } else {
                                     String str = ShareUitls.getString(SplashActivity.this, "Update", "");
                                     JSONObject jsonObject = new JSONObject(str);
                                     String start_pag = jsonObject.getString("start_page");
                                     if (!StringUtils.isEmpty(start_pag)) {
                                         Startpage startpage = new Gson().fromJson(start_pag, Startpage.class);
-                                        setOpenScreenView(startpage);
+                                        if (App.isShowSdkAd(activity, startpage.getAd_show_type())) {
+                                            setOpenScreenView(startpage);
+                                        } else {
+                                            handler.sendEmptyMessageDelayed(0, 500);
+                                        }
                                     } else {
                                         handler.sendEmptyMessageDelayed(0, 500);
                                     }

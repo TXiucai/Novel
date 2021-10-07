@@ -368,7 +368,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         if (StringUtils.isEmpty(str)) {
             RecomendApp recomendApp = new RecomendApp(activity);
             recomendApp.getRequestData();
-
             new DialogExpirerdVip().getUserInfo(activity);
             return;
         }
@@ -387,12 +386,14 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         if (result.length() != 0) {
             handler.sendEmptyMessageDelayed(1, 1000);
         }
+        RecomendApp recomendApp = new RecomendApp(activity);
+        recomendApp.getRequestData();
+        new DialogExpirerdVip().getUserInfo(activity);
     }
 
     private void initData() {
         syncDevice(activity);
         getSdkAndLocalNotice(activity);
-        getReadButtomWebViewAD(activity);
     }
 
     private void getSdkAndLocalNotice(Activity activity) {
@@ -412,7 +413,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             homeNotice.setTitle(adInfo.getMaterial().getTitle());
                             homeNotice.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                             homeNotice.setJump_url(adInfo.getAdExtra().get("jump_url"));
-                            homeNotices.add(homeNotice);
+                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                                homeNotices.add(homeNotice);
+                            }
                         }
                         HomeNoticePhotoDialog.showDialog(activity, activity.getWindow().getDecorView(), homeNotices, true);
                     } catch (Exception e) {
@@ -428,38 +431,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         } else {
             getNotice(activity);
         }
-    }
-
-    /**
-     * 更新小说广告
-     *
-     * @param activity
-     */
-    public void getReadButtomWebViewAD(Activity activity) {
-        ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("type", XIAOSHUO + "");
-        params.putExtraParams("position", "12");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mAdvert, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        try {
-                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                            if (baseAd.ad_type == 1) {
-                                ReadActivity.USE_BUTTOM_AD = true;
-                            } else {
-                                ReadActivity.USE_BUTTOM_AD = false;
-                            }
-                        } catch (Exception e) {
-                            ReadActivity.USE_BUTTOM_AD = false;
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
     }
 
     /**

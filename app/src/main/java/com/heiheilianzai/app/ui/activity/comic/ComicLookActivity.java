@@ -743,13 +743,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 try {
                     getData(activity, comic_id, Chapter_id, true);
                     AdInfo adInfo = list.get(0);
-                    mSdkTopAd = new ComicChapterTopAd();
-                    mSdkTopAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                    mSdkTopAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                    mSdkTopAd.setAd_title(adInfo.getMaterial().getTitle());
-                    mSdkTopAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                    mSdkTopAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                    mSdkTopAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        mSdkTopAd = new ComicChapterTopAd();
+                        mSdkTopAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        mSdkTopAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                        mSdkTopAd.setAd_title(adInfo.getMaterial().getTitle());
+                        mSdkTopAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                        mSdkTopAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        mSdkTopAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                    }
                 } catch (Exception e) {
                     getData(activity, comic_id, Chapter_id, true);
                 }
@@ -906,7 +908,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         return null;
     }
 
-
     private void HandleData(ComicChapterItem comicChapterItem, String chapter_id, String comic_id, Activity activity) {
         try {
             this.comicChapterItem = comicChapterItem;
@@ -931,7 +932,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 baseComicImages.addAll(comicChapterItem.image_list);
                 if (mIsSdkAd) {
-                    if (mSdkTopAd != null && !App.isVip(activity)) {
+                    if (mSdkTopAd != null) {
                         BaseComicImage baseComicImage = new BaseComicImage();
                         baseComicImage.setAd(1);
                         baseComicImage.setAd_skip_url(mSdkTopAd.getAd_skip_url());
@@ -944,19 +945,17 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 } else {
                     ComicChapterTopAd advert = comicChapterItem.getAdvert();
                     if (advert != null) {
-                        if (!App.isVip(activity)) {
-                            BaseComicImage baseComicImage = new BaseComicImage();
-                            baseComicImage.setAd(1);
-                            baseComicImage.setAd_skip_url(advert.getAd_skip_url());
-                            baseComicImage.setImage(advert.getAd_image());
-                            baseComicImage.setAd_type(advert.getAd_type());
-                            baseComicImage.setAd_url_type(advert.getAd_url_type());
-                            baseComicImage.setHeight(advert.getAd_height());
-                            baseComicImage.setWidth(advert.getAd_width());
-                            baseComicImage.setAdvert_id(advert.getAdvert_id());
-                            baseComicImages.add(0, baseComicImage);
-                            ++baseComicImagesSize;
-                        }
+                        BaseComicImage baseComicImage = new BaseComicImage();
+                        baseComicImage.setAd(1);
+                        baseComicImage.setAd_skip_url(advert.getAd_skip_url());
+                        baseComicImage.setImage(advert.getAd_image());
+                        baseComicImage.setAd_type(advert.getAd_type());
+                        baseComicImage.setAd_url_type(advert.getAd_url_type());
+                        baseComicImage.setHeight(advert.getAd_height());
+                        baseComicImage.setWidth(advert.getAd_width());
+                        baseComicImage.setAdvert_id(advert.getAdvert_id());
+                        baseComicImages.add(0, baseComicImage);
+                        ++baseComicImagesSize;
                     }
                 }
 
@@ -1017,15 +1016,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         getData(activity, comic_id, comicChapterItem.next_chapter, false);
                     }
                 }
-                if (ReaderConfig.USE_AD && !App.isVip(activity)) {
-                    holderFoot.list_ad_view_layout.setVisibility(View.VISIBLE);
-                    getWebViewAD(activity);
-                } else {
-                    holderFoot.list_ad_view_layout.setVisibility(View.GONE);
-                }
-
+                getWebViewAD(activity);
                 ComicReadHistory.addReadHistory(FORM_READHISTORY, activity, comic_id, chapter_id);
-
             }
         } catch (Exception e) {
         } catch (Error e) {
@@ -1200,30 +1192,35 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 try {
                     AdInfo adInfo = list.get(0);
                     BaseAd baseAd = new BaseAd();
-                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
-                    baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                    baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
-                    if (baseAd != null) {
-                        holderFoot.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent();
-                                intent.setClass(activity, WebViewActivity.class);
-                                intent.putExtra("url", baseAd.ad_skip_url);
-                                intent.putExtra("title", baseAd.ad_title);
-                                intent.putExtra("advert_id", baseAd.advert_id);
-                                intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                                activity.startActivity(intent);
-                            }
-                        });
-                        ViewGroup.LayoutParams layoutParams = holderFoot.list_ad_view_img.getLayoutParams();
-                        layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                        layoutParams.height = layoutParams.width / 3;
-                        holderFoot.list_ad_view_img.setLayoutParams(layoutParams);
-                        MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, holderFoot.list_ad_view_img);
+                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                        baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                        baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                        baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                        baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                        if (baseAd != null) {
+                            holderFoot.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent();
+                                    intent.setClass(activity, WebViewActivity.class);
+                                    intent.putExtra("url", baseAd.ad_skip_url);
+                                    intent.putExtra("title", baseAd.ad_title);
+                                    intent.putExtra("advert_id", baseAd.advert_id);
+                                    intent.putExtra("ad_url_type", baseAd.ad_url_type);
+                                    activity.startActivity(intent);
+                                }
+                            });
+                            ViewGroup.LayoutParams layoutParams = holderFoot.list_ad_view_img.getLayoutParams();
+                            layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+                            layoutParams.height = layoutParams.width / 3;
+                            holderFoot.list_ad_view_img.setLayoutParams(layoutParams);
+                            holderFoot.list_ad_view_layout.setVisibility(View.VISIBLE);
+                            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, holderFoot.list_ad_view_img);
+                        }
+                    } else {
+                        holderFoot.list_ad_view_layout.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     localBotoomAd(activity);
@@ -1267,13 +1264,18 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 layoutParams.height = layoutParams.width / 3;
                                 holderFoot.list_ad_view_img.setLayoutParams(layoutParams);
                                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, holderFoot.list_ad_view_img);
+                                holderFoot.list_ad_view_layout.setVisibility(View.VISIBLE);
+                            } else {
+                                holderFoot.list_ad_view_layout.setVisibility(View.GONE);
                             }
                         } catch (Exception e) {
+                            holderFoot.list_ad_view_layout.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        holderFoot.list_ad_view_layout.setVisibility(View.GONE);
                     }
                 }
         );

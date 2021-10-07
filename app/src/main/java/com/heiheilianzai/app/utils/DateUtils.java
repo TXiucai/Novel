@@ -47,9 +47,13 @@ public class DateUtils {
     }
 
     public static String getStringToDate(String time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
-        String format = simpleDateFormat.format(new Date(Long.valueOf(time)));
-        return format;
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
+            String format = simpleDateFormat.format(new Date(Long.valueOf(time)));
+            return format;
+        } catch (Exception e) {
+        }
+        return "";
     }
 
     /**

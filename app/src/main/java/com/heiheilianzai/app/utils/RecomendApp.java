@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.RecommendAppBean;
@@ -73,7 +74,9 @@ public class RecomendApp {
                         appListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                         appListBean.setDown_link(adInfo.getAdExtra().get("down_link"));
                         appListBean.setApp_name(adInfo.getMaterial().getTitle());
-                        appListBeans.add(appListBean);
+                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            appListBeans.add(appListBean);
+                        }
                     }
                     recommendAppBean.setApp_list(appListBeans);
                     getAppUpdatePop(activity, recommendAppBean);

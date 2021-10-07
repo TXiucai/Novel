@@ -78,7 +78,7 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
         MyToash.Log("http_utaa", bookInfoComments.toString());
         this.baseComic = baseComic;
         activity_book_info_content_comment_des.setText(baseComic.description);
-        if (ReaderConfig.USE_AD && baseAd != null) {
+        if ( baseAd != null) {
             activity_book_info_ad.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);

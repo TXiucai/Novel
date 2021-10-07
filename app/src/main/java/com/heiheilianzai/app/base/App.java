@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
@@ -274,6 +275,32 @@ public class App extends LitePalApplication {
             }
         } else {
             return false;
+        }
+    }
+
+    //判断第三方广告给什么用户开启
+    public static boolean isShowSdkAd(Context context, String showType) {
+        //0 全部，1会员 2非会员  展示
+        if (showType != null) {
+            if (TextUtils.equals(showType, "0")) {
+                return true;
+            } else if (TextUtils.equals(showType, "1")) {
+                if (isVip(context)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (TextUtils.equals(showType, "2")) {
+                if (isVip(context)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 

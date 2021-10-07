@@ -95,12 +95,12 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
      */
     @Override
     public void getBannerData() {
-        getBannerData("StoreBookBannerData", ReaderConfig.BOOK_STORE_BANNER);
+        getBannerData("StoreBookBannerData", ReaderConfig.BOOK_STORE_BANNER, 0);
     }
 
     @Override
     public void getCacheBannerData() {
-        getCacheBannerData("StoreBookBannerData");
+        getCacheBannerData("StoreBookBannerData", 0);
     }
 
     @Override

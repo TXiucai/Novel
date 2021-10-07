@@ -52,6 +52,7 @@ public class DialogComicChapter {
     public ComicVChapterCatalogAdapter comicChapterCatalogAdapter;
     List<ComicChapter> comicChapterCatalogs;
     public ComicChapter mChapterAd;
+    private boolean mIsSdkAd = false;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public Dialog getDialogVipPop(Activity activity, BaseComic baseComic) {
@@ -126,10 +127,10 @@ public class DialogComicChapter {
     }
 
     private void getSdkChapterAd(Activity activity, BaseComic baseComic, VipHolder vipHolder) {
-
         for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkAd = true;
                 XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
                     @Override
                     public void onRequestOk(List<AdInfo> list) {
@@ -137,11 +138,15 @@ public class DialogComicChapter {
                             //先拿第三方广告然后替换原数据
                             httpData(activity, baseComic.getComic_id(), vipHolder);
                             AdInfo adInfo = list.get(0);
-                            mChapterAd = new ComicChapter();
-                            mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                            mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
-                            mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                            mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                                mChapterAd = new ComicChapter();
+                                mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                mChapterAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                                mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
+                                mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                                mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                                mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                            }
                         } catch (Exception e) {
                             httpData(activity, baseComic.getComic_id(), vipHolder);
                         }
@@ -153,9 +158,10 @@ public class DialogComicChapter {
                     }
                 });
                 return;
-            } else {
-                httpData(activity, baseComic.getComic_id(), vipHolder);
             }
+        }
+        if (!mIsSdkAd) {
+            httpData(activity, baseComic.getComic_id(), vipHolder);
         }
     }
 
@@ -181,17 +187,10 @@ public class DialogComicChapter {
                                 ComicChapter comicChapter = gson.fromJson(jsonElement, ComicChapter.class);
                                 comicChapter.setIs_limited_free(is_limited_free);
                                 comicChapter.comic_id = comic_id;
-
-                                if (App.isVip(activity)) {
-                                    if (comicChapter.getAd_image() == null) {
-                                        comicChapterCatalogs.add(comicChapter);
-                                    }
+                                if (comicChapter.getAd_image() != null && mChapterAd != null) {
+                                    comicChapterCatalogs.add(mChapterAd);
                                 } else {
-                                    if (comicChapter.getAd_image() != null && mChapterAd != null) {
-                                        comicChapterCatalogs.add(mChapterAd);
-                                    } else {
-                                        comicChapterCatalogs.add(comicChapter);
-                                    }
+                                    comicChapterCatalogs.add(comicChapter);
                                 }
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {

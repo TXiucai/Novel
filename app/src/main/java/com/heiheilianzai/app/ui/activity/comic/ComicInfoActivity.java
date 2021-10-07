@@ -173,8 +173,9 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     private int size;
     private int lastVisibleItemPosition;
     private boolean isCanShow = false;
+    private boolean isShowSdkAd = false;
 
-    @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back,
+    @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back, R.id.list_ad_view_layout,
             R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category, R.id.rl_comic_vip})
     public void getEvent(View view) {
         switch (view.getId()) {
@@ -228,12 +229,26 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
                 DialogComicChapter dialogComicChapter = new DialogComicChapter();
                 Dialog dialogVipPop = dialogComicChapter.getDialogVipPop(activity, baseComic);
-
                 break;
             case R.id.rl_comic_vip:
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 5);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
                 activity.startActivity(myIntent);
+                break;
+            case R.id.list_ad_view_layout:
+                if (baseAd != null) {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, WebViewActivity.class);
+                    String ad_skip_url = baseAd.ad_skip_url;
+                    if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
+                        ad_skip_url += "&uid=" + Utils.getUID(activity);
+                    }
+                    intent.putExtra("url", ad_skip_url);
+                    intent.putExtra("title", baseAd.ad_title);
+                    intent.putExtra("advert_id", baseAd.advert_id);
+                    intent.putExtra("ad_url_type", baseAd.ad_url_type);
+                    activity.startActivity(intent);
+                }
                 break;
         }
     }
@@ -259,7 +274,10 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ry_comic_category.setLayoutManager(linearLayoutManager);
-
+        ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
+        layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+        layoutParams.height = layoutParams.width / 3;
+        list_ad_view_img.setLayoutParams(layoutParams);
         init();
     }
 
@@ -366,59 +384,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             baseComic.setAuthor(comic.author);
             baseComic.setFlag(comic.flag);
             baseComic.setTotal_chapters(comic.total_chapters);
-            if (ReaderConfig.USE_AD && baseAd != null) {
-                activity_book_info_ad.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                layoutParams.height = layoutParams.width / 3;
-                list_ad_view_img.setLayoutParams(layoutParams);
-                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-                //替换第三方广告
-                for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
-                    AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-                    if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
-                        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
-                            @Override
-                            public void onRequestOk(List<AdInfo> list) {
-                                try {
-                                    AdInfo adInfo = list.get(0);
-                                    baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                                    baseAd.setAd_title(adInfo.getMaterial().getTitle());
-                                    baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                                    baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                                    MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
-                                } catch (Exception e) {
-                                }
-                            }
-
-                            @Override
-                            public void onRequestFailed(int i, String s) {
-
-                            }
-                        });
-                        return;
-                    }
-                }
-                activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(activity, WebViewActivity.class);
-                        String ad_skip_url = baseAd.ad_skip_url;
-                        if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
-                            ad_skip_url += "&uid=" + Utils.getUID(activity);
-                        }
-                        intent.putExtra("url", ad_skip_url);
-                        intent.putExtra("title", baseAd.ad_title);
-                        intent.putExtra("advert_id", baseAd.advert_id);
-                        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                        activity.startActivity(intent);
-                    }
-                });
-
-            } else {
-                activity_book_info_ad.setVisibility(View.GONE);
-            }
+            getSdkAd();
             ll_comment_container.removeAllViews();
             ll_label_container.removeAllViews();
             try {
@@ -509,6 +475,58 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
             } catch (Exception e) {
             }
+        }
+    }
+
+    private void getSdkAd() {
+        //替换第三方广告
+        for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                isShowSdkAd = true;
+                XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+                    @Override
+                    public void onRequestOk(List<AdInfo> list) {
+                        try {
+                            AdInfo adInfo = list.get(0);
+                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                                if (baseAd == null) {
+                                    baseAd = new BaseAd();
+                                }
+                                baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                                baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                                baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
+                                baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                                activity_book_info_ad.setVisibility(View.VISIBLE);
+                            } else {
+                                activity_book_info_ad.setVisibility(View.GONE);
+                            }
+                        } catch (Exception e) {
+                            localAd();
+                        }
+                    }
+
+                    @Override
+                    public void onRequestFailed(int i, String s) {
+                        localAd();
+                    }
+                });
+                return;
+            }
+        }
+        if (!isShowSdkAd){
+            localAd();
+        }
+    }
+
+    private void localAd() {
+        if (baseAd != null) {
+            activity_book_info_ad.setVisibility(View.VISIBLE);
+            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+        } else {
+            activity_book_info_ad.setVisibility(View.GONE);
         }
     }
 

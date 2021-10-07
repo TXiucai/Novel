@@ -27,12 +27,13 @@ public class HomeNoticePhotoDialog {
     static int mPosition = 0;
     static HomeNotice mHomeNotice;
 
-    public static void showDialog(final Activity activity, View v, List<HomeNotice> homeNotices,boolean isSdkAd) {
-        if (popupWindow != null && popupWindow.isShowing()) {
+    public static void showDialog(final Activity activity, View v, List<HomeNotice> homeNotices, boolean isSdkAd) {
+        if (popupWindow != null && popupWindow.isShowing() && homeNotices != null && homeNotices.size() > 0) {
             return;
         }
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_home_notice2, null);
         popupWindow = new PopupWindow(view, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ScreenSizeUtils.getInstance(activity).getScreenHeight(), true);
+        mPosition = 0;
         mHomeNotice = homeNotices.get(mPosition);
         ImageView homeNoticePhoto = view.findViewById(R.id.home_notice_photo);
         View close = view.findViewById(R.id.home_notice_close);
@@ -46,9 +47,9 @@ public class HomeNoticePhotoDialog {
                     MyPicasso.GlideImageNoSize(activity, mHomeNotice.getImg_content(), homeNoticePhoto);
                 } else {
                     NoticeEvent.DialogEvent dialogEvent = new NoticeEvent.DialogEvent();
-                    if (isSdkAd){
+                    if (isSdkAd) {
                         dialogEvent.action = NoticeEvent.ACTION_DIALOG_HOME_LOCAL;
-                    }else {
+                    } else {
                         dialogEvent.action = NoticeEvent.ACTION_DIALOG_HOME;
                     }
                     EventBus.getDefault().post(dialogEvent);

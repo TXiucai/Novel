@@ -25,8 +25,6 @@ import com.heiheilianzai.app.view.animation.PageAnimation;
 import com.heiheilianzai.app.view.animation.SimulationAnimation;
 import com.heiheilianzai.app.view.animation.SlideAnimation;
 
-import static com.heiheilianzai.app.ui.activity.read.ReadActivity.USE_BUTTOM_AD;
-
 /**
  * Created by scb on 2018/8/29 0029.
  */

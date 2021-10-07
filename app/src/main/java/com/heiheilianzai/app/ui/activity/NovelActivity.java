@@ -396,7 +396,7 @@ public class NovelActivity extends BaseButterKnifeTransparentActivity {
                 values.put("description", infoBook.description);
                 LitePal.updateAsync(BaseBook.class, values, basebooks.getId());
             }
-            if (ReaderConfig.USE_AD && infoBookItem.advert != null) {
+            if ( infoBookItem.advert != null) {
                 BaseAd baseAd = infoBookItem.advert;
                 activity_book_info_ad.setVisibility(View.VISIBLE);
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();

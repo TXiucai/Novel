@@ -236,7 +236,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         });
     }
 
-    public void getHeaderView(String result) {
+    public void getHeaderView(String result, int flag) {
         if (headerView == null) {
             headerView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_store_comic_content_head, null);
         }
@@ -244,7 +244,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         ViewGroup.LayoutParams layoutParams = mStoreBannerMale.getLayoutParams();
         layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         layoutParams.height = ScreenSizeUtils.getInstance(activity).getScreenWidth() * 3 / 5;
-        ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, 1);
+        ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, flag);
         RecyclerView recyclerView = headerView.findViewById(R.id.ry_recommend);
         getHomeRecommend(recyclerView);
         smartRecyclerAdapter.setHeaderView(headerView);
@@ -294,9 +294,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     protected abstract void getHomeRecommend(RecyclerView recyclerView);
 
     protected void getSdkLableAd(int recommendType) {
-        if (App.isVip(activity.getApplicationContext())) {
-            return;
-        }
         String type;
         if (recommendType == 0) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_NOVLE;
@@ -332,7 +329,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         lableAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
                         lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                         lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                        initLable(lableAd);
+                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            initLable(lableAd);
+                        }
                     } else {//漫画
                         StroreComicLable lableAd = new StroreComicLable();
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
@@ -340,7 +339,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         lableAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
                         lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                         lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                        initLable(lableAd);
+                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            initLable(lableAd);
+                        }
                     }
                 } catch (Exception e) {
                 }
@@ -402,7 +403,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         recommeListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                         recommeListBean.setTitle(adInfo.getAdExtra().get("title"));
                         recommeListBean.setWeight(adInfo.getAdExtra().get("weight"));
-                        recomme_list.add(recommeListBean);
+                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            recomme_list.add(recommeListBean);
+                        }
                     }
                     for (int i = 0; i < recomme_list.size(); i++) {
                         HomeRecommendBean.RecommeListBean sdkRecomenBean = recomme_list.get(i);
@@ -594,15 +597,15 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     /**
      * 加载Banner数据并写入缓存
      */
-    protected void getBannerData(String kayCache, String url) {
-        localBannerAd(kayCache, url);
+    protected void getBannerData(String kayCache, String url, int recommendType) {
+        localBannerAd(kayCache, url, recommendType);
     }
 
-    private void sdkBannerAd(String kayCache, String url, String json) {
+    private void sdkBannerAd(String kayCache, String url, String json, int flag) {
         String type;
-        if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER))
+        if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER)) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_NOVEL;
-        else {
+        } else {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_COMIC;
         }
         XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
@@ -615,9 +618,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         AdInfo adInfo = list.get(i);
                         bannerItemStore.setAction(Integer.valueOf(adInfo.getAdExtra().get("action")));
                         bannerItemStore.setContent(adInfo.getAdExtra().get("content"));
+
                         bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
                         bannerItemStore.setWeight(adInfo.getAdExtra().get("weight"));
-                        bannerItemStores.add(bannerItemStore);
+                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            bannerItemStores.add(bannerItemStore);
+                        }
                     }
                     List<BannerItemStore> localList = new ArrayList<>();
                     JsonParser jsonParser = new JsonParser();
@@ -638,21 +644,22 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     String sdkJson = new Gson().toJson(localList);
                     if (!StringUtils.isEmpty(sdkJson)) {
                         ShareUitls.putMainHttpTaskString(activity, kayCache, sdkJson);
-                        getHeaderView(sdkJson);
+                        getHeaderView(sdkJson, flag);
                     }
                 } catch (Exception e) {
-                    getHeaderView(json);
+                    getHeaderView(json, flag);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                getHeaderView(json);
+                getHeaderView(json, flag);
             }
         });
     }
 
-    private void localBannerAd(String kayCache, String url) {
+    private void localBannerAd(String kayCache, String url, int flag) {
+
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("channel_id", "1");
         String json = params.generateParamsJson();
@@ -662,9 +669,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         if (!StringUtils.isEmpty(result)) {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
                             if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2 || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2) {
-                                sdkBannerAd(kayCache, url, result);
+                                sdkBannerAd(kayCache, url, result, flag);
                             } else {
-                                getHeaderView(result);
+                                getHeaderView(result, flag);
                             }
                         }
                     }
@@ -680,13 +687,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     /**
      * 加载Banner 缓存数据
      */
-    protected void getCacheBannerData(String kay) {
+    protected void getCacheBannerData(String kay, int flag) {
         String cacheData = "";
         if (activity != null) {
             cacheData = ShareUitls.getMainHttpTaskString(activity, kay, null);
         }
         if (!StringUtils.isEmpty(cacheData)) {
-            getHeaderView(cacheData);
+            getHeaderView(cacheData, flag);
         }
     }
 

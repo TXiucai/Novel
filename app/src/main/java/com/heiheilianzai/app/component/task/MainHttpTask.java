@@ -21,7 +21,6 @@ import com.heiheilianzai.app.utils.Utils;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
-import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 
 //主界面接口数据缓存
@@ -121,14 +120,9 @@ public class MainHttpTask {
                                     break;
                                 case "Mine":
                                     Mine = result;
-                                    if (USE_AD_FINAL) {
-                                        ReaderConfig.REFREASH_USERCENTER = false;
-                                        UserInfoItem mUserInfo = new Gson().fromJson(result, UserInfoItem.class);
-                                        AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, mUserInfo.getUser_token());
-                                        if (mUserInfo.getIs_vip() == 1) {
-                                            ReaderConfig.USE_AD = false;
-                                        }
-                                    }
+                                    ReaderConfig.REFREASH_USERCENTER = false;
+                                    UserInfoItem mUserInfo = new Gson().fromJson(result, UserInfoItem.class);
+                                    AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, mUserInfo.getUser_token());
                                     break;
                             }
                             ShareUitls.putMainHttpTaskString(activity, Option, result);
@@ -254,6 +248,7 @@ public class MainHttpTask {
         }
         return true;
     }
+
     public boolean GoLogin(Activity activity) {
         if (!Utils.isLogin(activity)) {
             Intent intent = new Intent();

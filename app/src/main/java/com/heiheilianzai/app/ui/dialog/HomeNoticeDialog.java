@@ -34,8 +34,7 @@ public class HomeNoticeDialog {
     static int mPosition = 0;
 
     public static void showDialog(final Activity activity, View v, List<HomeNotice> homeNotice) {
-
-        if (popupWindow != null && popupWindow.isShowing()) {
+        if (popupWindow != null && popupWindow.isShowing() && homeNotice != null && homeNotice.size() > 0) {
             return;
         }
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_home_notice, null);
@@ -104,7 +103,7 @@ public class HomeNoticeDialog {
             public void onClick(View widget) {
                 String user_parame_need = homeNotice.get(mPosition).getUser_parame_need();
                 String jump_url = homeNotice.get(mPosition).getJump_url();
-                if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need,"2") && !jump_url.contains("&uid=")) {
+                if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !jump_url.contains("&uid=")) {
                     jump_url += "&uid=" + Utils.getUID(activity);
                 }
                 Intent intent = new Intent();

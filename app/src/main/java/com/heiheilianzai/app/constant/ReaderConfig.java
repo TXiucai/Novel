@@ -90,7 +90,6 @@ public class ReaderConfig {
         }
         return MAXheigth;
     }
-
     // 是否 启用支付 功能
     public static boolean USE_PAY = true;
     //是否使用微信 包括微信登录和微信分享
@@ -99,9 +98,7 @@ public class ReaderConfig {
     public static boolean USE_QQ = false;
     //是否使用分享
     public static boolean USE_SHARE = false;
-    //是否使用广告
-    public static boolean USE_AD = true;
-    public static final boolean USE_AD_FINAL = true;
+
     public static List<AppUpdate.ListBean> NOVEL_SDK_AD = new ArrayList<>();
     public static List<AppUpdate.ListBean> COMIC_SDK_AD = new ArrayList<>();
     public static AppUpdate.AdPositionOtherBean.ListBean OTHER_SDK_AD = new AppUpdate.AdPositionOtherBean.ListBean();

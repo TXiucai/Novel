@@ -98,12 +98,12 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
      */
     @Override
     public void getBannerData() {
-        getBannerData("StoreComicBannerData", ComicConfig.COMIC_STORE_BANNER);
+        getBannerData("StoreComicBannerData", ComicConfig.COMIC_STORE_BANNER, 0);
     }
 
     @Override
     public void getCacheBannerData() {
-        getCacheBannerData("StoreComicBannerData");
+        getCacheBannerData("StoreComicBannerData", 0);
     }
 
     @Override

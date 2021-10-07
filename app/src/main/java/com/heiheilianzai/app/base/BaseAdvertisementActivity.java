@@ -204,6 +204,7 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
                     startpage.setImage(list.get(0).getMaterial().getImageUrl());
                     startpage.setContent(list.get(0).getAdExtra().get("content"));
                     startpage.setSkip_type(Integer.valueOf(list.get(0).getAdExtra().get("skip_type")));
+                    startpage.setAd_show_type(list.get(0).getAdExtra().get("ad_show_type"));
                     ShareUitls.putString(App.getContext(), PrefConst.ADVERTISING_JSON_KAY, new Gson().toJson(startpage));
                     preloadAdvertisingImg(startpage);
                 } catch (Exception e) {

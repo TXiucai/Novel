@@ -22,6 +22,8 @@ public class BannerItemStore {
 
     public String weight;
 
+
+
     public String getWeight() {
         return weight;
     }

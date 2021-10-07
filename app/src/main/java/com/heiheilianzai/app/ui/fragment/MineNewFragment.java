@@ -73,7 +73,6 @@ import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
 import static com.heiheilianzai.app.constant.ReaderConfig.LIUSHUIJIELU;
 import static com.heiheilianzai.app.constant.ReaderConfig.MYCOMMENT;
 import static com.heiheilianzai.app.constant.ReaderConfig.READHISTORY;
-import static com.heiheilianzai.app.constant.ReaderConfig.USE_AD_FINAL;
 import static com.heiheilianzai.app.constant.ReaderConfig.getCurrencyUnit;
 
 /**
@@ -216,9 +215,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_info_tip.setText(mUserInfo.getVip_end_time());
                 fragment_mine_user_info_paylayout_vip.setText(LanguageUtil.getString(activity, R.string.mine_vip_continue));
                 fragment_mine_user_info_paylayout_vip.setBackground(activity.getDrawable(R.drawable.shape_vip_continue_bg));
-                if (USE_AD_FINAL) {
-                    ReaderConfig.USE_AD = false;
-                }
             } else {
                 fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
@@ -227,9 +223,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     fragment_mine_user_info_tip.setText(mUserInfo.getVip_expire_note());
                 } else {
                     fragment_mine_user_info_tip.setVisibility(View.GONE);
-                }
-                if (USE_AD_FINAL) {
-                    ReaderConfig.USE_AD = ReaderConfig.ad_switch == 1;
                 }
             }
             if (mUserInfo.getAuto_sub() == 0) {
