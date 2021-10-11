@@ -72,7 +72,7 @@ public class RecomendApp {
                         AdInfo adInfo = list.get(i);
                         appListBean.setApp_logo(adInfo.getMaterial().getImageUrl());
                         appListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                        appListBean.setDown_link(adInfo.getAdExtra().get("down_link"));
+                        appListBean.setDown_link(adInfo.getAdExtra().get("down_url"));
                         appListBean.setApp_name(adInfo.getMaterial().getTitle());
                         if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
                             appListBeans.add(appListBean);

@@ -172,8 +172,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     ComicHChapterCatalogAdapter comicChapterCatalogAdapter;
     private int size;
     private int lastVisibleItemPosition;
-    private boolean isCanShow = false;
     private boolean isShowSdkAd = false;
+    private Dialog mDialogChapter;
 
     @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back, R.id.list_ad_view_layout,
             R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category, R.id.rl_comic_vip})
@@ -224,11 +224,11 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
                 break;
             case R.id.ll_comic_category:
-                if (!isCanShow) {
+                DialogComicChapter dialogComicChapter = new DialogComicChapter();
+                if (mDialogChapter != null && mDialogChapter.isShowing()) {
                     return;
                 }
-                DialogComicChapter dialogComicChapter = new DialogComicChapter();
-                Dialog dialogVipPop = dialogComicChapter.getDialogVipPop(activity, baseComic);
+                mDialogChapter = dialogComicChapter.getDialogVipPop(activity, baseComic);
                 break;
             case R.id.rl_comic_vip:
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 5);
@@ -279,19 +279,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
         layoutParams.height = layoutParams.width / 3;
         list_ad_view_img.setLayoutParams(layoutParams);
         init();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        isCanShow = false;
-        ;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isCanShow = true;
     }
 
     public void init() {
@@ -481,7 +468,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     private void getSdkAd() {
         //替换第三方广告
         for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
-            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+            AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
                 isShowSdkAd = true;
                 XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
@@ -516,7 +503,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 return;
             }
         }
-        if (!isShowSdkAd){
+        if (!isShowSdkAd) {
             localAd();
         }
     }

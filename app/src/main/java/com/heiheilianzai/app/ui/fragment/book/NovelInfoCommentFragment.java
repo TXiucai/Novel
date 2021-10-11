@@ -231,6 +231,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
                                 baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
                                 baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                                 baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                                activity_book_info_ad.setVisibility(View.VISIBLE);
                                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
                             } else {
                                 activity_book_info_ad.setVisibility(View.GONE);

@@ -725,7 +725,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         baseComicImages = new ArrayList<>();
         for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
-            if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+            if (TextUtils.equals(listBean.getPosition(), "13") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
                 mIsSdkAd = true;
                 sdkAd(activity, comic_id, Chapter_id, true);
                 return;

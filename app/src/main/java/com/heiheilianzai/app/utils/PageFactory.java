@@ -269,13 +269,6 @@ public class PageFactory {
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));//注册广播,随时获取到电池电量信息
         initBg(config.getDayOrNight());
         measureMarginWidth();
-        if (list_ad_view_img == null) {
-            list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
-            ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-            layoutParams.width = ScreenSizeUtils.getInstance(context).getScreenWidth() - ImageUtil.dp2px(context, 20);
-            layoutParams.height = layoutParams.width;
-            list_ad_view_img.setLayoutParams(layoutParams);
-        }
     }
 
     private void measureMarginWidth() {
@@ -1596,7 +1589,6 @@ public class PageFactory {
                         baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                         baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                        baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
                         baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
                         clickAd(activity);
                     } else {
@@ -1641,6 +1633,13 @@ public class PageFactory {
 
     private void clickAd(Activity activity) {
         if (baseAd != null && baseAd.ad_type == 1) {
+            if (list_ad_view_img == null) {
+                list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
+                ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
+                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+                layoutParams.height = layoutParams.width;
+                list_ad_view_img.setLayoutParams(layoutParams);
+            }
             close_AD = false;
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override

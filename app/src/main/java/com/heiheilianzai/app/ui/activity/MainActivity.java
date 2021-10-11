@@ -402,11 +402,14 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 @Override
                 public void onRequestOk(List<AdInfo> list) {
                     try {
+                        List<AdInfo> adInfoList;
                         List<HomeNotice> homeNotices = new ArrayList<>();
                         if (list != null && list.size() > 10) {
-                            list.subList(0, 10);
+                            adInfoList = list.subList(0, 10);
+                        } else {
+                            adInfoList = list;
                         }
-                        for (int i = 0; i < list.size(); i++) {
+                        for (int i = 0; i < adInfoList.size(); i++) {
                             HomeNotice homeNotice = new HomeNotice();
                             AdInfo adInfo = list.get(i);
                             homeNotice.setImg_content(adInfo.getMaterial().getImageUrl());

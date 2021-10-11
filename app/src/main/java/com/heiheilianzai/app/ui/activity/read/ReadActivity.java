@@ -295,13 +295,12 @@ public class ReadActivity extends BaseReadActivity {
 
     @Override
     public void initData() {
-
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
-            //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
-            layoutParams.height = mScreenHeight;
-            bookpage.setLayoutParams(layoutParams);
-                getWebViewAD(activity);
-            bookpage.setADview(insert_todayone2);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
+        //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
+        layoutParams.height = mScreenHeight;
+        bookpage.setLayoutParams(layoutParams);
+        getWebViewAD(activity);
+        bookpage.setADview(insert_todayone2);
         next();
         acceptNovelBoyin(activity, chapter.getBook_name());
         getBookInfo();
@@ -318,7 +317,7 @@ public class ReadActivity extends BaseReadActivity {
         pageFactory = new PageFactory(baseBook, bookpage_scroll, bookpage_scroll_text, insert_todayone2, this);
         pageFactory.setPurchaseLayout(activity_read_purchase_layout, activity_read_purchase_layout2);
 
-            pageFactory.getWebViewAD(ReadActivity.this);//获取广告
+        pageFactory.getWebViewAD(ReadActivity.this);//获取广告
 
         IntentFilter mfilter = new IntentFilter();
         mfilter.addAction(Intent.ACTION_BATTERY_CHANGED);
@@ -810,11 +809,11 @@ public class ReadActivity extends BaseReadActivity {
             case R.id.tv_noad:
                 hideReadSetting();
 
-                    if (activity != null) {
-                        if (MainHttpTask.getInstance().Gotologin(activity)) {
-                            startActivityForResult(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_book_read), 3), 301);
-                        }
+                if (activity != null) {
+                    if (MainHttpTask.getInstance().Gotologin(activity)) {
+                        startActivityForResult(AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_book_read), 3), 301);
                     }
+                }
 
                 break;
             case R.id.activity_read_buttom_boyin_close:
@@ -975,7 +974,7 @@ public class ReadActivity extends BaseReadActivity {
     protected void onDestroy() {
         super.onDestroy();
         try {
-                handler.removeMessages(1);
+            handler.removeMessages(1);
         } catch (Exception e) {
         }
         if (pageFactory != null) {
@@ -1003,7 +1002,7 @@ public class ReadActivity extends BaseReadActivity {
                 localAd(activity);
             }
         } else {
-           adClick(activity);
+            adClick(activity);
         }
     }
 
@@ -1014,7 +1013,7 @@ public class ReadActivity extends BaseReadActivity {
                 try {
                     AdInfo adInfo = list.get(0);
                     baseAd = new BaseAd();
-                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))){
+                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
                         baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
                         baseAd.setAd_title(adInfo.getMaterial().getTitle());
                         baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
@@ -1022,8 +1021,9 @@ public class ReadActivity extends BaseReadActivity {
                         baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
                         baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
                         baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                        visible = baseAd.getAdvert_interval();
                         activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         activity_read_buttom_ad_layout.setVisibility(View.GONE);
                     }
                     adClick(activity);
@@ -1086,6 +1086,7 @@ public class ReadActivity extends BaseReadActivity {
                     activity_read_buttom_ad_layout.setVisibility(View.GONE);
                 }
             });
+            activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
             MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mIvAd);
         }
     }

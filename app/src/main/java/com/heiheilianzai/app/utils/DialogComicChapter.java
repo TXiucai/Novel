@@ -127,11 +127,11 @@ public class DialogComicChapter {
     }
 
     private void getSdkChapterAd(Activity activity, BaseComic baseComic, VipHolder vipHolder) {
-        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-            if (TextUtils.equals(listBean.getPosition(), "7") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+        for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "14") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
                 mIsSdkAd = true;
-                XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_DETAIL_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_DETAIL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+                XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_CHAPTER_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_CHAPTER, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
                     @Override
                     public void onRequestOk(List<AdInfo> list) {
                         try {
