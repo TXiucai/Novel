@@ -14,6 +14,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -62,13 +63,17 @@ public class HomeNoticePhotoDialog {
             public void onClick(View v) {
                 String user_parame_need = mHomeNotice.getUser_parame_need();
                 String jump_url = mHomeNotice.getJump_url();
+                String redirect_type = mHomeNotice.getRedirect_type();
                 if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !jump_url.contains("&uid=")) {
                     jump_url += "&uid=" + Utils.getUID(activity);
                 }
-                Intent intent = new Intent();
-                intent.setClass(activity, WebViewActivity.class);
-                intent.putExtra("url", jump_url);
-                activity.startActivity(intent);
+                if (TextUtils.equals(redirect_type,"1")){
+                    activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", jump_url));
+                }else {
+                    activity.startActivity(new Intent(activity, AboutActivity.class).
+                            putExtra("url", jump_url)
+                            .putExtra("style", "4")  );
+                }
             }
         });
         popupWindow.setBackgroundDrawable(new BitmapDrawable());

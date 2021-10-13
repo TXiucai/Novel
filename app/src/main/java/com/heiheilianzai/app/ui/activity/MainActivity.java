@@ -416,6 +416,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             homeNotice.setTitle(adInfo.getMaterial().getTitle());
                             homeNotice.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
                             homeNotice.setJump_url(adInfo.getAdExtra().get("jump_url"));
+                            homeNotice.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
                             if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
                                 homeNotices.add(homeNotice);
                             }

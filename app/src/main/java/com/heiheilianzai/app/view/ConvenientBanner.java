@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -515,16 +516,17 @@ public class ConvenientBanner<T> extends LinearLayout {
                         break;
                 }
                 break;
+                    //3,4.5行为一致的
             case 3:
-                activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", content));
-                break;
-                //4.5行为一致的
             case 4:
             case 5:
-                activity.startActivity(new Intent(activity, AboutActivity.class).
-                        putExtra("url", content)
-                        .putExtra("style", "4")
-                );
+                if (TextUtils.equals(bannerItemStore.getRedirect_type(),"1")){
+                    activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", content));
+                }else {
+                    activity.startActivity(new Intent(activity, AboutActivity.class).
+                            putExtra("url", content)
+                            .putExtra("style", "4")  );
+                }
                 break;
             case 6:
                 EventBus.getDefault().post(new SkipToBoYinEvent(content));

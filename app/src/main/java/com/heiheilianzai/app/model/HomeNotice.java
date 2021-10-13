@@ -12,6 +12,15 @@ public class HomeNotice {
     private String announ_type;
     private String text_content;
     private String user_parame_need;;
+    private String redirect_type;
+
+    public String getRedirect_type() {
+        return redirect_type;
+    }
+
+    public void setRedirect_type(String redirect_type) {
+        this.redirect_type = redirect_type;
+    }
 
     public String getUser_parame_need() {
         return user_parame_need;

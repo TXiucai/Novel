@@ -17,12 +17,19 @@ public class BannerItemStore {
      */
     public String image;
 
-
     public String  color;
 
     public String weight;
 
+    public String redirect_type;
 
+    public String getRedirect_type() {
+        return redirect_type;
+    }
+
+    public void setRedirect_type(String redirect_type) {
+        this.redirect_type = redirect_type;
+    }
 
     public String getWeight() {
         return weight;

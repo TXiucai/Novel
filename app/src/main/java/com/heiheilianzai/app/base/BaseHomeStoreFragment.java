@@ -618,7 +618,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         AdInfo adInfo = list.get(i);
                         bannerItemStore.setAction(Integer.valueOf(adInfo.getAdExtra().get("action")));
                         bannerItemStore.setContent(adInfo.getAdExtra().get("content"));
-
+                        bannerItemStore.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
                         bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
                         bannerItemStore.setWeight(adInfo.getAdExtra().get("weight"));
                         if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {

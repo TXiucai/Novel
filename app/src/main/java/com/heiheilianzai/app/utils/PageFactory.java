@@ -1638,6 +1638,7 @@ public class PageFactory {
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
                 layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
                 layoutParams.height = layoutParams.width;
+                Insert_todayone2 = layoutParams.width;
                 list_ad_view_img.setLayoutParams(layoutParams);
             }
             close_AD = false;
@@ -1650,6 +1651,7 @@ public class PageFactory {
                     if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
                         ad_skip_url += "&uid=" + Utils.getUID(activity);
                     }
+                    intent.putExtra("url", ad_skip_url);
                     intent.putExtra("title", baseAd.ad_title);
                     intent.putExtra("advert_id", baseAd.advert_id);
                     intent.putExtra("ad_url_type", baseAd.ad_url_type);

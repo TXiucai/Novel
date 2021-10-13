@@ -28,6 +28,7 @@ import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.ui.activity.boyin.BoyinDownActivity;
+import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -123,6 +124,12 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @JavascriptInterface
             @Override
+            public void callWebviewExplorer(String url) {//内部浏览器
+                activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", url));
+            }
+
+            @JavascriptInterface
+            @Override
             public void showBookInfoGuide() {//h5第一次进入有声小说播放详情，显示新手引导悬浮层。
                 //showFragmentYouShengGuide();
             }
@@ -185,6 +192,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void callExplorer(String url);
+
+        @JavascriptInterface
+        void callWebviewExplorer(String url);
 
         @JavascriptInterface
         void showBookInfoGuide();
