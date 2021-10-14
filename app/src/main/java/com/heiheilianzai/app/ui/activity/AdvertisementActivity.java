@@ -102,8 +102,12 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
     public void setStartpageView() {
         String json = ShareUitls.getString(getApplicationContext(), PrefConst.ADVERTISING_JSON_KAY, "");
         if (!StringUtils.isEmpty(json)) {
-            Startpage startpage = new Gson().fromJson(json, Startpage.class);
-            setStartpageView(startpage);
+            try {
+                Startpage startpage = new Gson().fromJson(json, Startpage.class);
+                setStartpageView(startpage);
+            }catch (Exception e){
+                handler.sendEmptyMessageDelayed(0, 500);
+            }
         } else {
             handler.sendEmptyMessageDelayed(0, 500);
         }
@@ -111,29 +115,33 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
     public void setStartpageView(Startpage startpage) {
         if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
-            time = Integer.valueOf(startpage.getCountdown_second());
-            setAdImageView(activity_splash_im, startpage, activity, new OnAdImageListener() {
-                @Override
-                public void onAnimationEnd() {
-                    activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
-                    handler.sendEmptyMessageDelayed(1, time == 5 ? 0 : 1000);
-                }
-
-                @Override
-                public void onFailed() {
-                    handler.sendEmptyMessageDelayed(0, 500);
-                }
-
-                @Override
-                public void onClick() {
-                    skip = false;
-                    if (!skip) {
-                        handler.removeMessages(1);
-                        handler.removeMessages(0);
-                        adSkip(startpage, activity);
+            if (App.isShowSdkAd(activity, startpage.getAd_show_type())) {
+                time = Integer.valueOf(startpage.getCountdown_second());
+                setAdImageView(activity_splash_im, startpage, activity, new OnAdImageListener() {
+                    @Override
+                    public void onAnimationEnd() {
+                        activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
+                        handler.sendEmptyMessageDelayed(1, time == 5 ? 0 : 1000);
                     }
-                }
-            });
+
+                    @Override
+                    public void onFailed() {
+                        handler.sendEmptyMessageDelayed(0, 500);
+                    }
+
+                    @Override
+                    public void onClick() {
+                        skip = false;
+                        if (!skip) {
+                            handler.removeMessages(1);
+                            handler.removeMessages(0);
+                            adSkip(startpage, activity);
+                        }
+                    }
+                });
+            } else {
+                handler.sendEmptyMessageDelayed(0, 500);
+            }
         } else {
             handler.sendEmptyMessageDelayed(0, 500);
         }
