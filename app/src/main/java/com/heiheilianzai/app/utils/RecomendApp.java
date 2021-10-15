@@ -132,9 +132,9 @@ public class RecomendApp {
         long recommendTime = ShareUitls.getRecommendAppTime(activity, "recommendTime", 0);
         long currentTimeDifferenceSecond = DateUtils.getCurrentTimeDifferenceSecond(recommendTime);
         long expiredTime = currentTimeDifferenceSecond / 60 / 60;
-        if (expiredTime <= 1) {
-            return null; //小于1个小时不进行展示
-        }
+//        if (expiredTime <= 1) {
+//            return null; //小于1个小时不进行展示
+//        }
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_recommend_app, null);
         popupWindow = new Dialog(activity, R.style.updateapp);
         Window window = popupWindow.getWindow();

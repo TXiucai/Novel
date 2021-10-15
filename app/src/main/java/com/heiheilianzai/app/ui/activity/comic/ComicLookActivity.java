@@ -1124,7 +1124,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (!Utils.isAppOnForeground(activity)) {
+        if (isActive) {
             initData();
         }
     }

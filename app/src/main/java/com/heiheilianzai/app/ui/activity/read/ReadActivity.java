@@ -222,6 +222,7 @@ public class ReadActivity extends BaseReadActivity {
     private long mReadStarTime;
     private long mReadEndTime;
     private boolean mIsSdkAd = false;
+    private boolean mIsActive = true;//是否处于前台
 
 
     @Override
@@ -288,8 +289,18 @@ public class ReadActivity extends BaseReadActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (!Utils.isAppOnForeground(activity)) {
+        if (mIsActive) {
             initData();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (Utils.isAppOnForeground(activity)) {
+            mIsActive = true;
+        } else {
+            mIsActive = false;
         }
     }
 

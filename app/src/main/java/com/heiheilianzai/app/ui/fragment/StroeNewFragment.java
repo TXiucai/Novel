@@ -29,6 +29,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.FloatMainBean;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.StoreEvent;
+import com.heiheilianzai.app.model.event.TaskRedPointEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.SearchActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
@@ -132,12 +133,12 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.fragment_store_fili:
-                mRedPointImg.setVisibility(View.GONE);
                 ShareUitls.putRecommendAppTime(activity, "taskPointTime", DateUtils.currentTime());
                 if (!Utils.isLogin(activity)) {
                     MainHttpTask.getInstance().Gotologin(activity);
                     return;
                 }
+                EventBus.getDefault().post(new TaskRedPointEvent(false));
                 startActivity(new Intent(activity, TaskCenterActivity.class));
                 break;
             case R.id.fragment_store_search:

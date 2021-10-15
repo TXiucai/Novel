@@ -1,6 +1,9 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
+import android.view.View;
+
 import com.heiheilianzai.app.model.event.StoreComicEvent;
+import com.heiheilianzai.app.model.event.TaskRedPointEvent;
 import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -19,6 +22,11 @@ public class StroeNewFragmentComic extends StroeNewFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void storeComicEvent(StoreComicEvent storeEvent) {
         setStoreSearchView(storeEvent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showTaskRdPoint(TaskRedPointEvent taskPointEvent) {
+        mRedPointImg.setVisibility(View.GONE);
     }
 
     @Override
