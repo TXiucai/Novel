@@ -200,11 +200,14 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     Startpage startpage = new Startpage();
-                    startpage.setCountdown_second(String.valueOf(list.get(0).getCountDown()));
-                    startpage.setImage(list.get(0).getMaterial().getImageUrl());
-                    startpage.setContent(list.get(0).getAdExtra().get("content"));
-                    startpage.setSkip_type(Integer.valueOf(list.get(0).getAdExtra().get("skip_type")));
-                    startpage.setAd_show_type(list.get(0).getAdExtra().get("ad_show_type"));
+                    AdInfo adInfo = list.get(0);
+                    startpage.setCountdown_second(String.valueOf(adInfo.getCountDown()));
+                    startpage.setImage(adInfo.getMaterial().getImageUrl());
+                    startpage.setContent(adInfo.getOperation().getValue());
+                    int type = adInfo.getOperation().getType();
+                    int skip_type = type == 1 ? 2 : 4;
+                    startpage.setSkip_type(skip_type);
+                    startpage.setAd_show_type(adInfo.getMaterial().getShowType());
                     ShareUitls.putString(App.getContext(), PrefConst.ADVERTISING_JSON_KAY, new Gson().toJson(startpage));
                     preloadAdvertisingImg(startpage);
                 } catch (Exception e) {

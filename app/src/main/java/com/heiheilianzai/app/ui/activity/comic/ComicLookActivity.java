@@ -743,14 +743,14 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 try {
                     getData(activity, comic_id, Chapter_id, true);
                     AdInfo adInfo = list.get(0);
-                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                         mSdkTopAd = new ComicChapterTopAd();
                         mSdkTopAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        mSdkTopAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                        mSdkTopAd.setAd_skip_url(adInfo.getOperation().getValue());
                         mSdkTopAd.setAd_title(adInfo.getMaterial().getTitle());
-                        mSdkTopAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                        mSdkTopAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                        mSdkTopAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                        mSdkTopAd.setUser_parame_need("1");
+                        mSdkTopAd.setAd_url_type(adInfo.getOperation().getType());
+                        mSdkTopAd.setAd_type(1);
                     }
                 } catch (Exception e) {
                     getData(activity, comic_id, Chapter_id, true);
@@ -1192,13 +1192,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 try {
                     AdInfo adInfo = list.get(0);
                     BaseAd baseAd = new BaseAd();
-                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
-                        baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        baseAd.setAd_skip_url(adInfo.getOperation().getValue());
                         baseAd.setAd_title(adInfo.getMaterial().getTitle());
                         baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                        baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                        baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                        baseAd.setUser_parame_need("1");
+                        baseAd.setAd_url_type(adInfo.getOperation().getType());
+                        baseAd.setAd_type(1);
                         if (baseAd != null) {
                             holderFoot.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                                 @Override

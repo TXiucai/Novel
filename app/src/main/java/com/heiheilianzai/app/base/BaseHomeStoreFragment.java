@@ -326,20 +326,20 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         StroreBookcLable lableAd = new StroreBookcLable();
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         lableAd.setAd_title(adInfo.getMaterial().getTitle());
-                        lableAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
-                        lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                        lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        lableAd.setAd_type(1);
+                        lableAd.setAd_url_type(adInfo.getOperation().getType());
+                        lableAd.setAd_skip_url(adInfo.getOperation().getValue());
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                             initLable(lableAd);
                         }
                     } else {//漫画
                         StroreComicLable lableAd = new StroreComicLable();
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         lableAd.setAd_title(adInfo.getMaterial().getTitle());
-                        lableAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
-                        lableAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                        lableAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
-                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        lableAd.setAd_type(1);
+                        lableAd.setAd_url_type(adInfo.getOperation().getType());
+                        lableAd.setAd_skip_url(adInfo.getOperation().getValue());
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                             initLable(lableAd);
                         }
                     }
@@ -397,13 +397,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         AdInfo adInfo = list.get(i);
                         recommeListBean.setImg_icon(adInfo.getMaterial().getImageUrl());
                         recommeListBean.setJump_url(adInfo.getAdExtra().get("jump_url"));
-                        recommeListBean.setJump_type(adInfo.getAdExtra().get("jump_type"));
-                        recommeListBean.setRecommend_type(adInfo.getAdExtra().get("recommend_type"));
+                        recommeListBean.setJump_type("0");
+                        recommeListBean.setRecommend_type("0");
                         recommeListBean.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
-                        recommeListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                        recommeListBean.setTitle(adInfo.getAdExtra().get("title"));
+                        recommeListBean.setUser_parame_need("1");
+                        recommeListBean.setTitle(adInfo.getMaterial().getTitle());
                         recommeListBean.setWeight(adInfo.getAdExtra().get("weight"));
-                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                             recomme_list.add(recommeListBean);
                         }
                     }
@@ -616,12 +616,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     for (int i = 0; i < list.size(); i++) {
                         BannerItemStore bannerItemStore = new BannerItemStore();
                         AdInfo adInfo = list.get(i);
-                        bannerItemStore.setAction(Integer.valueOf(adInfo.getAdExtra().get("action")));
-                        bannerItemStore.setContent(adInfo.getAdExtra().get("content"));
-                        bannerItemStore.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
+                        bannerItemStore.setAction(3);
+                        bannerItemStore.setContent(adInfo.getOperation().getValue());
+                        bannerItemStore.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
                         bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
-                        bannerItemStore.setWeight(adInfo.getAdExtra().get("weight"));
-                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                             bannerItemStores.add(bannerItemStore);
                         }
                     }
@@ -634,12 +633,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     }
                     for (int i = 0; i < bannerItemStores.size(); i++) {
                         BannerItemStore sdkItemBean = bannerItemStores.get(i);
-                        Integer positon = Integer.valueOf(sdkItemBean.getWeight());
-                        if (localList.size() >= positon) {
-                            localList.add(positon - 1, sdkItemBean);
-                        } else {
-                            localList.add(sdkItemBean);
-                        }
+                        localList.add(0, sdkItemBean);
                     }
                     String sdkJson = new Gson().toJson(localList);
                     if (!StringUtils.isEmpty(sdkJson)) {

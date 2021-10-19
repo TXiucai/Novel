@@ -193,13 +193,14 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                             //先拿第三方广告然后替换原数据
                             httpData(activity, comic_id);
                             AdInfo adInfo = list.get(0);
-                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 mChapterAd = new ComicChapter();
-                                mChapterAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                mChapterAd.setAd_skip_url(adInfo.getOperation().getValue());
+                                mChapterAd.setAd_type(1);
                                 mChapterAd.setAd_title(adInfo.getMaterial().getTitle());
                                 mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                                mChapterAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                                mChapterAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                                mChapterAd.setUser_parame_need("1");
+                                mChapterAd.setAd_url_type(adInfo.getOperation().getType());
                             }
                         } catch (Exception e) {
                             httpData(activity, comic_id);

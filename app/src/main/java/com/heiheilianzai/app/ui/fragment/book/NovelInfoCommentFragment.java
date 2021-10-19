@@ -222,15 +222,15 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
                     public void onRequestOk(List<AdInfo> list) {
                         try {
                             AdInfo adInfo = list.get(0);
-                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 if (baseAd == null) {
                                     baseAd = new BaseAd();
                                 }
-                                baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                                baseAd.setAd_skip_url(adInfo.getOperation().getValue());
                                 baseAd.setAd_title(adInfo.getMaterial().getTitle());
                                 baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                                baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                                baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
+                                baseAd.setUser_parame_need("1");
+                                baseAd.setAd_url_type(adInfo.getOperation().getType());
                                 activity_book_info_ad.setVisibility(View.VISIBLE);
                                 MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
                             } else {

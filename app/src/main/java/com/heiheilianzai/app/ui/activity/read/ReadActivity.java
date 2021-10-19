@@ -1024,14 +1024,14 @@ public class ReadActivity extends BaseReadActivity {
                 try {
                     AdInfo adInfo = list.get(0);
                     baseAd = new BaseAd();
-                    if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
-                        baseAd.setAd_skip_url(adInfo.getAdExtra().get("ad_skip_url"));
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        baseAd.setAd_skip_url(adInfo.getOperation().getValue());
                         baseAd.setAd_title(adInfo.getMaterial().getTitle());
                         baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        baseAd.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                        baseAd.setAd_url_type(Integer.valueOf(adInfo.getAdExtra().get("ad_url_type")));
-                        baseAd.setAdvert_interval(Integer.valueOf(adInfo.getAdExtra().get("advert_interval")));
-                        baseAd.setAd_type(Integer.valueOf(adInfo.getAdExtra().get("ad_type")));
+                        baseAd.setUser_parame_need("1");
+                        baseAd.setAd_url_type(adInfo.getOperation().getType());
+                        baseAd.setAdvert_interval(3);
+                        baseAd.setAd_type(1);
                         visible = baseAd.getAdvert_interval();
                         activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
                     } else {

@@ -414,10 +414,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             AdInfo adInfo = list.get(i);
                             homeNotice.setImg_content(adInfo.getMaterial().getImageUrl());
                             homeNotice.setTitle(adInfo.getMaterial().getTitle());
-                            homeNotice.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                            homeNotice.setJump_url(adInfo.getAdExtra().get("jump_url"));
-                            homeNotice.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
-                            if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                            homeNotice.setUser_parame_need("1");
+                            homeNotice.setJump_url(adInfo.getOperation().getValue());
+                            homeNotice.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
+                            if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 homeNotices.add(homeNotice);
                             }
                         }

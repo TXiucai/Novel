@@ -71,10 +71,10 @@ public class RecomendApp {
                         RecommendAppBean.AppListBean appListBean = new RecommendAppBean.AppListBean();
                         AdInfo adInfo = list.get(i);
                         appListBean.setApp_logo(adInfo.getMaterial().getImageUrl());
-                        appListBean.setUser_parame_need(adInfo.getAdExtra().get("user_parame_need"));
-                        appListBean.setDown_link(adInfo.getAdExtra().get("down_url"));
+                        appListBean.setUser_parame_need("1");
+                        appListBean.setDown_link(adInfo.getOperation().getValue());
                         appListBean.setApp_name(adInfo.getMaterial().getTitle());
-                        if (App.isShowSdkAd(activity, adInfo.getAdExtra().get("ad_show_type"))) {
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                             appListBeans.add(appListBean);
                         }
                     }
