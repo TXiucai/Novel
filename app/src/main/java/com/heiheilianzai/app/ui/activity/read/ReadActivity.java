@@ -290,7 +290,7 @@ public class ReadActivity extends BaseReadActivity {
     protected void onRestart() {
         super.onRestart();
         if (mIsActive) {
-            initData();
+            pageFactory.checkIsCoupon(pageFactory.chapterItem);
         }
     }
 
@@ -327,9 +327,7 @@ public class ReadActivity extends BaseReadActivity {
         mReferPage = intent.getStringExtra(REFER_PAGE_EXT_KAY);
         pageFactory = new PageFactory(baseBook, bookpage_scroll, bookpage_scroll_text, insert_todayone2, this);
         pageFactory.setPurchaseLayout(activity_read_purchase_layout, activity_read_purchase_layout2);
-
         pageFactory.getWebViewAD(ReadActivity.this);//获取广告
-
         IntentFilter mfilter = new IntentFilter();
         mfilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         mfilter.addAction(Intent.ACTION_TIME_TICK);

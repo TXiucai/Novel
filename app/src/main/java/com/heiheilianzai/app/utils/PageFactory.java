@@ -1705,7 +1705,7 @@ public class PageFactory {
         }
     }
 
-    private void checkIsCoupon(ChapterItem chapterItem) {
+    public void checkIsCoupon(ChapterItem chapterItem) {
         if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
             return;
         } else {
