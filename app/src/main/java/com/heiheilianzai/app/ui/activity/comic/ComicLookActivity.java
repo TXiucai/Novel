@@ -722,7 +722,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (baseComic.isAddBookSelf()) {
             activity_comiclook_shoucang.setVisibility(View.GONE);
         }
-        baseComicImages = new ArrayList<>();
+        if (baseComicImages == null) {
+            baseComicImages = new ArrayList<>();
+        }
         for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "13") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
