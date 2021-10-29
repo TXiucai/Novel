@@ -60,7 +60,6 @@ public class PageWidget extends View {
     boolean onTouchEventing;
     private BackPage backPage;
     private int page = 0;
-    private VolumClickListener mVolumClickListener;
 
     public void setBackPage(BackPage backPage) {
         this.backPage = backPage;
@@ -165,36 +164,6 @@ public class PageWidget extends View {
         } else {
             mAnimationProvider.drawStatic(canvas);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {//音量向上
-            Boolean isPre = mVolumClickListener.preVolumPage();
-            mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-            if (isPre) {
-                page--;
-                backPage.backPage(page);
-            }
-            if (!isPre) {
-                noNext = true;
-                onTouchEventing = false;
-            }
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {//音量向下
-            Boolean isNext = mVolumClickListener.nextVolumPage();
-            mAnimationProvider.setDirection(AnimationProvider.Direction.next);
-            if (isNext) {
-                page++;
-                backPage.backPage(page);
-            }
-            if (!isNext) {
-                onTouchEventing = false;
-                noNext = true;
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -447,12 +416,15 @@ public class PageWidget extends View {
         void backPage(int page);
     }
 
-    public void setmVolumClickListener(VolumClickListener mVolumClickListener) {
-        this.mVolumClickListener = mVolumClickListener;
+
+    public void preVolumPage() {
+        page--;
+        backPage.backPage(page);
     }
 
-    public interface VolumClickListener{
-        Boolean preVolumPage();
-        Boolean nextVolumPage();
+    public void nextVolumPage() {
+        page++;
+        backPage.backPage(page);
     }
+
 }

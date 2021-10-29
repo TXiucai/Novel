@@ -313,6 +313,9 @@
         <activity
             android:name=".ui.activity.AddressActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.setting.ReadSetActivity"
+            android:screenOrientation="portrait" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

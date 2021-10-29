@@ -88,6 +88,7 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
+import com.heiheilianzai.app.view.animation.AnimationProvider;
 import com.heiheilianzai.app.view.read.PageWidget;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
@@ -207,6 +208,9 @@ public class ReadActivity extends BaseReadActivity {
     long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
     int visible = -1;//每间隔多少也显示底部广告
     private NovelBoyinModel soundBookInfoBean;
+    private boolean mNovelVoice;
+    private boolean mNovelScreen;
+    private boolean mNovelOpen;
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
@@ -284,6 +288,23 @@ public class ReadActivity extends BaseReadActivity {
         setOpenCurrentTime();
         uiFreeCharge();
         setButtonADVisible();
+        initReadSetting();
+    }
+
+    private void initReadSetting() {
+        String novelTime_screen = AppPrefs.getSharedString(this, "novelTime_Screen", "0");
+        if (TextUtils.equals(novelTime_screen, "0")) {//跟随系统时间
+
+        } else if (TextUtils.equals(novelTime_screen, "5")) {
+
+        } else if (TextUtils.equals(novelTime_screen, "15")) {
+
+        } else if (TextUtils.equals(novelTime_screen, "30")) {
+
+        }
+        mNovelVoice = AppPrefs.getSharedBoolean(activity, "novelVoice_ToggleButton", false);
+        mNovelScreen = AppPrefs.getSharedBoolean(activity, "novelScreen_ToggleButton", true);
+        mNovelOpen = AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false);
     }
 
     @Override
@@ -292,6 +313,7 @@ public class ReadActivity extends BaseReadActivity {
         if (mIsActive) {
             pageFactory.checkIsCoupon(pageFactory.chapterItem);
         }
+        initReadSetting();
     }
 
     @Override
@@ -491,37 +513,7 @@ public class ReadActivity extends BaseReadActivity {
                 }
             }
         });
-        bookpage.setmVolumClickListener(new PageWidget.VolumClickListener() {
-            @Override
-            public Boolean preVolumPage() {
-                if (AutoProgressBar.getInstance().isStarted()) {
-                    AutoProgressBar.getInstance().pause();
-                }
-                if (isShow || isSpeaking) {
-                    return false;
-                }
-                try {
-                    pageFactory.prePage();
-                } catch (Exception e) {
-                }
-                return !pageFactory.isfirstPage();
-            }
 
-            @Override
-            public Boolean nextVolumPage() {
-                if (AutoProgressBar.getInstance().isStarted()) {
-                    AutoProgressBar.getInstance().pause();
-                }
-                if (isShow || isSpeaking) {
-                    return false;
-                }
-                try {
-                    pageFactory.nextPage();
-                } catch (Exception e) {
-                }
-                return !pageFactory.islastPage();
-            }
-        });
         bookpage.setTouchListener(new PageWidget.TouchListener() {
             @Override
             public void center() {
@@ -641,6 +633,24 @@ public class ReadActivity extends BaseReadActivity {
                 finish();
             } else {
                 askIsNeedToAddShelf();
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {//音量向上
+            try {
+                if (mNovelVoice) {
+                    bookpage.preVolumPage();
+                    pageFactory.prePage();
+                    return true;
+                }
+            } catch (Exception e) {
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {//音量向下
+            try {
+                if (mNovelVoice) {
+                    bookpage.next_page();
+                    pageFactory.nextPage();
+                    return true;
+                }
+            } catch (Exception e) {
             }
         }
         return super.onKeyDown(keyCode, event);

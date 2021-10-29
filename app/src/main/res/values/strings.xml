@@ -594,4 +594,13 @@
     <string name="string_login_register">未注册用户，登录后自动创建帐户</string>
     <string name="string_no_down">无法下载？</string>
     <string name="string_go_web">前往官网</string>
+    <string name="readActivity_more_setting"><![CDATA[更多阅读设置>]]></string>
+    <string name="readActivity_set_screenTime">屏幕关闭时间</string>
+    <string name="raadActivity_voice_page">音量键翻页</string>
+    <string name="readActivity_screen_page">点击屏幕左侧翻下一页</string>
+    <string name="string_read_set">更多阅读设置</string>
+    <string name="string_read_time_system">系统</string>
+    <string name="string_read_time_five">5分钟</string>
+    <string name="string_read_time_fivty">15分钟</string>
+    <string name="string_read_time_half">30分钟</string>
 </resources>

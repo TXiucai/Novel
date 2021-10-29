@@ -444,20 +444,13 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-            <ImageView
-                android:id="@+id/img_open"
-                android:layout_width="@dimen/dimens_18dp"
-                android:layout_height="@dimen/dimens_18dp"
-                android:layout_gravity="center_vertical"
-                android:src="@mipmap/auto_read_icon" />
-
             <TextView
                 android:id="@+id/tx_open"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="@string/ReadActivity_autoread_close"
+                android:text="@string/readActivity_more_setting"
                 android:textColor="@color/color_323334"
                 android:textSize="14sp" />
         </LinearLayout>
