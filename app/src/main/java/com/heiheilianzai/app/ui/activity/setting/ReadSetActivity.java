@@ -1,6 +1,10 @@
 package com.heiheilianzai.app.ui.activity.setting;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -9,6 +13,7 @@ import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
+import com.heiheilianzai.app.ui.dialog.ReadScreenSetDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.zcw.togglebutton.ToggleButton;
 
@@ -30,6 +35,8 @@ public class ReadSetActivity extends BaseActivity {
     @BindView(R.id.readActivity_auto_button)
     public ToggleButton mBtAuto;
     private Context mContext;
+    private ReadScreenSetDialog mReadScreenSetDialog;
+
     @Override
     public int initContentView() {
         return R.layout.activity_read_set;
@@ -39,17 +46,9 @@ public class ReadSetActivity extends BaseActivity {
     public void initView() {
         mContext = this;
         mTxTittle.setText(getResources().getString(R.string.string_read_set));
+        mReadScreenSetDialog = new ReadScreenSetDialog();
         String novelTime_screen = AppPrefs.getSharedString(this, "novelTime_Screen", "0");
-
-        if (TextUtils.equals(novelTime_screen, "0")) {//跟随系统时间
-            mTxScreenTime.setText(getString(R.string.string_read_time_system));
-        } else if (TextUtils.equals(novelTime_screen, "5")) {
-            mTxScreenTime.setText(getString(R.string.string_read_time_five));
-        } else if (TextUtils.equals(novelTime_screen, "15")) {
-            mTxScreenTime.setText(getString(R.string.string_read_time_fivty));
-        } else if (TextUtils.equals(novelTime_screen, "30")) {
-            mTxScreenTime.setText(getString(R.string.string_read_time_half));
-        }
+        initScreenTime(novelTime_screen);
 
         if (AppPrefs.getSharedBoolean(mContext, "novelVoice_ToggleButton", false)) {
             mBtVoice.setToggleOn();
@@ -68,11 +67,26 @@ public class ReadSetActivity extends BaseActivity {
         } else {
             mBtAuto.setToggleOff();
         }
-
+        mReadScreenSetDialog.setmOnCheckScreenTimeListener(new ReadScreenSetDialog.OnCheckScreenTimeListener() {
+            @Override
+            public void onCheckScreenTime(String time) {
+                initScreenTime(time);
+            }
+        });
         mRlScreenTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.System.canWrite(mContext)) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        mReadScreenSetDialog.getReadScreenSetDialog(mContext);
+                    }
+                } else {
+                    mReadScreenSetDialog.getReadScreenSetDialog(mContext);
+                }
             }
         });
 
@@ -103,6 +117,21 @@ public class ReadSetActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    private void initScreenTime(String novelTime_screen) {
+        if (TextUtils.equals(novelTime_screen, "0")) {//跟随系统时间
+            mTxScreenTime.setText(getString(R.string.string_read_time_system));
+        } else {
+            if (TextUtils.equals(novelTime_screen, "5")) {
+                mTxScreenTime.setText(getString(R.string.string_read_time_five));
+            } else if (TextUtils.equals(novelTime_screen, "15")) {
+                mTxScreenTime.setText(getString(R.string.string_read_time_fivty));
+            } else if (TextUtils.equals(novelTime_screen, "30")) {
+                mTxScreenTime.setText(getString(R.string.string_read_time_half));
+            }
+            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, Integer.valueOf(novelTime_screen) * 1000 * 60);
+        }
     }
 
     @Override

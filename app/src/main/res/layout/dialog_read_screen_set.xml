@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_ffffff_top">
+
+    <RadioGroup
+        android:id="@+id/dialog_read_screen_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dimens_20dp"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingRight="@dimen/dimens_20dp"
+        android:paddingBottom="@dimen/dp_10">
+
+        <RadioButton
+            android:id="@+id/dialog_read_screen_rb_five"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_55dp"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_screen_time_radiobutton"
+            android:text="@string/string_read_time_five"
+            android:textColor="@color/color_323334"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_d8d8d8" />
+
+        <RadioButton
+            android:id="@+id/dialog_read_screen_rb_fivty"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_55dp"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_screen_time_radiobutton"
+            android:text="@string/string_read_time_fivty"
+            android:textColor="@color/color_323334"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_d8d8d8" />
+
+        <RadioButton
+            android:id="@+id/dialog_read_screen_rb_half"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_55dp"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_screen_time_radiobutton"
+            android:text="@string/string_read_time_half"
+            android:textColor="@color/color_323334"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_d8d8d8" />
+
+        <RadioButton
+            android:id="@+id/dialog_read_screen_rb_system"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_55dp"
+            android:button="@null"
+            android:drawableRight="@drawable/selector_screen_time_radiobutton"
+            android:text="@string/string_read_time_system"
+            android:textColor="@color/color_323334"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_d8d8d8" />
+    </RadioGroup>
+</RelativeLayout>
