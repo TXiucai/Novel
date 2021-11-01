@@ -60,6 +60,11 @@ public class PageWidget extends View {
     boolean onTouchEventing;
     private BackPage backPage;
     private int page = 0;
+    private boolean mLeftScreen = false;
+
+    public void setmLeftScreen(boolean mLeftScreen) {
+        this.mLeftScreen = mLeftScreen;
+    }
 
     public void setBackPage(BackPage backPage) {
         this.backPage = backPage;
@@ -275,11 +280,20 @@ public class PageWidget extends View {
                         return true;
                     }
                 } else {
-                    Boolean isPre = mTouchListener.prePage();
-                    mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-                    if (!isPre) {
-                        onTouchEventing = false;
-                        return true;
+                    if (mLeftScreen){
+                        Boolean isNext = mTouchListener.nextPage();
+                        mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+                        if (!isNext) {
+                            onTouchEventing = false;
+                            return true;
+                        }
+                    }else {
+                        Boolean isPre = mTouchListener.prePage();
+                        mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
+                        if (!isPre) {
+                            onTouchEventing = false;
+                            return true;
+                        }
                     }
                 }
             }

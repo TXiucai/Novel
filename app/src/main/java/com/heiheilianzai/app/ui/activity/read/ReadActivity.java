@@ -11,13 +11,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -188,7 +192,6 @@ public class ReadActivity extends BaseReadActivity {
     public TextView activity_read_buttom_boyin_go;
     @BindView(R.id.titlebar_boyin)
     public RelativeLayout titlebar_boyin;
-
     private ReadingConfig config;
     private WindowManager.LayoutParams lp;
     private ChapterItem chapter;
@@ -293,18 +296,21 @@ public class ReadActivity extends BaseReadActivity {
 
     private void initReadSetting() {
         String novelTime_screen = AppPrefs.getSharedString(this, "novelTime_Screen", "0");
-        if (TextUtils.equals(novelTime_screen, "0")) {//跟随系统时间
-
-        } else if (TextUtils.equals(novelTime_screen, "5")) {
-
-        } else if (TextUtils.equals(novelTime_screen, "15")) {
-
-        } else if (TextUtils.equals(novelTime_screen, "30")) {
-
+        if (!TextUtils.equals(novelTime_screen, "0")) {//跟随系统时间
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.System.canWrite(activity)) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, Integer.valueOf(novelTime_screen) * 1000 * 60);
+                }
+            }
         }
         mNovelVoice = AppPrefs.getSharedBoolean(activity, "novelVoice_ToggleButton", false);
         mNovelScreen = AppPrefs.getSharedBoolean(activity, "novelScreen_ToggleButton", true);
         mNovelOpen = AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false);
+        bookpage.setmLeftScreen(mNovelScreen);
     }
 
     @Override
