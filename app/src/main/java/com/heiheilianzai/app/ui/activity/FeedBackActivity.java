@@ -12,11 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.adapter.FeedBackSubTypeAdapter;
 import com.heiheilianzai.app.adapter.FeedBackTypeAdapter;
 import com.heiheilianzai.app.adapter.ImagePickerAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
@@ -25,11 +26,13 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ComplaitTypeBean;
+import com.heiheilianzai.app.model.event.FeedSubTypeMode;
 import com.heiheilianzai.app.utils.FileUtils;
 import com.heiheilianzai.app.utils.GlideImageLoader;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.ToastUtil;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -70,6 +73,8 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     RecyclerView mTbRecycleView;
     @BindView(R.id.recyclerView)
     RecyclerView mPicRecycleView;
+    @BindView(R.id.tabSubRecycler)
+    RecyclerView mTabSubRecycleView;
     @BindView(R.id.iv)
     ImageView iv;
     @BindView(R.id.activity_feedback_content)
@@ -85,6 +90,9 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     private StringBuffer mFaceBackImg = new StringBuffer();
     private String mTagId;
     private List<ComplaitTypeBean.ComplaitListBean> mTypeBeanList;
+    private FeedBackSubTypeAdapter mFeedBackSubTypeAdapter;
+    private List<ComplaitTypeBean.ComplaitSubListBean> mSelectSubList;
+    private List<FeedSubTypeMode> mSubTypeModeList = new ArrayList<>();
 
     @Override
     public int initContentView() {
@@ -136,13 +144,39 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mTypeAdapter = new FeedBackTypeAdapter(this);
         mTbRecycleView.setAdapter(mTypeAdapter);
 
+        mTabSubRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mFeedBackSubTypeAdapter = new FeedBackSubTypeAdapter();
+        mTabSubRecycleView.setAdapter(mFeedBackSubTypeAdapter);
+
         mTypeAdapter.setOnItemClickListener((adapter, view, position) -> {
             mTypeAdapter.setCurrentPosition(position);
             if (!mTypeBeanList.isEmpty()) {
                 mTagId = mTypeBeanList.get(position).getId();
+                mSelectSubList = mTypeBeanList.get(position).getSubList();
+                inintSubList();
+                if (mSelectSubList != null && !mSelectSubList.isEmpty()) {
+                    mTabSubRecycleView.setVisibility(View.VISIBLE);
+                    mFeedBackSubTypeAdapter.setNewData(mSelectSubList);
+                } else {
+                    mTabSubRecycleView.setVisibility(View.GONE);
+                }
             }
         });
-
+        mFeedBackSubTypeAdapter.setmOnBackSubTypeListener(new FeedBackSubTypeAdapter.OnBackSubTypeListener() {
+            @Override
+            public void onBackSubType(String id, String type) {
+                for (ComplaitTypeBean.ComplaitSubListBean model : mSelectSubList) {
+                    if (TextUtils.equals(model.getId(), id)) {
+                        model.setContent(type);
+                    }
+                }
+                for (FeedSubTypeMode model : mSubTypeModeList) {
+                    if (TextUtils.equals(model.getId(), id)) {
+                        model.setContent(type);
+                    }
+                }
+            }
+        });
         //图片
         selImageList = new ArrayList<>();
         mImagePickerAdapter = new ImagePickerAdapter(this, selImageList, maxImgCount);
@@ -150,6 +184,19 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mPicRecycleView.setLayoutManager(new GridLayoutManager(this, 3));
         mPicRecycleView.setHasFixedSize(true);
         mPicRecycleView.setAdapter(mImagePickerAdapter);
+    }
+
+    private void inintSubList() {
+        mSubTypeModeList.clear();
+        if (mSelectSubList != null && !mSelectSubList.isEmpty()) {
+            for (int i = 0; i < mSelectSubList.size(); i++) {
+                FeedSubTypeMode feedSubTypeMode = new FeedSubTypeMode();
+                ComplaitTypeBean.ComplaitSubListBean complaitSubListBean = mSelectSubList.get(i);
+                feedSubTypeMode.setContent("");
+                feedSubTypeMode.setId(complaitSubListBean.getId());
+                mSubTypeModeList.add(feedSubTypeMode);
+            }
+        }
     }
 
     @Override
@@ -165,6 +212,16 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
                         ComplaitTypeBean complaitTypeBean = new Gson().fromJson(result, ComplaitTypeBean.class);
                         mTypeBeanList = complaitTypeBean.getList();
                         mTypeAdapter.setNewData(mTypeBeanList);
+                        mTypeAdapter.setCurrentPosition(0);
+                        mTagId = mTypeBeanList.get(0).getId();
+                        mSelectSubList = mTypeBeanList.get(0).getSubList();
+                        inintSubList();
+                        if (mSelectSubList != null && !mSelectSubList.isEmpty()) {
+                            mTabSubRecycleView.setVisibility(View.VISIBLE);
+                            mFeedBackSubTypeAdapter.setNewData(mSelectSubList);
+                        } else {
+                            mTabSubRecycleView.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
@@ -228,6 +285,16 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
             ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some2);
             return;
         }
+        if (mSelectSubList != null && !mSelectSubList.isEmpty()) {
+            for (int i = 0; i < mSelectSubList.size(); i++) {
+                ComplaitTypeBean.ComplaitSubListBean complaitSubListBean = mSelectSubList.get(i);
+                String isNeed = complaitSubListBean.getIsNeed();
+                if (TextUtils.equals(isNeed, "1") && StringUtils.isEmpty(complaitSubListBean.getContent())) {
+                    ToastUtil.getInstance().showShortT(String.format(getString(R.string.FeedBackActivity_sub_type), complaitSubListBean.getTitle()));
+                    return;
+                }
+            }
+        }
 
         ReaderParams params = new ReaderParams(this);
         if (!TextUtils.isEmpty(feedBackImg)) {
@@ -236,6 +303,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
 
         params.putExtraParams("quesion_type", mTagId);
         params.putExtraParams("content", activity_feedback_content.getText().toString() + "");
+        params.putExtraParams("quesion_type_child", new Gson().toJson(mSubTypeModeList));
         String json = params.generateParamsJson();
 
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUpAll, json, true, new HttpUtils.ResponseListener() {

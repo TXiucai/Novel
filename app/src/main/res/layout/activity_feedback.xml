@@ -40,6 +40,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_12dp" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tabSubRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_12dp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,19 +56,13 @@
 
             </LinearLayout>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color_f7f3f7">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimens_170dp"
-                    android:orientation="vertical"
                     android:background="@color/color_f7f3f7"
+                    android:orientation="vertical"
                     android:padding="@dimen/dimens_10dp">
-
-
+                    
                     <EditText
                         android:id="@+id/activity_feedback_content"
                         android:layout_width="match_parent"
@@ -74,14 +74,12 @@
                         android:maxLength="200"
                         android:textColorHint="@color/gray"
                         android:textSize="@dimen/public_10_dp" />
+
                     <ImageView
                         android:id="@+id/iv"
                         android:layout_width="@dimen/dimens_50dp"
                         android:layout_height="@dimen/dimens_50dp" />
                 </LinearLayout>
-
-            </ScrollView>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
