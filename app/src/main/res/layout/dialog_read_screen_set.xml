@@ -37,12 +37,8 @@
             android:drawableRight="@drawable/selector_screen_time_radiobutton"
             android:text="@string/string_read_time_fivty"
             android:textColor="@color/color_323334"
-            android:textSize="16sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_d8d8d8" />
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
         <RadioButton
             android:id="@+id/dialog_read_screen_rb_half"
@@ -52,7 +48,8 @@
             android:drawableRight="@drawable/selector_screen_time_radiobutton"
             android:text="@string/string_read_time_half"
             android:textColor="@color/color_323334"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
         <View
             android:layout_width="match_parent"

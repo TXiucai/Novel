@@ -446,7 +446,7 @@ public class SettingDialog extends Dialog {
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mContext.getPageFactory().getPageWidget().next_page();
+                                        mContext.getPageFactory().getPageWidget().next_page(true);
                                     }
                                 });
                             } else {

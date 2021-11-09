@@ -93,6 +93,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     private FeedBackSubTypeAdapter mFeedBackSubTypeAdapter;
     private List<ComplaitTypeBean.ComplaitSubListBean> mSelectSubList;
     private List<FeedSubTypeMode> mSubTypeModeList = new ArrayList<>();
+    private boolean mIsPosting = false;
 
     @Override
     public int initContentView() {
@@ -125,15 +126,30 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selImageList.size() > 0) {
-                    for (int i = 0; i < selImageList.size(); i++) {
-                        String bitmap = "data:image/jpeg;base64," + FileUtils.imageToBase64(selImageList.get(i).path);
-                        addFeedback(bitmap);
-                    }
-                } else {
-                    putAllMessage("");
+                if (!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)) {
+                    return;
                 }
-
+                if (TextUtils.isEmpty(activity_feedback_content.getText())) {
+                    ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some);
+                    return;
+                }
+                if (TextUtils.isEmpty(mTagId)) {
+                    ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some2);
+                    return;
+                }
+                if (mIsPosting){
+                    MyToash.Toash(FeedBackActivity.this,getString(R.string.string_posting));
+                }else {
+                    mIsPosting = true;
+                    if (selImageList.size() > 0) {
+                        for (int i = 0; i < selImageList.size(); i++) {
+                            String bitmap = "data:image/jpeg;base64," + FileUtils.imageToBase64(selImageList.get(i).path);
+                            addFeedback(bitmap);
+                        }
+                    } else {
+                        putAllMessage("");
+                    }
+                }
             }
         });
 
@@ -273,18 +289,6 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
     }
 
     private void putAllMessage(String feedBackImg) {
-        if (!MainHttpTask.getInstance().Gotologin(FeedBackActivity.this)) {
-            return;
-        }
-        if (TextUtils.isEmpty(activity_feedback_content.getText())) {
-            ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some);
-            return;
-        }
-
-        if (TextUtils.isEmpty(mTagId)) {
-            ToastUtil.getInstance().showShortT(R.string.FeedBackActivity_some2);
-            return;
-        }
         if (mSelectSubList != null && !mSelectSubList.isEmpty()) {
             for (int i = 0; i < mSelectSubList.size(); i++) {
                 ComplaitTypeBean.ComplaitSubListBean complaitSubListBean = mSelectSubList.get(i);
@@ -309,6 +313,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mUpAll, json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
+                        mIsPosting = false;
                         if (!TextUtils.isEmpty(feedBackImg)) {
                             mFaceBackImg.delete(0, mFaceBackImg.length());
                         }
@@ -327,6 +332,7 @@ public class FeedBackActivity extends BaseActivity implements ShowTitle, ImagePi
 
                     @Override
                     public void onErrorResponse(String ex) {
+                        mIsPosting = false;
                         mFaceBackImg.delete(0, mFaceBackImg.length());
                         mCount = 0;
                     }

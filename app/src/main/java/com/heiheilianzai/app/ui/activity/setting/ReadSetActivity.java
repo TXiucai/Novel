@@ -67,26 +67,18 @@ public class ReadSetActivity extends BaseActivity {
         } else {
             mBtAuto.setToggleOff();
         }
+
         mReadScreenSetDialog.setmOnCheckScreenTimeListener(new ReadScreenSetDialog.OnCheckScreenTimeListener() {
             @Override
             public void onCheckScreenTime(String time) {
                 initScreenTime(time);
             }
         });
+
         mRlScreenTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!Settings.System.canWrite(mContext)) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    } else {
-                        mReadScreenSetDialog.getReadScreenSetDialog(mContext);
-                    }
-                } else {
-                    mReadScreenSetDialog.getReadScreenSetDialog(mContext);
-                }
+                mReadScreenSetDialog.getReadScreenSetDialog(mContext);
             }
         });
 
@@ -130,7 +122,6 @@ public class ReadSetActivity extends BaseActivity {
             } else if (TextUtils.equals(novelTime_screen, "30")) {
                 mTxScreenTime.setText(getString(R.string.string_read_time_half));
             }
-            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, Integer.valueOf(novelTime_screen) * 1000 * 60);
         }
     }
 

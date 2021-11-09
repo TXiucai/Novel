@@ -3,7 +3,10 @@ package com.heiheilianzai.app.ui.activity.read;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.admin.DeviceAdminReceiver;
+import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +19,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
@@ -34,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
@@ -42,6 +48,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
+import com.heiheilianzai.app.component.ScreenOnAndOffReceiver;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
@@ -231,6 +238,19 @@ public class ReadActivity extends BaseReadActivity {
     private boolean mIsSdkAd = false;
     private boolean mIsActive = true;//是否处于前台
 
+    private DevicePolicyManager devicePolicyManager = null;
+    private ComponentName screenReceiver = null;
+    private PowerManager powerManager = null;
+    private PowerManager.WakeLock wakeLock;
+    private int mScreenTime;
+    private Handler mHanderTime = new Handler();
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            turnOffScreen();
+        }
+    };
+    private boolean mHaveScreenPermison = false;
 
     @Override
     public int initContentView() {
@@ -294,21 +314,37 @@ public class ReadActivity extends BaseReadActivity {
         initReadSetting();
     }
 
+    private void turnOnScreen() {
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, ReadActivity.class.getSimpleName());
+        wakeLock.acquire();
+        wakeLock.release();
+    }
+
+    private void turnOffScreen() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        devicePolicyManager.lockNow();
+    }
+
     private void initReadSetting() {
         String novelTime_screen = AppPrefs.getSharedString(this, "novelTime_Screen", "0");
         if (!TextUtils.equals(novelTime_screen, "0")) {//跟随系统时间
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.System.canWrite(activity)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } else {
-                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, Integer.valueOf(novelTime_screen) * 1000 * 60);
-                }
+            screenReceiver = new ComponentName(this, ScreenOnAndOffReceiver.class);
+            powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+            mHaveScreenPermison = devicePolicyManager.isAdminActive(screenReceiver);
+            if (mHaveScreenPermison) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                mScreenTime = Integer.valueOf(novelTime_screen) * 1000 * 60;
+                mHanderTime.postDelayed(mRunnable, mScreenTime);
+            } else {
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, screenReceiver);
+                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.string_read_screen_offoron));
+                startActivity(intent);
             }
         }
         mNovelVoice = AppPrefs.getSharedBoolean(activity, "novelVoice_ToggleButton", false);
-        mNovelScreen = AppPrefs.getSharedBoolean(activity, "novelScreen_ToggleButton", true);
+        mNovelScreen = AppPrefs.getSharedBoolean(activity, "novelScreen_ToggleButton", false);
         mNovelOpen = AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false);
         bookpage.setmLeftScreen(mNovelScreen);
     }
@@ -330,6 +366,7 @@ public class ReadActivity extends BaseReadActivity {
         } else {
             mIsActive = false;
         }
+        mHanderTime.removeCallbacks(mRunnable);
     }
 
     @Override
@@ -572,6 +609,20 @@ public class ReadActivity extends BaseReadActivity {
             public void cancel() {
                 pageFactory.cancelPage();
             }
+
+            @Override
+            public void down() {
+                if (mHaveScreenPermison) {
+                    mHanderTime.removeCallbacks(mRunnable);
+                }
+            }
+
+            @Override
+            public void up() {
+                if (mHaveScreenPermison) {
+                    mHanderTime.postDelayed(mRunnable, mScreenTime);
+                }
+            }
         });
         if (!ReaderConfig.USE_SHARE) {
             titlebar_share.setVisibility(View.GONE);
@@ -643,8 +694,7 @@ public class ReadActivity extends BaseReadActivity {
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {//音量向上
             try {
                 if (mNovelVoice) {
-                    bookpage.preVolumPage();
-                    pageFactory.prePage();
+                    bookpage.next_page(false);
                     return true;
                 }
             } catch (Exception e) {
@@ -652,8 +702,7 @@ public class ReadActivity extends BaseReadActivity {
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {//音量向下
             try {
                 if (mNovelVoice) {
-                    bookpage.next_page();
-                    pageFactory.nextPage();
+                    bookpage.next_page(true);
                     return true;
                 }
             } catch (Exception e) {

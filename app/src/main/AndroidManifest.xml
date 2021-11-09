@@ -42,6 +42,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!-- 清除屏保需要的权限 -->
+    <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
 
     <supports-screens
         android:anyDensity="true"
@@ -325,6 +327,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pathlist" />
         </provider> <!-- Required since 3.0.7 -->
+        <receiver
+            android:name=".component.ScreenOnAndOffReceiver"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/screen_on_off" />
+
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
         <!-- 新的 tag/alias 接口结果返回需要开发者配置一个自定的广播 -->
         <!-- 3.3.0开始所有事件将通过该类回调 -->
         <!-- 该广播需要继承 JPush 提供的 JPushMessageReceiver 类, 并如下新增一个 Intent-Filter -->

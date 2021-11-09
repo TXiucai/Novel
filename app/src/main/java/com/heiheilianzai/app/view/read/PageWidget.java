@@ -46,6 +46,7 @@ public class PageWidget extends View {
     private int downY = 0;
     private int moveX = 0;
     private int moveY = 0;
+    private int downXPre = 0;
     //翻页动画是否在执行
     private Boolean isRuning = false;
     Bitmap mCurPageBitmap = null; // 当前页
@@ -195,6 +196,7 @@ public class PageWidget extends View {
             isRuning = false;
             mAnimationProvider.setStartPoint(downX, downY);
             abortAnimation();
+            mTouchListener.down();
             Utils.printLog(TAG, "ACTION_DOWN");
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
@@ -261,6 +263,7 @@ public class PageWidget extends View {
                 this.postInvalidate();
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            mTouchListener.up();
             Utils.printLog(TAG, "ACTION_UP");
             if (!isMove) {
                 cancelPage = false;
@@ -280,14 +283,14 @@ public class PageWidget extends View {
                         return true;
                     }
                 } else {
-                    if (mLeftScreen){
+                    if (mLeftScreen) {
                         Boolean isNext = mTouchListener.nextPage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.next);
                         if (!isNext) {
                             onTouchEventing = false;
                             return true;
                         }
-                    }else {
+                    } else {
                         Boolean isPre = mTouchListener.prePage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
                         if (!isPre) {
@@ -339,28 +342,46 @@ public class PageWidget extends View {
         return true;
     }
 
-    public void next_page() {
+    public void next_page(boolean isNextOrPre) {
         if (PageFactory.getStatus() == PageFactory.Status.OPENING) {
             return;
         }
         downX = mScreenWidth * 4 / 5;
+        downXPre = mScreenWidth / 5;
         downY = mScreenHeight / 2;
-        mAnimationProvider.setTouchPoint(downX, downY);
         moveX = 0;
         moveY = 0;
         isMove = false;
         noNext = false;
         isNext = false;
         isRuning = false;
-        mAnimationProvider.setStartPoint(downX, downY);
+        if (isNextOrPre) {
+            mAnimationProvider.setTouchPoint(downX, downY);
+            mAnimationProvider.setStartPoint(downX, downY);
+        } else {
+            mAnimationProvider.setTouchPoint(downXPre, downY);
+            mAnimationProvider.setStartPoint(downXPre, downY);
+        }
         abortAnimation();
         if (!isMove) {
             cancelPage = false;
             isNext = true;
-
-            if (isNext) {
+            if (ADview != null) {
+                ADview.setVisibility(INVISIBLE);
+            }
+            if (isNext && isNextOrPre) {
                 Boolean isNext = mTouchListener.nextPage();
                 mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+                page++;
+                backPage.backPage(page);
+                Utils.printLog("onDrawaaa", "isNext:" + isNext);
+            }
+            if (!isNextOrPre) {
+                Boolean isPre = mTouchListener.prePage();
+                mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
+                page--;
+                backPage.backPage(page);
+                Utils.printLog("onDrawaaa", "isPre:" + isPre);
             }
         }
         if (cancelPage && mTouchListener != null) {
@@ -371,6 +392,9 @@ public class PageWidget extends View {
             mAnimationProvider.startAnimation(mScroller, new AnimationProvider.OnAnimationStopped() {
                 @Override
                 public void nextStop() {
+                    ++Current_Page;
+                    onTouchEventing = false;
+
                     if (mOnSwitchNextListener != null) {
                         mOnSwitchNextListener.switchNextChapter();
                         Utils.printLog("onDrawaaa", "开始加载下一章");
@@ -380,6 +404,13 @@ public class PageWidget extends View {
 
                 @Override
                 public void preStop() {
+                    --Current_Page;
+                    onTouchEventing = false;
+                    if (mOnSwitchPreListener != null) {
+                        mOnSwitchPreListener.switchPreChapter();
+                        Utils.printLog("onDrawaaa", "开始加载上一章");
+                        mOnSwitchPreListener = null;
+                    }
                 }
             });
             this.postInvalidate();
@@ -424,21 +455,13 @@ public class PageWidget extends View {
         Boolean nextPage();
 
         void cancel();
+
+        void down();
+
+        void up();
     }
 
     public interface BackPage {
         void backPage(int page);
     }
-
-
-    public void preVolumPage() {
-        page--;
-        backPage.backPage(page);
-    }
-
-    public void nextVolumPage() {
-        page++;
-        backPage.backPage(page);
-    }
-
 }

@@ -605,4 +605,8 @@
     <string name="string_read_time_fivty">15分钟</string>
     <string name="string_read_time_half">30分钟</string>
     <string name="string_read_time_permission"> 」需要开启修改系统权限才能正常使用</string>
+    <string name="string_posting">正在提交中...</string>
+    <string name="string_read_equipment_enable">设备管理器启用</string>
+    <string name="string_read_equipment_unenable">设备管理器禁用</string>
+    <string name="string_read_screen_offoron">使用亮灭屏功能</string>
 </resources>
