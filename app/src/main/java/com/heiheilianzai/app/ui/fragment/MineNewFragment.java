@@ -414,12 +414,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 break;
             case R.id.fragment_mine_user_info_tasklayout_feedback:
                 if (!Utils.isLogin(activity)) {
-                    GetDialog.IsOperation(activity, "登录后才可以进行反馈哦~", "", new GetDialog.IsOperationInterface() {
-                        @Override
-                        public void isOperation() {
-                            MainHttpTask.getInstance().Gotologin(activity);
-                        }
-                    });
+                    MainHttpTask.getInstance().Gotologin(activity);
                 } else
                     HandleOnclick(view, "fragment_mine_user_info_tasklayout_feedback");
                 break;
