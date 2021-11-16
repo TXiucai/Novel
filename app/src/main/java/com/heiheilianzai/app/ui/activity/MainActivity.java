@@ -154,6 +154,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private boolean mIsShowTwoNotice = true;
     private boolean mIsFirstTextNotice;
     private Dialog popupWindow;
+    private boolean mIsSdkAd = false;
+    private boolean mIsSdkTopAd = false;
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -186,6 +188,142 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         initView();
         initData();
         setOpenTimeEvent();
+        getWebTopAD(activity);
+        getWebViewAD(activity);
+    }
+
+    public void getWebViewAD(Activity activity) {
+        if (ReaderConfig.BOTTOM_READ_AD == null) {
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                    mIsSdkAd = true;
+                    sdkAd(activity);
+                    return;
+                }
+            }
+            if (!mIsSdkAd) {
+                localAd(activity);
+            }
+        }
+    }
+
+    public void getWebTopAD(Activity activity) {
+        if (ReaderConfig.TOP_READ_AD == null) {
+            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "17") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                    mIsSdkTopAd = true;
+                    sdkTopAd(activity);
+                    return;
+                }
+            }
+            if (!mIsSdkTopAd) {
+                localTopAd(activity);
+            }
+        }
+    }
+
+    private void sdkTopAd(Activity activity) {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_TOP_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_TOP, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    ReaderConfig.TOP_READ_AD = new BaseAd();
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        ReaderConfig.TOP_READ_AD.setAd_skip_url(adInfo.getOperation().getValue());
+                        ReaderConfig.TOP_READ_AD.setAd_title(adInfo.getMaterial().getTitle());
+                        ReaderConfig.TOP_READ_AD.setAd_image(adInfo.getMaterial().getImageUrl());
+                        ReaderConfig.TOP_READ_AD.setUser_parame_need("1");
+                        ReaderConfig.TOP_READ_AD.setAd_url_type(adInfo.getOperation().getType());
+                        ReaderConfig.TOP_READ_AD.setAd_type(1);
+                    }
+                } catch (Exception e) {
+                    localTopAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localAd(activity);
+            }
+        });
+    }
+
+    private void sdkAd(Activity activity) {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG : BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    ReaderConfig.BOTTOM_READ_AD = new BaseAd();
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        ReaderConfig.BOTTOM_READ_AD.setAd_skip_url(adInfo.getOperation().getValue());
+                        ReaderConfig.BOTTOM_READ_AD.setAd_title(adInfo.getMaterial().getTitle());
+                        ReaderConfig.BOTTOM_READ_AD.setAd_image(adInfo.getMaterial().getImageUrl());
+                        ReaderConfig.BOTTOM_READ_AD.setUser_parame_need("1");
+                        ReaderConfig.BOTTOM_READ_AD.setAd_url_type(adInfo.getOperation().getType());
+                        ReaderConfig.BOTTOM_READ_AD.setAd_type(1);
+                    }
+                } catch (Exception e) {
+                    localAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localAd(activity);
+            }
+        });
+    }
+
+    private void localAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", XIAOSHUO + "");
+        params.putExtraParams("position", "12");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            ReaderConfig.BOTTOM_READ_AD = new Gson().fromJson(result, BaseAd.class);
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+
+                    }
+                }
+        );
+    }
+
+    private void localTopAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", XIAOSHUO + "");
+        params.putExtraParams("position", "17");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            ReaderConfig.TOP_READ_AD = new Gson().fromJson(result, BaseAd.class);
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+
+                    }
+                }
+        );
     }
 
     private void initView() {

@@ -199,6 +199,8 @@ public class ReadActivity extends BaseReadActivity {
     public TextView activity_read_buttom_boyin_go;
     @BindView(R.id.titlebar_boyin)
     public RelativeLayout titlebar_boyin;
+    @BindView(R.id.activity_read_top_ad_iv)
+    public ImageView activity_read_top_ad_iv;
     private ReadingConfig config;
     private WindowManager.LayoutParams lp;
     private ChapterItem chapter;
@@ -211,12 +213,10 @@ public class ReadActivity extends BaseReadActivity {
     private Boolean mDayOrNight;
     private boolean isSpeaking = false;
     BaseBook baseBook;
-    BaseAd baseAd;
     ImageView list_ad_view_img;
     InfoBookItem mInfoBookItem;
     String mReferPage;//从哪个页面打开小说阅读(神策埋点数据)
     long mOpenCurrentTime;//打开小说阅读页的当前时间(每次翻动一个章节，改变一次时间)
-    int visible = -1;//每间隔多少也显示底部广告
     private NovelBoyinModel soundBookInfoBean;
     private boolean mNovelVoice;
     private boolean mNovelScreen;
@@ -235,7 +235,6 @@ public class ReadActivity extends BaseReadActivity {
     };
     private long mReadStarTime;
     private long mReadEndTime;
-    private boolean mIsSdkAd = false;
     private boolean mIsActive = true;//是否处于前台
 
     private DevicePolicyManager devicePolicyManager = null;
@@ -310,7 +309,6 @@ public class ReadActivity extends BaseReadActivity {
         }
         setOpenCurrentTime();
         uiFreeCharge();
-        setButtonADVisible();
         initReadSetting();
     }
 
@@ -375,7 +373,7 @@ public class ReadActivity extends BaseReadActivity {
         //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
         layoutParams.height = mScreenHeight;
         bookpage.setLayoutParams(layoutParams);
-        getWebViewAD(activity);
+        initAd(activity);
         bookpage.setADview(insert_todayone2);
         next();
         acceptNovelBoyin(activity, chapter.getBook_name());
@@ -1066,7 +1064,6 @@ public class ReadActivity extends BaseReadActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    getWebViewAD(activity);
                     handler.sendEmptyMessageDelayed(1, 30000);
                     break;
                 case 2:
@@ -1093,96 +1090,18 @@ public class ReadActivity extends BaseReadActivity {
         SensorsDataAPI.sharedInstance().trackTimerEnd(SaEventConfig.XS_CONTENT_PAGE_EVENT);
     }
 
-    public void getWebViewAD(Activity activity) {
-        if (baseAd == null) {
-            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-                if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
-                    mIsSdkAd = true;
-                    sdkAd(activity);
-                    return;
-                }
-            }
-            if (!mIsSdkAd) {
-                localAd(activity);
-            }
-        } else {
-            adClick(activity);
-        }
-    }
-
-    private void sdkAd(Activity activity) {
-        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG : BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
-            @Override
-            public void onRequestOk(List<AdInfo> list) {
-                try {
-                    AdInfo adInfo = list.get(0);
-                    baseAd = new BaseAd();
-                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
-                        baseAd.setAd_skip_url(adInfo.getOperation().getValue());
-                        baseAd.setAd_title(adInfo.getMaterial().getTitle());
-                        baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        baseAd.setUser_parame_need("1");
-                        baseAd.setAd_url_type(adInfo.getOperation().getType());
-                        baseAd.setAdvert_interval(3);
-                        baseAd.setAd_type(1);
-                        visible = baseAd.getAdvert_interval();
-                        activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-                    } else {
-                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                    }
-                    adClick(activity);
-                } catch (Exception e) {
-                    localAd(activity);
-                }
-            }
-
-            @Override
-            public void onRequestFailed(int i, String s) {
-                localAd(activity);
-            }
-        });
-    }
-
-    private void localAd(Activity activity) {
-        ReaderParams params = new ReaderParams(activity);
-        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
-        params.putExtraParams("type", XIAOSHUO + "");
-        params.putExtraParams("position", "12");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        try {
-                            baseAd = new Gson().fromJson(result, BaseAd.class);
-                            visible = baseAd.getAdvert_interval();
-                            activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-                            adClick(activity);
-                        } catch (Exception e) {
-                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                    }
-                }
-        );
-    }
-
-    private void adClick(Activity activity) {
-        if (baseAd != null && baseAd.ad_type == 1) {
+    private void initAd(Activity activity) {
+        if (ReaderConfig.BOTTOM_READ_AD != null && ReaderConfig.BOTTOM_READ_AD.ad_type == 1) {
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    JumpBookAd(activity);
+                    JumpBookAd(activity, ReaderConfig.BOTTOM_READ_AD);
                 }
             });
             mIvAd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    JumpBookAd(activity);
+                    JumpBookAd(activity, ReaderConfig.BOTTOM_READ_AD);
                 }
             });
             mIvClose.setOnClickListener(new View.OnClickListener() {
@@ -1192,11 +1111,25 @@ public class ReadActivity extends BaseReadActivity {
                 }
             });
             activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mIvAd);
+            MyPicasso.GlideImageNoSize(activity, ReaderConfig.BOTTOM_READ_AD.ad_image, mIvAd);
+        } else {
+            activity_read_buttom_ad_layout.setVisibility(View.GONE);
+        }
+        if (ReaderConfig.TOP_READ_AD != null && ReaderConfig.TOP_READ_AD.ad_type == 1) {
+            activity_read_top_ad_iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    JumpBookAd(activity, ReaderConfig.TOP_READ_AD);
+                }
+            });
+            activity_read_top_ad_iv.setVisibility(View.VISIBLE);
+            MyPicasso.GlideImageNoSize(activity, ReaderConfig.TOP_READ_AD.ad_image, activity_read_top_ad_iv);
+        } else {
+            activity_read_top_ad_iv.setVisibility(View.GONE);
         }
     }
 
-    private void JumpBookAd(Activity activity) {
+    private void JumpBookAd(Activity activity, BaseAd baseAd) {
         if (baseAd != null) {
             Intent intent = new Intent();
             intent.setClass(activity, WebViewActivity.class);
@@ -1328,25 +1261,4 @@ public class ReadActivity extends BaseReadActivity {
         mOpenCurrentTime = DateUtils.currentTime();
     }
 
-    /**
-     * 控制广告翻多少页后显示
-     */
-    private void setButtonADVisible() {
-        bookpage.setBackPage(new PageWidget.BackPage() {
-            @Override
-            public void backPage(int page) {
-                if (visible > 0) {
-                    if (Math.abs(page) % (visible + 1) == 0) {
-                        activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-                    } else {
-                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                    }
-                } else if (visible == 0) {
-                    activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-                } else {
-                    activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                }
-            }
-        });
-    }
 }

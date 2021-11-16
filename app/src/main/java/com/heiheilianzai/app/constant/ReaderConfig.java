@@ -9,6 +9,7 @@ import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.ShareUitls;
 
@@ -102,9 +103,11 @@ public class ReaderConfig {
     public static List<AppUpdate.ListBean> NOVEL_SDK_AD = new ArrayList<>();
     public static List<AppUpdate.ListBean> COMIC_SDK_AD = new ArrayList<>();
     public static AppUpdate.AdPositionOtherBean.ListBean OTHER_SDK_AD = new AppUpdate.AdPositionOtherBean.ListBean();
-    public static final int READBUTTOM_HEIGHT = 55;//yeudulibu AD
+    public static final int READBUTTOM_HEIGHT = 60;//yeudulibu AD
     public static final String BASE_PAY = "";
     public static final String IMG_CRYPTOGRAPHIC_POSTFIX = "?c";
+    public static BaseAd BOTTOM_READ_AD;
+    public static BaseAd TOP_READ_AD;
 
     /**
      * 分享成功增加金币

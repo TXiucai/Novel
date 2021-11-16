@@ -216,9 +216,12 @@ public class PageFactory {
         MHeight = ScreenSizeUtils.getInstance(mActivity).getScreenHeight();
         mHeight = MHeight;
         button_ad_heigth = ImageUtil.dp2px(mActivity, READBUTTOM_HEIGHT);
-        /*if (USE_BUTTOM_AD) {
-            mHeight -= button_ad_heigth; //暂时浮在页面上
-        }*/
+        if (ReaderConfig.TOP_READ_AD != null) {
+            mHeight -= button_ad_heigth;
+        }
+        if (ReaderConfig.BOTTOM_READ_AD != null) {
+            mHeight -= button_ad_heigth;
+        }
         mWidth = ScreenSizeUtils.getInstance(mActivity).getScreenWidth();
         sdf = new SimpleDateFormat("HH:mm");//HH:mm为24小时制,hh:mm为12小时制
         date = sdf.format(new java.util.Date());

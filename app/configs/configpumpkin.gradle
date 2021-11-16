@@ -101,7 +101,8 @@ gradle.ext {
     XAD_EVN_POS_NOVEL_DETAIL = "\"305\""//小说详情广告
     XAD_EVN_POS_BANNER_COMIC = "\"351\""//漫画轮播图广告
     XAD_EVN_POS_BANNER_NOVEL = "\"293\""//小说轮播图广告
-
+    XAD_EVN_POS_NOVEL_TOP = "\"602633\""//小说顶部广告
+    XAD_EVN_POS_COMIC_CHAPTER_INTERVAL = "\"602634\""//漫画章节间广告
     // 测试环境的广告位id
     XAD_EVN_POS_SPLASH_DEBUG = "\"313\""//闪屏页广告id
     XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG = "\"602554\""//首页Icon推荐
@@ -119,4 +120,6 @@ gradle.ext {
     XAD_EVN_POS_NOVEL_DETAIL_DEBUG = "\"305\""//小说详情广告
     XAD_EVN_POS_BANNER_COMIC_DEBUG = "\"351\""//漫画轮播图广告
     XAD_EVN_POS_BANNER_NOVEL_DEBUG = "\"293\""//小说轮播图广告
+    XAD_EVN_POS_NOVEL_TOP_DEBUG = "\"602633\""//小说顶部广告
+    XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG = "\"602634\""//漫画章节间广告
 }

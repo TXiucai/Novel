@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
 
+import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.ui.dialog.read.AutoProgressBar;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -59,16 +60,10 @@ public class PageWidget extends View {
     FrameLayout ADview;
     public int Current_Page;
     boolean onTouchEventing;
-    private BackPage backPage;
-    private int page = 0;
     private boolean mLeftScreen = false;
 
     public void setmLeftScreen(boolean mLeftScreen) {
         this.mLeftScreen = mLeftScreen;
-    }
-
-    public void setBackPage(BackPage backPage) {
-        this.backPage = backPage;
     }
 
     public void setADview(FrameLayout ADview) {
@@ -94,9 +89,12 @@ public class PageWidget extends View {
     private void initPage() {
         mScreenWidth = ScreenSizeUtils.getInstance(mContext).getScreenWidth();
         mScreenHeight = ScreenSizeUtils.getInstance(mContext).getScreenHeight();  //RGB_565
-        /*if (USE_BUTTOM_AD) {
-            mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60); //暂时浮在小说页面上
-        }*/
+        if (ReaderConfig.TOP_READ_AD != null) {
+            mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60);
+        }
+        if (ReaderConfig.BOTTOM_READ_AD != null) {
+            mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60);
+        }
         MyToash.Log("mScreenHeight", mScreenHeight + "");
         try {
             mCurPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);      //android:LargeHeap=true  use in  manifest application
@@ -213,10 +211,6 @@ public class PageWidget extends View {
                     if (isNext) {
                         Boolean isNext = mTouchListener.nextPage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.next);
-                        if (isNext) {
-                            page++;
-                            backPage.backPage(page);
-                        }
                         if (!isNext) {
                             onTouchEventing = false;
                             noNext = true;
@@ -225,10 +219,6 @@ public class PageWidget extends View {
                     } else {
                         Boolean isPre = mTouchListener.prePage();
                         mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-                        if (isPre) {
-                            page--;
-                            backPage.backPage(page);
-                        }
                         if (!isPre) {
                             noNext = true;
                             onTouchEventing = false;
@@ -372,15 +362,11 @@ public class PageWidget extends View {
             if (isNext && isNextOrPre) {
                 Boolean isNext = mTouchListener.nextPage();
                 mAnimationProvider.setDirection(AnimationProvider.Direction.next);
-                page++;
-                backPage.backPage(page);
                 Utils.printLog("onDrawaaa", "isNext:" + isNext);
             }
             if (!isNextOrPre) {
                 Boolean isPre = mTouchListener.prePage();
                 mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-                page--;
-                backPage.backPage(page);
                 Utils.printLog("onDrawaaa", "isPre:" + isPre);
             }
         }
@@ -461,7 +447,4 @@ public class PageWidget extends View {
         void up();
     }
 
-    public interface BackPage {
-        void backPage(int page);
-    }
 }

@@ -76,6 +76,8 @@ android {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC", gradle.ext.XAD_EVN_POS_BANNER_COMIC
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL", gradle.ext.XAD_EVN_POS_BANNER_NOVEL
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP", gradle.ext.XAD_EVN_POS_NOVEL_TOP
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL
 
         buildConfigField "String", "XAD_EVN_POS_SPLASH_DEBUG", gradle.ext.XAD_EVN_POS_SPLASH_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG
@@ -93,6 +95,8 @@ android {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_COMIC_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_NOVEL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_TOP_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG
         ndk {
             //选择要添加的对应cpu类型的.so库。为了兼容cpu，查看官网SDK的libs多添加几个
             abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'x86', 'x86_64'
@@ -243,6 +247,8 @@ def getAppConfig() {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC", gradle.ext.XAD_EVN_POS_BANNER_COMIC
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL", gradle.ext.XAD_EVN_POS_BANNER_NOVEL
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP", gradle.ext.XAD_EVN_POS_NOVEL_TOP
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL
 
         buildConfigField "String", "XAD_EVN_POS_SPLASH_DEBUG", gradle.ext.XAD_EVN_POS_SPLASH_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG
@@ -260,6 +266,8 @@ def getAppConfig() {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_COMIC_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_NOVEL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_TOP_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG
 
         buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
         buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
