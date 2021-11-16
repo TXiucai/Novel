@@ -142,7 +142,7 @@ public class LoginActivity extends BaseActivity {
                 mVp.setCurrentItem(1);
                 break;
             case R.id.activity_login_contract:
-                startActivity(new Intent(activity, AboutActivity.class).putExtra("url", ReaderConfig.getBaseUrl() + ReaderConfig.privacy).putExtra("flag", "privacy"));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
         }
     }
