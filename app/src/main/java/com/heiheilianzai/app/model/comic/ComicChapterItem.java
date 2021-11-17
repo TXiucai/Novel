@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.model.comic;
 
+import com.heiheilianzai.app.model.BaseAd;
+
 import java.util.List;
 
 public class ComicChapterItem {
@@ -8,11 +10,11 @@ public class ComicChapterItem {
     public String chapter_title;//": 章节title
     public String next_chapter;//": 621914, //下一章id
     public String last_chapter;//": 0, //上一章id
-    public int   total_comment;
+    public int total_comment;
     public int is_preview;//": 1, //是否预览章节 1是 0不是
-    public  int  display_order;
+    public int display_order;
     public List<BaseComicImage> image_list;
-    public ComicChapterTopAd advert;
+    public BaseAd advert;
     public String is_vip;
     public String is_book_coupon_pay;
     private boolean is_buy_status;
@@ -59,11 +61,11 @@ public class ComicChapterItem {
         this.is_vip = is_vip;
     }
 
-    public ComicChapterTopAd getAdvert() {
+    public BaseAd getAdvert() {
         return advert;
     }
 
-    public void setAdvert(ComicChapterTopAd advert) {
+    public void setAdvert(BaseAd advert) {
         this.advert = advert;
     }
 

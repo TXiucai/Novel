@@ -202,6 +202,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public RelativeLayout mRlRb;
     @BindView(R.id.sv_big)
     public ScrollView mSvBig;
+    @BindView(R.id.img_top_ad)
+    public ImageView mImgTopAd;
+    @BindView(R.id.img_bottom_ad)
+    public ImageView mImgBottomAd;
 
     Map<String, ComicChapterItem> map = new HashMap();//临时存储章节数据
     PurchaseDialog purchaseDialog;
@@ -238,7 +242,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private long mReadStarTime;
     private boolean mIsSdkAd = false;
     private boolean mIsSdkBottomAd = false;
-    private ComicChapterTopAd mSdkTopAd;
+    private BaseAd mSdkTopAd;
 
     @Override
     public int initContentView() {
@@ -257,7 +261,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                             @Override
                             public void onResponse(final String result) {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
-                                ComicChapterTopAd comicAdvert = comicChapterItem.getAdvert();
+                                BaseAd comicAdvert = comicChapterItem.getAdvert();
                                 HandleData(comicChapterItem, Chapter_id, comic_id, activity);
                                 map.put(Chapter_id, comicChapterItem);
                                 CurrentComicChapter.setImagesText(result);
@@ -725,6 +729,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (baseComicImages == null) {
             baseComicImages = new ArrayList<>();
         }
+        getWebViewAD(activity);
         for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "13") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
@@ -746,7 +751,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     getData(activity, comic_id, Chapter_id, true);
                     AdInfo adInfo = list.get(0);
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
-                        mSdkTopAd = new ComicChapterTopAd();
+                        mSdkTopAd = new BaseAd();
                         mSdkTopAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         mSdkTopAd.setAd_skip_url(adInfo.getOperation().getValue());
                         mSdkTopAd.setAd_title(adInfo.getMaterial().getTitle());
@@ -933,33 +938,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     ++baseComicImagesSize;
                 }
                 baseComicImages.addAll(comicChapterItem.image_list);
-                if (mIsSdkAd) {
-                    if (mSdkTopAd != null) {
-                        BaseComicImage baseComicImage = new BaseComicImage();
-                        baseComicImage.setAd(1);
-                        baseComicImage.setAd_skip_url(mSdkTopAd.getAd_skip_url());
-                        baseComicImage.setImage(mSdkTopAd.getAd_image());
-                        baseComicImage.setAd_type(mSdkTopAd.getAd_type());
-                        baseComicImage.setAd_url_type(mSdkTopAd.getAd_url_type());
-                        baseComicImages.add(0, baseComicImage);
-                        ++baseComicImagesSize;
-                    }
-                } else {
-                    ComicChapterTopAd advert = comicChapterItem.getAdvert();
-                    if (advert != null) {
-                        BaseComicImage baseComicImage = new BaseComicImage();
-                        baseComicImage.setAd(1);
-                        baseComicImage.setAd_skip_url(advert.getAd_skip_url());
-                        baseComicImage.setImage(advert.getAd_image());
-                        baseComicImage.setAd_type(advert.getAd_type());
-                        baseComicImage.setAd_url_type(advert.getAd_url_type());
-                        baseComicImage.setHeight(advert.getAd_height());
-                        baseComicImage.setWidth(advert.getAd_width());
-                        baseComicImage.setAdvert_id(advert.getAdvert_id());
-                        baseComicImages.add(0, baseComicImage);
-                        ++baseComicImagesSize;
-                    }
-                }
+                initTopAd(comicChapterItem);
 
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
@@ -1018,11 +997,31 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         getData(activity, comic_id, comicChapterItem.next_chapter, false);
                     }
                 }
-                getWebViewAD(activity);
                 ComicReadHistory.addReadHistory(FORM_READHISTORY, activity, comic_id, chapter_id);
             }
         } catch (Exception e) {
         } catch (Error e) {
+        }
+    }
+
+    private void initTopAd(ComicChapterItem comicChapterItem) {
+        if (mIsSdkAd) {
+            if (mSdkTopAd != null) {
+                mImgTopAd.setVisibility(View.VISIBLE);
+                MyPicasso.GlideImageNoSize(activity, mSdkTopAd.getAd_image(), mImgTopAd);
+                mImgTopAd.setOnClickListener((v) -> skipWeb(mSdkTopAd, activity));
+            } else {
+                mImgTopAd.setVisibility(View.GONE);
+            }
+        } else {
+            BaseAd advert = comicChapterItem.getAdvert();
+            if (advert != null) {
+                mImgTopAd.setVisibility(View.VISIBLE);
+                MyPicasso.GlideImageNoSize(activity, mSdkTopAd.getAd_image(), mImgTopAd);
+                mImgTopAd.setOnClickListener((v) -> skipWeb(advert, activity));
+            } else {
+                mImgTopAd.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -1202,27 +1201,17 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         baseAd.setAd_url_type(adInfo.getOperation().getType());
                         baseAd.setAd_type(1);
                         if (baseAd != null) {
-                            holderFoot.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
+                            mImgBottomAd.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent();
-                                    intent.setClass(activity, WebViewActivity.class);
-                                    intent.putExtra("url", baseAd.ad_skip_url);
-                                    intent.putExtra("title", baseAd.ad_title);
-                                    intent.putExtra("advert_id", baseAd.advert_id);
-                                    intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                                    activity.startActivity(intent);
+                                    skipWeb(baseAd, activity);
                                 }
                             });
-                            ViewGroup.LayoutParams layoutParams = holderFoot.list_ad_view_img.getLayoutParams();
-                            layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                            layoutParams.height = layoutParams.width / 3;
-                            holderFoot.list_ad_view_img.setLayoutParams(layoutParams);
-                            holderFoot.list_ad_view_layout.setVisibility(View.VISIBLE);
-                            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, holderFoot.list_ad_view_img);
+                            mImgBottomAd.setVisibility(View.VISIBLE);
+                            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mImgBottomAd);
                         }
                     } else {
-                        holderFoot.list_ad_view_layout.setVisibility(View.GONE);
+                        mImgBottomAd.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     localBotoomAd(activity);
@@ -1234,6 +1223,16 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 localBotoomAd(activity);
             }
         });
+    }
+
+    private void skipWeb(BaseAd baseAd, Activity activity) {
+        Intent intent = new Intent();
+        intent.setClass(activity, WebViewActivity.class);
+        intent.putExtra("url", baseAd.ad_skip_url);
+        intent.putExtra("title", baseAd.ad_title);
+        intent.putExtra("advert_id", baseAd.advert_id);
+        intent.putExtra("ad_url_type", baseAd.ad_url_type);
+        activity.startActivity(intent);
     }
 
 
@@ -1249,35 +1248,25 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
                             if (baseAd != null) {
-                                holderFoot.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
+                                mImgBottomAd.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent intent = new Intent();
-                                        intent.setClass(activity, WebViewActivity.class);
-                                        intent.putExtra("url", baseAd.ad_skip_url);
-                                        intent.putExtra("title", baseAd.ad_title);
-                                        intent.putExtra("advert_id", baseAd.advert_id);
-                                        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                                        activity.startActivity(intent);
+                                        skipWeb(baseAd, activity);
                                     }
                                 });
-                                ViewGroup.LayoutParams layoutParams = holderFoot.list_ad_view_img.getLayoutParams();
-                                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
-                                layoutParams.height = layoutParams.width / 3;
-                                holderFoot.list_ad_view_img.setLayoutParams(layoutParams);
-                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, holderFoot.list_ad_view_img);
-                                holderFoot.list_ad_view_layout.setVisibility(View.VISIBLE);
+                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mImgBottomAd);
+                                mImgBottomAd.setVisibility(View.VISIBLE);
                             } else {
-                                holderFoot.list_ad_view_layout.setVisibility(View.GONE);
+                                mImgBottomAd.setVisibility(View.GONE);
                             }
                         } catch (Exception e) {
-                            holderFoot.list_ad_view_layout.setVisibility(View.GONE);
+                            mImgBottomAd.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        holderFoot.list_ad_view_layout.setVisibility(View.GONE);
+                        mImgBottomAd.setVisibility(View.GONE);
                     }
                 }
         );
@@ -1300,16 +1289,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         public ImageView activity_comiclook_shangyihua_foot;
         @BindView(R.id.activity_comiclook_xiayihua_foot)
         public ImageView activity_comiclook_xiayihua_foot;
-        @BindView(R.id.list_ad_view_layout)
-        FrameLayout list_ad_view_layout;
-        @BindView(R.id.list_ad_view_img)
-        ImageView list_ad_view_img;
 
         public MyViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
-        @OnClick(value = {R.id.activity_comic_look_foot_shangyihua, R.id.activity_comic_look_foot_xiayihua, R.id.list_ad_view_layout})
+        @OnClick(value = {R.id.activity_comic_look_foot_shangyihua, R.id.activity_comic_look_foot_xiayihua})
         public void getEvent(View view) {
             switch (view.getId()) {
                 case R.id.activity_comic_look_foot_xiayihua:
@@ -1330,8 +1315,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
                     }
                     break;
-                case R.id.list_ad_view_layout:
-                    break;
             }
         }
     }
@@ -1340,7 +1323,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
      * 询问是否加入书架
      */
     private void askIsNeedToAddShelf() {
-        if (baseComic.isAddBookSelf()) {
+        if (baseComic != null && baseComic.isAddBookSelf()) {
             finish();
             return;
         }
