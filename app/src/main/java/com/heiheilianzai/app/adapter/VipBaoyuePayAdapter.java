@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.AcquirePayItem;
+import com.heiheilianzai.app.view.MarqueeView;
 
 import java.util.List;
 
@@ -59,10 +60,12 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.ryItem.setBackground(context.getDrawable(R.drawable.shape_e6e6e6_10));
         }
         if (!TextUtils.isEmpty(acquirePayItem.getGoods_label())) {
-            viewHolder.txFlag.setVisibility(View.VISIBLE);
-            viewHolder.txFlag.setText(acquirePayItem.getGoods_label());
+            viewHolder.mqFlag.setVisibility(View.VISIBLE);
+            viewHolder.mqFlag.setRndDuration(3000);
+            viewHolder.mqFlag.setText(acquirePayItem.getGoods_label());
+            viewHolder.mqFlag.startScroll();
         } else {
-            viewHolder.txFlag.setVisibility(View.GONE);
+            viewHolder.mqFlag.setVisibility(View.GONE);
         }
         viewHolder.txTittle.setText(acquirePayItem.getTitle());
         viewHolder.txPrice.setText(acquirePayItem.getPrice());
@@ -98,7 +101,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tx_vip_flag)
-        public TextView txFlag;
+        public MarqueeView mqFlag;
         @BindView(R.id.tx_vip_tittle)
         public TextView txTittle;
         @BindView(R.id.tx_vip_price)

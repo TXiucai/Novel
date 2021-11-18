@@ -242,7 +242,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private long mReadStarTime;
     private boolean mIsSdkAd = false;
     private boolean mIsSdkBottomAd = false;
+    private boolean mIsSdkChapterAd = false;
+    private boolean mIsShowChapterAd = false;
     private BaseAd mSdkTopAd;
+    private BaseAd mChapterBaseAd;
 
     @Override
     public int initContentView() {
@@ -410,7 +413,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             case R.id.activity_comiclook_xiayihua_layout:
                 if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
                     resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
-                    getData(activity, comic_id, comicChapterItem.next_chapter, true);
+                    if (mIsShowChapterAd) {
+                        initChapterAd();
+                    } else {
+                        getData(activity, comic_id, comicChapterItem.next_chapter, true);
+                    }
                 } else {
                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
                 }
@@ -418,7 +425,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             case R.id.activity_comiclook_shangyihua_layout:
                 if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
                     resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
-                    getData(activity, comic_id, comicChapterItem.last_chapter, true);
+                    if (mIsShowChapterAd) {
+                        initChapterAd();
+                    } else {
+                        getData(activity, comic_id, comicChapterItem.last_chapter, true);
+                    }
                 } else {
                     MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
                 }
@@ -634,6 +645,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         try {
             EventBus.getDefault().register(this);
             mReadStarTime = System.currentTimeMillis();
+            getWebViewAD(activity);
+            getChapterAD(activity);
             initViews();
             showMenu(false);
             if (AppPrefs.getSharedBoolean(activity, "small_ToggleButton", false)) {
@@ -729,7 +742,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (baseComicImages == null) {
             baseComicImages = new ArrayList<>();
         }
-        getWebViewAD(activity);
         for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "13") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
@@ -915,6 +927,25 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         return null;
     }
 
+    private void initChapterAd() {
+        if (mChapterBaseAd != null) {
+            baseComicImages.clear();
+            BaseComicImage baseComicImage = new BaseComicImage();
+            baseComicImagesSize = 0;
+            baseComicImage.setAd(1);
+            baseComicImage.setAd_skip_url(mChapterBaseAd.getAd_skip_url());
+            baseComicImage.setImage(mChapterBaseAd.getAd_image());
+            baseComicImage.setAd_type(mChapterBaseAd.getAd_type());
+            baseComicImage.setAd_url_type(mChapterBaseAd.getAd_url_type());
+            baseComicImages.add(0, baseComicImage);
+            ++baseComicImagesSize;
+            comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
+            comicChapterCatalogAdapter.NotifyDataSetChanged(baseComicImagesSize);
+            linearLayoutManager.scrollToPositionWithOffset(0, 0);
+            mIsShowChapterAd = false;
+        }
+    }
+
     private void HandleData(ComicChapterItem comicChapterItem, String chapter_id, String comic_id, Activity activity) {
         try {
             this.comicChapterItem = comicChapterItem;
@@ -961,6 +992,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     comicChapterCatalogAdapter.NotifyDataSetChanged(baseComicImagesSize);
                     linearLayoutManager.scrollToPositionWithOffset(0, 0);
                 }
+                mIsShowChapterAd = true;
                 //更新该本书的阅读记录
                 ContentValues values = new ContentValues();
                 values.put("current_chapter_id", chapter_id);
@@ -1186,6 +1218,77 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         }
     }
 
+    private void getChapterAD(Activity activity) {
+        for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "18") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkChapterAd = true;
+                sdkChapterAd();
+                return;
+            }
+        }
+        if (!mIsSdkChapterAd) {
+            localChapterAd(activity);
+        }
+    }
+
+    private void localChapterAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", MANHAU + "");
+        params.putExtraParams("position", "18");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            mChapterBaseAd = gson.fromJson(result, BaseAd.class);
+                            mIsShowChapterAd = true;
+                        } catch (Exception e) {
+                            mIsShowChapterAd = false;
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                        mIsShowChapterAd = false;
+                    }
+                }
+        );
+    }
+
+    private void sdkChapterAd() {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    if (mChapterBaseAd == null) {
+                        mChapterBaseAd = new BaseAd();
+                    }
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        mIsShowChapterAd = true;
+                        mChapterBaseAd.setAd_skip_url(adInfo.getOperation().getValue());
+                        mChapterBaseAd.setAd_title(adInfo.getMaterial().getTitle());
+                        mChapterBaseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        mChapterBaseAd.setUser_parame_need("1");
+                        mChapterBaseAd.setAd_url_type(adInfo.getOperation().getType());
+                        mChapterBaseAd.setAd_type(1);
+                    } else {
+                        localChapterAd(activity);
+                    }
+                } catch (Exception e) {
+                    localChapterAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localChapterAd(activity);
+            }
+        });
+    }
+
     private void sdkBottomAd() {
         XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_END_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_END, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
             @Override
@@ -1301,7 +1404,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     isclickScreen = false;
                     if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
                         resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
-                        getData(activity, comic_id, comicChapterItem.next_chapter, true);
+                        if (mIsShowChapterAd) {
+                            initChapterAd();
+                        } else {
+                            getData(activity, comic_id, comicChapterItem.next_chapter, true);
+                        }
                     } else {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
                     }
@@ -1310,7 +1417,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     isclickScreen = false;
                     if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
                         resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
-                        getData(activity, comic_id, comicChapterItem.last_chapter, true);
+                        if (mIsShowChapterAd) {
+                            initChapterAd();
+                        } else {
+                            getData(activity, comic_id, comicChapterItem.last_chapter, true);
+                        }
                     } else {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
                     }
