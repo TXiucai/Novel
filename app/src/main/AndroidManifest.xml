@@ -483,21 +483,7 @@
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
         </service> <!-- Push SDK 相关组件，required -->
-        <!-- 消息接收服务 -->
-        <service
-            android:name="com.alibaba.sdk.android.push.MsgService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.alibaba.sdk.android.push.NOTIFY_ACTION" />
-            </intent-filter>
-        </service>
-        <service
-            android:name="com.alibaba.sdk.android.push.channel.CheckService"
-            android:process=":channel">
-            <intent-filter>
-                <action android:name="com.alibaba.sdk.android.push.CHECK_SERVICE" />
-            </intent-filter>
-        </service>
+
         <service
             android:name="com.taobao.accs.ChannelService"
             android:exported="true"
@@ -519,7 +505,7 @@
         </service>
         <service
             android:name=".component.task.DownloadBoyinService"
-            android:enabled="true" /> <!-- 阿里云推送 -->
+            android:enabled="true" />
         <!-- 请填写你自己的- appKey -->
         <meta-data
             android:name="com.alibaba.app.appkey"
