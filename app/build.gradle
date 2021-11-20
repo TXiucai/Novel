@@ -322,8 +322,6 @@ dependencies {
     implementation files('libs/bugly_crash_release.jar')
     // 支付宝支付
     implementation files('libs/alipaySdk-20170725.jar')
-    // 阿里云推送
-    implementation "com.aliyun.ams:alicloud-android-push:${rootProject.alicloud}"
     // 友盟系列
     implementation "com.umeng.umsdk:analytics:${rootProject.umeng_analytics}"
     implementation "com.umeng.umsdk:common:${rootProject.umeng_common}"
@@ -332,7 +330,7 @@ dependencies {
     implementation files('libs/umeng-share-QQ-simplify-6.9.8.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.8.jar')
     implementation files('libs/umeng-sharetool-6.9.8.jar')
-    implementation (name: 'XAD_comm_1210709_release', ext: 'aar')
+    implementation(name: 'XAD_comm_1210709_release', ext: 'aar')
     implementation "org.nanohttpd:nanohttpd:${rootProject.nanohttpd}"
 
 

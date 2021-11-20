@@ -47,9 +47,9 @@ public class MyPushReceiver extends BroadcastReceiver {
             JSONObject obj = JSON.parseObject(extras);
             String content = obj.getString("content");
             String skip_type = obj.getString("skip_type");
-            ReaderMessageReceiver.sendNotification(context, title, message, skip_type, content);
-        } catch (Exception ig) {
-            ReaderMessageReceiver.sendNotification(context, title, message, null, null);
+
+        } catch (Exception ignored) {
+
         }
 
     }

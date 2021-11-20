@@ -9,9 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.alibaba.sdk.android.push.CloudPushService;
-import com.alibaba.sdk.android.push.CommonCallback;
-import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
@@ -28,7 +25,6 @@ import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BooActivityManager;
 import com.heiheilianzai.app.utils.JPushFactory;
 import com.heiheilianzai.app.utils.MyActivityManager;
-import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -82,32 +78,11 @@ public class App extends LitePalApplication {
             ReadingConfig.createConfig(this);
             Bugly.init(this, "75adbf1bdc", false);
             JPushUtil.init(this);
-            // 阿里云推送初始化会报错，导致其他插件初始化失败。由于暂时没有用到阿里云，放最下面了。
-            initCloudChannel(this);
+
         } catch (Exception E) {
         } catch (Error e) {
         }
         JPushFactory.testpush(this);
-    }
-
-    private void initCloudChannel(final Context applicationContext) {
-        // 创建notificaiton channel
-        this.createNotificationChannel();
-        PushServiceFactory.init(applicationContext);
-        final CloudPushService pushService = PushServiceFactory.getCloudPushService();
-        pushService.register(applicationContext, new CommonCallback() {
-            @Override
-            public void onSuccess(String response) {
-                ReaderConfig.PUSH_TOKEN = PushServiceFactory.getCloudPushService().getDeviceId();
-                MyToash.Log("PUSH_TOKEN", ReaderConfig.PUSH_TOKEN);
-                ShareUitls.putString(applicationContext, "PUSH_TOKEN", ReaderConfig.PUSH_TOKEN);
-            }
-
-            @Override
-            public void onFailed(String errorCode, String errorMessage) {
-            }
-        });
-
     }
 
     /**
