@@ -47,15 +47,6 @@
                         android:layout_height="match_parent"
                         android:scrollbars="vertical" />
 
-
-                    <!--      <FrameLayout
-                              android:id="@+id/insert_todayone2"
-                              android:layout_width="match_parent"
-                              android:layout_height="290dp"
-                              android:layout_gravity="center"
-                              android:layout_marginTop="30dp"
-                              android:layout_marginBottom="30dp" />-->
-
                     <include
                         android:id="@+id/activity_read_purchase_layout2"
                         layout="@layout/view_readactivity_buy"
@@ -98,22 +89,6 @@
                 android:progressDrawable="@drawable/auto_read_progress"
                 android:visibility="gone" />
 
-
-            <!-- <com.heiheilianzai.app.view.RingProgressView
-                 android:id="@+id/read_ringProgress"
-                 android:layout_width="23dp"
-                 android:layout_height="23dp"
-                 android:layout_alignParentRight="true"
-                 android:layout_marginTop="20dp"
-                 android:layout_marginRight="20dp"
-                 app:currentProgress="0"
-                 app:maxProgress="100"
-                 app:ringColor="#9AEF6C00"
-                 app:ringProgressColor="#EF6C00"
-                 app:ringWidth="3dp"
-                 app:textColor="#EF6C00"
-                 app:textSize="13dp" />-->
-
             <RelativeLayout
                 android:id="@+id/activity_read_top_menu"
                 android:layout_width="match_parent"
@@ -145,29 +120,6 @@
                 </LinearLayout>
 
 
-                <!-- <RelativeLayout
-                     android:id="@+id/tv_noad"
-                     android:layout_width="60dp"
-                     android:layout_height="50dp"
-                     android:layout_alignParentBottom="true"
-                     android:layout_toLeftOf="@+id/titlebar_share"
-                     android:gravity="center_vertical"
-                     android:visibility="visible">
-
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_centerInParent="true"
-                         android:background="@drawable/shape_readtop_close_ad"
-                         android:paddingLeft="8dp"
-                         android:paddingTop="3dp"
-                         android:paddingRight="8dp"
-                         android:paddingBottom="3dp"
-                         android:text="去广告"
-                         android:textColor="#EF6C00"
-                         android:textSize="12dp" />
-
-                 </RelativeLayout>-->
                 <RelativeLayout
                     android:id="@+id/titlebar_boyin"
                     android:layout_width="@dimen/dimens_40dp"
@@ -299,6 +251,16 @@
                     android:layout_marginRight="5dp"
                     android:background="@mipmap/light_mode"
                     android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:id="@+id/activity_read_speaker"
+                    android:layout_width="@dimen/dimens_80dp"
+                    android:layout_height="@dimen/dimens_40dp"
+                    android:layout_marginEnd="@dimen/dimens_10dp"
+                    android:layout_toStartOf="@id/activity_read_change_day_night"
+                    android:background="@drawable/bg_ll_read_speaker"
+                    android:orientation="horizontal">
+                </LinearLayout>
 
                 <RelativeLayout
                     android:id="@+id/bookpop_bottom"
