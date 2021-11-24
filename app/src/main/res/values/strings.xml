@@ -337,6 +337,7 @@
 
     <string name="ReadActivity_bg">背景</string>
     <string name="ReadActivity_autoread">开启自动阅读</string>
+    <string name="ReadActivity_listen">听书</string>
 
 
     <!--壳子-->
