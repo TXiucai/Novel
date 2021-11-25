@@ -449,6 +449,9 @@
                 <action android:name="org.android.agoo.client.MessageReceiverService" />
             </intent-filter>
         </service>
+        <service
+            android:name=".component.ReadNovelService"
+            android:enabled="true" />
         <service android:name=".component.DownComicService">
             <intent-filter>
                 <action android:name="com.heiheilianzai.app.ui.activity.comic.DownComicService" />

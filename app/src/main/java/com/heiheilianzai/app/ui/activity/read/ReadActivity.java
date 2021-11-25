@@ -48,6 +48,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
+import com.heiheilianzai.app.component.ReadNovelService;
 import com.heiheilianzai.app.component.ScreenOnAndOffReceiver;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -83,6 +84,7 @@ import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BookUtil;
 import com.heiheilianzai.app.utils.BrightnessUtil;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -137,6 +139,7 @@ import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfO
 public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
+    private final static String EXTRA_PAGE = "page";
     //神策埋点数据从哪个页面进入
     public static final String REFER_PAGE_EXT_KAY = "referPage";
     @BindView(R.id.bookpage)
@@ -242,6 +245,23 @@ public class ReadActivity extends BaseReadActivity {
     private PowerManager powerManager = null;
     private PowerManager.WakeLock wakeLock;
     private int mScreenTime;
+    public static final String TURN_NEXT = "turn_next";//翻页
+    public static final String UPDATE_BG = "update_bg";//界面每句加阴影
+    private BroadcastReceiver mNovelReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case UPDATE_BG:
+                    //todo
+                    break;
+                case TURN_NEXT:
+                    if (bookpage != null) {
+                        bookpage.next_page(true);
+                    }
+                    break;
+            }
+        }
+    };
     private Handler mHanderTime = new Handler();
     private Runnable mRunnable = new Runnable() {
         @Override
@@ -250,6 +270,7 @@ public class ReadActivity extends BaseReadActivity {
         }
     };
     private boolean mHaveScreenPermison = false;
+    private int mCurrentPage;//当前章节处于第几页
 
     @Override
     public int initContentView() {
@@ -292,6 +313,11 @@ public class ReadActivity extends BaseReadActivity {
             });
         }
         SensorsDataAPI.sharedInstance().trackTimerStart(SaEventConfig.XS_CONTENT_PAGE_EVENT);
+        //注册广播
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_BG);
+        intentFilter.addAction(TURN_NEXT);
+        registerReceiver(mNovelReceiver, intentFilter);
     }
 
     @Override
@@ -1085,6 +1111,7 @@ public class ReadActivity extends BaseReadActivity {
         }
         bookpage = null;
         unregisterReceiver(myReceiver);
+        unregisterReceiver(mNovelReceiver);
         isSpeaking = false;
         dismissAllDialog();
         SensorsDataAPI.sharedInstance().trackTimerEnd(SaEventConfig.XS_CONTENT_PAGE_EVENT);
@@ -1261,4 +1288,27 @@ public class ReadActivity extends BaseReadActivity {
         mOpenCurrentTime = DateUtils.currentTime();
     }
 
+    private void startReadNovelService() {
+        if (!Utils.isLogin(activity)) {
+            MainHttpTask.getInstance().Gotologin(activity);
+        } else {
+            if (App.isVip(activity)) {
+                //启动服务
+                if (!ReadNovelService.SERVICE_IS_LIVE) {
+                    // Android 8.0使用startForegroundService在前台启动新服务
+                    Intent intent = new Intent(this, ReadNovelService.class);
+                    intent.putExtra(EXTRA_CHAPTER, chapter);
+                    intent.putExtra(EXTRA_PAGE, mCurrentPage);
+                    intent.putExtra(EXTRA_BOOK, baseBook);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(intent);
+                    } else {
+                        startService(intent);
+                    }
+                }
+            } else {
+                new DialogVip().getDialogVipPop(activity, false);
+            }
+        }
+    }
 }
