@@ -60,7 +60,6 @@
 
                         <Button
                             android:id="@+id/activity_read_shangyizhang"
-
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
                             android:layout_alignParentLeft="true"
@@ -96,7 +95,6 @@
                 android:background="@drawable/shape_activity_read_top_bg"
                 android:visibility="gone">
 
-
                 <LinearLayout
                     android:id="@+id/activity_read_top_back_view"
                     android:layout_width="80dp"
@@ -118,7 +116,6 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/public_11_dp" />
                 </LinearLayout>
-
 
                 <RelativeLayout
                     android:id="@+id/titlebar_boyin"
@@ -278,7 +275,6 @@
                         android:text="@string/ReadActivity_listen"
                         android:textColor="@color/black"
                         android:textSize="@dimen/dimens_18sp" />
-
                 </LinearLayout>
 
                 <RelativeLayout
@@ -295,7 +291,6 @@
                         android:layout_centerVertical="true"
                         android:orientation="horizontal">
 
-
                         <TextView
                             android:id="@+id/tv_directory"
                             style="@style/text_style"
@@ -311,7 +306,6 @@
                             style="@style/text_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
                             android:layout_weight="1"
                             android:drawableTop="@mipmap/brightness_higher"
                             android:gravity="center"
@@ -322,7 +316,6 @@
                             style="@style/text_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
                             android:layout_weight="1"
                             android:drawableTop="@mipmap/font_icon"
                             android:gravity="center"
@@ -333,7 +326,6 @@
                             style="@style/text_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
                             android:layout_weight="1"
                             android:drawableTop="@mipmap/no_ad"
                             android:gravity="center"
@@ -344,7 +336,6 @@
                             style="@style/text_style"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
                             android:layout_weight="1"
                             android:drawableTop="@mipmap/comment_icon"
                             android:gravity="center"

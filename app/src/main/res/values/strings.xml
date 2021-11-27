@@ -339,7 +339,6 @@
     <string name="ReadActivity_autoread">开启自动阅读</string>
     <string name="ReadActivity_listen">听书</string>
 
-
     <!--壳子-->
 
     <string name="book_scanningSD">扫描SD卡一键导入</string>
@@ -353,7 +352,6 @@
     <string name="select_all">全选</string>
     <string name="file_searcher_searching">"正在搜索目录: "</string>
     <string name="file_searcher_searching_completed">搜索完成</string>
-
 
     <!--漫画详情-->
     <string name="fragment_comic_info_shoucang">收藏</string>
@@ -605,9 +603,29 @@
     <string name="string_read_time_five">5分钟</string>
     <string name="string_read_time_fivty">15分钟</string>
     <string name="string_read_time_half">30分钟</string>
+    <string name="string_read_time_sixty">60分钟</string>
     <string name="string_read_time_permission"> 」需要开启修改系统权限才能正常使用</string>
     <string name="string_posting">正在提交中...</string>
     <string name="string_read_equipment_enable">设备管理器启用</string>
     <string name="string_read_equipment_unenable">设备管理器禁用</string>
     <string name="string_read_screen_offoron">使用亮灭屏功能</string>
+
+    <string name="read_activity_exit_listen">退出听书模式</string>
+    <string name="read_activity_listen_timer">定时</string>
+    <string name="read_activity_listen_yingse">音色</string>
+    <string name="read_activity_listen_gao">高</string>
+    <string name="read_activity_listen_di">低</string>
+    <string name="read_activity_listen_shengdiao">声调</string>
+    <string name="read_activity_listen_kuai">快</string>
+    <string name="read_activity_listen_man">慢</string>
+    <string name="read_activity_listen_speed">速度</string>
+    <string name="read_activity_read_0_5">0.5倍</string>
+    <string name="read_activity_read_0_75">0.75倍</string>
+    <string name="read_activity_read_1">正常</string>
+    <string name="read_activity_read_1_25">1.25倍</string>
+    <string name="read_activity_read_1_5">1.5倍</string>
+    <string name="read_activity_read_1_75">1.75倍</string>
+    <string name="read_activity_read_2">2.0倍</string>
+    <string name="read_activity_read_ying_1">声音1</string>
+    <string name="read_activity_read_ying_2">声音2</string>
 </resources>

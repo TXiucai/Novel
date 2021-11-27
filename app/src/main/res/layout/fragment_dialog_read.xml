@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_200dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingRight="@dimen/dimens_10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dimens_60dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_speed"
+                android:textSize="@dimen/dimens_16sp" />
+
+            <TextView
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_man"
+                android:textSize="@dimen/dimens_16sp" />
+
+            <include
+                layout="@layout/rg_read_speak"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_kuai"
+                android:textSize="@dimen/dimens_16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dimens_60dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_shengdiao"
+                android:textSize="@dimen/dimens_16sp" />
+
+            <TextView
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_di"
+                android:textSize="@dimen/dimens_16sp" />
+
+            <include
+                layout="@layout/rg_read_speak_shengdiao"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_gao"
+                android:textSize="@dimen/dimens_16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dimens_60dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_yingse"
+                android:textSize="@dimen/dimens_16sp" />
+
+            <include
+                layout="@layout/rg_read_speak_yingse"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/dimens_60dp"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/read_activity_listen_timer"
+                android:textSize="@dimen/dimens_16sp" />
+
+            <include
+                layout="@layout/rg_read_speak_dingshi"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/btn_cancle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_40dp"
+        android:layout_marginTop="@dimen/dimens_10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dimens_30dp"
+                android:layout_height="@dimen/dimens_30dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/read_activity_read_exit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimens_5dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="@string/read_activity_exit_listen"
+                android:textSize="@dimen/dimens_16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
