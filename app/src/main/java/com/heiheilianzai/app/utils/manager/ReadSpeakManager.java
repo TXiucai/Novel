@@ -8,11 +8,16 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
+import androidx.annotation.RequiresApi;
+
+import com.heiheilianzai.app.utils.ListUtils;
+
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import kr.co.voiceware.java.vtapi.Constants;
 import kr.co.voiceware.java.vtapi.EngineInfo;
@@ -39,6 +44,8 @@ public class ReadSpeakManager {
     private EngineInfo selectedEngine = null;
     private VtLicenseSetting licensemodule = null;
     private List<SyncWordInfo> mWordInfo = new ArrayList<>();
+    private List<SyncWordInfo> fWordInfo = new ArrayList<>();
+    private List<SyncWordInfo> mWordInfoPause = new ArrayList<>();
     private int addFrame = 0;
     private int idxInfo = 0;
     private int totalFrame = 0;
@@ -58,6 +65,7 @@ public class ReadSpeakManager {
     public static final int BTN_PAUSE = 2;
     public static final int TXT_HIGHLIGHT = 4;
     private boolean isPause = false;
+    private String pauseText = null;
 
     private Thread playVoiceThread = null;
 
@@ -79,7 +87,6 @@ public class ReadSpeakManager {
             }
         }
     };
-
 
     public void ReadSpeakerManager(Context context) {
         this.context = context;
@@ -297,6 +304,10 @@ public class ReadSpeakManager {
         voicetext.vtapiExit();
         voicetext = null;
         vtapiHandle = 0;
+
+        addFrame = 0;
+        idxInfo = 0;
+        totalFrame = 0;
     }
 
     /**
@@ -311,105 +322,161 @@ public class ReadSpeakManager {
             mAudioTrack.play();
         }
 
-//        idxInfo = 0;
         if (null == playVoiceThread) {
 
-            idxInfo = 0;
             playVoiceThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    totalFrame = 0;
-                    addFrame = 0;
-                    idxInfo = 0;
 
-                    try {
-                        mAudioTrack.setPositionNotificationPeriod(1600);
-                        voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), options, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
-                            @Override
-                            public void onReadBuffer(byte[] output, int outputSize) {
+                    Message msg = uiHandler.obtainMessage();
+                    msg.what = BTN_PLAY;
+                    uiHandler.sendMessage(msg);
 
-                                if (outputSize > 0) {
-                                    final ByteBuffer audioData = ByteBuffer.wrap(output);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
-                                    } else {
-                                        mAudioTrack.write(output, 0, outputSize);
+                    mAudioTrack.setPositionNotificationPeriod(1600);
+
+                    //不是暂停后继续播放
+                    if (!isPause) {
+                        totalFrame = 0;
+                        addFrame = 0;
+                        idxInfo = 0;
+
+                        isPause = false;
+                        try {
+                            voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), options, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                                @Override
+                                public void onReadBuffer(byte[] output, int outputSize) {
+                                    if (outputSize > 0) {
+                                        final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                        } else {
+                                            mAudioTrack.write(output, 0, outputSize);
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
-                                //todo
-                                if (output != null) {
-                                    for (int i = 0; i < wordInfo.size(); i++) {
-                                        SyncWordInfo wordInfo1 = wordInfo.get(i);
-                                        int index = wordInfo1.getIndex();
-                                        int length = wordInfo1.getLength();
-                                        int startPosInText = wordInfo1.getStartPosInText();
-                                        int endPosInText = wordInfo1.getEndPosInText();
-                                        String word = wordInfo1.getWord();
-                                    }
+                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
 
-                                    totalFrame += outputSize;
+                                    if (output != null) {
+                                        totalFrame += outputSize;
+                                        mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
+                                        //首次加载计算内容长度 不可变
+                                        mWordInfo.addAll(wordInfo);
+                                        fWordInfo.addAll(wordInfo);
 
-                                    mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
-                                    mWordInfo.addAll(wordInfo);
-                                    final ByteBuffer audioData = ByteBuffer.wrap(output);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
-                                    } else {
-                                        mAudioTrack.write(output, 0, outputSize);
+                                        final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                        } else {
+                                            mAudioTrack.write(output, 0, outputSize);
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
+                                @Override
+                                public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
 
-                                if (output != null) {
-
-                                    for (int i = 0; i < markInfo.size(); i++) {
-                                        SyncMarkInfo markInfo1 = markInfo.get(i);
-                                        int index = markInfo1.getIndex();
-                                        int posInText = markInfo1.getPosInText();
-                                        int offsetInStream = markInfo1.getOffsetInStream();
-                                        String markName = markInfo1.getMarkName();
-                                    }
                                 }
+
+                                @Override
+                                public void onError(String reason) {
+
+                                }
+                            });
+
+                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                                Message msg1 = uiHandler.obtainMessage();
+                                msg1.what = BTN_STOP;
+                                uiHandler.sendMessage(msg1);
                             }
+//                                    else {
+//                                        Message msg1 = uiHandler.obtainMessage();
+//                                        msg1.what = BTN_STOP;
+//                                        uiHandler.sendMessage(msg1);
+//                                    }
 
-                            @Override
-                            public void onError(String reason) {
-
-                            }
-                        });
-
-                        if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                            Message msg1 = uiHandler.obtainMessage();
-                            msg1.what = BTN_STOP;
-                            uiHandler.sendMessage(msg1);
-                        } else {
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             Message msg1 = uiHandler.obtainMessage();
                             msg1.what = BTN_STOP;
                             uiHandler.sendMessage(msg1);
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Message msg1 = uiHandler.obtainMessage();
-                        msg1.what = BTN_STOP;
-                        uiHandler.sendMessage(msg1);
+
+                    } else {
+                        totalFrame = 0;
+                        addFrame = 0;
+                        isPause = false;
+
+                        try {
+                            voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, pauseText, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), options, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                                @Override
+                                public void onReadBuffer(byte[] output, int outputSize) {
+                                    if (outputSize > 0) {
+                                        final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                        } else {
+                                            mAudioTrack.write(output, 0, outputSize);
+                                        }
+                                    }
+                                }
+
+                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
+                                    if (output != null) {
+                                        totalFrame += outputSize;
+                                        mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
+                                        fWordInfo.addAll(wordInfo);
+
+                                        final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                        } else {
+                                            mAudioTrack.write(output, 0, outputSize);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
+
+                                }
+
+                                @Override
+                                public void onError(String reason) {
+
+                                }
+                            });
+
+                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                                Message msg1 = uiHandler.obtainMessage();
+                                msg1.what = BTN_STOP;
+                                uiHandler.sendMessage(msg1);
+                            }
+//                                    else {
+//                                        Message msg1 = uiHandler.obtainMessage();
+//                                        msg1.what = BTN_STOP;
+//                                        uiHandler.sendMessage(msg1);
+//                                    }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Message msg1 = uiHandler.obtainMessage();
+                            msg1.what = BTN_STOP;
+                            uiHandler.sendMessage(msg1);
+                        }
+
                     }
 
                 }
 
             });
 
-        } else {
-            isPause = false;
         }
-
         playVoiceThread.start();
     }
 
@@ -433,7 +500,65 @@ public class ReadSpeakManager {
             }
             mAudioTrack.flush();
         }
+    }
 
+    /**
+     * 暂停读书
+     */
+    public void pauseBook() {
+        isPause = true;
+        if (null != fWordInfo && idxInfo < mWordInfo.size()) {
+
+            //还未读的内容词组集合
+            mWordInfoPause = ListUtils.Companion.sListResult(mWordInfo, idxInfo);
+            //还未读的内容string
+            if (null != mWordInfoPause && mWordInfoPause.size() > 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    pauseText = list2String(mWordInfoPause);
+                } else {
+                    pauseText = ListUtils.Companion.getEString(mWordInfoPause);
+                }
+            }
+
+        } else {
+            //没有内容可读了，停止读书
+            if (null != voicetext) {
+                voicetext.vtapiStopBuffer(vtapiHandle);
+            }
+            if (null != playVoiceThread) {
+                playVoiceThread.interrupt();
+                playVoiceThread = null;
+            }
+
+            if (mAudioTrack != null) {
+                if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                    mAudioTrack.stop();
+                }
+                mAudioTrack.flush();
+            }
+
+            idxInfo = 0;
+        }
+
+        if (null != voicetext) {
+            voicetext.vtapiStopBuffer(vtapiHandle);
+        }
+        if (mAudioTrack != null) {
+            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                pausePlay();
+//                    mAudioTrack.pause();
+            }
+            mAudioTrack.flush();
+            uiButtonSetPause();
+        }
+    }
+
+    private void pausePlay() {
+        //播放线程启动了才允许暂停
+        if (playVoiceThread != null) {
+            isPause = true;
+            mAudioTrack.pause();
+        }
     }
 
     /**
@@ -524,6 +649,21 @@ public class ReadSpeakManager {
 
     public void setReadVolume(int readVolume) {
         this.readVolume = readVolume;
+    }
+
+    /**
+     * 把未读的词组集合拼成string
+     * @param list
+     * @return
+     */
+    public String list2String(List<SyncWordInfo> list) {
+
+        String collect = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            collect = list.stream().map(SyncWordInfo::getWord).collect(Collectors.joining(""));
+        }
+
+        return collect;
     }
 
 }
