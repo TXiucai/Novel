@@ -28,6 +28,24 @@ public class AppUpdate {
     public AdPositionComicBean ad_position_comic;
     public AdPositionOtherBean ad_position_other;
     public String book_text_api;
+    public String vtapi_license_key;
+    public String tts_open_switch;//2开启 1关闭
+
+    public String getVtapi_license_key() {
+        return vtapi_license_key;
+    }
+
+    public void setVtapi_license_key(String vtapi_license_key) {
+        this.vtapi_license_key = vtapi_license_key;
+    }
+
+    public String getTts_open_switch() {
+        return tts_open_switch;
+    }
+
+    public void setTts_open_switch(String tts_open_switch) {
+        this.tts_open_switch = tts_open_switch;
+    }
 
     public String getBook_text_api() {
         return book_text_api;

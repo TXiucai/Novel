@@ -222,6 +222,9 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 try {
                     if (response.length() != 0) {
                         AppUpdate dataBean = new Gson().fromJson(response, AppUpdate.class);
+                        if (!StringUtils.isEmpty(dataBean.getVtapi_license_key())) {
+                            ShareUitls.putString(SplashActivity.this, "vtapi_license_key", dataBean.getWebsite_android());
+                        }
                         if (!StringUtils.isEmpty(dataBean.getWebsite_android())) {
                             ShareUitls.putString(SplashActivity.this, "website", dataBean.getWebsite_android());
                         }
@@ -234,6 +237,9 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         }
                         if (!StringUtils.isEmpty(dataBean.getBook_text_api())) {
                             ShareUitls.putString(App.getContext(), PrefConst.NOVEL_API, dataBean.getBook_text_api());
+                        }
+                        if (!StringUtils.isEmpty(dataBean.getTts_open_switch())) {
+                            ReaderConfig.TTS_OPEN = dataBean.getTts_open_switch();
                         }
                         ReaderConfig.NOVEL_SDK_AD.clear();
                         ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());

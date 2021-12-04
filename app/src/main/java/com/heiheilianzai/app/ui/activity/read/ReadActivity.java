@@ -3,7 +3,6 @@ package com.heiheilianzai.app.ui.activity.read;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -14,19 +13,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
@@ -53,24 +47,20 @@ import com.heiheilianzai.app.component.ScreenOnAndOffReceiver;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
-import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
-import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.NovelBoyinModel;
 import com.heiheilianzai.app.model.book.BaseBook;
-import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.event.CloseAnimationEvent;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
-import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.CatalogInnerActivity;
 import com.heiheilianzai.app.ui.activity.CommentListActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -101,12 +91,7 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
-import com.heiheilianzai.app.view.animation.AnimationProvider;
 import com.heiheilianzai.app.view.read.PageWidget;
-import com.mobi.xad.XRequestManager;
-import com.mobi.xad.bean.AdInfo;
-import com.mobi.xad.bean.AdType;
-import com.mobi.xad.net.XAdRequestListener;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.media.UMImage;
@@ -117,8 +102,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -129,7 +112,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfOpen;
 
 /**
@@ -204,6 +186,8 @@ public class ReadActivity extends BaseReadActivity {
     public RelativeLayout titlebar_boyin;
     @BindView(R.id.activity_read_top_ad_iv)
     public ImageView activity_read_top_ad_iv;
+    @BindView(R.id.activity_read_speaker)
+    public LinearLayout activity_read_speaker;
     private ReadingConfig config;
     private WindowManager.LayoutParams lp;
     private ChapterItem chapter;
@@ -332,6 +316,11 @@ public class ReadActivity extends BaseReadActivity {
             list_ad_view_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ImageUtil.dp2px(activity, READBUTTOM_HEIGHT));
             insert_todayone2.addView(list_ad_view_img, params);
+        }
+        if (TextUtils.equals(ReaderConfig.TTS_OPEN, "2")) {
+            activity_read_speaker.setVisibility(View.VISIBLE);
+        } else {
+            activity_read_speaker.setVisibility(View.GONE);
         }
         setOpenCurrentTime();
         uiFreeCharge();
@@ -890,7 +879,7 @@ public class ReadActivity extends BaseReadActivity {
 
     @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
             R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night, R.id.activity_read_buttom_boyin_close,
-            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin})
+            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.activity_read_speaker})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_directory:
@@ -954,6 +943,9 @@ public class ReadActivity extends BaseReadActivity {
                 break;
             case R.id.titlebar_boyin:
                 jumpBoyin();
+                break;
+            case R.id.activity_read_speaker:
+                startReadNovelService();
                 break;
         }
     }
