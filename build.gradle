@@ -3,10 +3,10 @@
 buildscript {
     ext.kotlin_version = '1.4.0'
     repositories {
-        jcenter()
-        google()
-        maven { url 'https://dl.bintray.com/umsdk/release' }
-        mavenCentral()
+        maven { url 'http://repo.0d40fec.com/repository/android_jcenter/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_google/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_umeng_release/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_maven_central/' }
     }
 
     dependencies {
@@ -20,18 +20,17 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
-        google()
-        maven { url "http://dl.bintray.com/piasy/maven" }
-        maven { url "https://raw.githubusercontent.com/miomin/mvn-repo-ione/master" }
-        maven { url "https://jitpack.io" }
-        maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven { url 'http://repo.0d40fec.com/repository/android_jcenter/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_google/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_piasy_maven/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_miomin_maven/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_jitpack/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_umeng_release/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        mavenCentral()
+        maven { url 'http://repo.0d40fec.com/repository/android_sonatype_snapshots_maven/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_maven_central/' }
     }
 }
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
