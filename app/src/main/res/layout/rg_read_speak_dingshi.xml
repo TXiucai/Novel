@@ -23,7 +23,7 @@
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/ReadActivity_wu"
-            android:textColor="@color/black"
+            android:textColor="@color/read_rb_text_color"
             android:textSize="@dimen/dimens_18sp" />
 
         <RadioButton
@@ -38,7 +38,7 @@
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/string_read_time_fivty"
-            android:textColor="@color/black"
+            android:textColor="@color/read_rb_text_color"
             android:textSize="@dimen/dimens_18sp" />
 
         <RadioButton
@@ -53,7 +53,7 @@
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/string_read_time_half"
-            android:textColor="@color/black"
+            android:textColor="@color/read_rb_text_color"
             android:textSize="@dimen/dimens_18sp" />
 
         <RadioButton
@@ -68,7 +68,7 @@
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/string_read_time_sixty"
-            android:textColor="@color/black"
+            android:textColor="@color/read_rb_text_color"
             android:textSize="@dimen/dimens_18sp" />
 
     </RadioGroup>

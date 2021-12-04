@@ -88,7 +88,7 @@ public class ReadSpeakManager {
         }
     };
 
-    public void ReadSpeakerManager(Context context) {
+    public ReadSpeakManager(Context context) {
         this.context = context;
         rootPath = context.getExternalCacheDir().toString() + File.separator + "/ReadSpeaker/D16/";
         LICENESE_PATH = context.getExternalCacheDir().toString() + File.separator + "/ReadSpeaker/licensekey/";

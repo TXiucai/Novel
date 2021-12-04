@@ -15,6 +15,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -25,30 +27,103 @@ import com.heiheilianzai.app.R;
 
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class ReadSpeakDialogFragment extends DialogFragment {
     private View mView;
-    private TextView mCancel;
+    private RelativeLayout mCancel;
     private View mDecorView;
     private Animation mIntoSlide;
     private Animation mOutSlide;
     private boolean isClick = false;//过滤重复点击
     public DialogCallback diglogCallback;
 
+    @BindView(R.id.rb_yingsu_02)
+    public RadioButton rb_yingsu_02;
+    @BindView(R.id.rb_yingsu_03)
+    public RadioButton rb_yingsu_03;
+    @BindView(R.id.rb_yingsu_04)
+    public RadioButton rb_yingsu_04;
+    @BindView(R.id.rb_yingsu_05)
+    public RadioButton rb_yingsu_05;
+    @BindView(R.id.rb_yingsu_06)
+    public RadioButton rb_yingsu_06;
+    @BindView(R.id.rb_yingsu_07)
+    public RadioButton rb_yingsu_07;
+    @BindView(R.id.rb_yingsu_08)
+    public RadioButton rb_yingsu_08;
+    @BindView(R.id.rb_yingsu_12)
+    public TextView rb_yingsu_12;
+    @BindView(R.id.rb_yingsu_13)
+    public TextView rb_yingsu_13;
+    @BindView(R.id.rb_yingsu_14)
+    public TextView rb_yingsu_14;
+    @BindView(R.id.rb_yingsu_15)
+    public TextView rb_yingsu_15;
+    @BindView(R.id.rb_yingsu_16)
+    public TextView rb_yingsu_16;
+    @BindView(R.id.rb_yingsu_17)
+    public TextView rb_yingsu_17;
+    @BindView(R.id.rb_yingsu_18)
+    public TextView rb_yingsu_18;
+    @BindView(R.id.rb_shengdiao_02)
+    public RadioButton rb_shengdiao_02;
+    @BindView(R.id.rb_shengdiao_03)
+    public RadioButton rb_shengdiao_03;
+    @BindView(R.id.rb_shengdiao_04)
+    public RadioButton rb_shengdiao_04;
+    @BindView(R.id.rb_shengdiao_05)
+    public RadioButton rb_shengdiao_05;
+    @BindView(R.id.rb_shengdiao_06)
+    public RadioButton rb_shengdiao_06;
+    @BindView(R.id.rb_shengdiao_07)
+    public RadioButton rb_shengdiao_07;
+    @BindView(R.id.rb_shengdiao_08)
+    public RadioButton rb_shengdiao_08;
+    @BindView(R.id.rb_yingdiao_12)
+    public TextView rb_yingdiao_12;
+    @BindView(R.id.rb_yingdiao_13)
+    public TextView rb_yingdiao_13;
+    @BindView(R.id.rb_yingdiao_14)
+    public TextView rb_yingdiao_14;
+    @BindView(R.id.rb_yingdiao_15)
+    public TextView rb_yingdiao_15;
+    @BindView(R.id.rb_yingdiao_16)
+    public TextView rb_yingdiao_16;
+    @BindView(R.id.rb_yingdiao_17)
+    public TextView rb_yingdiao_17;
+    @BindView(R.id.rb_yingdiao_18)
+    public TextView rb_yingdiao_18;
+    @BindView(R.id.rb_yingse_01)
+    public RadioButton rb_yingse_01;
+    @BindView(R.id.rb_yingse_02)
+    public RadioButton rb_yingse_02;
+    @BindView(R.id.rb_dingshi_01)
+    public RadioButton rb_dingshi_01;
+    @BindView(R.id.rb_dingshi_02)
+    public RadioButton rb_dingshi_02;
+    @BindView(R.id.rb_dingshi_03)
+    public RadioButton rb_dingshi_03;
+    @BindView(R.id.rb_dingshi_04)
+    public RadioButton rb_dingshi_04;
+
     /**
      * 通讯回调接口
      */
     public interface DialogCallback {
         // 音速
-        void readSpeed();
+        void readSpeed(int speed);
 
         // 音调
-        void readDiao();
+        void readDiao(int diao);
 
         // 音色
-        void readSe();
+        void readSe(int se);
 
         // 定时
-        void readTimer();
+        void readTimer(int mins);
 
     }
 
@@ -64,6 +139,8 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         int height = getDialog().getWindow().getAttributes().height;
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, height);
+        // 初始化View注入
+        ButterKnife.bind(this.getDialog());
     }
 
     @Nullable
@@ -72,7 +149,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         mView = inflater.inflate(R.layout.fragment_dialog_read, container, false);
 
         mCancel = mView.findViewById(R.id.btn_cancle);
-
         //初始化Dialog
         initDialogView();
         return mView;
@@ -83,7 +159,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
      */
     public void initDialogView() {
         mDecorView = getDialog().getWindow().getDecorView();
-
         mDecorView.setBackground(new ColorDrawable(Color.TRANSPARENT));
 
         Window window = getDialog().getWindow();
@@ -106,24 +181,103 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         touchOutShowDialog();
         //back键处理
         getFocus();
+
     }
 
     public void initListener() {
         /**
          * "取消"条目的点击事件
          * */
-        mCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mCancel.setOnClickListener(view -> dimissDialog());
+        ReadSpeakDialogFragment.this.getDialog().setCanceledOnTouchOutside(true);
+    }
 
-                dimissDialog();
-                //TODO 将其他控件内条目设置成不可以点击的状态
-
-            }
-        });
-
-        //TODO 其他条目点击事件
-
+    @SuppressLint("NonConstantResourceId")
+    @OnClick({R.id.rb_yingsu_02, R.id.rb_yingsu_03, R.id.rb_yingsu_04, R.id.rb_yingsu_05, R.id.rb_yingsu_06,
+            R.id.rb_yingsu_07, R.id.rb_yingsu_08, R.id.rb_shengdiao_02, R.id.rb_shengdiao_03, R.id.rb_shengdiao_04,
+            R.id.rb_shengdiao_05, R.id.rb_shengdiao_06, R.id.rb_shengdiao_07, R.id.rb_shengdiao_08, R.id.rb_yingse_01,
+            R.id.rb_yingse_02, R.id.rb_dingshi_01, R.id.rb_dingshi_02, R.id.rb_dingshi_03, R.id.rb_dingshi_04})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rb_yingsu_02:
+                diglogCallback.readSpeed(50);
+                changeSpeedTVColor(rb_yingsu_12);
+                break;
+            case R.id.rb_yingsu_03:
+                diglogCallback.readSpeed(75);
+                changeSpeedTVColor(rb_yingsu_13);
+                break;
+            case R.id.rb_yingsu_04:
+                diglogCallback.readSpeed(100);
+                changeSpeedTVColor(rb_yingsu_14);
+                break;
+            case R.id.rb_yingsu_05:
+                diglogCallback.readSpeed(125);
+                changeSpeedTVColor(rb_yingsu_15);
+                break;
+            case R.id.rb_yingsu_06:
+                diglogCallback.readSpeed(150);
+                changeSpeedTVColor(rb_yingsu_16);
+                break;
+            case R.id.rb_yingsu_07:
+                diglogCallback.readSpeed(175);
+                changeSpeedTVColor(rb_yingsu_17);
+                break;
+            case R.id.rb_yingsu_08:
+                diglogCallback.readSpeed(200);
+                changeSpeedTVColor(rb_yingsu_18);
+                break;
+            case R.id.rb_shengdiao_02:
+                diglogCallback.readDiao(50);
+                changeDiaoTVColor(rb_yingdiao_12);
+                break;
+            case R.id.rb_shengdiao_03:
+                diglogCallback.readDiao(75);
+                changeDiaoTVColor(rb_yingdiao_13);
+                break;
+            case R.id.rb_shengdiao_04:
+                diglogCallback.readDiao(100);
+                changeDiaoTVColor(rb_yingdiao_14);
+                break;
+            case R.id.rb_shengdiao_05:
+                diglogCallback.readDiao(125);
+                changeDiaoTVColor(rb_yingdiao_15);
+                break;
+            case R.id.rb_shengdiao_06:
+                diglogCallback.readDiao(150);
+                changeDiaoTVColor(rb_yingdiao_16);
+                break;
+            case R.id.rb_shengdiao_07:
+                diglogCallback.readDiao(175);
+                changeDiaoTVColor(rb_yingdiao_17);
+                break;
+            case R.id.rb_shengdiao_08:
+                diglogCallback.readDiao(200);
+                changeDiaoTVColor(rb_yingdiao_18);
+                break;
+            case R.id.rb_yingse_01:
+                diglogCallback.readSe(1);
+                rb_yingse_01.setTextColor(getResources().getColor(R.color.red));
+                rb_yingse_02.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case R.id.rb_yingse_02:
+                diglogCallback.readSe(2);
+                rb_yingse_01.setTextColor(getResources().getColor(R.color.black));
+                rb_yingse_02.setTextColor(getResources().getColor(R.color.red));
+                break;
+            case R.id.rb_dingshi_01:
+                diglogCallback.readTimer(0);
+                break;
+            case R.id.rb_dingshi_02:
+                diglogCallback.readTimer(15);
+                break;
+            case R.id.rb_dingshi_03:
+                diglogCallback.readTimer(30);
+                break;
+            case R.id.rb_dingshi_04:
+                diglogCallback.readTimer(60);
+                break;
+        }
     }
 
     /**
@@ -172,7 +326,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         mOutSlide.setFillEnabled(true);
         mOutSlide.setFillAfter(true);
         mView.startAnimation(mOutSlide);
-
 
         //弹出屏幕动画的监听
         mOutSlide.setAnimationListener(new Animation.AnimationListener() {
@@ -227,6 +380,40 @@ public class ReadSpeakDialogFragment extends DialogFragment {
             }
             return false;
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    /**
+     * 修改 字颜色状态
+     *
+     * @param yinSpeed
+     */
+    private void changeSpeedTVColor(TextView yinSpeed) {
+        TextView[] speed = {rb_yingsu_12, rb_yingsu_13, rb_yingsu_14, rb_yingsu_15, rb_yingsu_16,
+                rb_yingsu_17, rb_yingsu_18};
+        for (TextView rb : speed) {
+            if (rb == yinSpeed) {
+                rb.setTextColor(getResources().getColor(R.color.red));
+            } else {
+                rb.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
+    }
+
+    private void changeDiaoTVColor(TextView yinDiao) {
+        TextView[] diao = {rb_yingdiao_12, rb_yingdiao_13, rb_yingdiao_14, rb_yingdiao_15,
+                rb_yingdiao_16, rb_yingdiao_17, rb_yingdiao_18};
+        for (TextView rb : diao) {
+            if (rb == yinDiao) {
+                rb.setTextColor(getResources().getColor(R.color.red));
+            } else {
+                rb.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
     }
 
 }

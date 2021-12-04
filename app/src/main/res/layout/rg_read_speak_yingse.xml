@@ -23,7 +23,7 @@
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/read_activity_read_ying_1"
-            android:textColor="@color/black"
+            android:textColor="@color/read_rb_text_color"
             android:textSize="@dimen/dimens_18sp" />
 
         <RadioButton
@@ -38,7 +38,7 @@
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/read_activity_read_ying_2"
-            android:textColor="@color/black"
+            android:textColor="@color/read_rb_text_color"
             android:textSize="@dimen/dimens_18sp" />
 
         <RadioButton

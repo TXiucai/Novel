@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_36dp"
             android:background="@null"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <RadioButton
@@ -38,12 +39,12 @@
             <RadioButton
                 android:id="@+id/rb_yingsu_02"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@null"
                 android:button="@drawable/rb_bg_event_selector"
-                android:checked="true"
+                android:checked="false"
                 android:gravity="center" />
 
             <RadioButton
@@ -65,7 +66,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:button="@drawable/rb_bg_event_selector"
-                android:checked="false"
+                android:checked="true"
                 android:gravity="center" />
 
             <RadioButton
@@ -116,107 +117,93 @@
 
     </RelativeLayout>
 
-    <RadioGroup
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_18dp"
+        android:layout_gravity="center_vertical"
         android:background="@null"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_11"
+        <TextView
+            android:id="@+id/rb_yingsu_11"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_12"
+        <TextView
+            android:id="@+id/rb_yingsu_12"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_0_5" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_13"
+        <TextView
+            android:id="@+id/rb_yingsu_13"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_0_75" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_14"
+        <TextView
+            android:id="@+id/rb_yingsu_14"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
+            android:textColor="@color/red"
             android:text="@string/read_activity_read_1" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_15"
+        <TextView
+            android:id="@+id/rb_yingsu_15"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_1_25" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_16"
+        <TextView
+            android:id="@+id/rb_yingsu_16"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_1_5" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_17"
+        <TextView
+            android:id="@+id/rb_yingsu_17"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_1_75" />
 
-        <RadioButton
-            android:id="@+id/rb_yingdiao_18"
+        <TextView
+            android:id="@+id/rb_yingsu_18"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_2" />
 
-    </RadioGroup>
+    </LinearLayout>
 
 </LinearLayout>

@@ -43,7 +43,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:button="@drawable/rb_bg_event_selector"
-                android:checked="true"
+                android:checked="false"
                 android:gravity="center" />
 
             <RadioButton
@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:button="@drawable/rb_bg_event_selector"
-                android:checked="false"
+                android:checked="true"
                 android:gravity="center" />
 
             <RadioButton
@@ -109,107 +109,92 @@
         </RadioGroup>
     </RelativeLayout>
 
-    <RadioGroup
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_18dp"
         android:background="@null"
         android:orientation="horizontal">
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_11"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_12"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_0_5" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_13"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_0_75" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_14"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
+            android:textColor="@color/red"
             android:text="@string/read_activity_read_1" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_15"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_1_25" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_16"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_1_5" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_17"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_1_75" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/rb_yingdiao_18"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@null"
-            android:button="@null"
-            android:checked="false"
             android:gravity="center"
             android:text="@string/read_activity_read_2" />
 
-    </RadioGroup>
+    </LinearLayout>
 
 </LinearLayout>

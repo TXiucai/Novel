@@ -134,7 +134,8 @@
         android:id="@+id/btn_cancle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_40dp"
-        android:layout_marginTop="@dimen/dimens_10dp">
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -153,7 +154,6 @@
                 android:layout_height="@dimen/dimens_40dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/dimens_5dp"
-                android:background="@color/white"
                 android:gravity="center"
                 android:text="@string/read_activity_exit_listen"
                 android:textSize="@dimen/dimens_16sp" />

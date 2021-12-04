@@ -70,6 +70,7 @@ import com.heiheilianzai.app.ui.dialog.read.AutoProgressBar;
 import com.heiheilianzai.app.ui.dialog.read.AutoSettingDialog;
 import com.heiheilianzai.app.ui.dialog.read.BrightnessDialog;
 import com.heiheilianzai.app.ui.dialog.read.SettingDialog;
+import com.heiheilianzai.app.ui.fragment.book.ReadSpeakDialogFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BookUtil;
 import com.heiheilianzai.app.utils.BrightnessUtil;
@@ -89,6 +90,7 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
 import com.heiheilianzai.app.view.read.PageWidget;
@@ -113,6 +115,8 @@ import butterknife.OnClick;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
 import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfOpen;
+
+import androidx.fragment.app.FragmentManager;
 
 /**
  * 小说阅读 Activity
@@ -188,6 +192,10 @@ public class ReadActivity extends BaseReadActivity {
     public ImageView activity_read_top_ad_iv;
     @BindView(R.id.activity_read_speaker)
     public LinearLayout activity_read_speaker;
+
+    private ReadSpeakManager readSpeakManager;
+    private ReadSpeakDialogFragment readSpeakDialogFragment;
+    private FragmentManager mFragmentManager;
     private ReadingConfig config;
     private WindowManager.LayoutParams lp;
     private ChapterItem chapter;
@@ -302,6 +310,8 @@ public class ReadActivity extends BaseReadActivity {
         intentFilter.addAction(UPDATE_BG);
         intentFilter.addAction(TURN_NEXT);
         registerReceiver(mNovelReceiver, intentFilter);
+
+        readSpeakManager = new ReadSpeakManager(getApplicationContext());
     }
 
     @Override
@@ -877,6 +887,7 @@ public class ReadActivity extends BaseReadActivity {
         return pageFactory;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
             R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night, R.id.activity_read_buttom_boyin_close,
             R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.activity_read_speaker})
@@ -945,7 +956,7 @@ public class ReadActivity extends BaseReadActivity {
                 jumpBoyin();
                 break;
             case R.id.activity_read_speaker:
-                startReadNovelService();
+                initReadSpeakDialogFragment();
                 break;
         }
     }
@@ -1073,6 +1084,43 @@ public class ReadActivity extends BaseReadActivity {
                     }
                 }
         );
+    }
+
+    /**
+     * readSpeakDialogFragment
+     * 听书阅读相关设置
+     */
+    private void initReadSpeakDialogFragment() {
+        if (null == readSpeakDialogFragment && null == mFragmentManager) {
+            readSpeakDialogFragment = new ReadSpeakDialogFragment();
+            mFragmentManager = getSupportFragmentManager();
+        }
+
+        if (!readSpeakDialogFragment.isAdded()) {
+            readSpeakDialogFragment.show(mFragmentManager, "readSpeakDialogFragment");
+        }
+
+        readSpeakDialogFragment.setDialogCallback(new ReadSpeakDialogFragment.DialogCallback() {
+            @Override
+            public void readSpeed(int speed) {//音速
+                readSpeakManager.setReadSpeed(speed);
+            }
+
+            @Override
+            public void readDiao(int diao) {//音调
+                readSpeakManager.setReadPitch(diao);
+            }
+
+            @Override
+            public void readSe(int se) {//音色
+                readSpeakManager.setYingSe(se);
+            }
+
+            @Override
+            public void readTimer(int mins) {//定时
+                //TODO 读书定时 mins 返回的是分钟数
+            }
+        });
     }
 
     @SuppressLint("HandlerLeak")
