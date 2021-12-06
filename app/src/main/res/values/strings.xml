@@ -628,4 +628,6 @@
     <string name="read_activity_read_2">2.0倍</string>
     <string name="read_activity_read_ying_1">声音1</string>
     <string name="read_activity_read_ying_2">声音2</string>
+    <string name="read_license_download_error">"read license key download failed"</string>
+    <string name="read_license_key_null">read book license key is NULL</string>
 </resources>

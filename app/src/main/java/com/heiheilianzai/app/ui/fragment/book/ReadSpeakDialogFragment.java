@@ -256,12 +256,12 @@ public class ReadSpeakDialogFragment extends DialogFragment {
                 changeDiaoTVColor(rb_yingdiao_18);
                 break;
             case R.id.rb_yingse_01:
-                diglogCallback.readSe(1);
+                diglogCallback.readSe(0);
                 rb_yingse_01.setTextColor(getResources().getColor(R.color.red));
                 rb_yingse_02.setTextColor(getResources().getColor(R.color.black));
                 break;
             case R.id.rb_yingse_02:
-                diglogCallback.readSe(2);
+                diglogCallback.readSe(1);
                 rb_yingse_01.setTextColor(getResources().getColor(R.color.black));
                 rb_yingse_02.setTextColor(getResources().getColor(R.color.red));
                 break;

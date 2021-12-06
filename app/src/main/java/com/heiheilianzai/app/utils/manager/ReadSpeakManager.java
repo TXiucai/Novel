@@ -7,10 +7,15 @@ import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 
 import androidx.annotation.RequiresApi;
 
+import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.utils.AssetZipUtils;
 import com.heiheilianzai.app.utils.ListUtils;
+import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.ToastUtil;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -30,10 +35,11 @@ import kr.co.voiceware.vtlicensemodule.LicenseDownloadListener;
 import kr.co.voiceware.vtlicensemodule.VtLicenseSetting;
 
 public class ReadSpeakManager {
-    private final String VOICE_TWN = "yafang";
-    private final String VOICE_CHI = "hui";
-    //购买的，3个月过期，需要续费更换。后期 需要有接口动态获取
-    private static final String LICENSE_KEY = "I3T2-MCCN-LOMG-8IDT-PJ7R";
+    private final static String VOICE_TWN = "yafang";
+    private final static String VOICE_CHI = "hui";
+    private final static String type = "d16";
+    //购买的，3个月过期，需要续费更换。有接口动态获取
+    private static String LICENSE_KEY;
     Context context;
 
     public static String rootPath;
@@ -51,7 +57,7 @@ public class ReadSpeakManager {
     private int totalFrame = 0;
 
     AudioTrack mAudioTrack;
-    private int mSampleRate = 16000;
+    private final int mSampleRate = 16000;
     private int DEFAULT_VOLUME = 100;
     //范围 50-400
     private int readPitch = 100;
@@ -59,6 +65,8 @@ public class ReadSpeakManager {
     private int readSpeed = 100;
     //范围 0-500
     private int readVolume = 100;
+    // 0 台湾，1 普通话
+    private int readYinSe = 0;
 
     public static final int BTN_PLAY = 3;
     public static final int BTN_STOP = 1;
@@ -66,6 +74,7 @@ public class ReadSpeakManager {
     public static final int TXT_HIGHLIGHT = 4;
     private boolean isPause = false;
     private String pauseText = null;
+    private int retryDownload = 3;
 
     private Thread playVoiceThread = null;
 
@@ -92,6 +101,13 @@ public class ReadSpeakManager {
         this.context = context;
         rootPath = context.getExternalCacheDir().toString() + File.separator + "/ReadSpeaker/D16/";
         LICENESE_PATH = context.getExternalCacheDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
+        initReadSetting();
+    }
+
+    private void initReadSetting() {
+        initAudioRead();
+        checkLicense(context);
+
     }
 
     /**
@@ -171,7 +187,7 @@ public class ReadSpeakManager {
     private void unfileZipFile(Context context) {
         //文件解压
         try {
-//            AssetsZipUtils.UnZipAssetsFolder(context, "ReadSpeaker.zip", context.getExternalCacheDir().toString());
+            AssetZipUtils.UnZipAssetsFolder(context, "ReadSpeaker.zip", context.getExternalCacheDir().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,6 +198,11 @@ public class ReadSpeakManager {
      * 如果没有，需要下载
      */
     public void checkLicense(Context context) {
+        //判断D16文件是否存在，不存在就解压
+        File D16File = new File(rootPath);
+        if (!D16File.exists() || !D16File.isDirectory()) {
+            unfileZipFile(context);
+        }
 
         licensemodule = new VtLicenseSetting(context);
         //retry download license
@@ -198,31 +219,42 @@ public class ReadSpeakManager {
         } else {
             downloadLicense();
         }
-
     }
 
     /**
      * 下载license
      */
     public void downloadLicense() {
+        LICENSE_KEY = ShareUitls.getString(context, "vtapi_license_key", null);
+        if (TextUtils.isEmpty(LICENSE_KEY)) {
+            ToastUtil.getInstance().showShortT(context.getString(R.string.read_license_key_null));
+            return;
+        }
         licensemodule.vtLicenseDownload(LICENSE_KEY, LICENESE_PATH, new LicenseDownloadListener() {
             @Override
             public void onSuccess() {
-
+                load();
             }
 
             @Override
             public void onFailure(String s) {
-                //TODO 认证license下载失败处理
-
+                retryDownloadLicense();
             }
 
             @Override
             public void onError(String s) {
-                //TODO 认证license下载失败处理
-
+                retryDownloadLicense();
             }
         });
+    }
+
+    private void retryDownloadLicense() {
+        if (retryDownload > 0) {
+            retryDownload--;
+            downloadLicense();
+        } else {
+            ToastUtil.getInstance().showShortT(context.getString(R.string.read_license_download_error));
+        }
     }
 
     /**
@@ -244,10 +276,11 @@ public class ReadSpeakManager {
                 select = VOICE_TWN;
             case 1:
                 select = VOICE_CHI;
+            default:
+                select = VOICE_TWN;
         }
 
         //目前是只有这个 D16库。写死
-        String type = "d16";
         for (Map.Entry<String, EngineInfo> e : voicetext.vtapiGetEngineInfo().entrySet()) {
             if (e.getValue().getSpeaker().equals(select) && e.getValue().getType().equals(type)) {
                 selectedEngine = e.getValue();
@@ -273,16 +306,10 @@ public class ReadSpeakManager {
             voicetext.vtapiSetLicenseFolder(LICENESE_PATH);
             voicetext.vtapiUsingLicensekey(true);
         }
-        //TODO 日志 正式环境请注释，不容许日志
-        voicetext.vtapiSetCallbackForLogFilter(0);
 
         try {
             voicetext.vtapiInit(rootPath);
             vtapiHandle = voicetext.vtapiCreateHandle();
-
-            for (Map.Entry<String, EngineInfo> e : voicetext.vtapiGetEngineInfo().entrySet()) {
-//                voices.add(e.getValue().getSpeaker() + "-" + e.getValue().getType());
-            }
 
             options = new Options();
             options.setPitch(readPitch);
@@ -313,7 +340,7 @@ public class ReadSpeakManager {
     /**
      * play 开始播放
      */
-    public void playBook(String bookContent) {
+    public void playReadBook(String bookContent) {
         if (null == voicetext) {
             return;
         }
@@ -322,6 +349,7 @@ public class ReadSpeakManager {
             mAudioTrack.play();
         }
 
+        setYingSe(getReadYinSe());
         if (null == playVoiceThread) {
 
             playVoiceThread = new Thread(new Runnable() {
@@ -483,7 +511,7 @@ public class ReadSpeakManager {
     /**
      * stop  停止播放
      */
-    public void stopBook() {
+    public void stopReadBook() {
 
         if (null != voicetext) {
             voicetext.vtapiStopBuffer(vtapiHandle);
@@ -505,7 +533,7 @@ public class ReadSpeakManager {
     /**
      * 暂停读书
      */
-    public void pauseBook() {
+    public void pauseReadBook() {
         isPause = true;
         if (null != fWordInfo && idxInfo < mWordInfo.size()) {
 
@@ -522,20 +550,7 @@ public class ReadSpeakManager {
 
         } else {
             //没有内容可读了，停止读书
-            if (null != voicetext) {
-                voicetext.vtapiStopBuffer(vtapiHandle);
-            }
-            if (null != playVoiceThread) {
-                playVoiceThread.interrupt();
-                playVoiceThread = null;
-            }
-
-            if (mAudioTrack != null) {
-                if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                    mAudioTrack.stop();
-                }
-                mAudioTrack.flush();
-            }
+            stopReadBook();
 
             idxInfo = 0;
         }
@@ -601,7 +616,7 @@ public class ReadSpeakManager {
      * @param sPos 起始位置
      * @param ePos 结束位置
      */
-    private void uiHighlightText(int sPos, int ePos, String content) {
+    public void uiHighlightText(int sPos, int ePos, String content) {
         //TODO 这里只返回 起始位置index 业务做字体颜色改变。以下为修改颜色示例
 //        SpannableString hSpanStr = new SpannableString(content);
 //        //设置字体颜色
@@ -652,7 +667,23 @@ public class ReadSpeakManager {
     }
 
     /**
+     * 音色
+     * 0 台湾 TWN
+     * 1 普通话 CHN
+     *
+     * @return
+     */
+    public int getReadYinSe() {
+        return readYinSe;
+    }
+
+    public void setReadYinSe(int readYinSe) {
+        this.readYinSe = readYinSe;
+    }
+
+    /**
      * 把未读的词组集合拼成string
+     *
      * @param list
      * @return
      */

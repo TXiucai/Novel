@@ -1113,12 +1113,17 @@ public class ReadActivity extends BaseReadActivity {
 
             @Override
             public void readSe(int se) {//音色
-                readSpeakManager.setYingSe(se);
+                readSpeakManager.setReadYinSe(se);
             }
 
             @Override
             public void readTimer(int mins) {//定时
                 //TODO 读书定时 mins 返回的是分钟数
+                /**
+                 * 0 不定时
+                 * 15 30 60 均是分钟数
+                 * 只有以上4个数字
+                 */
             }
         });
     }
@@ -1245,7 +1250,7 @@ public class ReadActivity extends BaseReadActivity {
      * onDestroy销毁关闭所有对话框
      */
     private void dismissAllDialog() {
-        dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog);
+        dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog,readSpeakDialogFragment.getDialog());
     }
 
     /**
