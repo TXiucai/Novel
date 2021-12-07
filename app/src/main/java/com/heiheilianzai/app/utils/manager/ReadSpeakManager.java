@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.utils.AssetZipUtils;
-import com.heiheilianzai.app.utils.ListUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.ToastUtil;
 
@@ -77,6 +76,22 @@ public class ReadSpeakManager {
     private int retryDownload = 3;
 
     private Thread playVoiceThread = null;
+    public ReadSpeakStateCallback readSpeakStateCallback;
+
+    /**
+     * 语音读书阅读器状态回调
+     * 1 停止读书
+     * 2 暂停读书 由于暂停按钮在通知栏，所以这里不做暂停状态回调处理
+     * 3 正在读书
+     * 4 读完了
+     */
+    public interface ReadSpeakStateCallback {
+        void readSpeakState(int state);
+    }
+
+    public void setReadSpeakStateCallback(ReadSpeakStateCallback readSpeakStateCallback) {
+        this.readSpeakStateCallback = readSpeakStateCallback;
+    }
 
     private final Handler uiHandler = new Handler() {
 
@@ -84,14 +99,10 @@ public class ReadSpeakManager {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == BTN_PLAY) {
-                uiButtonSetPlay();
+                setPlay();
             } else if (msg.what == BTN_STOP) {
-                uiButtonSetStop();
-            }
-//            else if (msg.what == BTN_PAUSE) {
-//                uiButtonSetPause();
-//            }
-            else {
+                setStop();
+            } else {
                 uiHighlightText(msg.arg1, msg.arg2, (String) msg.obj);
             }
         }
@@ -311,7 +322,20 @@ public class ReadSpeakManager {
             voicetext.vtapiInit(rootPath);
             vtapiHandle = voicetext.vtapiCreateHandle();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 读书音频设置
+     */
+    public void setReadOptions() {
+        if (options == null) {
             options = new Options();
+        }
+
+        try {
             options.setPitch(readPitch);
             options.setSpeed(readSpeed);
             options.setVolume(readVolume);
@@ -342,14 +366,18 @@ public class ReadSpeakManager {
      */
     public void playReadBook(String bookContent) {
         if (null == voicetext) {
-            return;
+            load();
+//            return;
         }
 
         if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
             mAudioTrack.play();
         }
 
+        // 设置音色 和语音属性
         setYingSe(getReadYinSe());
+        setReadOptions();
+
         if (null == playVoiceThread) {
 
             playVoiceThread = new Thread(new Runnable() {
@@ -359,16 +387,18 @@ public class ReadSpeakManager {
                     Message msg = uiHandler.obtainMessage();
                     msg.what = BTN_PLAY;
                     uiHandler.sendMessage(msg);
+                    readSpeakStateCallback.readSpeakState(3);
 
                     mAudioTrack.setPositionNotificationPeriod(1600);
 
-                    //不是暂停后继续播放
-                    if (!isPause) {
-                        totalFrame = 0;
-                        addFrame = 0;
-                        idxInfo = 0;
+                    totalFrame = 0;
+                    addFrame = 0;
+                    idxInfo = 0;
 
+                    if (!isPause) {
+                        pauseText = bookContent;
                         isPause = false;
+
                         try {
                             voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), options, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
                                 @Override
@@ -414,28 +444,19 @@ public class ReadSpeakManager {
                                 }
                             });
 
-                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                                Message msg1 = uiHandler.obtainMessage();
-                                msg1.what = BTN_STOP;
-                                uiHandler.sendMessage(msg1);
-                            }
-//                                    else {
-//                                        Message msg1 = uiHandler.obtainMessage();
-//                                        msg1.what = BTN_STOP;
-//                                        uiHandler.sendMessage(msg1);
-//                                    }
+                            Message msg1 = uiHandler.obtainMessage();
+                            msg1.what = BTN_STOP;
+                            uiHandler.sendMessage(msg1);
+                            readSpeakStateCallback.readSpeakState(4);
 
                         } catch (Exception e) {
                             e.printStackTrace();
                             Message msg1 = uiHandler.obtainMessage();
                             msg1.what = BTN_STOP;
                             uiHandler.sendMessage(msg1);
+                            readSpeakStateCallback.readSpeakState(1);
                         }
-
-
                     } else {
-                        totalFrame = 0;
-                        addFrame = 0;
                         isPause = false;
 
                         try {
@@ -455,9 +476,12 @@ public class ReadSpeakManager {
                                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                                 @Override
                                 public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
+
                                     if (output != null) {
                                         totalFrame += outputSize;
                                         mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
+                                        //首次加载计算内容长度 不可变
+                                        mWordInfo.addAll(wordInfo);
                                         fWordInfo.addAll(wordInfo);
 
                                         final ByteBuffer audioData = ByteBuffer.wrap(output);
@@ -480,24 +504,18 @@ public class ReadSpeakManager {
                                 }
                             });
 
-                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                                Message msg1 = uiHandler.obtainMessage();
-                                msg1.what = BTN_STOP;
-                                uiHandler.sendMessage(msg1);
-                            }
-//                                    else {
-//                                        Message msg1 = uiHandler.obtainMessage();
-//                                        msg1.what = BTN_STOP;
-//                                        uiHandler.sendMessage(msg1);
-//                                    }
+                            Message msg1 = uiHandler.obtainMessage();
+                            msg1.what = BTN_STOP;
+                            uiHandler.sendMessage(msg1);
+                            readSpeakStateCallback.readSpeakState(4);
 
                         } catch (Exception e) {
                             e.printStackTrace();
                             Message msg1 = uiHandler.obtainMessage();
                             msg1.what = BTN_STOP;
                             uiHandler.sendMessage(msg1);
+                            readSpeakStateCallback.readSpeakState(1);
                         }
-
                     }
 
                 }
@@ -528,44 +546,23 @@ public class ReadSpeakManager {
             }
             mAudioTrack.flush();
         }
+
+        mWordInfo.clear();
+        addFrame = 0;
+        idxInfo = 0;
+        totalFrame = 0;
+
+        readSpeakStateCallback.readSpeakState(1);
     }
 
     /**
      * 暂停读书
+     * 业务再把这一行文字重新读
      */
     public void pauseReadBook() {
         isPause = true;
-        if (null != fWordInfo && idxInfo < mWordInfo.size()) {
+        stopReadBook();
 
-            //还未读的内容词组集合
-            mWordInfoPause = ListUtils.Companion.sListResult(mWordInfo, idxInfo);
-            //还未读的内容string
-            if (null != mWordInfoPause && mWordInfoPause.size() > 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    pauseText = list2String(mWordInfoPause);
-                } else {
-                    pauseText = ListUtils.Companion.getEString(mWordInfoPause);
-                }
-            }
-
-        } else {
-            //没有内容可读了，停止读书
-            stopReadBook();
-
-            idxInfo = 0;
-        }
-
-        if (null != voicetext) {
-            voicetext.vtapiStopBuffer(vtapiHandle);
-        }
-        if (mAudioTrack != null) {
-            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                pausePlay();
-//                    mAudioTrack.pause();
-            }
-            mAudioTrack.flush();
-            uiButtonSetPause();
-        }
     }
 
     private void pausePlay() {
@@ -579,13 +576,15 @@ public class ReadSpeakManager {
     /**
      * 播放时 主线程事件 处理
      */
-    private void uiButtonSetPlay() {
+    private void setPlay() {
+
     }
 
     /**
      * 停止时 主线程事件 处理
+     * 同时回调
      */
-    private void uiButtonSetStop() {
+    private void setStop() {
         if (mAudioTrack != null) {
             if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                 mAudioTrack.stop();
@@ -617,7 +616,6 @@ public class ReadSpeakManager {
      * @param ePos 结束位置
      */
     public void uiHighlightText(int sPos, int ePos, String content) {
-        //TODO 这里只返回 起始位置index 业务做字体颜色改变。以下为修改颜色示例
 //        SpannableString hSpanStr = new SpannableString(content);
 //        //设置字体颜色
 //        hSpanStr.setSpan(new ForegroundColorSpan(Color.RED), sPos, ePos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

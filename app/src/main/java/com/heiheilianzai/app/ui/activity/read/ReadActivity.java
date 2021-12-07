@@ -1,5 +1,8 @@
 package com.heiheilianzai.app.ui.activity.read;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
+import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfOpen;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -35,10 +38,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
-import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -112,11 +116,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
-import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfOpen;
-
-import androidx.fragment.app.FragmentManager;
 
 /**
  * 小说阅读 Activity
@@ -1250,7 +1249,7 @@ public class ReadActivity extends BaseReadActivity {
      * onDestroy销毁关闭所有对话框
      */
     private void dismissAllDialog() {
-        dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog,readSpeakDialogFragment.getDialog());
+        dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog, readSpeakDialogFragment.getDialog());
     }
 
     /**
