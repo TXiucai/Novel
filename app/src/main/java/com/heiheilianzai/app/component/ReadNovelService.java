@@ -57,7 +57,6 @@ public class ReadNovelService extends Service {
     private Notification mNotification;
     private int mNotifyID = 100;
     public static boolean SERVICE_IS_LIVE;
-    private int mReadLine;
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -85,6 +84,9 @@ public class ReadNovelService extends Service {
     private ReadSpeakManager mReadSpeakManager;
     private TRPage mCurrentPage;
     private long mBegin;//该章具体的某一页
+    private int mReadPage = 0;//当前章节读的那一页
+    private int mReadLine = 0;//当前页的那一行
+    private List<TRPage> mTrPages;
 
     @Nullable
     @Override
@@ -118,7 +120,8 @@ public class ReadNovelService extends Service {
         getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
             @Override
             public void onSuccessChapterContent(List<TRPage> pages) {
-
+                mTrPages = pages;
+                readBook();
             }
 
             @Override
@@ -126,8 +129,55 @@ public class ReadNovelService extends Service {
                 MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
             }
         });
+        mReadSpeakManager.setReadSpeakStateCallback(new ReadSpeakManager.ReadSpeakStateCallback() {
+            @Override
+            public void readSpeakState(int state) {
+                switch (state) {
+                    case 1: // 停止播放
+                        break;
+                    case 2://暂停播放
+                        break;
+                    case 3://播放中
+                        mHandler.sendEmptyMessage(2);
+                        break;
+                    case 4://读完了
+                        mHandler.sendEmptyMessage(1);
+                        mReadLine++;
+                        readBook();
+                        break;
+                }
+            }
+        });
         upDateNotifacation();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void readBook() {
+        if (mTrPages != null && mTrPages.size() > 0) {
+            if (mTrPages.size() > mReadPage) {
+                mCurrentPage = mTrPages.get(mReadPage);
+                if (mCurrentPage.getLines() != null && mCurrentPage.getLines().size() > mReadLine) {
+                    mReadSpeakManager.playReadBook(mCurrentPage.getLines().get(mReadLine));
+                } else {
+                    mReadPage++;
+                    mReadLine = 0;
+                    readBook();
+                }
+            } else {
+                getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
+                    @Override
+                    public void onSuccessChapterContent(List<TRPage> content) {
+                        mTrPages = content;
+                        readBook();
+                    }
+
+                    @Override
+                    public void onFailChapterContent() {
+                        MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+                    }
+                });
+            }
+        }
     }
 
     private void getChapterContent(String book_id, String chapter_id, GetChapterContent getChapterContent) {
@@ -200,9 +250,9 @@ public class ReadNovelService extends Service {
             switch (intent.getAction()) {
                 case STATUS_PLAY_PAUSE_ACTION:
                     if (mIsPlay) {
-                        //todo
+                        mReadSpeakManager.stopReadBook();
                     } else {
-                        //todo
+                        readBook();
                     }
                     mIsPlay = !mIsPlay;
                     upDateNotifacation();
