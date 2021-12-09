@@ -337,7 +337,6 @@
 
     <string name="ReadActivity_bg">背景</string>
     <string name="ReadActivity_autoread">开启自动阅读</string>
-    <string name="ReadActivity_listen">听书</string>
 
     <!--壳子-->
 
@@ -626,8 +625,8 @@
     <string name="read_activity_read_1_5">1.5倍</string>
     <string name="read_activity_read_1_75">1.75倍</string>
     <string name="read_activity_read_2">2.0倍</string>
-    <string name="read_activity_read_ying_1">声音1</string>
-    <string name="read_activity_read_ying_2">声音2</string>
+    <string name="read_activity_read_ying_1">女生</string>
+    <string name="read_activity_read_ying_2">台湾女生</string>
     <string name="read_license_download_error">"read license key download failed"</string>
     <string name="read_license_key_null">read book license key is NULL</string>
 </resources>

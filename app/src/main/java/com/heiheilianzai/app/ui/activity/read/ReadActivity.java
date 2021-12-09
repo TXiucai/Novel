@@ -190,7 +190,7 @@ public class ReadActivity extends BaseReadActivity {
     @BindView(R.id.activity_read_top_ad_iv)
     public ImageView activity_read_top_ad_iv;
     @BindView(R.id.activity_read_speaker)
-    public LinearLayout activity_read_speaker;
+    public ImageView activity_read_speaker;
 
     private ReadSpeakManager readSpeakManager;
     private ReadSpeakDialogFragment readSpeakDialogFragment;

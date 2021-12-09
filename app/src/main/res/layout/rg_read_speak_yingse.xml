@@ -17,14 +17,16 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@null"
-            android:button="@drawable/rb_bg_selector"
+            android:background="@drawable/rb_bg_selector"
+            android:layout_marginStart="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_5dp"
+            android:button="@null"
             android:checked="true"
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/read_activity_read_ying_1"
             android:textColor="@color/read_rb_text_color"
-            android:textSize="@dimen/dimens_18sp" />
+            android:textSize="@dimen/dimens_14sp" />
 
         <RadioButton
             android:id="@+id/rb_yingse_02"
@@ -32,14 +34,16 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@null"
-            android:button="@drawable/rb_bg_selector"
+            android:background="@drawable/rb_bg_selector"
+            android:layout_marginStart="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_5dp"
+            android:button="@null"
             android:checked="false"
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:text="@string/read_activity_read_ying_2"
             android:textColor="@color/read_rb_text_color"
-            android:textSize="@dimen/dimens_18sp" />
+            android:textSize="@dimen/dimens_14sp" />
 
         <RadioButton
             android:id="@+id/rb_yingse_03"
@@ -47,13 +51,15 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@null"
-            android:button="@drawable/rb_bg_selector"
+            android:background="@drawable/rb_bg_selector"
+            android:layout_marginStart="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_5dp"
+            android:button="@null"
             android:checked="false"
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/dimens_18sp"
+            android:textSize="@dimen/dimens_14sp"
             android:visibility="invisible" />
 
         <RadioButton
@@ -62,13 +68,15 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@null"
-            android:button="@drawable/rb_bg_selector"
+            android:background="@drawable/rb_bg_selector"
+            android:layout_marginStart="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_5dp"
+            android:button="@null"
             android:checked="false"
             android:gravity="center"
             android:padding="@dimen/dimens_2dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/dimens_18sp"
+            android:textSize="@dimen/dimens_14sp"
             android:visibility="invisible" />
 
     </RadioGroup>
