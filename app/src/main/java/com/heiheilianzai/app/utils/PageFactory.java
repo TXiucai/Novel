@@ -41,7 +41,6 @@ import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.book.ReadHistory;
 import com.heiheilianzai.app.model.event.RefreshTopbook;
-import com.heiheilianzai.app.ui.activity.CatalogActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.read.PurchaseDialog;
@@ -112,10 +111,13 @@ public class PageFactory {
     private Typeface typeface;
     //文字画笔
     private Paint mPaint;
+    //文字高亮画笔
+    private Paint mPaintLine;
     //加载画笔
     private Paint waitPaint;
     //文字颜色
     private int m_textColor = Color.rgb(50, 65, 78);
+    private int m_lineBgColor = Color.rgb(142, 137, 136);
     // 绘制内容的宽
     private float mVisibleHeight;
     // 绘制内容的宽
@@ -250,6 +252,8 @@ public class PageFactory {
         mPaint.setColor(m_textColor);// 字体颜色
         mPaint.setTypeface(typeface);
         mPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
+        mPaintLine = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
+        mPaintLine.setColor(m_lineBgColor);// 字体颜色
         waitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
         waitPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
         waitPaint.setTextSize(resources.getDimension(R.dimen.reading_max_text_size));// 字体大小
@@ -298,6 +302,85 @@ public class PageFactory {
 
     private void calculateLineCount2() {
         mLineCount = (int) (mVisibleHeight / (m_fontSize + lineSpace));// 可显示的行数
+    }
+
+    public void onDrawReadLine(Bitmap bitmap, List<String> m_lines, Boolean updateChapter, int mReadLine) {
+        try {
+            Canvas c = new Canvas(bitmap);
+            try {
+                c.drawBitmap(getBgBitmap(), 0, 0, null);
+            } catch (Exception e) {
+                c.drawBitmap(getBgBitmap2(), 0, 0, null);
+            }
+            mPaint.setTextSize(getFontSize());
+            mPaint.setColor(getTextColor());
+            mBatteryPaint.setColor(getTextColor());
+            mChapterPaint.setColor(getTextColor());
+            mChapterPaint.setTextSize(RATIO * getFontSize());
+            mPaint.setColor(getTextColor());
+            float y = 0;
+            if (!m_lines.isEmpty()) {
+                if (currentPage.getBegin() == 0) {
+                    y = (OFFSET + 1) * marginHeight - Chapter_height;
+                } else {
+                    y = marginHeight;
+                }
+                DrawText:
+                for (int i = 0; i < m_lines.size(); i++) {
+                    String strLine = m_lines.get(i);
+                    y += m_fontSize + lineSpace;
+                    if (i == mReadLine) {
+                        c.drawRect(measureMarginWidth, mPaint.getFontMetricsInt().top, y, mPaint.getFontMetrics().bottom, );
+                    }
+                    c.drawText(changeJIanfan(strLine), measureMarginWidth, y, mPaint);
+                }
+              /*  for (String strLine : m_lines) {
+                    y += m_fontSize + lineSpace;
+                    c.drawText(changeJIanfan(strLine), measureMarginWidth, y, mPaint);
+                }*/
+            }
+            float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtil.getBookLen());//进度
+            if (mPageEvent != null) {
+                mPageEvent.changeProgress(fPercent);
+            }
+            float myfPercent = (float) ((mBookUtil.getBookLen() * (chapterItem.getDisplay_order()) + currentPage.getEnd()) * 1.0 / (mBookUtil.getBookLen() * ChapterManager.getInstance(mActivity).mChapterList.size()));//进度
+            // 画白分例
+            String strPercent = df.format(myfPercent * 100);//进度文字
+            c.drawText(strPercent + "%", mWidth - PercentWidth, mHeight - statusMarginBottom, mBatteryPaint);//x y为坐标值
+            baseBook.setAllPercent(strPercent);
+            if (baseBook.isAddBookSelf() == 1) {
+                ContentValues values = new ContentValues();
+                values.put("allPercent", strPercent);
+                LitePal.updateAll(BaseBook.class, values, "book_id = ?", book_id);
+                EventBus.getDefault().post(new RefreshTopbook(book_id, strPercent));
+            }
+            if (currentPage != null && chapterItem != null) {
+                ChapterManager.getInstance(mActivity).getCurrentChapter().setChapteritem_begin(currentPage.getBegin());
+                ContentValues values1 = new ContentValues();
+                values1.put("chapteritem_begin", currentPage.getBegin());
+                LitePal.updateAll(ChapterItem.class, values1, "book_id = ? and chapter_id = ?", book_id, chapter_id);
+            }
+            // 画时间
+            drawBatteryAndDate(c);
+            //画书名
+            c.drawText(chapterTitle, marginWidth, statusMarginBottom + BookNameTop + tendp, mBatteryPaint);
+            if (currentPage.getBegin() == 0) {
+                mChapterPaint.setTextSize(RATIO * getFontSize());
+                for (int i = 100; i > 0; i--) {
+                    int With = (int) (mChapterPaint.measureText(chapterTitle));
+                    if (With < mWidth - chapterRight) {
+                        break;
+                    }
+                    float s = (float) i / 100;
+                    mChapterPaint.setTextSize((s * getFontSize()));
+                }
+                c.drawText(chapterTitle, marginWidth, 2 * marginHeight + Chapter_height, mChapterPaint);
+            }
+            //更新购买view的文字颜色
+            mSupport(mIsPreview);
+            mBookPageWidget.postInvalidate();
+        } catch (Exception e) {
+        }
     }
 
     public void onDraw(Bitmap bitmap, List<String> m_lines, Boolean updateChapter) {
@@ -841,6 +924,10 @@ public class PageFactory {
                 onDraw(mBookPageWidget.getNextPage(), currentPage.getLines(), true);
             }
         }
+    }
+
+    public TRPage getCurrentPage() {
+        return currentPage;
     }
 
     public void cancelPage() {

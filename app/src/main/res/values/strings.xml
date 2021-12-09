@@ -629,4 +629,6 @@
     <string name="read_activity_read_ying_2">台湾女生</string>
     <string name="read_license_download_error">"read license key download failed"</string>
     <string name="read_license_key_null">read book license key is NULL</string>
+    <string name="string_read_book_error">听书出现问题</string>
+
 </resources>

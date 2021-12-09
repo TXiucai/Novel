@@ -244,6 +244,8 @@ public class ReadActivity extends BaseReadActivity {
             switch (intent.getAction()) {
                 case UPDATE_BG:
                     //todo
+                    mReadLine = (int) intent.getExtras().get("line");
+                    pageFactory.onDrawReadLine(bookpage.getCurPage(),pageFactory.getCurrentPage().getLines(),true,mReadLine);
                     break;
                 case TURN_NEXT:
                     if (bookpage != null) {
@@ -261,7 +263,8 @@ public class ReadActivity extends BaseReadActivity {
         }
     };
     private boolean mHaveScreenPermison = false;
-    private int mCurrentPage;//当前章节处于第几页
+    private String mCurrentPage;//当前章节处于第几页
+    private int mReadLine;
 
     @Override
     public int initContentView() {
@@ -1340,9 +1343,10 @@ public class ReadActivity extends BaseReadActivity {
                 //启动服务
                 if (!ReadNovelService.SERVICE_IS_LIVE) {
                     // Android 8.0使用startForegroundService在前台启动新服务
+                    chapter.setBegin(pageFactory.getCurrentPage().getBegin());
                     Intent intent = new Intent(this, ReadNovelService.class);
-                    intent.putExtra(EXTRA_CHAPTER, chapter);
-                    intent.putExtra(EXTRA_PAGE, mCurrentPage);
+                    intent.putExtra(EXTRA_CHAPTER,chapter);
+                    intent.putExtra(EXTRA_PAGE, pageFactory.getPageForBegin(chapter.getBegin()).getLineToString());
                     intent.putExtra(EXTRA_BOOK, baseBook);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(intent);

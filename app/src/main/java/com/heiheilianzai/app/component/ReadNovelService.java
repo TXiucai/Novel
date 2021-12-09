@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,9 +26,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.constant.PrefConst;
+import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
+import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.TRPage;
+import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
+
+import org.litepal.LitePal;
+
+import java.util.List;
 
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
@@ -45,6 +57,7 @@ public class ReadNovelService extends Service {
     private Notification mNotification;
     private int mNotifyID = 100;
     public static boolean SERVICE_IS_LIVE;
+    private int mReadLine;
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -59,6 +72,7 @@ public class ReadNovelService extends Service {
                 case 2:
                     Intent intentUpdate = new Intent();
                     intentUpdate.setAction(ReadActivity.UPDATE_BG);
+                    intentUpdate.putExtra("line", mReadLine);
                     sendBroadcast(intentUpdate);
                     break;
             }
@@ -66,6 +80,11 @@ public class ReadNovelService extends Service {
     };
     private ChapterItem mChapterItem;
     private BaseBook mBaseBook;
+    private ChapterManager mChapterManager;
+    private String mPageContent;//当前章节当前页的内容
+    private ReadSpeakManager mReadSpeakManager;
+    private TRPage mCurrentPage;
+    private long mBegin;//该章具体的某一页
 
     @Nullable
     @Override
@@ -76,6 +95,7 @@ public class ReadNovelService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        mReadSpeakManager = new ReadSpeakManager(getApplicationContext());
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);
         registerReceiver(mNotificationReceiver, intentFilter);
@@ -87,14 +107,83 @@ public class ReadNovelService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         SERVICE_IS_LIVE = true;
         mChapterItem = (ChapterItem) intent.getExtras().get(EXTRA_CHAPTER);
+        mBegin = mChapterItem.getBegin();
         mBaseBook = (BaseBook) intent.getExtras().get(EXTRA_BOOK);
         mTittle = mChapterItem.getBook_name();
         mChapterTittle = mChapterItem.getChapter_title();
         mImgUrl = mBaseBook.getCover();
-        int page = (int) intent.getExtras().get(EXTRA_PAGE);
-        //todo 开启读书
+        mPageContent = (String) intent.getExtras().get(EXTRA_PAGE);
+        mChapterManager = new ChapterManager();
+        mChapterManager.openBook(mBaseBook, mBaseBook.getBook_id(), mChapterItem.getChapter_id());
+        getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
+            @Override
+            public void onSuccessChapterContent(List<TRPage> pages) {
+
+            }
+
+            @Override
+            public void onFailChapterContent() {
+                MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+            }
+        });
         upDateNotifacation();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void getChapterContent(String book_id, String chapter_id, GetChapterContent getChapterContent) {
+        mChapterManager.getChapter(chapter_id, new ChapterManager.QuerychapterItemInterface() {
+            @Override
+            public void success(ChapterItem querychapterItem) {
+                mChapterItem = querychapterItem;
+                String path = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
+                if (querychapterItem.getChapter_path() == null) {
+                    if (FileManager.isExist(path)) {
+                        ContentValues values = new ContentValues();
+                        values.put("chapter_path", path);
+                        LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
+                        querychapterItem.setChapter_path(path);
+                        try {
+                            ChapterPageManager chapterPageManager = new ChapterPageManager(getApplicationContext(), querychapterItem);
+                            List<TRPage> pages = chapterPageManager.getPages(mBegin);
+                            getChapterContent.onSuccessChapterContent(pages);
+                        } catch (Exception e) {
+                        }
+                    } else {
+                        ChapterManager.notfindChapter(ShareUitls.getString(getApplication(), PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text, querychapterItem, book_id, chapter_id, new ChapterManager.ChapterDownload() {
+                            @Override
+                            public void finish() {
+                                try {
+                                    ChapterPageManager chapterPageManager = new ChapterPageManager(getApplicationContext(), querychapterItem);
+                                    List<TRPage> pages = chapterPageManager.getPages(mBegin);
+                                    getChapterContent.onSuccessChapterContent(pages);
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    try {
+                        ChapterPageManager chapterPageManager = new ChapterPageManager(getApplicationContext(), querychapterItem);
+                        List<TRPage> pages = chapterPageManager.getPages(mBegin);
+                        getChapterContent.onSuccessChapterContent(pages);
+                    } catch (Exception e) {
+                    }
+                }
+
+            }
+
+            @Override
+            public void fail() {
+                getChapterContent.onFailChapterContent();
+            }
+        });
+    }
+
+    public interface GetChapterContent {
+        void onSuccessChapterContent(List<TRPage> content);
+
+        void onFailChapterContent();
     }
 
     @Override
@@ -155,6 +244,7 @@ public class ReadNovelService extends Service {
 
 //            3、创建通知栏点击时的跳转意图
             Intent intent = new Intent(this, ReadActivity.class);
+            mChapterItem.setBegin(mCurrentPage.getBegin());
             intent.putExtra(EXTRA_BOOK, mBaseBook);
             intent.putExtra(EXTRA_CHAPTER, mChapterItem);
             PendingIntent pendingActivity = PendingIntent.getActivity(this, 0, intent, 0);
