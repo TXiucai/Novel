@@ -110,8 +110,8 @@ public class ReadSpeakManager {
 
     public ReadSpeakManager(Context context) {
         this.context = context;
-        rootPath = context.getExternalCacheDir().toString() + File.separator + "/ReadSpeaker/D16/";
-        LICENESE_PATH = context.getExternalCacheDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
+        rootPath = context.getFilesDir().toString() + File.separator + "/ReadSpeaker/D16/";
+        LICENESE_PATH = context.getFilesDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
         initReadSetting();
     }
 
@@ -195,10 +195,10 @@ public class ReadSpeakManager {
     /**
      * 第一步：解压语音库文件
      */
-    private void unfileZipFile(Context context) {
+    private void unfileZipFile(Context context, String outPath) {
         //文件解压
         try {
-            AssetZipUtils.UnZipAssetsFolder(context, "ReadSpeaker.zip", context.getExternalCacheDir().toString());
+            AssetZipUtils.UnZipAssetsFolder(context, "ReadSpeaker.zip", outPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,7 +212,8 @@ public class ReadSpeakManager {
         //判断D16文件是否存在，不存在就解压
         File D16File = new File(rootPath);
         if (!D16File.exists() || !D16File.isDirectory()) {
-            unfileZipFile(context);
+            String outPath = context.getFilesDir().toString() + File.separator + "ReadSpeaker";
+            unfileZipFile(context, outPath);
         }
 
         licensemodule = new VtLicenseSetting(context);
