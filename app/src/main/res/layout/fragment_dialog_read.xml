@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -14,79 +15,79 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_54dp"
             android:layout_marginStart="@dimen/dimens_10dp"
             android:layout_marginTop="@dimen/dimens_20dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="@dimen/dimens_44dp"
-                android:layout_height="@dimen/dimens_40dp"
+                android:layout_height="@dimen/dimens_38dp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="start|center_vertical"
                 android:text="@string/read_activity_listen_speed"
-                android:textSize="@dimen/dimens_14sp" />
+                android:textSize="@dimen/dimens_12sp" />
 
-            <TextView
-                android:layout_width="@dimen/dimens_20dp"
-                android:layout_height="@dimen/dimens_40dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="@string/read_activity_listen_man"
-                android:textSize="@dimen/dimens_14sp" />
-
-            <include
-                layout="@layout/rg_read_speak"
-                android:layout_width="0dp"
+            <com.heiheilianzai.app.view.read.SignSeekBar
+                android:id="@+id/sb_read_speed"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="@dimen/dimens_20dp"
-                android:layout_height="@dimen/dimens_40dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="@string/read_activity_listen_kuai"
-                android:textSize="@dimen/dimens_14sp" />
+                app:ssb_anim_duration="200"
+                app:ssb_auto_adjust_section_mark="true"
+                app:ssb_second_track_color="@color/color_ebebeb"
+                app:ssb_second_track_size="@dimen/dimens_10dp"
+                app:ssb_section_text_color="#c8c8c8"
+                app:ssb_show_section_mark="true"
+                app:ssb_show_section_text="false"
+                app:ssb_show_thumb_shadow="true"
+                app:ssb_show_thumb_text="true"
+                app:ssb_sides_labels="@array/labes"
+                app:ssb_text_space="@dimen/dimens_1dp"
+                app:ssb_thumb_radius="@dimen/dimens_5dp"
+                app:ssb_thumb_radius_on_dragging="@dimen/dimens_7dp"
+                app:ssb_thumb_text_size="@dimen/dimens_12sp"
+                app:ssb_touch_to_seek="true"
+                app:ssb_track_color="@color/color_f7f7f7"
+                app:ssb_track_size="@dimen/dimens_10dp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_54dp"
             android:layout_marginStart="@dimen/dimens_10dp"
             android:layout_marginTop="@dimen/dimens_20dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="@dimen/dimens_44dp"
-                android:layout_height="@dimen/dimens_40dp"
+                android:layout_height="@dimen/dimens_38dp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="start|center_vertical"
                 android:text="@string/read_activity_listen_shengdiao"
-                android:textSize="@dimen/dimens_14sp" />
+                android:textSize="@dimen/dimens_12sp" />
 
-            <TextView
-                android:layout_width="@dimen/dimens_20dp"
-                android:layout_height="@dimen/dimens_40dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="@string/read_activity_listen_di"
-                android:textSize="@dimen/dimens_14sp" />
-
-            <include
-                layout="@layout/rg_read_speak_shengdiao"
-                android:layout_width="0dp"
+            <com.heiheilianzai.app.view.read.SignSeekBar
+                android:id="@+id/sb_read_yindiao"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="@dimen/dimens_20dp"
-                android:layout_height="@dimen/dimens_40dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="@string/read_activity_listen_gao"
-                android:textSize="@dimen/dimens_14sp" />
+                app:ssb_anim_duration="200"
+                app:ssb_auto_adjust_section_mark="true"
+                app:ssb_second_track_color="@color/color_ebebeb"
+                app:ssb_second_track_size="@dimen/dimens_10dp"
+                app:ssb_section_text_color="#c8c8c8"
+                app:ssb_show_section_mark="true"
+                app:ssb_show_section_text="false"
+                app:ssb_show_thumb_shadow="true"
+                app:ssb_show_thumb_text="true"
+                app:ssb_sides_labels="@array/labes"
+                app:ssb_text_space="@dimen/dimens_1dp"
+                app:ssb_thumb_radius="@dimen/dimens_5dp"
+                app:ssb_thumb_radius_on_dragging="@dimen/dimens_7dp"
+                app:ssb_thumb_text_size="@dimen/dimens_12sp"
+                app:ssb_touch_to_seek="true"
+                app:ssb_track_color="@color/color_f7f7f7"
+                app:ssb_track_size="@dimen/dimens_10dp" />
 
         </LinearLayout>
 
@@ -99,16 +100,16 @@
 
             <TextView
                 android:layout_width="@dimen/dimens_44dp"
-                android:layout_height="@dimen/dimens_36dp"
+                android:layout_height="@dimen/dimens_32dp"
                 android:layout_gravity="center"
                 android:gravity="start|center_vertical"
                 android:text="@string/read_activity_listen_yingse"
-                android:textSize="@dimen/dimens_14sp" />
+                android:textSize="@dimen/dimens_12sp" />
 
             <include
                 layout="@layout/rg_read_speak_yingse"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimens_36dp"
+                android:layout_height="@dimen/dimens_32dp"
                 android:layout_gravity="center"
                 android:layout_weight="1" />
 
@@ -123,16 +124,16 @@
 
             <TextView
                 android:layout_width="@dimen/dimens_44dp"
-                android:layout_height="@dimen/dimens_36dp"
+                android:layout_height="@dimen/dimens_32dp"
                 android:layout_gravity="center"
                 android:gravity="start|center_vertical"
                 android:text="@string/read_activity_listen_timer"
-                android:textSize="@dimen/dimens_14sp" />
+                android:textSize="@dimen/dimens_12sp" />
 
             <include
                 layout="@layout/rg_read_speak_dingshi"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimens_36dp"
+                android:layout_height="@dimen/dimens_32dp"
                 android:layout_gravity="center"
                 android:layout_weight="1" />
 

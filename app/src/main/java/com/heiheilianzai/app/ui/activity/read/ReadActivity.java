@@ -127,6 +127,7 @@ public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_PAGE = "page";
     //神策埋点数据从哪个页面进入
     public static final String REFER_PAGE_EXT_KAY = "referPage";
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.bookpage)
     PageWidget bookpage;
     @BindView(R.id.activity_read_top_back_view)
@@ -1126,6 +1127,19 @@ public class ReadActivity extends BaseReadActivity {
                  * 15 30 60 均是分钟数
                  * 只有以上4个数字
                  */
+            }
+        });
+
+        /**
+         * 1 停止，可能还有读完，其他因素（或故意）造成的停止
+         * 2 暂停（我没返回，因为暂停的触发方式只有在通知栏有）
+         * 3 正在阅读 我有返回
+         * 4 读完了跟 1 的区别是，读完了后停止的
+         */
+        readSpeakManager.setReadSpeakStateCallback(new ReadSpeakManager.ReadSpeakStateCallback() {
+            @Override
+            public void readSpeakState(int state) {
+                //TODO 读书状态
             }
         });
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <attr name="autoScaleTextViewStyle" />
     <declare-styleable name="AutoScaleTextView">
@@ -44,10 +44,64 @@
 
     <declare-styleable name="MarqueeView">
         <attr name="scroll_interval" format="integer" />
-        <attr name="scroll_first_delay" format="integer"/>
+        <attr name="scroll_first_delay" format="integer" />
         <attr name="scroll_mode">
-            <enum name="mode_forever" value="100"/>
-            <enum name="mode_once" value="101"/>
+            <enum name="mode_forever" value="100" />
+            <enum name="mode_once" value="101" />
         </attr>
     </declare-styleable>
+
+    <!--    听书 seekbar-->
+    <declare-styleable name="SignSeekBar">
+        <attr name="ssb_min" format="float|reference" />
+        <attr name="ssb_max" format="float|reference" />
+        <attr name="ssb_progress" format="float|reference" />
+        <attr name="ssb_is_float_type" format="boolean" />
+        <attr name="ssb_track_size" format="dimension|reference" />
+        <attr name="ssb_second_track_size" format="dimension|reference" />
+        <attr name="ssb_thumb_radius" format="dimension|reference" />
+        <attr name="ssb_thumb_radius_on_dragging" format="dimension|reference" />
+        <attr name="ssb_track_color" format="color|reference" />
+        <attr name="ssb_second_track_color" format="color|reference" />
+        <attr name="ssb_thumb_color" format="color|reference" />
+        <attr name="ssb_section_count" format="integer|reference" />
+        <attr name="ssb_show_section_mark" format="boolean" />
+        <attr name="ssb_auto_adjust_section_mark" format="boolean" />
+        <attr name="ssb_show_section_text" format="boolean" />
+        <attr name="ssb_section_text_size" format="dimension|reference" />
+        <attr name="ssb_section_text_color" format="color|reference" />
+        <attr name="ssb_section_text_position">
+            <enum name="sides" value="0" />
+            <enum name="bottom_sides" value="1" />
+            <enum name="below_section_mark" value="2" />
+        </attr>
+        <attr name="ssb_section_text_interval" format="integer" />
+        <attr name="ssb_show_thumb_text" format="boolean" />
+        <attr name="ssb_thumb_text_size" format="dimension|reference" />
+        <attr name="ssb_thumb_text_color" format="color|reference" />
+        <attr name="ssb_show_progress_in_float" format="boolean" />
+        <attr name="ssb_touch_to_seek" format="boolean" />
+        <attr name="ssb_seek_by_section" format="boolean" />
+        <attr name="ssb_sign_color" format="color|reference" />
+        <attr name="ssb_sign_border_color" format="color|reference" />
+        <attr name="ssb_sign_show_border" format="boolean" />
+        <attr name="ssb_sign_text_size" format="dimension|reference" />
+        <attr name="ssb_sign_border_size" format="dimension|reference" />
+        <attr name="ssb_sign_text_color" format="color|reference" />
+        <attr name="ssb_anim_duration" format="integer" />
+        <attr name="ssb_show_sign" format="boolean" />
+        <attr name="ssb_text_space" format="dimension|reference" />
+        <attr name="ssb_sides_labels" format="reference" />
+        <attr name="ssb_thumb_bg_alpha" format="float|reference" />
+        <attr name="ssb_thumb_ratio" format="float|reference" />
+        <attr name="ssb_show_thumb_shadow" format="boolean" />
+        <attr name="ssb_sign_arrow_autofloat" format="boolean" />
+        <attr name="ssb_sign_height" format="dimension|reference" />
+        <attr name="ssb_sign_width" format="dimension|reference" />
+        <attr name="ssb_sign_arrow_height" format="dimension|reference" />
+        <attr name="ssb_sign_arrow_width" format="dimension|reference" />
+        <attr name="ssb_sign_round" format="dimension|reference" />
+        <attr name="ssb_unusable_color" format="color|reference" />
+    </declare-styleable>
+
 </resources>

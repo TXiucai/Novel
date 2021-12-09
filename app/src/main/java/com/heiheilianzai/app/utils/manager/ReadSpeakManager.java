@@ -76,7 +76,7 @@ public class ReadSpeakManager {
     private int retryDownload = 3;
 
     private Thread playVoiceThread = null;
-    public ReadSpeakStateCallback readSpeakStateCallback;
+    private ReadSpeakStateCallback readSpeakStateCallback;
 
     /**
      * 语音读书阅读器状态回调
@@ -284,11 +284,11 @@ public class ReadSpeakManager {
 
         switch (position) {
             case 0:
-                select = VOICE_TWN;
-            case 1:
                 select = VOICE_CHI;
-            default:
+            case 1:
                 select = VOICE_TWN;
+            default:
+                select = VOICE_CHI;
         }
 
         //目前是只有这个 D16库。写死

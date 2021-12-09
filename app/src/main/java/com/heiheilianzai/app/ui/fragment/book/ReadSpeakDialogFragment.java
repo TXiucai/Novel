@@ -17,13 +17,13 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.view.read.SignSeekBar;
 
 import java.util.Objects;
 
@@ -39,63 +39,9 @@ public class ReadSpeakDialogFragment extends DialogFragment {
     private Animation mOutSlide;
     private boolean isClick = false;//过滤重复点击
     public DialogCallback diglogCallback;
+    private SignSeekBar sbSpeed;
+    private SignSeekBar sbYindiao;
 
-    @BindView(R.id.rb_yingsu_02)
-    public RadioButton rb_yingsu_02;
-    @BindView(R.id.rb_yingsu_03)
-    public RadioButton rb_yingsu_03;
-    @BindView(R.id.rb_yingsu_04)
-    public RadioButton rb_yingsu_04;
-    @BindView(R.id.rb_yingsu_05)
-    public RadioButton rb_yingsu_05;
-    @BindView(R.id.rb_yingsu_06)
-    public RadioButton rb_yingsu_06;
-    @BindView(R.id.rb_yingsu_07)
-    public RadioButton rb_yingsu_07;
-    @BindView(R.id.rb_yingsu_08)
-    public RadioButton rb_yingsu_08;
-    @BindView(R.id.rb_yingsu_12)
-    public TextView rb_yingsu_12;
-    @BindView(R.id.rb_yingsu_13)
-    public TextView rb_yingsu_13;
-    @BindView(R.id.rb_yingsu_14)
-    public TextView rb_yingsu_14;
-    @BindView(R.id.rb_yingsu_15)
-    public TextView rb_yingsu_15;
-    @BindView(R.id.rb_yingsu_16)
-    public TextView rb_yingsu_16;
-    @BindView(R.id.rb_yingsu_17)
-    public TextView rb_yingsu_17;
-    @BindView(R.id.rb_yingsu_18)
-    public TextView rb_yingsu_18;
-    @BindView(R.id.rb_shengdiao_02)
-    public RadioButton rb_shengdiao_02;
-    @BindView(R.id.rb_shengdiao_03)
-    public RadioButton rb_shengdiao_03;
-    @BindView(R.id.rb_shengdiao_04)
-    public RadioButton rb_shengdiao_04;
-    @BindView(R.id.rb_shengdiao_05)
-    public RadioButton rb_shengdiao_05;
-    @BindView(R.id.rb_shengdiao_06)
-    public RadioButton rb_shengdiao_06;
-    @BindView(R.id.rb_shengdiao_07)
-    public RadioButton rb_shengdiao_07;
-    @BindView(R.id.rb_shengdiao_08)
-    public RadioButton rb_shengdiao_08;
-    @BindView(R.id.rb_yingdiao_12)
-    public TextView rb_yingdiao_12;
-    @BindView(R.id.rb_yingdiao_13)
-    public TextView rb_yingdiao_13;
-    @BindView(R.id.rb_yingdiao_14)
-    public TextView rb_yingdiao_14;
-    @BindView(R.id.rb_yingdiao_15)
-    public TextView rb_yingdiao_15;
-    @BindView(R.id.rb_yingdiao_16)
-    public TextView rb_yingdiao_16;
-    @BindView(R.id.rb_yingdiao_17)
-    public TextView rb_yingdiao_17;
-    @BindView(R.id.rb_yingdiao_18)
-    public TextView rb_yingdiao_18;
     @BindView(R.id.rb_yingse_01)
     public RadioButton rb_yingse_01;
     @BindView(R.id.rb_yingse_02)
@@ -108,6 +54,8 @@ public class ReadSpeakDialogFragment extends DialogFragment {
     public RadioButton rb_dingshi_03;
     @BindView(R.id.rb_dingshi_04)
     public RadioButton rb_dingshi_04;
+
+    private static final int[] beiSu = {50, 75, 100, 125, 150, 175, 200};
 
     /**
      * 通讯回调接口
@@ -151,6 +99,8 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         mCancel = mView.findViewById(R.id.btn_cancle);
         //初始化Dialog
         initDialogView();
+        sbSpeed = mView.findViewById(R.id.sb_read_speed);
+        sbYindiao = mView.findViewById(R.id.sb_read_yindiao);
         return mView;
     }
 
@@ -190,80 +140,79 @@ public class ReadSpeakDialogFragment extends DialogFragment {
          * */
         mCancel.setOnClickListener(view -> dimissDialog());
         ReadSpeakDialogFragment.this.getDialog().setCanceledOnTouchOutside(true);
+
+        sbSpeed.getConfigBuilder()
+                .min(0)
+                .max(6)
+                .progress(2)
+                .sectionCount(6)
+                .thumbColor(getResources().getColor(R.color.white))
+                .sectionTextColor(getResources().getColor(R.color.black))
+                .sectionTextSize(10)
+                .setStartText("慢")
+                .setEndText("快")
+                .sectionTextPosition(SignSeekBar.TextPosition.BELOW_SECTION_MARK)
+                .build();
+        sbSpeed.setOnProgressChangedListener(new SignSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(SignSeekBar signSeekBar, int progress, float progressFloat, boolean fromUser) {
+
+            }
+
+            @Override
+            public void getProgressOnActionUp(SignSeekBar signSeekBar, int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnFinally(SignSeekBar signSeekBar, int progress, float progressFloat, boolean fromUser) {
+                int speed = beiSu[progress];
+                diglogCallback.readSpeed(speed);
+            }
+        });
+
+        sbYindiao.getConfigBuilder()
+                .min(0)
+                .max(6)
+                .progress(2)
+                .sectionCount(6)
+                .thumbColor(getResources().getColor(R.color.white))
+                .sectionTextColor(getResources().getColor(R.color.black))
+                .sectionTextSize(10)
+                .setStartText("低")
+                .setEndText("高")
+                .sectionTextPosition(SignSeekBar.TextPosition.BELOW_SECTION_MARK)
+                .build();
+        sbYindiao.setOnProgressChangedListener(new SignSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(SignSeekBar signSeekBar, int progress, float progressFloat, boolean fromUser) {
+
+            }
+
+            @Override
+            public void getProgressOnActionUp(SignSeekBar signSeekBar, int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnFinally(SignSeekBar signSeekBar, int progress, float progressFloat, boolean fromUser) {
+                int yindiao = beiSu[progress];
+                diglogCallback.readDiao(yindiao);
+            }
+        });
+
     }
 
     @SuppressLint("NonConstantResourceId")
-    @OnClick({R.id.rb_yingsu_02, R.id.rb_yingsu_03, R.id.rb_yingsu_04, R.id.rb_yingsu_05, R.id.rb_yingsu_06,
-            R.id.rb_yingsu_07, R.id.rb_yingsu_08, R.id.rb_shengdiao_02, R.id.rb_shengdiao_03, R.id.rb_shengdiao_04,
-            R.id.rb_shengdiao_05, R.id.rb_shengdiao_06, R.id.rb_shengdiao_07, R.id.rb_shengdiao_08, R.id.rb_yingse_01,
-            R.id.rb_yingse_02, R.id.rb_dingshi_01, R.id.rb_dingshi_02, R.id.rb_dingshi_03, R.id.rb_dingshi_04})
+    @OnClick({R.id.rb_yingse_01, R.id.rb_yingse_02, R.id.rb_dingshi_01, R.id.rb_dingshi_02,
+            R.id.rb_dingshi_03, R.id.rb_dingshi_04})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.rb_yingsu_02:
-                diglogCallback.readSpeed(50);
-                changeSpeedTVColor(rb_yingsu_12);
-                break;
-            case R.id.rb_yingsu_03:
-                diglogCallback.readSpeed(75);
-                changeSpeedTVColor(rb_yingsu_13);
-                break;
-            case R.id.rb_yingsu_04:
-                diglogCallback.readSpeed(100);
-                changeSpeedTVColor(rb_yingsu_14);
-                break;
-            case R.id.rb_yingsu_05:
-                diglogCallback.readSpeed(125);
-                changeSpeedTVColor(rb_yingsu_15);
-                break;
-            case R.id.rb_yingsu_06:
-                diglogCallback.readSpeed(150);
-                changeSpeedTVColor(rb_yingsu_16);
-                break;
-            case R.id.rb_yingsu_07:
-                diglogCallback.readSpeed(175);
-                changeSpeedTVColor(rb_yingsu_17);
-                break;
-            case R.id.rb_yingsu_08:
-                diglogCallback.readSpeed(200);
-                changeSpeedTVColor(rb_yingsu_18);
-                break;
-            case R.id.rb_shengdiao_02:
-                diglogCallback.readDiao(50);
-                changeDiaoTVColor(rb_yingdiao_12);
-                break;
-            case R.id.rb_shengdiao_03:
-                diglogCallback.readDiao(75);
-                changeDiaoTVColor(rb_yingdiao_13);
-                break;
-            case R.id.rb_shengdiao_04:
-                diglogCallback.readDiao(100);
-                changeDiaoTVColor(rb_yingdiao_14);
-                break;
-            case R.id.rb_shengdiao_05:
-                diglogCallback.readDiao(125);
-                changeDiaoTVColor(rb_yingdiao_15);
-                break;
-            case R.id.rb_shengdiao_06:
-                diglogCallback.readDiao(150);
-                changeDiaoTVColor(rb_yingdiao_16);
-                break;
-            case R.id.rb_shengdiao_07:
-                diglogCallback.readDiao(175);
-                changeDiaoTVColor(rb_yingdiao_17);
-                break;
-            case R.id.rb_shengdiao_08:
-                diglogCallback.readDiao(200);
-                changeDiaoTVColor(rb_yingdiao_18);
-                break;
             case R.id.rb_yingse_01:
                 diglogCallback.readSe(0);
-                rb_yingse_01.setTextColor(getResources().getColor(R.color.red));
-                rb_yingse_02.setTextColor(getResources().getColor(R.color.black));
                 break;
             case R.id.rb_yingse_02:
                 diglogCallback.readSe(1);
-                rb_yingse_01.setTextColor(getResources().getColor(R.color.black));
-                rb_yingse_02.setTextColor(getResources().getColor(R.color.red));
                 break;
             case R.id.rb_dingshi_01:
                 diglogCallback.readTimer(0);
@@ -385,35 +334,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    /**
-     * 修改 字颜色状态
-     *
-     * @param yinSpeed
-     */
-    private void changeSpeedTVColor(TextView yinSpeed) {
-        TextView[] speed = {rb_yingsu_12, rb_yingsu_13, rb_yingsu_14, rb_yingsu_15, rb_yingsu_16,
-                rb_yingsu_17, rb_yingsu_18};
-        for (TextView rb : speed) {
-            if (rb == yinSpeed) {
-                rb.setTextColor(getResources().getColor(R.color.red));
-            } else {
-                rb.setTextColor(getResources().getColor(R.color.black));
-            }
-        }
-    }
-
-    private void changeDiaoTVColor(TextView yinDiao) {
-        TextView[] diao = {rb_yingdiao_12, rb_yingdiao_13, rb_yingdiao_14, rb_yingdiao_15,
-                rb_yingdiao_16, rb_yingdiao_17, rb_yingdiao_18};
-        for (TextView rb : diao) {
-            if (rb == yinDiao) {
-                rb.setTextColor(getResources().getColor(R.color.red));
-            } else {
-                rb.setTextColor(getResources().getColor(R.color.black));
-            }
-        }
     }
 
 }
