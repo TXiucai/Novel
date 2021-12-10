@@ -16,11 +16,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
@@ -38,11 +40,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -244,9 +248,8 @@ public class ReadActivity extends BaseReadActivity {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case UPDATE_BG:
-                    //todo
                     mReadLine = (int) intent.getExtras().get("line");
-                    pageFactory.onDrawReadLine(bookpage.getCurPage(),pageFactory.getCurrentPage().getLines(),true,mReadLine);
+                    pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
                     break;
                 case TURN_NEXT:
                     if (bookpage != null) {
@@ -295,6 +298,7 @@ public class ReadActivity extends BaseReadActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ReaderConfig.BANG_SCREEN= NotchScreen.hasNotchScreen(this);
         mReadStarTime = System.currentTimeMillis();
         //首次阅读 显示引导图
         if (ShareUitls.getString(ReadActivity.this, "FirstRead", "yes").equals("yes")) {
@@ -960,10 +964,21 @@ public class ReadActivity extends BaseReadActivity {
                 break;
             case R.id.activity_read_speaker:
                 initReadSpeakDialogFragment();
+                openPermission();
                 break;
         }
     }
-
+    public void openPermission() {
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            Intent localIntent = new Intent();
+            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            localIntent.setData(Uri.fromParts("package", BuildConfig.APPLICATION_ID, null));
+            startActivity(localIntent);
+        } else {
+            startReadNovelService();
+        }
+    }
     private void jumpBoyin() {
         String baseH5Url = App.getBaseH5Url();
         String url = null;
@@ -1266,7 +1281,11 @@ public class ReadActivity extends BaseReadActivity {
      * onDestroy销毁关闭所有对话框
      */
     private void dismissAllDialog() {
-        dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog, readSpeakDialogFragment.getDialog());
+        if (readSpeakDialogFragment != null) {
+            dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog, readSpeakDialogFragment.getDialog());
+        } else {
+            dismissAllDialog(mBrightDialog, mSettingDialog, mAutoSettingDialog);
+        }
     }
 
     /**
@@ -1359,7 +1378,7 @@ public class ReadActivity extends BaseReadActivity {
                     // Android 8.0使用startForegroundService在前台启动新服务
                     chapter.setBegin(pageFactory.getCurrentPage().getBegin());
                     Intent intent = new Intent(this, ReadNovelService.class);
-                    intent.putExtra(EXTRA_CHAPTER,chapter);
+                    intent.putExtra(EXTRA_CHAPTER, chapter);
                     intent.putExtra(EXTRA_PAGE, pageFactory.getPageForBegin(chapter.getBegin()).getLineToString());
                     intent.putExtra(EXTRA_BOOK, baseBook);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

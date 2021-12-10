@@ -223,7 +223,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
                     if (response.length() != 0) {
                         AppUpdate dataBean = new Gson().fromJson(response, AppUpdate.class);
                         if (!StringUtils.isEmpty(dataBean.getVtapi_license_key())) {
-                            ShareUitls.putString(SplashActivity.this, "vtapi_license_key", dataBean.getWebsite_android());
+                            ShareUitls.putString(SplashActivity.this, "vtapi_license_key", dataBean.getVtapi_license_key());
                         }
                         if (!StringUtils.isEmpty(dataBean.getWebsite_android())) {
                             ShareUitls.putString(SplashActivity.this, "website", dataBean.getWebsite_android());

@@ -87,6 +87,8 @@ public class ReadNovelService extends Service {
     private int mReadPage = 0;//当前章节读的那一页
     private int mReadLine = 0;//当前页的那一行
     private List<TRPage> mTrPages;
+    private ReadReceiver mNotificationReceiver;
+    private NotificationManager mNotificationManager;
 
     @Nullable
     @Override
@@ -98,11 +100,11 @@ public class ReadNovelService extends Service {
     public void onCreate() {
         super.onCreate();
         mReadSpeakManager = new ReadSpeakManager(getApplicationContext());
+        mNotificationReceiver = new ReadReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);
+        intentFilter.addAction(STATUS_CLOSE_SERVICE_ACTION);
         registerReceiver(mNotificationReceiver, intentFilter);
-        setNotification();
-        startForeground(mNotifyID, mNotification);
     }
 
     @Override
@@ -111,17 +113,21 @@ public class ReadNovelService extends Service {
         mChapterItem = (ChapterItem) intent.getExtras().get(EXTRA_CHAPTER);
         mBegin = mChapterItem.getBegin();
         mBaseBook = (BaseBook) intent.getExtras().get(EXTRA_BOOK);
-        mTittle = mChapterItem.getBook_name();
+        mTittle = mBaseBook.getName();
         mChapterTittle = mChapterItem.getChapter_title();
         mImgUrl = mBaseBook.getCover();
         mPageContent = (String) intent.getExtras().get(EXTRA_PAGE);
         mChapterManager = new ChapterManager();
-        mChapterManager.openBook(mBaseBook, mBaseBook.getBook_id(), mChapterItem.getChapter_id());
+        mChapterManager.getChapterList(mBaseBook.getBook_id());
         getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
             @Override
             public void onSuccessChapterContent(List<TRPage> pages) {
-                mTrPages = pages;
-                readBook();
+                if (pages != null && pages.size() > 0) {
+                    mTrPages = pages;
+                    mCurrentPage = mTrPages.get(mReadPage);
+                    setNotification();
+                    readBook();
+                }
             }
 
             @Override
@@ -148,35 +154,33 @@ public class ReadNovelService extends Service {
                 }
             }
         });
-        upDateNotifacation();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void readBook() {
-        if (mTrPages != null && mTrPages.size() > 0) {
-            if (mTrPages.size() > mReadPage) {
-                mCurrentPage = mTrPages.get(mReadPage);
-                if (mCurrentPage.getLines() != null && mCurrentPage.getLines().size() > mReadLine) {
-                    mReadSpeakManager.playReadBook(mCurrentPage.getLines().get(mReadLine));
-                } else {
-                    mReadPage++;
-                    mReadLine = 0;
+        if (mTrPages.size() > mReadPage) {
+            mCurrentPage = mTrPages.get(mReadPage);
+            if (mCurrentPage.getLines() != null && mCurrentPage.getLines().size() > mReadLine) {
+                mReadSpeakManager.playReadBook(mCurrentPage.getLines().get(mReadLine));
+            } else {
+                mReadPage++;
+                mReadLine = 0;
+                readBook();
+            }
+        } else {
+            getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
+                @Override
+                public void onSuccessChapterContent(List<TRPage> content) {
+                    mTrPages.clear();
+                    mTrPages.addAll(content);
                     readBook();
                 }
-            } else {
-                getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
-                    @Override
-                    public void onSuccessChapterContent(List<TRPage> content) {
-                        mTrPages = content;
-                        readBook();
-                    }
 
-                    @Override
-                    public void onFailChapterContent() {
-                        MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
-                    }
-                });
-            }
+                @Override
+                public void onFailChapterContent() {
+                    MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+                }
+            });
         }
     }
 
@@ -220,7 +224,6 @@ public class ReadNovelService extends Service {
                     } catch (Exception e) {
                     }
                 }
-
             }
 
             @Override
@@ -244,7 +247,7 @@ public class ReadNovelService extends Service {
         super.onDestroy();
     }
 
-    private BroadcastReceiver mNotificationReceiver = new BroadcastReceiver() {
+    private class ReadReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
@@ -255,25 +258,28 @@ public class ReadNovelService extends Service {
                         readBook();
                     }
                     mIsPlay = !mIsPlay;
-                    upDateNotifacation();
+                    setNotification();
                     break;
                 case STATUS_CLOSE_SERVICE_ACTION:
+                    mReadSpeakManager.stopReadBook();
                     Intent intentService = new Intent(context, ReadNovelService.class);
                     stopService(intentService);
                     break;
             }
 
         }
-    };
+    }
+
+    ;
 
     //        在通知栏显示，并监听播放/停止按钮
     private void setNotification() {
         try {
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //            android 8 以后才有NotificationChannel，所以进行版本判断
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel("heihei", getResources().getString(R.string.string_name), IMPORTANCE_DEFAULT);
-                manager.createNotificationChannel(channel);
+                mNotificationManager.createNotificationChannel(channel);
             }
 
 //           2、自定义通知栏布局，按钮点击事件
@@ -282,16 +288,11 @@ public class ReadNovelService extends Service {
             PendingIntent broadcast = PendingIntent.getBroadcast(this, 2, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
             mRemoteView.setOnClickPendingIntent(R.id.notification_play, broadcast);
 
-            Intent intentClose = new Intent(STATUS_PLAY_PAUSE_ACTION);
+            Intent intentClose = new Intent(STATUS_CLOSE_SERVICE_ACTION);
             PendingIntent closeService = PendingIntent.getBroadcast(this, 3, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);
             mRemoteView.setOnClickPendingIntent(R.id.notification_close, closeService);
 
             upDateNotifacation();
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);
-            intentFilter.addAction(STATUS_CLOSE_SERVICE_ACTION);
-            registerReceiver(mNotificationReceiver, intentFilter);
-
 //            3、创建通知栏点击时的跳转意图
             Intent intent = new Intent(this, ReadActivity.class);
             mChapterItem.setBegin(mCurrentPage.getBegin());
@@ -301,19 +302,19 @@ public class ReadNovelService extends Service {
 //             用Builder构造器创建Notification
 
             mNotification = new NotificationCompat.Builder(this, "heihei")
-                    .setContent(mRemoteView)   // 自定义的布局视图
                     .setContentTitle(mTittle)
                     .setSmallIcon(R.mipmap.launcher_icon) // 要用alpha图标
                     .setContentIntent(pendingActivity) // 点击通知栏跳转到播放页面
+                    .setContent(mRemoteView)   // 自定义的布局视图
                     .build();
-            mNotification.flags = Notification.FLAG_NO_CLEAR; // 让通知不被清除
-            manager.notify(mNotifyID, mNotification);
+            mNotification.flags = Notification.FLAG_NO_CLEAR; // 让通知不被
+            startForeground(mNotifyID, mNotification);
         } catch (Exception e) {
         }
     }
 
     private void upDateNotifacation() {
-        mRemoteView.setTextViewText(R.id.notification_chapter, mTittle);
+        mRemoteView.setTextViewText(R.id.notification_chapter, mChapterTittle);
         mRemoteView.setTextViewText(R.id.notification_tittle, mTittle);
         Glide.with(this).asBitmap().load(mImgUrl).into(new SimpleTarget<Bitmap>() {
             @Override

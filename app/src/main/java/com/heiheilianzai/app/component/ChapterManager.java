@@ -69,6 +69,7 @@ public class ChapterManager {
     }
 
     public ChapterManager() {
+        mChapterList = new ArrayList<>();
         mDownloadTask = new DownloadTask();
     }
 
@@ -528,7 +529,13 @@ public class ChapterManager {
             querychapterItemInterface.success(mChapterList.get(0));
         }
     }
-
+    public void getChapterList(String book_id){
+        LitePalchapterList = LitePal.where("book_id = ?", book_id).find(ChapterItem.class);
+        if (!LitePalchapterList.isEmpty()) {
+            mChapterList.clear();
+            mChapterList.addAll(LitePalchapterList);
+        }
+    }
     public void loadChapterList(final String chapter_id) {
         Next_chapter = 0;
         Last_chapter = 0;

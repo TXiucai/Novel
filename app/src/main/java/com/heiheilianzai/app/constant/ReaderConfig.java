@@ -84,6 +84,7 @@ public class ReaderConfig {
     public static int MAXheigth;//获取手机能显示图片的最高高度
 
     public static final String API_CRYPTOGRAPHY = "1";//api加密标识
+    public static boolean BANG_SCREEN = false;//刘海屏
 
     public static int getMAXheigth() {
         if (MAXheigth == 0) {

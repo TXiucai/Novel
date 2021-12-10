@@ -70,7 +70,6 @@ public class ChapterPageManager {
     Resources resources;
     int button_ad_heigth;
     private float tendp;
-    private boolean hasNotchScreen;
     private List<TRPage> mChapterPages;
 
     public ChapterPageManager(Context mActivity, ChapterItem querychapterItem) {
@@ -96,7 +95,9 @@ public class ChapterPageManager {
             df = new DecimalFormat("#0.0");
             marginWidth = resources.getDimension(R.dimen.readingMarginWidth);
             lineSpace = resources.getDimension(R.dimen.reading_line_spacing_medium);
-            if (hasNotchScreen = NotchScreen.hasNotchScreen((Activity) mActivity)) {
+            mVisibleWidth = mWidth - marginWidth * 2;
+            mVisibleHeight = mHeight - marginHeight * 2;
+            if (ReaderConfig.BANG_SCREEN) {
                 tendp = ImageUtil.dp2px(mActivity, 15);
                 statusMarginBottom = resources.getDimension(R.dimen.reading_status_margin_bottom_hasNotchScreen);
                 marginHeight = resources.getDimension(R.dimen.readingMarginHeight);
@@ -106,6 +107,13 @@ public class ChapterPageManager {
                 marginHeight = resources.getDimension(R.dimen.readingMarginHeightNotchScreen);
                 BookNameTop = ImageUtil.dp2px(mActivity, 15);
             }
+            m_fontSize = config.getFontSize();
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
+            mPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
+            mPaint.setTextSize(m_fontSize);// 字体大小
+            mPaint.setColor(m_textColor);// 字体颜色
+            mPaint.setTypeface(config.getTypeface());
+            mPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
         } catch (Exception e) {
         }
     }
