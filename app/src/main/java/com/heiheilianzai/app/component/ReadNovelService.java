@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.component;
 
+import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -39,9 +41,8 @@ import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
 
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.util.List;
-
-import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
 public class ReadNovelService extends Service {
     private final String STATUS_PLAY_PAUSE_ACTION = "service_play_pause";
@@ -99,7 +100,9 @@ public class ReadNovelService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mReadSpeakManager = new ReadSpeakManager(getApplicationContext());
+        String rootPath = getFilesDir().toString() + File.separator + "/ReadSpeaker/D16/";
+        String LICENSE_PATH = getFilesDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
+        mReadSpeakManager = new ReadSpeakManager(getApplicationContext(), rootPath, LICENSE_PATH);
         mNotificationReceiver = new ReadReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);

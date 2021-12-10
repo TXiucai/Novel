@@ -112,6 +112,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -298,7 +299,7 @@ public class ReadActivity extends BaseReadActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ReaderConfig.BANG_SCREEN= NotchScreen.hasNotchScreen(this);
+        ReaderConfig.BANG_SCREEN = NotchScreen.hasNotchScreen(this);
         mReadStarTime = System.currentTimeMillis();
         //首次阅读 显示引导图
         if (ShareUitls.getString(ReadActivity.this, "FirstRead", "yes").equals("yes")) {
@@ -318,7 +319,9 @@ public class ReadActivity extends BaseReadActivity {
         intentFilter.addAction(TURN_NEXT);
         registerReceiver(mNovelReceiver, intentFilter);
 
-        readSpeakManager = new ReadSpeakManager(getApplicationContext());
+        String rootPath = getFilesDir().toString() + File.separator + "/ReadSpeaker/D16/";
+        String LICENSE_PATH = getFilesDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
+        readSpeakManager = new ReadSpeakManager(getApplicationContext(), rootPath, LICENSE_PATH);
     }
 
     @Override
@@ -963,12 +966,14 @@ public class ReadActivity extends BaseReadActivity {
                 jumpBoyin();
                 break;
             case R.id.activity_read_speaker:
-                initReadSpeakDialogFragment();
                 openPermission();
                 break;
         }
     }
+
     public void openPermission() {
+        //初始化语音读书设置 不可动态更改的设置
+        readSpeakManager.initReadSetting();
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             Intent localIntent = new Intent();
             localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -979,6 +984,7 @@ public class ReadActivity extends BaseReadActivity {
             startReadNovelService();
         }
     }
+
     private void jumpBoyin() {
         String baseH5Url = App.getBaseH5Url();
         String url = null;
@@ -1373,6 +1379,7 @@ public class ReadActivity extends BaseReadActivity {
             MainHttpTask.getInstance().Gotologin(activity);
         } else {
             if (App.isVip(activity)) {
+                initReadSpeakDialogFragment();
                 //启动服务
                 if (!ReadNovelService.SERVICE_IS_LIVE) {
                     // Android 8.0使用startForegroundService在前台启动新服务

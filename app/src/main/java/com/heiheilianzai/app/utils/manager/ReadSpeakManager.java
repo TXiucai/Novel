@@ -34,18 +34,16 @@ import kr.co.voiceware.vtlicensemodule.LicenseDownloadListener;
 import kr.co.voiceware.vtlicensemodule.VtLicenseSetting;
 
 public class ReadSpeakManager {
-    private final static String VOICE_TWN = "yafang";
-    private final static String VOICE_CHI = "hui";
     private final static String type = "d16";
     //购买的，3个月过期，需要续费更换。有接口动态获取
     private static String LICENSE_KEY;
     Context context;
 
-    public static String rootPath;
-    public static String LICENESE_PATH;
+    public String rootPath;
+    public String LICENESE_PATH;
     private VoiceText voicetext = null;
     private long vtapiHandle = 0;
-    private Options options = null;
+    private Options mOptions = null;
     private EngineInfo selectedEngine = null;
     private VtLicenseSetting licensemodule = null;
     private List<SyncWordInfo> mWordInfo = new ArrayList<>();
@@ -62,8 +60,6 @@ public class ReadSpeakManager {
     private int readPitch = 100;
     //范围 50-400
     private int readSpeed = 100;
-    //范围 0-500
-    private int readVolume = 100;
     // 0 台湾，1 普通话
     private int readYinSe = 0;
 
@@ -108,24 +104,26 @@ public class ReadSpeakManager {
         }
     };
 
-    public ReadSpeakManager(Context context) {
+    public ReadSpeakManager(Context context, String rootPath, String LICENESE_PATH) {
         this.context = context;
-        rootPath = context.getFilesDir().toString() + File.separator + "/ReadSpeaker/D16/";
-        LICENESE_PATH = context.getFilesDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
-        initReadSetting();
+        this.rootPath = rootPath;
+        this.LICENESE_PATH = LICENESE_PATH;
     }
 
-    private void initReadSetting() {
+    public ReadSpeakManager initReadSetting() {
         initAudioRead();
-        checkLicense(context);
-
+        checkLicense();
+        return this;
     }
 
     /**
      * 初始化默认设置
      */
-    public void initAudioRead() {
+    private void initAudioRead() {
         int outputBufferSize = AudioTrack.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+        if (mAudioTrack != null) {
+            return;
+        }
         try {
             mAudioTrack = new AudioTrack(AudioManager.USE_DEFAULT_STREAM_TYPE, mSampleRate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, outputBufferSize, AudioTrack.MODE_STREAM);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -208,7 +206,7 @@ public class ReadSpeakManager {
      * 第二步：license key 认证
      * 如果没有，需要下载
      */
-    public void checkLicense(Context context) {
+    private void checkLicense() {
         //判断D16文件是否存在，不存在就解压
         File D16File = new File(rootPath);
         if (!D16File.exists() || !D16File.isDirectory()) {
@@ -221,6 +219,7 @@ public class ReadSpeakManager {
 //        licensemodule.resetLicenseFileDownload();
 
         if (licensemodule.getLicensed()) {
+            // licensekey 下的认证文件，如果不小心被删掉了，重新下载。
             String verifyTxtPath = LICENESE_PATH + "verification.txt";
             File verifyFile = new File(verifyTxtPath);
             if (!verifyFile.exists()) {
@@ -236,7 +235,7 @@ public class ReadSpeakManager {
     /**
      * 下载license
      */
-    public void downloadLicense() {
+    private void downloadLicense() {
         LICENSE_KEY = ShareUitls.getString(context, "vtapi_license_key", null);
         if (TextUtils.isEmpty(LICENSE_KEY)) {
             ToastUtil.getInstance().showShortT(context.getString(R.string.read_license_key_null));
@@ -245,7 +244,6 @@ public class ReadSpeakManager {
         licensemodule.vtLicenseDownload(LICENSE_KEY, LICENESE_PATH, new LicenseDownloadListener() {
             @Override
             public void onSuccess() {
-                load();
             }
 
             @Override
@@ -281,15 +279,11 @@ public class ReadSpeakManager {
             return;
         }
         // SDK 目前就2个语音库，固定的
-        String select = VOICE_TWN;
-
-        switch (position) {
-            case 0:
-                select = VOICE_CHI;
-            case 1:
-                select = VOICE_TWN;
-            default:
-                select = VOICE_CHI;
+        String select = "hui";
+        if (position == 0) {
+            select = "hui";
+        } else {
+            select = "yafang";
         }
 
         //目前是只有这个 D16库。写死
@@ -299,15 +293,28 @@ public class ReadSpeakManager {
                 break;
             }
         }
+    }
 
+    private EngineInfo getYingSe() {
+        if (selectedEngine == null) {
+            String yinse = "hui";
+            for (Map.Entry<String, EngineInfo> e : voicetext.vtapiGetEngineInfo().entrySet()) {
+                if (e.getValue().getSpeaker().equals(yinse) && e.getValue().getType().equals(type)) {
+                    selectedEngine = e.getValue();
+                    break;
+                }
+            }
+        }
+        return selectedEngine;
     }
 
     /**
-     * 语音文件load
+     * load 初始化语音读书
+     * 每次读书，只需设置一次
      */
-    public void load() {
+    public ReadSpeakManager load() {
         if (null != voicetext) {
-            return;
+            return this;
         }
 
         voicetext = new VoiceText();
@@ -326,23 +333,51 @@ public class ReadSpeakManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return this;
     }
 
     /**
      * 读书音频设置
      */
-    public void setReadOptions() {
+    public void setReadOptions(Options options) {
+        if (options == null) {
+            mOptions = new Options();
+            try {
+                mOptions.setPitch(readPitch);
+                mOptions.setSpeed(readSpeed);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            mOptions = options;
+        }
+    }
+
+    public Options setReadOptionsSetting(Options options) {
         if (options == null) {
             options = new Options();
+            try {
+                options.setSpeed(getReadSpeed());
+                options.setPitch(getReadPitch());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return options;
+    }
 
-        try {
-            options.setPitch(readPitch);
-            options.setSpeed(readSpeed);
-            options.setVolume(readVolume);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private Options getOptions() {
+        if (mOptions == null) {
+            mOptions = new Options();
+            try {
+                mOptions.setPitch(readPitch);
+                mOptions.setSpeed(readSpeed);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return mOptions;
     }
 
     /**
@@ -367,8 +402,7 @@ public class ReadSpeakManager {
      */
     public void playReadBook(String bookContent) {
         if (null == voicetext) {
-            load();
-//            return;
+            return;
         }
 
         if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
@@ -376,8 +410,13 @@ public class ReadSpeakManager {
         }
 
         // 设置音色 和语音属性
-        setYingSe(getReadYinSe());
-        setReadOptions();
+        selectedEngine = getYingSe();
+        mOptions = getOptions();
+        String speak = selectedEngine.getSpeaker();
+        String type = selectedEngine.getType();
+        int samp = selectedEngine.getSampling();
+
+        int speed = mOptions.getSpeed();
 
         if (null == playVoiceThread) {
 
@@ -401,7 +440,7 @@ public class ReadSpeakManager {
                         isPause = false;
 
                         try {
-                            voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), options, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                            voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
                                 @Override
                                 public void onReadBuffer(byte[] output, int outputSize) {
                                     if (outputSize > 0) {
@@ -441,7 +480,6 @@ public class ReadSpeakManager {
 
                                 @Override
                                 public void onError(String reason) {
-
                                 }
                             });
 
@@ -461,7 +499,7 @@ public class ReadSpeakManager {
                         isPause = false;
 
                         try {
-                            voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, pauseText, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), options, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                            voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, pauseText, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
                                 @Override
                                 public void onReadBuffer(byte[] output, int outputSize) {
                                     if (outputSize > 0) {
@@ -563,7 +601,6 @@ public class ReadSpeakManager {
     public void pauseReadBook() {
         isPause = true;
         stopReadBook();
-
     }
 
     private void pausePlay() {
@@ -602,7 +639,7 @@ public class ReadSpeakManager {
     /**
      * 暂停时 主线程事件 处理
      */
-    private void uiButtonSetPause() {
+    private void setPause() {
         if (mAudioTrack != null) {
             if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                 mAudioTrack.pause();
@@ -650,19 +687,6 @@ public class ReadSpeakManager {
 
     public void setReadSpeed(int readSpeed) {
         this.readSpeed = readSpeed;
-    }
-
-    /**
-     * 声音大小 可随系统更改
-     *
-     * @return
-     */
-    public int getReadVolume() {
-        return readVolume;
-    }
-
-    public void setReadVolume(int readVolume) {
-        this.readVolume = readVolume;
     }
 
     /**
