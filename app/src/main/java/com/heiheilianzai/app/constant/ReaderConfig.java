@@ -485,6 +485,12 @@ public class ReaderConfig {
     public static final String REGISTERFAST = "/user-new/quick-register";
 
     /**
+     * 上次听记录
+     */
+    public static final String LISTENBOOKRECODE = "/book-listen/update-listen";
+
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

@@ -28,12 +28,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.component.http.OkHttpEngine;
+import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.TRPage;
@@ -43,6 +48,8 @@ import org.litepal.LitePal;
 
 import java.io.File;
 import java.util.List;
+
+import okhttp3.Request;
 
 public class ReadNovelService extends Service {
     private final String STATUS_PLAY_PAUSE_ACTION = "service_play_pause";
@@ -126,6 +133,7 @@ public class ReadNovelService extends Service {
             @Override
             public void onSuccessChapterContent(List<TRPage> pages) {
                 if (pages != null && pages.size() > 0) {
+                    updaeListenRecord();
                     mTrPages = pages;
                     mCurrentPage = mTrPages.get(mReadPage);
                     setNotification();
@@ -158,6 +166,21 @@ public class ReadNovelService extends Service {
             }
         });
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void updaeListenRecord() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("book_id", mChapterItem.getBook_id());
+        String json = params.generateParamsJson();
+        OkHttpEngine.getInstance(getApplication()).postAsyncHttp(ReaderConfig.getBaseUrl() + ReaderConfig.LISTENBOOKRECODE, json, new ResultCallback() {
+            @Override
+            public void onError(Request request, Exception e) {
+            }
+
+            @Override
+            public void onResponse(String response) {
+            }
+        });
     }
 
     private void readBook() {
@@ -326,9 +349,9 @@ public class ReadNovelService extends Service {
             }
         });
         if (mIsPlay) {
-            mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_play);
-        } else {
             mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_stop);
+        } else {
+            mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_play);
         }
     }
 }

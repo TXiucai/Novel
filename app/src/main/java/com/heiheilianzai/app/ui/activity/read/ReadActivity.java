@@ -301,9 +301,19 @@ public class ReadActivity extends BaseReadActivity {
         super.onCreate(savedInstanceState);
         ReaderConfig.BANG_SCREEN = NotchScreen.hasNotchScreen(this);
         mReadStarTime = System.currentTimeMillis();
+        int MHeight = ScreenSizeUtils.getInstance(this).getScreenHeight();
         //首次阅读 显示引导图
         if (ShareUitls.getString(ReadActivity.this, "FirstRead", "yes").equals("yes")) {
             ShareUitls.putString(ReadActivity.this, "FirstRead", "no");
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) activity_read_firstread.getLayoutParams();
+            if (ReaderConfig.TOP_READ_AD != null) {
+                MHeight -= ImageUtil.dp2px(this, READBUTTOM_HEIGHT);
+            }
+            if (ReaderConfig.BOTTOM_READ_AD != null) {
+                MHeight -= ImageUtil.dp2px(this, READBUTTOM_HEIGHT);
+            }
+            layoutParams.height = ImageUtil.dp2px(this, MHeight);
+            activity_read_firstread.setLayoutParams(layoutParams);
             activity_read_firstread.setVisibility(View.VISIBLE);
             activity_read_firstread.setOnClickListener(new View.OnClickListener() {
                 @Override
