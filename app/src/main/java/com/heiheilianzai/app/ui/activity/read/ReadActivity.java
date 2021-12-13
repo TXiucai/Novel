@@ -252,7 +252,9 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
             switch (intent.getAction()) {
                 case UPDATE_BG:
                     mReadLine = (int) intent.getExtras().get("line");
-                    pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
+                    if (pageFactory != null) {
+                        pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
+                    }
                     break;
                 case TURN_NEXT:
                     if (bookpage != null) {

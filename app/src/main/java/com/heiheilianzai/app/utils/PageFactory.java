@@ -117,7 +117,7 @@ public class PageFactory {
     private Paint waitPaint;
     //文字颜色
     private int m_textColor = Color.rgb(50, 65, 78);
-    private int m_lineBgColor = Color.rgb(142, 137, 136);
+    private int m_lineBgColor = Color.rgb(248, 248, 255);// Color.rgb(142, 137, 136);
     // 绘制内容的宽
     private float mVisibleHeight;
     // 绘制内容的宽
@@ -330,7 +330,7 @@ public class PageFactory {
                     String strLine = m_lines.get(i);
                     y += m_fontSize + lineSpace;
                     if (i == mReadLine) {
-                        c.drawRect(measureMarginWidth, mPaint.getFontMetricsInt().top, y, mPaint.getFontMetrics().bottom, mPaintLine);
+                        c.drawRect(measureMarginWidth, mPaint.getFontMetricsInt().top+y, mWidth-measureMarginWidth, mPaint.getFontMetrics().bottom+y, mPaintLine);
                     }
                     c.drawText(changeJIanfan(strLine), measureMarginWidth, y, mPaint);
                 }

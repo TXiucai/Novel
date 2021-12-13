@@ -120,50 +120,51 @@ public class ReadNovelService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         SERVICE_IS_LIVE = true;
-        mChapterItem = (ChapterItem) intent.getExtras().get(EXTRA_CHAPTER);
-        mBegin = mChapterItem.getBegin();
-        mBaseBook = (BaseBook) intent.getExtras().get(EXTRA_BOOK);
-        mTittle = mBaseBook.getName();
-        mChapterTittle = mChapterItem.getChapter_title();
-        mImgUrl = mBaseBook.getCover();
-        mPageContent = (String) intent.getExtras().get(EXTRA_PAGE);
-        mChapterManager = new ChapterManager();
-        mChapterManager.getChapterList(mBaseBook.getBook_id());
-        getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
-            @Override
-            public void onSuccessChapterContent(List<TRPage> pages) {
-                if (pages != null && pages.size() > 0) {
-                    updaeListenRecord();
-                    mTrPages = pages;
-                    mCurrentPage = mTrPages.get(mReadPage);
-                    setNotification();
-                    readBook();
-                }
-            }
-
-            @Override
-            public void onFailChapterContent() {
-                MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
-            }
-        });
-        mReadSpeakManager.setReadSpeakStateCallback(new ReadSpeakManager.ReadSpeakStateCallback() {
-            @Override
-            public void readSpeakState(int state) {
-                switch (state) {
-                    case 1: // 停止播放
-                        break;
-                    case 2://暂停播放
-                        break;
-                    case 3://播放中
-                        mHandler.sendEmptyMessage(2);
-                        break;
-                    case 4://读完了
-                        mReadLine++;
+        if (intent != null && intent.getExtras() != null) {
+            mChapterItem = (ChapterItem) intent.getExtras().get(EXTRA_CHAPTER);
+            mBegin = mChapterItem.getBegin();
+            mBaseBook = (BaseBook) intent.getExtras().get(EXTRA_BOOK);
+            mTittle = mBaseBook.getName();
+            mChapterTittle = mChapterItem.getChapter_title();
+            mImgUrl = mBaseBook.getCover();
+            mPageContent = (String) intent.getExtras().get(EXTRA_PAGE);
+            mChapterManager = new ChapterManager();
+            mChapterManager.getChapterList(mBaseBook.getBook_id());
+            getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
+                @Override
+                public void onSuccessChapterContent(List<TRPage> pages) {
+                    if (pages != null && pages.size() > 0) {
+                        updaeListenRecord();
+                        mTrPages = pages;
+                        mCurrentPage = mTrPages.get(mReadPage);
+                        setNotification();
                         readBook();
-                        break;
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onFailChapterContent() {
+                    MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+                }
+            });
+            mReadSpeakManager.setReadSpeakStateCallback(new ReadSpeakManager.ReadSpeakStateCallback() {
+                @Override
+                public void readSpeakState(int state) {
+                    switch (state) {
+                        case 1: // 停止播放
+                            break;
+                        case 2://暂停播放
+                            break;
+                        case 3://播放中
+                            break;
+                        case 4://读完了
+                            mReadLine++;
+                            readBook();
+                            break;
+                    }
+                }
+            });
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -186,6 +187,7 @@ public class ReadNovelService extends Service {
         if (mTrPages.size() > mReadPage) {
             mCurrentPage = mTrPages.get(mReadPage);
             if (mCurrentPage.getLines() != null && mCurrentPage.getLines().size() > mReadLine) {
+                mHandler.sendEmptyMessage(2);
                 mReadSpeakManager.playReadBook(mCurrentPage.getLines().get(mReadLine));
             } else {
                 mReadPage++;
@@ -199,6 +201,9 @@ public class ReadNovelService extends Service {
                 public void onSuccessChapterContent(List<TRPage> content) {
                     mTrPages.clear();
                     mTrPages.addAll(content);
+                    mReadPage = 0;
+                    mReadLine = 0;
+                    setNotification();
                     readBook();
                 }
 
@@ -338,7 +343,7 @@ public class ReadNovelService extends Service {
     }
 
     private void upDateNotifacation() {
-        mRemoteView.setTextViewText(R.id.notification_chapter, mChapterTittle);
+        mRemoteView.setTextViewText(R.id.notification_chapter, mChapterItem.getBook_name());
         mRemoteView.setTextViewText(R.id.notification_tittle, mTittle);
         Glide.with(this).asBitmap().load(mImgUrl).into(new SimpleTarget<Bitmap>() {
             @Override
