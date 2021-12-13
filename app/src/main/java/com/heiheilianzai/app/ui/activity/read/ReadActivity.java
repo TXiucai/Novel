@@ -112,7 +112,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
-import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -329,9 +328,7 @@ public class ReadActivity extends BaseReadActivity {
         intentFilter.addAction(TURN_NEXT);
         registerReceiver(mNovelReceiver, intentFilter);
 
-        String rootPath = getFilesDir().toString() + File.separator + "/ReadSpeaker/D16/";
-        String LICENSE_PATH = getFilesDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
-        readSpeakManager = new ReadSpeakManager(getApplicationContext(), rootPath, LICENSE_PATH);
+        readSpeakManager = new ReadSpeakManager(getApplicationContext()).initReadSetting();
     }
 
     @Override
@@ -982,8 +979,7 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     public void openPermission() {
-        //初始化语音读书设置 不可动态更改的设置
-        readSpeakManager.initReadSetting();
+        readSpeakManager.load();
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             Intent localIntent = new Intent();
             localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1167,12 +1163,7 @@ public class ReadActivity extends BaseReadActivity {
          * 3 正在阅读 我有返回
          * 4 读完了跟 1 的区别是，读完了后停止的
          */
-        readSpeakManager.setReadSpeakStateCallback(new ReadSpeakManager.ReadSpeakStateCallback() {
-            @Override
-            public void readSpeakState(int state) {
-                //TODO 读书状态
-            }
-        });
+
     }
 
     @SuppressLint("HandlerLeak")

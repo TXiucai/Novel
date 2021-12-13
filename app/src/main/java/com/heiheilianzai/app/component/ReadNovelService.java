@@ -35,10 +35,8 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
-import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.utils.FileManager;
-import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.TRPage;
@@ -46,7 +44,6 @@ import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
 
 import org.litepal.LitePal;
 
-import java.io.File;
 import java.util.List;
 
 import okhttp3.Request;
@@ -107,9 +104,7 @@ public class ReadNovelService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        String rootPath = getFilesDir().toString() + File.separator + "/ReadSpeaker/D16/";
-        String LICENSE_PATH = getFilesDir().toString() + File.separator + "/ReadSpeaker/licensekey/";
-        mReadSpeakManager = new ReadSpeakManager(getApplicationContext(), rootPath, LICENSE_PATH);
+        mReadSpeakManager = new ReadSpeakManager(getApplicationContext());
         mNotificationReceiver = new ReadReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);
