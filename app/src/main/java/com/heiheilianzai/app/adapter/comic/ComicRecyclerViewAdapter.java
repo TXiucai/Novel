@@ -196,7 +196,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                         holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
                     }
                 }
-            } else if (holderr instanceof MyAdViewHolder) {
+            }
+            else if (holderr instanceof MyAdViewHolder) {
                 MyAdViewHolder holderAd = (MyAdViewHolder) holderr;
                 BaseComicImage comicImage = list.get(position);
                 MyPicasso.GlideImageNoSize(activity, comicImage.getImage(), holderAd.ivAD);

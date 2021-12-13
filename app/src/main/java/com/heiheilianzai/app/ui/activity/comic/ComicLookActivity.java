@@ -245,6 +245,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private boolean mIsSdkChapterAd = false;
     private boolean mIsShowChapterAd = false;
     public static boolean mIsSipAd = false;
+    private boolean mIsShowChapter = false;
     private BaseAd mSdkTopAd;
     private BaseAd mChapterBaseAd;
 
@@ -412,27 +413,33 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 showMenu(false);
                 break;
             case R.id.activity_comiclook_xiayihua_layout:
-                if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
-                    resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
-                    if (mIsShowChapterAd) {
-                        initChapterAd();
-                    } else {
-                        getData(activity, comic_id, comicChapterItem.next_chapter, true);
-                    }
+                if (mIsShowChapterAd) {
+                    initChapterAd();
                 } else {
-                    MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
+                    if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
+                        resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
+                        getData(activity, comic_id, comicChapterItem.next_chapter, true);
+                    } else {
+                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
+                    }
                 }
                 break;
             case R.id.activity_comiclook_shangyihua_layout:
-                if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
-                    resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
-                    if (mIsShowChapterAd) {
-                        initChapterAd();
-                    } else {
-                        getData(activity, comic_id, comicChapterItem.last_chapter, true);
-                    }
+                if (mIsShowChapterAd) {
+                    initChapterAd();
                 } else {
-                    MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
+                    if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
+                        resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
+                        getData(activity, comic_id, comicChapterItem.last_chapter, true);
+                    } else {
+                        if (mChapterBaseAd != null && !mIsShowChapter) {
+                            getData(activity, comic_id, comicChapterItem.chapter_id, true);
+                            mIsShowChapter = true;
+                        } else {
+                            MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
+                            mIsShowChapter = false;
+                        }
+                    }
                 }
                 break;
             case R.id.activity_comiclook_tucao_layout:
@@ -934,6 +941,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     ++baseComicImagesSize;
                 }
                 baseComicImages.addAll(comicChapterItem.image_list);
+                if (mChapterBaseAd != null) {
+                    mIsShowChapterAd = true;
+                }
                 if (first) {
                     comicChapterCatalogAdapter = new ComicRecyclerViewAdapter(activity, WIDTH, HEIGHT, baseComicImages, activity_comic_look_foot, baseComicImagesSize, itemOnclick);
                     comicChapterCatalogAdapter.setmIsAlbum(TextUtils.equals(comicChapterItem.getIs_album(), "2"));
@@ -971,7 +981,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 CurrentComicChapter.IsRead = true;
                 item_dialog_downadapter_RotationLoadingView.setVisibility(View.GONE);
                 activity_comiclook_danmu_dangqianhua.setVisibility(View.VISIBLE);
-                if (comicChapterItem.next_chapter.equals("0")) {
+                if (comicChapterItem.next_chapter.equals("0") && mChapterBaseAd == null) {
                     holderFoot.activity_comiclook_xiayihua_foot.setImageResource(R.mipmap.right_gray);
                     activity_comiclook_xiayihua.setImageResource(R.mipmap.right_gray);
                 } else {
@@ -1233,7 +1243,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         } else {
                             mImgTopAd.setVisibility(View.GONE);
                         }
-                    }else{
+                    } else {
                         localTopAd(activity);
                     }
                 } catch (Exception e) {
@@ -1450,28 +1460,35 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             switch (view.getId()) {
                 case R.id.activity_comic_look_foot_xiayihua:
                     isclickScreen = false;
-                    if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
-                        resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
-                        if (mIsShowChapterAd) {
-                            initChapterAd();
-                        } else {
-                            getData(activity, comic_id, comicChapterItem.next_chapter, true);
-                        }
+                    if (mIsShowChapterAd) {
+                        initChapterAd();
                     } else {
-                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
+                        if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
+                            resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
+                            getData(activity, comic_id, comicChapterItem.next_chapter, true);
+                        } else {
+                            MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_end));
+                        }
                     }
                     break;
                 case R.id.activity_comic_look_foot_shangyihua:
                     isclickScreen = false;
-                    if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
-                        resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
-                        if (mIsShowChapterAd) {
-                            initChapterAd();
-                        } else {
-                            getData(activity, comic_id, comicChapterItem.last_chapter, true);
-                        }
+                    if (mIsShowChapterAd) {
+                        initChapterAd();
                     } else {
-                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
+                        if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
+                            resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
+                            getData(activity, comic_id, comicChapterItem.last_chapter, true);
+                        } else {
+                            if (mChapterBaseAd != null && !mIsShowChapter) {
+                                getData(activity, comic_id, comicChapterItem.chapter_id, true);
+                                mIsShowChapter = true;
+                            } else {
+                                MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
+                                mIsShowChapter = false;
+                            }
+                        }
+
                     }
                     break;
             }
