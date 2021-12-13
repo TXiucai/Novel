@@ -22,11 +22,9 @@ allprojects {
     repositories {
         maven { url 'http://repo.0d40fec.com/repository/android_jcenter/' }
         maven { url 'http://repo.0d40fec.com/repository/android_google/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_piasy_maven/' }
         maven { url 'http://repo.0d40fec.com/repository/android_miomin_maven/' }
         maven { url 'http://repo.0d40fec.com/repository/android_jitpack/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_umeng_release/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
+        maven { url 'http://repo.0d40fec.com/repository/android_aliyun_releases/'}
         maven { url 'http://repo.0d40fec.com/repository/android_sonatype_snapshots_maven/' }
         maven { url 'http://repo.0d40fec.com/repository/android_maven_central/' }
     }
