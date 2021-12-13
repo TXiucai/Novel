@@ -246,7 +246,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
             @Override
             public void onRequestFailed(int i, String s) {
-                localAd(activity);
+                localTopAd(activity);
             }
         });
     }

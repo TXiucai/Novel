@@ -167,6 +167,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.activity.read.ReadActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
