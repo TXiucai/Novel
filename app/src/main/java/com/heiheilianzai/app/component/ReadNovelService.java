@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -62,6 +63,7 @@ public class ReadNovelService extends Service {
     private Notification mNotification;
     private int mNotifyID = 100;
     public static boolean SERVICE_IS_LIVE;
+    public int delayMins = 0;
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -94,22 +96,25 @@ public class ReadNovelService extends Service {
     private List<TRPage> mTrPages;
     private ReadReceiver mNotificationReceiver;
     private NotificationManager mNotificationManager;
+    private OnServiceListener onServiceListener;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new MyBinder();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mReadSpeakManager = new ReadSpeakManager(getApplicationContext());
+        mReadSpeakManager = ReadSpeakManager.getInstance().initReadSetting();
         mNotificationReceiver = new ReadReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);
         intentFilter.addAction(STATUS_CLOSE_SERVICE_ACTION);
         registerReceiver(mNotificationReceiver, intentFilter);
+        //定时器逻辑
+
     }
 
     @Override
@@ -153,7 +158,6 @@ public class ReadNovelService extends Service {
                         mHandler.sendEmptyMessage(2);
                         break;
                     case 4://读完了
-                        mHandler.sendEmptyMessage(1);
                         mReadLine++;
                         readBook();
                         break;
@@ -186,6 +190,7 @@ public class ReadNovelService extends Service {
             } else {
                 mReadPage++;
                 mReadLine = 0;
+                mHandler.sendEmptyMessage(1);
                 readBook();
             }
         } else {
@@ -291,8 +296,6 @@ public class ReadNovelService extends Service {
         }
     }
 
-    ;
-
     //        在通知栏显示，并监听播放/停止按钮
     private void setNotification() {
         try {
@@ -349,4 +352,27 @@ public class ReadNovelService extends Service {
             mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_play);
         }
     }
+
+    public class MyBinder extends Binder implements IBinder {
+        public void setTimer(int mins) {
+            ReadNovelService.this.delayMins = mins;
+        }
+
+        public ReadNovelService getService() {
+            return ReadNovelService.this;
+        }
+    }
+
+    public void setOnServiceListener(OnServiceListener onServiceListener) {
+        this.onServiceListener = onServiceListener;
+    }
+
+    public OnServiceListener getOnServiceListener() {
+        return onServiceListener;
+    }
+
+    public static interface OnServiceListener {
+        void setDelayTimer(int mins);
+    }
+
 }

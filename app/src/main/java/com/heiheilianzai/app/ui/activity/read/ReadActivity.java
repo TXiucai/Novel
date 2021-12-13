@@ -14,12 +14,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -125,7 +127,7 @@ import butterknife.OnClick;
  * 小说阅读 Activity
  * Created by Administrator on 2016/7/15 0015.
  */
-public class ReadActivity extends BaseReadActivity {
+public class ReadActivity extends BaseReadActivity implements ServiceConnection {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
     private final static String EXTRA_PAGE = "page";
@@ -220,6 +222,7 @@ public class ReadActivity extends BaseReadActivity {
     private boolean mNovelVoice;
     private boolean mNovelScreen;
     private boolean mNovelOpen;
+    private ReadNovelService.MyBinder binder;
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
@@ -328,7 +331,9 @@ public class ReadActivity extends BaseReadActivity {
         intentFilter.addAction(TURN_NEXT);
         registerReceiver(mNovelReceiver, intentFilter);
 
-        readSpeakManager = new ReadSpeakManager(getApplicationContext()).initReadSetting();
+        readSpeakManager = ReadSpeakManager.getInstance()
+                .initReadSetting()
+                .load();
     }
 
     @Override
@@ -979,7 +984,6 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     public void openPermission() {
-        readSpeakManager.load();
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             Intent localIntent = new Intent();
             localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1143,7 +1147,7 @@ public class ReadActivity extends BaseReadActivity {
 
             @Override
             public void readSe(int se) {//音色
-                readSpeakManager.setReadYinSe(se);
+                readSpeakManager.setYingSe(se);
             }
 
             @Override
@@ -1154,15 +1158,9 @@ public class ReadActivity extends BaseReadActivity {
                  * 15 30 60 均是分钟数
                  * 只有以上4个数字
                  */
+
             }
         });
-
-        /**
-         * 1 停止，可能还有读完，其他因素（或故意）造成的停止
-         * 2 暂停（我没返回，因为暂停的触发方式只有在通知栏有）
-         * 3 正在阅读 我有返回
-         * 4 读完了跟 1 的区别是，读完了后停止的
-         */
 
     }
 
@@ -1399,5 +1397,18 @@ public class ReadActivity extends BaseReadActivity {
                 new DialogVip().getDialogVipPop(activity, false);
             }
         }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        binder = (ReadNovelService.MyBinder) iBinder;
+        binder.getService().setOnServiceListener(mins -> {
+
+        });
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+
     }
 }

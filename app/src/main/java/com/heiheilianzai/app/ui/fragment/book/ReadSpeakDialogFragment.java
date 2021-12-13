@@ -28,8 +28,6 @@ import com.heiheilianzai.app.view.read.SignSeekBar;
 import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ReadSpeakDialogFragment extends DialogFragment {
     private View mView;
@@ -42,10 +40,8 @@ public class ReadSpeakDialogFragment extends DialogFragment {
     private SignSeekBar sbSpeed;
     private SignSeekBar sbYindiao;
 
-    @BindView(R.id.rb_yingse_01)
-    public RadioButton rb_yingse_01;
-    @BindView(R.id.rb_yingse_02)
-    public RadioButton rb_yingse_02;
+    private RadioButton rb_yingse_01;
+    private RadioButton rb_yingse_02;
     @BindView(R.id.rb_dingshi_01)
     public RadioButton rb_dingshi_01;
     @BindView(R.id.rb_dingshi_02)
@@ -87,8 +83,7 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         int height = getDialog().getWindow().getAttributes().height;
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, height);
-        // 初始化View注入
-        ButterKnife.bind(this.getDialog());
+
     }
 
     @Nullable
@@ -101,6 +96,13 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         initDialogView();
         sbSpeed = mView.findViewById(R.id.sb_read_speed);
         sbYindiao = mView.findViewById(R.id.sb_read_yindiao);
+        rb_yingse_01 = mView.findViewById(R.id.rb_yingse_01);
+        rb_yingse_02 = mView.findViewById(R.id.rb_yingse_02);
+        rb_dingshi_01 = mView.findViewById(R.id.rb_dingshi_01);
+        rb_dingshi_02 = mView.findViewById(R.id.rb_dingshi_02);
+        rb_dingshi_03 = mView.findViewById(R.id.rb_dingshi_03);
+        rb_dingshi_04 = mView.findViewById(R.id.rb_dingshi_04);
+
         return mView;
     }
 
@@ -201,32 +203,13 @@ public class ReadSpeakDialogFragment extends DialogFragment {
             }
         });
 
-    }
+        rb_yingse_01.setOnClickListener(view -> diglogCallback.readSe(0));
+        rb_yingse_02.setOnClickListener(view -> diglogCallback.readSe(1));
+        rb_dingshi_04.setOnClickListener(view -> diglogCallback.readTimer(60));
+        rb_dingshi_03.setOnClickListener(view -> diglogCallback.readTimer(30));
+        rb_dingshi_02.setOnClickListener(view -> diglogCallback.readTimer(15));
+        rb_dingshi_01.setOnClickListener(view -> diglogCallback.readTimer(0));
 
-    @SuppressLint("NonConstantResourceId")
-    @OnClick({R.id.rb_yingse_01, R.id.rb_yingse_02, R.id.rb_dingshi_01, R.id.rb_dingshi_02,
-            R.id.rb_dingshi_03, R.id.rb_dingshi_04})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rb_yingse_01:
-                diglogCallback.readSe(0);
-                break;
-            case R.id.rb_yingse_02:
-                diglogCallback.readSe(1);
-                break;
-            case R.id.rb_dingshi_01:
-                diglogCallback.readTimer(0);
-                break;
-            case R.id.rb_dingshi_02:
-                diglogCallback.readTimer(15);
-                break;
-            case R.id.rb_dingshi_03:
-                diglogCallback.readTimer(30);
-                break;
-            case R.id.rb_dingshi_04:
-                diglogCallback.readTimer(60);
-                break;
-        }
     }
 
     /**

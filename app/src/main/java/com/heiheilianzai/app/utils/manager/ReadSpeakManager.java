@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.utils.manager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -13,6 +14,7 @@ import android.text.TextUtils;
 import androidx.annotation.RequiresApi;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.utils.AssetZipUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.ToastUtil;
@@ -40,7 +42,7 @@ public class ReadSpeakManager {
     private final static String type = "d16";
     //购买的，3个月过期，需要续费更换。有接口动态获取
     private static String LICENSE_KEY;
-    Context context;
+    private Context context;
 
     private VoiceText voicetext = null;
     private long vtapiHandle = 0;
@@ -75,6 +77,20 @@ public class ReadSpeakManager {
     private Thread playVoiceThread = null;
     private ReadSpeakStateCallback readSpeakStateCallback;
 
+    @SuppressLint("StaticFieldLeak")
+    private static ReadSpeakManager instance;
+
+    private ReadSpeakManager() {
+        context = App.getAppContext();
+    }
+
+    public static ReadSpeakManager getInstance() {
+        if (instance == null) {
+            instance = new ReadSpeakManager();
+        }
+        return instance;
+    }
+
     /**
      * 语音读书阅读器状态回调
      * 1 停止读书
@@ -99,15 +115,9 @@ public class ReadSpeakManager {
                 setPlay();
             } else if (msg.what == BTN_STOP) {
                 setStop();
-            } else {
-                uiHighlightText(msg.arg1, msg.arg2, (String) msg.obj);
             }
         }
     };
-
-    public ReadSpeakManager(Context context) {
-        this.context = context;
-    }
 
     public ReadSpeakManager initReadSetting() {
         initAudioRead();
@@ -206,6 +216,9 @@ public class ReadSpeakManager {
      * 如果没有，需要下载
      */
     private void checkLicense() {
+        if (context == null) {
+            context = App.getAppContext();
+        }
         //判断D16文件是否存在，不存在就解压
         File D16File = new File(ROOT_PATH);
         if (!D16File.exists() || !D16File.isDirectory()) {
@@ -369,12 +382,12 @@ public class ReadSpeakManager {
     private Options getOptions() {
         if (mOptions == null) {
             mOptions = new Options();
-            try {
-                mOptions.setPitch(readPitch);
-                mOptions.setSpeed(readSpeed);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        }
+        try {
+            mOptions.setPitch(readPitch);
+            mOptions.setSpeed(readSpeed);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return mOptions;
     }
@@ -416,6 +429,7 @@ public class ReadSpeakManager {
         int samp = selectedEngine.getSampling();
 
         int speed = mOptions.getSpeed();
+        int pitch = mOptions.getPitch();
 
         playVoiceThread = new Thread(new Runnable() {
             @Override

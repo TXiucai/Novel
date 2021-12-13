@@ -2,6 +2,8 @@ package com.heiheilianzai.app.utils;
 
 import android.content.Context;
 
+import com.heiheilianzai.app.base.App;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ public class AssetZipUtils {
      */
     public static void UnZipAssetsFolder(Context context, String zipFileString, String
             outPathString) throws Exception {
+        if(context == null){
+            context = App.getAppContext();
+        }
         ZipInputStream inPutZip = new ZipInputStream(context.getAssets().open(zipFileString));
         ZipEntry zipEntry;
         String szName = "";
