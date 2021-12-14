@@ -61,6 +61,15 @@ public class PageWidget extends View {
     public int Current_Page;
     boolean onTouchEventing;
     private boolean mLeftScreen = false;
+    private boolean mIsOpenService = false;
+
+    public void setmIsOpenService(boolean mIsOpenService) {
+        this.mIsOpenService = mIsOpenService;
+    }
+
+    public boolean ismIsOpenService() {
+        return mIsOpenService;
+    }
 
     public void setmLeftScreen(boolean mLeftScreen) {
         this.mLeftScreen = mLeftScreen;
@@ -198,6 +207,9 @@ public class PageWidget extends View {
             Utils.printLog(TAG, "ACTION_DOWN");
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+            if (mIsOpenService) {
+                return true;
+            }
             //判断是否移动了
             if (!isMove) {
                 isMove = Math.abs(downX - x) > slop || Math.abs(downY - y) > slop;
@@ -265,6 +277,9 @@ public class PageWidget extends View {
                     onTouchEventing = false;
                     return true;
                 } else isNext = x >= mScreenWidth / 2;
+                if (mIsOpenService) {
+                    return true;
+                }
                 if (isNext) {
                     Boolean isNext = mTouchListener.nextPage();
                     mAnimationProvider.setDirection(AnimationProvider.Direction.next);

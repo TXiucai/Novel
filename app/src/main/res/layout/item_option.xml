@@ -76,7 +76,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@id/item_store_label_male_horizontal_description"
                 android:orientation="horizontal">
 
                 <TextView

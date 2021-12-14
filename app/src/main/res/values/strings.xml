@@ -630,5 +630,6 @@
     <string name="read_license_download_error">"read license key download failed"</string>
     <string name="read_license_key_null">read book license key is NULL</string>
     <string name="string_read_book_error">听书出现问题</string>
+    <string name="string_read_service_prohibit">听书模式下，该功能暂时不可用</string>
 
 </resources>

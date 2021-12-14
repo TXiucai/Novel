@@ -80,6 +80,11 @@ public class ReadNovelService extends Service {
                     intentUpdate.putExtra("line", mReadLine);
                     sendBroadcast(intentUpdate);
                     break;
+                case 3:
+                    Intent intentClose = new Intent();
+                    intentClose.setAction(ReadActivity.CLOSE_SERVICE);
+                    sendBroadcast(intentClose);
+                    break;
             }
         }
     };
@@ -288,6 +293,7 @@ public class ReadNovelService extends Service {
                     break;
                 case STATUS_CLOSE_SERVICE_ACTION:
                     mReadSpeakManager.stopReadBook();
+                    mHandler.sendEmptyMessage(3);
                     Intent intentService = new Intent(context, ReadNovelService.class);
                     stopService(intentService);
                     break;

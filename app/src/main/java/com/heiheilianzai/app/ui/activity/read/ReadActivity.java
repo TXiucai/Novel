@@ -243,6 +243,7 @@ public class ReadActivity extends BaseReadActivity {
     private int mScreenTime;
     public static final String TURN_NEXT = "turn_next";//翻页
     public static final String UPDATE_BG = "update_bg";//界面每句加阴影
+    public static final String CLOSE_SERVICE = "close_service";//关闭服务
     private BroadcastReceiver mNovelReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -254,8 +255,20 @@ public class ReadActivity extends BaseReadActivity {
                     }
                     break;
                 case TURN_NEXT:
+                    if (readSpeakDialogFragment != null && readSpeakDialogFragment.getShowsDialog()) {
+                        readSpeakDialogFragment.dimissDialog();
+                    }
+                    if (isShow) {
+                        hideReadSetting();
+                    }
                     if (bookpage != null) {
                         bookpage.next_page(true);
+                    }
+                    break;
+                case CLOSE_SERVICE:
+                    if (bookpage != null) {
+                        bookpage.setmIsOpenService(false);
+                        pageFactory.close_AD = false;
                     }
                     break;
             }
@@ -331,6 +344,7 @@ public class ReadActivity extends BaseReadActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPDATE_BG);
         intentFilter.addAction(TURN_NEXT);
+        intentFilter.addAction(CLOSE_SERVICE);
         registerReceiver(mNovelReceiver, intentFilter);
 
         readSpeakManager = ReadSpeakManager.getInstance()
@@ -740,17 +754,21 @@ public class ReadActivity extends BaseReadActivity {
             }
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {//音量向上
             try {
-                if (mNovelVoice) {
-                    bookpage.next_page(false);
-                    return true;
+                if (!bookpage.ismIsOpenService()) {
+                    if (mNovelVoice) {
+                        bookpage.next_page(false);
+                        return true;
+                    }
                 }
             } catch (Exception e) {
             }
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {//音量向下
             try {
-                if (mNovelVoice) {
-                    bookpage.next_page(true);
-                    return true;
+                if (!bookpage.ismIsOpenService()) {
+                    if (mNovelVoice) {
+                        bookpage.next_page(true);
+                        return true;
+                    }
                 }
             } catch (Exception e) {
             }
@@ -939,9 +957,13 @@ public class ReadActivity extends BaseReadActivity {
                 startActivity(intentComment);
                 break;
             case R.id.tv_setting:
-                hideReadSetting();
-                mSettingDialog.setProgressBar(auto_read_progress_bar);
-                mSettingDialog.show();
+                if (!bookpage.ismIsOpenService()) {
+                    hideReadSetting();
+                    mSettingDialog.setProgressBar(auto_read_progress_bar);
+                    mSettingDialog.show();
+                } else {
+                    MyToash.Toash(this, getString(R.string.string_read_service_prohibit));
+                }
                 break;
             case R.id.bookpop_bottom:
                 break;
@@ -1389,6 +1411,8 @@ public class ReadActivity extends BaseReadActivity {
                 initReadSpeakDialogFragment();
                 //启动服务
                 if (!ReadNovelService.SERVICE_IS_LIVE) {
+                    bookpage.setmIsOpenService(true);
+                    pageFactory.close_AD = true;
                     // Android 8.0使用startForegroundService在前台启动新服务
                     chapter.setBegin(pageFactory.getCurrentPage().getBegin());
                     Intent intent = new Intent(this, ReadNovelService.class);

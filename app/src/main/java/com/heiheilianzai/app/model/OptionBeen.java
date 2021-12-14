@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class OptionBeen  extends  BaseAd {
@@ -9,6 +10,7 @@ public class OptionBeen  extends  BaseAd {
     public String cover;//水平封面
     public String author;//"": "黎明C", //作者
     public String description;//"": "美貌千金与帅气王爷", //描述
+    @SerializedName("is_finished")
     public int is_finish;//"": 1, //是否完结 1已完结 0连载中
     public String flag;//"": "更新至32话", //角标
     public List<BaseTag> tag;
