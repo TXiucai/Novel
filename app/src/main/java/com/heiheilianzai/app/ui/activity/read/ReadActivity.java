@@ -250,7 +250,7 @@ public class ReadActivity extends BaseReadActivity {
                 case UPDATE_BG:
                     mReadLine = (int) intent.getExtras().get("line");
                     if (pageFactory != null) {
-                        pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
+//                        pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
                     }
                     break;
                 case TURN_NEXT:
@@ -350,11 +350,6 @@ public class ReadActivity extends BaseReadActivity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ImageUtil.dp2px(activity, READBUTTOM_HEIGHT));
             insert_todayone2.addView(list_ad_view_img, params);
         }
-        if (TextUtils.equals(ReaderConfig.TTS_OPEN, "2")) {
-            activity_read_speaker.setVisibility(View.VISIBLE);
-        } else {
-            activity_read_speaker.setVisibility(View.GONE);
-        }
         setOpenCurrentTime();
         uiFreeCharge();
         initReadSetting();
@@ -429,6 +424,12 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void next() {
+        if (TextUtils.equals(ReaderConfig.TTS_OPEN, "2")) {
+            activity_read_speaker.setVisibility(View.VISIBLE);
+        } else {
+            activity_read_speaker.setVisibility(View.GONE);
+        }
+
         config = ReadingConfig.getInstance();
         //  阅读管理器
         //获取intent中的携带的信息
@@ -1161,6 +1162,11 @@ public class ReadActivity extends BaseReadActivity {
                  * 只有以上4个数字
                  */
 
+            }
+
+            @Override
+            public void cancelRead() {
+                readSpeakManager.stopReadBook();
             }
         });
 

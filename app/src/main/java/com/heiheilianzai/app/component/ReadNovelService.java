@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -127,23 +126,6 @@ public class ReadNovelService extends Service {
             mPageContent = (String) intent.getExtras().get(EXTRA_PAGE);
             mChapterManager = new ChapterManager();
             mChapterManager.getChapterList(mBaseBook.getBook_id());
-            getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
-                @Override
-                public void onSuccessChapterContent(List<TRPage> pages) {
-                    if (pages != null && pages.size() > 0) {
-                        updaeListenRecord();
-                        mTrPages = pages;
-                        mCurrentPage = mTrPages.get(mReadPage);
-                        setNotification();
-                        readBook();
-                    }
-                }
-
-                @Override
-                public void onFailChapterContent() {
-                    MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
-                }
-            });
             mReadSpeakManager.setReadSpeakStateCallback(new ReadSpeakManager.ReadSpeakStateCallback() {
                 @Override
                 public void readSpeakState(int state) {
@@ -155,12 +137,33 @@ public class ReadNovelService extends Service {
                         case 3://播放中
                             break;
                         case 4://读完了
-                            mReadLine++;
+                            mReadSpeakManager.stopReadBook();
+                            mReadPage++;
                             readBook();
                             break;
                     }
                 }
             });
+
+            getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
+                @Override
+                public void onSuccessChapterContent(List<TRPage> pages) {
+                    if (pages != null && pages.size() > 0) {
+                        updaeListenRecord();
+                        mTrPages = pages;
+                        mCurrentPage = mTrPages.get(mReadPage);
+                        mIsPlay = true;
+                        readBook();
+                        setNotification();
+                    }
+                }
+
+                @Override
+                public void onFailChapterContent() {
+                    MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+                }
+            });
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -183,15 +186,9 @@ public class ReadNovelService extends Service {
     private void readBook() {
         if (mTrPages.size() > mReadPage) {
             mCurrentPage = mTrPages.get(mReadPage);
-            if (mCurrentPage.getLines() != null && mCurrentPage.getLines().size() > mReadLine) {
-                mHandler.sendEmptyMessage(2);
-                mReadSpeakManager.playReadBook(mCurrentPage.getLines().get(mReadLine));
-            } else {
-                mReadPage++;
-                mReadLine = 0;
-                mHandler.sendEmptyMessage(1);
-                readBook();
-            }
+            mHandler.sendEmptyMessage(1);
+            mReadSpeakManager.playReadBook(mCurrentPage.getLineToString());
+
         } else {
             getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
                 @Override
@@ -206,6 +203,7 @@ public class ReadNovelService extends Service {
 
                 @Override
                 public void onFailChapterContent() {
+                    mReadSpeakManager.stopReadBook();
                     MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
                 }
             });
@@ -340,7 +338,7 @@ public class ReadNovelService extends Service {
     }
 
     private void upDateNotifacation() {
-        mRemoteView.setTextViewText(R.id.notification_chapter, mChapterItem.getBook_name());
+        mRemoteView.setTextViewText(R.id.notification_chapter, mChapterItem.getChapter_title());
         mRemoteView.setTextViewText(R.id.notification_tittle, mTittle);
         Glide.with(this).asBitmap().load(mImgUrl).into(new SimpleTarget<Bitmap>() {
             @Override
@@ -348,7 +346,7 @@ public class ReadNovelService extends Service {
                 mRemoteView.setImageViewBitmap(R.id.notification_logo, resource);
             }
         });
-        if (mIsPlay) {
+        if (!mIsPlay) {
             mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_stop);
         } else {
             mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_play);

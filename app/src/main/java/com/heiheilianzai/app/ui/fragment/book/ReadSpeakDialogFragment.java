@@ -68,7 +68,8 @@ public class ReadSpeakDialogFragment extends DialogFragment {
 
         // 定时
         void readTimer(int mins);
-
+        //取消读书
+        void cancelRead();
     }
 
     public void setDialogCallback(DialogCallback diglogCallback) {
@@ -140,7 +141,10 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         /**
          * "取消"条目的点击事件
          * */
-        mCancel.setOnClickListener(view -> dimissDialog());
+        mCancel.setOnClickListener(view -> {
+            diglogCallback.cancelRead();
+            dimissDialog();
+        });
         ReadSpeakDialogFragment.this.getDialog().setCanceledOnTouchOutside(true);
 
         sbSpeed.getConfigBuilder()

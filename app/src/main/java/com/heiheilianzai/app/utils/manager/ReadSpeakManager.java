@@ -7,8 +7,6 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 
 import androidx.annotation.RequiresApi;
@@ -24,6 +22,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import kr.co.voiceware.java.vtapi.Constants;
@@ -66,16 +67,10 @@ public class ReadSpeakManager {
     // 0 台湾，1 普通话
     private int readYinSe = 0;
 
-    public static final int BTN_PLAY = 3;
-    public static final int BTN_STOP = 1;
-    public static final int BTN_PAUSE = 2;
-    public static final int TXT_HIGHLIGHT = 4;
-    private boolean isPause = false;
-    private String pauseText = null;
     private int retryDownload = 3;
 
-    private Thread playVoiceThread = null;
     private ReadSpeakStateCallback readSpeakStateCallback;
+    ExecutorService readThreadPool;
 
     @SuppressLint("StaticFieldLeak")
     private static ReadSpeakManager instance;
@@ -105,19 +100,6 @@ public class ReadSpeakManager {
     public void setReadSpeakStateCallback(ReadSpeakStateCallback readSpeakStateCallback) {
         this.readSpeakStateCallback = readSpeakStateCallback;
     }
-
-    private final Handler uiHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == BTN_PLAY) {
-                setPlay();
-            } else if (msg.what == BTN_STOP) {
-                setStop();
-            }
-        }
-    };
 
     public ReadSpeakManager initReadSetting() {
         initAudioRead();
@@ -160,34 +142,15 @@ public class ReadSpeakManager {
                             SyncWordInfo tmpinfo = mWordInfo.get(idxInfo);
                             addFrame += tmpinfo.getLength();
                             idxInfo++;
-                            Message msgHighlight = uiHandler.obtainMessage();
-                            msgHighlight.what = TXT_HIGHLIGHT;
-                            //仅仅高亮当前所读词组
-//                            msgHighlight.arg1 = tmpinfo.getStartPosInText();
-                            msgHighlight.arg1 = 0;
-                            msgHighlight.arg2 = tmpinfo.getEndPosInText();
-                            uiHandler.sendMessage(msgHighlight);
                         } else if (track.getPlaybackHeadPosition() > 0 && (addFrame / 2) > track.getPlaybackHeadPosition()) {
                             SyncWordInfo tmpinfo = mWordInfo.get(idxInfo - 1);
-                            Message msgHighlight = uiHandler.obtainMessage();
-                            msgHighlight.what = TXT_HIGHLIGHT;
-                            //仅仅高亮当前所读词组
-//                            msgHighlight.arg1 = tmpinfo.getStartPosInText();
-                            msgHighlight.arg1 = 0;
-                            msgHighlight.arg2 = tmpinfo.getEndPosInText();
-                            uiHandler.sendMessage(msgHighlight);
+
                         } else if ((addFrame / 2) <= track.getPlaybackHeadPosition()) {
                             if (idxInfo < mWordInfo.size()) {
                                 SyncWordInfo tmpinfo = mWordInfo.get(idxInfo);
                                 if (tmpinfo.getStartPosInText() != 0) {
                                     addFrame += tmpinfo.getLength();
-                                    Message msgHighlight = uiHandler.obtainMessage();
-                                    msgHighlight.what = TXT_HIGHLIGHT;
-                                    //仅仅高亮当前所读词组
-//                                    msgHighlight.arg1 = tmpinfo.getStartPosInText();
-                                    msgHighlight.arg1 = 0;
-                                    msgHighlight.arg2 = tmpinfo.getEndPosInText();
-                                    uiHandler.sendMessage(msgHighlight);
+
                                     idxInfo++;
                                 }
                             }
@@ -424,20 +387,14 @@ public class ReadSpeakManager {
         // 设置音色 和语音属性
         selectedEngine = getYingSe();
         mOptions = getOptions();
-        String speak = selectedEngine.getSpeaker();
-        String type = selectedEngine.getType();
-        int samp = selectedEngine.getSampling();
 
-        int speed = mOptions.getSpeed();
-        int pitch = mOptions.getPitch();
-
-        playVoiceThread = new Thread(new Runnable() {
+        if (readThreadPool == null) {
+            readThreadPool = Executors.newSingleThreadExecutor();
+        }
+        readThreadPool.execute(new Runnable() {
             @Override
             public void run() {
 
-                Message msg = uiHandler.obtainMessage();
-                msg.what = BTN_PLAY;
-                uiHandler.sendMessage(msg);
                 readSpeakStateCallback.readSpeakState(3);
 
                 mAudioTrack.setPositionNotificationPeriod(1600);
@@ -446,149 +403,68 @@ public class ReadSpeakManager {
                 addFrame = 0;
                 idxInfo = 0;
 
-                if (!isPause) {
-                    pauseText = bookContent;
-                    isPause = false;
-
-                    try {
-                        voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
-                            @Override
-                            public void onReadBuffer(byte[] output, int outputSize) {
-                                if (outputSize > 0) {
-                                    final ByteBuffer audioData = ByteBuffer.wrap(output);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
-                                    } else {
-                                        mAudioTrack.write(output, 0, outputSize);
-                                    }
+                try {
+                    voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                        @Override
+                        public void onReadBuffer(byte[] output, int outputSize) {
+                            if (outputSize > 0) {
+                                final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                } else {
+                                    mAudioTrack.write(output, 0, outputSize);
                                 }
                             }
+                        }
 
-                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                            @Override
-                            public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
+                            if (output != null) {
+                                totalFrame += outputSize;
+                                mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
+                                //首次加载计算内容长度 不可变
+                                mWordInfo.addAll(wordInfo);
+                                fWordInfo.addAll(wordInfo);
 
-                                if (output != null) {
-                                    totalFrame += outputSize;
-                                    mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
-                                    //首次加载计算内容长度 不可变
-                                    mWordInfo.addAll(wordInfo);
-                                    fWordInfo.addAll(wordInfo);
-
-                                    final ByteBuffer audioData = ByteBuffer.wrap(output);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
-                                    } else {
-                                        mAudioTrack.write(output, 0, outputSize);
-                                    }
+                                final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                } else {
+                                    mAudioTrack.write(output, 0, outputSize);
                                 }
                             }
+                        }
 
-                            @Override
-                            public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
+                        @Override
+                        public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onError(String reason) {
-                            }
-                        });
+                        @Override
+                        public void onError(String reason) {
+                        }
+                    });
+                    readSpeakStateCallback.readSpeakState(4);
 
-                        Message msg1 = uiHandler.obtainMessage();
-                        msg1.what = BTN_STOP;
-                        uiHandler.sendMessage(msg1);
-                        readSpeakStateCallback.readSpeakState(4);
+                } catch (Exception e) {
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Message msg1 = uiHandler.obtainMessage();
-                        msg1.what = BTN_STOP;
-                        uiHandler.sendMessage(msg1);
-                        readSpeakStateCallback.readSpeakState(1);
-                    }
-                } else {
-                    isPause = false;
-
-                    try {
-                        voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, pauseText, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
-                            @Override
-                            public void onReadBuffer(byte[] output, int outputSize) {
-                                if (outputSize > 0) {
-                                    final ByteBuffer audioData = ByteBuffer.wrap(output);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
-                                    } else {
-                                        mAudioTrack.write(output, 0, outputSize);
-                                    }
-                                }
-                            }
-
-                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                            @Override
-                            public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
-
-                                if (output != null) {
-                                    totalFrame += outputSize;
-                                    mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
-                                    //首次加载计算内容长度 不可变
-                                    mWordInfo.addAll(wordInfo);
-                                    fWordInfo.addAll(wordInfo);
-
-                                    final ByteBuffer audioData = ByteBuffer.wrap(output);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
-                                    } else {
-                                        mAudioTrack.write(output, 0, outputSize);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
-
-                            }
-
-                            @Override
-                            public void onError(String reason) {
-
-                            }
-                        });
-
-                        Message msg1 = uiHandler.obtainMessage();
-                        msg1.what = BTN_STOP;
-                        uiHandler.sendMessage(msg1);
-                        readSpeakStateCallback.readSpeakState(4);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Message msg1 = uiHandler.obtainMessage();
-                        msg1.what = BTN_STOP;
-                        uiHandler.sendMessage(msg1);
-                        readSpeakStateCallback.readSpeakState(1);
-                    }
                 }
 
             }
 
         });
 
-        playVoiceThread.start();
     }
 
     /**
      * stop  停止播放
      */
     public void stopReadBook() {
-
         if (null != voicetext) {
             voicetext.vtapiStopBuffer(vtapiHandle);
         }
 
-        if (null != playVoiceThread) {
-            playVoiceThread.interrupt();
-            playVoiceThread = null;
-        }
-
         if (mAudioTrack != null) {
             if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                 mAudioTrack.stop();
@@ -601,49 +477,17 @@ public class ReadSpeakManager {
         idxInfo = 0;
         totalFrame = 0;
 
-        readSpeakStateCallback.readSpeakState(1);
-    }
-
-    /**
-     * 暂停读书
-     * 业务再把这一行文字重新读
-     */
-    public void pauseReadBook() {
-        isPause = true;
-        stopReadBook();
-    }
-
-    private void pausePlay() {
-        //播放线程启动了才允许暂停
-        if (playVoiceThread != null) {
-            isPause = true;
-            mAudioTrack.pause();
-        }
-    }
-
-    /**
-     * 播放时 主线程事件 处理
-     */
-    private void setPlay() {
-
-    }
-
-    /**
-     * 停止时 主线程事件 处理
-     * 同时回调
-     */
-    private void setStop() {
-        if (mAudioTrack != null) {
-            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                mAudioTrack.stop();
+        if (null != readThreadPool) {
+            readThreadPool.shutdown();
+            readThreadPool.shutdownNow();
+            try {
+                readThreadPool.awaitTermination(50, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            mAudioTrack.flush();
+            readThreadPool = null;
         }
 
-        mWordInfo.clear();
-        addFrame = 0;
-        idxInfo = 0;
-        totalFrame = 0;
     }
 
     /**
