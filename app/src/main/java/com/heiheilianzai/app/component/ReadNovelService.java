@@ -96,12 +96,11 @@ public class ReadNovelService extends Service {
     private List<TRPage> mTrPages;
     private ReadReceiver mNotificationReceiver;
     private NotificationManager mNotificationManager;
-    private OnServiceListener onServiceListener;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new MyBinder();
+        return null;
     }
 
     @Override
@@ -113,8 +112,6 @@ public class ReadNovelService extends Service {
         intentFilter.addAction(STATUS_PLAY_PAUSE_ACTION);
         intentFilter.addAction(STATUS_CLOSE_SERVICE_ACTION);
         registerReceiver(mNotificationReceiver, intentFilter);
-        //定时器逻辑
-
     }
 
     @Override
@@ -357,27 +354,4 @@ public class ReadNovelService extends Service {
             mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_play);
         }
     }
-
-    public class MyBinder extends Binder implements IBinder {
-        public void setTimer(int mins) {
-            ReadNovelService.this.delayMins = mins;
-        }
-
-        public ReadNovelService getService() {
-            return ReadNovelService.this;
-        }
-    }
-
-    public void setOnServiceListener(OnServiceListener onServiceListener) {
-        this.onServiceListener = onServiceListener;
-    }
-
-    public OnServiceListener getOnServiceListener() {
-        return onServiceListener;
-    }
-
-    public static interface OnServiceListener {
-        void setDelayTimer(int mins);
-    }
-
 }

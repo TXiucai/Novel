@@ -14,14 +14,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -127,7 +125,7 @@ import butterknife.OnClick;
  * 小说阅读 Activity
  * Created by Administrator on 2016/7/15 0015.
  */
-public class ReadActivity extends BaseReadActivity implements ServiceConnection {
+public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
     private final static String EXTRA_PAGE = "page";
@@ -222,7 +220,6 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
     private boolean mNovelVoice;
     private boolean mNovelScreen;
     private boolean mNovelOpen;
-    private ReadNovelService.MyBinder binder;
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
@@ -334,8 +331,7 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
         registerReceiver(mNovelReceiver, intentFilter);
 
         readSpeakManager = ReadSpeakManager.getInstance()
-                .initReadSetting()
-                .load();
+                .initReadSetting();
     }
 
     @Override
@@ -986,6 +982,7 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
     }
 
     public void openPermission() {
+        readSpeakManager.load();
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             Intent localIntent = new Intent();
             localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1401,16 +1398,4 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
         }
     }
 
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        binder = (ReadNovelService.MyBinder) iBinder;
-        binder.getService().setOnServiceListener(mins -> {
-
-        });
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-
-    }
 }
