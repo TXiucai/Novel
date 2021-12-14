@@ -313,8 +313,11 @@ public class ReadActivity extends BaseReadActivity {
             if (ReaderConfig.BOTTOM_READ_AD != null) {
                 MHeight -= ImageUtil.dp2px(this, READBUTTOM_HEIGHT);
             }
-            layoutParams.height = ImageUtil.dp2px(this, MHeight);
+            layoutParams.height = MHeight;
+            layoutParams.width = ScreenSizeUtils.getInstance(this).getScreenWidth();
+            layoutParams.setMargins(0, ImageUtil.dp2px(this, READBUTTOM_HEIGHT), 0, ImageUtil.dp2px(this, READBUTTOM_HEIGHT));
             activity_read_firstread.setLayoutParams(layoutParams);
+            activity_read_firstread.setImageResource(R.mipmap.icon_firstread);
             activity_read_firstread.setVisibility(View.VISIBLE);
             activity_read_firstread.setOnClickListener(new View.OnClickListener() {
                 @Override
