@@ -212,7 +212,7 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         rb_dingshi_04.setOnClickListener(view -> diglogCallback.readTimer(60));
         rb_dingshi_03.setOnClickListener(view -> diglogCallback.readTimer(30));
         rb_dingshi_02.setOnClickListener(view -> diglogCallback.readTimer(15));
-        rb_dingshi_01.setOnClickListener(view -> diglogCallback.readTimer(0));
+        rb_dingshi_01.setOnClickListener(view -> diglogCallback.readTimer(-1));
 
     }
 

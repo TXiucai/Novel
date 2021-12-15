@@ -14,7 +14,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.os.Binder;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -62,7 +64,7 @@ public class ReadNovelService extends Service {
     private Notification mNotification;
     private int mNotifyID = 100;
     public static boolean SERVICE_IS_LIVE;
-    public int delayMins = 0;
+    public int delayMins = -1;
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -104,7 +106,7 @@ public class ReadNovelService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new ReadBinder();
     }
 
     @Override
@@ -294,8 +296,7 @@ public class ReadNovelService extends Service {
                 case STATUS_CLOSE_SERVICE_ACTION:
                     mReadSpeakManager.stopReadBook();
                     mHandler.sendEmptyMessage(3);
-                    Intent intentService = new Intent(context, ReadNovelService.class);
-                    stopService(intentService);
+                    closeService(context);
                     break;
             }
 
@@ -358,4 +359,55 @@ public class ReadNovelService extends Service {
             mRemoteView.setImageViewResource(R.id.notification_play, R.mipmap.ic_play);
         }
     }
+
+    public void closeService(Context context) {
+        Intent intentService = new Intent(context, ReadNovelService.class);
+        stopService(intentService);
+    }
+
+    public class ReadBinder extends Binder implements IBinder {
+        TimerCount timerCount;
+        final long unitML = 60 * 1000L;
+
+        public void setDelayTimer(int mins) {
+            ReadNovelService.this.delayMins = mins;
+            if (timerCount != null) {
+                timerCount.cancel();
+                timerCount = null;
+            }
+            if (mins > 0) {
+                long millisInFuture = mins * unitML;
+                timerCount = new TimerCount(millisInFuture, 1000);
+                timerCount.start();
+            }
+        }
+
+        public void cancelRead() {
+            closeService(ReadNovelService.this);
+        }
+
+        public ReadNovelService getService() {
+            return ReadNovelService.this;
+        }
+
+    }
+
+    class TimerCount extends CountDownTimer {
+
+        public TimerCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long l) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            // 停止服务
+            closeService(ReadNovelService.this);
+        }
+    }
+
 }

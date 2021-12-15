@@ -14,12 +14,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -125,7 +127,7 @@ import butterknife.OnClick;
  * 小说阅读 Activity
  * Created by Administrator on 2016/7/15 0015.
  */
-public class ReadActivity extends BaseReadActivity {
+public class ReadActivity extends BaseReadActivity implements ServiceConnection {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
     private final static String EXTRA_PAGE = "page";
@@ -220,6 +222,9 @@ public class ReadActivity extends BaseReadActivity {
     private boolean mNovelVoice;
     private boolean mNovelScreen;
     private boolean mNovelOpen;
+
+    private ReadNovelService.ReadBinder readBinder;
+
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
@@ -1177,18 +1182,17 @@ public class ReadActivity extends BaseReadActivity {
 
             @Override
             public void readTimer(int mins) {//定时
-                //TODO 读书定时 mins 返回的是分钟数
-                /**
-                 * 0 不定时
-                 * 15 30 60 均是分钟数
-                 * 只有以上4个数字
-                 */
-
+                if (readBinder != null) {
+                    readBinder.setDelayTimer(mins);
+                }
             }
 
             @Override
             public void cancelRead() {
                 readSpeakManager.stopReadBook();
+                if (readBinder != null) {
+                    readBinder.cancelRead();
+                }
             }
         });
 
@@ -1423,11 +1427,29 @@ public class ReadActivity extends BaseReadActivity {
                         startForegroundService(intent);
                     } else {
                         startService(intent);
+                        bindService(intent, this, Context.BIND_AUTO_CREATE);
                     }
                 }
             } else {
                 new DialogVip().getDialogVipPop(activity, false);
             }
+        }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        readBinder = (ReadNovelService.ReadBinder) iBinder;
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        unbinderService();
+    }
+
+    private void unbinderService() {
+        if (readBinder != null) {
+            unbindService(this);
+            readBinder = null;
         }
     }
 
