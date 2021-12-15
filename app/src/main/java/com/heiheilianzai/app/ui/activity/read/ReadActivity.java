@@ -54,7 +54,9 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.ReadNovelService;
 import com.heiheilianzai.app.component.ScreenOnAndOffReceiver;
+import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
@@ -122,6 +124,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Request;
 
 /**
  * 小说阅读 Activity
@@ -256,16 +259,18 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
                 case UPDATE_BG:
                     mReadLine = (int) intent.getExtras().get("line");
                     if (pageFactory != null) {
-//                        pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
+                        //每行高亮
+                        //pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
                     }
                     break;
                 case TURN_NEXT:
-                    if (readSpeakDialogFragment != null && readSpeakDialogFragment.getShowsDialog()) {
+                    //翻页暂时不消失浮窗
+                    /*if (readSpeakDialogFragment != null && readSpeakDialogFragment.getShowsDialog()) {
                         readSpeakDialogFragment.dimissDialog();
                     }
                     if (isShow) {
                         hideReadSetting();
-                    }
+                    }*/
                     if (bookpage != null) {
                         bookpage.next_page(true);
                     }
@@ -1007,6 +1012,7 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
                 jumpBoyin();
                 break;
             case R.id.activity_read_speaker:
+                updaeListenRecord();
                 openPermission();
                 break;
         }
@@ -1405,6 +1411,21 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
      */
     private void setOpenCurrentTime() {
         mOpenCurrentTime = DateUtils.currentTime();
+    }
+
+    private void updaeListenRecord() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("book_id", baseBook.getBook_id());
+        String json = params.generateParamsJson();
+        OkHttpEngine.getInstance(getApplication()).postAsyncHttp(ReaderConfig.getBaseUrl() + ReaderConfig.LISTENBOOKRECODE, json, new ResultCallback() {
+            @Override
+            public void onError(Request request, Exception e) {
+            }
+
+            @Override
+            public void onResponse(String response) {
+            }
+        });
     }
 
     private void startReadNovelService() {

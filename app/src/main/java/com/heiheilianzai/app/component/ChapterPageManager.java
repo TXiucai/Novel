@@ -163,9 +163,9 @@ public class ChapterPageManager {
         mChapterPages.clear();
         TRPage pageForBegin = getPageForBegin(begin);
         mChapterPages.add(pageForBegin);
-        while (mBookUtil.next(true) != 1) {
+        while (mBookUtil.next(true) != -1) {
             TRPage nextPage = getNextPage();
-            if (nextPage.getEnd() < mBookUtil.getBookLen()) {
+            if (nextPage.getEnd() <= mBookUtil.getBookLen()) {
                 mChapterPages.add(nextPage);
             } else {
                 currentPage.setBegin(0);

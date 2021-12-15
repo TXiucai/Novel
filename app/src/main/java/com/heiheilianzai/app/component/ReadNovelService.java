@@ -144,6 +144,7 @@ public class ReadNovelService extends Service {
                         case 3://播放中
                             break;
                         case 4://读完了
+                            mHandler.sendEmptyMessage(1);
                             mReadSpeakManager.stopReadBook();
                             mReadPage++;
                             readBook();
@@ -156,7 +157,6 @@ public class ReadNovelService extends Service {
                 @Override
                 public void onSuccessChapterContent(List<TRPage> pages) {
                     if (pages != null && pages.size() > 0) {
-                        updaeListenRecord();
                         mTrPages = pages;
                         mCurrentPage = mTrPages.get(mReadPage);
                         mIsPlay = true;
@@ -175,25 +175,9 @@ public class ReadNovelService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void updaeListenRecord() {
-        ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("book_id", mChapterItem.getBook_id());
-        String json = params.generateParamsJson();
-        OkHttpEngine.getInstance(getApplication()).postAsyncHttp(ReaderConfig.getBaseUrl() + ReaderConfig.LISTENBOOKRECODE, json, new ResultCallback() {
-            @Override
-            public void onError(Request request, Exception e) {
-            }
-
-            @Override
-            public void onResponse(String response) {
-            }
-        });
-    }
-
     private void readBook() {
         if (mTrPages.size() > mReadPage) {
             mCurrentPage = mTrPages.get(mReadPage);
-            mHandler.sendEmptyMessage(1);
             mReadSpeakManager.playReadBook(mCurrentPage.getLineToString());
 
         } else {
@@ -204,6 +188,7 @@ public class ReadNovelService extends Service {
                     mTrPages.addAll(content);
                     mReadPage = 0;
                     mReadLine = 0;
+                    mBegin = 0;
                     setNotification();
                     readBook();
                 }
