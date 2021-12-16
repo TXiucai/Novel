@@ -178,17 +178,15 @@ public class ReadNovelService extends Service {
     private void readBook() {
         if (mTrPages.size() > mReadPage) {
             mCurrentPage = mTrPages.get(mReadPage);
+            mChapterItem.setBegin(mCurrentPage.getBegin());
             mReadSpeakManager.playReadBook(mCurrentPage.getLineToString());
 
         } else {
+            reset();
             getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
                 @Override
                 public void onSuccessChapterContent(List<TRPage> content) {
-                    mTrPages.clear();
                     mTrPages.addAll(content);
-                    mReadPage = 0;
-                    mReadLine = 0;
-                    mBegin = 0;
                     setNotification();
                     readBook();
                 }
@@ -200,6 +198,13 @@ public class ReadNovelService extends Service {
                 }
             });
         }
+    }
+
+    private void reset() {
+        mTrPages.clear();
+        mReadPage = 0;
+        mReadLine = 0;
+        mBegin = 0;
     }
 
     private void getChapterContent(String book_id, String chapter_id, GetChapterContent getChapterContent) {

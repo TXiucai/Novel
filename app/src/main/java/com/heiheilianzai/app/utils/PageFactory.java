@@ -330,7 +330,7 @@ public class PageFactory {
                     String strLine = m_lines.get(i);
                     y += m_fontSize + lineSpace;
                     if (i == mReadLine) {
-                        c.drawRect(measureMarginWidth, mPaint.getFontMetricsInt().top+y, mWidth-measureMarginWidth, mPaint.getFontMetrics().bottom+y, mPaintLine);
+                        c.drawRect(measureMarginWidth, mPaint.getFontMetricsInt().top + y, mWidth - measureMarginWidth, mPaint.getFontMetrics().bottom + y, mPaintLine);
                     }
                     c.drawText(changeJIanfan(strLine), measureMarginWidth, y, mPaint);
                 }

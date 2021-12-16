@@ -265,12 +265,12 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
                     break;
                 case TURN_NEXT:
                     //翻页暂时不消失浮窗
-                    /*if (readSpeakDialogFragment != null && readSpeakDialogFragment.getShowsDialog()) {
+                    if (readSpeakDialogFragment != null && readSpeakDialogFragment.getShowsDialog()) {
                         readSpeakDialogFragment.dimissDialog();
                     }
                     if (isShow) {
                         hideReadSetting();
-                    }*/
+                    }
                     if (bookpage != null) {
                         bookpage.next_page(true);
                     }
@@ -1439,9 +1439,10 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
                     bookpage.setmIsOpenService(true);
                     pageFactory.close_AD = true;
                     // Android 8.0使用startForegroundService在前台启动新服务
-                    chapter.setBegin(pageFactory.getCurrentPage().getBegin());
+                    ChapterItem currentChapter = ChapterManager.getInstance(this).getCurrentChapter();
+                    currentChapter.setBegin(pageFactory.getCurrentPage().getBegin());
                     Intent intent = new Intent(this, ReadNovelService.class);
-                    intent.putExtra(EXTRA_CHAPTER, chapter);
+                    intent.putExtra(EXTRA_CHAPTER, currentChapter);
                     intent.putExtra(EXTRA_PAGE, pageFactory.getPageForBegin(chapter.getBegin()).getLineToString());
                     intent.putExtra(EXTRA_BOOK, baseBook);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
