@@ -68,6 +68,7 @@ public class ReadSpeakDialogFragment extends DialogFragment {
 
         // 定时
         void readTimer(int mins);
+
         //取消读书
         void cancelRead();
     }
@@ -91,10 +92,9 @@ public class ReadSpeakDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_dialog_read, container, false);
-
-        mCancel = mView.findViewById(R.id.btn_cancle);
         //初始化Dialog
         initDialogView();
+        mCancel = mView.findViewById(R.id.btn_cancle);
         sbSpeed = mView.findViewById(R.id.sb_read_speed);
         sbYindiao = mView.findViewById(R.id.sb_read_yindiao);
         rb_yingse_01 = mView.findViewById(R.id.rb_yingse_01);
@@ -141,10 +141,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         /**
          * "取消"条目的点击事件
          * */
-        mCancel.setOnClickListener(view -> {
-            diglogCallback.cancelRead();
-            dimissDialog();
-        });
         ReadSpeakDialogFragment.this.getDialog().setCanceledOnTouchOutside(true);
 
         sbSpeed.getConfigBuilder()
@@ -206,7 +202,10 @@ public class ReadSpeakDialogFragment extends DialogFragment {
                 diglogCallback.readDiao(yindiao);
             }
         });
-
+        mCancel.setOnClickListener(view -> {
+            diglogCallback.cancelRead();
+            dimissDialog();
+        });
         rb_yingse_01.setOnClickListener(view -> diglogCallback.readSe(0));
         rb_yingse_02.setOnClickListener(view -> diglogCallback.readSe(1));
         rb_dingshi_04.setOnClickListener(view -> diglogCallback.readTimer(60));

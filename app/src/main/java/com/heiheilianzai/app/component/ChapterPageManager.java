@@ -95,8 +95,6 @@ public class ChapterPageManager {
             df = new DecimalFormat("#0.0");
             marginWidth = resources.getDimension(R.dimen.readingMarginWidth);
             lineSpace = resources.getDimension(R.dimen.reading_line_spacing_medium);
-            mVisibleWidth = mWidth - marginWidth * 2;
-            mVisibleHeight = mHeight - marginHeight * 2;
             if (ReaderConfig.BANG_SCREEN) {
                 tendp = ImageUtil.dp2px(mActivity, 15);
                 statusMarginBottom = resources.getDimension(R.dimen.reading_status_margin_bottom_hasNotchScreen);
@@ -107,6 +105,8 @@ public class ChapterPageManager {
                 marginHeight = resources.getDimension(R.dimen.readingMarginHeightNotchScreen);
                 BookNameTop = ImageUtil.dp2px(mActivity, 15);
             }
+            mVisibleWidth = mWidth - marginWidth * 2;
+            mVisibleHeight = mHeight - marginHeight * 2;
             m_fontSize = config.getFontSize();
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
             mPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
@@ -118,9 +118,9 @@ public class ChapterPageManager {
         }
     }
 
-    private void calculateLineCount() {
+    private void calculateLineCount(long begin) {
         try {
-            if (currentPage == null || currentPage.getBegin() == 0) {
+            if (begin == 0) {
                 calculateLineCount1();
             } else {
                 calculateLineCount2();
@@ -159,7 +159,7 @@ public class ChapterPageManager {
     }
 
     public List<TRPage> getPages(long begin) {
-        calculateLineCount();
+        calculateLineCount(begin);
         mChapterPages.clear();
         TRPage pageForBegin = getPageForBegin(begin);
         mChapterPages.add(pageForBegin);

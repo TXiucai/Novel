@@ -72,6 +72,7 @@ import com.heiheilianzai.app.model.event.CloseAnimationEvent;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.SetTimerEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.CatalogInnerActivity;
 import com.heiheilianzai.app.ui.activity.CommentListActivity;
@@ -130,7 +131,7 @@ import okhttp3.Request;
  * 小说阅读 Activity
  * Created by Administrator on 2016/7/15 0015.
  */
-public class ReadActivity extends BaseReadActivity implements ServiceConnection {
+public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_BOOK = "book";
     private final static String EXTRA_CHAPTER = "chapter";
     private final static String EXTRA_PAGE = "page";
@@ -225,8 +226,6 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
     private boolean mNovelVoice;
     private boolean mNovelScreen;
     private boolean mNovelOpen;
-
-    private ReadNovelService.ReadBinder readBinder;
 
     // 接收电池信息更新的广播
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -359,6 +358,10 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
 
         readSpeakManager = ReadSpeakManager.getInstance()
                 .initReadSetting();
+        if (ReadNovelService.SERVICE_IS_LIVE) {
+            bookpage.setmIsOpenService(true);
+            pageFactory.close_AD = true;
+        }
     }
 
     @Override
@@ -1188,16 +1191,16 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
 
             @Override
             public void readTimer(int mins) {//定时
-                if (readBinder != null) {
-                    readBinder.setDelayTimer(mins);
-                }
+                EventBus.getDefault().post(new SetTimerEvent(mins));
             }
 
             @Override
             public void cancelRead() {
-                readSpeakManager.stopReadBook();
-                if (readBinder != null) {
-                    readBinder.cancelRead();
+                if (ReadNovelService.SERVICE_IS_LIVE) {
+                    bookpage.setmIsOpenService(false);
+                    pageFactory.close_AD = false;
+                    Intent intentService = new Intent(getApplicationContext(), ReadNovelService.class);
+                    stopService(intentService);
                 }
             }
         });
@@ -1449,29 +1452,11 @@ public class ReadActivity extends BaseReadActivity implements ServiceConnection 
                         startForegroundService(intent);
                     } else {
                         startService(intent);
-                        bindService(intent, this, Context.BIND_AUTO_CREATE);
                     }
                 }
             } else {
                 new DialogVip().getDialogVipPop(activity, false);
             }
-        }
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        readBinder = (ReadNovelService.ReadBinder) iBinder;
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-        unbinderService();
-    }
-
-    private void unbinderService() {
-        if (readBinder != null) {
-            unbindService(this);
-            readBinder = null;
         }
     }
 

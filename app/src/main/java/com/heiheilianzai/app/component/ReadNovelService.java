@@ -30,13 +30,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.component.http.OkHttpEngine;
-import com.heiheilianzai.app.component.http.ReaderParams;
-import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.model.event.SetTimerEvent;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
@@ -44,11 +42,12 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.TRPage;
 import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
 import java.util.List;
-
-import okhttp3.Request;
 
 public class ReadNovelService extends Service {
     private final String STATUS_PLAY_PAUSE_ACTION = "service_play_pause";
@@ -65,6 +64,7 @@ public class ReadNovelService extends Service {
     private int mNotifyID = 100;
     public static boolean SERVICE_IS_LIVE;
     public int delayMins = -1;
+    TimerCount mTtimerCount;
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -106,12 +106,13 @@ public class ReadNovelService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new ReadBinder();
+        return null;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         mReadSpeakManager = ReadSpeakManager.getInstance().initReadSetting();
         mNotificationReceiver = new ReadReceiver();
         IntentFilter intentFilter = new IntentFilter();
@@ -144,10 +145,10 @@ public class ReadNovelService extends Service {
                         case 3://播放中
                             break;
                         case 4://读完了
-                            mHandler.sendEmptyMessage(1);
                             mReadSpeakManager.stopReadBook();
                             mReadPage++;
                             readBook();
+                            mHandler.sendEmptyMessage(1);
                             break;
                     }
                 }
@@ -173,6 +174,22 @@ public class ReadNovelService extends Service {
 
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setTimer(SetTimerEvent timer) {
+        final long unitML = 60 * 1000L;
+        int mins = timer.getTime();
+        ReadNovelService.this.delayMins = mins;
+        if (mTtimerCount != null) {
+            mTtimerCount.cancel();
+            mTtimerCount = null;
+        }
+        if (mins > 0) {
+            long millisInFuture = mins * unitML;
+            mTtimerCount = new TimerCount(millisInFuture, 1000);
+            mTtimerCount.start();
+        }
     }
 
     private void readBook() {
@@ -265,6 +282,10 @@ public class ReadNovelService extends Service {
     @Override
     public void onDestroy() {
         SERVICE_IS_LIVE = false;
+        if (mReadSpeakManager != null) {
+            mReadSpeakManager.stopReadBook();
+        }
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mNotificationReceiver);
         stopForeground(true);
         super.onDestroy();
@@ -316,10 +337,9 @@ public class ReadNovelService extends Service {
             upDateNotifacation();
 //            3、创建通知栏点击时的跳转意图
             Intent intent = new Intent(this, ReadActivity.class);
-            mChapterItem.setBegin(mCurrentPage.getBegin());
             intent.putExtra(EXTRA_BOOK, mBaseBook);
             intent.putExtra(EXTRA_CHAPTER, mChapterItem);
-            PendingIntent pendingActivity = PendingIntent.getActivity(this, 0, intent, 0);
+            PendingIntent pendingActivity = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 //             用Builder构造器创建Notification
 
             mNotification = new NotificationCompat.Builder(this, "heihei")
@@ -355,33 +375,6 @@ public class ReadNovelService extends Service {
         stopService(intentService);
     }
 
-    public class ReadBinder extends Binder implements IBinder {
-        TimerCount timerCount;
-        final long unitML = 60 * 1000L;
-
-        public void setDelayTimer(int mins) {
-            ReadNovelService.this.delayMins = mins;
-            if (timerCount != null) {
-                timerCount.cancel();
-                timerCount = null;
-            }
-            if (mins > 0) {
-                long millisInFuture = mins * unitML;
-                timerCount = new TimerCount(millisInFuture, 1000);
-                timerCount.start();
-            }
-        }
-
-        public void cancelRead() {
-            closeService(ReadNovelService.this);
-        }
-
-        public ReadNovelService getService() {
-            return ReadNovelService.this;
-        }
-
-    }
-
     class TimerCount extends CountDownTimer {
 
         public TimerCount(long millisInFuture, long countDownInterval) {
@@ -396,7 +389,7 @@ public class ReadNovelService extends Service {
         @Override
         public void onFinish() {
             // 停止服务
-            closeService(ReadNovelService.this);
+            closeService(getApplicationContext());
         }
     }
 

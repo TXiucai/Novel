@@ -17,6 +17,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
+import com.heiheilianzai.app.component.ReadNovelService;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
@@ -171,8 +172,11 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
             case R.id.activity_settings_logout:
                 //所有登录用户置为none用户
                 exitUser(this);
+                if (ReadNovelService.SERVICE_IS_LIVE) {
+                    Intent intentService = new Intent(getApplicationContext(), ReadNovelService.class);
+                    stopService(intentService);
+                }
                 EventBus.getDefault().post(new RefreshMine(null));
-                //EventBus.getDefault().post(new RefreshDiscoveryFragment());
                 finish();
                 break;
             case R.id.activity_settings_language:
