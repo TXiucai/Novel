@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.nfc.cardemulation.OffHostApduService;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +29,9 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
@@ -55,7 +57,6 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.comic.ComicChapterItem;
-import com.heiheilianzai.app.model.comic.ComicChapterTopAd;
 import com.heiheilianzai.app.model.comic.ComicInfo;
 import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
@@ -70,12 +71,10 @@ import com.heiheilianzai.app.utils.BrightnessUtil;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.DialogComicLook;
 import com.heiheilianzai.app.utils.DialogCouponNotMore;
-import com.heiheilianzai.app.utils.DialogLogin;
 import com.heiheilianzai.app.utils.DialogNovelCoupon;
 import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
-import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
@@ -109,9 +108,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -248,6 +244,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private boolean mIsShowChapter = false;
     private BaseAd mSdkTopAd;
     private BaseAd mChapterBaseAd;
+
+    /**
+     * 当前是第几页
+     */
+    private int mPageIndex;
 
     @Override
     public int initContentView() {
@@ -1464,6 +1465,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         initChapterAd();
                     } else {
                         if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
+                            mPageIndex++;
                             resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
                             getData(activity, comic_id, comicChapterItem.next_chapter, true);
                         } else {
@@ -1473,14 +1475,20 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     break;
                 case R.id.activity_comic_look_foot_shangyihua:
                     isclickScreen = false;
+                    if (mPageIndex == 0) {
+                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
+                        return;
+                    }
                     if (mIsShowChapterAd) {
                         initChapterAd();
                     } else {
                         if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
+                            mPageIndex--;
                             resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                             getData(activity, comic_id, comicChapterItem.last_chapter, true);
                         } else {
                             if (mChapterBaseAd != null && !mIsShowChapter) {
+                                mPageIndex--;
                                 getData(activity, comic_id, comicChapterItem.chapter_id, true);
                                 mIsShowChapter = true;
                             } else {
@@ -1488,7 +1496,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 mIsShowChapter = false;
                             }
                         }
-
                     }
                     break;
             }
