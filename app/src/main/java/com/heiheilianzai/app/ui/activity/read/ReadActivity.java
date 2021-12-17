@@ -1174,17 +1174,29 @@ public class ReadActivity extends BaseReadActivity {
         readSpeakDialogFragment.setDialogCallback(new ReadSpeakDialogFragment.DialogCallback() {
             @Override
             public void readSpeed(int speed) {//音速
-                readSpeakManager.setReadSpeed(speed);
+                int readSpeed = ShareUitls.getInt(App.getAppContext(), ReadSpeakManager.READ_SPEED, 100);
+                if (speed != readSpeed) {
+                    readSpeakManager.setReadSpeed(speed);
+                    readSpeakManager.stopReadBook(3);
+                }
             }
 
             @Override
             public void readDiao(int diao) {//音调
-                readSpeakManager.setReadPitch(diao);
+                int readPitch = ReadSpeakManager.getInstance().getReadPitch();
+                if (diao != readPitch) {
+                    readSpeakManager.setReadPitch(diao);
+                    readSpeakManager.stopReadBook(3);
+                }
             }
 
             @Override
             public void readSe(int se) {//音色
-                readSpeakManager.setYingSe(se);
+                int readSe = ReadSpeakManager.getInstance().getReadYinSe();
+                if (se != readSe) {
+                    readSpeakManager.setReadYinSe(se);
+                    readSpeakManager.stopReadBook(3);
+                }
             }
 
             @Override
@@ -1198,8 +1210,8 @@ public class ReadActivity extends BaseReadActivity {
                 if (ReadNovelService.SERVICE_IS_LIVE) {
                     bookpage.setmIsOpenService(false);
                     pageFactory.close_AD = false;
-                    Intent intentService = new Intent(getApplicationContext(), ReadNovelService.class);
-                    stopService(intentService);
+//                    Intent intentService = new Intent(getApplicationContext(), ReadNovelService.class);
+//                    stopService(intentService);
                 }
             }
         });

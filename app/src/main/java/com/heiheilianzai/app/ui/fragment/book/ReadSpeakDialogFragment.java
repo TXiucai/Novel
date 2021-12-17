@@ -23,6 +23,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.utils.ListUtils;
+import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
 import com.heiheilianzai.app.view.read.SignSeekBar;
 
 import java.util.Objects;
@@ -142,11 +146,14 @@ public class ReadSpeakDialogFragment extends DialogFragment {
          * "取消"条目的点击事件
          * */
         ReadSpeakDialogFragment.this.getDialog().setCanceledOnTouchOutside(true);
+        int optionsSpeed = ShareUitls.getInt(App.getAppContext(), ReadSpeakManager.READ_SPEED, 100);
+        int speedIndex = ListUtils.Companion.getElementIndex(optionsSpeed);
+        int speedProgress = (speedIndex < 0 || speedIndex > 6) ? 2 : speedIndex;
 
         sbSpeed.getConfigBuilder()
                 .min(0)
                 .max(6)
-                .progress(2)
+                .progress(speedProgress)
                 .sectionCount(6)
                 .thumbColor(getResources().getColor(R.color.white))
                 .sectionTextColor(getResources().getColor(R.color.black))
@@ -173,10 +180,13 @@ public class ReadSpeakDialogFragment extends DialogFragment {
             }
         });
 
+        int optionsPitch = ShareUitls.getInt(App.getAppContext(), ReadSpeakManager.READ_PITCH, 100);
+        int pitchIndex = ListUtils.Companion.getElementIndex(optionsPitch);
+        int pitchProgress = (pitchIndex < 0 || pitchIndex > 6) ? 2 : pitchIndex;
         sbYindiao.getConfigBuilder()
                 .min(0)
                 .max(6)
-                .progress(2)
+                .progress(pitchProgress)
                 .sectionCount(6)
                 .thumbColor(getResources().getColor(R.color.white))
                 .sectionTextColor(getResources().getColor(R.color.black))
@@ -202,10 +212,25 @@ public class ReadSpeakDialogFragment extends DialogFragment {
                 diglogCallback.readDiao(yindiao);
             }
         });
+
         mCancel.setOnClickListener(view -> {
             diglogCallback.cancelRead();
             dimissDialog();
         });
+
+        int yinse = ShareUitls.getInt(App.getAppContext(), ReadSpeakManager.READ_YINSE, 0);
+        if (yinse == 0) {
+            rb_yingse_01.setSelected(true);
+            rb_yingse_01.setChecked(true);
+            rb_yingse_02.setSelected(false);
+            rb_yingse_02.setChecked(false);
+        } else {
+            rb_yingse_01.setSelected(false);
+            rb_yingse_01.setChecked(false);
+            rb_yingse_02.setSelected(true);
+            rb_yingse_02.setSelected(true);
+        }
+
         rb_yingse_01.setOnClickListener(view -> diglogCallback.readSe(0));
         rb_yingse_02.setOnClickListener(view -> diglogCallback.readSe(1));
         rb_dingshi_04.setOnClickListener(view -> diglogCallback.readTimer(60));

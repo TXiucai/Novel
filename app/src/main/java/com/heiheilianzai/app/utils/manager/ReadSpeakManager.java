@@ -24,9 +24,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import kr.co.voiceware.java.vtapi.Constants;
@@ -43,6 +40,9 @@ public class ReadSpeakManager {
     private static final String ROOT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ReadSpeaker/D16/";
     private static final String LICENSE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ReadSpeaker/licensekey/";
     private final static String type = "d16";
+    public static final String READ_PITCH = "options_pitch";
+    public static final String READ_SPEED = "options_speed";
+    public static final String READ_YINSE = "options_yinse";
     //购买的，3个月过期，需要续费更换。有接口动态获取
     private static String LICENSE_KEY;
     private Context context;
@@ -54,20 +54,20 @@ public class ReadSpeakManager {
     private VtLicenseSetting licensemodule = null;
     private List<SyncWordInfo> mWordInfo = new ArrayList<>();
     private List<SyncWordInfo> fWordInfo = new ArrayList<>();
-    private List<SyncWordInfo> mWordInfoPause = new ArrayList<>();
     private int addFrame = 0;
     private int idxInfo = 0;
     private int totalFrame = 0;
+    private String bookText = null;
 
     AudioTrack mAudioTrack;
     private final int mSampleRate = 16000;
     private int DEFAULT_VOLUME = 100;
     //范围 50-400
-    private int readPitch = 100;
+    private int readPitch;
     //范围 50-400
-    private int readSpeed = 100;
-    // 0 台湾，1 普通话
-    private int readYinSe = 0;
+    private int readSpeed;
+    // 1 台湾，0 普通话
+    private int readYinSe;
 
     public static final int BTN_PLAY = 3;
     public static final int BTN_NEXT = 1;
@@ -78,7 +78,7 @@ public class ReadSpeakManager {
     private int retryDownload = 3;
 
     private ReadSpeakStateCallback readSpeakStateCallback;
-    ExecutorService readThreadPool;
+//    ExecutorService readThreadPool;
 
     @SuppressLint("StaticFieldLeak")
     private static ReadSpeakManager instance;
@@ -185,6 +185,10 @@ public class ReadSpeakManager {
             });
 
         }
+
+        readYinSe = ShareUitls.getInt(App.getAppContext(), READ_YINSE, 0);
+        readPitch = ShareUitls.getInt(App.getAppContext(), READ_PITCH, 100);
+        readSpeed = ShareUitls.getInt(App.getAppContext(), READ_SPEED, 100);
     }
 
     /**
@@ -274,7 +278,9 @@ public class ReadSpeakManager {
      *
      * @param position
      */
+    @Deprecated
     public void setYingSe(int position) {
+        ShareUitls.putInt(App.getAppContext(), READ_YINSE, position);
         if (null == voicetext) {
             return;
         }
@@ -296,15 +302,16 @@ public class ReadSpeakManager {
     }
 
     private EngineInfo getYingSe() {
-        if (selectedEngine == null) {
-            String yinse = "hui";
-            for (Map.Entry<String, EngineInfo> e : voicetext.vtapiGetEngineInfo().entrySet()) {
-                if (e.getValue().getSpeaker().equals(yinse) && e.getValue().getType().equals(type)) {
-                    selectedEngine = e.getValue();
-                    break;
-                }
+        int yinseInt = getReadYinSe();
+        String yinse = yinseInt == 0 ? "hui" : "yafang";
+
+        for (Map.Entry<String, EngineInfo> e : voicetext.vtapiGetEngineInfo().entrySet()) {
+            if (e.getValue().getSpeaker().equals(yinse) && e.getValue().getType().equals(type)) {
+                selectedEngine = e.getValue();
+                break;
             }
         }
+
         return selectedEngine;
     }
 
@@ -404,6 +411,7 @@ public class ReadSpeakManager {
         if (null == voicetext) {
             return;
         }
+        bookText = bookContent;
 
         if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
             mAudioTrack.play();
@@ -412,14 +420,11 @@ public class ReadSpeakManager {
         // 设置音色 和语音属性
         selectedEngine = getYingSe();
         mOptions = getOptions();
+        idxInfo = 0;
 
-        if (readThreadPool == null) {
-            readThreadPool = Executors.newSingleThreadExecutor();
-        }
-        readThreadPool.execute(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-
                 Message msg0 = uiHandler.obtainMessage();
                 msg0.what = BTN_PLAY;
                 uiHandler.sendMessage(msg0);
@@ -494,7 +499,7 @@ public class ReadSpeakManager {
 
             }
 
-        });
+        }).start();
 
     }
 
@@ -503,13 +508,12 @@ public class ReadSpeakManager {
      */
     public void stopReadBook(int from) {
         isPause = from;
-
-        if (from != 2) {
-            if (null != voicetext) {
-                voicetext.vtapiStopBuffer(vtapiHandle);
-            }
+        if (from == 1) {
+            readSpeakStateCallback.readSpeakState(1);
         }
-
+        if (null != voicetext) {
+            voicetext.vtapiStopBuffer(vtapiHandle);
+        }
         setPause();
     }
 
@@ -528,17 +532,6 @@ public class ReadSpeakManager {
         addFrame = 0;
         idxInfo = 0;
         totalFrame = 0;
-
-        if (null != readThreadPool) {
-            readThreadPool.shutdown();
-            readThreadPool.shutdownNow();
-            try {
-                readThreadPool.awaitTermination(50, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            readThreadPool = null;
-        }
 
     }
 
@@ -568,6 +561,7 @@ public class ReadSpeakManager {
     }
 
     public void setReadPitch(int readPitch) {
+        ShareUitls.putInt(App.getAppContext(), ReadSpeakManager.READ_PITCH, readPitch);
         this.readPitch = readPitch;
     }
 
@@ -581,6 +575,7 @@ public class ReadSpeakManager {
     }
 
     public void setReadSpeed(int readSpeed) {
+        ShareUitls.putInt(App.getAppContext(), ReadSpeakManager.READ_SPEED, readSpeed);
         this.readSpeed = readSpeed;
     }
 
@@ -596,6 +591,7 @@ public class ReadSpeakManager {
     }
 
     public void setReadYinSe(int readYinSe) {
+        ShareUitls.putInt(App.getAppContext(), READ_YINSE, readYinSe);
         this.readYinSe = readYinSe;
     }
 
@@ -616,13 +612,13 @@ public class ReadSpeakManager {
     }
 
     private void setPlay() {
+        isPause = 0;
         readSpeakStateCallback.readSpeakState(3);
     }
 
     private void setNext() {
         setPause();
         readSpeakStateCallback.readSpeakState(4);
-
     }
 
     /**
@@ -631,13 +627,112 @@ public class ReadSpeakManager {
      * 做一个处理
      */
     private void setStop(int arg1) {
-        if (arg1 != 2) {
-            readSpeakStateCallback.readSpeakState(1);
-            if (null != voicetext) {
-                voicetext.vtapiStopBuffer(vtapiHandle);
-            }
-        }
 
         setPause();
+        if (arg1 == 3) {
+            resetOptions();
+        }
     }
+
+    private void resetOptions() {
+        mOptions = getOptions();
+        selectedEngine = getYingSe();
+        optionsReadBook(bookText);
+    }
+
+    public void optionsReadBook(String bookContent) {
+        if (null == voicetext) {
+            return;
+        }
+
+        if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
+            mAudioTrack.play();
+        }
+
+        // 设置音色 和语音属性
+        selectedEngine = getYingSe();
+        mOptions = getOptions();
+        idxInfo = 0;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg0 = uiHandler.obtainMessage();
+                msg0.what = BTN_PLAY;
+                uiHandler.sendMessage(msg0);
+
+                mAudioTrack.setPositionNotificationPeriod(1600);
+
+                totalFrame = 0;
+                addFrame = 0;
+                idxInfo = 0;
+
+                try {
+                    voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                        @Override
+                        public void onReadBuffer(byte[] output, int outputSize) {
+                            if (outputSize > 0) {
+                                final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                } else {
+                                    mAudioTrack.write(output, 0, outputSize);
+                                }
+                            }
+                        }
+
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onReadBufferWithWordInfo(byte[] output, int outputSize, List<SyncWordInfo> wordInfo) {
+                            if (output != null) {
+                                totalFrame += outputSize;
+                                mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
+                                //首次加载计算内容长度 不可变
+                                mWordInfo.addAll(wordInfo);
+                                fWordInfo.addAll(wordInfo);
+
+                                final ByteBuffer audioData = ByteBuffer.wrap(output);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    mAudioTrack.write(audioData, audioData.remaining(), AudioTrack.WRITE_BLOCKING);
+                                } else {
+                                    mAudioTrack.write(output, 0, outputSize);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onReadBufferWithMarkInfo(byte[] output, int outputSize, List<SyncMarkInfo> markInfo) {
+
+                        }
+
+                        @Override
+                        public void onError(String reason) {
+                        }
+                    });
+
+                    if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                        Message msg1 = uiHandler.obtainMessage();
+                        msg1.what = BTN_NEXT;
+                        uiHandler.sendMessage(msg1);
+                    } else {
+                        Message msg2 = uiHandler.obtainMessage();
+                        msg2.what = BTN_STOP;
+                        msg2.arg1 = isPause;
+                        uiHandler.sendMessage(msg2);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Message msg2 = uiHandler.obtainMessage();
+                    msg2.what = BTN_STOP;
+                    msg2.arg1 = 1;
+                    uiHandler.sendMessage(msg2);
+                }
+
+            }
+
+        }).start();
+
+    }
+
 }
