@@ -19,6 +19,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
+import com.heiheilianzai.app.component.ReadNovelService;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.BoyinPlayerEvent;
@@ -152,6 +153,10 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @Override
             public void isPlaying(boolean isPlay) {//保留方法 获取有声页面播放状态
+                if (ReadNovelService.SERVICE_IS_LIVE) {
+                    Intent intentService = new Intent(activity, ReadNovelService.class);
+                    activity.stopService(intentService);
+                }
             }
 
             @JavascriptInterface

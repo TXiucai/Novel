@@ -118,9 +118,9 @@ public class ChapterPageManager {
         }
     }
 
-    private void calculateLineCount(long begin) {
+    private void calculateLineCount() {
         try {
-            if (begin == 0) {
+            if (currentPage == null && currentPage.getBegin() == 0) {
                 calculateLineCount1();
             } else {
                 calculateLineCount2();
@@ -139,6 +139,7 @@ public class ChapterPageManager {
     }
 
     public TRPage getNextPage() {
+        calculateLineCount();
         mBookUtil.setPostition(currentPage.getEnd());
         TRPage trPage = new TRPage();
         trPage.setBegin(currentPage.getEnd() + 1);
@@ -149,6 +150,7 @@ public class ChapterPageManager {
     }
 
     public TRPage getPageForBegin(long begin) {
+        calculateLineCount();
         TRPage trPage = new TRPage();
         trPage.setBegin(begin);
         mBookUtil.setPostition(begin - 1);
@@ -159,7 +161,6 @@ public class ChapterPageManager {
     }
 
     public List<TRPage> getPages(long begin) {
-        calculateLineCount(begin);
         mChapterPages.clear();
         TRPage pageForBegin = getPageForBegin(begin);
         mChapterPages.add(pageForBegin);

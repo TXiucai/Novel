@@ -63,7 +63,7 @@ public class ReadNovelService extends Service {
     private int mNotifyID = 100;
     public static boolean SERVICE_IS_LIVE;
     public int delayMins = -1;
-    TimerCount mTtimerCount;
+    private TimerCount mTtimerCount;
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
         @Override
@@ -161,7 +161,6 @@ public class ReadNovelService extends Service {
                         mCurrentPage = mTrPages.get(mReadPage);
                         mIsPlay = true;
                         readBook();
-                        setNotification();
                     }
                 }
 
@@ -196,14 +195,13 @@ public class ReadNovelService extends Service {
             mCurrentPage = mTrPages.get(mReadPage);
             mChapterItem.setBegin(mCurrentPage.getBegin());
             mReadSpeakManager.playReadBook(mCurrentPage.getLineToString());
-
+            setNotification();
         } else {
             reset();
             getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
                 @Override
                 public void onSuccessChapterContent(List<TRPage> content) {
                     mTrPages.addAll(content);
-                    setNotification();
                     readBook();
                 }
 
@@ -336,9 +334,10 @@ public class ReadNovelService extends Service {
             upDateNotifacation();
 //            3、创建通知栏点击时的跳转意图
             Intent intent = new Intent(this, ReadActivity.class);
+            mChapterItem.setBegin(mCurrentPage.getBegin());
             intent.putExtra(EXTRA_BOOK, mBaseBook);
             intent.putExtra(EXTRA_CHAPTER, mChapterItem);
-            PendingIntent pendingActivity = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingActivity = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 //             用Builder构造器创建Notification
 
             mNotification = new NotificationCompat.Builder(this, "heihei")
