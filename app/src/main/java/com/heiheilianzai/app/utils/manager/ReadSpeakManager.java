@@ -503,8 +503,8 @@ public class ReadSpeakManager {
      */
     public void stopReadBook(int from) {
         isPause = from;
+
         if (from != 2) {
-            readSpeakStateCallback.readSpeakState(1);
             if (null != voicetext) {
                 voicetext.vtapiStopBuffer(vtapiHandle);
             }

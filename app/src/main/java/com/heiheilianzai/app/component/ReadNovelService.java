@@ -138,7 +138,8 @@ public class ReadNovelService extends Service {
                 public void readSpeakState(int state) {
                     switch (state) {
                         case 1: // 停止播放
-                            mReadSpeakManager.stopReadBook(1);
+                            mHandler.sendEmptyMessage(3);
+                            closeService(getApplicationContext());
                             break;
                         case 2://暂停播放
                             break;
