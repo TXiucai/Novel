@@ -14,14 +14,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -1196,6 +1194,7 @@ public class ReadActivity extends BaseReadActivity {
 
             @Override
             public void cancelRead() {
+                readSpeakManager.stopReadBook(1);
                 if (ReadNovelService.SERVICE_IS_LIVE) {
                     bookpage.setmIsOpenService(false);
                     pageFactory.close_AD = false;

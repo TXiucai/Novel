@@ -7,6 +7,8 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 
 import androidx.annotation.RequiresApi;
@@ -67,6 +69,12 @@ public class ReadSpeakManager {
     // 0 台湾，1 普通话
     private int readYinSe = 0;
 
+    public static final int BTN_PLAY = 3;
+    public static final int BTN_NEXT = 1;
+    public static final int BTN_STOP = 2;
+    public static final int TXT_HIGHLIGHT = 4;
+    private int isPause = 1;
+
     private int retryDownload = 3;
 
     private ReadSpeakStateCallback readSpeakStateCallback;
@@ -100,6 +108,23 @@ public class ReadSpeakManager {
     public void setReadSpeakStateCallback(ReadSpeakStateCallback readSpeakStateCallback) {
         this.readSpeakStateCallback = readSpeakStateCallback;
     }
+
+    private final Handler uiHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == BTN_PLAY) {
+                setPlay();
+            } else if (msg.what == BTN_NEXT) {
+                setNext();
+            } else if (msg.what == BTN_STOP) {
+                setStop(msg.arg1);
+            } else {
+                uiHighlightText(msg.arg1, msg.arg2, (String) msg.obj);
+            }
+        }
+    };
 
     public ReadSpeakManager initReadSetting() {
         initAudioRead();
@@ -395,7 +420,9 @@ public class ReadSpeakManager {
             @Override
             public void run() {
 
-                readSpeakStateCallback.readSpeakState(3);
+                Message msg0 = uiHandler.obtainMessage();
+                msg0.what = BTN_PLAY;
+                uiHandler.sendMessage(msg0);
 
                 mAudioTrack.setPositionNotificationPeriod(1600);
 
@@ -445,10 +472,24 @@ public class ReadSpeakManager {
                         public void onError(String reason) {
                         }
                     });
-                    readSpeakStateCallback.readSpeakState(4);
+
+                    if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                        Message msg1 = uiHandler.obtainMessage();
+                        msg1.what = BTN_NEXT;
+                        uiHandler.sendMessage(msg1);
+                    } else {
+                        Message msg2 = uiHandler.obtainMessage();
+                        msg2.what = BTN_STOP;
+                        msg2.arg1 = isPause;
+                        uiHandler.sendMessage(msg2);
+                    }
 
                 } catch (Exception e) {
-
+                    e.printStackTrace();
+                    Message msg2 = uiHandler.obtainMessage();
+                    msg2.what = BTN_STOP;
+                    msg2.arg1 = 1;
+                    uiHandler.sendMessage(msg2);
                 }
 
             }
@@ -460,14 +501,25 @@ public class ReadSpeakManager {
     /**
      * stop  停止播放
      */
-    public void stopReadBook() {
-        if (null != voicetext) {
-            voicetext.vtapiStopBuffer(vtapiHandle);
+    public void stopReadBook(int from) {
+        isPause = from;
+        if (from != 2) {
+            readSpeakStateCallback.readSpeakState(1);
+            if (null != voicetext) {
+                voicetext.vtapiStopBuffer(vtapiHandle);
+            }
         }
 
+        setPause();
+    }
+
+    /**
+     * 暂停时 主线程事件 处理
+     */
+    private void setPause() {
         if (mAudioTrack != null) {
             if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                mAudioTrack.stop();
+                mAudioTrack.pause();
             }
             mAudioTrack.flush();
         }
@@ -488,17 +540,6 @@ public class ReadSpeakManager {
             readThreadPool = null;
         }
 
-    }
-
-    /**
-     * 暂停时 主线程事件 处理
-     */
-    private void setPause() {
-        if (mAudioTrack != null) {
-            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                mAudioTrack.pause();
-            }
-        }
     }
 
     /**
@@ -574,4 +615,29 @@ public class ReadSpeakManager {
         return collect;
     }
 
+    private void setPlay() {
+        readSpeakStateCallback.readSpeakState(3);
+    }
+
+    private void setNext() {
+        setPause();
+        readSpeakStateCallback.readSpeakState(4);
+
+    }
+
+    /**
+     * 停止
+     * 由于暂停也是停止
+     * 做一个处理
+     */
+    private void setStop(int arg1) {
+        if (arg1 != 2) {
+            readSpeakStateCallback.readSpeakState(1);
+            if (null != voicetext) {
+                voicetext.vtapiStopBuffer(vtapiHandle);
+            }
+        }
+
+        setPause();
+    }
 }

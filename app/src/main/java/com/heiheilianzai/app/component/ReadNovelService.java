@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.os.Binder;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -139,13 +138,13 @@ public class ReadNovelService extends Service {
                 public void readSpeakState(int state) {
                     switch (state) {
                         case 1: // 停止播放
+                            mReadSpeakManager.stopReadBook(1);
                             break;
                         case 2://暂停播放
                             break;
                         case 3://播放中
                             break;
                         case 4://读完了
-                            mReadSpeakManager.stopReadBook();
                             mReadPage++;
                             readBook();
                             mHandler.sendEmptyMessage(1);
@@ -210,7 +209,7 @@ public class ReadNovelService extends Service {
 
                 @Override
                 public void onFailChapterContent() {
-                    mReadSpeakManager.stopReadBook();
+                    mReadSpeakManager.stopReadBook(1);
                     MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
                 }
             });
@@ -283,7 +282,7 @@ public class ReadNovelService extends Service {
     public void onDestroy() {
         SERVICE_IS_LIVE = false;
         if (mReadSpeakManager != null) {
-            mReadSpeakManager.stopReadBook();
+            mReadSpeakManager.stopReadBook(1);
         }
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mNotificationReceiver);
@@ -297,7 +296,7 @@ public class ReadNovelService extends Service {
             switch (intent.getAction()) {
                 case STATUS_PLAY_PAUSE_ACTION:
                     if (mIsPlay) {
-                        mReadSpeakManager.stopReadBook();
+                        mReadSpeakManager.stopReadBook(2);
                     } else {
                         readBook();
                     }
@@ -305,7 +304,7 @@ public class ReadNovelService extends Service {
                     setNotification();
                     break;
                 case STATUS_CLOSE_SERVICE_ACTION:
-                    mReadSpeakManager.stopReadBook();
+                    mReadSpeakManager.stopReadBook(1);
                     mHandler.sendEmptyMessage(3);
                     closeService(context);
                     break;
@@ -373,6 +372,9 @@ public class ReadNovelService extends Service {
     public void closeService(Context context) {
         Intent intentService = new Intent(context, ReadNovelService.class);
         stopService(intentService);
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(mNotifyID);
+        }
     }
 
     class TimerCount extends CountDownTimer {
@@ -389,6 +391,7 @@ public class ReadNovelService extends Service {
         @Override
         public void onFinish() {
             // 停止服务
+            mReadSpeakManager.stopReadBook(1);
             closeService(getApplicationContext());
         }
     }
