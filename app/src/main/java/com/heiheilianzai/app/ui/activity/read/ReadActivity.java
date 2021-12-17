@@ -254,14 +254,12 @@ public class ReadActivity extends BaseReadActivity {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case UPDATE_BG:
-                    mReadLine = (int) intent.getExtras().get("line");
                     if (pageFactory != null) {
                         //每行高亮
                         //pageFactory.onDrawReadLine(bookpage.getCurPage(), pageFactory.getCurrentPage().getLines(), true, mReadLine);
                     }
                     break;
                 case TURN_NEXT:
-                    //翻页暂时不消失浮窗
                     if (readSpeakDialogFragment != null && readSpeakDialogFragment.getShowsDialog()) {
                         readSpeakDialogFragment.dimissDialog();
                     }
@@ -288,9 +286,16 @@ public class ReadActivity extends BaseReadActivity {
             turnOffScreen();
         }
     };
+    private Intent mIntent;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mIntent = intent;
+        initData();
+    }
+
     private boolean mHaveScreenPermison = false;
-    private String mCurrentPage;//当前章节处于第几页
-    private int mReadLine;
 
     @Override
     public int initContentView() {
@@ -458,10 +463,12 @@ public class ReadActivity extends BaseReadActivity {
         config = ReadingConfig.getInstance();
         //  阅读管理器
         //获取intent中的携带的信息
-        Intent intent = getIntent();
-        chapter = (ChapterItem) intent.getSerializableExtra(EXTRA_CHAPTER);
-        baseBook = (BaseBook) intent.getSerializableExtra(EXTRA_BOOK);
-        mReferPage = intent.getStringExtra(REFER_PAGE_EXT_KAY);
+        if (mIntent == null) {
+            mIntent = getIntent();
+        }
+        chapter = (ChapterItem) mIntent.getSerializableExtra(EXTRA_CHAPTER);
+        baseBook = (BaseBook) mIntent.getSerializableExtra(EXTRA_BOOK);
+        mReferPage = mIntent.getStringExtra(REFER_PAGE_EXT_KAY);
         pageFactory = new PageFactory(baseBook, bookpage_scroll, bookpage_scroll_text, insert_todayone2, this);
         pageFactory.setPurchaseLayout(activity_read_purchase_layout, activity_read_purchase_layout2);
         pageFactory.getWebViewAD(ReadActivity.this);//获取广告

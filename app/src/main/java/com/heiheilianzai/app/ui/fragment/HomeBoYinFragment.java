@@ -27,7 +27,6 @@ import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
-import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.ui.activity.boyin.BoyinDownActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -153,10 +152,6 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
             @Override
             public void isPlaying(boolean isPlay) {//保留方法 获取有声页面播放状态
-                if (ReadNovelService.SERVICE_IS_LIVE) {
-                    Intent intentService = new Intent(activity, ReadNovelService.class);
-                    activity.stopService(intentService);
-                }
             }
 
             @JavascriptInterface
@@ -179,6 +174,15 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
             @Override
             public void setH5Cache(String key, String value) {
                 AppPrefs.putSharedString(activity, key, value);
+            }
+
+            @JavascriptInterface
+            @Override
+            public void stopPlay() {
+                if (ReadNovelService.SERVICE_IS_LIVE) {
+                    Intent intentService = new Intent(activity, ReadNovelService.class);
+                    activity.stopService(intentService);
+                }
             }
         }, "android");
         mWebView.loadUrl(mBoyinUrl);
@@ -224,6 +228,9 @@ public class HomeBoYinFragment extends BaseButterKnifeFragment {
 
         @JavascriptInterface
         void setH5Cache(String key, String value);
+
+        @JavascriptInterface
+        void stopPlay();
     }
 
     private class MyWebViewDownLoadListener implements DownloadListener {

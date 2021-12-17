@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.component;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -12,11 +11,9 @@ import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.utils.BookUtil;
 import com.heiheilianzai.app.utils.ImageUtil;
-import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.TRPage;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -118,12 +115,16 @@ public class ChapterPageManager {
         }
     }
 
-    private void calculateLineCount() {
+    private void calculateLineCount(long begin) {
         try {
-            if (currentPage == null && currentPage.getBegin() == 0) {
-                calculateLineCount1();
-            } else {
+            if (begin != 0) {
                 calculateLineCount2();
+            } else {
+                if (currentPage == null || currentPage.getBegin() == 0) {
+                    calculateLineCount1();
+                } else {
+                    calculateLineCount2();
+                }
             }
         } catch (Exception e) {
             calculateLineCount1();
@@ -139,7 +140,7 @@ public class ChapterPageManager {
     }
 
     public TRPage getNextPage() {
-        calculateLineCount();
+        calculateLineCount(0);
         mBookUtil.setPostition(currentPage.getEnd());
         TRPage trPage = new TRPage();
         trPage.setBegin(currentPage.getEnd() + 1);
@@ -150,7 +151,7 @@ public class ChapterPageManager {
     }
 
     public TRPage getPageForBegin(long begin) {
-        calculateLineCount();
+        calculateLineCount(begin);
         TRPage trPage = new TRPage();
         trPage.setBegin(begin);
         mBookUtil.setPostition(begin - 1);

@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -101,6 +103,9 @@ public class ReadNovelService extends Service {
     private List<TRPage> mTrPages;
     private ReadReceiver mNotificationReceiver;
     private NotificationManager mNotificationManager;
+    private int mResultStatus;
+    private AudioManager mAudioManager;
+    private OnAudioFocusChangeListener mFocusChangeListener;
 
     @Nullable
     @Override
@@ -153,26 +158,44 @@ public class ReadNovelService extends Service {
                     }
                 }
             });
-
-            getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
-                @Override
-                public void onSuccessChapterContent(List<TRPage> pages) {
-                    if (pages != null && pages.size() > 0) {
-                        mTrPages = pages;
-                        mCurrentPage = mTrPages.get(mReadPage);
-                        mIsPlay = true;
-                        readBook();
+            mAudioManager = (AudioManager) getApplication().getSystemService(Context.AUDIO_SERVICE);
+            mFocusChangeListener = new OnAudioFocusChangeListener() {
+                public void onAudioFocusChange(int focusChange) {
+                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                        mReadSpeakManager.stopReadBook(1);
+                        closeService(getApplicationContext());
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                        mReadSpeakManager.stopReadBook(1);
+                        closeService(getApplicationContext());
                     }
                 }
+            };
+            mResultStatus = mAudioManager.requestAudioFocus(mFocusChangeListener,
+                    // Use the music stream.
+                    AudioManager.STREAM_MUSIC,
+                    // Request permanent focus.
+                    AudioManager.AUDIOFOCUS_GAIN);
 
-                @Override
-                public void onFailChapterContent() {
-                    MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
-                }
-            });
+            if (mResultStatus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                getChapterContent(mBaseBook.getBook_id(), mChapterItem.getChapter_id(), new GetChapterContent() {
+                    @Override
+                    public void onSuccessChapterContent(List<TRPage> pages) {
+                        if (pages != null && pages.size() > 0) {
+                            mTrPages = pages;
+                            mCurrentPage = mTrPages.get(mReadPage);
+                            mIsPlay = true;
+                            readBook();
+                        }
+                    }
 
+                    @Override
+                    public void onFailChapterContent() {
+                        MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+                    }
+                });
+            }
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -283,6 +306,9 @@ public class ReadNovelService extends Service {
         if (mReadSpeakManager != null) {
             mReadSpeakManager.stopReadBook(1);
         }
+        if (mAudioManager != null && mFocusChangeListener != null) {
+            mAudioManager.abandonAudioFocus(mFocusChangeListener);
+        }
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mNotificationReceiver);
         stopForeground(true);
@@ -372,6 +398,7 @@ public class ReadNovelService extends Service {
     public void closeService(Context context) {
         Intent intentService = new Intent(context, ReadNovelService.class);
         stopService(intentService);
+        mAudioManager.abandonAudioFocus(mFocusChangeListener);
         if (mNotificationManager != null) {
             mNotificationManager.cancel(mNotifyID);
         }
