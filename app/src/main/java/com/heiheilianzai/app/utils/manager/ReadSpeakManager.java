@@ -57,6 +57,7 @@ public class ReadSpeakManager {
     private int addFrame = 0;
     private int idxInfo = 0;
     private int totalFrame = 0;
+    private int endPos = 0;
     private String bookText = null;
 
     AudioTrack mAudioTrack;
@@ -72,7 +73,7 @@ public class ReadSpeakManager {
     public static final int BTN_PLAY = 3;
     public static final int BTN_NEXT = 1;
     public static final int BTN_STOP = 2;
-    public static final int TXT_HIGHLIGHT = 4;
+    public static final int TXT_POSITION = 4;
     private int isPause = 1;
 
     private int retryDownload = 3;
@@ -167,15 +168,28 @@ public class ReadSpeakManager {
                             SyncWordInfo tmpinfo = mWordInfo.get(idxInfo);
                             addFrame += tmpinfo.getLength();
                             idxInfo++;
+                            Message positionMessage = uiHandler.obtainMessage();
+                            positionMessage.what = TXT_POSITION;
+                            positionMessage.arg1 = tmpinfo.getStartPosInText();
+                            positionMessage.arg2 = tmpinfo.getEndPosInText();
+                            uiHandler.sendMessage(positionMessage);
                         } else if (track.getPlaybackHeadPosition() > 0 && (addFrame / 2) > track.getPlaybackHeadPosition()) {
                             SyncWordInfo tmpinfo = mWordInfo.get(idxInfo - 1);
-
+                            Message positionMessage = uiHandler.obtainMessage();
+                            positionMessage.what = TXT_POSITION;
+                            positionMessage.arg1 = tmpinfo.getStartPosInText();
+                            positionMessage.arg2 = tmpinfo.getEndPosInText();
+                            uiHandler.sendMessage(positionMessage);
                         } else if ((addFrame / 2) <= track.getPlaybackHeadPosition()) {
                             if (idxInfo < mWordInfo.size()) {
                                 SyncWordInfo tmpinfo = mWordInfo.get(idxInfo);
                                 if (tmpinfo.getStartPosInText() != 0) {
                                     addFrame += tmpinfo.getLength();
-
+                                    Message positionMessage = uiHandler.obtainMessage();
+                                    positionMessage.what = TXT_POSITION;
+                                    positionMessage.arg1 = tmpinfo.getStartPosInText();
+                                    positionMessage.arg2 = tmpinfo.getEndPosInText();
+                                    uiHandler.sendMessage(positionMessage);
                                     idxInfo++;
                                 }
                             }
@@ -548,6 +562,7 @@ public class ReadSpeakManager {
 //        //设置字体背景色
 //        hSpanStr.setSpan(new BackgroundColorSpan(Color.RED), sPos, ePos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        tvBook.setText(hSpanStr);
+        endPos = sPos;
 
     }
 
@@ -637,10 +652,17 @@ public class ReadSpeakManager {
     private void resetOptions() {
         mOptions = getOptions();
         selectedEngine = getYingSe();
-        optionsReadBook(bookText);
+
+        if (TextUtils.isEmpty(bookText)) {
+            return;
+        }
+        String newText = bookText.substring(endPos);
+        if (!TextUtils.isEmpty(newText)) {
+            optionsReadBook(newText);
+        }
     }
 
-    public void optionsReadBook(String bookContent) {
+    public void optionsReadBook(String newText) {
         if (null == voicetext) {
             return;
         }
@@ -648,6 +670,8 @@ public class ReadSpeakManager {
         if (mAudioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING) {
             mAudioTrack.play();
         }
+
+        bookText = newText;
 
         // 设置音色 和语音属性
         selectedEngine = getYingSe();
@@ -668,7 +692,7 @@ public class ReadSpeakManager {
                 idxInfo = 0;
 
                 try {
-                    voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, bookContent, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
+                    voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, newText, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
                         @Override
                         public void onReadBuffer(byte[] output, int outputSize) {
                             if (outputSize > 0) {
