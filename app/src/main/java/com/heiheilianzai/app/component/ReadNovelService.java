@@ -323,7 +323,7 @@ public class ReadNovelService extends Service {
                     if (mIsPlay) {
                         mReadSpeakManager.stopReadBook(2);
                     } else {
-                        readBook();
+                        mReadSpeakManager.readPauseBook();
                     }
                     mIsPlay = !mIsPlay;
                     setNotification();

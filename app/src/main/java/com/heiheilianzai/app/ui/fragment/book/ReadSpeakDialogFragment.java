@@ -39,7 +39,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
     private View mDecorView;
     private Animation mIntoSlide;
     private Animation mOutSlide;
-    private boolean isClick = false;//过滤重复点击
     public DialogCallback diglogCallback;
     private SignSeekBar sbSpeed;
     private SignSeekBar sbYindiao;
@@ -224,15 +223,43 @@ public class ReadSpeakDialogFragment extends DialogFragment {
             rb_yingse_01.setChecked(true);
             rb_yingse_02.setSelected(false);
             rb_yingse_02.setChecked(false);
+            rb_yingse_01.setBackgroundResource(R.drawable.rb_stroke_selected);
+            rb_yingse_02.setBackgroundResource(R.drawable.rb_stroke_unselect);
+            rb_yingse_01.setTextColor(getResources().getColor(R.color.black));
+            rb_yingse_02.setTextColor(getResources().getColor(R.color.color_969696));
         } else {
             rb_yingse_01.setSelected(false);
             rb_yingse_01.setChecked(false);
             rb_yingse_02.setSelected(true);
             rb_yingse_02.setSelected(true);
+            rb_yingse_01.setBackgroundResource(R.drawable.rb_stroke_unselect);
+            rb_yingse_02.setBackgroundResource(R.drawable.rb_stroke_selected);
+            rb_yingse_01.setTextColor(getResources().getColor(R.color.color_969696));
+            rb_yingse_02.setTextColor(getResources().getColor(R.color.black));
         }
 
-        rb_yingse_01.setOnClickListener(view -> diglogCallback.readSe(0));
-        rb_yingse_02.setOnClickListener(view -> diglogCallback.readSe(1));
+        rb_yingse_01.setOnClickListener(view -> {
+            diglogCallback.readSe(0);
+            rb_yingse_01.setSelected(true);
+            rb_yingse_01.setChecked(true);
+            rb_yingse_02.setSelected(false);
+            rb_yingse_02.setChecked(false);
+            rb_yingse_01.setBackgroundResource(R.drawable.rb_stroke_selected);
+            rb_yingse_02.setBackgroundResource(R.drawable.rb_stroke_unselect);
+            rb_yingse_01.setTextColor(getResources().getColor(R.color.black));
+            rb_yingse_02.setTextColor(getResources().getColor(R.color.color_969696));
+        });
+        rb_yingse_02.setOnClickListener(view -> {
+            diglogCallback.readSe(1);
+            rb_yingse_01.setSelected(false);
+            rb_yingse_01.setChecked(false);
+            rb_yingse_02.setSelected(true);
+            rb_yingse_02.setChecked(true);
+            rb_yingse_01.setBackgroundResource(R.drawable.rb_stroke_unselect);
+            rb_yingse_02.setBackgroundResource(R.drawable.rb_stroke_selected);
+            rb_yingse_01.setTextColor(getResources().getColor(R.color.color_969696));
+            rb_yingse_02.setTextColor(getResources().getColor(R.color.black));
+        });
         rb_dingshi_04.setOnClickListener(view -> diglogCallback.readTimer(60));
         rb_dingshi_03.setOnClickListener(view -> diglogCallback.readTimer(30));
         rb_dingshi_02.setOnClickListener(view -> diglogCallback.readTimer(15));
@@ -263,10 +290,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
      * 过滤重复点击
      */
     public void dimissDialog() {
-        if (isClick) {
-            return;
-        }
-        isClick = true;
         initOutAnimation();
     }
 
@@ -296,8 +319,6 @@ public class ReadSpeakDialogFragment extends DialogFragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 //过滤重复点击的标记
-                isClick = false;
-
                 ReadSpeakDialogFragment.this.dismiss();
             }
 
@@ -347,4 +368,8 @@ public class ReadSpeakDialogFragment extends DialogFragment {
         super.onDestroy();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 }

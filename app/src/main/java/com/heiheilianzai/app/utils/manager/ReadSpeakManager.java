@@ -79,7 +79,6 @@ public class ReadSpeakManager {
     private int retryDownload = 3;
 
     private ReadSpeakStateCallback readSpeakStateCallback;
-//    ExecutorService readThreadPool;
 
     @SuppressLint("StaticFieldLeak")
     private static ReadSpeakManager instance;
@@ -757,6 +756,13 @@ public class ReadSpeakManager {
 
         }).start();
 
+    }
+
+    /**
+     * 继续接着读
+     */
+    public void readPauseBook() {
+        resetOptions();
     }
 
 }
