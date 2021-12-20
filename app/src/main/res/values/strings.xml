@@ -631,5 +631,6 @@
     <string name="read_license_key_null">read book license key is NULL</string>
     <string name="string_read_book_error">听书出现问题</string>
     <string name="string_read_service_prohibit">听书模式下，该功能暂时不可用</string>
+    <string name="string_notification_permission">请打开通知栏权限。点击【确定】跳转设置页。</string>
 
 </resources>

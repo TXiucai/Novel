@@ -5,6 +5,7 @@ import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfO
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
@@ -1030,11 +1031,8 @@ public class ReadActivity extends BaseReadActivity {
     public void openPermission() {
         readSpeakManager.load();
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            Intent localIntent = new Intent();
-            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            localIntent.setData(Uri.fromParts("package", BuildConfig.APPLICATION_ID, null));
-            startActivity(localIntent);
+            //测试要求要给一个弹窗提示
+            showNotificationPermissionTip();
         } else {
             startReadNovelService();
         }
@@ -1477,6 +1475,33 @@ public class ReadActivity extends BaseReadActivity {
                 new DialogVip().getDialogVipPop(activity, false);
             }
         }
+    }
+
+    /**
+     * 通知栏权限如果没有开启，测试要求先给一个弹窗
+     */
+    private void showNotificationPermissionTip() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(ReadActivity.this);
+        dialog.setMessage(getResources().getString(R.string.string_notification_permission))
+                .setCancelable(true)
+                .setPositiveButton(getResources().getString(R.string.public_sure), (dialogInterface, i) -> {
+                    // 调整设置页
+                    dialogInterface.dismiss();
+                    go2SettingNotification();
+                })
+                .setNegativeButton(getResources().getString(R.string.splashactivity_cancle), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                });
+        dialog.show();
+
+    }
+
+    private void go2SettingNotification() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        localIntent.setData(Uri.fromParts("package", BuildConfig.APPLICATION_ID, null));
+        startActivity(localIntent);
     }
 
 }
