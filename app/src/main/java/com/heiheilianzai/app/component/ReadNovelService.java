@@ -75,6 +75,7 @@ public class ReadNovelService extends Service {
                 case 1:
                     Intent intentNext = new Intent();
                     intentNext.setAction(ReadActivity.TURN_NEXT);
+                    intentNext.putExtra("book_id", mBaseBook.getBook_id());
                     sendBroadcast(intentNext);
                     break;
                 case 2:

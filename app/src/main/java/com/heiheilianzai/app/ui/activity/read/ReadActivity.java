@@ -266,7 +266,8 @@ public class ReadActivity extends BaseReadActivity {
                     if (isShow) {
                         hideReadSetting();
                     }
-                    if (bookpage != null) {
+                    String book_id = (String) intent.getExtras().get("book_id");
+                    if (bookpage != null && TextUtils.equals(baseBook.getBook_id(), book_id)) {
                         bookpage.next_page(true);
                     }
                     break;
