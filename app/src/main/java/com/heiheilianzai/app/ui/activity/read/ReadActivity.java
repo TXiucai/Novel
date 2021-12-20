@@ -68,10 +68,12 @@ import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.NovelBoyinModel;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.event.CloseAnimationEvent;
+import com.heiheilianzai.app.model.event.NovelOpenOtherEvent;
 import com.heiheilianzai.app.model.event.RefreshBookInfoEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.SetTimerEvent;
+import com.heiheilianzai.app.model.event.StartOtherNovel;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.CatalogInnerActivity;
 import com.heiheilianzai.app.ui.activity.CommentListActivity;
@@ -112,6 +114,8 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
@@ -1454,13 +1458,13 @@ public class ReadActivity extends BaseReadActivity {
         } else {
             if (App.isVip(activity)) {
                 initReadSpeakDialogFragment();
+                ChapterItem currentChapter = ChapterManager.getInstance(this).getCurrentChapter();
+                currentChapter.setBegin(pageFactory.getCurrentPage().getBegin());
                 //启动服务
                 if (!ReadNovelService.SERVICE_IS_LIVE) {
                     bookpage.setmIsOpenService(true);
                     pageFactory.close_AD = true;
                     // Android 8.0使用startForegroundService在前台启动新服务
-                    ChapterItem currentChapter = ChapterManager.getInstance(this).getCurrentChapter();
-                    currentChapter.setBegin(pageFactory.getCurrentPage().getBegin());
                     Intent intent = new Intent(this, ReadNovelService.class);
                     intent.putExtra(EXTRA_CHAPTER, currentChapter);
                     intent.putExtra(EXTRA_PAGE, pageFactory.getPageForBegin(chapter.getBegin()).getLineToString());
@@ -1470,6 +1474,8 @@ public class ReadActivity extends BaseReadActivity {
                     } else {
                         startService(intent);
                     }
+                } else {
+                    EventBus.getDefault().post(new NovelOpenOtherEvent(currentChapter, baseBook));
                 }
             } else {
                 new DialogVip().getDialogVipPop(activity, false);
@@ -1504,4 +1510,27 @@ public class ReadActivity extends BaseReadActivity {
         startActivity(localIntent);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void startOtherNovelRead(StartOtherNovel otherNovelRead) {
+        if (otherNovelRead.isStartNovel()) {
+            if (ReadNovelService.SERVICE_IS_LIVE) {
+                bookpage.setmIsOpenService(false);
+                pageFactory.close_AD = false;
+                Intent intentService = new Intent(getApplicationContext(), ReadNovelService.class);
+                stopService(intentService);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1000);
+                            if (!ReadNovelService.SERVICE_IS_LIVE){
+                                startReadNovelService();
+                            }
+                        } catch (InterruptedException e) {
+                        }
+                    }
+                }).start();
+            }
+        }
+    }
 }

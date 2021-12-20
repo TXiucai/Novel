@@ -21,6 +21,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,9 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.model.event.NovelOpenOtherEvent;
 import com.heiheilianzai.app.model.event.SetTimerEvent;
+import com.heiheilianzai.app.model.event.StartOtherNovel;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
@@ -212,6 +215,17 @@ public class ReadNovelService extends Service {
             long millisInFuture = mins * unitML;
             mTtimerCount = new TimerCount(millisInFuture, 1000);
             mTtimerCount.start();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setOtherNovelRead(NovelOpenOtherEvent otherNovelRead) {
+        BaseBook baseBook = otherNovelRead.getmBaseBook();
+        ChapterItem chapterItem = otherNovelRead.getmChapterItem();
+        if (!TextUtils.equals(mBaseBook.getBook_id(), baseBook.getBook_id()) || !TextUtils.equals(mChapterItem.getChapter_id(), chapterItem.getChapter_id())) {
+            StartOtherNovel startOtherNovel = new StartOtherNovel();
+            startOtherNovel.setStartNovel(true);
+            EventBus.getDefault().post(startOtherNovel);
         }
     }
 
