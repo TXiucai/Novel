@@ -3,7 +3,9 @@ package com.heiheilianzai.app.utils;
 import android.app.Activity;
 import android.app.Dialog;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,21 +45,23 @@ import butterknife.ButterKnife;
  */
 public class RecomendApp {
     Activity activity;
+    private List<RecommendAppBean.AppListBean> mRecomendAppLocalLists;
 
     public RecomendApp(Activity activity) {
         this.activity = activity;
     }
 
+    private boolean mIsShowSd = false;
 
     /**
      * 获取数据
      */
     public void getRequestData() {
         if (ReaderConfig.OTHER_SDK_AD.getApp_index() == 2) {
+            mIsShowSd = true;
             sdkAppAd();
-        } else {
-            localAppAd();
         }
+        localAppAd();
     }
 
     private void sdkAppAd() {
@@ -78,15 +82,17 @@ public class RecomendApp {
                             appListBeans.add(appListBean);
                         }
                     }
-                    recommendAppBean.setApp_list(appListBeans);
-                    getAppUpdatePop(activity, recommendAppBean);
+                    appListBeans.addAll(mRecomendAppLocalLists);
+                    getAppUpdatePop(activity, appListBeans);
                 } catch (Exception e) {
+                    mIsShowSd = false;
                     localAppAd();
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
+                mIsShowSd = false;
                 localAppAd();
             }
         });
@@ -100,7 +106,10 @@ public class RecomendApp {
                     @Override
                     public void onResponse(String response) {
                         RecommendAppBean recommendAppBean = new Gson().fromJson(response, RecommendAppBean.class);
-                        getAppUpdatePop(activity, recommendAppBean);
+                        mRecomendAppLocalLists = recommendAppBean.getApp_list();
+                        if (!mIsShowSd) {
+                            getAppUpdatePop(activity, mRecomendAppLocalLists);
+                        }
                     }
 
                     @Override
@@ -124,9 +133,9 @@ public class RecomendApp {
 
     public Dialog popupWindow;
 
-    public Dialog getAppUpdatePop(final Activity activity, RecommendAppBean recommendAppBean) {
+    public Dialog getAppUpdatePop(final Activity activity, List<RecommendAppBean.AppListBean> appListBean) {
         this.activity = activity;
-        if (recommendAppBean.getApp_list() == null || recommendAppBean.getApp_list().size() == 0) {
+        if (appListBean == null || appListBean.size() == 0) {
             return null;
         }
         long recommendTime = ShareUitls.getRecommendAppTime(activity, "recommendTime", 0);
@@ -142,7 +151,7 @@ public class RecomendApp {
         window.setGravity(Gravity.CENTER);
         final UpdateHolder updateHolder = new UpdateHolder(view);
         RecyclerView.LayoutManager layoutManager;
-        switch (recommendAppBean.getApp_list().size()) {
+        switch (appListBean.size()) {
             case 1:
                 layoutManager = new GridLayoutManager(activity, 1);
                 break;
@@ -152,10 +161,10 @@ public class RecomendApp {
             default:
                 layoutManager = new GridLayoutManager(activity, 3);
         }
-
-        //设置布局管理器为线性布局管理器
         updateHolder.ry.setLayoutManager(layoutManager);
-        RecommendAppAdapter appAdapter = new RecommendAppAdapter(activity, recommendAppBean.getApp_list());
+        ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(activity, R.dimen.dimens_10dp);
+        updateHolder.ry.addItemDecoration(itemOffsetDecoration);
+        RecommendAppAdapter appAdapter = new RecommendAppAdapter(activity, appListBean);
         updateHolder.ry.setAdapter(appAdapter);
         updateHolder.dialog_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +180,26 @@ public class RecomendApp {
         popupWindow.show();
         ShareUitls.putRecommendAppTime(activity, "recommendTime", DateUtils.currentTime());
         return popupWindow;
+    }
+
+    public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+
+        private int mItemOffset;
+
+        public ItemOffsetDecoration(int itemOffset) {
+            mItemOffset = itemOffset;
+        }
+
+        public ItemOffsetDecoration(Context context, int itemOffsetId) {
+            this(context.getResources().getDimensionPixelSize(itemOffsetId));
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
+        }
     }
 
     class RecommendAppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
