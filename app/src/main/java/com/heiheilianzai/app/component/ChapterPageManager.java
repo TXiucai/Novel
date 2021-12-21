@@ -115,22 +115,6 @@ public class ChapterPageManager {
         }
     }
 
-    private void calculateLineCount(long begin) {
-        try {
-            if (begin != 0) {
-                calculateLineCount2();
-            } else {
-                if (currentPage == null || currentPage.getBegin() == 0) {
-                    calculateLineCount1();
-                } else {
-                    calculateLineCount2();
-                }
-            }
-        } catch (Exception e) {
-            calculateLineCount1();
-        }
-    }
-
     private void calculateLineCount1() {
         mLineCount = (int) ((mVisibleHeight - OFFSET * marginHeight) / (m_fontSize + lineSpace));// 可显示的行数
     }
@@ -140,7 +124,7 @@ public class ChapterPageManager {
     }
 
     public TRPage getNextPage() {
-        calculateLineCount(0);
+        calculateLineCount2();
         mBookUtil.setPostition(currentPage.getEnd());
         TRPage trPage = new TRPage();
         trPage.setBegin(currentPage.getEnd() + 1);
@@ -151,7 +135,11 @@ public class ChapterPageManager {
     }
 
     public TRPage getPageForBegin(long begin) {
-        calculateLineCount(begin);
+        if (begin == 0) {
+            calculateLineCount1();
+        } else {
+            calculateLineCount2();
+        }
         TRPage trPage = new TRPage();
         trPage.setBegin(begin);
         mBookUtil.setPostition(begin - 1);
