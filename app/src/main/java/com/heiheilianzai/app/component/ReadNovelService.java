@@ -1,7 +1,5 @@
 package com.heiheilianzai.app.component;
 
-import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
-
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -359,7 +357,7 @@ public class ReadNovelService extends Service {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //            android 8 以后才有NotificationChannel，所以进行版本判断
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("heihei", getResources().getString(R.string.string_name), IMPORTANCE_DEFAULT);
+                NotificationChannel channel = new NotificationChannel("heihei", getResources().getString(R.string.string_name), NotificationManager.IMPORTANCE_LOW);
                 mNotificationManager.createNotificationChannel(channel);
             }
 
@@ -387,6 +385,7 @@ public class ReadNovelService extends Service {
                     .setSmallIcon(R.mipmap.launcher_icon) // 要用alpha图标
                     .setContentIntent(pendingActivity) // 点击通知栏跳转到播放页面
                     .setContent(mRemoteView)   // 自定义的布局视图
+                    .setSound(null)
                     .build();
             mNotification.flags = Notification.FLAG_NO_CLEAR; // 让通知不被
             startForeground(mNotifyID, mNotification);

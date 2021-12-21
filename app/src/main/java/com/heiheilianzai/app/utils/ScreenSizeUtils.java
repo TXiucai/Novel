@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -55,5 +56,21 @@ public class ScreenSizeUtils {
     //获取屏幕高度
     public int getScreenHeight() {
         return screenHeight;
+    }
+
+    /**
+     * 获取手机品牌
+     */
+    public static String getBrand() {
+        return Build.BRAND;
+    }
+
+    /**
+     * 判断是否是 一加 手机
+     *
+     * @return
+     */
+    public static boolean isOnePlus() {
+        return ("oneplus").equalsIgnoreCase(getBrand().replace(" ", ""));
     }
 }
