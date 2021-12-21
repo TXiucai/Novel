@@ -1,12 +1,11 @@
 package com.heiheilianzai.app.utils;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.component.ReadNovelService;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.constant.RabbitConfig;
@@ -131,6 +130,8 @@ public class HttpUtils {
                                         if (Utils.isLogin(context)) {
                                             LoginModel.resetLogin(context);
                                             MyToash.ToashError(context, msg);
+                                            Intent intentService = new Intent(App.getAppContext(), ReadNovelService.class);
+                                            App.getAppContext().stopService(intentService);
                                         }
                                         responseListener.onErrorResponse(null);
                                         break;
@@ -228,6 +229,8 @@ public class HttpUtils {
                                         if (Utils.isLogin(context)) {
                                             LoginModel.resetLogin(context);
                                             MyToash.ToashError(context, msg);
+                                            Intent intentService = new Intent(App.getAppContext(), ReadNovelService.class);
+                                            App.getAppContext().stopService(intentService);
                                         }
                                         responseListener.onErrorResponse(null);
                                         break;

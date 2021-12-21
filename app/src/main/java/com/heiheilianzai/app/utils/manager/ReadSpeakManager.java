@@ -43,6 +43,7 @@ public class ReadSpeakManager {
     public static final String READ_PITCH = "options_pitch";
     public static final String READ_SPEED = "options_speed";
     public static final String READ_YINSE = "options_yinse";
+    private static final String RSM_LICENSE_KEY = "rsm_license_key";
     //购买的，3个月过期，需要续费更换。有接口动态获取
     private static String LICENSE_KEY;
     private Context context;
@@ -235,6 +236,19 @@ public class ReadSpeakManager {
         //retry download license
 //        licensemodule.resetLicenseFileDownload();
 
+        /**
+         * 防止 license key 过期，仍然不下载 认证文件
+         */
+        LICENSE_KEY = ShareUitls.getString(context, "vtapi_license_key", null);
+        String rsmLiscenseKey = ShareUitls.getString(App.getAppContext(), RSM_LICENSE_KEY, null);
+        if (TextUtils.isEmpty(LICENSE_KEY)) {
+            ToastUtil.getInstance().showShortT(context.getString(R.string.read_license_key_null));
+            return;
+        }
+        if (TextUtils.isEmpty(rsmLiscenseKey) || !rsmLiscenseKey.equalsIgnoreCase(LICENSE_KEY)) {
+            licensemodule.resetLicenseFileDownload();
+        }
+
         if (licensemodule.getLicensed()) {
             // licensekey 下的认证文件，如果不小心被删掉了，重新下载。
             String verifyTxtPath = LICENSE_PATH + "verification.txt";
@@ -261,6 +275,7 @@ public class ReadSpeakManager {
         licensemodule.vtLicenseDownload(LICENSE_KEY, LICENSE_PATH, new LicenseDownloadListener() {
             @Override
             public void onSuccess() {
+                ShareUitls.putString(App.getAppContext(), RSM_LICENSE_KEY, LICENSE_KEY);
             }
 
             @Override
