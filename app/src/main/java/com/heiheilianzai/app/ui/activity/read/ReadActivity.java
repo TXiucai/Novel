@@ -66,6 +66,7 @@ import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.NovelBoyinModel;
+import com.heiheilianzai.app.model.TTSFilterType;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.event.CloseAnimationEvent;
 import com.heiheilianzai.app.model.event.NovelOpenOtherEvent;
@@ -424,6 +425,8 @@ public class ReadActivity extends BaseReadActivity {
         mNovelScreen = AppPrefs.getSharedBoolean(activity, "novelScreen_ToggleButton", false);
         mNovelOpen = AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false);
         bookpage.setmLeftScreen(mNovelScreen);
+        // 获取tts 不支持的 字符
+        getTTSFilter();
     }
 
     @Override
@@ -1523,7 +1526,7 @@ public class ReadActivity extends BaseReadActivity {
                     public void run() {
                         try {
                             Thread.sleep(1000);
-                            if (!ReadNovelService.SERVICE_IS_LIVE){
+                            if (!ReadNovelService.SERVICE_IS_LIVE) {
                                 startReadNovelService();
                             }
                         } catch (InterruptedException e) {
@@ -1532,5 +1535,29 @@ public class ReadActivity extends BaseReadActivity {
                 }).start();
             }
         }
+    }
+
+    /**
+     * 获取tts 不兼容的 格式字符
+     * {"list":["0xC2 0xA0"]}
+     */
+    private void getTTSFilter() {
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.TTS_FILTER, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String result) {
+                try {
+                    TTSFilterType ttsFilterType = new Gson().fromJson(result, TTSFilterType.class);
+                    readSpeakManager.setTTSFilterList(ttsFilterType.getList());
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+            }
+        });
+
     }
 }

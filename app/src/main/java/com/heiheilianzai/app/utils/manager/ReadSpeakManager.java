@@ -54,12 +54,12 @@ public class ReadSpeakManager {
     private EngineInfo selectedEngine = null;
     private VtLicenseSetting licensemodule = null;
     private List<SyncWordInfo> mWordInfo = new ArrayList<>();
-    private List<SyncWordInfo> fWordInfo = new ArrayList<>();
     private int addFrame = 0;
     private int idxInfo = 0;
     private int totalFrame = 0;
     private int endPos = 0;
     private String bookText = null;
+    private List<String> ttsFilterList = null;
 
     AudioTrack mAudioTrack;
     private final int mSampleRate = 16000;
@@ -485,7 +485,6 @@ public class ReadSpeakManager {
                                 mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
                                 //首次加载计算内容长度 不可变
                                 mWordInfo.addAll(wordInfo);
-                                fWordInfo.addAll(wordInfo);
 
                                 final ByteBuffer audioData = ByteBuffer.wrap(output);
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -727,7 +726,6 @@ public class ReadSpeakManager {
                                 mAudioTrack.setNotificationMarkerPosition(totalFrame / 2);
                                 //首次加载计算内容长度 不可变
                                 mWordInfo.addAll(wordInfo);
-                                fWordInfo.addAll(wordInfo);
 
                                 final ByteBuffer audioData = ByteBuffer.wrap(output);
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -778,6 +776,17 @@ public class ReadSpeakManager {
      */
     public void readPauseBook() {
         resetOptions();
+    }
+
+    /**
+     * TTS 不支持的 格式编码 集合
+     */
+    public void setTTSFilterList(List<String> list) {
+        this.ttsFilterList = list;
+    }
+
+    public List<String> getTtsFilterList() {
+        return ttsFilterList;
     }
 
 }

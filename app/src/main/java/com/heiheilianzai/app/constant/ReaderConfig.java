@@ -92,6 +92,7 @@ public class ReaderConfig {
         }
         return MAXheigth;
     }
+
     // 是否 启用支付 功能
     public static boolean USE_PAY = true;
     //是否使用微信 包括微信登录和微信分享
@@ -489,6 +490,10 @@ public class ReaderConfig {
      */
     public static final String LISTENBOOKRECODE = "/book-listen/update-listen";
 
+    /**
+     * tts 语音库 不支持的 字符格式
+     */
+    public static final String TTS_FILTER = "/tts/filter";
 
     /**
      * 通过第三方获取用户使用网络所在区域

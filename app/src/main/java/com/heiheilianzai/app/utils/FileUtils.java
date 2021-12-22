@@ -4,6 +4,8 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Xml;
 
+import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
+
 import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.File;
@@ -205,17 +207,42 @@ public class FileUtils {
      * 避免 tts 语音库无法识别 造成读书内容 异常
      */
     public static String getFilter2TTS(String str) {
-        String newStr = "";
         byte[] bytes = new byte[]{(byte) 0xc2, (byte) 0xa0};
-        String temp = null;
-        try {
-            temp = new String(bytes, Xml.Encoding.UTF_8.name());
-            newStr = str.replaceAll(temp, "");
-            return newStr;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        List<String> list = ReadSpeakManager.getInstance().getTtsFilterList();
+        String newStr = str;
+        String repalStr = null;
+
+        if (list == null || list.size() <= 1) {
+            bytes = new byte[]{(byte) 0xc2, (byte) 0xa0};
+            try {
+                repalStr = new String(bytes, Xml.Encoding.UTF_8.name());
+                newStr = str.replaceAll(repalStr, " ");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                String ttsStr = list.get(i);
+                if (!TextUtils.isEmpty(ttsStr) && ttsStr.contains(" ")) {
+                    String[] temp = ttsStr.split(" ");
+                    if (temp[0].contains("0x") && temp[1].contains("0x")) {
+
+                        try {
+                            byte byte1 = (byte) Integer.parseInt(temp[0].substring(2));
+                            byte byte2 = (byte) Integer.parseInt(temp[1].substring(2));
+                            bytes = new byte[]{byte1, byte2};
+                            repalStr = new String(bytes, Xml.Encoding.UTF_8.name());
+                            newStr = str.replaceAll(repalStr, " ");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
         }
-        return str;
+
+        return newStr;
     }
 
 }
