@@ -2,6 +2,7 @@ package com.heiheilianzai.app.utils;
 
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Xml;
 
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -197,6 +198,24 @@ public class FileUtils {
             e.printStackTrace();
         }
         return stringbuffer.toString();
+    }
+
+    /**
+     * 过滤小说 特殊格式字符
+     * 避免 tts 语音库无法识别 造成读书内容 异常
+     */
+    public static String getFilter2TTS(String str) {
+        String newStr = "";
+        byte[] bytes = new byte[]{(byte) 0xc2, (byte) 0xa0};
+        String temp = null;
+        try {
+            temp = new String(bytes, Xml.Encoding.UTF_8.name());
+            newStr = str.replaceAll(temp, "");
+            return newStr;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 
 }

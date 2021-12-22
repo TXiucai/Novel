@@ -39,6 +39,7 @@ import com.heiheilianzai.app.model.event.SetTimerEvent;
 import com.heiheilianzai.app.model.event.StartOtherNovel;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.FileUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.TRPage;
@@ -231,7 +232,9 @@ public class ReadNovelService extends Service {
         if (mTrPages.size() > mReadPage) {
             mCurrentPage = mTrPages.get(mReadPage);
             mChapterItem.setBegin(mCurrentPage.getBegin());
-            mReadSpeakManager.playReadBook(mCurrentPage.getLineToString());
+            String currentPageText = mCurrentPage.getLineToString();
+            String bookText = FileUtils.getFilter2TTS(currentPageText);
+            mReadSpeakManager.playReadBook(bookText);
             setNotification();
         } else {
             reset();
