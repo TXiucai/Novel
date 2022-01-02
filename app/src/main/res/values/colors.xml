@@ -179,5 +179,9 @@
     <color name="color_646464">#646464</color>
     <color name="color_ebebeb">#EBEBEB</color>
     <color name="color_c8c8c8">#C8C8C8</color>
+    <color name="color_ffedb3">#FFEDB3</color>
+    <color name="color_8a681d">#8A681D</color>
+    <color name="color_ff9f11">#FF9F11</color>
+    <color name="color_3b140d">#3B140D</color>
     <!--色值定义END-->
 </resources>
