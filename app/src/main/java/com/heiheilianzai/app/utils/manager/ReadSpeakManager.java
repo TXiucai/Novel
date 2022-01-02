@@ -20,6 +20,7 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.ToastUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,14 @@ import kr.co.voiceware.java.vtapi.VoiceText;
 import kr.co.voiceware.java.vtapi.VoiceTextListener;
 import kr.co.voiceware.vtlicensemodule.LicenseDownloadListener;
 import kr.co.voiceware.vtlicensemodule.VtLicenseSetting;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Sink;
 
 public class ReadSpeakManager {
     private static final String ROOT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ReadSpeaker/D16/";
@@ -236,9 +245,9 @@ public class ReadSpeakManager {
         //retry download license
 //        licensemodule.resetLicenseFileDownload();
 
-        /**
+        /*        *//**
          * 防止 license key 过期，仍然不下载 认证文件
-         */
+         *//*
         LICENSE_KEY = ShareUitls.getString(context, "vtapi_license_key", null);
         String rsmLiscenseKey = ShareUitls.getString(App.getAppContext(), RSM_LICENSE_KEY, null);
         if (TextUtils.isEmpty(LICENSE_KEY)) {
@@ -260,7 +269,15 @@ public class ReadSpeakManager {
             }
         } else {
             downloadLicense();
+        }*/
+
+        String verifyTxtPath = LICENSE_PATH + "verification.txt";
+        File verifyFile = new File(verifyTxtPath);
+        if (!verifyFile.exists()) {
+            //retry download license
+            downloadVerification();
         }
+
     }
 
     /**
@@ -293,7 +310,8 @@ public class ReadSpeakManager {
     private void retryDownloadLicense() {
         if (retryDownload > 0) {
             retryDownload--;
-            downloadLicense();
+//            downloadLicense();
+            downloadVerification();
         } else {
             ToastUtil.getInstance().showShortT(context.getString(R.string.read_license_download_error));
         }
@@ -365,6 +383,21 @@ public class ReadSpeakManager {
             voicetext.vtapiInit(ROOT_PATH);
             vtapiHandle = voicetext.vtapiCreateHandle();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        EngineInfo engineInfo = getYingSe();
+        String licensePath = LICENSE_PATH + "verification.txt";
+        try {
+            int isExpired = voicetext.vtapiCheckLicenseFile(engineInfo, licensePath);
+            if (isExpired == -51) {
+                File file = new File(licensePath);
+                if (file.exists()) {
+                    file.delete();
+                }
+                downloadVerification();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -789,4 +822,41 @@ public class ReadSpeakManager {
         return ttsFilterList;
     }
 
+    private void downloadVerification() {
+        final String url = "https://d.iqt.ai/tts/Android/verification.txt";
+        Request request = new Request.Builder().url(url).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                retryDownloadLicense();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Sink sink = null;
+                BufferedSink bufferedSink = null;
+                try {
+                    String licensePath = LICENSE_PATH;
+                    File fileLicense = new File(licensePath);
+                    if (!fileLicense.exists()) {
+                        fileLicense.mkdir();
+                    }
+                    String fileName = "verification.txt";
+                    File dest = new File(licensePath, fileName);
+                    sink = Okio.sink(dest);
+                    bufferedSink = Okio.buffer(sink);
+                    bufferedSink.writeAll(response.body().source());
+                    bufferedSink.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (bufferedSink != null) {
+                        bufferedSink.close();
+                    }
+                }
+            }
+
+        });
+    }
 }
