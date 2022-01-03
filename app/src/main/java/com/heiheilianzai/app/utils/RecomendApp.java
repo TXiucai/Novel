@@ -59,7 +59,6 @@ public class RecomendApp {
     public void getRequestData() {
         if (ReaderConfig.OTHER_SDK_AD.getApp_index() == 2) {
             mIsShowSd = true;
-            sdkAppAd();
         }
         localAppAd();
     }
@@ -109,6 +108,8 @@ public class RecomendApp {
                         mRecomendAppLocalLists = recommendAppBean.getApp_list();
                         if (!mIsShowSd) {
                             getAppUpdatePop(activity, mRecomendAppLocalLists);
+                        } else {
+                            sdkAppAd();
                         }
                     }
 
