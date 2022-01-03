@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import kr.co.voiceware.java.vtapi.Constants;
@@ -241,7 +242,7 @@ public class ReadSpeakManager {
             unfileZipFile(context, outPath);
         }
 
-        licensemodule = new VtLicenseSetting(context);
+//        licensemodule = new VtLicenseSetting(context);
         //retry download license
 //        licensemodule.resetLicenseFileDownload();
 
@@ -270,13 +271,7 @@ public class ReadSpeakManager {
         } else {
             downloadLicense();
         }*/
-
-        String verifyTxtPath = LICENSE_PATH + "verification.txt";
-        File verifyFile = new File(verifyTxtPath);
-        if (!verifyFile.exists()) {
-            //retry download license
-            downloadVerification();
-        }
+        downloadVerification();
 
     }
 
@@ -371,7 +366,7 @@ public class ReadSpeakManager {
         }
         voicetext = new VoiceText();
         if (licensemodule == null) {
-            voicetext.vtapiSetLicenseFolder(ROOT_PATH + "verify/");
+            voicetext.vtapiSetLicenseFolder(ROOT_PATH);
         } else {
             // License Module
             voicetext.vtapiSetLicenseFolder(LICENSE_PATH);
@@ -388,7 +383,7 @@ public class ReadSpeakManager {
         }
 
         EngineInfo engineInfo = getYingSe();
-        String licensePath = LICENSE_PATH + "verification.txt";
+        String licensePath = ROOT_PATH + "verification.txt";
         try {
             int isExpired = voicetext.vtapiCheckLicenseFile(engineInfo, licensePath);
             if (isExpired == -51) {
@@ -483,9 +478,10 @@ public class ReadSpeakManager {
         mOptions = getOptions();
         idxInfo = 0;
 
-        new Thread(new Runnable() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
+
                 Message msg0 = uiHandler.obtainMessage();
                 msg0.what = BTN_PLAY;
                 uiHandler.sendMessage(msg0);
@@ -559,7 +555,7 @@ public class ReadSpeakManager {
 
             }
 
-        }).start();
+        });
 
     }
 
@@ -736,7 +732,6 @@ public class ReadSpeakManager {
                 totalFrame = 0;
                 addFrame = 0;
                 idxInfo = 0;
-
                 try {
                     voicetext.vtapiTextToBufferWithSyncWordInfo(vtapiHandle, newText, false, false, 0, selectedEngine.getSpeaker(), selectedEngine.getSampling(), selectedEngine.getType(), mOptions, Constants.OutputFormat.FORMAT_16PCM, new VoiceTextListener() {
                         @Override
@@ -836,7 +831,7 @@ public class ReadSpeakManager {
                 Sink sink = null;
                 BufferedSink bufferedSink = null;
                 try {
-                    String licensePath = LICENSE_PATH;
+                    String licensePath = ROOT_PATH;
                     File fileLicense = new File(licensePath);
                     if (!fileLicense.exists()) {
                         fileLicense.mkdir();
