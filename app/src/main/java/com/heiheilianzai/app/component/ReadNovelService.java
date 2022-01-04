@@ -237,20 +237,26 @@ public class ReadNovelService extends Service {
             mReadSpeakManager.playReadBook(bookText);
             setNotification();
         } else {
-            reset();
-            getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
-                @Override
-                public void onSuccessChapterContent(List<TRPage> content) {
-                    mTrPages.addAll(content);
-                    readBook();
-                }
+            if (TextUtils.equals(mChapterItem.getNext_chapter_id(), "-2")) {//这个本书读完关闭服务
+                mReadSpeakManager.stopReadBook(1);
+                closeService(getApplicationContext());
+            } else {
+                reset();
+                getChapterContent(mBaseBook.getBook_id(), mChapterItem.getNext_chapter_id(), new GetChapterContent() {
+                    @Override
+                    public void onSuccessChapterContent(List<TRPage> content) {
+                        mTrPages.addAll(content);
+                        readBook();
+                    }
 
-                @Override
-                public void onFailChapterContent() {
-                    mReadSpeakManager.stopReadBook(1);
-                    MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
-                }
-            });
+                    @Override
+                    public void onFailChapterContent() {
+                        mReadSpeakManager.stopReadBook(1);
+                        MyToash.ToashError(getApplication(), getResources().getString(R.string.string_read_book_error));
+                    }
+                });
+            }
+
         }
     }
 
