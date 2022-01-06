@@ -142,6 +142,10 @@ public class BookConfig {
      */
     public static final String book_top_year_refresh =  "/home-recommen/book-refresh";
 
-
+    /**
+     * 主页底部radio button 图片
+     * 动态获
+     */
+    public static final String bottom_icon_menu = "/bottom-icon-menu/index";
 
 }

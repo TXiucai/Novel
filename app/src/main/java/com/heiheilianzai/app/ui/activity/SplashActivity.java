@@ -2,11 +2,19 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
 import com.google.gson.Gson;
@@ -17,10 +25,12 @@ import com.heiheilianzai.app.base.BaseAdvertisementActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.constant.AppConfig;
+import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ApiDomainBean;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.BottomIconMenu;
 import com.heiheilianzai.app.model.H5UrlBean;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.UserInfoItem;
@@ -41,21 +51,16 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.mobi.xad.XAdManager;
-import com.mobi.xad.XRequestManager;
-import com.mobi.xad.bean.AdInfo;
-import com.mobi.xad.bean.AdType;
-import com.mobi.xad.net.XAdRequestListener;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
-
-
-import androidx.annotation.NonNull;
 
 import butterknife.BindView;
 
@@ -300,6 +305,28 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 }
             }
         });
+
+        /**
+         * 动态获取主页底部菜单栏图标
+         */
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        String url = ReaderConfig.getBaseUrl() + BookConfig.bottom_icon_menu;
+        HttpUtils.getInstance(this).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) throws JSONException {
+                BottomIconMenu bottomIconMenu = new Gson().fromJson(response, BottomIconMenu.class);
+                if (bottomIconMenu != null && bottomIconMenu.list != null || bottomIconMenu.list.size() > 0) {
+                    getUrlDownload(bottomIconMenu.getList());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+
+            }
+        });
+
     }
 
     @Override
@@ -407,4 +434,75 @@ public class SplashActivity extends BaseAdvertisementActivity {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 获取 底部 radio button 图片地址
+     *
+     * @param list
+     */
+    private void getUrlDownload(List<BottomIconMenu.RBIcons> list) {
+
+        for (int i = 0; i < list.size(); i++) {
+            BottomIconMenu.RBIcons rbIcons = list.get(i);
+            String iconSelected = rbIcons.getIcon_selected();
+            String iconNormal = rbIcons.getIcon_normal();
+            saveImg2SD(i, "selected", iconSelected);
+            saveImg2SD(i, "normal", iconNormal);
+        }
+
+    }
+
+    /**
+     * 使用glide下载并转换成bitmap
+     *
+     * @param i
+     * @param type
+     * @param url
+     */
+    private void saveImg2SD(int i, String type, String url) {
+        Glide.get(SplashActivity.this).clearMemory();
+        Glide.with(SplashActivity.this)
+                .asBitmap()
+                .load(url)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                        saveToSystemGallery(i, type, bitmap);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+    }
+
+    /**
+     * 保存到本地
+     *
+     * @param i
+     * @param type
+     * @param bitmap
+     */
+    public void saveToSystemGallery(int i, String type, Bitmap bitmap) {
+        File fileDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/", "hhlz");
+        if (!fileDir.exists()) {
+            fileDir.mkdir();
+        }
+
+        String fileName = "rb_btn_" + type + "_" + i + ".png";
+
+        File file = new File(fileDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

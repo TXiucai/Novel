@@ -1,5 +1,9 @@
 package com.heiheilianzai.app.ui.activity;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
+import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,10 +12,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -23,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -50,20 +58,18 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
-import com.heiheilianzai.app.model.RecommendAppBean;
 import com.heiheilianzai.app.model.VipOrderBean;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
-import com.heiheilianzai.app.model.event.NoticeEvent;
-import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
+import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
-import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.HomeNoticeDialog;
 import com.heiheilianzai.app.ui.dialog.HomeNoticePhotoDialog;
 import com.heiheilianzai.app.ui.dialog.MyPoPwindow;
@@ -102,14 +108,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
-import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
-import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 public class MainActivity extends BaseButterKnifeTransparentActivity {
     @BindView(R.id.RadioGroup)
@@ -963,5 +968,59 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      */
     private void trackInstallation() {
         SensorsDataHelper.trackInstallation();
+    }
+
+    /**
+     * 动态设置radio button selector
+     */
+    private void setRBSelectedState() {
+        String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        RadioButton[] bytes = {home_novel_layout, home_store_layout, home_store_layout_comic, home_discovery_layout, home_mine_layout};
+        for (int i = 1; i <= bytes.length; i++) {
+            String picNameNormal = "rb_btn_normal" + i + ".png";
+            String picNameSelected = "rb_btn_selected" + i + ".png";
+
+            Bitmap bitmap_normal = imgToBitmap(rootPath + picNameNormal);
+            Bitmap bitmap_selected = imgToBitmap(rootPath + picNameSelected);
+            StateListDrawable arriveddrawable = new StateListDrawable();
+//        Drawable arriveselected = getResources().getDrawable(R.drawable.bitmap_1_selected);
+//        Drawable arriveunSelected = getResources().getDrawable(R.drawable.bitmap_1_normal);
+            if (bitmap_normal != null && bitmap_selected != null) {
+                Drawable arriveunSelected = new BitmapDrawable(bitmap_normal);
+                Drawable arriveselected = new BitmapDrawable(bitmap_selected);
+
+                arriveddrawable.addState(new int[]{android.R.attr.state_checked},
+                        arriveselected);
+                arriveddrawable.addState(new int[]{-android.R.attr.state_checked},
+                        arriveunSelected);
+                bytes[i - 1].setCompoundDrawablesWithIntrinsicBounds(null, arriveddrawable, null, null);
+
+//            ColorStateList colorStateList = getResources().getColorStateList(R.color.rb_menu_item_textcolor);
+//            bytes[i-1].setTextColor(colorStateList);
+            }
+
+        }
+    }
+
+    /**
+     * 从本地拿取图片，并转bitmap
+     *
+     * @param picPath
+     * @return
+     */
+    private Bitmap imgToBitmap(String picPath) {
+        FileInputStream fis = null;
+        File file = new File(picPath);
+        if (!file.exists()) {
+            return null;
+        }
+
+        try {
+            fis = new FileInputStream(picPath);
+        } catch (FileNotFoundException e) {
+
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(fis);
+        return bitmap;
     }
 }
