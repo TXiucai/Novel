@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.AcquirePayItem;
+import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.view.MarqueeView;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,7 +48,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.vip_baoyue_pay_item, null, false);
+        View inflate = LayoutInflater.from(context).inflate(R.layout.my_member_price, null, false);
         return new ViewHolder(inflate);
     }
 
@@ -55,34 +57,50 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         AcquirePayItem acquirePayItem = list.get(position);
         ViewHolder viewHolder = (ViewHolder) holder;
         if (selectPosition == position) {
-            viewHolder.ryItem.setBackground(context.getDrawable(R.drawable.shape_d69547_10));
+            viewHolder.mLlGift.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.ryItem.setBackground(context.getDrawable(R.drawable.shape_e6e6e6_10));
+            viewHolder.mLlGift.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(acquirePayItem.getGoods_label())) {
-            viewHolder.mqFlag.setVisibility(View.VISIBLE);
-            viewHolder.mqFlag.setRndDuration(3000);
-            viewHolder.mqFlag.setText(acquirePayItem.getGoods_label());
-            viewHolder.mqFlag.startScroll();
+            viewHolder.mTxLabel.setVisibility(View.VISIBLE);
+            viewHolder.mTxLabel.setText(acquirePayItem.getGoods_label());
         } else {
-            viewHolder.mqFlag.setVisibility(View.GONE);
+            viewHolder.mTxLabel.setVisibility(View.GONE);
         }
-        viewHolder.txTittle.setText(acquirePayItem.getTitle());
-        viewHolder.txPrice.setText(acquirePayItem.getPrice());
-        if (acquirePayItem.getOriginal_price() != null && !TextUtils.equals(acquirePayItem.getOriginal_price(), "0")) {
-            viewHolder.txTip.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            viewHolder.txTip.setText("¥" + acquirePayItem.getOriginal_price());
+        viewHolder.mTxTittle.setText(acquirePayItem.getTitle());
+        viewHolder.mTxSubTittle.setText(acquirePayItem.getSub_title());
+        viewHolder.mTxPrice.setText(String.valueOf(acquirePayItem.getPrice()));
+        if (acquirePayItem.getOriginal_price() != 0) {
+            viewHolder.mTxOriginalPrice.setVisibility(View.VISIBLE);
+            viewHolder.mTxOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            viewHolder.mTxOriginalPrice.setText("¥" + acquirePayItem.getOriginal_price());
         } else {
-            viewHolder.txTip.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
-            viewHolder.txTip.setText(acquirePayItem.getNote());
+            viewHolder.mTxOriginalPrice.setVisibility(View.GONE);
         }
         if (onPayItemClickListener != null) {
-            viewHolder.ryItem.setOnClickListener(new View.OnClickListener() {
+            viewHolder.mRlItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onPayItemClickListener.onPayItemClick(acquirePayItem, position);
                 }
             });
+        }
+        if (acquirePayItem.getPrivilege_list_name() != null && acquirePayItem.getPrivilege_list_name().size() > 0) {
+            for (int i = 0; i < acquirePayItem.getPrivilege_list_name().size(); i++) {
+                if (i == 0) {
+                    viewHolder.mTxGift1.setText(acquirePayItem.getPrivilege_list_name().get(0));
+                    viewHolder.mTxGift1.setVisibility(View.VISIBLE);
+                } else if (i == 1) {
+                    viewHolder.mTxGift2.setText(acquirePayItem.getPrivilege_list_name().get(1));
+                    viewHolder.mTxGift2.setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            viewHolder.mTxGift1.setVisibility(View.GONE);
+            viewHolder.mTxGift2.setVisibility(View.GONE);
+        }
+        if (acquirePayItem.getEnd_time() != 0) {
+            viewHolder.mTxTime.setText(DateUtils.getDistanceTime(DateUtils.getTodayTimeHM(), DateUtils.timeStampToDate(acquirePayItem.getEnd_time(), "yyyy-MM-dd HH:mm")));
         }
     }
 
@@ -100,16 +118,26 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tx_vip_flag)
-        public MarqueeView mqFlag;
-        @BindView(R.id.tx_vip_tittle)
-        public TextView txTittle;
-        @BindView(R.id.tx_vip_price)
-        public TextView txPrice;
-        @BindView(R.id.tx_vip_tip)
-        public TextView txTip;
-        @BindView(R.id.rl_vip_item)
-        public LinearLayout ryItem;
+        @BindView(R.id.iv_newer_label)
+        public TextView mTxLabel;
+        @BindView(R.id.tv_limit_time)
+        public TextView mTxTime;
+        @BindView(R.id.iv_member_label)
+        public TextView mTxTittle;
+        @BindView(R.id.tv_label_01)
+        public TextView mTxSubTittle;
+        @BindView(R.id.tv_current_price)
+        public TextView mTxPrice;
+        @BindView(R.id.tv_original_price)
+        public TextView mTxOriginalPrice;
+        @BindView(R.id.tv_gift_1)
+        public TextView mTxGift1;
+        @BindView(R.id.tv_gift_2)
+        public TextView mTxGift2;
+        @BindView(R.id.ll_gift_list)
+        public LinearLayout mLlGift;
+        @BindView(R.id.rl_newer_member)
+        public RelativeLayout mRlItem;
 
         public ViewHolder(View view) {
             super(view);

@@ -574,7 +574,7 @@
     <string name="string_comment">精品推荐</string>
     <string name="string_success_vip_marquee">恭喜%s开通vip套餐</string>
     <string name="string_vip_price">实付：¥</string>
-    <string name="string_vip_price_tip">(标价￥%s，已优惠￥%d)</string>
+    <string name="string_vip_price_tip">(标价￥%d，已优惠￥%d)</string>
     <string name="string_accept_gift_success">恭喜您，兑换成功！</string>
     <string name="string_edit_address_success">收货地址修改成功</string>
     <string name="string_registe_fast">快速注册</string>
@@ -633,5 +633,6 @@
     <string name="string_read_service_prohibit">听书模式下，该功能暂时不可用</string>
     <string name="string_notification_permission">请打开通知栏权限。点击【确定】跳转设置页。</string>
     <string name="string_welfare_go"><u>立刻前往</u></string>
+    <string name="string_vip_power">基础特权</string>
 
 </resources>

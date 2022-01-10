@@ -9,49 +9,36 @@ public class AcquirePayItem {
 
 
     /**
-     * goods_id : 11
-     * title : 12个月
-     * price : 150
+     * privilege_list_name : ["测试test","测试重复","测试1"]
+     * goods_id : 41
+     * title : 两日会员.
+     * price : 10
+     * original_price : 0
+     * goods_label : 新人专享
      * apple_id :
+     * default_select : 0
+     * sub_title : 限时体验
+     * end_time : 1643641505
      * pay_channel : ["alipay","weixin"]
-     * note : 省66元，12.5元/每月
-     * tag : [{"tab":"年费vip","color":"#ff0000"}]
+     * note_text :
+     * note : 限时体验
+     * tag : []
      */
 
     private String goods_id;
     private String title;
-    private String price;
-    private String apple_id;
-    private String note;
-    private List<String> pay_channel;
-    private List<TagBean> tag;
-    private String original_price;
+    private int price;
+    private int original_price;
     private String goods_label;
+    private String apple_id;
+    private String default_select;
+    private String sub_title;
+    private int end_time;
     private String note_text;
-
-    public String getNote_text() {
-        return note_text;
-    }
-
-    public void setNote_text(String note_text) {
-        this.note_text = note_text;
-    }
-
-    public String getGoods_label() {
-        return goods_label;
-    }
-
-    public void setGoods_label(String goods_label) {
-        this.goods_label = goods_label;
-    }
-
-    public String getOriginal_price() {
-        return original_price;
-    }
-
-    public void setOriginal_price(String original_price) {
-        this.original_price = original_price;
-    }
+    private String note;
+    private List<String> privilege_list_name;
+    private List<String> pay_channel;
+    private List<?> tag;
 
     public String getGoods_id() {
         return goods_id;
@@ -69,12 +56,28 @@ public class AcquirePayItem {
         this.title = title;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getOriginal_price() {
+        return original_price;
+    }
+
+    public void setOriginal_price(int original_price) {
+        this.original_price = original_price;
+    }
+
+    public String getGoods_label() {
+        return goods_label;
+    }
+
+    public void setGoods_label(String goods_label) {
+        this.goods_label = goods_label;
     }
 
     public String getApple_id() {
@@ -85,12 +88,52 @@ public class AcquirePayItem {
         this.apple_id = apple_id;
     }
 
+    public String getDefault_select() {
+        return default_select;
+    }
+
+    public void setDefault_select(String default_select) {
+        this.default_select = default_select;
+    }
+
+    public String getSub_title() {
+        return sub_title;
+    }
+
+    public void setSub_title(String sub_title) {
+        this.sub_title = sub_title;
+    }
+
+    public int getEnd_time() {
+        return end_time;
+    }
+
+    public void setEnd_time(int end_time) {
+        this.end_time = end_time;
+    }
+
+    public String getNote_text() {
+        return note_text;
+    }
+
+    public void setNote_text(String note_text) {
+        this.note_text = note_text;
+    }
+
     public String getNote() {
         return note;
     }
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public List<String> getPrivilege_list_name() {
+        return privilege_list_name;
+    }
+
+    public void setPrivilege_list_name(List<String> privilege_list_name) {
+        this.privilege_list_name = privilege_list_name;
     }
 
     public List<String> getPay_channel() {
@@ -101,37 +144,11 @@ public class AcquirePayItem {
         this.pay_channel = pay_channel;
     }
 
-    public List<TagBean> getTag() {
+    public List<?> getTag() {
         return tag;
     }
 
-    public void setTag(List<TagBean> tag) {
+    public void setTag(List<?> tag) {
         this.tag = tag;
-    }
-
-    public static class TagBean {
-        /**
-         * tab : 年费vip
-         * color : #ff0000
-         */
-
-        private String tab;
-        private String color;
-
-        public String getTab() {
-            return tab;
-        }
-
-        public void setTab(String tab) {
-            this.tab = tab;
-        }
-
-        public String getColor() {
-            return color;
-        }
-
-        public void setColor(String color) {
-            this.color = color;
-        }
     }
 }

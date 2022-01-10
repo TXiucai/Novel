@@ -43,7 +43,67 @@
                 android:textSize="16sp" />
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_simple"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:background="@color/black"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.heiheilianzai.app.view.CircleImageView
+                android:id="@+id/activity_acquire_avatar2"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:src="@mipmap/hold_user_avatar" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activity_acquire_avatar_name2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/BaoyueActivity_no_login"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/activity_acquire_avatar_isvip2"
+                    android:layout_width="@dimen/dimens_18dp"
+                    android:layout_height="@dimen/dimens_18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dimens_6dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_isvip"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/activity_acquire_customer_service2"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="@dimen/dp_40"
+                android:background="@drawable/shape_ef966b_20"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimens_10dp"
+                android:paddingRight="@dimen/dimens_10dp"
+                android:text="联系客服"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+        </LinearLayout>
+
         <com.heiheilianzai.app.view.ObservableScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -54,30 +114,24 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_140dp"
-                    android:background="@color/black" />
-
                 <RelativeLayout
+                    android:id="@+id/rl_complete"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_150dp"
+                    android:layout_height="@dimen/dimens_80dp"
                     android:layout_marginLeft="@dimen/dimens_15dp"
-                    android:layout_marginTop="-125dp"
                     android:layout_marginRight="@dimen/dimens_15dp"
                     android:background="@mipmap/baoyue_vip_bg">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_15dp"
                         android:orientation="horizontal"
                         android:padding="@dimen/dimens_10dp">
 
                         <com.heiheilianzai.app.view.CircleImageView
                             android:id="@+id/activity_acquire_avatar"
-                            android:layout_width="@dimen/dimens_50dp"
-                            android:layout_height="@dimen/dimens_50dp"
+                            android:layout_width="@dimen/dp_40"
+                            android:layout_height="@dimen/dp_40"
                             android:layout_marginLeft="@dimen/dimens_10dp"
                             android:src="@mipmap/hold_user_avatar" />
 
@@ -101,7 +155,7 @@
                                     android:gravity="center_vertical"
                                     android:text="@string/BaoyueActivity_no_login"
                                     android:textColor="@color/white"
-                                    android:textSize="14sp" />
+                                    android:textSize="15sp" />
 
                                 <ImageView
                                     android:id="@+id/activity_acquire_avatar_isvip"
@@ -122,7 +176,7 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/BaoyueActivity_mianfei"
                                 android:textColor="@color/color_ef966B"
-                                android:textSize="12sp" />
+                                android:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -131,14 +185,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginTop="@dimen/dimens_25dp"
+                        android:layout_marginTop="@dimen/dp_10"
                         android:layout_marginRight="@dimen/dimens_30dp"
                         android:gravity="center"
                         android:orientation="vertical">
 
                         <View
                             android:layout_width="@dimen/dimens_35dp"
-                            android:layout_height="@dimen/dimens_35dp"
+                            android:layout_height="@dimen/dimens_30dp"
                             android:layout_centerHorizontal="true"
                             android:background="@mipmap/ic_customer_service" />
 
@@ -159,22 +213,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-50dp"
                     android:background="@color/white"
                     android:orientation="vertical">
 
-                    <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:text="@string/string_vip_power"
+                        android:textColor="@color/color_323334"
+                        android:textSize="14sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/activity_acquire_privilege_gridview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:numColumns="5" />
+                        android:layout_height="wrap_content" />
 
                     <LinearLayout
                         android:id="@+id/ll_announce_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimens_30dp"
+                        android:layout_height="@dimen/dimens_26dp"
                         android:layout_marginLeft="@dimen/dimens_15dp"
-                        android:layout_marginTop="@dimen/dimens_20dp"
                         android:layout_marginRight="@dimen/dimens_15dp"
                         android:layout_marginBottom="@dimen/dimens_10dp"
                         android:background="@drawable/shape_announce"
@@ -190,12 +249,10 @@
                         <com.heiheilianzai.app.view.MarqueeTextView
                             android:id="@+id/marquee"
                             android:layout_width="0dp"
-                            android:layout_height="@dimen/dimens_30dp"
+                            android:layout_height="@dimen/dimens_26dp"
                             android:layout_marginLeft="@dimen/dimens_10dp"
                             android:layout_weight="1" />
-
                     </LinearLayout>
-
 
                 </LinearLayout>
 
@@ -212,23 +269,6 @@
                     android:layout_marginTop="@dimen/dimens_10dp"
                     android:layout_marginRight="@dimen/dimens_15dp" />
 
-                <TextView
-                    android:id="@+id/tx_bottom_tip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimens_15dp"
-                    android:layout_marginTop="@dimen/dimens_10dp"
-                    android:layout_marginRight="@dimen/dimens_15dp"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:background="@drawable/shape_f6f6f6_20"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/dimens_15dp"
-                    android:paddingTop="@dimen/dimens_7dp"
-                    android:paddingRight="@dimen/dimens_15dp"
-                    android:paddingBottom="@dimen/dimens_7dp"
-                    android:textColor="@color/color_c1c1c1"
-                    android:textSize="11sp" />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimens_10dp"
@@ -241,8 +281,7 @@
                     android:layout_marginTop="@dimen/dimens_15dp"
                     android:text="@string/string_comment"
                     android:textColor="@color/color_323334"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
                 <com.heiheilianzai.app.view.AdaptionGridView
                     android:id="@+id/gv"
@@ -264,16 +303,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_45dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/dimens_15dp"
-        android:layout_marginRight="@dimen/dimens_15dp"
-        android:layout_marginBottom="@dimen/dimens_15dp"
-        android:background="@mipmap/vip_success_bg"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="64"
+            android:layout_weight="1"
+            android:background="@color/color_1a1a1a"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="@dimen/dimens_25dp">
@@ -305,7 +341,6 @@
                 android:textColor="@color/color_9a9a9a"
                 android:textSize="10sp"
                 android:visibility="gone" />
-
         </LinearLayout>
 
         <TextView
@@ -313,10 +348,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_weight="36"
+            android:layout_weight="1"
+            android:background="@color/color_f7b500"
             android:gravity="center"
             android:text="@string/mine_vip_open"
-            android:textColor="@color/color_323334"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold" />
 

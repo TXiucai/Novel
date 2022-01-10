@@ -7,47 +7,36 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AcquirePrivilegeItem;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.ScreenSizeUtils;
 
 import java.util.List;
 
 /**
- *包月特权
+ * 包月特权
  * Created by scb on 2018/8/12.
  */
-public class AcquireBaoyuePrivilegeAdapter extends ReaderBaseAdapter<AcquirePrivilegeItem> {
+public class AcquireBaoyuePrivilegeAdapter extends BaseQuickAdapter<AcquirePrivilegeItem, BaseViewHolder> {
     Activity mActivity;
-    public AcquireBaoyuePrivilegeAdapter(Activity context, List<AcquirePrivilegeItem> list, int count) {
-        this(context, list, count,true);
-    }
 
-    public AcquireBaoyuePrivilegeAdapter(Activity context, List<AcquirePrivilegeItem> list, int count, boolean close) {
-        super(context, list, count, close);
-        mActivity=context;
+    public AcquireBaoyuePrivilegeAdapter(Activity mActivity) {
+        super(R.layout.item_acquire_privilege);
+        this.mActivity = mActivity;
     }
 
     @Override
-    public View getOwnView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_acquire_privilege, null, false);
-            viewHolder.item_acquire_privilege_img= convertView.findViewById(R.id.item_acquire_privilege_img);
-            viewHolder.item_acquire_privilege_title= convertView.findViewById(R.id.item_acquire_privilege_title);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-        MyPicasso.GlideImageNoSize(mActivity, ReaderConfig.getBaseUrl()+mList.get(position).getIcon(), viewHolder.item_acquire_privilege_img);
-        viewHolder.item_acquire_privilege_title.setText(mList.get(position).getLabel());
-        return convertView;
-    }
-
-    class ViewHolder {
-        ImageView item_acquire_privilege_img;
-        TextView item_acquire_privilege_title;
+    protected void convert(@NonNull BaseViewHolder helper, AcquirePrivilegeItem item) {
+        ViewGroup.LayoutParams layoutParams = helper.itemView.getLayoutParams();
+        layoutParams.width = ScreenSizeUtils.getInstance(mActivity).getScreenWidth() / 5;
+        helper.itemView.setLayoutParams(layoutParams);
+        helper.setText(R.id.item_acquire_privilege_title, item.getLabel());
+        MyPicasso.GlideImageNoSize(mActivity, item.getIcon(), helper.getView(R.id.item_acquire_privilege_img));
     }
 }
