@@ -17,7 +17,7 @@ public class BottomIconMenu {
     public static class RBIcons {
         String icon_selected;
         String icon_normal;
-        String title;
+        String icon_title;
 
         public String getIcon_selected() {
             return icon_selected;
@@ -35,12 +35,12 @@ public class BottomIconMenu {
             this.icon_normal = icon_normal;
         }
 
-        public String getTitle() {
-            return title;
+        public String getIcon_title() {
+            return icon_title;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setIcon_title(String icon_title) {
+            this.icon_title = icon_title;
         }
     }
 }

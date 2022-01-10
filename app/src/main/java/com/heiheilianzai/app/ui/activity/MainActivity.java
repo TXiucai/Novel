@@ -332,25 +332,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     private void initView() {
-        setBottomButtonImgs();
+        setRBSelectedState();
         initFragmentView();
         ShowPOP();
-    }
-
-    /**
-     * 设置底部按钮图片
-     */
-    private void setBottomButtonImgs() {
-        setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
-        setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
-        setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
-        if (getAppUpdate() != null && getBoyinSwitch() == 1) {
-            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
-            home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
-        } else {
-            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_discovery);
-        }
-        setBottomButtonImg(home_mine_layout, R.drawable.selector_home_mine);
     }
 
     private void setBottomButtonImg(RadioButton button, int drawable) {
@@ -976,27 +960,42 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private void setRBSelectedState() {
         String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
         RadioButton[] bytes = {home_novel_layout, home_store_layout, home_store_layout_comic, home_discovery_layout, home_mine_layout};
-        for (int i = 1; i <= bytes.length; i++) {
-            String picNameNormal = "rb_btn_normal" + i + ".png";
-            String picNameSelected = "rb_btn_selected" + i + ".png";
+        int[] bytesmipNormal = {R.mipmap.main_rb_menu_normal_1, R.mipmap.main_rb_menu_normal_2, R.mipmap.comic1, R.mipmap.activity_home_boyin_normal, R.mipmap.activity_home_mine_normal};
+        int[] bytesmipSelected = {R.mipmap.main_rb_menu_selected_1, R.mipmap.main_rb_menu_selected_2, R.mipmap.comic2, R.mipmap.activity_home_boyin_press, R.mipmap.activity_home_mine_press};
+        String[] titles = {getString(R.string.MainActivity_shujia), getString(R.string.noverfragment_xiaoshuo), getString(R.string.noverfragment_manhua), getString(R.string.MainActivity_boyin), getString(R.string.MainActivity_my)};
+
+        for (int i = 0; i < bytes.length; i++) {
+            String picNameNormal = "rb_btn_normal_" + i + ".png";
+            String picNameSelected = "rb_btn_selected_" + i + ".png";
 
             Bitmap bitmap_normal = imgToBitmap(rootPath + picNameNormal);
             Bitmap bitmap_selected = imgToBitmap(rootPath + picNameSelected);
             StateListDrawable arriveddrawable = new StateListDrawable();
-//        Drawable arriveselected = getResources().getDrawable(R.drawable.bitmap_1_selected);
-//        Drawable arriveunSelected = getResources().getDrawable(R.drawable.bitmap_1_normal);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.outWidth = 100;
+            options.outHeight = 100;
+            options.inSampleSize = 1;
+            if (bitmap_normal == null) {
+                bitmap_normal = BitmapFactory.decodeResource(getResources(), bytesmipNormal[i], options);
+            }
+            if (bitmap_selected == null) {
+                bitmap_selected = BitmapFactory.decodeResource(getResources(), bytesmipSelected[i], options);
+            }
             if (bitmap_normal != null && bitmap_selected != null) {
-                Drawable arriveunSelected = new BitmapDrawable(bitmap_normal);
-                Drawable arriveselected = new BitmapDrawable(bitmap_selected);
-
+                Drawable drawNormal = new BitmapDrawable(bitmap_normal);
+                Drawable drawSelected = new BitmapDrawable(bitmap_selected);
+                drawNormal.setBounds(0, 0, 100, 100);
+                drawSelected.setBounds(0, 0, 100, 100);
                 arriveddrawable.addState(new int[]{android.R.attr.state_checked},
-                        arriveselected);
+                        drawSelected);
                 arriveddrawable.addState(new int[]{-android.R.attr.state_checked},
-                        arriveunSelected);
-                bytes[i - 1].setCompoundDrawablesWithIntrinsicBounds(null, arriveddrawable, null, null);
+                        drawNormal);
+                bytes[i].setCompoundDrawablesWithIntrinsicBounds(null, arriveddrawable, null, null);
 
-//            ColorStateList colorStateList = getResources().getColorStateList(R.color.rb_menu_item_textcolor);
-//            bytes[i-1].setTextColor(colorStateList);
+                String title = ShareUitls.getString(App.getContext(), "tab_main_menu_" + i, titles[i]);
+                bytes[i].setText(title);
+
             }
 
         }

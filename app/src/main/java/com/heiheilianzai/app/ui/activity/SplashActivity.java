@@ -2,19 +2,14 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
 import com.google.gson.Gson;
@@ -50,6 +45,7 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.mobi.xad.XAdManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,12 +53,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import butterknife.BindView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Sink;
 
 /**
  * 开屏页
@@ -448,6 +453,8 @@ public class SplashActivity extends BaseAdvertisementActivity {
             String iconNormal = rbIcons.getIcon_normal();
             saveImg2SD(i, "selected", iconSelected);
             saveImg2SD(i, "normal", iconNormal);
+            String title = rbIcons.getIcon_title();
+            ShareUitls.putString(App.getAppContext(), "tab_main_menu_" + i, title);
         }
 
     }
@@ -460,49 +467,70 @@ public class SplashActivity extends BaseAdvertisementActivity {
      * @param url
      */
     private void saveImg2SD(int i, String type, String url) {
-        Glide.get(SplashActivity.this).clearMemory();
-        Glide.with(SplashActivity.this)
-                .asBitmap()
-                .load(url)
-                .into(new CustomTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
-                        saveToSystemGallery(i, type, bitmap);
+
+        String fileName = "rb_btn_" + type + "_" + i + ".png";
+        downloadMenus(url, fileName);
+    }
+
+    private void downloadMenus(String url, String fileName) {
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        File dest = new File(dirPath, fileName);
+
+        Request request = new Request.Builder().url(url).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Sink sink = null;
+                BufferedSink bufferedSink = null;
+                try {
+                    String imgPath = dirPath;
+                    File imgFile = new File(imgPath);
+                    if (!imgFile.exists()) {
+                        imgFile.mkdir();
                     }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    sink = Okio.sink(dest);
+                    bufferedSink = Okio.buffer(sink);
+                    bufferedSink.writeAll(response.body().source());
+                    bufferedSink.close();
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (bufferedSink != null) {
+                        bufferedSink.close();
                     }
-                });
+                    decryptFile(fileName);
+                }
+
+            }
+
+        });
     }
 
     /**
-     * 保存到本地
+     * 解密文件成 png
      *
-     * @param i
-     * @param type
-     * @param bitmap
+     * @param fileName
      */
-    public void saveToSystemGallery(int i, String type, Bitmap bitmap) {
-        File fileDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/", "hhlz");
-        if (!fileDir.exists()) {
-            fileDir.mkdir();
-        }
+    private void decryptFile(String fileName) {
 
-        String fileName = "rb_btn_" + type + "_" + i + ".png";
-
-        File file = new File(fileDir, fileName);
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        File dest = new File(dirPath, fileName);
+        InputStream inputStream = null;
         try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
+            inputStream = new FileInputStream(dest);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
     }
 
 }
