@@ -29,9 +29,12 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -53,11 +56,13 @@ import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.DownloadBoyinService;
+import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
+import com.heiheilianzai.app.model.PrivilegeWelfare;
 import com.heiheilianzai.app.model.VipOrderBean;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
@@ -106,6 +111,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -138,6 +144,14 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public LinearLayout shelf_book_delete_btn;
     @BindView(R.id.view_guide_down)
     View view_guide_down;
+    @BindView(R.id.fl_welfare)
+    FrameLayout fl_welfare;
+    @BindView(R.id.iv_welfare_close)
+    ImageView iv_welfare_close;
+    @BindView(R.id.tv_welfare_text)
+    TextView tv_welfare_text;
+    @BindView(R.id.tv_welfare_go)
+    TextView tv_welfare_go;
 
     private List<Fragment> mFragmentList;
     private AppUpdate mAppUpdate;
@@ -335,6 +349,22 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setRBSelectedState();
         initFragmentView();
         ShowPOP();
+    }
+
+    /**
+     * 设置底部按钮图片
+     */
+    private void setBottomButtonImgs() {
+        setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
+        setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
+        setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
+        if (getAppUpdate() != null && getBoyinSwitch() == 1) {
+            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
+            home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
+        } else {
+            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_discovery);
+        }
+        setBottomButtonImg(home_mine_layout, R.drawable.selector_home_mine);
     }
 
     private void setBottomButtonImg(RadioButton button, int drawable) {
@@ -638,6 +668,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 mIsShowTwoNotice = false;
             }
         }
+        // 专享福利
+        getWelfareConfig(activity);
     }
 
     @Override
@@ -971,18 +1003,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             Bitmap bitmap_normal = imgToBitmap(rootPath + picNameNormal);
             Bitmap bitmap_selected = imgToBitmap(rootPath + picNameSelected);
             StateListDrawable arriveddrawable = new StateListDrawable();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            options.outWidth = 100;
-            options.outHeight = 100;
-            options.inSampleSize = 1;
-            if (bitmap_normal == null) {
-                bitmap_normal = BitmapFactory.decodeResource(getResources(), bytesmipNormal[i], options);
-            }
-            if (bitmap_selected == null) {
-                bitmap_selected = BitmapFactory.decodeResource(getResources(), bytesmipSelected[i], options);
-            }
-            if (bitmap_normal != null && bitmap_selected != null) {
+
+            if (bitmap_normal == null || bitmap_selected == null) {
+                setBottomButtonImgs();
+                break;
+            } else {
                 Drawable drawNormal = new BitmapDrawable(bitmap_normal);
                 Drawable drawSelected = new BitmapDrawable(bitmap_selected);
                 drawNormal.setBounds(0, 0, 100, 100);
@@ -997,7 +1022,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 bytes[i].setText(title);
 
             }
-
         }
     }
 
@@ -1021,5 +1045,59 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         }
         Bitmap bitmap = BitmapFactory.decodeStream(fis);
         return bitmap;
+    }
+
+    /**
+     * 获取首页福利展示
+     * status 0 不展示，1 展示
+     *
+     * @param activity
+     */
+    private void getWelfareConfig(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        String url = ReaderConfig.getBaseUrl() + BookConfig.privilege_welfare_config;
+        HttpUtils.getInstance(this).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) throws JSONException {
+                PrivilegeWelfare welfare = new Gson().fromJson(response, PrivilegeWelfare.class);
+                WelfareStatus(welfare);
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+
+            }
+        });
+    }
+
+    /**
+     * 专享福利
+     *
+     * @param welfare
+     */
+    private void WelfareStatus(PrivilegeWelfare welfare) {
+        if (welfare != null) {
+            String status = welfare.getStatus();
+            String context = welfare.getWelfare_title();
+            if (status.equalsIgnoreCase("1")) {
+                fl_welfare.setVisibility(View.VISIBLE);
+                tv_welfare_text.setText(context);
+                iv_welfare_close.setOnClickListener(view -> {
+                    fl_welfare.setVisibility(View.GONE);
+                });
+                tv_welfare_go.setOnClickListener(view -> {
+                    fl_welfare.setVisibility(View.GONE);
+                    Intent intent = new Intent();
+                    intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 1);
+                    intent.putExtra("isvip", Utils.isLogin(activity));
+                    startActivity(intent);
+                });
+
+            } else {
+                fl_welfare.setVisibility(View.GONE);
+            }
+        }
+
     }
 }

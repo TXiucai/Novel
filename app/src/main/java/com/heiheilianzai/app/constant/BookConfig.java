@@ -148,4 +148,9 @@ public class BookConfig {
      */
     public static final String bottom_icon_menu = "/bottom-icon-menu/index";
 
+    /**
+     * 首页充值福利提醒
+     */
+    public static final String privilege_welfare_config = "/privilegeconfig/welfare";
+
 }

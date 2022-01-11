@@ -632,5 +632,6 @@
     <string name="string_read_book_error">听书出现问题</string>
     <string name="string_read_service_prohibit">听书模式下，该功能暂时不可用</string>
     <string name="string_notification_permission">请打开通知栏权限。点击【确定】跳转设置页。</string>
+    <string name="string_welfare_go"><u>立刻前往</u></string>
 
 </resources>

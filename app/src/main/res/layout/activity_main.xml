@@ -20,6 +20,59 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/dimens_60dp" />
 
+    <FrameLayout
+        android:id="@+id/fl_welfare"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_40dp"
+        android:layout_above="@id/main_menu_layout"
+        android:background="@drawable/gradient_red_bg"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimens_15dp"
+            android:layout_marginRight="@dimen/dimens_30dp">
+
+            <ImageView
+                android:id="@+id/iv_welfare_close"
+                android:layout_width="@dimen/dimens_28dp"
+                android:layout_height="@dimen/dimens_28dp"
+                android:layout_centerVertical="true"
+                android:foregroundGravity="center_vertical"
+                android:scaleType="fitXY"
+                android:src="@mipmap/iv_welfare_close" />
+
+            <TextView
+                android:id="@+id/tv_welfare_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/dimens_10dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/tv_welfare_go"
+                android:layout_toEndOf="@id/iv_welfare_close"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_14sp" />
+
+            <TextView
+                android:id="@+id/tv_welfare_go"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:text="@string/string_welfare_go"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/main_menu_layout"
         android:layout_width="match_parent"
