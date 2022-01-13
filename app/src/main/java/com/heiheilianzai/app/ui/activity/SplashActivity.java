@@ -161,6 +161,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
     private void initXad(String api) {
         XAdManager.INSTANCE.init(activity.getApplication(), BuildConfig.DEBUG ? BuildConfig.XAD_ENV_APP_ID_DEBUG : BuildConfig.XAD_ENV_APP_ID,
                 BuildConfig.DEBUG ? BuildConfig.XAD_EVN_APP_SECRET_DEBUG : BuildConfig.XAD_EVN_APP_SECRET, BuildConfig.XAD_EVN_APP_CHANNEL, api, BuildConfig.DEBUG);
+        XAdManager.INSTANCE.setUserId(Utils.getUUID(activity));
     }
 
 

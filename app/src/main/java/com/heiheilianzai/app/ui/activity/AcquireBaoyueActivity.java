@@ -179,7 +179,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 if (scrollY > DisplayUtils.dp2px(AcquireBaoyueActivity.this, 70)) {
                     mLlSimple.setVisibility(View.VISIBLE);
                     mRlComplete.setVisibility(View.GONE);
-                } else {
+                } else if (scrollY == 0) {
                     mLlSimple.setVisibility(View.GONE);
                     mRlComplete.setVisibility(View.VISIBLE);
                 }
@@ -759,5 +759,11 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         EventBus.getDefault().post(new RefreshMine(null));
         EventBus.getDefault().post(new LogoutBoYinEvent());
         SensorsDataHelper.profileSet(context);
+    }
+
+    @Override
+    protected void onDestroy() {
+        vipBaoyuePayAdapter.cancelAllTimers();
+        super.onDestroy();
     }
 }

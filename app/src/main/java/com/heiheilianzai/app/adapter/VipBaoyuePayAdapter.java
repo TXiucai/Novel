@@ -1,8 +1,11 @@
 package com.heiheilianzai.app.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,8 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<AcquirePayItem> list;
     private OnPayItemClickListener onPayItemClickListener;
     private int selectPosition = 0;
+    //用于退出activity,避免countdown，造成资源浪费。
+    private SparseArray<CountDownTimer> countDownMap;
 
     public int getSelectPosition() {
         return selectPosition;
@@ -43,6 +48,22 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public VipBaoyuePayAdapter(Context context, List<AcquirePayItem> list) {
         this.context = context;
         this.list = list;
+        countDownMap = new SparseArray<>();
+    }
+
+    /**
+     * 清空资源
+     */
+    public void cancelAllTimers() {
+        if (countDownMap == null) {
+            return;
+        }
+        for (int i = 0, length = countDownMap.size(); i < length; i++) {
+            CountDownTimer cdt = countDownMap.get(countDownMap.keyAt(i));
+            if (cdt != null) {
+                cdt.cancel();
+            }
+        }
     }
 
     @NonNull
@@ -52,6 +73,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return new ViewHolder(inflate);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         AcquirePayItem acquirePayItem = list.get(position);
@@ -69,11 +91,11 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         viewHolder.mTxTittle.setText(acquirePayItem.getTitle());
         viewHolder.mTxSubTittle.setText(acquirePayItem.getSub_title());
-        viewHolder.mTxPrice.setText(String.valueOf(acquirePayItem.getPrice()));
+        viewHolder.mTxPrice.setText("¥" + String.valueOf(acquirePayItem.getPrice()));
         if (acquirePayItem.getOriginal_price() != 0) {
             viewHolder.mTxOriginalPrice.setVisibility(View.VISIBLE);
             viewHolder.mTxOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            viewHolder.mTxOriginalPrice.setText("¥" + acquirePayItem.getOriginal_price());
+            viewHolder.mTxOriginalPrice.setText(context.getResources().getString(R.string.stirng_orignal_price) + acquirePayItem.getOriginal_price());
         } else {
             viewHolder.mTxOriginalPrice.setVisibility(View.GONE);
         }
@@ -99,8 +121,24 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.mTxGift1.setVisibility(View.GONE);
             viewHolder.mTxGift2.setVisibility(View.GONE);
         }
-        if (acquirePayItem.getEnd_time() != 0) {
-            viewHolder.mTxTime.setText(DateUtils.getDistanceTime(DateUtils.getTodayTimeHM(), DateUtils.timeStampToDate(acquirePayItem.getEnd_time(), "yyyy-MM-dd HH:mm")));
+        //将前一个缓存清除
+        if (viewHolder.countDownTimer != null) {
+            viewHolder.countDownTimer.cancel();
+        }
+        long end_time = (long)acquirePayItem.getEnd_time() * 1000;
+        if (end_time > 0) {
+            long time = (end_time - System.currentTimeMillis());
+            viewHolder.countDownTimer = new CountDownTimer(time, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    viewHolder.mTxTime.setText(DateUtils.getDistanceTime(DateUtils.getTodayTimeHMS(), DateUtils.timeStampToDate(end_time, "yyyy-MM-dd HH:mm:ss")));
+                }
+
+                public void onFinish() {
+                    viewHolder.mTxTime.setVisibility(View.GONE);
+                }
+            }.start();
+
+            countDownMap.put(viewHolder.mTxTime.hashCode(), viewHolder.countDownTimer);
         }
     }
 
@@ -138,6 +176,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public LinearLayout mLlGift;
         @BindView(R.id.rl_newer_member)
         public RelativeLayout mRlItem;
+        public CountDownTimer countDownTimer;
 
         public ViewHolder(View view) {
             super(view);

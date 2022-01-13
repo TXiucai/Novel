@@ -69,9 +69,11 @@ public class DateUtils {
     public static String getTodayTimeHMS() {
         return getTodayTime("yyyy-MM-dd HH:mm:ss");
     }
+
     public static String getTodayTimeHM() {
         return getTodayTime("yyyy-MM-dd HH:mm");
     }
+
     public static String getTodayTime(String pattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         Date date = new Date(System.currentTimeMillis());
@@ -139,14 +141,14 @@ public class DateUtils {
             return "00:" + (second >= 10 ? (second + "") : ("0" + second));
         }
     }
+
     /**
      * 两个时间相差距离多少天多少小时多少分多少秒
-     * @param str1 时间参数 1 格式：1990-01-01 12:00
-     * @param str2 时间参数 2 格式：2009-01-01 12:00
+     *
      * @return String 返回值为：xx天xx小时xx分xx秒
      */
     public static String getDistanceTime(String starttime, String endtime) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date one;
         Date two;
         long day = 0;
@@ -158,8 +160,8 @@ public class DateUtils {
             two = df.parse(endtime);
             long time1 = one.getTime();
             long time2 = two.getTime();
-            long diff ;
-            if(time1<time2) {
+            long diff;
+            if (time1 < time2) {
                 diff = time2 - time1;
             } else {
                 diff = time1 - time2;
@@ -167,10 +169,10 @@ public class DateUtils {
             day = diff / (24 * 60 * 60 * 1000);
             hour = (diff / (60 * 60 * 1000) - day * 24);
             min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
-
+            sec = diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60;
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return day + "天" + hour + "小时" + min + "分";
+        return day + "天" + hour + "小时" + min + "分" + sec + "秒";
     }
 }

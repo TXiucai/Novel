@@ -634,5 +634,6 @@
     <string name="string_notification_permission">请打开通知栏权限。点击【确定】跳转设置页。</string>
     <string name="string_welfare_go"><u>立刻前往</u></string>
     <string name="string_vip_power">基础特权</string>
+    <string name="stirng_orignal_price">原价：</string>
 
 </resources>
