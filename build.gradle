@@ -3,10 +3,10 @@
 buildscript {
     ext.kotlin_version = '1.4.0'
     repositories {
-        maven { url 'http://repo.0d40fec.com/repository/android_jcenter/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_google/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_umeng_release/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_maven_central/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_jcenter/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_google/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_umeng_release/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_maven_central/' }
     }
 
     dependencies {
@@ -20,13 +20,13 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url 'http://repo.0d40fec.com/repository/android_jcenter/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_google/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_miomin_maven/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_jitpack/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_aliyun_releases/'}
-        maven { url 'http://repo.0d40fec.com/repository/android_sonatype_snapshots_maven/' }
-        maven { url 'http://repo.0d40fec.com/repository/android_maven_central/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_jcenter/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_google/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_miomin_maven/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_jitpack/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_aliyun_releases/'}
+        maven { url 'http://10.64.64.44:8081/repository/android_sonatype_snapshots_maven/' }
+        maven { url 'http://10.64.64.44:8081/repository/android_maven_central/' }
     }
 }
 task clean(type: Delete) {
