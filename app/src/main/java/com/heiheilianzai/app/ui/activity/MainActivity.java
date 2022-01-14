@@ -70,6 +70,7 @@ import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
+import com.heiheilianzai.app.model.event.LogoutEvent;
 import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.RegisterLoginWelfareEvent;
@@ -1110,5 +1111,13 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshWelfare(RegisterLoginWelfareEvent event) {
         getWelfareConfig(activity);
+    }
+
+    /**
+     * 退出登录
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void dismissWelfare(LogoutEvent event) {
+        fl_welfare.setVisibility(View.GONE);
     }
 }

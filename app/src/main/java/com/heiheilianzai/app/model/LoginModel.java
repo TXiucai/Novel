@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
@@ -16,6 +15,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
+import com.heiheilianzai.app.model.event.LogoutEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -252,6 +252,7 @@ public class LoginModel {
         ReaderConfig.REFREASH_USERCENTER = true;
         EventBus.getDefault().post(new RefreshMine(null));
         EventBus.getDefault().post(new LogoutBoYinEvent());
+        EventBus.getDefault().post(new LogoutEvent());
         SensorsDataHelper.profileSet(context);
     }
 
