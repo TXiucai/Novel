@@ -1108,7 +1108,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void refreshWelfare(RegisterLoginWelfareEvent event) {
+    public void refreshWelfare(RegisterLoginWelfareEvent event) {
         getWelfareConfig(activity);
     }
 }
