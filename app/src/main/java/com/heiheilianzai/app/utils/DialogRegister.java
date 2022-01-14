@@ -1,5 +1,8 @@
 package com.heiheilianzai.app.utils;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
+import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.text.Editable;
@@ -23,6 +26,7 @@ import com.heiheilianzai.app.model.LoginInfo;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.RegisterLoginWelfareEvent;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.FirstStartActivity;
 
@@ -32,9 +36,6 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 
 public class DialogRegister {
     private RegisterBackListener mRegisterBackListener;
@@ -152,6 +153,7 @@ public class DialogRegister {
                                 }
                                 MyToash.Toash(activity, String.format(activity.getResources().getString(R.string.string_register_success), user_default_password));
                                 popupWindow.dismiss();
+                                EventBus.getDefault().post(new RegisterLoginWelfareEvent());
                             } catch (JSONException e) {
 
                             }

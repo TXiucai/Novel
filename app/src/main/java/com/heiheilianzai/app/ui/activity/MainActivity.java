@@ -72,6 +72,7 @@ import com.heiheilianzai.app.model.event.ExitAppEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.RegisterLoginWelfareEvent;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
@@ -1099,5 +1100,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             }
         }
 
+    }
+
+    /**
+     * 注册或登录，需要刷新 专享福利
+     *
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void refreshWelfare(RegisterLoginWelfareEvent event) {
+        getWelfareConfig(activity);
     }
 }

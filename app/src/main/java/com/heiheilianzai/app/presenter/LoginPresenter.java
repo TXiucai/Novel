@@ -13,6 +13,7 @@ import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.RegisterLoginWelfareEvent;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.FirstStartActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
@@ -86,6 +87,7 @@ public class LoginPresenter {
                     }
                 });
                 EventBus.getDefault().post(new RefreshMine(loginInfo));
+                EventBus.getDefault().post(new RegisterLoginWelfareEvent());
                 if (GETPRODUCT_TYPE(activity) != 2) {
                     EventBus.getDefault().post(new RefreshBookSelf(null));
                 }
