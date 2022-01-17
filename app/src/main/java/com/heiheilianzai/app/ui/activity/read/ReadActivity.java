@@ -1043,6 +1043,8 @@ public class ReadActivity extends BaseReadActivity {
         } else {
             startReadNovelService();
         }
+        // 上报下载次数i
+        postDownloadVerificationCount();
     }
 
     private void jumpBoyin() {
@@ -1560,4 +1562,27 @@ public class ReadActivity extends BaseReadActivity {
         });
 
     }
+
+    /**
+     * 上报 tts 下载次数
+     */
+    private void postDownloadVerificationCount() {
+        String key = DateUtils.getTodayTime();
+        boolean downloaded = ShareUitls.getBoolean(activity, key, false);
+        if (!downloaded) {
+            ReaderParams params = new ReaderParams(activity);
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.TTS_DOWNLOAD_COUNT, json, false, new HttpUtils.ResponseListener() {
+                @Override
+                public void onResponse(String result) {
+                    ShareUitls.putBoolean(activity, key, true);
+                }
+
+                @Override
+                public void onErrorResponse(String ex) {
+                }
+            });
+        }
+    }
+
 }

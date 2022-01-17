@@ -496,6 +496,11 @@ public class ReaderConfig {
     public static final String TTS_FILTER = "/tts/filter";
 
     /**
+     * 统计同一个设备下载tts 认证次数 因为三方没有给这个次数
+     */
+    public static final String TTS_DOWNLOAD_COUNT = "/book-listen/add-device-times";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";
