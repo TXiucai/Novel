@@ -1043,8 +1043,6 @@ public class ReadActivity extends BaseReadActivity {
         } else {
             startReadNovelService();
         }
-        // 上报下载次数i
-        postDownloadVerificationCount();
     }
 
     private void jumpBoyin() {
@@ -1482,6 +1480,9 @@ public class ReadActivity extends BaseReadActivity {
                 } else {
                     EventBus.getDefault().post(new NovelOpenOtherEvent(currentChapter, baseBook));
                 }
+
+                // 上报下载次数i
+                postDownloadVerificationCount();
             } else {
                 new DialogVip().getDialogVipPop(activity, false);
             }
