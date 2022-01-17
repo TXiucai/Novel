@@ -118,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_50dp"
         android:layout_marginLeft="@dimen/dimens_2dp"
-        android:layout_marginTop="@dimen/dimens_80dp"
+        android:layout_marginTop="@dimen/dimens_85dp"
         android:layout_marginRight="@dimen/dimens_2dp"
         android:layout_marginBottom="@dimen/dimens_2dp"
         android:background="@drawable/ll_have_gift_bg"
