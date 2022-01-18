@@ -1012,8 +1012,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             } else {
                 Drawable drawNormal = new BitmapDrawable(bitmap_normal);
                 Drawable drawSelected = new BitmapDrawable(bitmap_selected);
-                drawNormal.setBounds(0, 0, 100, 100);
-                drawSelected.setBounds(0, 0, 100, 100);
                 arriveddrawable.addState(new int[]{android.R.attr.state_checked},
                         drawSelected);
                 arriveddrawable.addState(new int[]{-android.R.attr.state_checked},

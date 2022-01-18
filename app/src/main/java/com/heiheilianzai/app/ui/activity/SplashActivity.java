@@ -322,8 +322,10 @@ public class SplashActivity extends BaseAdvertisementActivity {
             @Override
             public void onResponse(String response) throws JSONException {
                 BottomIconMenu bottomIconMenu = new Gson().fromJson(response, BottomIconMenu.class);
-                if (bottomIconMenu != null && bottomIconMenu.list != null || bottomIconMenu.list.size() > 0) {
+                if (bottomIconMenu != null && bottomIconMenu.list != null && bottomIconMenu.list.size() > 0) {
                     getUrlDownload(bottomIconMenu.getList());
+                } else {
+                    deleteBottomIcons();
                 }
             }
 
@@ -333,6 +335,46 @@ public class SplashActivity extends BaseAdvertisementActivity {
             }
         });
 
+    }
+
+    /**
+     * 主动删掉 之前保存的 bottom icons
+     */
+    private void deleteBottomIcons() {
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        File file1 = new File(dirPath);
+        File file2 = new File(outPath);
+        if (file1.exists()) {
+            deleteDirectory(file1);
+        }
+        if (file2.exists()) {
+            deleteDirectory(file2);
+        }
+
+    }
+
+    private void deleteDirectory(File directory) {
+        if (!directory.isDirectory()) {
+            directory.delete();
+        } else {
+            File[] files = directory.listFiles();
+            //空文件夹，直接删除
+            if (files.length == 0) {
+                directory.delete();
+                return;
+            }
+
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
+                } else {
+                    file.delete();
+                }
+            }
+        }
+
+        directory.delete();
     }
 
     @Override
