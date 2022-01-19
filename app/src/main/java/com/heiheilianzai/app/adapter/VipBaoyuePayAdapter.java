@@ -20,9 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.AcquirePayItem;
 import com.heiheilianzai.app.utils.DateUtils;
-import com.heiheilianzai.app.view.MarqueeView;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,13 +73,24 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         AcquirePayItem acquirePayItem = list.get(position);
         ViewHolder viewHolder = (ViewHolder) holder;
-        if (selectPosition == position) {
+
+        List<String> privilegeList = acquirePayItem.getPrivilege_list_name();
+        if (privilegeList != null && privilegeList.size() > 0) {
             viewHolder.mLlGift.setVisibility(View.VISIBLE);
         } else {
             viewHolder.mLlGift.setVisibility(View.GONE);
+        }
+
+        viewHolder.ll_member_have_gift.setBackgroundResource(R.drawable.bg_gift_select);
+        if (selectPosition == position) {
+            viewHolder.ll_member_have_gift.setBackgroundResource(R.drawable.bg_stroke_ff9f11);
+            viewHolder.iv_selected_icon.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.ll_member_have_gift.setBackgroundResource(R.drawable.bg_stroke_transparent);
+            viewHolder.iv_selected_icon.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(acquirePayItem.getGoods_label())) {
             viewHolder.mTxLabel.setVisibility(View.VISIBLE);
@@ -100,7 +109,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.mTxOriginalPrice.setVisibility(View.GONE);
         }
         if (onPayItemClickListener != null) {
-            viewHolder.mRlItem.setOnClickListener(new View.OnClickListener() {
+            viewHolder.ll_member_have_gift.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onPayItemClickListener.onPayItemClick(acquirePayItem, position);
@@ -125,7 +134,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (viewHolder.countDownTimer != null) {
             viewHolder.countDownTimer.cancel();
         }
-        long end_time = (long)acquirePayItem.getEnd_time() * 1000;
+        long end_time = (long) acquirePayItem.getEnd_time() * 1000;
         if (end_time > 0) {
             long time = (end_time - System.currentTimeMillis());
             viewHolder.countDownTimer = new CountDownTimer(time, 1000) {
@@ -176,6 +185,10 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public LinearLayout mLlGift;
         @BindView(R.id.rl_newer_member)
         public RelativeLayout mRlItem;
+        @BindView(R.id.ll_member_have_gift)
+        public RelativeLayout ll_member_have_gift;
+        @BindView(R.id.iv_selected_icon)
+        public ImageView iv_selected_icon;
         public CountDownTimer countDownTimer;
 
         public ViewHolder(View view) {

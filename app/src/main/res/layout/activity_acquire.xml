@@ -114,6 +114,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/black">
+
                 <RelativeLayout
                     android:id="@+id/rl_complete"
                     android:layout_width="match_parent"
@@ -209,6 +215,7 @@
                             android:textSize="10sp" />
                     </LinearLayout>
                 </RelativeLayout>
+            </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

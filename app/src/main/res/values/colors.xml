@@ -186,5 +186,7 @@
     <color name="color_e6ff3d39">#E6FF3D39</color>
     <color name="color_e6ff7943">#E6FF7943</color>
     <color name="color_8A681D">#8A681D</color>
+    <color name="color_ff8c47">#FF8C47</color>
+    <color name="color_fe2f63">#FE2F63</color>
     <!--色值定义END-->
 </resources>
