@@ -78,7 +78,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ViewHolder viewHolder = (ViewHolder) holder;
 
         List<String> privilegeList = acquirePayItem.getPrivilege_list_name();
-        if (privilegeList != null && privilegeList.size() > 0) {
+        if (selectPosition == position && privilegeList != null && privilegeList.size() > 0) {
             viewHolder.mLlGift.setVisibility(View.VISIBLE);
         } else {
             viewHolder.mLlGift.setVisibility(View.GONE);
