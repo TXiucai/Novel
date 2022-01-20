@@ -227,6 +227,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:layout_marginTop="@dimen/dimens_10dp"
                         android:text="@string/string_vip_power"
                         android:textColor="@color/color_323334"
                         android:textSize="14sp" />
@@ -356,7 +357,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@color/color_f7b500"
+            android:background="@color/color_ffd97a"
             android:gravity="center"
             android:text="@string/mine_vip_open"
             android:textColor="@color/black"
