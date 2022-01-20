@@ -74,6 +74,7 @@
         <activity
             android:name=".ui.activity.SplashActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -254,6 +255,7 @@
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -332,6 +334,7 @@
         <receiver
             android:name=".component.ScreenOnAndOffReceiver"
             android:label="@string/app_name"
+            android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
@@ -347,7 +350,7 @@
         <receiver
             android:name=".component.push.MyJPushMessageReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
 
@@ -359,7 +362,7 @@
         <receiver
             android:name=".component.push.MyPushReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
 
                 <!-- Required 用户注册 SDK 的 intent -->
@@ -379,6 +382,7 @@
 
         <receiver
             android:name="com.taobao.accs.EventReceiver"
+            android:exported="true"
             android:process=":channel">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -397,6 +401,7 @@
         </receiver>
         <receiver
             android:name="com.taobao.accs.ServiceReceiver"
+            android:exported="true"
             android:process=":channel">
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.COMMAND" />
@@ -420,6 +425,7 @@
         </receiver>
         <receiver
             android:name="com.alibaba.sdk.android.push.SystemEventReceiver"
+            android:exported="true"
             android:process=":channel">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -453,7 +459,8 @@
         <service
             android:name=".component.ReadNovelService"
             android:enabled="true" />
-        <service android:name=".component.DownComicService">
+        <service android:name=".component.DownComicService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.heiheilianzai.app.ui.activity.comic.DownComicService" />
             </intent-filter>
@@ -466,12 +473,14 @@
             android:name="com.alibaba.sdk.android.push.channel.KeepChannelService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":channel" />
-        <service android:name="cn.jpush.android.service.PluginFCMMessagingService">
+        <service android:name="cn.jpush.android.service.PluginFCMMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="cn.jpush.android.service.PluginFCMInstanceIdService">
+        <service android:name="cn.jpush.android.service.PluginFCMInstanceIdService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -481,7 +490,7 @@
         <service
             android:name=".component.push.MyJPushService"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:process=":pushcore">
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
@@ -490,7 +499,6 @@
 
         <service
             android:name="com.taobao.accs.ChannelService"
-            android:exported="true"
             android:process=":channel">
             <intent-filter>
                 <action android:name="com.taobao.accs.intent.action.SERVICE" />
@@ -498,7 +506,6 @@
         </service>
         <service
             android:name="com.taobao.accs.ChannelService$KernelService"
-            android:exported="false"
             android:process=":channel" />
         <service
             android:name="com.taobao.accs.data.MsgDistributeService"
