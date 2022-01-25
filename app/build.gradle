@@ -23,6 +23,7 @@ android {
         versionName gradle.ext.VERSION_NAME
         manifestPlaceholders = gradle.ext.MANIFESTPLACEHOLDERS
 
+        buildConfigField "String", "tinstall_key", gradle.ext.TINSTALL_KEY
         buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
         buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
         buildConfigField "String", "app_wx_id", gradle.ext.APP_WX_ID
@@ -269,6 +270,7 @@ def getAppConfig() {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_TOP_DEBUG
         buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG
 
+        buildConfigField "String", "tinstall_key", gradle.ext.TINSTALL_KEY
         buildConfigField "String", "umeng_key", gradle.ext.UMENG_KEY
         buildConfigField "String", "umeng_name", gradle.ext.UMENG_NAME
         buildConfigField "String", "app_wx_id", gradle.ext.APP_WX_ID
@@ -439,6 +441,9 @@ dependencies {
     implementation "com.lzy.widget:imagepicker:${rootProject.imagepicker}"
     //三级联动
     implementation "com.contrarywind:Android-PickerView:${rootProject.pickView}"
+
+    // tinstall
+    implementation(name: "api_scyfnq_com", ext: "aar")
 }
 
 /**

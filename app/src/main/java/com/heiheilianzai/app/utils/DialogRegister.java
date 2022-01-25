@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -29,6 +30,7 @@ import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.RegisterLoginWelfareEvent;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.FirstStartActivity;
+import com.tinstall.tinstall.TInstall;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -114,10 +116,17 @@ public class DialogRegister {
         mTxRegister.setClickable(false);
         mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_e6e6e6_20));
         String name = mEdName.getText().toString();
+        String inviteCode = ShareUitls.getString(App.getAppContext(), ReaderConfig.TINSTALL_KEY, null);
 
         if (name != null && !TextUtils.equals(name, "") && name.matches(mMath) && FileUtils.isSimpleOrComplex(name)) {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("user_name", name);
+
+            // 通过tinstall 获取到的注册邀请码
+            if (!TextUtils.isEmpty(inviteCode)) {
+                params.putExtraParams("invite_code", inviteCode);
+            }
+
             String json = params.generateParamsJson();
             HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.REGISTERFAST, json, true, new HttpUtils.ResponseListener() {
                         @Override
@@ -157,6 +166,9 @@ public class DialogRegister {
                             } catch (JSONException e) {
 
                             }
+
+                            ShareUitls.putString(App.getContext(), ReaderConfig.tinstall_code, "");
+                            TInstall.registered(App.getAppContext());
                         }
 
                         @Override

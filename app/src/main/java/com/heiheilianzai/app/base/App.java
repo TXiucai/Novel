@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.base;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -36,6 +37,7 @@ import com.sensorsdata.analytics.android.sdk.SAConfigOptions;
 import com.sensorsdata.analytics.android.sdk.SensorsAnalyticsAutoTrackEventType;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.tencent.bugly.Bugly;
+import com.tinstall.tinstall.TInstall;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.umcrash.UMCrash;
@@ -79,10 +81,25 @@ public class App extends LitePalApplication {
             Bugly.init(this, "75adbf1bdc", false);
             JPushUtil.init(this);
 
+            if (isMainProgress()) {
+                TInstall.init(this, BuildConfig.tinstall_key);//tinstall_key 为申请的应用KEY
+            }
+
         } catch (Exception E) {
         } catch (Error e) {
         }
         JPushFactory.testpush(this);
+    }
+
+    private boolean isMainProgress() {
+        int pid = android.os.Process.myPid();
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
+            if (appProcess.pid == pid) {
+                return getApplicationInfo().packageName.equals(appProcess.processName);
+            }
+        }
+        return false;
     }
 
     /**

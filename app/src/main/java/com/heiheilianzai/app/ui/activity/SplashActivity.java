@@ -47,6 +47,7 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.mobi.xad.XAdManager;
+import com.tinstall.tinstall.TInstall;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -335,6 +336,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
             }
         });
 
+        getInstallCode();
     }
 
     /**
@@ -576,4 +578,20 @@ public class SplashActivity extends BaseAdvertisementActivity {
         AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
     }
 
+    private void getInstallCode() {
+        TInstall.getInstall(SplashActivity.this, new TInstall.TInstallCallback() {
+            @Override
+            public void installBack(JSONObject object) {
+                // 通过该方法拿到设置的渠道值，剩余值为自定义的其他参数
+                try {
+                    String channel = object.getString("channel");
+                    ShareUitls.putString(App.getContext(), ReaderConfig.tinstall_code, channel);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
 }

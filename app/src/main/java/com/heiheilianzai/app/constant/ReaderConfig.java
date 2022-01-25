@@ -35,6 +35,8 @@ public class ReaderConfig {
     public static final String WEIXIN_APP_SECRET = BuildConfig.app_wx_secret;
     //友盟统计
     public static final String UMENG = BuildConfig.umeng_key;
+    // tinstall key
+    public static final String TINSTALL_KEY = BuildConfig.tinstall_key;
     //QQ分享
     public static final String QQ_APPID = BuildConfig.app_qq_id;
     //QQ_SECRET
@@ -82,6 +84,8 @@ public class ReaderConfig {
     public static final int fragment_store_manhau_dp = 15;
     public static final int REFRESH_HEIGHT = 120;//书城 发现 向下滑动距离 改变bar 背景
     public static int MAXheigth;//获取手机能显示图片的最高高度
+
+    public static final String tinstall_code= "TINSTALL_CODE";
 
     public static final String API_CRYPTOGRAPHY = "1";//api加密标识
     public static boolean BANG_SCREEN = false;//刘海屏
