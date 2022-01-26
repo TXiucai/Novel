@@ -34,7 +34,7 @@
                 android:layout_height="@dimen/dimens_36dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimens_20dp"
-                android:background="@drawable/shape_ff8350_20"
+                android:background="@drawable/gradient_ff2f00_ffbd5c"
                 android:gravity="center"
                 android:text="@string/string_un_sign"
                 android:textColor="@color/white"
@@ -87,10 +87,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/dimens_25dp"
-                android:background="@drawable/shape_taskcenter_orenge"
                 android:gravity="center"
                 android:text="@string/task_go"
-                android:textColor="@color/white"
+                android:textColor="@color/color_9a9a9a"
                 android:textSize="12sp" />
         </RelativeLayout>
 
