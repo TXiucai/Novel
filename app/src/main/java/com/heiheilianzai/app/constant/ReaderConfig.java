@@ -127,6 +127,8 @@ public class ReaderConfig {
 
     public static final String mBookStoreUrl = "/book/store";
 
+    public static final String mBookChannelUrl = "/book-channel-list/index";
+
     public static final String mTopYearBookUrl = "/home-recommen/annuallist";
 
     public static final String mTopYearComicUrl = "/home-recommen/annualcomic";

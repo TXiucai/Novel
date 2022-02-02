@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.core.content.ContextCompat;
@@ -27,6 +28,7 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
+import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
@@ -247,6 +249,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, flag);
         RecyclerView recyclerView = headerView.findViewById(R.id.ry_recommend);
         getHomeRecommend(recyclerView);
+        getChannelData();
         smartRecyclerAdapter.setHeaderView(headerView);
     }
 
@@ -271,6 +274,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getCacheStockData();
     }
 
+    protected abstract void getChannelData();
+
     protected abstract void getSdkLableAd();
 
     protected abstract void initLable(Object type);
@@ -292,6 +297,34 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     protected abstract void onMyScrollStateChanged(int position);//停止滑动后列表位置
 
     protected abstract void getHomeRecommend(RecyclerView recyclerView);
+
+    protected void getChannelData(String url) {
+        RelativeLayout relativeLayoutChannel = headerView.findViewById(R.id.rl_channel);
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    ChannelBean channelBean = new Gson().fromJson(response, ChannelBean.class);
+                    relativeLayoutChannel.setVisibility(View.VISIBLE);
+                    initChannel(channelBean);
+                } catch (Exception e) {
+                    relativeLayoutChannel.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+                relativeLayoutChannel.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void initChannel(ChannelBean channelBean) {
+        RecyclerView recyclerViewChannel = headerView.findViewById(R.id.ry_channel);
+        ImageView imgChannel = headerView.findViewById(R.id.img_channel_more);
+    }
 
     protected void getSdkLableAd(int recommendType) {
         String type;

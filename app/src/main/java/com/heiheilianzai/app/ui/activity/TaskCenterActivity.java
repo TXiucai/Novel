@@ -70,6 +70,7 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
     TaskCenter taskCenter;
     private List<String> mCouponLists = new ArrayList<>();
     public Activity activity;
+    private boolean mIsInvite = false;
 
     @Override
     public int initContentView() {
@@ -188,11 +189,14 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                     }
                     break;
                 case R.id.tx_task_invite_go:
-                    if (Utils.isLogin(activity)) {
-                        startActivity(new Intent().setClass(activity, InviteCodeActivity.class));
-                    } else {
-                        MainHttpTask.getInstance().Gotologin(activity);
+                    if (!mIsInvite) {
+                        if (Utils.isLogin(activity)) {
+                            startActivity(new Intent().setClass(activity, InviteCodeActivity.class));
+                        } else {
+                            MainHttpTask.getInstance().Gotologin(activity);
+                        }
                     }
+
                     break;
             }
         }
@@ -274,6 +278,10 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
         if (taskCenter != null) {
             sign_info = taskCenter.sign_info;
             signTextChage();
+            mIsInvite = taskCenter.getInvite_info().isInvite_status();
+            if (mIsInvite) {
+                holder.activity_taskcenter_invite_go.setText(taskCenter.getInvite_info().getInvite_code());
+            }
             holder.activity_taskcenter_getshuquan.setText(String.format(getString(R.string.sign_rules)));
             holder.mStepView.setStepNum(mCouponLists, sign_info.sign_days);
             task_list.clear();
@@ -307,7 +315,8 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
     public void iSInviteCode(InviteCodeEvent inviteCodeEvent) {
         if (inviteCodeEvent.isInvite) {
             if (holder != null) {
-                holder.activity_taskcenter_invite.setVisibility(View.GONE);
+                mIsInvite = true;
+                holder.activity_taskcenter_invite_go.setText(inviteCodeEvent.inviteCode);
             }
         }
     }

@@ -60,7 +60,7 @@ public class InviteCodeActivity extends BaseButterKnifeActivity {
                         @Override
                         public void onResponse(final String result) {
                             ShareUitls.putBoolean(activity, "invite_code", true);
-                            EventBus.getDefault().post(new InviteCodeEvent(true));
+                            EventBus.getDefault().post(new InviteCodeEvent(true, inviteCode));
                             MyToash.Toash(activity,LanguageUtil.getString(activity, R.string.invite_code_sucecess));
                             finish();
                         }

@@ -31,6 +31,11 @@ public class ComicConfig {
     public static final String COMIC_home_stock = "/comic/home-stock";
 
     /**
+     * 漫画频道
+     */
+    public static final String COMIC_channel = "/comic-channel-list/index";
+
+    /**
      * 漫画换一换
      */
     public static final String COMIC_home_refresh = "/comic/refresh";

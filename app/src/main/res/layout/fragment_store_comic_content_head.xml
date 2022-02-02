@@ -7,6 +7,26 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/rl_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ry_channel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_40" />
+
+        <ImageView
+            android:id="@+id/img_channel_more"
+            android:layout_width="@dimen/dimens_30dp"
+            android:layout_height="@dimen/dimens_30dp"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
     <com.heiheilianzai.app.view.ConvenientBanner
         android:id="@+id/store_banner_male"
         android:layout_width="match_parent"

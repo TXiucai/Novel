@@ -11,6 +11,15 @@ public class TaskCenter {
     private List<TaskCenter2> task_menu;
     private User_info user_info;
     public Sign_info sign_info;
+    private Invite_info invite_info;
+
+    public Invite_info getInvite_info() {
+        return invite_info;
+    }
+
+    public void setInvite_info(Invite_info invite_info) {
+        this.invite_info = invite_info;
+    }
 
     public static class Sign_info {
         @Override
@@ -242,6 +251,36 @@ public class TaskCenter {
 
         public void setUnit(String unit) {
             this.unit = unit;
+        }
+    }
+
+    public static class Invite_info {
+        private String task_title;
+        private boolean invite_status;
+        private String invite_code;
+
+        public String getTask_title() {
+            return task_title;
+        }
+
+        public void setTask_title(String task_title) {
+            this.task_title = task_title;
+        }
+
+        public boolean isInvite_status() {
+            return invite_status;
+        }
+
+        public void setInvite_status(boolean invite_status) {
+            this.invite_status = invite_status;
+        }
+
+        public String getInvite_code() {
+            return invite_code;
+        }
+
+        public void setInvite_code(String invite_code) {
+            this.invite_code = invite_code;
         }
     }
 }
