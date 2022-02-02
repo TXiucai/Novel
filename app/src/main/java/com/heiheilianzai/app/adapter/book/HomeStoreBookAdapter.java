@@ -2,6 +2,7 @@ package com.heiheilianzai.app.adapter.book;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.AdaptionGridView;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,6 +153,13 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.list_ad_view_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!TextUtils.isEmpty(stroreComicLable.getAdId())) {
+                    AdInfo adInfo = new AdInfo();
+                    adInfo.setAdId(stroreComicLable.getAdId());
+                    adInfo.setAdPosId(stroreComicLable.getAdPosId());
+                    adInfo.setAdPosId(stroreComicLable.getRequestId());
+                    XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                }
                 Intent intent = new Intent();
                 intent.setClass(activity, WebViewActivity.class);
                 intent.putExtra("url", stroreComicLable.ad_skip_url);

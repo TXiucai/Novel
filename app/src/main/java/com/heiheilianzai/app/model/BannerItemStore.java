@@ -3,7 +3,7 @@ package com.heiheilianzai.app.model;
 /**
  * 首页banner的Item
  */
-public class BannerItemStore {
+public class BannerItemStore extends BaseSdkAD{
     /**
      * bookid
      */

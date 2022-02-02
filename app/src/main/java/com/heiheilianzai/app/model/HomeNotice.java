@@ -3,7 +3,7 @@ package com.heiheilianzai.app.model;
 /**
  * 首页公告
  */
-public class HomeNotice {
+public class HomeNotice extends BaseSdkAD{
     public String title;
     public String content;
     public String os_type;

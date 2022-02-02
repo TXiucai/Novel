@@ -44,6 +44,8 @@ import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -470,6 +472,13 @@ public class ConvenientBanner<T> extends LinearLayout {
     }
 
     private static void Onclick(BannerItemStore bannerItemStore, Activity activity, int flag) {
+        if (!TextUtils.isEmpty(bannerItemStore.getAdId())) {
+            AdInfo adInfo = new AdInfo();
+            adInfo.setAdId(bannerItemStore.getAdId());
+            adInfo.setAdPosId(bannerItemStore.getAdPosId());
+            adInfo.setAdPosId(bannerItemStore.getRequestId());
+            XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+        }
         String content = bannerItemStore.getContent();
         switch (bannerItemStore.getAction()) {
             case 1:

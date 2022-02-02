@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,6 +32,7 @@ import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
+import com.mobi.xad.XAdManager;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
 import com.mobi.xad.bean.AdType;
@@ -136,6 +138,13 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
      * @param context
      */
     public static void adSkip(Startpage startpage, Context context) {
+        if (!TextUtils.isEmpty(startpage.getAdId())) {
+            AdInfo adInfo = new AdInfo();
+            adInfo.setAdId(startpage.getAdId());
+            adInfo.setAdPosId(startpage.getAdPosId());
+            adInfo.setAdPosId(startpage.getRequestId());
+            XRequestManager.INSTANCE.requestEventClick(context, adInfo);
+        }
         if (startpage.skip_type == 1) {// skip_type 1 书籍 2 外部跳转链接 3 漫画 4 浏览器打开链接 5不操作
             context.startActivity(new Intent(context, BookInfoActivity.class).putExtra("book_id", startpage.content));
         } else if (startpage.skip_type == 2) {
@@ -201,6 +210,9 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
                 try {
                     Startpage startpage = new Startpage();
                     AdInfo adInfo = list.get(0);
+                    startpage.setAdId(adInfo.getAdId());
+                    startpage.setAdPosId(adInfo.getAdPosId());
+                    startpage.setRequestId(adInfo.getRequestId());
                     startpage.setCountdown_second(String.valueOf(adInfo.getCountDown()));
                     startpage.setImage(adInfo.getMaterial().getImageUrl());
                     startpage.setContent(adInfo.getOperation().getValue());

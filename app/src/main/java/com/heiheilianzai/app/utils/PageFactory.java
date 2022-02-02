@@ -1674,6 +1674,9 @@ public class PageFactory {
                     AdInfo adInfo = list.get(0);
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                         baseAd = new BaseAd();
+                        baseAd.setAdId(adInfo.getAdId());
+                        baseAd.setRequestId(adInfo.getRequestId());
+                        baseAd.setAdPosId(adInfo.getAdPosId());
                         baseAd.setAd_skip_url(adInfo.getOperation().getValue());
                         baseAd.setAd_title(adInfo.getMaterial().getTitle());
                         baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
@@ -1735,6 +1738,13 @@ public class PageFactory {
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!TextUtils.isEmpty(baseAd.getAdId())) {
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setAdId(baseAd.getAdId());
+                        adInfo.setAdPosId(baseAd.getAdPosId());
+                        adInfo.setAdPosId(baseAd.getRequestId());
+                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                    }
                     Intent intent = new Intent();
                     intent.setClass(activity, WebViewActivity.class);
                     String ad_skip_url = baseAd.ad_skip_url;

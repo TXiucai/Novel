@@ -195,6 +195,9 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                             AdInfo adInfo = list.get(0);
                             if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 mChapterAd = new ComicChapter();
+                                mChapterAd.setAdId(adInfo.getAdId());
+                                mChapterAd.setAdPosId(adInfo.getAdPosId());
+                                mChapterAd.setRequestId(adInfo.getRequestId());
                                 mChapterAd.setAd_skip_url(adInfo.getOperation().getValue());
                                 mChapterAd.setAd_type(1);
                                 mChapterAd.setAd_title(adInfo.getMaterial().getTitle());

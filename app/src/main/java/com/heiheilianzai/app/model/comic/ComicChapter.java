@@ -39,7 +39,33 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     private boolean is_buy_status;
     private String is_limited_free;//0否1是
     private String user_parame_need;
+    private String requestId;
+    private String adId;
+    private String adPosId;
 
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getAdId() {
+        return adId;
+    }
+
+    public void setAdId(String adId) {
+        this.adId = adId;
+    }
+
+    public String getAdPosId() {
+        return adPosId;
+    }
+
+    public void setAdPosId(String adPosId) {
+        this.adPosId = adPosId;
+    }
     public String getUser_parame_need() {
         return user_parame_need;
     }

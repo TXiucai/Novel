@@ -324,6 +324,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     AdInfo adInfo = list.get(0);
                     if (recommendType == 0) {//小说
                         StroreBookcLable lableAd = new StroreBookcLable();
+                        lableAd.setRequestId(adInfo.getRequestId());
+                        lableAd.setAdId(adInfo.getAdId());
+                        lableAd.setAdPosId(adInfo.getAdPosId());
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         lableAd.setAd_title(adInfo.getMaterial().getTitle());
                         lableAd.setAd_type(1);
@@ -334,6 +337,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         }
                     } else {//漫画
                         StroreComicLable lableAd = new StroreComicLable();
+                        lableAd.setRequestId(adInfo.getRequestId());
+                        lableAd.setAdId(adInfo.getAdId());
+                        lableAd.setAdPosId(adInfo.getAdPosId());
                         lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
                         lableAd.setAd_title(adInfo.getMaterial().getTitle());
                         lableAd.setAd_type(1);
@@ -395,6 +401,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     for (int i = 0; i < list.size(); i++) {
                         HomeRecommendBean.RecommeListBean recommeListBean = new HomeRecommendBean.RecommeListBean();
                         AdInfo adInfo = list.get(i);
+                        recommeListBean.setRequestId(adInfo.getRequestId());
+                        recommeListBean.setAdPosId(adInfo.getAdPosId());
+                        recommeListBean.setAdId(adInfo.getAdId());
                         recommeListBean.setImg_icon(adInfo.getMaterial().getImageUrl());
                         recommeListBean.setJump_url(adInfo.getAdExtra().get("jump_url"));
                         recommeListBean.setJump_type("0");
@@ -436,6 +445,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         homeRecommendAdapter.setOnItemRecommendListener(new HomeRecommendAdapter.OnItemRecommendListener() {
             @Override
             public void onItemRecommendListener(HomeRecommendBean.RecommeListBean recommeListBean) {
+                if (!TextUtils.isEmpty(recommeListBean.getAdId())) {
+                    AdInfo adInfo = new AdInfo();
+                    adInfo.setAdId(recommeListBean.getAdId());
+                    adInfo.setAdPosId(recommeListBean.getAdPosId());
+                    adInfo.setAdPosId(recommeListBean.getRequestId());
+                    XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                }
                 int jump_type = Integer.valueOf(recommeListBean.getJump_type());//0跳转链接 1首页-推荐页   2首页完结页  3首页-榜单页  4VIP充值页   5活动中心
                 String jump_url = recommeListBean.getJump_url();
                 int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  小说   1为漫画',
@@ -616,6 +632,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     for (int i = 0; i < list.size(); i++) {
                         BannerItemStore bannerItemStore = new BannerItemStore();
                         AdInfo adInfo = list.get(i);
+                        bannerItemStore.setAdPosId(adInfo.getAdPosId());
+                        bannerItemStore.setRequestId(adInfo.getRequestId());
+                        bannerItemStore.setAdId(adInfo.getAdId());
                         bannerItemStore.setAction(3);
                         bannerItemStore.setContent(adInfo.getOperation().getValue());
                         bannerItemStore.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));

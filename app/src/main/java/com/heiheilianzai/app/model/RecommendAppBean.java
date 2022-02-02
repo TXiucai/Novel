@@ -30,7 +30,7 @@ public class RecommendAppBean {
         this.app_list = app_list;
     }
 
-    public static class AppListBean {
+    public static class AppListBean extends BaseSdkAD{
         private String id;
         private String app_name;
         private String osType;

@@ -1,8 +1,10 @@
 package com.heiheilianzai.app.model.comic;
 
+import com.heiheilianzai.app.model.BaseSdkAD;
+
 import java.util.List;
 
-public class BaseComicImage{
+public class BaseComicImage extends BaseSdkAD {
     public String comic_id;//": 26470, //漫画id
     public String chapter_id;//": 837923, //章节id
     public String image_id;//": 3576961, //图片id

@@ -1,6 +1,6 @@
 package com.heiheilianzai.app.model;
 
-public class BaseAd {
+public class BaseAd extends BaseSdkAD{
     public String advert_id;//
     public int ad_type;//": 1,   // 广告类型
     public String ad_title;//": "测试一下25",  // 标题
@@ -10,7 +10,6 @@ public class BaseAd {
     public int advert_interval;//小说底部广告每间隔多少页显示
     public String ad_subtitle;
     public String user_parame_need;
-
     public String getUser_parame_need() {
         return user_parame_need;
     }

@@ -32,6 +32,8 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.view.DoubleClickListener;
 import com.heiheilianzai.app.view.comic.DanmuRelativeLayout;
 import com.heiheilianzai.app.view.comic.ProgressPieIndicator;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -205,6 +207,13 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                     holderAd.ivAD.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (!TextUtils.isEmpty(comicImage.getAdId())) {
+                                AdInfo adInfo = new AdInfo();
+                                adInfo.setAdId(comicImage.getAdId());
+                                adInfo.setAdPosId(comicImage.getAdPosId());
+                                adInfo.setAdPosId(comicImage.getRequestId());
+                                XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                            }
                             Intent intent = new Intent();
                             intent.setClass(activity, WebViewActivity.class);
                             intent.putExtra("url", comicImage.getAd_skip_url());

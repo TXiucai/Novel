@@ -28,7 +28,7 @@ public class HomeRecommendBean {
         this.recomme_list = recomme_list;
     }
 
-    public static class RecommeListBean {
+    public static class RecommeListBean extends BaseSdkAD {
         private String id;
         private String title;
         private String img_icon;

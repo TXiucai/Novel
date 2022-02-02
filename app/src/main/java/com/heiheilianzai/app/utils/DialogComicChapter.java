@@ -140,6 +140,9 @@ public class DialogComicChapter {
                             AdInfo adInfo = list.get(0);
                             if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 mChapterAd = new ComicChapter();
+                                mChapterAd.setRequestId(adInfo.getRequestId());
+                                mChapterAd.setAdPosId(adInfo.getAdPosId());
+                                mChapterAd.setAdId(adInfo.getAdId());
                                 mChapterAd.setAd_skip_url(adInfo.getOperation().getValue());
                                 mChapterAd.setAd_type(1);
                                 mChapterAd.setAd_title(adInfo.getMaterial().getTitle());

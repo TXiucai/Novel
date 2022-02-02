@@ -109,6 +109,8 @@ import com.heiheilianzai.app.utils.manager.ReadSpeakManager;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.ScrollEditText;
 import com.heiheilianzai.app.view.read.PageWidget;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.media.UMImage;
@@ -1306,6 +1308,13 @@ public class ReadActivity extends BaseReadActivity {
 
     private void JumpBookAd(Activity activity, BaseAd baseAd) {
         if (baseAd != null) {
+            if (!TextUtils.isEmpty(baseAd.getAdId())) {
+                AdInfo adInfo = new AdInfo();
+                adInfo.setAdId(baseAd.getAdId());
+                adInfo.setAdPosId(baseAd.getAdPosId());
+                adInfo.setAdPosId(baseAd.getRequestId());
+                XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+            }
             Intent intent = new Intent();
             intent.setClass(activity, WebViewActivity.class);
             String ad_skip_url = baseAd.ad_skip_url;

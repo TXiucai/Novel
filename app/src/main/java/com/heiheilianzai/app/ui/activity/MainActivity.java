@@ -259,6 +259,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         ReaderConfig.TOP_READ_AD.setUser_parame_need("1");
                         ReaderConfig.TOP_READ_AD.setAd_url_type(adInfo.getOperation().getType());
                         ReaderConfig.TOP_READ_AD.setAd_type(1);
+                        ReaderConfig.TOP_READ_AD.setAdId(adInfo.getAdId());
+                        ReaderConfig.TOP_READ_AD.setAdPosId(adInfo.getAdPosId());
+                        ReaderConfig.TOP_READ_AD.setRequestId(adInfo.getRequestId());
                     }
                 } catch (Exception e) {
                     localTopAd(activity);
@@ -286,6 +289,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         ReaderConfig.BOTTOM_READ_AD.setUser_parame_need("1");
                         ReaderConfig.BOTTOM_READ_AD.setAd_url_type(adInfo.getOperation().getType());
                         ReaderConfig.BOTTOM_READ_AD.setAd_type(1);
+                        ReaderConfig.BOTTOM_READ_AD.setAdId(adInfo.getAdId());
+                        ReaderConfig.BOTTOM_READ_AD.setAdPosId(adInfo.getAdPosId());
+                        ReaderConfig.BOTTOM_READ_AD.setRequestId(adInfo.getRequestId());
                     }
                 } catch (Exception e) {
                     localAd(activity);
@@ -571,6 +577,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         for (int i = 0; i < adInfoList.size(); i++) {
                             HomeNotice homeNotice = new HomeNotice();
                             AdInfo adInfo = list.get(i);
+                            homeNotice.setAdId(adInfo.getAdId());
+                            homeNotice.setRequestId(adInfo.getRequestId());
+                            homeNotice.setAdPosId(adInfo.getAdPosId());
                             homeNotice.setImg_content(adInfo.getMaterial().getImageUrl());
                             homeNotice.setTitle(adInfo.getMaterial().getTitle());
                             homeNotice.setUser_parame_need("1");

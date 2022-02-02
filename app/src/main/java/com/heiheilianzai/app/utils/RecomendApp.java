@@ -73,6 +73,9 @@ public class RecomendApp {
                     for (int i = 0; i < list.size(); i++) {
                         RecommendAppBean.AppListBean appListBean = new RecommendAppBean.AppListBean();
                         AdInfo adInfo = list.get(i);
+                        appListBean.setAdId(adInfo.getAdId());
+                        appListBean.setRequestId(adInfo.getRequestId());
+                        appListBean.setAdPosId(adInfo.getAdPosId());
                         appListBean.setApp_logo(adInfo.getMaterial().getImageUrl());
                         appListBean.setUser_parame_need("1");
                         appListBean.setDown_link(adInfo.getOperation().getValue());
@@ -229,6 +232,13 @@ public class RecomendApp {
             appHolder.tvInstall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!TextUtils.isEmpty(appListBean.getAdId())) {
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setAdId(appListBean.getAdId());
+                        adInfo.setAdPosId(appListBean.getAdPosId());
+                        adInfo.setAdPosId(appListBean.getRequestId());
+                        XRequestManager.INSTANCE.requestEventClick(context, adInfo);
+                    }
                     String down_link = appListBean.getDown_link();
                     if (!StringUtils.isEmpty(down_link)) {
                         if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !down_link.contains("&uid=")) {

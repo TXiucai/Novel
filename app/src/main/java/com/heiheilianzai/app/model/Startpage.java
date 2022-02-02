@@ -3,7 +3,7 @@ package com.heiheilianzai.app.model;
 /**
  * 开屏广告
  */
-public class Startpage {
+public class Startpage extends BaseSdkAD{
     public String image;
     public String content;
     public int skip_type;

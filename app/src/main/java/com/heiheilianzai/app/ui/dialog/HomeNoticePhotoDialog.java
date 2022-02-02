@@ -18,6 +18,8 @@ import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.Utils;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -61,6 +63,13 @@ public class HomeNoticePhotoDialog {
         homeNoticePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!TextUtils.isEmpty(mHomeNotice.getAdId())) {
+                    AdInfo adInfo = new AdInfo();
+                    adInfo.setAdId(mHomeNotice.getAdId());
+                    adInfo.setAdPosId(mHomeNotice.getAdPosId());
+                    adInfo.setAdPosId(mHomeNotice.getRequestId());
+                    XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                }
                 String user_parame_need = mHomeNotice.getUser_parame_need();
                 String jump_url = mHomeNotice.getJump_url();
                 String redirect_type = mHomeNotice.getRedirect_type();

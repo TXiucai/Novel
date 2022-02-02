@@ -31,6 +31,8 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import java.util.List;
 
@@ -174,6 +176,13 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
             myAdViewHolder.ivAD.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!TextUtils.isEmpty(comicChapterCatalog.getAdId())) {
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setAdId(comicChapterCatalog.getAdId());
+                        adInfo.setAdPosId(comicChapterCatalog.getAdPosId());
+                        adInfo.setAdPosId(comicChapterCatalog.getRequestId());
+                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                    }
                     Intent intent = new Intent();
                     intent.setClass(activity, WebViewActivity.class);
                     intent.putExtra("url", comicChapterCatalog.getAd_skip_url());
