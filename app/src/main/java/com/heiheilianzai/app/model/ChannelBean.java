@@ -1,8 +1,9 @@
 package com.heiheilianzai.app.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ChannelBean {
+public class ChannelBean implements Serializable {
 
     /**
      * channel_icon : http://webp.itrm8z3b.com/channel_icon/img/775657c23a8af7729bc1cbc58c7ff76d.jpg
@@ -20,7 +21,7 @@ public class ChannelBean {
         this.list = list;
     }
 
-    public static class ListBean {
+    public static class ListBean implements Serializable{
         private String channel_icon;
         private String channel_name;
         private String id;

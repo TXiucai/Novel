@@ -234,7 +234,7 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
             holder.activity_taskcenter_sign.setClickable(false);
         } else {
             holder.activity_taskcenter_sign.setText(getString(R.string.string_un_sign));
-            holder.activity_taskcenter_sign.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+            holder.activity_taskcenter_sign.setBackground(getDrawable(R.drawable.gradient_ff2f00_ffbd5c));
             holder.activity_taskcenter_sign.setTextColor(getResources().getColor(R.color.white));
         }
     }

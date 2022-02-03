@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.headerfooter.songhang.library.SmartRecyclerAdapter;
 import com.heiheilianzai.app.BuildConfig;
+import com.heiheilianzai.app.ChannelAdapter;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -35,6 +37,7 @@ import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.ChannelActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.TopActivity;
 import com.heiheilianzai.app.ui.activity.TopNewActivity;
@@ -298,7 +301,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void getHomeRecommend(RecyclerView recyclerView);
 
-    protected void getChannelData(String url) {
+    protected void getChannelData(String url, boolean product) {
         RelativeLayout relativeLayoutChannel = headerView.findViewById(R.id.rl_channel);
         ReaderParams params = new ReaderParams(activity);
         String json = params.generateParamsJson();
@@ -308,7 +311,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 try {
                     ChannelBean channelBean = new Gson().fromJson(response, ChannelBean.class);
                     relativeLayoutChannel.setVisibility(View.VISIBLE);
-                    initChannel(channelBean);
+                    initChannel(channelBean, product);
                 } catch (Exception e) {
                     relativeLayoutChannel.setVisibility(View.GONE);
                 }
@@ -321,9 +324,34 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         });
     }
 
-    private void initChannel(ChannelBean channelBean) {
+    private void initChannel(ChannelBean channelBean, boolean product) {
         RecyclerView recyclerViewChannel = headerView.findViewById(R.id.ry_channel);
         ImageView imgChannel = headerView.findViewById(R.id.img_channel_more);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewChannel.setLayoutManager(linearLayoutManager);
+        ChannelAdapter channelAdapter = new ChannelAdapter(channelBean.getList(), activity, 0);
+        recyclerViewChannel.setAdapter(channelAdapter);
+        channelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
+            @Override
+            public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
+                channelAdapter.setSelection(positon);
+            }
+        });
+        imgChannel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, ChannelActivity.class);
+                intent.putExtra("PRODUCE", product);
+                intent.putExtra("CHANNEL", channelBean);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
     }
 
     protected void getSdkLableAd(int recommendType) {

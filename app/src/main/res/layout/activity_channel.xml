@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_channel_head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_150dp">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/dimens_20dp"
+            android:layout_height="@dimen/dimens_20dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dimens_35dp"
+            android:src="@mipmap/back_black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-15dp"
+        android:background="@drawable/shape_comicinfo_bg2"
+        android:paddingLeft="@dimen/dimens_20dp"
+        android:paddingRight="@dimen/dimens_20dp"
+        android:paddingTop="@dimen/dimens_20dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ry_channel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

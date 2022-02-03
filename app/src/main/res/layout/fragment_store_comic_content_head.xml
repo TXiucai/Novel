@@ -10,20 +10,24 @@
     <RelativeLayout
         android:id="@+id/rl_channel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/dp_10">
+        android:layout_height="@dimen/dimens_25dp"
+        android:layout_marginBottom="@dimen/dp_10">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ry_channel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dp_40" />
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/dimens_50dp" />
 
         <ImageView
             android:id="@+id/img_channel_more"
-            android:layout_width="@dimen/dimens_30dp"
-            android:layout_height="@dimen/dimens_30dp"
-            android:layout_alignParentRight="true" />
+            android:layout_width="@dimen/dimens_25dp"
+            android:layout_height="@dimen/dimens_25dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:src="@mipmap/comic_mall_more" />
 
     </RelativeLayout>
 

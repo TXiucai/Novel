@@ -41,7 +41,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     protected void getChannelData() {
-        getChannelData(ReaderConfig.mBookChannelUrl);
+        getChannelData(ReaderConfig.mBookChannelUrl, true);
     }
 
     @Override
