@@ -47,6 +47,7 @@ import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.ObservableScrollView;
+import com.heiheilianzai.app.view.foldtextview.ExpandableTextView;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
 import com.mobi.xad.bean.AdType;
@@ -75,7 +76,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
     @BindView(R.id.activity_book_info_scrollview)
     public ObservableScrollView activity_book_info_scrollview;
     @BindView(R.id.activity_book_info_content_comment_des)
-    public TextView activity_book_info_content_comment_des;
+    public ExpandableTextView etv;
 
     /**
      * 精品推荐的视图容器
@@ -105,7 +106,16 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
         H50 = ImageUtil.dp2px(activity, 50);
         H100 = H50; //  相比书城 没有换一换 布局高度
         H20 = ImageUtil.dp2px(activity, 12);
-        activity_book_info_content_comment_des.setText(baseComic.getDescription());
+
+        int viewWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth()-ImageUtil.dp2px(getActivity(),20f);
+        etv.initWidth(viewWidth);
+        etv.setMaxLines(3);
+        etv.setHasAnimation(false);
+        etv.setCloseInNewLine(true);
+        etv.setOpenSuffixColor(getResources().getColor(R.color.color_39383c));
+        etv.setCloseSuffixColor(getResources().getColor(R.color.color_39383c));
+        etv.setOriginalText(baseComic.getDescription());
+
         getSdkAd();
         activity_book_info_content_label_container.removeAllViews();
         activity_book_info_content_comment_container.removeAllViews();

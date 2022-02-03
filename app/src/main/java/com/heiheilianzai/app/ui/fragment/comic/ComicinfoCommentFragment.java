@@ -33,6 +33,7 @@ import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.ObservableScrollView;
+import com.heiheilianzai.app.view.foldtextview.ExpandableTextView;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
     @BindView(R.id.activity_book_info_scrollview)
     public ObservableScrollView activity_book_info_scrollview;
     @BindView(R.id.activity_book_info_content_comment_des)
-    public TextView activity_book_info_content_comment_des;
+    public ExpandableTextView etv;
 
     /**
      * 精品推荐的视图容器
@@ -77,7 +78,16 @@ public class ComicinfoCommentFragment extends BaseButterKnifeFragment {
     public void senddata(StroreComicLable.Comic baseComic, List<BookInfoComment> bookInfoComments, StroreComicLable stroreComicLable, BaseAd baseAd) {
         MyToash.Log("http_utaa", bookInfoComments.toString());
         this.baseComic = baseComic;
-        activity_book_info_content_comment_des.setText(baseComic.description);
+
+        int viewWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth()-ImageUtil.dp2px(getActivity(),20f);
+        etv.initWidth(viewWidth);
+        etv.setMaxLines(2);
+        etv.setHasAnimation(false);
+        etv.setCloseInNewLine(true);
+        etv.setOpenSuffixColor(getResources().getColor(R.color.white));
+        etv.setCloseSuffixColor(getResources().getColor(R.color.white));
+        etv.setOriginalText(baseComic.description);
+
         if ( baseAd != null) {
             activity_book_info_ad.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();

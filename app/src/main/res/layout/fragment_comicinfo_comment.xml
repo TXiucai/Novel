@@ -23,7 +23,7 @@
             android:textColor="@color/gray3"
             android:textSize="15dp" />
 
-        <TextView
+        <com.heiheilianzai.app.view.foldtextview.ExpandableTextView
             android:id="@+id/activity_book_info_content_comment_des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
