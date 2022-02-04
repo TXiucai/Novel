@@ -1,9 +1,11 @@
 package com.heiheilianzai.app.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -63,7 +65,12 @@ public class ChannelActivity extends BaseWarmStartActivity {
         channelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
             @Override
             public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
-
+                Intent intent = new Intent();
+                intent.putExtra("CHANNEL", item);
+                intent.putExtra("PRODUCE", produce);
+                intent.putExtra("POSITION", positon);
+                setResult(2,intent);
+                finish();
             }
         });
     }

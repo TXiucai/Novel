@@ -35,6 +35,8 @@ public class ComicConfig {
      */
     public static final String COMIC_channel = "/comic-channel-list/index";
 
+    public static final String COMIC_Detail_channel = "/comic-channel-list/label";
+
     /**
      * 漫画换一换
      */

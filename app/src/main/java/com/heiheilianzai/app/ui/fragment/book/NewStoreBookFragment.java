@@ -1,7 +1,5 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
-import android.util.Log;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
@@ -11,7 +9,6 @@ import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.event.StoreBookEvent;
-import com.heiheilianzai.app.view.AdaptionGridView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
@@ -20,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
-import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
-
 
 /**
  * 首页小说
@@ -75,7 +70,6 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
                 hot_word = null;
             }
         } catch (Exception e) {
-            Log.e("", e.getMessage());
         }
         postAsyncHttpEngine_ing = false;
     }

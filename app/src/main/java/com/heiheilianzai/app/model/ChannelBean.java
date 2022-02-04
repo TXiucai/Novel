@@ -5,10 +5,12 @@ import java.util.List;
 
 public class ChannelBean implements Serializable {
 
+
     /**
-     * channel_icon : http://webp.itrm8z3b.com/channel_icon/img/775657c23a8af7729bc1cbc58c7ff76d.jpg
-     * channel_name : test-02
-     * id : 2
+     * channel_icon : http://webp.itrm8z3b.com/channel_icon/img/2d57f745b92faf64b9531513c0910198.jpg
+     * channel_name : 我
+     * id : 1
+     * recommend_id_list : ["2","21"]
      */
 
     private List<ListBean> list;
@@ -21,10 +23,11 @@ public class ChannelBean implements Serializable {
         this.list = list;
     }
 
-    public static class ListBean implements Serializable{
+    public static class ListBean implements Serializable {
         private String channel_icon;
         private String channel_name;
         private String id;
+        private List<String> recommend_id_list;
 
         public String getChannel_icon() {
             return channel_icon;
@@ -48,6 +51,14 @@ public class ChannelBean implements Serializable {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public List<String> getRecommend_id_list() {
+            return recommend_id_list;
+        }
+
+        public void setRecommend_id_list(List<String> recommend_id_list) {
+            this.recommend_id_list = recommend_id_list;
         }
     }
 }

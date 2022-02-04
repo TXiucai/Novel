@@ -3,7 +3,6 @@ package com.heiheilianzai.app.base;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,7 +10,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,20 +24,18 @@ import com.heiheilianzai.app.ChannelAdapter;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
-import com.heiheilianzai.app.constant.PrefConst;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.HomeRecommendBean;
-import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.ChannelActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
-import com.heiheilianzai.app.ui.activity.TopActivity;
 import com.heiheilianzai.app.ui.activity.TopNewActivity;
 import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
 import com.heiheilianzai.app.ui.activity.TopYearComicActivity;
@@ -53,7 +49,6 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.utils.ViewUtils;
 import com.heiheilianzai.app.view.ConvenientBanner;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.mobi.xad.XRequestManager;
@@ -76,10 +71,8 @@ import java.util.List;
 import butterknife.BindView;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
-import static com.heiheilianzai.app.constant.ReaderConfig.PAIHANGINSEX;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
-import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
  * 首页小说，首页漫画内容基类。
@@ -109,6 +102,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     boolean isEdit = false;//后台是否修改了推荐列表数据
     boolean isLoadMore = true;//是否加载更多
     int mFirstIndex = -1;//上次列表滚动到的位置
+    private ChannelAdapter mChannelAdapter;
 
     @Override
     protected void initView() {
@@ -330,12 +324,16 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewChannel.setLayoutManager(linearLayoutManager);
-        ChannelAdapter channelAdapter = new ChannelAdapter(channelBean.getList(), activity, 0);
-        recyclerViewChannel.setAdapter(channelAdapter);
-        channelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
+        mChannelAdapter = new ChannelAdapter(channelBean.getList(), activity, 0);
+        recyclerViewChannel.setAdapter(mChannelAdapter);
+        mChannelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
             @Override
             public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
-                channelAdapter.setSelection(positon);
+                mChannelAdapter.setSelection(positon);
+                List<String> recommend_id_list = item.getRecommend_id_list();
+                if (recommend_id_list != null) {
+                    getChannelDeatailData(recommend_id_list, product);
+                }
             }
         });
         imgChannel.setOnClickListener(new View.OnClickListener() {
@@ -351,7 +349,47 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1 && resultCode == 2) {
+            ChannelBean.ListBean listBean = (ChannelBean.ListBean) data.getExtras().getSerializable("CHANNEL");
+            boolean produce = data.getExtras().getBoolean("PRODUCE");
+            int position = data.getExtras().getInt("POSITION", 0);
+            List<String> recommend_id_list = listBean.getRecommend_id_list();
+            mChannelAdapter.setSelection(position);
+            if (recommend_id_list != null) {
+                getChannelDeatailData(recommend_id_list, produce);
+            }
+        }
+    }
 
+    private void getChannelDeatailData(List<String> list, boolean product) {
+        String url;
+        if (product) {
+            url = ReaderConfig.mBookChannelDetailUrl;
+        } else {
+            url = ComicConfig.COMIC_Detail_channel;
+        }
+        ReaderParams params = new ReaderParams(activity);
+        String id = "";
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
+            if (i < list.size() - 1) {
+                id += s + ",";
+            } else {
+                id += s;
+            }
+        }
+        params.putExtraParams("recommend_id", id);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) {
+                initInfo(response);
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+            }
+        });
     }
 
     protected void getSdkLableAd(int recommendType) {
