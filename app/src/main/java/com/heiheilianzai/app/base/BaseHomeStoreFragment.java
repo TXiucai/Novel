@@ -28,6 +28,7 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
@@ -70,9 +71,11 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
 import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
+import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 
 /**
  * 首页小说，首页漫画内容基类。
@@ -103,6 +106,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     boolean isLoadMore = true;//是否加载更多
     int mFirstIndex = -1;//上次列表滚动到的位置
     private ChannelAdapter mChannelAdapter;
+    private boolean mIsNovelLabelSdk;
+    private boolean mIsComicLabelSdk;
 
     @Override
     protected void initView() {
@@ -399,20 +404,76 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
                 AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
                 if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//小说栏目间广告 第三方打开
+                    mIsNovelLabelSdk = true;
                     sdkLableAd(recommendType, type);
                     return;
                 }
+            }
+            if (!mIsNovelLabelSdk) {
+                localLabelAd(recommendType);
             }
         } else {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_COMIC;
             for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
                 AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
                 if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
+                    mIsComicLabelSdk = true;
                     sdkLableAd(recommendType, type);
                     return;
                 }
             }
+            if (!mIsComicLabelSdk) {
+                localLabelAd(recommendType);
+            }
         }
+    }
+
+    private void localLabelAd(int recommendType) {
+        String json;
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        if (recommendType == 0) {
+            ReaderParams params = new ReaderParams(activity);
+            params.putExtraParams("type", XIAOSHUO + "");
+            params.putExtraParams("position", "1");
+            json = params.generateParamsJson();
+        } else {
+            ReaderParams params = new ReaderParams(activity);
+            params.putExtraParams("type", MANHAU + "");
+            params.putExtraParams("position", "1");
+            json = params.generateParamsJson();
+        }
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            if (recommendType == 0) {//小说
+                                StroreBookcLable lableAd = new StroreBookcLable();
+                                BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                                lableAd.setAd_image(baseAd.getAd_image());
+                                lableAd.setAd_title(baseAd.getAd_title());
+                                lableAd.setAd_type(baseAd.getAd_type());
+                                lableAd.setAd_url_type(baseAd.getAd_url_type());
+                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());
+                                initLable(lableAd);
+                            } else {//漫画
+                                StroreComicLable lableAd = new StroreComicLable();
+                                BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                                lableAd.setAd_image(baseAd.getAd_image());
+                                lableAd.setAd_title(baseAd.getAd_title());
+                                lableAd.setAd_type(baseAd.getAd_type());
+                                lableAd.setAd_url_type(baseAd.getAd_url_type());
+                                lableAd.setAd_skip_url(baseAd.getAd_skip_url()) ;
+                                initLable(lableAd);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     private void sdkLableAd(int recommendType, String type) {

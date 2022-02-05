@@ -57,6 +57,7 @@ import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -575,6 +576,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
+                            updateRecord();
                             mComicInfo = gs.fromJson(result, ComicInfo.class);
                             if (mComicInfo != null) {
                                 comic = mComicInfo.comic;
@@ -594,6 +596,22 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
         );
         getDataCatalogInfo();//获取小说目录
+    }
+
+    private void updateRecord() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("comic_id", comic_id);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_info_record, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     private void getDataCatalogInfo() {

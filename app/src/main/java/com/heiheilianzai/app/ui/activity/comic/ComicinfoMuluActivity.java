@@ -26,6 +26,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
@@ -49,6 +50,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
 
 /**
  * 漫画详情-目录
@@ -178,7 +181,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
         comicChapterCatalogs = new ArrayList<>();
         comicChapterCatalogAdapter = new ComicChapterCatalogAdapter(false, null, activity, currentChapter_id, comicChapterCatalogs, ImageUtil.dp2px(activity, 96));
         fragment_comicinfo_mulu_list.setAdapter(comicChapterCatalogAdapter);
-        getSdkChapterAd(activity, comic_id);
+        httpData(activity, comic_id);
     }
 
     private void getSdkChapterAd(Activity activity, String comic_id) {
@@ -190,8 +193,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                     @Override
                     public void onRequestOk(List<AdInfo> list) {
                         try {
-                            //先拿第三方广告然后替换原数据
-                            httpData(activity, comic_id);
+
                             AdInfo adInfo = list.get(0);
                             if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 mChapterAd = new ComicChapter();
@@ -204,23 +206,69 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                                 mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
                                 mChapterAd.setUser_parame_need("1");
                                 mChapterAd.setAd_url_type(adInfo.getOperation().getType());
+                                initChapterAd();
                             }
                         } catch (Exception e) {
-                            httpData(activity, comic_id);
+                            localChapterAd(activity);
                         }
                     }
 
                     @Override
                     public void onRequestFailed(int i, String s) {
-                        httpData(activity, comic_id);
+                        localChapterAd(activity);
                     }
                 });
                 return;
             }
         }
         if (!isSdkAd) {
-            httpData(activity, comic_id);
+            localChapterAd(activity);
         }
+    }
+
+    private void initChapterAd() {
+        if (mChapterAd != null) {
+            for (int i = 0; i < comicChapterCatalogs.size(); i++) {
+                if ((i + 1) % 5 == 0) {
+                    comicChapterCatalogs.add(mChapterAd);
+                }
+            }
+            comicChapterCatalogAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    private void localChapterAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", MANHAU + "");
+        params.putExtraParams("position", "14");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                            if (mChapterAd == null) {
+                                mChapterAd = new ComicChapter();
+                            }
+                            mChapterAd.setAd_skip_url(baseAd.getAd_skip_url());
+                            mChapterAd.setAd_type(baseAd.getAd_type());
+                            mChapterAd.setAd_title(baseAd.getAd_title());
+                            mChapterAd.setAd_image(baseAd.getAd_image());
+                            mChapterAd.setUser_parame_need(baseAd.getUser_parame_need());
+                            mChapterAd.setAd_url_type(baseAd.getAd_url_type());
+                            initChapterAd();
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     public void httpData(Activity activity, String comic_id) {
@@ -233,6 +281,7 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
+                            getSdkChapterAd(activity, comic_id);
                             JSONObject jsonObject = new JSONObject(result);
                             JsonParser jsonParser = new JsonParser();
                             mTotalPage = jsonObject.getInt("total_page");

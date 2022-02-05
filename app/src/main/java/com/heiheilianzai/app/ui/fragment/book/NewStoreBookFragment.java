@@ -48,13 +48,9 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
     protected void initLable(Object type) {
         if (type != null) {
             StroreBookcLable stroreBookcLable = (StroreBookcLable) type;
-            for (StroreBookcLable bookcLable : listData) {
-                if (bookcLable.ad_type == 1) {
-                    bookcLable.setAd_image(stroreBookcLable.getAd_image());
-                    bookcLable.setAd_skip_url(stroreBookcLable.getAd_skip_url());
-                    bookcLable.setAd_title(stroreBookcLable.getAd_title());
-                    bookcLable.setAd_url_type(stroreBookcLable.getAd_url_type());
-                }
+            int size = listData.size();
+            for (int i = 0; i < size; i++) {
+                listData.add(2 * i + 1, stroreBookcLable);
             }
             adapter.notifyDataSetChanged();
         }

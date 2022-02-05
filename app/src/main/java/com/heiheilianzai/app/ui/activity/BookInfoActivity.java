@@ -336,9 +336,26 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                     public void onResponse(String result) {
                         try {
                             initInfo(result);
+                            updateRecord();
                         } catch (Exception e) {
                             MyToash.Log("", e.getMessage());
                         }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    private void updateRecord() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("book_id", mBookId);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(BookInfoActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mBookInfoRecordUrl, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
                     }
 
                     @Override

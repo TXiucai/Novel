@@ -152,6 +152,12 @@ public class ReaderConfig {
     public static final String mBookInfoUrl = "/book/info";
 
     /**
+     * 作品详情记录
+     */
+    public static final String mBookInfoRecordUrl = "/book/add-book-behavior-log";
+
+
+    /**
      * 关于我们
      */
     public static final String aBoutUs = "/service/about";

@@ -832,6 +832,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_chapter, json, false, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(final String result) {
+                            updateRecord();
                             if (HandleData) {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
                                 HandleData(comicChapterItem, chapter_id, comic_id, activity);
@@ -876,6 +877,22 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         } else {
             MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
         }
+    }
+
+    private void updateRecord() {
+        ReaderParams params = new ReaderParams(this);
+        params.putExtraParams("comic_id", comic_id);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_info_record, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     private ComicChapter getCurrentComicChapter(int comicChapterSize) {

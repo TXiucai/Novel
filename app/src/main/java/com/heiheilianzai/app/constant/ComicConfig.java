@@ -58,6 +58,11 @@ public class ComicConfig {
     public static final String COMIC_info = "/comic/info";
 
     /**
+     * 漫画详情记录
+     */
+    public static final String COMIC_info_record = "/comic/add-comic-behavior-log";
+
+    /**
      * 漫画目录
      */
     public static final String COMIC_catalog = "/comic/catalog";

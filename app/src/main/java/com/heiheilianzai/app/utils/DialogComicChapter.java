@@ -25,6 +25,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
@@ -43,9 +44,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
+
 public class DialogComicChapter {
     Gson gson = new Gson();
-    boolean isLoadingData = false;//是否在加载数据
     private int mPageNum = 1;//页数
     private int orderby = 1;//1 正序 2 倒序
     private int mTotalPage, size;
@@ -65,7 +67,7 @@ public class DialogComicChapter {
         //设置弹出位置
         window.setGravity(Gravity.BOTTOM);
         VipHolder vipHolder = new VipHolder(view);
-        getSdkChapterAd(activity, baseComic, vipHolder);
+        httpData(activity, baseComic.getComic_id(), vipHolder);
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         vipHolder.ryChapter.setLayoutManager(layoutManager);
@@ -126,7 +128,7 @@ public class DialogComicChapter {
         return popupWindow;
     }
 
-    private void getSdkChapterAd(Activity activity, BaseComic baseComic, VipHolder vipHolder) {
+    private void getSdkChapterAd(Activity activity, VipHolder vipHolder) {
         for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
             AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
             if (TextUtils.equals(listBean.getPosition(), "14") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
@@ -135,11 +137,11 @@ public class DialogComicChapter {
                     @Override
                     public void onRequestOk(List<AdInfo> list) {
                         try {
-                            //先拿第三方广告然后替换原数据
-                            httpData(activity, baseComic.getComic_id(), vipHolder);
                             AdInfo adInfo = list.get(0);
                             if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
-                                mChapterAd = new ComicChapter();
+                                if (mChapterAd == null) {
+                                    mChapterAd = new ComicChapter();
+                                }
                                 mChapterAd.setRequestId(adInfo.getRequestId());
                                 mChapterAd.setAdPosId(adInfo.getAdPosId());
                                 mChapterAd.setAdId(adInfo.getAdId());
@@ -149,23 +151,69 @@ public class DialogComicChapter {
                                 mChapterAd.setAd_image(adInfo.getMaterial().getImageUrl());
                                 mChapterAd.setUser_parame_need("1");
                                 mChapterAd.setAd_url_type(adInfo.getOperation().getType());
+                                initChapterAd();
                             }
                         } catch (Exception e) {
-                            httpData(activity, baseComic.getComic_id(), vipHolder);
+                            localChapterAd(activity);
                         }
                     }
 
                     @Override
                     public void onRequestFailed(int i, String s) {
-                        httpData(activity, baseComic.getComic_id(), vipHolder);
+                        localChapterAd(activity);
                     }
                 });
                 return;
             }
         }
         if (!mIsSdkAd) {
-            httpData(activity, baseComic.getComic_id(), vipHolder);
+            localChapterAd(activity);
         }
+    }
+
+    private void initChapterAd() {
+        if (mChapterAd != null) {
+            for (int i = 0; i < comicChapterCatalogs.size(); i++) {
+                if ((i + 1) % 5 == 0) {
+                    comicChapterCatalogs.add(mChapterAd);
+                }
+            }
+            comicChapterCatalogAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    private void localChapterAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", MANHAU + "");
+        params.putExtraParams("position", "14");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            BaseAd baseAd = gson.fromJson(result, BaseAd.class);
+                            if (mChapterAd == null) {
+                                mChapterAd = new ComicChapter();
+                            }
+                            mChapterAd.setAd_skip_url(baseAd.getAd_skip_url());
+                            mChapterAd.setAd_type(baseAd.getAd_type());
+                            mChapterAd.setAd_title(baseAd.getAd_title());
+                            mChapterAd.setAd_image(baseAd.getAd_image());
+                            mChapterAd.setUser_parame_need(baseAd.getUser_parame_need());
+                            mChapterAd.setAd_url_type(baseAd.getAd_url_type());
+                            initChapterAd();
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     public void httpData(Activity activity, String comic_id, VipHolder vipHolder) {
@@ -178,6 +226,7 @@ public class DialogComicChapter {
                     @Override
                     public void onResponse(final String result) {
                         try {
+                            getSdkChapterAd(activity, vipHolder);
                             JSONObject jsonObject = new JSONObject(result);
                             JsonParser jsonParser = new JsonParser();
                             mTotalPage = jsonObject.getInt("total_page");
@@ -190,14 +239,9 @@ public class DialogComicChapter {
                                 ComicChapter comicChapter = gson.fromJson(jsonElement, ComicChapter.class);
                                 comicChapter.setIs_limited_free(is_limited_free);
                                 comicChapter.comic_id = comic_id;
-                                if (comicChapter.getAd_image() != null && mChapterAd != null) {
-                                    comicChapterCatalogs.add(mChapterAd);
-                                } else {
-                                    comicChapterCatalogs.add(comicChapter);
-                                }
+                                comicChapterCatalogs.add(comicChapter);
                             }
                             if (comicChapterCatalogs != null && !comicChapterCatalogs.isEmpty()) {
-                                isLoadingData = comicChapterCatalogs.size() == jsonObject.getInt("total_chapter");
                                 int comicCatalogsSize = comicChapterCatalogs.size();
                                 if (mPageNum == 1) {
                                     size = comicChapterCatalogs.size();
