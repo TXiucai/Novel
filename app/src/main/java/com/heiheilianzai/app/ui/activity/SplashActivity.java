@@ -584,7 +584,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
             public void installBack(JSONObject object) {
                 // 通过该方法拿到设置的渠道值，剩余值为自定义的其他参数
                 try {
-                    String channel = object.getString("channel");
+                    String channel = object.getString("code");
                     ShareUitls.putString(App.getContext(), ReaderConfig.tinstall_code, channel);
                 } catch (JSONException e) {
                     e.printStackTrace();
