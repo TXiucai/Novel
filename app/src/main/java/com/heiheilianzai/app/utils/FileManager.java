@@ -292,6 +292,9 @@ public class FileManager {
     }
 
     public static void GlideCopy(File source, File target) throws Exception {
+        if (source == null || target == null) {
+            return;
+        }
         FileInputStream fileInputStream = null;
         FileOutputStream fileOutputStream = null;
         try {
@@ -344,9 +347,9 @@ public class FileManager {
     /**
      * 保存到本地，通知相册刷新
      *
-     * @param context  上下文
-     * @param bitmap   要保存的 Bitmap
-     * @param bitName  要使用 JPEG 命名
+     * @param context 上下文
+     * @param bitmap  要保存的 Bitmap
+     * @param bitName 要使用 JPEG 命名
      */
     public static void saveBitmap(Context context, Bitmap bitmap, String bitName) {
         String fileName;

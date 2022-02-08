@@ -575,7 +575,9 @@ public class SplashActivity extends BaseAdvertisementActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
+        if(inputStream!=null){
+            AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
+        }
     }
 
     private void getInstallCode() {

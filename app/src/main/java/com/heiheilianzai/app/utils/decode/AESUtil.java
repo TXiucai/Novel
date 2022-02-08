@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.utils.decode;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.base.App;
@@ -205,6 +206,9 @@ public class AESUtil {
      * @return
      */
     public static File decryptFile(String key, InputStream in, String destFilePath) {
+        if (in == null || TextUtils.isEmpty(destFilePath)) {
+            return null;
+        }
         OutputStream out = null;
         File destFile = null;
         File sourceFile = null;

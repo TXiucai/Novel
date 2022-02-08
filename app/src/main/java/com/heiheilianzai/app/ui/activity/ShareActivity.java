@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -51,8 +52,10 @@ public class ShareActivity extends BaseWarmStartActivity {
                 MyToash.ToashSuccess(ShareActivity.this, "已保存二维码到相册");
                 break;
             case R.id.share_save://地址复制到粘贴板
-                StringUtils.setStringInClipboard(ShareActivity.this, share_url_t.getText().toString());
-                MyToash.ToashSuccess(ShareActivity.this, getString(R.string.ShareActivity_save_toast));
+                if(!TextUtils.isEmpty(share_url_t.getText())){
+                    StringUtils.setStringInClipboard(ShareActivity.this, share_url_t.getText().toString());
+                    MyToash.ToashSuccess(ShareActivity.this, getString(R.string.ShareActivity_save_toast));
+                }
                 break;
             case R.id.share_back:
                 finish();
