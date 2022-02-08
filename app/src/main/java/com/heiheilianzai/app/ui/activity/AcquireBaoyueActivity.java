@@ -112,6 +112,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public TextView activity_acquire_avatar_name2;
     @BindView(R.id.activity_acquire_pay_gridview)
     public RecyclerView activity_acquire_pay_gridview;
+    @BindView(R.id.tx_privilege)
+    public TextView mTxPrivilege;
     @BindView(R.id.activity_acquire_privilege_gridview)
     public RecyclerView activity_acquire_privilege_gridview;
     @BindView(R.id.activity_acquire_avatar_desc)
@@ -379,6 +381,11 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             activity_acquire_privilege_gridview.setLayoutManager(linearLayoutManager);
             activity_acquire_privilege_gridview.setAdapter(baoyuePrivilegeAdapter);
             baoyuePrivilegeAdapter.setNewData(privilegeList);
+            if (privilegeList.size() > 0) {
+                mTxPrice.setVisibility(View.VISIBLE);
+            } else {
+                mTxPrice.setVisibility(View.GONE);
+            }
             vipBaoyuePayAdapter = new VipBaoyuePayAdapter(this, payList);
             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
             if (selectAcquirePayItem == null) {

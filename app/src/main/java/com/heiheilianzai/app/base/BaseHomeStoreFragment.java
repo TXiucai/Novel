@@ -108,6 +108,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private ChannelAdapter mChannelAdapter;
     private boolean mIsNovelLabelSdk;
     private boolean mIsComicLabelSdk;
+    private String channelId = "1"; //默认男频
 
     @Override
     protected void initView() {
@@ -338,6 +339,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 List<String> recommend_id_list = item.getRecommend_id_list();
                 if (recommend_id_list != null) {
                     getChannelDeatailData(recommend_id_list, product);
+                } else {
+                    channelId = "";
+                    listData.clear();
+                    adapter.notifyDataSetChanged();
+                    smartRecyclerAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -362,6 +368,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             mChannelAdapter.setSelection(position);
             if (recommend_id_list != null) {
                 getChannelDeatailData(recommend_id_list, produce);
+            } else {
+                channelId = "";
+                listData.clear();
+                adapter.notifyDataSetChanged();
+                smartRecyclerAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -374,16 +385,16 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             url = ComicConfig.COMIC_Detail_channel;
         }
         ReaderParams params = new ReaderParams(activity);
-        String id = "";
+        channelId = "";
         for (int i = 0; i < list.size(); i++) {
             String s = list.get(i);
             if (i < list.size() - 1) {
-                id += s + ",";
+                channelId += s + ",";
             } else {
-                id += s;
+                channelId += s;
             }
         }
-        params.putExtraParams("recommend_id", id);
+        params.putExtraParams("recommend_id", channelId);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
             @Override
@@ -462,7 +473,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                                 lableAd.setAd_title(baseAd.getAd_title());
                                 lableAd.setAd_type(baseAd.getAd_type());
                                 lableAd.setAd_url_type(baseAd.getAd_url_type());
-                                lableAd.setAd_skip_url(baseAd.getAd_skip_url()) ;
+                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());
                                 initLable(lableAd);
                             }
                         } catch (Exception e) {
@@ -696,7 +707,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      */
     protected void getStockData(String kayCache, String url) {
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("channel_id", "1");//男频
+        params.putExtraParams("channel_id", channelId);//男频
         params.putExtraParams("page", "" + page);
         params.putExtraParams("limit", "4"); //返回4条（已协商）
         String json = params.generateParamsJson();
