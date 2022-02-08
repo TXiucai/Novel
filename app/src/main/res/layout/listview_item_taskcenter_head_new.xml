@@ -89,7 +89,8 @@
                 android:layout_marginEnd="@dimen/dimens_25dp"
                 android:gravity="center"
                 android:text="@string/task_go"
-                android:textColor="@color/color_9a9a9a"
+                android:background="@drawable/shape_taskcenter_orenge"
+                android:textColor="@color/white"
                 android:textSize="12sp" />
         </RelativeLayout>
 

@@ -281,6 +281,8 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
             mIsInvite = taskCenter.getInvite_info().isInvite_status();
             if (mIsInvite) {
                 holder.activity_taskcenter_invite_go.setText(taskCenter.getInvite_info().getInvite_code());
+                holder.activity_taskcenter_invite_go.setTextColor(getResources().getColor(R.color.color_9a9a9a));
+                holder.activity_taskcenter_invite_go.setBackground(null);
             }
             holder.activity_taskcenter_getshuquan.setText(String.format(getString(R.string.sign_rules)));
             holder.mStepView.setStepNum(mCouponLists, sign_info.sign_days);

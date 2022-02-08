@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
+import android.text.TextUtils;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
@@ -56,8 +58,13 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     protected void initLable(Object type) {
         if (type != null) {
             StroreComicLable stroreBookcLable = (StroreComicLable) type;
-            int size = listData.size();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < listData.size(); i++) {
+                if (listData.get(i).getAd_type() == 1) {
+                    listData.remove(i);
+                }
+            }
+            int sizeData = listData.size();
+            for (int i = 0; i < sizeData; i++) {
                 listData.add(2 * i + 1, stroreBookcLable);
             }
             adapter.notifyDataSetChanged();

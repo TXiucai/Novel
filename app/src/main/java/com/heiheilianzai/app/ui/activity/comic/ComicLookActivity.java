@@ -883,7 +883,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         ReaderParams params = new ReaderParams(this);
         params.putExtraParams("comic_id", comic_id);
         String json = params.generateParamsJson();
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_info_record, json, false, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_info_read_record, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                     }

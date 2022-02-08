@@ -84,7 +84,7 @@
                                 android:layout_marginTop="@dimen/dimens_12dp"
                                 android:layout_weight="1"
                                 android:lineSpacingExtra="@dimen/dimens_3dp"
-                                android:lines="2"
+                                android:lines="3"
                                 android:textColor="@color/color_c0c0c0"
                                 android:textSize="@dimen/public_12_dp" />
 

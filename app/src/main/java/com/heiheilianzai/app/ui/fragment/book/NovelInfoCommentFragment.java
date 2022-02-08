@@ -109,7 +109,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
 
         int viewWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth()-ImageUtil.dp2px(getActivity(),20f);
         etv.initWidth(viewWidth);
-        etv.setMaxLines(3);
+        etv.setMaxLines(4);
         etv.setHasAnimation(false);
         etv.setCloseInNewLine(true);
         etv.setOpenSuffixColor(getResources().getColor(R.color.color_39383c));
