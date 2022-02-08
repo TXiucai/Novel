@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.activity.comic;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -306,6 +307,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         purchaseDialog.show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @OnClick(value = {R.id.titlebar_back, R.id.activity_comiclook_shoucang, R.id.activity_comiclook_refresh, R.id.activity_comiclook_dingbu, R.id.activity_comiclook_danmu_layout,
             R.id.activity_comiclook_danmu_fashe, R.id.activity_comiclook_xiayihua_layout, R.id.activity_comiclook_shangyihua_layout, R.id.activity_comiclook_set,
             R.id.activity_comiclook_tucao_layout, R.id.activity_comiclook_share, R.id.activity_comiclook_xiazai, R.id.activity_comiclook_quanji,
@@ -476,6 +478,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
                                 mIsSmall = true;
                                 activity_comiclook_RecyclerView.setEnableScale(false);
+                                comicChapterCatalogAdapter.notifyDataSetChanged();
                             }
                         } else {
                             if (comicChapterCatalogAdapter != null) {
@@ -484,6 +487,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 activity_comiclook_RecyclerView.setBackgroundColor(getResources().getColor(R.color.white));
                                 activity_comiclook_RecyclerView.setEnableScale(true);
                                 mIsSmall = false;
+                                comicChapterCatalogAdapter.notifyDataSetChanged();
                             }
                         }
                         mSvBig.setVisibility(View.GONE);
@@ -528,6 +532,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mRbBig.setChecked(true);
                         mRbSmall.setChecked(false);
                         activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                        comicChapterCatalogAdapter.notifyDataSetChanged();
                     }
                 }
                 break;
@@ -539,6 +544,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mRbBig.setChecked(false);
                         mRbSmall.setChecked(false);
                         activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                        comicChapterCatalogAdapter.notifyDataSetChanged();
                     }
                 }
                 break;
@@ -550,6 +556,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mRbBig.setChecked(false);
                         mRbSmall.setChecked(true);
                         activity_comiclook_RecyclerView.scrollToPosition(current_read_img_order);
+                        comicChapterCatalogAdapter.notifyDataSetChanged();
                     }
                 }
                 break;

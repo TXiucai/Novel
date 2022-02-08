@@ -79,6 +79,7 @@ import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.CustomSwipeToRefresh;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.ObservableScrollView;
+import com.heiheilianzai.app.view.foldtextview.ExpandableTextView;
 import com.jaeger.library.StatusBarUtil;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
@@ -126,7 +127,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     @BindView(R.id.tx_comic_name)
     public TextView tx_comic_name;
     @BindView(R.id.tx_comic_description)
-    public TextView tx_comic_description;
+    public ExpandableTextView etv;
     @BindView(R.id.tx_comic_status)
     public TextView tx_comic_status;
     @BindView(R.id.tx_comic_num)
@@ -325,7 +326,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 if (layoutManager instanceof LinearLayoutManager) {
                     lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
                 }
-                if (comicChapterCatalogAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == comicChapter.size()) {
+                if (comicChapterCatalogAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition >= comicChapter.size() - 1) {
                     if (mTotalPage >= mPageNum) {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
                         getDataCatalogInfo();
@@ -362,7 +363,16 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             } else {
                 tx_comic_num.setText(comic.hot_num);
             }
-            tx_comic_description.setText(comic.description);
+
+            int viewWidth = getWindowManager().getDefaultDisplay().getWidth() - ImageUtil.dp2px(ComicInfoActivity.this, 20f);
+            etv.initWidth(viewWidth);
+            etv.setMaxLines(2);
+            etv.setHasAnimation(false);
+            etv.setCloseInNewLine(true);
+            etv.setOpenSuffixColor(getResources().getColor(R.color.white));
+            etv.setCloseSuffixColor(getResources().getColor(R.color.white));
+            etv.setOriginalText(comic.description);
+
             tx_comic_status.setText(comic.tag.get(0).getTab());
             tx_comic_flag.setText(String.format(getString(R.string.comicinfo_total_chapter), comic.total_chapters));
             titlebar_text.setText(comic.name);

@@ -77,14 +77,12 @@
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
 
-                            <TextView
+                            <com.heiheilianzai.app.view.foldtextview.ExpandableTextView
                                 android:id="@+id/tx_comic_description"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dimens_12dp"
-                                android:layout_weight="1"
                                 android:lineSpacingExtra="@dimen/dimens_3dp"
-                                android:lines="3"
                                 android:textColor="@color/color_c0c0c0"
                                 android:textSize="@dimen/public_12_dp" />
 

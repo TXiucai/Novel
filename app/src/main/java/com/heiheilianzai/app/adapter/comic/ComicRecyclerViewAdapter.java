@@ -1,5 +1,9 @@
 package com.heiheilianzai.app.adapter.comic;
 
+import static com.heiheilianzai.app.constant.ComicConfig.IS_OPEN_DANMU;
+import static com.heiheilianzai.app.constant.ReaderConfig.getMAXheigth;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -42,9 +46,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.heiheilianzai.app.constant.ComicConfig.IS_OPEN_DANMU;
-import static com.heiheilianzai.app.constant.ReaderConfig.getMAXheigth;
-
 /**
  * 阅读漫画Adapter
  * Created by abc on 2017/4/28.
@@ -70,7 +71,6 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public void setmSmall(int mSmall) {
         this.mSmall = mSmall;
-        notifyDataSetChanged();
     }
 
     public void setmIsAlbum(boolean mIsAlbum) {
@@ -89,6 +89,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         tocao_bgcolor = Color.parseColor("#4d000000");
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void NotifyDataSetChanged(int Size) {
         relativeLayoutsDanmu.clear();
         size = Size;
@@ -121,7 +122,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holderr, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holderr, @SuppressLint("RecyclerView") final int position) {
         try {
             if (holderr instanceof MyViewHolder) {
                 if (position < size) {
@@ -198,8 +199,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                         holder.item_comic_recyclerview_danmu.setVisibility(View.GONE);
                     }
                 }
-            }
-            else if (holderr instanceof MyAdViewHolder) {
+            } else if (holderr instanceof MyAdViewHolder) {
                 MyAdViewHolder holderAd = (MyAdViewHolder) holderr;
                 BaseComicImage comicImage = list.get(position);
                 MyPicasso.GlideImageNoSize(activity, comicImage.getImage(), holderAd.ivAD);
