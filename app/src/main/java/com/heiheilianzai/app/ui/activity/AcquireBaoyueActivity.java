@@ -382,9 +382,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             activity_acquire_privilege_gridview.setAdapter(baoyuePrivilegeAdapter);
             baoyuePrivilegeAdapter.setNewData(privilegeList);
             if (privilegeList.size() > 0) {
-                mTxPrice.setVisibility(View.VISIBLE);
+                mTxPrivilege.setVisibility(View.VISIBLE);
             } else {
-                mTxPrice.setVisibility(View.GONE);
+                mTxPrivilege.setVisibility(View.GONE);
             }
             vipBaoyuePayAdapter = new VipBaoyuePayAdapter(this, payList);
             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);

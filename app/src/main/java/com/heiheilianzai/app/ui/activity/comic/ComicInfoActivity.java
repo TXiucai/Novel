@@ -29,7 +29,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -135,8 +134,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     public LinearLayout ll_comic_category;
     @BindView(R.id.ry_comic_category)
     public RecyclerView ry_comic_category;
-    @BindView(R.id.sr_comic_category)
-    public CustomSwipeToRefresh swipeRefreshLayout;
     @BindView(R.id.tx_add_comment)
     public TextView tx_add_comment;
     @BindView(R.id.ll_comment_container)
@@ -218,7 +215,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                         intent.putExtra("baseComic", baseComic);
                         startActivity(intent);
                     } else {
-                        MyToash.ToashError(activity, "漫画正在更新中~");
+                        MyToash.ToashError(activity, getString(R.string.comic_loading));
                     }
                 } else {
                     MyToash.Toash(activity, getString(R.string.down_toast_msg));
@@ -310,14 +307,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 book_info_titlebar_container_shadow.setAlpha(ratio);
             }
         });
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPageNum = 1;
-                comicChapter.clear();
-                getDataCatalogInfo();
-            }
-        });
+
         ry_comic_category.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -327,7 +317,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 }
                 if (comicChapterCatalogAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition >= comicChapter.size() - 1) {
                     if (mTotalPage >= mPageNum) {
-                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
                         getDataCatalogInfo();
                     } else {
                         MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ReadActivity_chapterfail));
@@ -634,7 +623,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             @Override
             public void onResponse(final String result) {
                 try {
-                    swipeRefreshLayout.setRefreshing(false);
                     JSONObject jsonObject = new JSONObject(result);
                     JsonParser jsonParser = new JsonParser();
                     String coupon_pay_price = jsonObject.getString("coupon_pay_price");
@@ -653,7 +641,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                         if (mPageNum == 1) {
                             comicChapterCatalogAdapter.notifyDataSetChanged();
                         } else {
-                            comicChapterCatalogAdapter.notifyItemRangeInserted(size + 2, comicChapter.size());
+                            comicChapterCatalogAdapter.notifyItemRangeInserted(size, comicChapter.size());
                         }
                         mPageNum++;
                     }
@@ -664,7 +652,6 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
 
             @Override
             public void onErrorResponse(String ex) {
-                swipeRefreshLayout.setRefreshing(false);
                 if (ex != null && ex.equals("nonet")) {
                     MyToash.Log("nonet", "11");
                     if (comicChapter != null && !comicChapter.isEmpty()) {

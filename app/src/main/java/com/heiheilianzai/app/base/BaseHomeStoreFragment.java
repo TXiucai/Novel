@@ -310,8 +310,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(String response) {
                 try {
                     ChannelBean channelBean = new Gson().fromJson(response, ChannelBean.class);
-                    relativeLayoutChannel.setVisibility(View.VISIBLE);
-                    initChannel(channelBean, product);
+                    if (channelBean.getList() != null && channelBean.getList().size() > 0) {
+                        relativeLayoutChannel.setVisibility(View.VISIBLE);
+                        initChannel(channelBean, product);
+                    } else {
+                        relativeLayoutChannel.setVisibility(View.GONE);
+                    }
                 } catch (Exception e) {
                     relativeLayoutChannel.setVisibility(View.GONE);
                 }
@@ -736,6 +740,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         }
                         initInfo(result);
                     } catch (Exception e) {
+                        finishLoadmore();
                         e.printStackTrace();
                     }
                 } else {

@@ -174,9 +174,15 @@ public class DialogComicChapter {
     private void initChapterAd() {
         if (mChapterAd != null) {
             for (int i = 0; i < comicChapterCatalogs.size(); i++) {
-                if ((i + 1) % 5 == 0) {
-                    comicChapterCatalogs.add(mChapterAd);
+                if (comicChapterCatalogs.get(i).getAd_type() == 1) {
+                    comicChapterCatalogs.remove(i);
                 }
+            }
+            int size = comicChapterCatalogs.size();
+            int count = size % 5;
+            int adNum = count == 0 ? size / 5 : size / 5 + 1;
+            for (int i = 0; i < adNum; i++) {
+                comicChapterCatalogs.add((i + 1) * 5 + i, mChapterAd);
             }
             comicChapterCatalogAdapter.notifyDataSetChanged();
         }
@@ -226,7 +232,6 @@ public class DialogComicChapter {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            getSdkChapterAd(activity, vipHolder);
                             JSONObject jsonObject = new JSONObject(result);
                             JsonParser jsonParser = new JsonParser();
                             mTotalPage = jsonObject.getInt("total_page");
@@ -255,6 +260,7 @@ public class DialogComicChapter {
                                 }
                                 mPageNum++;
                             }
+                            getSdkChapterAd(activity, vipHolder);
 
                         } catch (Exception E) {
                         }

@@ -168,19 +168,12 @@
 
                 <include layout="@layout/separator_line" />
 
-                <com.heiheilianzai.app.view.CustomSwipeToRefresh
-                    android:id="@+id/sr_comic_category"
-                    android:background="@color/white"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ry_comic_category"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_90dp"
-                    android:paddingLeft="@dimen/dimens_15dp"
-                    android:paddingRight="@dimen/dimens_15dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/ry_comic_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimens_90dp" />
-                </com.heiheilianzai.app.view.CustomSwipeToRefresh>
+                    android:layout_height="@dimen/dimens_90dp" />
 
                 <include
                     layout="@layout/list_ad_view"

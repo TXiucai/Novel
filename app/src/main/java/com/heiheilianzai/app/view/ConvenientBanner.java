@@ -411,19 +411,23 @@ public class ConvenientBanner<T> extends LinearLayout {
             mBannerItemListMale.add(bannerItemStore);
         }
         if (flag == 0 || flag == 1) {
-            mStoreBannerMale.setPages(new CBViewHolderCreator<HomeBannerHolderViewComic>() {
-                @Override
-                public HomeBannerHolderViewComic createHolder() {
-                    return new HomeBannerHolderViewComic(flag);
-                }
-            }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
-                    .setOnItemClickListener(new OnItemClickListener() {
+            if (!mBannerItemListMale.isEmpty()) {
+                mStoreBannerMale.setPages(new CBViewHolderCreator<HomeBannerHolderViewComic>() {
+                    @Override
+                    public HomeBannerHolderViewComic createHolder() {
+                        return new HomeBannerHolderViewComic(flag);
+                    }
+                }, mBannerItemListMale).setPageIndicator(new int[]{R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
+                        .setOnItemClickListener(new OnItemClickListener() {
 
-                        @Override
-                        public void onItemClick(int position) {
-                            Onclick(mBannerItemListMale.get(position), activity, flag);
-                        }
-                    });
+                            @Override
+                            public void onItemClick(int position) {
+                                Onclick(mBannerItemListMale.get(position), activity, flag);
+                            }
+                        });
+            } else {
+                mStoreBannerMale.setVisibility(View.GONE);
+            }
         } else {
             if (!mBannerItemListMale.isEmpty()) {
                 final int WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
@@ -525,16 +529,16 @@ public class ConvenientBanner<T> extends LinearLayout {
                         break;
                 }
                 break;
-                    //3,4.5行为一致的
+            //3,4.5行为一致的
             case 3:
             case 4:
             case 5:
-                if (TextUtils.equals(bannerItemStore.getRedirect_type(),"1")){
+                if (TextUtils.equals(bannerItemStore.getRedirect_type(), "1")) {
                     activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", content));
-                }else {
+                } else {
                     activity.startActivity(new Intent(activity, AboutActivity.class).
                             putExtra("url", content)
-                            .putExtra("style", "4")  );
+                            .putExtra("style", "4"));
                 }
                 break;
             case 6:

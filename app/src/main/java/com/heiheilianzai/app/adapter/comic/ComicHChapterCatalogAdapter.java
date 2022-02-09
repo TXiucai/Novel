@@ -37,15 +37,12 @@ import butterknife.ButterKnife;
 public class ComicHChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Activity activity;
     public List<ComicChapter> comicChapterCatalogList;
-    public int size;
     BaseComic baseComic;
 
     public ComicHChapterCatalogAdapter(BaseComic baseComic, Activity activity, List<ComicChapter> comicChapterCatalogList) {
         this.activity = activity;
         this.baseComic = baseComic;
-        size = comicChapterCatalogList.size();
         this.comicChapterCatalogList = comicChapterCatalogList;
-
     }
 
     @NonNull
