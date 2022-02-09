@@ -64,27 +64,29 @@ public class FloatImageViewShow {
                 });
                 return;
             }
-            Glide.with(activity).asBitmap().load(icon_url).into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                    int width = ImageUtil.dp2px(activity, 60);
-                    int heiht = width * resource.getHeight() / resource.getWidth();
-                    bitmap = ImageUtil.imageScale(resource, width, heiht);
-                    floatDragView.addFloatDragView(activity, bitmap, relativeLayout, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).asBitmap().load(icon_url).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        int width = ImageUtil.dp2px(activity, 60);
+                        int heiht = width * resource.getHeight() / resource.getWidth();
+                        bitmap = ImageUtil.imageScale(resource, width, heiht);
+                        floatDragView.addFloatDragView(activity, bitmap, relativeLayout, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                            if (Utils.isLogin(activity)) {
-                                activity.startActivity(new Intent(activity, DayShareActivity.class));
-                            } else {
-                                activity.startActivity(new Intent(activity, LoginActivity.class));
+                                if (Utils.isLogin(activity)) {
+                                    activity.startActivity(new Intent(activity, DayShareActivity.class));
+                                } else {
+                                    activity.startActivity(new Intent(activity, LoginActivity.class));
+                                }
+
                             }
+                        });
 
-                        }
-                    });
-
-                }
-            });
+                    }
+                });
+            }
 
         } catch (Exception e) {
         }

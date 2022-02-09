@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
@@ -26,10 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by scb on 2018/12/14.
@@ -49,7 +49,9 @@ public class MyPicasso {
             return;
         } else {
             imageView.setImageResource(def);
-            Glide.with(activity).load(url).apply(getRequestOptions(def, imageView)).into(imageView);
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).load(url).apply(getRequestOptions(def, imageView)).into(imageView);
+            }
         }
     }
 
@@ -63,12 +65,16 @@ public class MyPicasso {
         } else {
             imageView.setImageResource(def);
             RequestOptions options = getRequestOptions(width, height, def, true, false, imageView);
-            Glide.with(activity).load(url).apply(options).into(imageView);
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).load(url).apply(options).into(imageView);
+            }
         }
     }
 
     public static void GlideImageRoundedCorners(int radius, Activity activity, String url, ImageView imageView, int width, int height) {
-        GlideImageRoundedCorners(radius, activity, url, imageView, width, height, R.mipmap.icon_comic_def);
+        if (activity != null && !activity.isFinishing()) {
+            GlideImageRoundedCorners(radius, activity, url, imageView, width, height, R.mipmap.icon_comic_def);
+        }
     }
 
     public static void GlideImageRoundedCorners(int radius, Activity activity, String url, ImageView imageView, int width, int height, int def) {
@@ -77,12 +83,15 @@ public class MyPicasso {
         } else {
             imageView.setImageResource(def);
             RequestOptions options = getRequestOptions(width, height, def, radius, activity, imageView);
-            Glide.with(activity).load(url).apply(options).into(imageView);
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).load(url).apply(options).into(imageView);
+            }
         }
     }
 
     public static void GlideImageRoundedGasoMohu(Activity activity, String url, ImageView imageView, int width, int height) {
-        GlideImageRoundedGasoMohu(activity, url, imageView, width, height, R.mipmap.icon_comic_def);
+        if (activity != null && !activity.isFinishing())
+            GlideImageRoundedGasoMohu(activity, url, imageView, width, height, R.mipmap.icon_comic_def);
     }
 
     public static void GlideImageRoundedGasoMohu(Activity activity, String url, ImageView imageView, int width, int height, int def) {
@@ -91,13 +100,18 @@ public class MyPicasso {
         } else {
             imageView.setImageResource(def);
             RequestOptions options = getRequestOptions(width, height, def, true, true, imageView);
-            Glide.with(activity).load(url).apply(options).into(imageView);
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).load(url).apply(options).into(imageView);
+            }
         }
     }
-    public static void loadLocalImage(Activity activity,int drawable,ImageView imageView){
-        Glide.with(activity)
-                .setDefaultRequestOptions(new RequestOptions().set(GifOptions.DECODE_FORMAT, DecodeFormat.PREFER_ARGB_8888))//处理gif动图黑底的情况
-                .load(drawable).into(imageView);
+
+    public static void loadLocalImage(Activity activity, int drawable, ImageView imageView) {
+        if (activity != null && !activity.isFinishing()) {
+            Glide.with(activity)
+                    .setDefaultRequestOptions(new RequestOptions().set(GifOptions.DECODE_FORMAT, DecodeFormat.PREFER_ARGB_8888))//处理gif动图黑底的情况
+                    .load(drawable).into(imageView);
+        }
     }
 
     public static RequestOptions getRequestOptions(int def, ImageView imageView) {
@@ -141,23 +155,25 @@ public class MyPicasso {
      * @param listener
      */
     public static void intoAdImage(ImageView imageView, Startpage startpage, Activity activity, AdvertisementActivity.OnAdImageListener listener) {
-        RequestBuilder builder = Glide.with(activity).load(startpage.image).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                listener.onFailed();
-                return false;
-            }
+        if (activity != null && !activity.isFinishing()) {
+            RequestBuilder builder = Glide.with(activity).load(startpage.image).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    listener.onFailed();
+                    return false;
+                }
 
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                listener.onAnimationEnd();
-                return false;
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    listener.onAnimationEnd();
+                    return false;
+                }
+            });
+            if (Rom.isVivo()) {
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             }
-        });
-        if (Rom.isVivo()) {
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            builder.into(imageView);
         }
-        builder.into(imageView);
     }
 
     /**

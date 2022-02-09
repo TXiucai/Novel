@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.activity;
 
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -80,8 +82,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
  * 小说简介页
@@ -286,22 +286,26 @@ public class NovelActivity extends BaseButterKnifeTransparentActivity {
             titlebar_text.setAlpha(0);
             book_info_titlebar_container_shadow.setAlpha(0);
             try {
-                Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        try {
-                            activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, NovelActivity.this));
-                        } catch (Exception e) {
-                        } catch (Error r) {
-                        }
-                    }
+                if (activity != null && !activity.isFinishing()) {
 
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
-                        activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, NovelActivity.this));
-                    }
-                });
+                    Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            try {
+                                activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, NovelActivity.this));
+                            } catch (Exception e) {
+                            } catch (Error r) {
+                            }
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
+                            activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, NovelActivity.this));
+                        }
+                    });
+
+                }
             } catch (Exception e) {
                 MyToash.Log("", e.getMessage());
             } catch (Error r) {
@@ -396,7 +400,7 @@ public class NovelActivity extends BaseButterKnifeTransparentActivity {
                 values.put("description", infoBook.description);
                 LitePal.updateAsync(BaseBook.class, values, basebooks.getId());
             }
-            if ( infoBookItem.advert != null) {
+            if (infoBookItem.advert != null) {
                 BaseAd baseAd = infoBookItem.advert;
                 activity_book_info_ad.setVisibility(View.VISIBLE);
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();

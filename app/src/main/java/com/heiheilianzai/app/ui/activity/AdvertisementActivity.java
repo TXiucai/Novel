@@ -36,7 +36,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
     @Override
     public void onCreateView() {
         String flieName = ShareUitls.getString(getApplicationContext(), PrefConst.ADVERTISING_IMG_KAY, "");
-        if (!StringUtils.isEmpty(flieName)) {
+        if (!StringUtils.isEmpty(flieName) && activity != null && !activity.isFinishing()) {
             Glide.with(activity).load(new File(flieName)).into(activity_splash_im);
         }
         startPage();
@@ -106,7 +106,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
             try {
                 Startpage startpage = new Gson().fromJson(json, Startpage.class);
                 setStartpageView(startpage);
-            }catch (Exception e){
+            } catch (Exception e) {
                 handler.sendEmptyMessageDelayed(0, 500);
             }
         } else {

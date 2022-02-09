@@ -374,12 +374,15 @@ public class ComicActivity extends BaseWarmStartActivity {
                 MyPicasso.GlideImageRoundedGasoMohu(activity, comic.vertical_cover, activity_book_info_content_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
             }
             try {
-                Glide.with(this).asBitmap().load(comic.horizontal_cover).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
-                    }
-                });
+                if (activity != null && !activity.isFinishing()) {
+                    Glide.with(this).asBitmap().load(comic.horizontal_cover).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
+                        }
+                    });
+                }
+
             } catch (Exception e) {
             }
             activity_book_info_content_name.setText(comic.name);

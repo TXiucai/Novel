@@ -408,7 +408,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
         if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
             time = Integer.valueOf(startpage.getCountdown_second());
             String flieName = ShareUitls.getString(getApplicationContext(), PrefConst.ADVERTISING_IMG_KAY, "");
-            if (!StringUtils.isEmpty(flieName)) {
+            if (!StringUtils.isEmpty(flieName) && activity != null && !activity.isFinishing()) {
                 Glide.with(activity).load(new File(flieName)).into(activity_splash_im);
             }
             setAdImageView(activity_splash_im, startpage, activity, new AdvertisementActivity.OnAdImageListener() {
@@ -575,7 +575,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if(inputStream!=null){
+        if (inputStream != null) {
             AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
         }
     }

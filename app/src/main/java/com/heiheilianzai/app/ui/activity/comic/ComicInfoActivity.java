@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.activity.comic;
 
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -57,7 +59,6 @@ import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
-import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.ReplyCommentActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -98,8 +99,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
  * 作品详情
@@ -348,12 +347,14 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 MyPicasso.GlideImageRoundedGasoMohu(activity, comic.vertical_cover, activity_comic_cover_bg, ScreenSizeUtils.getInstance(activity).getScreenWidth(), ImageUtil.dp2px(activity, 205), R.mipmap.comic_def_cross);
             }
             try {
-                Glide.with(this).asBitmap().load(comic.horizontal_cover).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
-                    }
-                });
+                if (activity != null && !activity.isFinishing()) {
+                    Glide.with(this).asBitmap().load(comic.horizontal_cover).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            activity_comic_info_topbarD = BlurImageview.reloadCoverBg(activity, resource);
+                        }
+                    });
+                }
             } catch (Exception e) {
             }
             tx_comic_name.setText(comic.name);

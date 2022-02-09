@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.activity;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.USE_WEIXIN;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -71,8 +73,6 @@ import butterknife.BindView;
 import top.zibin.luban.CompressionPredicate;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.USE_WEIXIN;
 
 /**
  * 用户个人资料页
@@ -338,7 +338,9 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
 
     private void Handle(String uri) {
         try {
-            Glide.with(activity).load(uri).into(user_info_avatar);
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).load(uri).into(user_info_avatar);
+            }
             Luban.with(this)
                     .load(uri)
                     .ignoreBy(100)

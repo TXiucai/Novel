@@ -3,7 +3,6 @@ package com.heiheilianzai.app.adapter.comic;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.model.comic.BaseComic;
-import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
-import com.heiheilianzai.app.ui.activity.CatalogActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.DateUtils;
-import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -117,13 +113,13 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
                 holder.item_comicchaptercatalog_name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));
             }
             MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
-            if (!StringUtils.isEmpty(comicChapterCatalog.getIs_limited_free()) && TextUtils.equals(comicChapterCatalog.getIs_limited_free(), "1")) {
+            if (!StringUtils.isEmpty(comicChapterCatalog.getIs_limited_free()) && TextUtils.equals("1", comicChapterCatalog.getIs_limited_free())) {
                 holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
                 holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
                 holder.item_comic_chapter_bg.setVisibility(View.GONE);
             } else {
                 if (App.isVip(activity)) {
-                    if (comicChapterCatalog.getIs_vip() == 1 || TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {
+                    if (comicChapterCatalog.getIs_vip() == 1 || TextUtils.equals("1", comicChapterCatalog.getIs_book_coupon_pay())) {
                         holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
                         holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
                         holder.item_comic_chapter_bg.setVisibility(View.GONE);
@@ -133,7 +129,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                 } else {
                     if (comicChapterCatalog.getIs_vip() == 0) {//免费
-                        if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "0")) {
+                        if (!TextUtils.isEmpty(comicChapterCatalog.getIs_book_coupon_pay()) && TextUtils.equals("0", comicChapterCatalog.getIs_book_coupon_pay())) {
                             holder.item_comic_chapter_lock.setVisibility(View.GONE);
                             holder.item_comic_chapter_bg.setVisibility(View.GONE);
                         } else {
@@ -148,7 +144,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
                             }
                         }
                     } else {
-                        if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {
+                        if (!TextUtils.isEmpty(comicChapterCatalog.getIs_book_coupon_pay()) && TextUtils.equals("1", comicChapterCatalog.getIs_book_coupon_pay())) {
                             if (comicChapterCatalog.isIs_buy_status()) {
                                 holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
                                 holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);

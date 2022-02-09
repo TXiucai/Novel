@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.activity;
 
+import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,8 +68,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
  * 小说简介页
@@ -268,22 +267,25 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             novelMuluFragment.sendData(mBaseBook);
             novelInfoCommentFragment.senddata(mBaseBook, infoBookItem.comment, infoBookItem.label.get(0), infoBookItem.advert);
             try {
-                Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        try {
-                            activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, BookInfoActivity.this));
-                        } catch (Exception e) {
-                        } catch (Error r) {
+                if (activity != null && !activity.isFinishing()) {
+                    Glide.with(this).asBitmap().load(infoBook.cover).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            try {
+                                activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(resource, BookInfoActivity.this));
+                            } catch (Exception e) {
+                            } catch (Error r) {
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
-                        activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
-                    }
-                });
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
+                            activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
+                        }
+                    });
+                }
+
             } catch (Exception e) {
                 MyToash.Log("", e.getMessage());
             } catch (Error r) {
