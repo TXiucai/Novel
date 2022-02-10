@@ -116,7 +116,7 @@ public class DialogRegister {
         mTxRegister.setClickable(false);
         mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_e6e6e6_20));
         String name = mEdName.getText().toString();
-        String inviteCode = ShareUitls.getString(App.getAppContext(), ReaderConfig.TINSTALL_KEY, null);
+        String inviteCode = ShareUitls.getString(App.getAppContext(), ReaderConfig.tinstall_code, null);
 
         if (name != null && !TextUtils.equals(name, "") && name.matches(mMath) && FileUtils.isSimpleOrComplex(name)) {
             ReaderParams params = new ReaderParams(activity);
