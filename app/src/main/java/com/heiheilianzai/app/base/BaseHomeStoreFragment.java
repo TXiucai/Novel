@@ -108,7 +108,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private ChannelAdapter mChannelAdapter;
     private boolean mIsNovelLabelSdk;
     private boolean mIsComicLabelSdk;
-    private String channelId = "";
+    private String mChannelId = "";
+    private String mTopChannelId = "";
     private LinearLayoutManager mLinearLayoutManager;
 
     @Override
@@ -130,6 +131,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         layoutManager = new MyContentLinearLayoutManager(getContext());
         smartRecyclerAdapter = new SmartRecyclerAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
+        smartRecyclerAdapter.setHeaderView(headerView);
         recyclerView.setAdapter(smartRecyclerAdapter);
         //暂时注释滑动状态栏改变
         /*recyclerView.setOnTouchListener(new View.OnTouchListener() {
@@ -196,7 +198,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 mFirstIndex = 0;
                 store_comic_refresh_layout.setLoadmoreEnable(true);
                 isLoadMore = true;
-                getData();//刷新banner、推荐列表
                 getChannelDetailData();
             }
 
@@ -252,9 +253,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         layoutParams.height = ScreenSizeUtils.getInstance(activity).getScreenWidth() * 3 / 5;
         ConvenientBanner.initbanner(activity, gson, result, mStoreBannerMale, 5000, flag);
-        RecyclerView recyclerView = headerView.findViewById(R.id.ry_recommend);
-        getHomeRecommend(recyclerView);
-        getChannelData();
         smartRecyclerAdapter.setHeaderView(headerView);
     }
 
@@ -270,7 +268,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     protected void getData() {
-        getBannerData();
+        getChannelData();
     }
 
     protected void getCacheData() {
@@ -302,7 +300,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void onMyScrollStateChanged(int position);//停止滑动后列表位置
 
-    protected abstract void getHomeRecommend(RecyclerView recyclerView);
+    protected abstract void getHomeRecommend();
 
     protected void getChannelData(String url, boolean product) {
         RelativeLayout relativeLayoutChannel = headerView.findViewById(R.id.rl_channel);
@@ -339,24 +337,29 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         recyclerViewChannel.setLayoutManager(mLinearLayoutManager);
         mChannelAdapter = new ChannelAdapter(channelBean.getList(), activity, 0);
         recyclerViewChannel.setAdapter(mChannelAdapter);
+        mTopChannelId = channelBean.getList().get(0).getId();
+        getHomeAds();
         if (channelBean.getList() != null && channelBean.getList().size() > 0) {
             List<String> recommend_id_list = channelBean.getList().get(0).getRecommend_id_list();
             if (recommend_id_list != null) {
-                getChannelId(recommend_id_list);
+                getmChannelId(recommend_id_list);
                 getChannelDetailData();
             }
         }
         mChannelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
             @Override
             public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
+                page = 1;
                 mLinearLayoutManager.scrollToPositionWithOffset(positon, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
                 mChannelAdapter.setSelection(positon);
                 List<String> recommend_id_list = item.getRecommend_id_list();
+                mTopChannelId = item.getId();
+                getHomeAds();
                 if (recommend_id_list != null) {
-                    getChannelId(recommend_id_list);
+                    getmChannelId(recommend_id_list);
                     getChannelDetailData();
                 } else {
-                    channelId = "";
+                    mChannelId = "";
                     listData.clear();
                     adapter.notifyDataSetChanged();
                     smartRecyclerAdapter.notifyDataSetChanged();
@@ -377,17 +380,20 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 1 && resultCode == 2) {
+            page = 1;
             ChannelBean.ListBean listBean = (ChannelBean.ListBean) data.getExtras().getSerializable("CHANNEL");
             boolean produce = data.getExtras().getBoolean("PRODUCE");
             int position = data.getExtras().getInt("POSITION", 0);
             List<String> recommend_id_list = listBean.getRecommend_id_list();
+            mTopChannelId = listBean.getId();
+            getHomeAds();
             mChannelAdapter.setSelection(position);
             mLinearLayoutManager.scrollToPositionWithOffset(position, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
             if (recommend_id_list != null) {
-                getChannelId(recommend_id_list);
+                getmChannelId(recommend_id_list);
                 getChannelDetailData();
             } else {
-                channelId = "";
+                mChannelId = "";
                 listData.clear();
                 adapter.notifyDataSetChanged();
                 smartRecyclerAdapter.notifyDataSetChanged();
@@ -397,7 +403,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected void getChannelDetailData(String url) {
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("recommend_id", channelId);
+        params.putExtraParams("recommend_id", mChannelId);
         params.putExtraParams("page", "" + page);
         params.putExtraParams("limit", "4"); //返回4条（已协商）
         String json = params.generateParamsJson();
@@ -441,13 +447,14 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         });
     }
 
-    private void getChannelId(List<String> list) {
+    private void getmChannelId(List<String> list) {
+        mChannelId = "";
         for (int i = 0; i < list.size(); i++) {
             String s = list.get(i);
             if (i < list.size() - 1) {
-                channelId += s + ",";
+                mChannelId += s + ",";
             } else {
-                channelId += s;
+                mChannelId += s;
             }
         }
     }
@@ -575,13 +582,18 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         });
     }
 
-    protected void getHomeRecommend(RecyclerView recyclerView, int recommendType) {
-        localIconAd(recyclerView, recommendType);
+    protected void getHomeRecommend(int recommendType) {
+        localIconAd(recommendType);
     }
 
-    private void localIconAd(RecyclerView recyclerView, int recommendType) {
+    private void localIconAd(int recommendType) {
+        if (TextUtils.isEmpty(mTopChannelId)) {
+            return;
+        }
+        RecyclerView ryRecommend = headerView.findViewById(R.id.ry_recommend);
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_type", String.valueOf(recommendType));//男频
+        params.putExtraParams("icon_channel_id", mTopChannelId);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(App.getBaseUrl() + ReaderConfig.mHomeRecomment, json, false, new HttpUtils.ResponseListener() {
             @Override
@@ -589,9 +601,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 HomeRecommendBean homeRecommendBean = new Gson().fromJson(response, HomeRecommendBean.class);
                 List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
                 if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2) {
-                    sdkIconAd(recyclerView, recommendType, recomme_list);
+                    sdkIconAd(ryRecommend, recommendType, recomme_list);
                 } else {
-                    initRecommend(recyclerView, recomme_list);
+                    initRecommend(ryRecommend, recomme_list);
                 }
             }
 
@@ -734,7 +746,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshComicChapterList(BuyLoginSuccessEvent buyLoginSuccessEvent) {
+        getHomeAds();
+    }
+
+    private void getHomeAds() {
         getBannerData();
+        getHomeRecommend();
     }
 
     public int getScollYDistance() {
@@ -752,7 +769,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      */
     protected void getStockData(String kayCache, String url) {
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("channel_id", channelId);
+        params.putExtraParams("channel_id", mChannelId);
         params.putExtraParams("page", "" + page);
         params.putExtraParams("limit", "4"); //返回4条（已协商）
         String json = params.generateParamsJson();
@@ -883,8 +900,15 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     private void localBannerAd(String kayCache, String url, int flag) {
-
         ReaderParams params = new ReaderParams(activity);
+        if (TextUtils.isEmpty(mTopChannelId)) {
+            return;
+        }
+        if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER)) {
+            params.putExtraParams("book_channel_id", mTopChannelId);
+        } else {
+            params.putExtraParams("comic_channel_id", mTopChannelId);
+        }
         params.putExtraParams("channel_id", "1");
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {

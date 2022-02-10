@@ -138,7 +138,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
     }
 
     @Override
-    protected void getHomeRecommend(RecyclerView recyclerView) {
-        getHomeRecommend(recyclerView, 0);
+    protected void getHomeRecommend() {
+        getHomeRecommend(0);
     }
 }

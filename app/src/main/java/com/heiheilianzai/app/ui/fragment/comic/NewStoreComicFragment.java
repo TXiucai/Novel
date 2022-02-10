@@ -147,7 +147,7 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     }
 
     @Override
-    protected void getHomeRecommend(RecyclerView recyclerView) {
-        getHomeRecommend(recyclerView, 1);
+    protected void getHomeRecommend() {
+        getHomeRecommend(1);
     }
 }
