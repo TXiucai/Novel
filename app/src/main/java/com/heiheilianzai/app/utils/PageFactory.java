@@ -1048,7 +1048,9 @@ public class PageFactory {
                             chapterItem.setUpdate_time(chapterContent.getUpdate_time());
                             ContentValues values = new ContentValues();
                             String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterItem.getIs_preview() + "/").concat(chapterItem.getIs_new_content() + "/").concat(chapterItem.getUpdate_time()).concat(".txt");
-                            FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                            if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                                FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                            }
                             values.put("chapteritem_begin", 0);
                             values.put("chapter_path", filepath);
                             values.put("is_preview", "0");

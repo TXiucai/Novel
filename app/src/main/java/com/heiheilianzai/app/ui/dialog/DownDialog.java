@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -353,7 +354,9 @@ public class DownDialog {
                         for (JsonElement jsonElement : jsonElements) {
                             ChapterContent chapterContent = gson.fromJson(jsonElement, ChapterContent.class);//解析
                             String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(downoption.book_id + "/").concat(chapterContent.getChapter_id() + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getIs_new_content() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
-                            FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                            if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                                FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                            }
                             size += chapterContent.getWords() * 3;
                             ++temp;
                             downoption.down_cunrrent_num = temp;

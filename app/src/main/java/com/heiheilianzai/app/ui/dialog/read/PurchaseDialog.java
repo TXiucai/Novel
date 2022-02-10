@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -322,7 +323,9 @@ public class PurchaseDialog extends Dialog {
                             ChapterManager.getInstance(mContext).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
                             ContentValues values = new ContentValues();
                             String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterContent.getIs_preview() + "/").concat(chapterContent.getIs_new_content() + "/").concat(chapterContent.getUpdate_time()).concat(".txt");
-                            FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                            if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                                FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                            }
                             values.put("chapteritem_begin", 0);
                             values.put("chapter_path", filepath);
                             values.put("update_time", chapterContent.getUpdate_time());

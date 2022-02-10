@@ -320,7 +320,9 @@ public class ChapterManager {
                                 querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
                                 querychapterItem.setIs_preview(chapterContent.getIs_preview());
                                 String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
-                                FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                                if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                                    FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                                }
                                 querychapterItem.setChapteritem_begin(0);
                                 querychapterItem.setChapter_path(filepath);
                                 querychapterItem.setIs_preview(chapterContent.getIs_preview());
@@ -378,7 +380,9 @@ public class ChapterManager {
                         querychapterItem.setIs_preview(chapterContent.getIs_preview());
                         querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
                         String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
-                        FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                        if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                            FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                        }
                         querychapterItem.setChapteritem_begin(0);
                         querychapterItem.setChapter_path(filepath);
                         ContentValues values = new ContentValues();
@@ -440,7 +444,9 @@ public class ChapterManager {
                         querychapterItem.setIs_preview(chapterContent.getIs_preview());
                         querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
                         String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
-                        FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                        if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                            FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                        }
                         querychapterItem.setChapteritem_begin(0);
                         querychapterItem.setChapter_path(filepath);
                         ContentValues values = new ContentValues();
@@ -529,13 +535,15 @@ public class ChapterManager {
             querychapterItemInterface.success(mChapterList.get(0));
         }
     }
-    public void getChapterList(String book_id){
+
+    public void getChapterList(String book_id) {
         LitePalchapterList = LitePal.where("book_id = ?", book_id).find(ChapterItem.class);
         if (!LitePalchapterList.isEmpty()) {
             mChapterList.clear();
             mChapterList.addAll(LitePalchapterList);
         }
     }
+
     public void loadChapterList(final String chapter_id) {
         Next_chapter = 0;
         Last_chapter = 0;
@@ -772,7 +780,9 @@ public class ChapterManager {
                         querychapterItem.setIs_preview(chapterContent.getIs_preview());
                         querychapterItem.setUpdate_time(chapterContent.getUpdate_time());
                         String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(querychapterItem.getIs_preview() + "/").concat(querychapterItem.getIs_new_content() + "/").concat(querychapterItem.getUpdate_time()).concat(".txt");
-                        FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                        if (!TextUtils.isEmpty(chapterContent.getContent())) {
+                            FileManager.createFile(filepath, chapterContent.getContent().getBytes());
+                        }
                         ContentValues values = new ContentValues();
                         values.put("chapteritem_begin", 0);
                         values.put("chapter_path", filepath);

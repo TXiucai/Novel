@@ -143,18 +143,26 @@ public class ReaderWebView extends WebView {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (mDialog != null && mDialog.isShowing()) {
-                    mDialog.cancel();
-                    mDialog = null;
+                try {
+                    if (mActivity != null) {
+                        if (mDialog != null && mDialog.isShowing()) {
+                            mDialog.cancel();
+                            mDialog = null;
+                        }
+                        getSettings().setBlockNetworkImage(false);
+                    }
+
+                    if (mCallback != null)
+                        mCallback.onLoadSuccess();
+                    if (mTimer != null) {
+                        mTimer.cancel();
+                        mTimer.purge();
+                        mTimer = null;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (mCallback != null)
-                    mCallback.onLoadSuccess();
-                if (mTimer != null) {
-                    mTimer.cancel();
-                    mTimer.purge();
-                    mTimer = null;
-                }
-                getSettings().setBlockNetworkImage(false);// 把图片加载放在最后来加载渲染
             }
 
             @Override

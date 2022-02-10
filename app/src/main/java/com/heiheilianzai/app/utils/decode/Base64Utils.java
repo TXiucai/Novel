@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.utils.decode;
 
+import android.text.TextUtils;
+
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
@@ -30,6 +32,9 @@ public class Base64Utils {
      * @throws Exception
      */
     public static byte[] decode(String base64) throws Exception {
+        if (TextUtils.isEmpty(base64)) {
+            return null;
+        }
         return new Base64().decode(base64.getBytes());
     }
 
@@ -109,6 +114,7 @@ public class Base64Utils {
      * <p>
      * 二进制数据写文件
      * </p>
+     *
      * @param bytes    二进制数据
      * @param filePath 文件生成目录
      */

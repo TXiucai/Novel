@@ -740,7 +740,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void initData() {
-        if (comicChapter != null) {
+        if (comicChapter != null && comicChapter.size() > 0) {
             ComicChapterSize = comicChapter.size();
             if (TextUtils.isEmpty(Chapter_id)) {
                 ComicChapter currentComicChapter = getCurrentComicChapter(0);
@@ -934,7 +934,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             baseComicImage.setImage(mChapterBaseAd.getAd_image());
             baseComicImage.setAd_type(mChapterBaseAd.getAd_type());
             baseComicImage.setAd_url_type(mChapterBaseAd.getAd_url_type());
-            if (!TextUtils.isEmpty(mChapterBaseAd.getAdId())){
+            if (!TextUtils.isEmpty(mChapterBaseAd.getAdId())) {
                 baseComicImage.setAdId(mChapterBaseAd.getAdId());
                 baseComicImage.setRequestId(mChapterBaseAd.getRequestId());
                 baseComicImage.setAdPosId(mChapterBaseAd.getAdPosId());

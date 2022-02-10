@@ -770,7 +770,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
 
     @Override
     protected void onDestroy() {
-        vipBaoyuePayAdapter.cancelAllTimers();
+        if (vipBaoyuePayAdapter != null) {
+            vipBaoyuePayAdapter.cancelAllTimers();
+        }
         super.onDestroy();
     }
 }

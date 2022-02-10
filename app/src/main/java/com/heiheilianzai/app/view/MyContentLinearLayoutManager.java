@@ -16,7 +16,7 @@ public class MyContentLinearLayoutManager extends LinearLayoutManager {
         super(context, orientation, reverseLayout);
     }
 
-    public MyContentLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
+    public MyContentLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -24,7 +24,9 @@ public class MyContentLinearLayoutManager extends LinearLayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         try {
             super.onLayoutChildren(recycler, state);
-        }catch (Exception e){
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            indexOutOfBoundsException.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
