@@ -108,7 +108,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private ChannelAdapter mChannelAdapter;
     private boolean mIsNovelLabelSdk;
     private boolean mIsComicLabelSdk;
-    private String channelId = "1"; //默认男频
+    private String channelId = "";
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void initView() {
@@ -196,13 +197,14 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 store_comic_refresh_layout.setLoadmoreEnable(true);
                 isLoadMore = true;
                 getData();//刷新banner、推荐列表
+                getChannelDetailData();
             }
 
             @Override
             public void onLoading() {
                 if (isLoadMore()) {
                     page += 1;
-                    getStockData();//推荐列表
+                    getChannelDetailData();
                 } else {
                     finishLoadmore();
                 }
@@ -269,7 +271,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected void getData() {
         getBannerData();
-        getStockData();
     }
 
     protected void getCacheData() {
@@ -278,6 +279,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     protected abstract void getChannelData();
+
+    protected abstract void getChannelDetailData();
 
     protected abstract void getSdkLableAd();
 
@@ -331,18 +334,27 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private void initChannel(ChannelBean channelBean, boolean product) {
         RecyclerView recyclerViewChannel = headerView.findViewById(R.id.ry_channel);
         ImageView imgChannel = headerView.findViewById(R.id.img_channel_more);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewChannel.setLayoutManager(linearLayoutManager);
+        mLinearLayoutManager = new LinearLayoutManager(activity);
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewChannel.setLayoutManager(mLinearLayoutManager);
         mChannelAdapter = new ChannelAdapter(channelBean.getList(), activity, 0);
         recyclerViewChannel.setAdapter(mChannelAdapter);
+        if (channelBean.getList() != null && channelBean.getList().size() > 0) {
+            List<String> recommend_id_list = channelBean.getList().get(0).getRecommend_id_list();
+            if (recommend_id_list != null) {
+                getChannelId(recommend_id_list);
+                getChannelDetailData();
+            }
+        }
         mChannelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
             @Override
             public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
+                mLinearLayoutManager.scrollToPositionWithOffset(positon, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
                 mChannelAdapter.setSelection(positon);
                 List<String> recommend_id_list = item.getRecommend_id_list();
                 if (recommend_id_list != null) {
-                    getChannelDeatailData(recommend_id_list, product);
+                    getChannelId(recommend_id_list);
+                    getChannelDetailData();
                 } else {
                     channelId = "";
                     listData.clear();
@@ -370,8 +382,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             int position = data.getExtras().getInt("POSITION", 0);
             List<String> recommend_id_list = listBean.getRecommend_id_list();
             mChannelAdapter.setSelection(position);
+            mLinearLayoutManager.scrollToPositionWithOffset(position, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
             if (recommend_id_list != null) {
-                getChannelDeatailData(recommend_id_list, produce);
+                getChannelId(recommend_id_list);
+                getChannelDetailData();
             } else {
                 channelId = "";
                 listData.clear();
@@ -381,15 +395,53 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         }
     }
 
-    private void getChannelDeatailData(List<String> list, boolean product) {
-        String url;
-        if (product) {
-            url = ReaderConfig.mBookChannelDetailUrl;
-        } else {
-            url = ComicConfig.COMIC_Detail_channel;
-        }
+    protected void getChannelDetailData(String url) {
         ReaderParams params = new ReaderParams(activity);
-        channelId = "";
+        params.putExtraParams("recommend_id", channelId);
+        params.putExtraParams("page", "" + page);
+        params.putExtraParams("limit", "4"); //返回4条（已协商）
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) {
+                if (!StringUtils.isEmpty(response)) {
+                    try {
+                        getSdkLableAd();//获取第三方广告
+                        setIsLoadMore(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String edit_time = jsonObject.getString("max_edit_time");//获取服务器修改时间戳
+                        if (page == 1) {//第一页保存修改时间戳，保存列表总条数
+                            max_edit_time = edit_time;
+                            finishRefresh(true);
+                        } else {
+                            if (isLoadMore) {
+                                boolean isEdit = !edit_time.equals(max_edit_time);
+                                if (isEdit) {//编辑了推荐位
+                                    getEditData();
+                                    return;
+                                }
+                            }
+                            finishLoadmore(isLoadMore);
+                        }
+                        initInfo(response);
+                    } catch (Exception e) {
+                        finishLoadmore();
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (page > 1) {
+                        isLoadMore = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+            }
+        });
+    }
+
+    private void getChannelId(List<String> list) {
         for (int i = 0; i < list.size(); i++) {
             String s = list.get(i);
             if (i < list.size() - 1) {
@@ -398,18 +450,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 channelId += s;
             }
         }
-        params.putExtraParams("recommend_id", channelId);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
-            @Override
-            public void onResponse(String response) {
-                initInfo(response);
-            }
-
-            @Override
-            public void onErrorResponse(String ex) {
-            }
-        });
     }
 
     protected void getSdkLableAd(int recommendType) {
@@ -530,6 +570,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
             @Override
             public void onRequestFailed(int i, String s) {
+                localLabelAd(recommendType);
             }
         });
     }
@@ -711,7 +752,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
      */
     protected void getStockData(String kayCache, String url) {
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("channel_id", channelId);//男频
+        params.putExtraParams("channel_id", channelId);
         params.putExtraParams("page", "" + page);
         params.putExtraParams("limit", "4"); //返回4条（已协商）
         String json = params.generateParamsJson();
@@ -752,12 +793,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
             @Override
             public void onErrorResponse(String ex) {
-                if (page == 1) {
-                    getCacheStockData();
-                    finishRefresh(false);
-                } else {
-                    finishLoadmore(false);
-                }
             }
         });
     }
@@ -867,7 +902,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        getCacheBannerData();
                     }
                 }
         );

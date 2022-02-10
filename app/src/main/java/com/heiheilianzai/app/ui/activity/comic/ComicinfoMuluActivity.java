@@ -193,7 +193,6 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                     @Override
                     public void onRequestOk(List<AdInfo> list) {
                         try {
-
                             AdInfo adInfo = list.get(0);
                             if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                                 mChapterAd = new ComicChapter();
@@ -229,14 +228,19 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
     private void initChapterAd() {
         if (mChapterAd != null) {
             for (int i = 0; i < comicChapterCatalogs.size(); i++) {
-                if ((i + 1) % 5 == 0) {
-                    comicChapterCatalogs.add(mChapterAd);
+                if (comicChapterCatalogs.get(i).getAd_type() == 1) {
+                    comicChapterCatalogs.remove(i);
                 }
+            }
+            int size = comicChapterCatalogs.size();
+            int count = size % 5;
+            int adNum = count == 0 ? size / 5 : size / 5 + 1;
+            for (int i = 0; i < adNum; i++) {
+                comicChapterCatalogs.add((i + 1) * 5 + i, mChapterAd);
             }
             comicChapterCatalogAdapter.notifyDataSetChanged();
         }
     }
-
 
     private void localChapterAd(Activity activity) {
         ReaderParams params = new ReaderParams(activity);

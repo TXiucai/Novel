@@ -50,6 +50,11 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     }
 
     @Override
+    protected void getChannelDetailData() {
+        getChannelDetailData(ComicConfig.COMIC_Detail_channel);
+    }
+
+    @Override
     protected void getSdkLableAd() {
         getSdkLableAd(1);
     }
