@@ -23,7 +23,7 @@ import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.LoginInfo;
+import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -134,12 +134,12 @@ public class DialogRegister {
                             try {
                                 String user_default_password = new JSONObject(result).getString("user_default_password");
                                 Gson gson = new Gson();
-                                LoginInfo loginInfo = gson.fromJson(result, LoginInfo.class);
+                                UserInfoItem userInfoItem = gson.fromJson(result, UserInfoItem.class);
                                 AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, result);
-                                if (loginInfo != null) {
-                                    AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
-                                    AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
-                                    AppPrefs.putSharedInt(activity, PrefConst.COUPON, loginInfo.getSilverRemain());
+                                if (userInfoItem != null) {
+                                    AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, userInfoItem.getUser_token());
+                                    AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(userInfoItem.getUid()));
+                                    AppPrefs.putSharedInt(activity, PrefConst.COUPON, userInfoItem.getSilverRemain());
                                     EventBus.getDefault().post(new BuyLoginSuccessEvent());
                                     syncDevice(activity);
                                     FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
@@ -147,7 +147,7 @@ public class DialogRegister {
                                         public void saveSuccess() {
                                         }
                                     });
-                                    EventBus.getDefault().post(new RefreshMine(loginInfo));
+                                    EventBus.getDefault().post(new RefreshMine(userInfoItem));
                                     if (GETPRODUCT_TYPE(activity) != 2) {
                                         EventBus.getDefault().post(new RefreshBookSelf(null));
                                     }

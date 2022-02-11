@@ -1,5 +1,8 @@
 package com.heiheilianzai.app.presenter;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
+import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
+
 import android.app.Activity;
 
 import com.google.gson.Gson;
@@ -8,8 +11,8 @@ import com.heiheilianzai.app.callback.LoginResultCallback;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.LoginInfo;
 import com.heiheilianzai.app.model.LoginModel;
+import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -22,12 +25,8 @@ import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
-import com.heiheilianzai.app.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 
 /**
  * 用户登录管理 Presenter
@@ -61,7 +60,8 @@ public class LoginPresenter {
             }
         });
     }
-    public void loginUser(final LoginActivity.LoginSuccess loginSuccess){
+
+    public void loginUser(final LoginActivity.LoginSuccess loginSuccess) {
         mLoginModel.loginUser(mLoginView.getUserName(), mLoginView.getPassword(), new LoginResultCallback() {
             @Override
             public void getResult(String jsonStr) {
@@ -73,12 +73,12 @@ public class LoginPresenter {
     private void initLoginData(String jsonStr, LoginActivity.LoginSuccess loginSuccess) {
         try {
             Gson gson = new Gson();
-            LoginInfo loginInfo = gson.fromJson(jsonStr, LoginInfo.class);
+            UserInfoItem userInfoItem = gson.fromJson(jsonStr, UserInfoItem.class);
             AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, jsonStr);
-            if (loginInfo != null) {
-                AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
-                AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
-                AppPrefs.putSharedInt(activity, PrefConst.COUPON, loginInfo.getSilverRemain());
+            if (userInfoItem != null) {
+                AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, userInfoItem.getUser_token());
+                AppPrefs.putSharedString(activity, ReaderConfig.UID, String.valueOf(userInfoItem.getUid()));
+                AppPrefs.putSharedInt(activity, PrefConst.COUPON, userInfoItem.getSilverRemain());
                 EventBus.getDefault().post(new BuyLoginSuccessEvent());
                 syncDevice(activity);
                 FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
@@ -86,7 +86,7 @@ public class LoginPresenter {
                     public void saveSuccess() {
                     }
                 });
-                EventBus.getDefault().post(new RefreshMine(loginInfo));
+                EventBus.getDefault().post(new RefreshMine(userInfoItem));
                 EventBus.getDefault().post(new RegisterLoginWelfareEvent());
                 if (GETPRODUCT_TYPE(activity) != 2) {
                     EventBus.getDefault().post(new RefreshBookSelf(null));
@@ -107,7 +107,7 @@ public class LoginPresenter {
      * 登录请求:刷新我的页面;刷新用户数据,及登录有声用户数据;根据配置刷新书架小说、漫画
      */
     public void loginPhone(final LoginActivity.LoginSuccess loginSuccess) {
-        mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(),mLoginView.getCountryCode(), new LoginResultCallback() {
+        mLoginModel.loginPhone(mLoginView.getPhoneNum(), mLoginView.getMessage(), mLoginView.getCountryCode(), new LoginResultCallback() {
             @Override
             public void getResult(final String loginStr) {
                 initLoginData(loginStr, loginSuccess);

@@ -1,5 +1,9 @@
 package com.heiheilianzai.app.wxapi;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
+import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
+import static com.heiheilianzai.app.utils.AppPrefs.putSharedString;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +16,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.LoginInfo;
+import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.RefreshBookSelf;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -31,10 +35,6 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
 import org.greenrobot.eventbus.EventBus;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
-import static com.heiheilianzai.app.utils.AppPrefs.putSharedString;
 
 /**
  * 微信登录相关
@@ -122,12 +122,12 @@ public class WXEntryActivity extends WXCallbackActivity implements IWXAPIEventHa
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + "/user/app-login-wechat", json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-                        LoginInfo loginInfo = new Gson().fromJson(result, LoginInfo.class);
-                        if (loginInfo != null) {
-                            putSharedString(activity, ReaderConfig.TOKEN, loginInfo.getUser_token());
-                            putSharedString(activity, ReaderConfig.UID, String.valueOf(loginInfo.getUid()));
-                            EventBus.getDefault().post(new RefreshMine(loginInfo));
-                            EventBus.getDefault().post(new RefreshUserInfo(loginInfo));
+                        UserInfoItem userInfoItem = new Gson().fromJson(result, UserInfoItem.class);
+                        if (userInfoItem != null) {
+                            putSharedString(activity, ReaderConfig.TOKEN, userInfoItem.getUser_token());
+                            putSharedString(activity, ReaderConfig.UID, String.valueOf(userInfoItem.getUid()));
+                            EventBus.getDefault().post(new RefreshMine(userInfoItem));
+                            EventBus.getDefault().post(new RefreshUserInfo(userInfoItem));
                             EventBus.getDefault().post(new BuyLoginSuccessEvent());
                             if (GETPRODUCT_TYPE(activity) != 2) {
                                 EventBus.getDefault().post(new RefreshBookSelf(null));
