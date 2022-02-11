@@ -412,6 +412,7 @@ public class ConvenientBanner<T> extends LinearLayout {
         }
         if (flag == 0 || flag == 1) {
             if (!mBannerItemListMale.isEmpty()) {
+                mStoreBannerMale.setVisibility(View.VISIBLE);
                 mStoreBannerMale.setPages(new CBViewHolderCreator<HomeBannerHolderViewComic>() {
                     @Override
                     public HomeBannerHolderViewComic createHolder() {
@@ -430,6 +431,7 @@ public class ConvenientBanner<T> extends LinearLayout {
             }
         } else {
             if (!mBannerItemListMale.isEmpty()) {
+                mStoreBannerMale.setVisibility(View.VISIBLE);
                 final int WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
                 if (flag == 2) {
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mStoreBannerMale.getLayoutParams();
