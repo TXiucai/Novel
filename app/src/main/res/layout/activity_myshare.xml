@@ -62,10 +62,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_68dp"
-            android:layout_marginTop="@dimen/dimens_20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_15dp"
             android:paddingLeft="@dimen/dimens_32dp"
-            android:paddingTop="@dimen/dimens_14dp"
+            android:paddingTop="@dimen/dimens_10dp"
             android:paddingRight="@dimen/dimens_32dp"
             android:paddingBottom="@dimen/dimens_14dp">
 
@@ -73,7 +73,7 @@
                 android:id="@+id/tv_link"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="left"
                 android:textColor="@color/color_1a1a1a"
                 android:textSize="@dimen/dimens_14sp" />
 
