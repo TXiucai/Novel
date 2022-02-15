@@ -31,6 +31,7 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
@@ -808,7 +809,6 @@ public class PageFactory {
                             }
                         }
                         drawLastChapter(querychapterItem, preChapterId);
-                        checkIsCoupon(querychapterItem);
                     }
 
                     @Override
@@ -891,7 +891,6 @@ public class PageFactory {
                                 }
                             }
                             drawNextChapter(querychapterItem, nextChapterId);
-                            checkIsCoupon(querychapterItem);
                         }
 
                         @Override
@@ -1003,6 +1002,22 @@ public class PageFactory {
         }
         checkIsCoupon(chapterItem);
         ReadHistory.addReadHistory(true, mActivity, book_id, chapter_id);//阅读历史上传 没看一个新章节都上传一次
+    }
+
+    private void updateRecord() {
+        ReaderParams params = new ReaderParams(mActivity);
+        params.putExtraParams("book_id", book_id);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadRecord, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     /**
@@ -1804,11 +1819,14 @@ public class PageFactory {
             DialogVip dialogVip = new DialogVip();
             dialogVip.getDialogVipPop(mActivity, true);
             return;
+        } else {
+            updateRecord();
         }
     }
 
     public void checkIsCoupon(ChapterItem chapterItem) {
         if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
+            updateRecord();
             return;
         } else {
             if (Utils.isLogin(mActivity)) {
@@ -1856,10 +1874,11 @@ public class PageFactory {
                                             dialogCouponNotMore.getDialogVipPop(activity, true);
                                         }
                                     } else {
-                                        mDialogVip = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+                                        if (mDialogVip == null || !mDialogVip.isShowing()) {
+                                            mDialogVip = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+                                        }
                                     }
                                 }
-
                                 dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                                     @Override
                                     public void onOpenCoupon(boolean isBuy) {
@@ -1867,11 +1886,14 @@ public class PageFactory {
                                             mDialogVip.dismiss();
                                         }
                                         chapterItem.setIs_buy_status(true);
+                                        updateRecord();
                                     }
                                 });
                                 return;
                             }
                             checkIsVip(chapterItem);
+                        } else {
+                            updateRecord();
                         }
                     }
 

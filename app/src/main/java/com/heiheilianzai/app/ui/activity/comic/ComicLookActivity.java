@@ -839,7 +839,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ComicConfig.COMIC_chapter, json, false, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(final String result) {
-                            updateRecord();
                             if (HandleData) {
                                 ComicChapterItem comicChapterItem = gson.fromJson(result, ComicChapterItem.class);
                                 HandleData(comicChapterItem, chapter_id, comic_id, activity);
@@ -1159,13 +1158,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         mReadStarTime = System.currentTimeMillis();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (isActive && !mIsSipAd) {
-            initData();
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshComicChapterList(ComicChapterEventbus comicChapterte) {//更新当前目录集合的 最近阅读图片记录
@@ -1726,6 +1718,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             DialogVip dialogVip = new DialogVip();
             dialogVip.getDialogVipPop(activity, true);
             return;
+        } else {
+            updateRecord();
         }
     }
 
@@ -1734,11 +1728,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         String is_vip = chapterItem.getIs_vip();
         String is_limited_free = chapterItem.getIs_limited_free();
         if (!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) {
+            updateRecord();
             return;
         }
         if (Utils.isLogin(activity)) {
             boolean isCoupon = false;
             if (chapterItem.isIs_buy_status()) {
+                updateRecord();
                 return;
             }
             if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
@@ -1758,7 +1754,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                             dialogCouponNotMore.getDialogVipPop(activity, true);
                         }
                     } else {
-                        dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
+                        if (dialogVipPop == null || !dialogVipPop.isShowing()) {
+                            dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
+                        }
                     }
                     dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
                         @Override
@@ -1767,10 +1765,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                                 dialogVipPop.dismiss();
                             }
                             chapterItem.setIs_book_coupon_pay("0");
+                            updateRecord();
                         }
                     });
+                    return;
                 }
             }
+            checkIsVip(chapterItem);
         } else {
             if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
                 DialogRegister dialogRegister = new DialogRegister();
@@ -1784,6 +1785,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         }
                     }
                 });
+            } else {
+                updateRecord();
             }
         }
     }

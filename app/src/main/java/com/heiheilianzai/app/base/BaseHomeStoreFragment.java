@@ -3,6 +3,7 @@ package com.heiheilianzai.app.base;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,7 +25,6 @@ import com.heiheilianzai.app.ChannelAdapter;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
-import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
@@ -111,6 +111,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private String mChannelId = "";
     private String mTopChannelId = "";
     private LinearLayoutManager mLinearLayoutManager;
+    private float mEventX;
+    private float mEventMoveX;
+    private float mEventY;
+    private float mEventMoveY;
+    private int mChannelPosition = 0;
+    private ChannelBean mChannelBean;
 
     @Override
     protected void initView() {
@@ -133,6 +139,61 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         recyclerView.setLayoutManager(layoutManager);
         smartRecyclerAdapter.setHeaderView(headerView);
         recyclerView.setAdapter(smartRecyclerAdapter);
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mEventX = event.getX();
+                        mEventY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        mEventMoveX = event.getX();
+                        mEventMoveY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        float v1 = mEventMoveX - mEventX;
+                        float v2 = mEventMoveY - mEventY;
+                        if (Math.abs(v2) < Math.abs(v1)) {
+                            if (mChannelBean.getList() != null && mChannelAdapter != null) {
+                                if (v1 < 0) {//右滑
+                                    if (mChannelPosition < mChannelBean.getList().size() - 1) {
+                                        mChannelPosition++;
+                                        freshChannel();
+                                        return true;
+                                    }
+                                } else {//左滑
+                                    if (mChannelPosition > 0) {
+                                        mChannelPosition--;
+                                        freshChannel();
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+                return false;
+            }
+
+            private void freshChannel() {
+                page = 1;
+                mLinearLayoutManager.scrollToPositionWithOffset(mChannelPosition, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
+                mChannelAdapter.setSelection(mChannelPosition);
+                List<String> recommend_id_list = mChannelBean.getList().get(mChannelPosition).getRecommend_id_list();
+                mTopChannelId = mChannelBean.getList().get(mChannelPosition).getId();
+                getHomeAds();
+                if (recommend_id_list != null) {
+                    getmChannelId(recommend_id_list);
+                    getChannelDetailData();
+                } else {
+                    mChannelId = "";
+                    listData.clear();
+                    adapter.notifyDataSetChanged();
+                    smartRecyclerAdapter.notifyDataSetChanged();
+                }
+            }
+        });
         //暂时注释滑动状态栏改变
         /*recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -310,10 +371,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             @Override
             public void onResponse(String response) {
                 try {
-                    ChannelBean channelBean = new Gson().fromJson(response, ChannelBean.class);
-                    if (channelBean.getList() != null && channelBean.getList().size() > 0) {
+                    mChannelBean = new Gson().fromJson(response, ChannelBean.class);
+                    if (mChannelBean.getList() != null && mChannelBean.getList().size() > 0) {
                         relativeLayoutChannel.setVisibility(View.VISIBLE);
-                        initChannel(channelBean, product);
+                        initChannel(mChannelBean, product);
                     } else {
                         relativeLayoutChannel.setVisibility(View.GONE);
                     }
@@ -335,12 +396,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         mLinearLayoutManager = new LinearLayoutManager(activity);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewChannel.setLayoutManager(mLinearLayoutManager);
-        mChannelAdapter = new ChannelAdapter(channelBean.getList(), activity, 0);
+        List<ChannelBean.ListBean> list = channelBean.getList();
+        mChannelAdapter = new ChannelAdapter(list, activity, 0);
         recyclerViewChannel.setAdapter(mChannelAdapter);
-        mTopChannelId = channelBean.getList().get(0).getId();
+        mTopChannelId = list.get(0).getId();
         getHomeAds();
-        if (channelBean.getList() != null && channelBean.getList().size() > 0) {
-            List<String> recommend_id_list = channelBean.getList().get(0).getRecommend_id_list();
+        if (list != null && list.size() > 0) {
+            List<String> recommend_id_list = list.get(0).getRecommend_id_list();
             if (recommend_id_list != null) {
                 getmChannelId(recommend_id_list);
                 getChannelDetailData();
@@ -349,6 +411,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         mChannelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
             @Override
             public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
+                mChannelPosition = positon;
                 page = 1;
                 mLinearLayoutManager.scrollToPositionWithOffset(positon, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
                 mChannelAdapter.setSelection(positon);

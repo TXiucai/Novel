@@ -348,6 +348,11 @@ public class ReaderConfig {
     public static final String mReadTime = "/usergrandtotalread/minute";
 
     /**
+     * 上传阅读记录
+     */
+    public static final String mReadRecord = "/chapter/add-book-behavior-read-log";
+
+    /**
      * 获取当期最新一条充值订单
      */
     public static final String mPayLastOrder = "/user/lastpay-order";
