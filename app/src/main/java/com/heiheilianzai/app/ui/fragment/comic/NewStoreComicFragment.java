@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,7 @@ import com.heiheilianzai.app.adapter.comic.HomeStoreComicAdapter;
 import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.StoreComicEvent;
@@ -33,6 +35,9 @@ import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLable> {
 
 
+    private String mChannelId;
+    private String mChannelRecommendId;
+
     @Override
     public int initContentView() {
         return R.layout.fragment_comic_store_new;
@@ -42,11 +47,25 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     public void initViews() {
         adapter = new HomeStoreComicAdapter(activity, listData, false);
         super.initViews();
+        if (getArguments() != null) {
+            ChannelBean.ListBean channelBean = (ChannelBean.ListBean) getArguments().getSerializable("channel");
+            mChannelId = channelBean.getId();
+            mChannelRecommendId = getRecommendChannelId(channelBean.getRecommend_id_list());
+        }
     }
 
     @Override
-    protected void getChannelData() {
-        getChannelData(ComicConfig.COMIC_channel, false);
+    protected void setChannelId() {
+        setmChannelId(mChannelId, mChannelRecommendId);
+    }
+
+
+    public static NewStoreComicFragment newInstance(ChannelBean.ListBean channelBean) {
+        NewStoreComicFragment newStoreComicFragment = new NewStoreComicFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("channel", channelBean);
+        newStoreComicFragment.setArguments(args);
+        return newStoreComicFragment;
     }
 
     @Override

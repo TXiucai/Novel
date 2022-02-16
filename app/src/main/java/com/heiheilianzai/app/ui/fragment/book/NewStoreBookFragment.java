@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,8 +10,10 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.book.HomeStoreBookAdapter;
 import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.event.StoreBookEvent;
+import com.heiheilianzai.app.ui.fragment.comic.NewStoreComicFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
@@ -25,6 +28,9 @@ import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_BOOK;
  * Created by scb on 2018/6/9.
  */
 public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable> {
+
+    private String mChannelId;
+    private String mChannelRecommendId;
     @Override
     public int initContentView() {
         return R.layout.fragment_comic_store_new;
@@ -34,11 +40,24 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
     public void initViews() {
         adapter = new HomeStoreBookAdapter(activity, listData, false);
         super.initViews();
+        if (getArguments() != null) {
+            ChannelBean.ListBean channelBean= (ChannelBean.ListBean) getArguments().getSerializable("channel");
+            mChannelId = channelBean.getId();
+            mChannelRecommendId = getRecommendChannelId(channelBean.getRecommend_id_list());
+        }
     }
 
     @Override
-    protected void getChannelData() {
-        getChannelData(ReaderConfig.mBookChannelUrl, true);
+    protected void setChannelId() {
+        setmChannelId(mChannelId,mChannelRecommendId);
+    }
+
+    public static NewStoreBookFragment newInstance(ChannelBean.ListBean channelBean) {
+        NewStoreBookFragment newStoreComicFragment = new NewStoreBookFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("channel", channelBean);
+        newStoreComicFragment.setArguments(args);
+        return newStoreComicFragment;
     }
 
     @Override

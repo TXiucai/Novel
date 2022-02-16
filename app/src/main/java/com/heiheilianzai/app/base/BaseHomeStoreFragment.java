@@ -3,13 +3,10 @@ package com.heiheilianzai.app.base;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +18,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.headerfooter.songhang.library.SmartRecyclerAdapter;
 import com.heiheilianzai.app.BuildConfig;
-import com.heiheilianzai.app.ChannelAdapter;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -29,13 +25,11 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.BaseAd;
-import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
-import com.heiheilianzai.app.ui.activity.ChannelActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.TopNewActivity;
 import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
@@ -105,18 +99,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     boolean isEdit = false;//后台是否修改了推荐列表数据
     boolean isLoadMore = true;//是否加载更多
     int mFirstIndex = -1;//上次列表滚动到的位置
-    private ChannelAdapter mChannelAdapter;
     private boolean mIsNovelLabelSdk;
     private boolean mIsComicLabelSdk;
     private String mChannelId = "";
     private String mTopChannelId = "";
-    private LinearLayoutManager mLinearLayoutManager;
-    private float mEventX;
-    private float mEventMoveX;
-    private float mEventY;
-    private float mEventMoveY;
-    private int mChannelPosition = 0;
-    private ChannelBean mChannelBean;
 
     @Override
     protected void initView() {
@@ -129,7 +115,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     protected void initViews() {
-        EventBus.getDefault().register(this);
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_store_comic_content_head, null);
         fragment_newbookself_top = ((StroeNewFragment) getParentFragment()).fragment_newbookself_top;
         hot_word = ((StroeNewFragment) getParentFragment()).myHotWord;
@@ -139,61 +124,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         recyclerView.setLayoutManager(layoutManager);
         smartRecyclerAdapter.setHeaderView(headerView);
         recyclerView.setAdapter(smartRecyclerAdapter);
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mEventX = event.getX();
-                        mEventY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        mEventMoveX = event.getX();
-                        mEventMoveY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        float v1 = mEventMoveX - mEventX;
-                        float v2 = mEventMoveY - mEventY;
-                        if (Math.abs(v2) < Math.abs(v1)) {
-                            if (mChannelBean.getList() != null && mChannelAdapter != null) {
-                                if (v1 < 0) {//右滑
-                                    if (mChannelPosition < mChannelBean.getList().size() - 1) {
-                                        mChannelPosition++;
-                                        freshChannel();
-                                        return true;
-                                    }
-                                } else {//左滑
-                                    if (mChannelPosition > 0) {
-                                        mChannelPosition--;
-                                        freshChannel();
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                }
-                return false;
-            }
-
-            private void freshChannel() {
-                page = 1;
-                mLinearLayoutManager.scrollToPositionWithOffset(mChannelPosition, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
-                mChannelAdapter.setSelection(mChannelPosition);
-                List<String> recommend_id_list = mChannelBean.getList().get(mChannelPosition).getRecommend_id_list();
-                mTopChannelId = mChannelBean.getList().get(mChannelPosition).getId();
-                getHomeAds();
-                if (recommend_id_list != null) {
-                    getmChannelId(recommend_id_list);
-                    getChannelDetailData();
-                } else {
-                    mChannelId = "";
-                    listData.clear();
-                    adapter.notifyDataSetChanged();
-                    smartRecyclerAdapter.notifyDataSetChanged();
-                }
-            }
-        });
         //暂时注释滑动状态栏改变
         /*recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -329,7 +259,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     protected void getData() {
-        getChannelData();
+        setChannelId();
     }
 
     protected void getCacheData() {
@@ -337,7 +267,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getCacheStockData();
     }
 
-    protected abstract void getChannelData();
+    protected abstract void setChannelId();
 
     protected abstract void getChannelDetailData();
 
@@ -363,108 +293,25 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void getHomeRecommend();
 
-    protected void getChannelData(String url, boolean product) {
-        RelativeLayout relativeLayoutChannel = headerView.findViewById(R.id.rl_channel);
-        ReaderParams params = new ReaderParams(activity);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    mChannelBean = new Gson().fromJson(response, ChannelBean.class);
-                    if (mChannelBean.getList() != null && mChannelBean.getList().size() > 0) {
-                        relativeLayoutChannel.setVisibility(View.VISIBLE);
-                        initChannel(mChannelBean, product);
-                    } else {
-                        relativeLayoutChannel.setVisibility(View.GONE);
-                    }
-                } catch (Exception e) {
-                    relativeLayoutChannel.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onErrorResponse(String ex) {
-                relativeLayoutChannel.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    private void initChannel(ChannelBean channelBean, boolean product) {
-        RecyclerView recyclerViewChannel = headerView.findViewById(R.id.ry_channel);
-        ImageView imgChannel = headerView.findViewById(R.id.img_channel_more);
-        mLinearLayoutManager = new LinearLayoutManager(activity);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewChannel.setLayoutManager(mLinearLayoutManager);
-        List<ChannelBean.ListBean> list = channelBean.getList();
-        mChannelAdapter = new ChannelAdapter(list, activity, 0);
-        recyclerViewChannel.setAdapter(mChannelAdapter);
-        mTopChannelId = list.get(0).getId();
+    public void setmChannelId(String channelId, String channelRecommendId) {
+        mChannelId = channelRecommendId;
+        mTopChannelId = channelId;
         getHomeAds();
-        if (list != null && list.size() > 0) {
-            List<String> recommend_id_list = list.get(0).getRecommend_id_list();
-            if (recommend_id_list != null) {
-                getmChannelId(recommend_id_list);
-                getChannelDetailData();
-            }
-        }
-        mChannelAdapter.setOnChannelItemClickListener(new ChannelAdapter.OnChannelItemClickListener() {
-            @Override
-            public void onChannelItemClick(ChannelBean.ListBean item, int positon) {
-                mChannelPosition = positon;
-                page = 1;
-                mLinearLayoutManager.scrollToPositionWithOffset(positon, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
-                mChannelAdapter.setSelection(positon);
-                List<String> recommend_id_list = item.getRecommend_id_list();
-                mTopChannelId = item.getId();
-                getHomeAds();
-                if (recommend_id_list != null) {
-                    getmChannelId(recommend_id_list);
-                    getChannelDetailData();
-                } else {
-                    mChannelId = "";
-                    listData.clear();
-                    adapter.notifyDataSetChanged();
-                    smartRecyclerAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-        imgChannel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity, ChannelActivity.class);
-                intent.putExtra("PRODUCE", product);
-                intent.putExtra("CHANNEL", channelBean);
-                startActivityForResult(intent, 1);
-            }
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 1 && resultCode == 2) {
-            page = 1;
-            ChannelBean.ListBean listBean = (ChannelBean.ListBean) data.getExtras().getSerializable("CHANNEL");
-            boolean produce = data.getExtras().getBoolean("PRODUCE");
-            int position = data.getExtras().getInt("POSITION", 0);
-            List<String> recommend_id_list = listBean.getRecommend_id_list();
-            mTopChannelId = listBean.getId();
-            getHomeAds();
-            mChannelAdapter.setSelection(position);
-            mLinearLayoutManager.scrollToPositionWithOffset(position, ScreenSizeUtils.getInstance(activity).getScreenWidth() / 2);
-            if (recommend_id_list != null) {
-                getmChannelId(recommend_id_list);
-                getChannelDetailData();
-            } else {
-                mChannelId = "";
-                listData.clear();
-                adapter.notifyDataSetChanged();
-                smartRecyclerAdapter.notifyDataSetChanged();
-            }
-        }
+        getChannelDetailData();
     }
 
     protected void getChannelDetailData(String url) {
+        if (TextUtils.isEmpty(mChannelId)) {
+            listData.clear();
+            adapter.notifyDataSetChanged();
+            smartRecyclerAdapter.notifyDataSetChanged();
+            if (page == 1) {//第一页保存修改时间戳，保存列表总条数
+                store_comic_refresh_layout.finishRefresh();
+            } else {
+                store_comic_refresh_layout.finishLoadmore();
+            }
+            return;
+        }
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", mChannelId);
         params.putExtraParams("page", "" + page);
@@ -501,25 +348,38 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     if (page > 1) {
                         isLoadMore = false;
                     }
+                    if (page == 1) {
+                        finishRefresh(false);
+                    } else {
+                        finishLoadmore(false);
+                    }
                 }
             }
 
             @Override
             public void onErrorResponse(String ex) {
+                if (page == 1) {
+                    finishRefresh(false);
+                } else {
+                    finishLoadmore(false);
+                }
             }
         });
     }
 
-    private void getmChannelId(List<String> list) {
-        mChannelId = "";
-        for (int i = 0; i < list.size(); i++) {
-            String s = list.get(i);
-            if (i < list.size() - 1) {
-                mChannelId += s + ",";
-            } else {
-                mChannelId += s;
+    public String getRecommendChannelId(List<String> list) {
+        String recommendChannelId = "";
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                String s = list.get(i);
+                if (i < list.size() - 1) {
+                    recommendChannelId += s + ",";
+                } else {
+                    recommendChannelId += s;
+                }
             }
         }
+        return recommendChannelId;
     }
 
     protected void getSdkLableAd(int recommendType) {

@@ -16,21 +16,32 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
+import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.FloatMainBean;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.StoreEvent;
 import com.heiheilianzai.app.model.event.TaskRedPointEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.ChannelActivity;
 import com.heiheilianzai.app.ui.activity.SearchActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
@@ -51,7 +62,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
@@ -78,6 +93,12 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     public TextView mTxOrderGo;
     @BindView(R.id.fragment_order_close)
     public ImageView mImgOrderClose;
+    @BindView(R.id.tb_tittle)
+    public TabLayout mTbChannel;
+    @BindView(R.id.vp_channel)
+    public ViewPager mVpChannel;
+    @BindView(R.id.rl_channel)
+    public RelativeLayout mRlChannel;
     FragmentManager fragmentManager;
     public String hot_word[];
     int hot_word_size, hot_word_position;
@@ -86,6 +107,10 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     BaseButterKnifeFragment fragment;
     private FloatMainBean mFloatMainBean;
     private int mGoodId;
+    private List<String> mTittlesList = new ArrayList<>();
+    private List<Fragment> mFragmentList = new ArrayList<>();
+    private ChannelHomeHolder mHolder;
+    private ChannelBean mChannelBean;
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -101,7 +126,6 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             }
         }
     };
-
 
     @Override
     public int initContentView() {
@@ -129,9 +153,15 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         }
     }
 
-    @OnClick(value = {R.id.fragment_store_fili, R.id.fragment_store_search, R.id.main_float_img, R.id.fragment_order_close, R.id.fragment_order_go})
+    @OnClick(value = {R.id.fragment_store_fili, R.id.fragment_store_search, R.id.main_float_img, R.id.fragment_order_close, R.id.fragment_order_go, R.id.img_channel_more})
     public void getEvent(View view) {
         switch (view.getId()) {
+            case R.id.img_channel_more:
+                Intent intentChannel = new Intent(activity, ChannelActivity.class);
+                intentChannel.putExtra("PRODUCE", getProduct());
+                intentChannel.putExtra("CHANNEL", mChannelBean);
+                startActivityForResult(intentChannel, 1);
+                break;
             case R.id.fragment_store_fili:
                 ShareUitls.putRecommendAppTime(activity, "taskPointTime", DateUtils.currentTime());
                 if (!Utils.isLogin(activity)) {
@@ -229,6 +259,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
 
     @Override
     protected void initView() {
+        mTbChannel.setSelectedTabIndicatorHeight(0);
         fragmentManager = getChildFragmentManager();
         if (NotchScreen.hasNotchScreen(getActivity())) {
             ViewGroup.LayoutParams layoutParams = fragment_newbookself_top.getLayoutParams();
@@ -240,11 +271,8 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         mTxOrderGo.setText(spannableString);
         getFloat(activity, getProduct());
+        getChannelData();
         showIsGiftPoint();
-        try {
-            initOption();
-        } catch (Exception e) {
-        }
     }
 
     private void showIsGiftPoint() {
@@ -256,12 +284,6 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         } else {
             mRedPointImg.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void initOption() {
-        fragment = getProduct() ? new NewStoreBookFragment() : new NewStoreComicFragment();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.fragment_store_fragment, fragment).commit();
     }
 
     /**
@@ -313,6 +335,136 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             }
         } catch (Exception e) {
             mFloatImg.setVisibility(View.GONE);
+        }
+    }
+
+    protected void getChannelData() {
+        String url;
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        boolean product = getProduct();
+        if (product) {
+            url = ReaderConfig.mBookChannelUrl;
+        } else {
+            url = ComicConfig.COMIC_channel;
+        }
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    mChannelBean = new Gson().fromJson(response, ChannelBean.class);
+                    if (mChannelBean.getList() != null && mChannelBean.getList().size() > 0) {
+                        mRlChannel.setVisibility(View.VISIBLE);
+                        initChannel(mChannelBean);
+                    } else {
+                        mRlChannel.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                    mRlChannel.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+                mRlChannel.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void initChannel(ChannelBean channelBean) {
+        if (channelBean.getList() != null) {
+            for (int i = 0; i < channelBean.getList().size(); i++) {
+                ChannelBean.ListBean listBean = channelBean.getList().get(i);
+                mTittlesList.add(listBean.getChannel_name());
+                if (getProduct()){
+                    NewStoreBookFragment newStoreBookFragment = NewStoreBookFragment.newInstance(listBean);
+                    mFragmentList.add(newStoreBookFragment);
+                }else {
+                    NewStoreComicFragment newStoreComicFragment = NewStoreComicFragment.newInstance(listBean);
+                    mFragmentList.add(newStoreComicFragment);
+                }
+            }
+            mVpChannel.setOffscreenPageLimit(channelBean.getList().size());
+            mVpChannel.setAdapter(new FragmentPagerAdapter(fragmentManager) {
+                @NonNull
+                @Override
+                public Fragment getItem(int position) {
+                    return mFragmentList.get(position);
+                }
+
+                @Override
+                public int getCount() {
+                    return mFragmentList.size();
+                }
+
+                @Nullable
+                @Override
+                public CharSequence getPageTitle(int position) {
+                    return mTittlesList.get(position);
+                }
+            });
+            mTbChannel.setupWithViewPager(mVpChannel);
+            int tabCount = mTbChannel.getTabCount();
+            for (int i = 0; i < tabCount; i++) {
+                TabLayout.Tab tabAt = mTbChannel.getTabAt(i);
+                tabAt.setCustomView(R.layout.item_channel_home);
+                View customView = tabAt.getCustomView();
+                mHolder = new ChannelHomeHolder(customView);
+                mHolder.mTxChannel.setText(mTittlesList.get(i));
+                if (i == 0) {
+                    mHolder.mTxChannel.setTextSize(20);
+                    mHolder.mTxChannel.setSelected(true);
+                    mHolder.mImgBackground.setVisibility(View.VISIBLE);
+                } else {
+                    mHolder.mTxChannel.setSelected(false);
+                    mHolder.mTxChannel.setTextSize(14);
+                    mHolder.mImgBackground.setVisibility(View.GONE);
+                }
+            }
+
+            mTbChannel.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    mVpChannel.setCurrentItem(tab.getPosition());
+                    mHolder = new ChannelHomeHolder(tab.getCustomView());
+                    mHolder.mTxChannel.setSelected(true);
+                    mHolder.mTxChannel.setTextSize(20);
+                    mHolder.mImgBackground.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    mHolder = new ChannelHomeHolder(tab.getCustomView());
+                    mHolder.mTxChannel.setSelected(false);
+                    mHolder.mTxChannel.setTextSize(14);
+                    mHolder.mImgBackground.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+            mTbChannel.getTabAt(0).select();
+        }
+
+    }
+
+    private class ChannelHomeHolder {
+        TextView mTxChannel;
+        View mImgBackground;
+
+        public ChannelHomeHolder(View itemView) {
+            mTxChannel = itemView.findViewById(R.id.tx_channel);
+            mImgBackground = itemView.findViewById(R.id.img_background);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1 && resultCode == 2) {
+            int position = data.getExtras().getInt("POSITION", 0);
+            mTbChannel.getTabAt(position).select();
         }
     }
 }
