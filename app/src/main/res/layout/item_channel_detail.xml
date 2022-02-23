@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimens_18dp" />
+        android:layout_marginTop="@dimen/dimens_13dp" />
 
     <TextView
         android:id="@+id/tx_tittle"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dimens_20dp"
+        android:layout_marginBottom="@dimen/dimens_16dp"
         android:textColor="@color/color_323334"
         android:textSize="12sp" />
 </RelativeLayout>

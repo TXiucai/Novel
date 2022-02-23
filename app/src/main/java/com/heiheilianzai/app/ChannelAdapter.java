@@ -79,7 +79,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             layoutParams.height = layoutParams.width;
             detailHolder.mRlItem.setLayoutParams(layoutParams);
             ViewGroup.LayoutParams mCirImgLayoutParams = detailHolder.mCirImg.getLayoutParams();
-            mCirImgLayoutParams.width = layoutParams.width * 2 / 5;
+            mCirImgLayoutParams.width = layoutParams.width * 1 / 2;
             mCirImgLayoutParams.height = mCirImgLayoutParams.width;
             detailHolder.mCirImg.setLayoutParams(mCirImgLayoutParams);
             MyPicasso.GlideImageNoSize(mContext, mList.get(position).getChannel_icon(), detailHolder.mCirImg);
