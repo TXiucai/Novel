@@ -376,11 +376,11 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             for (int i = 0; i < channelBean.getList().size(); i++) {
                 ChannelBean.ListBean listBean = channelBean.getList().get(i);
                 mTittlesList.add(listBean.getChannel_name());
-                if (getProduct()){
-                    NewStoreBookFragment newStoreBookFragment = NewStoreBookFragment.newInstance(listBean);
+                if (getProduct()) {
+                    NewStoreBookFragment newStoreBookFragment = NewStoreBookFragment.newInstance(listBean, i);
                     mFragmentList.add(newStoreBookFragment);
-                }else {
-                    NewStoreComicFragment newStoreComicFragment = NewStoreComicFragment.newInstance(listBean);
+                } else {
+                    NewStoreComicFragment newStoreComicFragment = NewStoreComicFragment.newInstance(listBean, i);
                     mFragmentList.add(newStoreComicFragment);
                 }
             }

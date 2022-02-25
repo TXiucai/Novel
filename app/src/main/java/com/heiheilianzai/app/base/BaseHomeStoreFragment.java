@@ -103,6 +103,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private boolean mIsComicLabelSdk;
     private String mChannelId = "";
     private String mTopChannelId = "";
+    private int mPosition;
 
     @Override
     protected void initView() {
@@ -267,6 +268,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getCacheStockData();
     }
 
+    protected abstract void setPosition();
+
     protected abstract void setChannelId();
 
     protected abstract void getChannelDetailData();
@@ -293,7 +296,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected abstract void getHomeRecommend();
 
-    public void setmChannelId(String channelId, String channelRecommendId) {
+    protected void setPosition(int position) {
+        mPosition = position;
+    }
+
+    protected void setmChannelId(String channelId, String channelRecommendId) {
         mChannelId = channelRecommendId;
         mTopChannelId = channelId;
         getHomeAds();
@@ -313,6 +320,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             return;
         }
         ReaderParams params = new ReaderParams(activity);
+        if (TextUtils.equals(url, ReaderConfig.mBookChannelDetailUrl)) {
+            params.putExtraParams("book_channel_id", mTopChannelId);
+        } else {
+            params.putExtraParams("comic_channel_id", mTopChannelId);
+        }
         params.putExtraParams("recommend_id", mChannelId);
         params.putExtraParams("page", "" + page);
         params.putExtraParams("limit", "4"); //返回4条（已协商）
@@ -523,7 +535,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(String response) throws JSONException {
                 HomeRecommendBean homeRecommendBean = new Gson().fromJson(response, HomeRecommendBean.class);
                 List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
-                if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2) {
+                //只有第一个频道才展示第三方icon
+                if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2 && mPosition == 0) {
                     sdkIconAd(ryRecommend, recommendType, recomme_list);
                 } else {
                     initRecommend(ryRecommend, recomme_list);
@@ -790,7 +803,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         bannerItemStore.setContent(adInfo.getOperation().getValue());
                         bannerItemStore.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
                         bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
-                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        //第三方广告素材描述和频道id相对应
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType()) && TextUtils.equals(mTopChannelId, adInfo.getMaterial().subtitle)) {
                             bannerItemStores.add(bannerItemStore);
                         }
                     }

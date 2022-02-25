@@ -37,6 +37,7 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
     private String mChannelId;
     private String mChannelRecommendId;
+    private int mPosition;
 
     @Override
     public int initContentView() {
@@ -51,7 +52,13 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
             ChannelBean.ListBean channelBean = (ChannelBean.ListBean) getArguments().getSerializable("channel");
             mChannelId = channelBean.getId();
             mChannelRecommendId = getRecommendChannelId(channelBean.getRecommend_id_list());
+            mPosition = getArguments().getInt("position", 0);
         }
+    }
+
+    @Override
+    protected void setPosition() {
+        setPosition(mPosition);
     }
 
     @Override
@@ -60,10 +67,11 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     }
 
 
-    public static NewStoreComicFragment newInstance(ChannelBean.ListBean channelBean) {
+    public static NewStoreComicFragment newInstance(ChannelBean.ListBean channelBean, int position) {
         NewStoreComicFragment newStoreComicFragment = new NewStoreComicFragment();
         Bundle args = new Bundle();
         args.putSerializable("channel", channelBean);
+        args.putInt("position", position);
         newStoreComicFragment.setArguments(args);
         return newStoreComicFragment;
     }

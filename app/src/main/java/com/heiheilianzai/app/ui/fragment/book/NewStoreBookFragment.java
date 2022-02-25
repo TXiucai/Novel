@@ -31,6 +31,8 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     private String mChannelId;
     private String mChannelRecommendId;
+    private int mPosition;
+
     @Override
     public int initContentView() {
         return R.layout.fragment_comic_store_new;
@@ -41,21 +43,28 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
         adapter = new HomeStoreBookAdapter(activity, listData, false);
         super.initViews();
         if (getArguments() != null) {
-            ChannelBean.ListBean channelBean= (ChannelBean.ListBean) getArguments().getSerializable("channel");
+            ChannelBean.ListBean channelBean = (ChannelBean.ListBean) getArguments().getSerializable("channel");
             mChannelId = channelBean.getId();
             mChannelRecommendId = getRecommendChannelId(channelBean.getRecommend_id_list());
+            mPosition = getArguments().getInt("position", 0);
         }
     }
 
     @Override
-    protected void setChannelId() {
-        setmChannelId(mChannelId,mChannelRecommendId);
+    protected void setPosition() {
+        setPosition(mPosition);
     }
 
-    public static NewStoreBookFragment newInstance(ChannelBean.ListBean channelBean) {
+    @Override
+    protected void setChannelId() {
+        setmChannelId(mChannelId, mChannelRecommendId);
+    }
+
+    public static NewStoreBookFragment newInstance(ChannelBean.ListBean channelBean, int position) {
         NewStoreBookFragment newStoreComicFragment = new NewStoreBookFragment();
         Bundle args = new Bundle();
         args.putSerializable("channel", channelBean);
+        args.putInt("position", position);
         newStoreComicFragment.setArguments(args);
         return newStoreComicFragment;
     }

@@ -214,34 +214,30 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     public void getWebViewAD(Activity activity) {
-        if (ReaderConfig.BOTTOM_READ_AD == null) {
-            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-                if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
-                    mIsSdkAd = true;
-                    sdkAd(activity);
-                    return;
-                }
+        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkAd = true;
+                sdkAd(activity);
+                return;
             }
-            if (!mIsSdkAd) {
-                localAd(activity);
-            }
+        }
+        if (!mIsSdkAd) {
+            localAd(activity);
         }
     }
 
     public void getWebTopAD(Activity activity) {
-        if (ReaderConfig.TOP_READ_AD == null) {
-            for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-                AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-                if (TextUtils.equals(listBean.getPosition(), "17") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
-                    mIsSdkTopAd = true;
-                    sdkTopAd(activity);
-                    return;
-                }
+        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "17") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkTopAd = true;
+                sdkTopAd(activity);
+                return;
             }
-            if (!mIsSdkTopAd) {
-                localTopAd(activity);
-            }
+        }
+        if (!mIsSdkTopAd) {
+            localTopAd(activity);
         }
     }
 
