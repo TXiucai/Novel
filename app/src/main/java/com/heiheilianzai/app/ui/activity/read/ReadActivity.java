@@ -3,6 +3,8 @@ package com.heiheilianzai.app.ui.activity.read;
 import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
 import static com.heiheilianzai.app.ui.fragment.book.NewNovelFragment.BookShelfOpen;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -393,6 +395,15 @@ public class ReadActivity extends BaseReadActivity {
         uiFreeCharge();
         initReadSetting();
         initAd(activity);
+        startListenAnim();
+    }
+
+    private void startListenAnim() {
+        ObjectAnimator valueAnimator = ObjectAnimator.ofFloat(activity_read_speaker, "TranslationY", 0, 10, -2, 10, -2, 15);
+        valueAnimator.setDuration(3000);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        valueAnimator.start();
     }
 
     private void turnOnScreen() {
@@ -958,7 +969,7 @@ public class ReadActivity extends BaseReadActivity {
     @SuppressLint("NonConstantResourceId")
     @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
             R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night, R.id.activity_read_buttom_boyin_close,
-            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.activity_read_speaker})
+            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.rl_listen})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_directory:
@@ -1027,7 +1038,7 @@ public class ReadActivity extends BaseReadActivity {
             case R.id.titlebar_boyin:
                 jumpBoyin();
                 break;
-            case R.id.activity_read_speaker:
+            case R.id.rl_listen:
                 updaeListenRecord();
                 openPermission();
                 break;

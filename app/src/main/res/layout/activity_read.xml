@@ -244,23 +244,54 @@
                     android:id="@+id/activity_read_change_day_night"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_above="@id/activity_read_speaker"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginRight="@dimen/dimens_15dp"
                     android:layout_marginBottom="@dimen/dimens_20dp"
                     android:background="@mipmap/light_mode"
                     android:scaleType="centerCrop" />
 
-                <ImageView
-                    android:id="@+id/activity_read_speaker"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                <RelativeLayout
+                    android:id="@+id/rl_listen"
+                    android:layout_width="@dimen/dimens_155dp"
+                    android:layout_height="@dimen/dimens_50dp"
                     android:layout_above="@id/bookpop_bottom"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="@dimen/dimens_22dp"
-                    android:background="@mipmap/activity_read_listen"
-                    android:scaleType="centerCrop" />
+                    android:layout_marginRight="@dimen/dimens_15dp"
+                    android:layout_marginBottom="@dimen/dimens_22dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimens_22dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@mipmap/listen_item_background"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/dimens_32dp"
+                        android:text="@string/string_listen"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_48dp"
+                        android:layout_height="@dimen/dimens_48dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:src="@mipmap/listen_background" />
+
+                    <ImageView
+                        android:id="@+id/activity_read_speaker"
+                        android:layout_width="@dimen/dimens_48dp"
+                        android:layout_height="@dimen/dimens_48dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:src="@mipmap/listen_ear" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_30dp"
+                        android:layout_height="@dimen/dimens_12dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:src="@mipmap/listen_novel" />
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/bookpop_bottom"
