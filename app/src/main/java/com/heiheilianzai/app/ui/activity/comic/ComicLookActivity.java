@@ -242,14 +242,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private boolean mIsSdkChapterAd = false;
     private boolean mIsShowChapterAd = false;
     public static boolean mIsSipAd = false;
-    private boolean mIsShowChapter = false;
     private BaseAd mSdkTopAd;
     private BaseAd mChapterBaseAd;
-
-    /**
-     * 当前是第几页
-     */
-    private int mPageIndex;
 
     @Override
     public int initContentView() {
@@ -416,7 +410,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 showMenu(false);
                 break;
             case R.id.activity_comiclook_xiayihua_layout:
-                if (mIsShowChapterAd) {
+                if (mIsShowChapterAd && !comicChapterItem.next_chapter.equals("0")) {
                     initChapterAd();
                 } else {
                     if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
@@ -428,19 +422,19 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case R.id.activity_comiclook_shangyihua_layout:
-                if (mIsShowChapterAd) {
+                if (mIsShowChapterAd && !comicChapterItem.last_chapter.equals("0")) {
                     initChapterAd();
                 } else {
-                    if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
+                    if (!mIsShowChapterAd && comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
                         resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                         getData(activity, comic_id, comicChapterItem.last_chapter, true);
                     } else {
-                        if (mChapterBaseAd != null && !mIsShowChapter) {
+                        //特殊情况第一章和第二章中间的广告点击上一章
+                        if (mChapterBaseAd != null && !mIsShowChapterAd && comicChapterItem.last_chapter.equals("0")) {
+                            resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                             getData(activity, comic_id, comicChapterItem.chapter_id, true);
-                            mIsShowChapter = true;
                         } else {
                             MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
-                            mIsShowChapter = false;
                         }
                     }
                 }
@@ -1499,11 +1493,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             switch (view.getId()) {
                 case R.id.activity_comic_look_foot_xiayihua:
                     isclickScreen = false;
-                    if (mIsShowChapterAd) {
+                    if (mIsShowChapterAd && !comicChapterItem.next_chapter.equals("0")) {
                         initChapterAd();
                     } else {
                         if (comicChapterItem != null && !comicChapterItem.next_chapter.equals("0")) {
-                            mPageIndex++;
                             resetSaData(LanguageUtil.getString(activity, R.string.refer_page_next_chapter));
                             getData(activity, comic_id, comicChapterItem.next_chapter, true);
                         } else {
@@ -1513,25 +1506,18 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     break;
                 case R.id.activity_comic_look_foot_shangyihua:
                     isclickScreen = false;
-                    if (mPageIndex == 0) {
-                        MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
-                        return;
-                    }
-                    if (mIsShowChapterAd) {
+                    if (mIsShowChapterAd && !comicChapterItem.last_chapter.equals("0")) {
                         initChapterAd();
                     } else {
-                        if (comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
-                            mPageIndex--;
+                        if (!mIsShowChapterAd && comicChapterItem != null && !comicChapterItem.last_chapter.equals("0")) {
                             resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                             getData(activity, comic_id, comicChapterItem.last_chapter, true);
                         } else {
-                            if (mChapterBaseAd != null && !mIsShowChapter) {
-                                mPageIndex--;
+                            if (mChapterBaseAd != null && !mIsShowChapterAd && comicChapterItem.last_chapter.equals("0")) {
+                                resetSaData(LanguageUtil.getString(activity, R.string.refer_page_previous_chapter));
                                 getData(activity, comic_id, comicChapterItem.chapter_id, true);
-                                mIsShowChapter = true;
                             } else {
                                 MyToash.ToashError(activity, LanguageUtil.getString(activity, R.string.ComicLookActivity_start));
-                                mIsShowChapter = false;
                             }
                         }
                     }

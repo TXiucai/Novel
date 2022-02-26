@@ -392,6 +392,7 @@ public class ReadActivity extends BaseReadActivity {
         setOpenCurrentTime();
         uiFreeCharge();
         initReadSetting();
+        initAd(activity);
     }
 
     private void turnOnScreen() {
@@ -454,7 +455,6 @@ public class ReadActivity extends BaseReadActivity {
         //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
         layoutParams.height = mScreenHeight;
         bookpage.setLayoutParams(layoutParams);
-        initAd(activity);
         bookpage.setADview(insert_todayone2);
         next();
         acceptNovelBoyin(activity, chapter.getBook_name());

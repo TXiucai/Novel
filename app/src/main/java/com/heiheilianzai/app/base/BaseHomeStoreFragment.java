@@ -261,6 +261,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected void getData() {
         setChannelId();
+        setPosition();
     }
 
     protected void getCacheData() {
