@@ -59,6 +59,8 @@ import com.heiheilianzai.app.component.task.DownloadBoyinService;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.localPush.LoaclPushBean;
+import com.heiheilianzai.app.localPush.NotificationUtil;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeNotice;
@@ -211,6 +213,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setOpenTimeEvent();
         getWebTopAD(activity);
         getWebViewAD(activity);
+        getLocalPushData();
     }
 
     public void getWebViewAD(Activity activity) {
@@ -787,6 +790,37 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                                 setVIPSuccessOrderEvent(vipOrderBean);
                             }
                         } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+
+    /**
+     * 获取本地推送数据
+     */
+    private void getLocalPushData() {
+        ReaderParams params = new ReaderParams(MainActivity.this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(MainActivity.this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.LOCAL_PUSH, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        List<LoaclPushBean> loaclPushBeans = new ArrayList<>();
+                        Gson gson = new Gson();
+                        try {
+                            JSONArray jsonArray = new JSONArray(result);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                LoaclPushBean loaclPushBean = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), LoaclPushBean.class);
+                                loaclPushBeans.add(loaclPushBean);
+                            }
+                            NotificationUtil.clearAllNotifyMsg(activity);
+                            NotificationUtil.notifyByAlarm(activity, loaclPushBeans);
+                        } catch (Exception e) {
+                            String s = e.toString();
                         }
                     }
 

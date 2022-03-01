@@ -520,6 +520,16 @@ public class ReaderConfig {
     public static final String TTS_DOWNLOAD_COUNT = "/book-listen/add-device-times";
 
     /**
+     * 本地推送
+     */
+    public static final String LOCAL_PUSH = "/local-push-content/index";
+
+    /**
+     * 本地推送点击上报
+     */
+    public static final String LOCAL_PUSH_ClICK = "/local-push-content/add-click-log";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

@@ -2,6 +2,7 @@ package com.heiheilianzai.app.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -84,6 +85,10 @@ public class DateUtils {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         Date date = new Date(time);
         return simpleDateFormat.format(date);
+    }
+
+    public static long dateToTime(String date) {
+        return (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(date, new ParsePosition(0)).getTime();
     }
 
     /**
