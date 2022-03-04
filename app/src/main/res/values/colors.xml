@@ -192,5 +192,10 @@
     <color name="color_ffbd5c">#FFBD5C</color>
     <color name="color_ff2f00">#FF2F00</color>
     <color name="color_39383c">#39383C</color>
+    <color name="color_28292d">#28292D</color>
+    <color name="color_fc641d">#FC641D</color>
+    <color name="color_2628292d">#2628292D</color>
+    <color name="color_353636">#353636</color>
+    <color name="color_bfbfbf">#BFBFBF</color>
     <!--色值定义END-->
 </resources>

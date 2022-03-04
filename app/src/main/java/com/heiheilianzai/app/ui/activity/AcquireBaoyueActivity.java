@@ -142,6 +142,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public ObservableScrollView mScrollView;
     @BindView(R.id.rl_complete)
     public RelativeLayout mRlComplete;
+    @BindView(R.id.tv_order_record)
+    public TextView tv_order_record;
 
     String mKeFuOnline;//客服链接
     private static final int SDK_PAY_FLAG = 1;
@@ -355,6 +357,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 activity_acquire_avatar_isvip.setVisibility(View.GONE);
                 activity_acquire_avatar_isvip2.setVisibility(View.GONE);
             }
+
+            ShareUitls.putString(AcquireBaoyueActivity.this, "kefu_online", mKeFuOnline);
             List<AcquirePayItem> payList = new ArrayList<>();
             JSONArray listArray = jsonObj.getJSONArray("list");
             for (int i = 0; i < listArray.length(); i++) {
@@ -422,7 +426,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         mTxPrice.setText(String.valueOf(price));
     }
 
-    @OnClick(value = {R.id.activity_acquire_customer_service, R.id.tx_open_vip, R.id.activity_acquire_customer_service2})
+    @OnClick(value = {R.id.activity_acquire_customer_service, R.id.tx_open_vip, R.id.activity_acquire_customer_service2, R.id.tv_order_record})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.activity_acquire_customer_service:
@@ -445,6 +449,10 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     }
                 }
                 break;
+            case R.id.tv_order_record:
+                startActivity(new Intent(AcquireBaoyueActivity.this, OrderRecordActivity.class));
+                break;
+
         }
     }
 

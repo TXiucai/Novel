@@ -1081,7 +1081,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
         }
         Bitmap bitmap = BitmapFactory.decodeStream(fis);
-        return bitmap;
+        //指定图标尺寸 会出现缩放拉伸
+        int wh = ImageUtil.dp2px(MainActivity.this, 70);
+        return ImageUtil.scaleWithWH(bitmap, wh, wh);
     }
 
     /**

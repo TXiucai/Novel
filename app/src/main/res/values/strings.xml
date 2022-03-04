@@ -637,5 +637,13 @@
     <string name="stirng_orignal_price">原价：</string>
     <string name="comic_loading">漫画正在更新中~</string>
     <string name="string_listen">快来听小说吧</string>
+    <string name="order_become_vip">成为会员，无线畅享</string>
+    <string name="order_record_title">订单记录</string>
+    <string name="tv_order_number">订单号：%s</string>
+    <string name="tv_order_time">下单时间：%s</string>
+    <string name="tv_pay_time">支付时间：%s</string>
+    <string name="tv_pay_channel">支付通道：%s</string>
+    <string name="tv_order_go_pay">去支付</string>
+    <string name="tv_copy_order_number">复制订单</string>
 
 </resources>

@@ -41,6 +41,18 @@
                 android:text=""
                 android:textColor="@color/color_ef966B"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_order_record"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dimens_15dp"
+                android:gravity="center_vertical"
+                android:text="@string/order_record_title"
+                android:textColor="@color/color_bfbfbf"
+                android:textSize="@dimen/dimens_14sp" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -114,108 +126,108 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@color/black">
-
-                <RelativeLayout
-                    android:id="@+id/rl_complete"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_80dp"
-                    android:layout_marginLeft="@dimen/dimens_15dp"
-                    android:layout_marginRight="@dimen/dimens_15dp"
-                    android:background="@mipmap/baoyue_vip_bg">
+                    android:layout_height="match_parent"
+                    android:background="@color/black"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dimens_10dp">
-
-                        <com.heiheilianzai.app.view.CircleImageView
-                            android:id="@+id/activity_acquire_avatar"
-                            android:layout_width="@dimen/dp_40"
-                            android:layout_height="@dimen/dp_40"
-                            android:layout_marginLeft="@dimen/dimens_10dp"
-                            android:src="@mipmap/hold_user_avatar" />
+                    <RelativeLayout
+                        android:id="@+id/rl_complete"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimens_80dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:layout_marginRight="@dimen/dimens_15dp"
+                        android:background="@mipmap/baoyue_vip_bg">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dimens_50dp"
-                            android:layout_marginLeft="@dimen/dimens_10dp"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/dimens_10dp">
+
+                            <com.heiheilianzai.app.view.CircleImageView
+                                android:id="@+id/activity_acquire_avatar"
+                                android:layout_width="@dimen/dp_40"
+                                android:layout_height="@dimen/dp_40"
+                                android:layout_marginLeft="@dimen/dimens_10dp"
+                                android:src="@mipmap/hold_user_avatar" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/dimens_50dp"
+                                android:layout_marginLeft="@dimen/dimens_10dp"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/activity_acquire_avatar_name"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
-                                    android:text="@string/BaoyueActivity_no_login"
-                                    android:textColor="@color/white"
-                                    android:textSize="15sp" />
+                                    android:orientation="horizontal">
 
-                                <ImageView
-                                    android:id="@+id/activity_acquire_avatar_isvip"
-                                    android:layout_width="@dimen/dimens_18dp"
-                                    android:layout_height="@dimen/dimens_18dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginLeft="@dimen/dimens_6dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@mipmap/icon_isvip"
-                                    android:visibility="gone" />
+                                    <TextView
+                                        android:id="@+id/activity_acquire_avatar_name"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/BaoyueActivity_no_login"
+                                        android:textColor="@color/white"
+                                        android:textSize="15sp" />
+
+                                    <ImageView
+                                        android:id="@+id/activity_acquire_avatar_isvip"
+                                        android:layout_width="@dimen/dimens_18dp"
+                                        android:layout_height="@dimen/dimens_18dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginLeft="@dimen/dimens_6dp"
+                                        android:scaleType="centerCrop"
+                                        android:src="@mipmap/icon_isvip"
+                                        android:visibility="gone" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/activity_acquire_avatar_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/dimens_4dp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/BaoyueActivity_mianfei"
+                                    android:textColor="@color/color_ef966B"
+                                    android:textSize="10sp" />
                             </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/activity_acquire_customer_service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dimens_30dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <View
+                                android:layout_width="@dimen/dimens_35dp"
+                                android:layout_height="@dimen/dimens_30dp"
+                                android:layout_centerHorizontal="true"
+                                android:background="@mipmap/ic_customer_service" />
 
                             <TextView
-                                android:id="@+id/activity_acquire_avatar_desc"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dimens_4dp"
-                                android:gravity="center_vertical"
-                                android:text="@string/BaoyueActivity_mianfei"
-                                android:textColor="@color/color_ef966B"
+                                android:layout_height="@dimen/dimens_18dp"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/shape_ef966b_20"
+                                android:gravity="center"
+                                android:paddingLeft="@dimen/dimens_10dp"
+                                android:paddingRight="@dimen/dimens_10dp"
+                                android:text="联系客服"
+                                android:textColor="@color/white"
                                 android:textSize="10sp" />
                         </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/activity_acquire_customer_service"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:layout_marginRight="@dimen/dimens_30dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <View
-                            android:layout_width="@dimen/dimens_35dp"
-                            android:layout_height="@dimen/dimens_30dp"
-                            android:layout_centerHorizontal="true"
-                            android:background="@mipmap/ic_customer_service" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dimens_18dp"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/shape_ef966b_20"
-                            android:gravity="center"
-                            android:paddingLeft="@dimen/dimens_10dp"
-                            android:paddingRight="@dimen/dimens_10dp"
-                            android:text="联系客服"
-                            android:textColor="@color/white"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

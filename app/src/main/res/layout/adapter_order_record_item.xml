@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dimens_15dp"
+    android:layout_marginEnd="@dimen/dimens_15dp"
+    android:background="@drawable/layer_blur_order_list">
+
+    <TextView
+        android:id="@+id/tv_type_vip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimens_10dp"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:layout_marginBottom="@dimen/dimens_7dp"
+        android:textColor="@color/color_28292d"
+        android:textSize="@dimen/dimens_14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_vip_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimens_5dp"
+        android:textColor="@color/color_fc641d"
+        android:textSize="@dimen/dimens_12sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_type_vip"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_1dp"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/tv_type_vip" />
+
+    <TextView
+        android:id="@+id/tv_order_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimens_10dp"
+        android:text="@string/tv_order_number"
+        android:textColor="@color/color_929292"
+        android:textSize="@dimen/dimens_12sp"
+        app:layout_constraintStart_toStartOf="@id/tv_type_vip"
+        app:layout_constraintTop_toBottomOf="@id/v_line"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_order_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_order_number"
+        android:layout_marginTop="@dimen/dimens_8dp"
+        android:text="@string/tv_order_time"
+        android:textColor="@color/color_929292"
+        android:textSize="@dimen/dimens_12sp"
+        app:layout_constraintStart_toStartOf="@id/tv_type_vip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_order_number"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_pay_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_order_time"
+        android:layout_marginTop="@dimen/dimens_8dp"
+        android:text="@string/tv_pay_time"
+        android:textColor="@color/color_929292"
+        android:textSize="@dimen/dimens_12sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/tv_type_vip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_order_time" />
+
+    <TextView
+        android:id="@+id/tv_pay_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_pay_time"
+        android:layout_marginTop="@dimen/dimens_8dp"
+        android:text="@string/tv_pay_channel"
+        android:textColor="@color/color_929292"
+        android:textSize="@dimen/dimens_12sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/tv_type_vip"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pay_time" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/dimens_5dp"
+        android:textColor="@color/color_28292d"
+        android:textSize="@dimen/dimens_20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_order_time" />
+
+    <TextView
+        android:id="@+id/tv_go_pay"
+        android:layout_width="@dimen/dimens_80dp"
+        android:layout_height="@dimen/dimens_24dp"
+        android:layout_marginTop="@dimen/dimens_6dp"
+        android:layout_marginEnd="@dimen/dimens_5dp"
+        android:layout_marginBottom="@dimen/dimens_12dp"
+        android:background="@drawable/shape_start_bg"
+        android:gravity="center"
+        android:text="@string/tv_order_go_pay"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimens_12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pay_channel" />
+
+    <TextView
+        android:id="@+id/tv_go_customer"
+        android:layout_width="@dimen/dimens_80dp"
+        android:layout_height="@dimen/dimens_24dp"
+        android:layout_below="@id/tv_pay_channel"
+        android:layout_marginTop="@dimen/dimens_6dp"
+        android:layout_marginEnd="@dimen/dimens_6dp"
+        android:layout_marginBottom="@dimen/dimens_12dp"
+        android:background="@drawable/bg_order_39383c"
+        android:gravity="center"
+        android:text="@string/MineNewFragment_lianxikefu"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimens_12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_go_pay"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pay_channel" />
+
+    <TextView
+        android:id="@+id/tv_copy_order"
+        android:layout_width="@dimen/dimens_80dp"
+        android:layout_height="@dimen/dimens_24dp"
+        android:layout_below="@id/tv_pay_channel"
+        android:layout_marginTop="@dimen/dimens_5dp"
+        android:layout_marginEnd="@dimen/dimens_6dp"
+        android:layout_marginBottom="@dimen/dimens_12dp"
+        android:layout_toStartOf="@id/tv_go_customer"
+        android:background="@drawable/bg_order_39383c"
+        android:gravity="center"
+        android:text="@string/tv_copy_order_number"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimens_12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_go_customer"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pay_channel" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
