@@ -372,6 +372,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     }
 
     private void initChannel(ChannelBean channelBean) {
+        int selectChannel = 0;
         if (channelBean.getList() != null) {
             for (int i = 0; i < channelBean.getList().size(); i++) {
                 ChannelBean.ListBean listBean = channelBean.getList().get(i);
@@ -379,9 +380,17 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 if (getProduct()) {
                     NewStoreBookFragment newStoreBookFragment = NewStoreBookFragment.newInstance(listBean, i);
                     mFragmentList.add(newStoreBookFragment);
+                    String novel_channel_id = ShareUitls.getString(getContext(), "NOVEL_CHANNEL_ID", "");
+                    if (TextUtils.equals(novel_channel_id, listBean.getId())) {
+                        selectChannel = i;
+                    }
                 } else {
                     NewStoreComicFragment newStoreComicFragment = NewStoreComicFragment.newInstance(listBean, i);
                     mFragmentList.add(newStoreComicFragment);
+                    String comic_channel_id = ShareUitls.getString(getContext(), "COMIC_CHANNEL_ID", "");
+                    if (TextUtils.equals(comic_channel_id, listBean.getId())) {
+                        selectChannel = i;
+                    }
                 }
             }
             mVpChannel.setOffscreenPageLimit(channelBean.getList().size());
@@ -445,7 +454,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
 
                 }
             });
-            mTbChannel.getTabAt(0).select();
+            mTbChannel.getTabAt(selectChannel).select();
         }
 
     }

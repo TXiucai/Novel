@@ -372,7 +372,11 @@
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".localPush.AlarmReceive"/>
+        <receiver
+            android:name=".localPush.AlarmReceive"
+            android:enabled="true"
+            android:exported="true" />
+
         <service
             android:name=".localPush.AlarmService"
             android:enabled="true"

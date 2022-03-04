@@ -50,7 +50,7 @@ public class AlarmTimerUtil {
      * @param action
      */
     public static void cancelAlarmTimer(Context context, String action, int alarmId) {
-        Intent myIntent = new Intent();
+        Intent myIntent = new Intent(context, AlarmService.class);
         myIntent.setAction(action);
         PendingIntent sender = PendingIntent.getService(context, alarmId, myIntent, 0);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

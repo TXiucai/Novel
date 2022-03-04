@@ -1,13 +1,14 @@
 package com.heiheilianzai.app.localPush;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseOptionActivity;
+import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
@@ -16,7 +17,6 @@ import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.SplashActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
-import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
@@ -25,11 +25,14 @@ import static com.heiheilianzai.app.constant.ReaderConfig.LOOKMORE;
 import static com.heiheilianzai.app.ui.activity.BookInfoActivity.BOOK_ID_EXT_KAY;
 import static com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity.COMIC_ID_EXT_KAY;
 
+import okhttp3.Request;
+
 public class AlarmReceive extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
-        LoaclPushBean obj = (LoaclPushBean) intent.getSerializableExtra("localPush");
-        int push_target = Integer.valueOf(obj.getPush_target());//推送目标  0默认（默认功能为唤醒APP并进入）   1链接   2页面   3内容
+    public void onReceive(Context context, Intent intentReceive) {
+        LoaclPushBean obj = (LoaclPushBean) intentReceive.getSerializableExtra("localPush");
+        int push_target = Integer.valueOf(obj.getPush_target());//推送目标  0默认（默认功能为唤醒APP并进入）   1链接   2页面
+        Intent intent = null;
         switch (push_target) {
             case 1: //链接
                 int redirect_type = Integer.valueOf(obj.getRedirect_type());//默认1    跳转类型  1内置浏览器 2外部浏览器
@@ -52,12 +55,15 @@ public class AlarmReceive extends BroadcastReceiver {
                 switch (jump_page_type) {
                     case 1://书架
                         ShareUitls.putTab(context, "LastFragment", 0);
+                        intent = new Intent(context, MainActivity.class);
                         break;
                     case 2://小说
                         ShareUitls.putTab(context, "LastFragment", 1);
+                        intent = new Intent(context, MainActivity.class);
                         break;
                     case 3://漫画
                         ShareUitls.putTab(context, "LastFragment", 2);
+                        intent = new Intent(context, MainActivity.class);
                         break;
                     case 4://我的
                         ShareUitls.putTab(context, "LastFragment", 4);
@@ -100,9 +106,11 @@ public class AlarmReceive extends BroadcastReceiver {
                         break;
                     case 5://5小说频道
                         ShareUitls.putTab(context, "LastFragment", 1);
+                        ShareUitls.putString(context, "NOVEL_CHANNEL_ID", jump_content_id);
                         break;
                     case 6://6漫画频道
                         ShareUitls.putTab(context, "LastFragment", 2);
+                        ShareUitls.putString(context, "COMIC_CHANNEL_ID", jump_content_id);
                         intent = new Intent(context, MainActivity.class);
                         break;
                 }
@@ -111,24 +119,27 @@ public class AlarmReceive extends BroadcastReceiver {
                 intent = new Intent(context, SplashActivity.class);
                 break;
         }
-        context.startActivity(intent);
-        upDataClick(context, obj);
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            upDataClick(context, obj);
+        }
     }
 
     private void upDataClick(Context context, LoaclPushBean obj) {
         ReaderParams params = new ReaderParams(context);
         params.putExtraParams("local_push_id", String.valueOf(obj.getId()));
         String json = params.generateParamsJson();
-        HttpUtils.getInstance((Activity) context).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.LOCAL_PUSH_ClICK, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
+        OkHttpEngine.getInstance(context).postAsyncHttp(ReaderConfig.getBaseUrl() + ReaderConfig.LOCAL_PUSH_ClICK, json, new ResultCallback() {
+            @Override
+            public void onError(Request request, Exception e) {
 
-                    }
+            }
 
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
+            @Override
+            public void onResponse(String response) {
+
+            }
+        });
     }
 }

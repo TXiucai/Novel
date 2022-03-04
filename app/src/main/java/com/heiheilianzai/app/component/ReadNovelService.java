@@ -366,10 +366,9 @@ public class ReadNovelService extends Service {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //            android 8 以后才有NotificationChannel，所以进行版本判断
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("heihei", getResources().getString(R.string.string_name), NotificationManager.IMPORTANCE_LOW);
+                @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("heihei", getResources().getString(R.string.string_name), NotificationManager.IMPORTANCE_HIGH);
                 mNotificationManager.createNotificationChannel(channel);
             }
-
 //           2、自定义通知栏布局，按钮点击事件
             mRemoteView = new RemoteViews(getPackageName(), R.layout.novel_notifacation);
             Intent intentPause = new Intent(STATUS_PLAY_PAUSE_ACTION);

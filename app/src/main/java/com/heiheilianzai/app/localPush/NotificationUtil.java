@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.localPush;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,7 +11,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.utils.DateUtils;
@@ -25,26 +25,12 @@ import java.util.Map;
  */
 
 public class NotificationUtil {
-    private static final String TAG = "NotificationUtil";
-
     /**
      * 通过定时闹钟发送通知
      */
     public static void notifyByAlarm(Context context, List<LoaclPushBean> lists) {
-//将数据存储起来
+        //将数据存储起来
         int count = 0;
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (lists.size() <= 0) {
-            //默认推送
-                   /* try {
-                        Map map = new HashMap<>();
-                        map.put("KEY_NOTIFY_ID", obj.type);
-                        map.put("KEY_NOTIFY", NotifyObject.to(obj));
-                        AlarmTimerUtil.setAlarmTimer(context, ++count, obj.firstTime, "TIMER_ACTION", map);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
-        }
         for (LoaclPushBean loaclPushBean : lists) {
             String start_time = loaclPushBean.getStart_time();
             if (TextUtils.isEmpty(start_time)) {
@@ -59,7 +45,7 @@ public class NotificationUtil {
                     Map map = new HashMap<>();
                     map.put("KEY_NOTIFY_ID", String.valueOf(loaclPushBean.getId()));
                     map.put("KEY_NOTIFY", loaclPushBean.to(loaclPushBean));
-                    AlarmTimerUtil.setAlarmTimer(context, ++count, System.currentTimeMillis() + 10 * 1000, "TIMER_ACTION", map);
+                    AlarmTimerUtil.setAlarmTimer(context, ++count, time, "TIMER_ACTION", map);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -83,7 +69,6 @@ public class NotificationUtil {
      * @param context
      * @param obj
      */
-
     private static void notifyMsg(Context context, LoaclPushBean obj, int nid, long time, NotificationManager mNotifyMgr) {
         if (context == null || obj == null) return;
         if (mNotifyMgr == null) {
@@ -96,21 +81,17 @@ public class NotificationUtil {
         //notification
         Notification notification = null;
         // 构建 PendingIntent
-        PendingIntent pi = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(context, nid, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //版本兼容
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//兼容Android8.0
-            String id = "my_channel_01";
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            CharSequence name = "notice";
-            NotificationChannel mChannel = new NotificationChannel(id, name, importance);
-            mChannel.enableLights(true);
-            mChannel.setDescription("just show notice");
+            @SuppressLint("WrongConstant") NotificationChannel mChannel = new NotificationChannel("local_push_id", "heihei", NotificationManager.IMPORTANCE_HIGH);
+            mChannel.setDescription("local_push");
             mChannel.enableLights(true);
             mChannel.setLightColor(Color.GREEN);
+            mChannel.canBypassDnd();
             mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             mNotifyMgr.createNotificationChannel(mChannel);
-            Notification.Builder builder = new Notification.Builder(context, id);
+            Notification.Builder builder = new Notification.Builder(context, "local_push_id");
             builder.setAutoCancel(true)
                     .setContentIntent(pi)
                     .setContentTitle(obj.getPush_title())
@@ -119,8 +100,7 @@ public class NotificationUtil {
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setWhen(System.currentTimeMillis());
             notification = builder.build();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+        } else {
             Notification.Builder builder = new Notification.Builder(context);
             builder.setAutoCancel(true)
                     .setContentIntent(pi)
@@ -144,18 +124,16 @@ public class NotificationUtil {
 
     public static void clearAllNotifyMsg(Context context) {
         try {
-            NotificationManager mNotifyMgr =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotifyMgr.cancelAll();
             SharedPreferences mPreferences = context.getSharedPreferences("SHARE_PREFERENCE_NOTIFICATION", Context.MODE_PRIVATE);
             int max_id = mPreferences.getInt("KEY_MAX_ALARM_ID", 0);
             for (int i = 1; i <= max_id; i++) {
                 AlarmTimerUtil.cancelAlarmTimer(context, "TIMER_ACTION", i);
             }
-//清除数据
+            //清除数据
             mPreferences.edit().remove("KEY_MAX_ALARM_ID").commit();
-        } catch (Exception e) {
-            Log.e(TAG, "取消通知失败", e);
+        } catch (Exception ignore) {
         }
     }
 }

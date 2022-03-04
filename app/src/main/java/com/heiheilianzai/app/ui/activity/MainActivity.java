@@ -817,10 +817,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                                 LoaclPushBean loaclPushBean = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), LoaclPushBean.class);
                                 loaclPushBeans.add(loaclPushBean);
                             }
-                            NotificationUtil.clearAllNotifyMsg(activity);
                             NotificationUtil.notifyByAlarm(activity, loaclPushBeans);
                         } catch (Exception e) {
-                            String s = e.toString();
                         }
                     }
 

@@ -17,16 +17,18 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String str = intent.getStringExtra("KEY_NOTIFY");
-        if (str == null || str.trim().length() == 0)
-            return super.onStartCommand(intent, flags, startId);
-        try {
-            LoaclPushBean obj = LoaclPushBean.from(str);
-            NotificationUtil.notifyByAlarmByReceiver(this, obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (intent != null) {
+            String str = intent.getStringExtra("KEY_NOTIFY");
+            if (str == null || str.trim().length() == 0)
+                return super.onStartCommand(intent, flags, startId);
+            try {
+                LoaclPushBean obj = LoaclPushBean.from(str);
+                NotificationUtil.notifyByAlarmByReceiver(this, obj);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
