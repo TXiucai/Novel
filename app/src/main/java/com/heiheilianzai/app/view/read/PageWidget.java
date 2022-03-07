@@ -15,6 +15,7 @@ import android.widget.Scroller;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.ui.dialog.read.AutoProgressBar;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.PageFactory;
@@ -98,10 +99,11 @@ public class PageWidget extends View {
     private void initPage() {
         mScreenWidth = ScreenSizeUtils.getInstance(mContext).getScreenWidth();
         mScreenHeight = ScreenSizeUtils.getInstance(mContext).getScreenHeight();  //RGB_565
-        if (ReaderConfig.TOP_READ_AD != null) {
+        long display_ad_days_novel = AppPrefs.getSharedLong(mContext, "display_ad_days_novel", 0);
+        if (ReaderConfig.TOP_READ_AD != null && System.currentTimeMillis() > display_ad_days_novel) {
             mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60);
         }
-        if (ReaderConfig.BOTTOM_READ_AD != null) {
+        if (ReaderConfig.BOTTOM_READ_AD != null && System.currentTimeMillis() > display_ad_days_novel) {
             mScreenHeight = mScreenHeight - ImageUtil.dp2px(mContext, 60);
         }
         MyToash.Log("mScreenHeight", mScreenHeight + "");

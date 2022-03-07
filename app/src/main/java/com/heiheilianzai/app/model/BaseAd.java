@@ -10,6 +10,16 @@ public class BaseAd extends BaseSdkAD{
     public int advert_interval;//小说底部广告每间隔多少页显示
     public String ad_subtitle;
     public String user_parame_need;
+    public int display_ad_days;
+
+    public int getDisplay_ad_days() {
+        return display_ad_days;
+    }
+
+    public void setDisplay_ad_days(int display_ad_days) {
+        this.display_ad_days = display_ad_days;
+    }
+
     public String getUser_parame_need() {
         return user_parame_need;
     }

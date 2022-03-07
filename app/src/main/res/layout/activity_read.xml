@@ -9,12 +9,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/activity_read_top_ad_iv"
+        <RelativeLayout
+            android:id="@+id/activity_read_top_ad_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_60dp"
-            android:scaleType="fitXY" />
+            android:layout_height="@dimen/public_read_buttom_ad_hegth2">
+
+            <ImageView
+                android:id="@+id/activity_read_top_ad_iv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_60dp"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/activity_read_top_ad_close"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/float_close_button" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -379,8 +391,7 @@
                 android:layout_width="@dimen/dimens_20dp"
                 android:layout_height="@dimen/dimens_20dp"
                 android:layout_alignParentRight="true"
-                android:src="@mipmap/float_close_button"
-                android:visibility="gone" />
+                android:src="@mipmap/float_close_button" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -182,10 +182,14 @@ public class ReadActivity extends BaseReadActivity {
     public FrameLayout insert_todayone2;
     @BindView(R.id.activity_read_buttom_ad_layout)
     public RelativeLayout activity_read_buttom_ad_layout;
+    @BindView(R.id.activity_read_top_ad_layout)
+    public RelativeLayout mRlTopLayout;
     @BindView(R.id.activity_read_buttom_ad_iv)
     ImageView mIvAd;
     @BindView(R.id.activity_read_buttom_ad_close)
     ImageView mIvClose;
+    @BindView(R.id.activity_read_top_ad_close)
+    ImageView mIVTopClose;
     @BindView(R.id.tv_noad)
     TextView tv_noad;
     @BindView(R.id.activity_read_shangyizhang)
@@ -298,6 +302,7 @@ public class ReadActivity extends BaseReadActivity {
         }
     };
     private Intent mIntent;
+    private long mDisPlayAdTime;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -1120,30 +1125,6 @@ public class ReadActivity extends BaseReadActivity {
         );
     }
 
-    public void NoAD(final Activity activity, final PageFactory pageFactory, final ChapterItem chapterItem, final boolean AUTO_NOAD) {
-        if (pageFactory.close_AD) {
-            MyToash.ToashSuccess(activity, "广告已关闭");
-            return;
-        }
-        ReaderParams params = new ReaderParams(activity);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + BookConfig.del_ad, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-                        if (result.equals("true")) {
-                            pageFactory.close_AD = true;
-                            EventBus.getDefault().post(new RefreshMine(null));
-                            MyToash.ToashSuccess(activity, "广告已关闭");
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
-    }
-
     public void acceptNovelBoyin(Activity activity, String name) {
         MyPicasso.GlideImageNoSize(activity, baseBook.getCover(), activity_read_buttom_boyin_img, R.mipmap.book_def_v);
         activity_read_buttom_boyin_tittle.setText(String.format(getString(R.string.string_novel_boyin_tittle), name));
@@ -1233,8 +1214,6 @@ public class ReadActivity extends BaseReadActivity {
                 if (ReadNovelService.SERVICE_IS_LIVE) {
                     bookpage.setmIsOpenService(false);
                     pageFactory.close_AD = false;
-//                    Intent intentService = new Intent(getApplicationContext(), ReadNovelService.class);
-//                    stopService(intentService);
                 }
             }
         });
@@ -1276,7 +1255,8 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void initAd(Activity activity) {
-        if (ReaderConfig.BOTTOM_READ_AD != null && ReaderConfig.BOTTOM_READ_AD.ad_type == 1) {
+        mDisPlayAdTime = AppPrefs.getSharedLong(activity, "display_ad_days_novel", 0);
+        if (ReaderConfig.BOTTOM_READ_AD != null && ReaderConfig.BOTTOM_READ_AD.ad_type == 1 && System.currentTimeMillis() > mDisPlayAdTime) {
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1292,7 +1272,10 @@ public class ReadActivity extends BaseReadActivity {
             mIvClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mRlTopLayout.setVisibility(View.GONE);
                     activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                    AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                    flushPage();
                 }
             });
             activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
@@ -1300,18 +1283,32 @@ public class ReadActivity extends BaseReadActivity {
         } else {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
-        if (ReaderConfig.TOP_READ_AD != null && ReaderConfig.TOP_READ_AD.ad_type == 1) {
+        if (ReaderConfig.TOP_READ_AD != null && ReaderConfig.TOP_READ_AD.ad_type == 1 && System.currentTimeMillis() > mDisPlayAdTime) {
             activity_read_top_ad_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     JumpBookAd(activity, ReaderConfig.TOP_READ_AD);
                 }
             });
-            activity_read_top_ad_iv.setVisibility(View.VISIBLE);
+            mIVTopClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mRlTopLayout.setVisibility(View.GONE);
+                    activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                    AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                    flushPage();
+                }
+            });
+            mRlTopLayout.setVisibility(View.VISIBLE);
             MyPicasso.GlideImageNoSize(activity, ReaderConfig.TOP_READ_AD.ad_image, activity_read_top_ad_iv);
         } else {
-            activity_read_top_ad_iv.setVisibility(View.GONE);
+            mRlTopLayout.setVisibility(View.GONE);
         }
+    }
+
+    private void flushPage() {
+        initAd(activity);
+        initData();
     }
 
     private void JumpBookAd(Activity activity, BaseAd baseAd) {

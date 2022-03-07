@@ -219,10 +219,11 @@ public class PageFactory {
         MHeight = ScreenSizeUtils.getInstance(mActivity).getScreenHeight();
         mHeight = MHeight;
         button_ad_heigth = ImageUtil.dp2px(mActivity, READBUTTOM_HEIGHT);
-        if (ReaderConfig.TOP_READ_AD != null) {
+        long display_ad_days_novel = AppPrefs.getSharedLong(mActivity, "display_ad_days_novel", 0);
+        if (ReaderConfig.TOP_READ_AD != null && System.currentTimeMillis() > display_ad_days_novel) {
             mHeight -= button_ad_heigth;
         }
-        if (ReaderConfig.BOTTOM_READ_AD != null) {
+        if (ReaderConfig.BOTTOM_READ_AD != null && System.currentTimeMillis() > display_ad_days_novel) {
             mHeight -= button_ad_heigth;
         }
         mWidth = ScreenSizeUtils.getInstance(mActivity).getScreenWidth();

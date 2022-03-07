@@ -49,6 +49,9 @@ public class ReaderConfig {
 
     public static boolean app_free_charge = true;//免费频道
 
+    public static int display_ad_days_novel = 0;//几天之后从新展示
+    public static int display_ad_days_comic = 0;//几天之后从新展示
+
     public static int GETPRODUCT_TYPE(Activity activity) {
         if (PRODUCT_TYPE == 0) {
             PRODUCT_TYPE = ShareUitls.getInt(activity, "PRODUCT_TYPE", 3);

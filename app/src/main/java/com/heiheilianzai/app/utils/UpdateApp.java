@@ -81,6 +81,8 @@ public class UpdateApp {
                         try {
                             AppUpdate mAppUpdate = new Gson().fromJson(response, AppUpdate.class);
                             ReaderConfig.newInstance().app_free_charge = mAppUpdate.pay_switch == 1 ? false : true;
+                            ReaderConfig.display_ad_days_novel = mAppUpdate.getDisplay_ad_days();
+                            ReaderConfig.display_ad_days_comic = mAppUpdate.getDisplay_ad_days();
                         } catch (Exception e) {
                         }
                         updateAppInterface.Next(response);
