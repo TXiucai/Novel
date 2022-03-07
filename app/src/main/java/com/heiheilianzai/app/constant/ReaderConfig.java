@@ -530,6 +530,11 @@ public class ReaderConfig {
     public static final String LOCAL_PUSH_ClICK = "/local-push-content/add-click-log";
 
     /**
+     * 用户订单记录
+     */
+    public static final String USER_ORDER_RECORD = "/user-order/order-history";
+
+    /**
      * 通过第三方获取用户使用网络所在区域
      */
     public static final String thirdpartyGetCity = "http://pv.sohu.com/cityjson?ie=utf-8";

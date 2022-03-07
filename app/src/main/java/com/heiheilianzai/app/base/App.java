@@ -14,6 +14,7 @@ import com.github.piasy.biv.BigImageViewer;
 import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
+import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.http.PreparedDomain;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.constant.PrefConst;
@@ -33,6 +34,9 @@ import com.heiheilianzai.app.utils.UpdateApp;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
+import com.scwang.smart.refresh.footer.ClassicsFooter;
+import com.scwang.smart.refresh.header.MaterialHeader;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.sensorsdata.analytics.android.sdk.SAConfigOptions;
 import com.sensorsdata.analytics.android.sdk.SensorsAnalyticsAutoTrackEventType;
 import com.sensorsdata.analytics.android.sdk.SensorsDataAPI;
@@ -52,6 +56,32 @@ import java.net.Proxy;
 public class App extends LitePalApplication {
     public static Context context;
     public static PreparedDomain preparedDomain;
+
+    static {
+        // 设置全局的Header构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+            layout.setPrimaryColorsId(R.color.black, R.color.black, R.color.black);// 全局设置主题颜色
+            layout.setEnableAutoLoadMore(true);//是否启用列表惯性滑动到底部时自动加载更多
+            layout.setEnableHeaderTranslationContent(false);//是否下拉Header的时候向下平移列表或者内容
+            layout.setEnableFooterTranslationContent(true);//是否上拉Footer的时候向上平移列表或者内容
+            layout.setDisableContentWhenRefresh(true);//是否在刷新的时候禁止列表的操作
+            layout.setDisableContentWhenLoading(true);//是否在加载的时候禁止列表的操作
+            layout.setEnableScrollContentWhenLoaded(true);//是否在加载完成时滚动列表显示新的内容
+            return new MaterialHeader(context)
+                    .setColorSchemeResources(R.color.black, R.color.black, R.color.black);// 指定为经典Header，默认是 贝塞尔雷达Header
+        });
+        // 设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
+            layout.setEnableAutoLoadMore(true);//是否启用列表惯性滑动到底部时自动加载更多
+            layout.setEnableHeaderTranslationContent(false);//是否下拉Header的时候向下平移列表或者内容
+            layout.setEnableFooterTranslationContent(true);//是否上拉Footer的时候向上平移列表或者内容
+            layout.setDisableContentWhenRefresh(true);//是否在刷新的时候禁止列表的操作
+            layout.setDisableContentWhenLoading(true);//是否在加载的时候禁止列表的操作
+            layout.setEnableScrollContentWhenLoaded(true);//是否在加载完成时滚动列表显示新的内容
+            // 指定为经典Footer，默认是 BallPulseFooter
+            return new ClassicsFooter(context).setDrawableSize(20);
+        });
+    }
 
     @Override
     public void onCreate() {

@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.OrderRecordBean;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 
@@ -40,6 +41,7 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
         TextView tv_price = helper.getView(R.id.tv_price);
         TextView tv_go_customer = helper.getView(R.id.tv_go_customer);
         TextView tv_copy_order = helper.getView(R.id.tv_copy_order);
+        TextView tv_go_pay = helper.getView(R.id.tv_go_pay);
 
         if (item == null) {
             return;
@@ -56,6 +58,15 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
             String status = getPayStatus(item.getStatus());
             tv_vip_status.setText(status);
             tv_vip_status.setVisibility(View.VISIBLE);
+
+            if ("1".equals(item.getStatus())) {
+                tv_go_pay.setVisibility(View.VISIBLE);
+                tv_go_pay.setOnClickListener(view -> {
+                    //TODO 去付款
+                });
+            } else {
+                tv_go_pay.setVisibility(View.GONE);
+            }
         } else {
             tv_vip_status.setVisibility(View.INVISIBLE);
         }
@@ -65,7 +76,10 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
             tv_order_number.setText(orderNumber);
             tv_order_number.setVisibility(View.VISIBLE);
 
-            tv_copy_order.setOnClickListener(view -> StringUtils.setStringInClipboard(context, item.getTrade_no()));
+            tv_copy_order.setOnClickListener(view -> {
+                StringUtils.setStringInClipboard(context, item.getTrade_no());
+                MyToash.Toash(context, context.getResources().getString(R.string.order_record_activity_copy));
+            });
             tv_copy_order.setVisibility(View.VISIBLE);
         } else {
             tv_order_number.setVisibility(View.INVISIBLE);

@@ -314,6 +314,8 @@
         <activity
             android:name=".ui.activity.ChannelActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.OrderRecordActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
