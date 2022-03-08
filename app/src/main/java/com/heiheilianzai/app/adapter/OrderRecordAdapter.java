@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,9 +13,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.OrderRecordBean;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import java.util.List;
 
@@ -62,7 +66,10 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
             if ("1".equals(item.getStatus())) {
                 tv_go_pay.setVisibility(View.VISIBLE);
                 tv_go_pay.setOnClickListener(view -> {
-                    //TODO 去付款
+                    Intent intentVip = AcquireBaoyueActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_mine), 12);
+                    intentVip.putExtra("isvip", Utils.isLogin(context));
+                    intentVip.putExtra("goodsId", item.getGoods_id());
+                    context.startActivity(intentVip);
                 });
             } else {
                 tv_go_pay.setVisibility(View.GONE);

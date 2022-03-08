@@ -201,6 +201,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public ScrollView mSvBig;
     @BindView(R.id.img_top_ad)
     public ImageView mImgTopAd;
+    @BindView(R.id.activity_comic_top_ad_layout)
+    public RelativeLayout mRlTop;
+    @BindView(R.id.activity_comic_buttom_ad_layout)
+    public RelativeLayout mRlButtom;
     @BindView(R.id.img_bottom_ad)
     public ImageView mImgBottomAd;
 
@@ -243,6 +247,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     private boolean mIsShowChapterAd = false;
     public static boolean mIsSipAd = false;
     private BaseAd mSdkTopAd;
+    private BaseAd mSdkBottomAd;
     private BaseAd mChapterBaseAd;
 
     @Override
@@ -305,9 +310,20 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @OnClick(value = {R.id.titlebar_back, R.id.activity_comiclook_shoucang, R.id.activity_comiclook_refresh, R.id.activity_comiclook_dingbu, R.id.activity_comiclook_danmu_layout,
             R.id.activity_comiclook_danmu_fashe, R.id.activity_comiclook_xiayihua_layout, R.id.activity_comiclook_shangyihua_layout, R.id.activity_comiclook_set,
             R.id.activity_comiclook_tucao_layout, R.id.activity_comiclook_share, R.id.activity_comiclook_xiazai, R.id.activity_comiclook_quanji,
-            R.id.activity_comiclook_danmu_img2, R.id.activity_comiclook_foot, R.id.comic_rb_small, R.id.comic_rb_mid, R.id.comic_rb_big, R.id.comic_big_back, R.id.rl_big})
+            R.id.activity_comiclook_danmu_img2, R.id.activity_comiclook_foot, R.id.comic_rb_small, R.id.comic_rb_mid, R.id.comic_rb_big, R.id.comic_big_back, R.id.rl_big,
+            R.id.activity_comic_buttom_ad_close, R.id.activity_comic_top_ad_close})
     public void getEvent(View view) {
         switch (view.getId()) {
+            case R.id.activity_comic_buttom_ad_close:
+                mRlButtom.setVisibility(View.GONE);
+                mRlTop.setVisibility(View.GONE);
+                AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                break;
+            case R.id.activity_comic_top_ad_close:
+                mRlButtom.setVisibility(View.GONE);
+                mRlTop.setVisibility(View.GONE);
+                AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                break;
             case R.id.titlebar_back:
                 try {
                     ContentValues values = new ContentValues();
@@ -1032,29 +1048,6 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         }
     }
 
-    private void initTopAd(ComicChapterItem comicChapterItem) {
-        if (mIsSdkAd) {
-            if (mSdkTopAd != null) {
-                mImgTopAd.setVisibility(View.VISIBLE);
-                MyPicasso.GlideImageNoSize(activity, mSdkTopAd.getAd_image(), mImgTopAd);
-                mIsSipAd = true;
-                mImgTopAd.setOnClickListener((v) -> skipWeb(mSdkTopAd, activity));
-            } else {
-                mImgTopAd.setVisibility(View.GONE);
-            }
-        } else {
-            BaseAd advert = comicChapterItem.getAdvert();
-            if (advert != null) {
-                mImgTopAd.setVisibility(View.VISIBLE);
-                MyPicasso.GlideImageNoSize(activity, mSdkTopAd.getAd_image(), mImgTopAd);
-                mIsSipAd = true;
-                mImgTopAd.setOnClickListener((v) -> skipWeb(advert, activity));
-            } else {
-                mImgTopAd.setVisibility(View.GONE);
-            }
-        }
-    }
-
     public void sendTucao(String image_id, String content, boolean CommentFlag) {
         if (!MainHttpTask.getInstance().Gotologin(activity)) {
             return;
@@ -1255,14 +1248,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mSdkTopAd.setUser_parame_need("1");
                         mSdkTopAd.setAd_url_type(adInfo.getOperation().getType());
                         mSdkTopAd.setAd_type(1);
-                        if (mSdkTopAd != null) {
-                            mImgTopAd.setVisibility(View.VISIBLE);
-                            MyPicasso.GlideImageNoSize(activity, mSdkTopAd.getAd_image(), mImgTopAd);
-                            mIsSipAd = true;
-                            mImgTopAd.setOnClickListener((v) -> skipWeb(mSdkTopAd, activity));
+                        mSdkTopAd.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        if (mSdkBottomAd != null) {
+                            ReaderConfig.display_ad_days_comic = mSdkTopAd.display_ad_days > mSdkBottomAd.display_ad_days ? mSdkTopAd.display_ad_days : mSdkBottomAd.display_ad_days;
                         } else {
-                            mImgTopAd.setVisibility(View.GONE);
+                            ReaderConfig.display_ad_days_comic = mSdkTopAd.getDisplay_ad_days();
                         }
+                        initTopAndButtomAd(mSdkTopAd, mRlTop);
                     } else {
                         localTopAd(activity);
                     }
@@ -1289,25 +1281,29 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
-                            if (baseAd != null) {
-                                mImgTopAd.setVisibility(View.VISIBLE);
-                                MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgTopAd);
-                                mIsSipAd = true;
-                                mImgTopAd.setOnClickListener((v) -> skipWeb(baseAd, activity));
-                            } else {
-                                mImgTopAd.setVisibility(View.GONE);
-                            }
+                            initTopAndButtomAd(baseAd, mRlTop);
                         } catch (Exception e) {
-                            mImgTopAd.setVisibility(View.GONE);
+                            mRlTop.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        mImgTopAd.setVisibility(View.GONE);
+                        mRlTop.setVisibility(View.GONE);
                     }
                 }
         );
+    }
+
+    private void initTopAndButtomAd(BaseAd baseAd, View parentView) {
+        long display_ad_days_comic = AppPrefs.getSharedLong(activity, "display_ad_days_comic", 0);
+        if (baseAd != null && System.currentTimeMillis() > display_ad_days_comic) {
+            parentView.setVisibility(View.VISIBLE);
+            MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgTopAd);
+            parentView.setOnClickListener((v) -> skipWeb(baseAd, activity));
+        } else {
+            parentView.setVisibility(View.GONE);
+        }
     }
 
     private void localChapterAd(Activity activity) {
@@ -1376,29 +1372,26 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    BaseAd baseAd = new BaseAd();
+                    mSdkBottomAd = new BaseAd();
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
-                        baseAd.setAdId(adInfo.getAdId());
-                        baseAd.setRequestId(adInfo.getRequestId());
-                        baseAd.setAdPosId(adInfo.getAdPosId());
-                        baseAd.setAd_skip_url(adInfo.getOperation().getValue());
-                        baseAd.setAd_title(adInfo.getMaterial().getTitle());
-                        baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        baseAd.setUser_parame_need("1");
-                        baseAd.setAd_url_type(adInfo.getOperation().getType());
-                        baseAd.setAd_type(1);
-                        if (baseAd != null) {
-                            mImgBottomAd.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    skipWeb(baseAd, activity);
-                                }
-                            });
-                            mImgBottomAd.setVisibility(View.VISIBLE);
-                            MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mImgBottomAd);
+                        mSdkBottomAd.setAdId(adInfo.getAdId());
+                        mSdkBottomAd.setRequestId(adInfo.getRequestId());
+                        mSdkBottomAd.setAdPosId(adInfo.getAdPosId());
+                        mSdkBottomAd.setAd_skip_url(adInfo.getOperation().getValue());
+                        mSdkBottomAd.setAd_title(adInfo.getMaterial().getTitle());
+                        mSdkBottomAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        mSdkBottomAd.setUser_parame_need("1");
+                        mSdkBottomAd.setAd_url_type(adInfo.getOperation().getType());
+                        mSdkBottomAd.setAd_type(1);
+                        mSdkBottomAd.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        if (mSdkTopAd != null) {
+                            ReaderConfig.display_ad_days_comic = mSdkTopAd.display_ad_days > mSdkBottomAd.display_ad_days ? mSdkTopAd.display_ad_days : mSdkBottomAd.display_ad_days;
+                        } else {
+                            ReaderConfig.display_ad_days_comic = mSdkBottomAd.getDisplay_ad_days();
                         }
+                        initTopAndButtomAd(mSdkBottomAd, mRlButtom);
                     } else {
-                        mImgBottomAd.setVisibility(View.GONE);
+                        mRlButtom.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     localBotoomAd(activity);
@@ -1441,26 +1434,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
-                            if (baseAd != null) {
-                                mImgBottomAd.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        skipWeb(baseAd, activity);
-                                    }
-                                });
-                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, mImgBottomAd);
-                                mImgBottomAd.setVisibility(View.VISIBLE);
-                            } else {
-                                mImgBottomAd.setVisibility(View.GONE);
-                            }
+                            initTopAndButtomAd(baseAd, mRlButtom);
                         } catch (Exception e) {
-                            mImgBottomAd.setVisibility(View.GONE);
+                            mRlButtom.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-                        mImgBottomAd.setVisibility(View.GONE);
+                        mRlButtom.setVisibility(View.GONE);
                     }
                 }
         );
