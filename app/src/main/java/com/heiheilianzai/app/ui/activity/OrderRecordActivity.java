@@ -21,6 +21,8 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.OrderRecordBean;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
+import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.itemdiv.VerticalItemDecoration;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -69,9 +71,21 @@ public class OrderRecordActivity extends BaseActivity implements OnRefreshListen
     private void initEvent() {
         rl_order_back.setOnClickListener(view -> OrderRecordActivity.this.finish());
 
-        orderRecordAdapter.setOrderRecordKeFuListener(kefuUrl -> {
-            if (!TextUtils.isEmpty(kefuUrl)) {
-                startActivity(new Intent(OrderRecordActivity.this, AboutActivity.class).putExtra("url", kefuUrl).putExtra("flag", "notitle"));
+        orderRecordAdapter.setOrderRecordKeFuListener(new OrderRecordAdapter.OrderRecordListener() {
+            @Override
+            public void goKeFuOnline(String kefuUrl) {
+                if (!TextUtils.isEmpty(kefuUrl)) {
+                    startActivity(new Intent(OrderRecordActivity.this, AboutActivity.class).putExtra("url", kefuUrl).putExtra("flag", "notitle"));
+                }
+            }
+
+            @Override
+            public void goPay(String goodsId) {
+                Intent intentVip = AcquireBaoyueActivity.getMyIntent(OrderRecordActivity.this, LanguageUtil.getString(OrderRecordActivity.this, R.string.refer_page_mine), 12);
+                intentVip.putExtra("isvip", Utils.isLogin(OrderRecordActivity.this));
+                intentVip.putExtra("goodsId", goodsId);
+                startActivity(intentVip);
+                finish();
             }
         });
 
