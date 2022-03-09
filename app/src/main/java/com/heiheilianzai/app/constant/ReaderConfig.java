@@ -51,6 +51,8 @@ public class ReaderConfig {
 
     public static int display_ad_days_novel = 0;//几天之后从新展示
     public static int display_ad_days_comic = 0;//几天之后从新展示
+    public static int display_second = 5;//听书按钮引导提示默认5秒
+    public static String guide_text = "";//听书文案
 
     public static int GETPRODUCT_TYPE(Activity activity) {
         if (PRODUCT_TYPE == 0) {
@@ -88,7 +90,7 @@ public class ReaderConfig {
     public static final int REFRESH_HEIGHT = 120;//书城 发现 向下滑动距离 改变bar 背景
     public static int MAXheigth;//获取手机能显示图片的最高高度
 
-    public static final String tinstall_code= "TINSTALL_CODE";
+    public static final String tinstall_code = "TINSTALL_CODE";
 
     public static final String API_CRYPTOGRAPHY = "1";//api加密标识
     public static boolean BANG_SCREEN = false;//刘海屏

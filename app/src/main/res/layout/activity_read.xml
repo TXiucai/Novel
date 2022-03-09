@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/activity_read_top_ad_layout"
             android:layout_width="match_parent"
@@ -272,6 +273,7 @@
                     android:layout_marginBottom="@dimen/dimens_22dp">
 
                     <TextView
+                        android:id="@+id/activity_read_tittle"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimens_22dp"
                         android:layout_alignParentBottom="true"
@@ -418,4 +420,47 @@
         android:layout_height="match_parent"
         android:src="@mipmap/icon_firstread"
         android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_listen_out"
+        android:layout_width="@dimen/dimens_155dp"
+        android:layout_height="@dimen/dimens_50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="@dimen/dimens_20dp"
+        android:layout_marginBottom="@dimen/dimens_100dp">
+
+        <TextView
+            android:id="@+id/activity_read_tittle_out"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_22dp"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/listen_item_background"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dimens_32dp"
+            android:text="@string/string_listen"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="@dimen/dimens_48dp"
+            android:layout_height="@dimen/dimens_48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@mipmap/listen_background" />
+
+        <ImageView
+            android:id="@+id/activity_read_speaker_out"
+            android:layout_width="@dimen/dimens_48dp"
+            android:layout_height="@dimen/dimens_48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@mipmap/listen_ear" />
+
+        <ImageView
+            android:layout_width="@dimen/dimens_30dp"
+            android:layout_height="@dimen/dimens_12dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@mipmap/listen_novel" />
+    </RelativeLayout>
 </FrameLayout>

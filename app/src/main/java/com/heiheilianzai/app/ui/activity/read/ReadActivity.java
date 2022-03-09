@@ -145,7 +145,6 @@ public class ReadActivity extends BaseReadActivity {
     private final static String EXTRA_PAGE = "page";
     //神策埋点数据从哪个页面进入
     public static final String REFER_PAGE_EXT_KAY = "referPage";
-    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.bookpage)
     PageWidget bookpage;
     @BindView(R.id.activity_read_top_back_view)
@@ -214,6 +213,17 @@ public class ReadActivity extends BaseReadActivity {
     public ImageView activity_read_top_ad_iv;
     @BindView(R.id.activity_read_speaker)
     public ImageView activity_read_speaker;
+    @BindView(R.id.activity_read_speaker_out)
+    public ImageView activity_read_speaker_out;
+    @BindView(R.id.activity_read_tittle)
+    public TextView activity_read_tittle;
+    @BindView(R.id.activity_read_tittle_out)
+    public TextView activity_read_tittle_out;
+    @BindView(R.id.rl_listen_out)
+    public RelativeLayout activity_read_listen_out;
+    @BindView(R.id.rl_listen)
+    public RelativeLayout activity_read_listen;
+
 
     private ReadSpeakManager readSpeakManager;
     private ReadSpeakDialogFragment readSpeakDialogFragment;
@@ -303,6 +313,7 @@ public class ReadActivity extends BaseReadActivity {
     };
     private Intent mIntent;
     private long mDisPlayAdTime;
+    private ObjectAnimator mAnimatorOut;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -404,11 +415,21 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void startListenAnim() {
+        if (!TextUtils.isEmpty(ReaderConfig.guide_text)) {
+            activity_read_tittle.setText(ReaderConfig.guide_text);
+            activity_read_tittle_out.setText(ReaderConfig.guide_text);
+        }
+        handler.sendEmptyMessageDelayed(2, ReaderConfig.display_second * 1000);
         ObjectAnimator valueAnimator = ObjectAnimator.ofFloat(activity_read_speaker, "TranslationY", 0, 10, -2, 10, -2, 15);
         valueAnimator.setDuration(3000);
         valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
         valueAnimator.setRepeatMode(ValueAnimator.REVERSE);
         valueAnimator.start();
+        mAnimatorOut = ObjectAnimator.ofFloat(activity_read_speaker_out, "TranslationY", 0, 10, -2, 10, -2, 15);
+        mAnimatorOut.setDuration(3000);
+        mAnimatorOut.setRepeatCount(ValueAnimator.INFINITE);
+        mAnimatorOut.setRepeatMode(ValueAnimator.REVERSE);
+        mAnimatorOut.start();
     }
 
     private void turnOnScreen() {
@@ -479,9 +500,11 @@ public class ReadActivity extends BaseReadActivity {
 
     private void next() {
         if (TextUtils.equals(ReaderConfig.TTS_OPEN, "2")) {
-            activity_read_speaker.setVisibility(View.VISIBLE);
+            activity_read_listen.setVisibility(View.VISIBLE);
+            activity_read_listen_out.setVisibility(View.VISIBLE);
         } else {
-            activity_read_speaker.setVisibility(View.GONE);
+            activity_read_listen.setVisibility(View.GONE);
+            activity_read_listen_out.setVisibility(View.GONE);
         }
 
         config = ReadingConfig.getInstance();
@@ -663,6 +686,9 @@ public class ReadActivity extends BaseReadActivity {
         bookpage.setTouchListener(new PageWidget.TouchListener() {
             @Override
             public void center() {
+                //点击中间提示主动消失
+                activity_read_listen_out.setVisibility(View.GONE);
+                mAnimatorOut.cancel();
                 if (AutoProgressBar.getInstance().isStarted()) {
                     if (!mAutoSettingDialog.isShowing()) {
                         AutoProgressBar.getInstance().pause();
@@ -974,7 +1000,7 @@ public class ReadActivity extends BaseReadActivity {
     @SuppressLint("NonConstantResourceId")
     @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
             R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night, R.id.activity_read_buttom_boyin_close,
-            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.rl_listen})
+            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.rl_listen, R.id.rl_listen_out})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_directory:
@@ -1044,6 +1070,13 @@ public class ReadActivity extends BaseReadActivity {
                 jumpBoyin();
                 break;
             case R.id.rl_listen:
+                updaeListenRecord();
+                openPermission();
+                break;
+            case R.id.rl_listen_out:
+                if (mAnimatorOut != null) {
+                    mAnimatorOut.cancel();
+                }
                 updaeListenRecord();
                 openPermission();
                 break;
@@ -1230,6 +1263,8 @@ public class ReadActivity extends BaseReadActivity {
                     handler.sendEmptyMessageDelayed(1, 30000);
                     break;
                 case 2:
+                    activity_read_listen_out.setVisibility(View.GONE);
+                    mAnimatorOut.cancel();
                     break;
             }
         }
