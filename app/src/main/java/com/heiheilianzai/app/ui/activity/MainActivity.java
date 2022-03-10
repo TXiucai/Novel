@@ -63,6 +63,7 @@ import com.heiheilianzai.app.localPush.LoaclPushBean;
 import com.heiheilianzai.app.localPush.NotificationUtil;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.BottomIconMenu;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.PrivilegeWelfare;
 import com.heiheilianzai.app.model.VipOrderBean;
@@ -102,6 +103,7 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
+import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CustomScrollViewPager;
 import com.mobi.xad.XRequestManager;
@@ -121,10 +123,20 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Sink;
 
 public class MainActivity extends BaseButterKnifeTransparentActivity {
     @BindView(R.id.RadioGroup)
@@ -365,7 +377,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     private void initView() {
-        setRBSelectedState();
+        setBottomButtonImgs();
         initFragmentView();
         ShowPOP();
     }
@@ -614,6 +626,30 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         } else {
             getNotice(activity);
         }
+
+        /**
+         * 动态获取主页底部菜单栏图标
+         */
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        String url = ReaderConfig.getBaseUrl() + BookConfig.bottom_icon_menu;
+        HttpUtils.getInstance(this).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
+            @Override
+            public void onResponse(String response) throws JSONException {
+                BottomIconMenu bottomIconMenu = new Gson().fromJson(response, BottomIconMenu.class);
+                if (bottomIconMenu != null && bottomIconMenu.list != null && bottomIconMenu.list.size() > 0) {
+                    getUrlDownload(bottomIconMenu.getList());
+                } else {
+                    deleteBottomIcons();
+                }
+            }
+
+            @Override
+            public void onErrorResponse(String ex) {
+
+            }
+        });
+
     }
 
     /**
@@ -1169,4 +1205,148 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     public void dismissWelfare(LogoutEvent event) {
         fl_welfare.setVisibility(View.GONE);
     }
+
+
+    /**
+     * 主动删掉 之前保存的 bottom icons
+     */
+    private void deleteBottomIcons() {
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        File file1 = new File(dirPath);
+        File file2 = new File(outPath);
+        if (file1.exists()) {
+            deleteDirectory(file1);
+        }
+        if (file2.exists()) {
+            deleteDirectory(file2);
+        }
+    }
+
+    private void deleteDirectory(File directory) {
+        if (!directory.isDirectory()) {
+            directory.delete();
+        } else {
+            File[] files = directory.listFiles();
+            //空文件夹，直接删除
+            if (files.length == 0) {
+                directory.delete();
+                return;
+            }
+
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
+                } else {
+                    file.delete();
+                }
+            }
+        }
+        directory.delete();
+    }
+
+    /**
+     * 获取 底部 radio button 图片地址
+     *
+     * @param list
+     */
+    private void getUrlDownload(List<BottomIconMenu.RBIcons> list) {
+        for (int i = 0; i < list.size(); i++) {
+            BottomIconMenu.RBIcons rbIcons = list.get(i);
+            String iconSelected = rbIcons.getIcon_selected();
+            String iconNormal = rbIcons.getIcon_normal();
+            saveImg2SD(i, "selected", iconSelected);
+            saveImg2SD(i, "normal", iconNormal);
+            String title = rbIcons.getIcon_title();
+            ShareUitls.putString(App.getAppContext(), "tab_main_menu_" + i, title);
+        }
+    }
+
+    /**
+     * 使用glide下载并转换成bitmap
+     *
+     * @param i
+     * @param type
+     * @param url
+     */
+    private void saveImg2SD(int i, String type, String url) {
+
+        String fileName = "rb_btn_" + type + "_" + i + ".png";
+        downloadMenus(url, fileName);
+    }
+
+    private void downloadMenus(String url, String fileName) {
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        File dest = new File(dirPath, fileName);
+
+        Request request = new Request.Builder().url(url).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Sink sink = null;
+                BufferedSink bufferedSink = null;
+                try {
+                    File imgFile = new File(dirPath);
+                    if (!imgFile.exists()) {
+                        imgFile.mkdir();
+                    }
+
+                    sink = Okio.sink(dest);
+                    bufferedSink = Okio.buffer(sink);
+                    bufferedSink.writeAll(response.body().source());
+                    bufferedSink.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (bufferedSink != null) {
+                        bufferedSink.close();
+                    }
+                    decryptFile(fileName);
+                }
+
+            }
+
+        });
+    }
+
+    /**
+     * 解密文件成 png
+     *
+     * @param fileName
+     */
+    int iconCount = 0;
+
+    private void decryptFile(String fileName) {
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        File dest = new File(dirPath, fileName);
+
+        File outp = new File(outPath);
+        if (!outp.exists()) {
+            outp.mkdir();
+        }
+
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(dest);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (inputStream != null) {
+            AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
+        }
+        iconCount++;
+
+        if (iconCount == 10) {
+            MainActivity.this.runOnUiThread(this::setRBSelectedState);
+        }
+
+    }
+
 }

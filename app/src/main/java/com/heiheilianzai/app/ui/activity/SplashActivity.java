@@ -2,7 +2,6 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Environment;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,12 +19,10 @@ import com.heiheilianzai.app.base.BaseAdvertisementActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.push.JPushUtil;
 import com.heiheilianzai.app.constant.AppConfig;
-import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ApiDomainBean;
 import com.heiheilianzai.app.model.AppUpdate;
-import com.heiheilianzai.app.model.BottomIconMenu;
 import com.heiheilianzai.app.model.H5UrlBean;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.UserInfoItem;
@@ -45,7 +42,6 @@ import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.utils.decode.AESUtil;
 import com.mobi.xad.XAdManager;
 import com.tinstall.tinstall.TInstall;
 
@@ -54,21 +50,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 import butterknife.BindView;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okio.BufferedSink;
-import okio.Okio;
-import okio.Sink;
 
 /**
  * 开屏页
@@ -313,70 +296,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
             }
         });
 
-        /**
-         * 动态获取主页底部菜单栏图标
-         */
-        ReaderParams params = new ReaderParams(activity);
-        String json = params.generateParamsJson();
-        String url = ReaderConfig.getBaseUrl() + BookConfig.bottom_icon_menu;
-        HttpUtils.getInstance(this).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
-            @Override
-            public void onResponse(String response) throws JSONException {
-                BottomIconMenu bottomIconMenu = new Gson().fromJson(response, BottomIconMenu.class);
-                if (bottomIconMenu != null && bottomIconMenu.list != null && bottomIconMenu.list.size() > 0) {
-                    getUrlDownload(bottomIconMenu.getList());
-                } else {
-                    deleteBottomIcons();
-                }
-            }
-
-            @Override
-            public void onErrorResponse(String ex) {
-
-            }
-        });
-
         getInstallCode();
-    }
-
-    /**
-     * 主动删掉 之前保存的 bottom icons
-     */
-    private void deleteBottomIcons() {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
-        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
-        File file1 = new File(dirPath);
-        File file2 = new File(outPath);
-        if (file1.exists()) {
-            deleteDirectory(file1);
-        }
-        if (file2.exists()) {
-            deleteDirectory(file2);
-        }
-
-    }
-
-    private void deleteDirectory(File directory) {
-        if (!directory.isDirectory()) {
-            directory.delete();
-        } else {
-            File[] files = directory.listFiles();
-            //空文件夹，直接删除
-            if (files.length == 0) {
-                directory.delete();
-                return;
-            }
-
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    deleteDirectory(file);
-                } else {
-                    file.delete();
-                }
-            }
-        }
-
-        directory.delete();
     }
 
     @Override
@@ -466,7 +386,7 @@ public class SplashActivity extends BaseAdvertisementActivity {
      */
     public void saAppFailedLoad() {
         try {
-            SensorsDataHelper.setOpenTimeEvent(new Long(DateUtils.getCurrentTimeDifferenceSecond(-1)).intValue());
+            SensorsDataHelper.setOpenTimeEvent(Long.valueOf(DateUtils.getCurrentTimeDifferenceSecond(-1)).intValue());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -482,101 +402,6 @@ public class SplashActivity extends BaseAdvertisementActivity {
             SensorsDataHelper.login(loginId);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * 获取 底部 radio button 图片地址
-     *
-     * @param list
-     */
-    private void getUrlDownload(List<BottomIconMenu.RBIcons> list) {
-
-        for (int i = 0; i < list.size(); i++) {
-            BottomIconMenu.RBIcons rbIcons = list.get(i);
-            String iconSelected = rbIcons.getIcon_selected();
-            String iconNormal = rbIcons.getIcon_normal();
-            saveImg2SD(i, "selected", iconSelected);
-            saveImg2SD(i, "normal", iconNormal);
-            String title = rbIcons.getIcon_title();
-            ShareUitls.putString(App.getAppContext(), "tab_main_menu_" + i, title);
-        }
-
-    }
-
-    /**
-     * 使用glide下载并转换成bitmap
-     *
-     * @param i
-     * @param type
-     * @param url
-     */
-    private void saveImg2SD(int i, String type, String url) {
-
-        String fileName = "rb_btn_" + type + "_" + i + ".png";
-        downloadMenus(url, fileName);
-    }
-
-    private void downloadMenus(String url, String fileName) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
-        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
-        File dest = new File(dirPath, fileName);
-
-        Request request = new Request.Builder().url(url).build();
-        new OkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Sink sink = null;
-                BufferedSink bufferedSink = null;
-                try {
-                    String imgPath = dirPath;
-                    File imgFile = new File(imgPath);
-                    if (!imgFile.exists()) {
-                        imgFile.mkdir();
-                    }
-
-                    sink = Okio.sink(dest);
-                    bufferedSink = Okio.buffer(sink);
-                    bufferedSink.writeAll(response.body().source());
-                    bufferedSink.close();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (bufferedSink != null) {
-                        bufferedSink.close();
-                    }
-                    decryptFile(fileName);
-                }
-
-            }
-
-        });
-    }
-
-    /**
-     * 解密文件成 png
-     *
-     * @param fileName
-     */
-    private void decryptFile(String fileName) {
-
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
-        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
-        File dest = new File(dirPath, fileName);
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(dest);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (inputStream != null) {
-            AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
         }
     }
 
