@@ -54,6 +54,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.model.comic.ComicChapter;
@@ -1296,10 +1297,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void initTopAndButtomAd(BaseAd baseAd, View parentView) {
+        AdInfo adInfo = BaseSdkAD.newAdInfo(baseAd);
         long display_ad_days_comic = AppPrefs.getSharedLong(activity, "display_ad_days_comic", 0);
         if (baseAd != null && System.currentTimeMillis() > display_ad_days_comic) {
             parentView.setVisibility(View.VISIBLE);
-            MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgTopAd);
+            if (adInfo != null) {
+                MyPicasso.glideSdkAd(activity, adInfo, baseAd.getAd_image(), mImgTopAd);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgTopAd);
+            }
             parentView.setOnClickListener((v) -> skipWeb(baseAd, activity));
         } else {
             parentView.setVisibility(View.GONE);
@@ -1406,11 +1412,8 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void skipWeb(BaseAd baseAd, Activity activity) {
-        if (!TextUtils.isEmpty(baseAd.getAdId())) {
-            AdInfo adInfo = new AdInfo();
-            adInfo.setAdId(baseAd.getAdId());
-            adInfo.setAdPosId(baseAd.getAdPosId());
-            adInfo.setAdPosId(baseAd.getRequestId());
+        AdInfo adInfo = BaseSdkAD.newAdInfo(baseAd);
+        if (adInfo != null) {
             XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
         }
         Intent intent = new Intent();

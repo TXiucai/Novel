@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
@@ -23,6 +24,9 @@ import com.bumptech.glide.request.transition.Transition;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.ui.activity.AdvertisementActivity;
+import com.mobi.xad.XAdManager;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -174,6 +178,47 @@ public class MyPicasso {
             }
             builder.into(imageView);
         }
+    }
+
+    /**
+     * 广告sdk 朴光以及错误的上报
+     *
+     * @param context
+     * @param adInfo
+     * @param imageView
+     */
+    public static void glideSdkAd(Context context, AdInfo adInfo, String imgUrl, ImageView imageView) {
+        Glide.with(context).load(imgUrl).addListener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                XRequestManager.INSTANCE.requestErrorLoadImage(context, adInfo, "获取sdk图片失败" + e);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                XRequestManager.INSTANCE.requestEventExposure(context, adInfo);
+                return false;
+            }
+        }).into(imageView);
+    }
+
+    public static void glideSdkAd(Context context, AdInfo adInfo, String imgUrl, ImageView imageView, int width, int height, int def) {
+        imageView.setImageResource(def);
+        RequestOptions options = getRequestOptions(width, height, def, true, false, imageView);
+        Glide.with(context).load(imgUrl).addListener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                XRequestManager.INSTANCE.requestErrorLoadImage(context, adInfo, "获取sdk图片失败" + e);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                XRequestManager.INSTANCE.requestEventExposure(context, adInfo);
+                return false;
+            }
+        }).into(imageView);
     }
 
     /**

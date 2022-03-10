@@ -20,6 +20,7 @@ import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -33,6 +34,7 @@ import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
+import com.mobi.xad.bean.Material;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,15 +151,16 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
         layoutParams.height = layoutParams.width / 3;
         holder.list_ad_view_img.setLayoutParams(layoutParams);
-        MyPicasso.GlideImageNoSize(activity, stroreComicLable.ad_image, holder.list_ad_view_img);
+        AdInfo adInfo = BaseSdkAD.newAdInfo(stroreComicLable);
+        if (adInfo != null) {
+            MyPicasso.glideSdkAd(activity, adInfo, stroreComicLable.ad_image, holder.list_ad_view_img);
+        } else {
+            MyPicasso.GlideImageNoSize(activity, stroreComicLable.ad_image, holder.list_ad_view_img);
+        }
         holder.list_ad_view_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(stroreComicLable.getAdId())) {
-                    AdInfo adInfo = new AdInfo();
-                    adInfo.setAdId(stroreComicLable.getAdId());
-                    adInfo.setAdPosId(stroreComicLable.getAdPosId());
-                    adInfo.setAdPosId(stroreComicLable.getRequestId());
+                if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
                 Intent intent = new Intent();

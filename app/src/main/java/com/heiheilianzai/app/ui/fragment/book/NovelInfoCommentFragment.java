@@ -23,6 +23,7 @@ import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.BookInfoComment;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.book.BaseBook;
@@ -107,7 +108,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
         H100 = H50; //  相比书城 没有换一换 布局高度
         H20 = ImageUtil.dp2px(activity, 12);
 
-        int viewWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth()-ImageUtil.dp2px(getActivity(),20f);
+        int viewWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth() - ImageUtil.dp2px(getActivity(), 20f);
         etv.initWidth(viewWidth);
         etv.setMaxLines(4);
         etv.setHasAnimation(false);
@@ -245,7 +246,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
                                 baseAd.setUser_parame_need("1");
                                 baseAd.setAd_url_type(adInfo.getOperation().getType());
                                 activity_book_info_ad.setVisibility(View.VISIBLE);
-                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                                MyPicasso.glideSdkAd(activity, adInfo, baseAd.getAd_image(), list_ad_view_img);
                             } else {
                                 activity_book_info_ad.setVisibility(View.GONE);
                             }
@@ -262,7 +263,7 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
                 return;
             }
         }
-        if (!isShowSdkAd){
+        if (!isShowSdkAd) {
             localAd();
         }
     }
@@ -285,14 +286,11 @@ public class NovelInfoCommentFragment extends BaseButterKnifeFragment {
         layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
         layoutParams.height = layoutParams.width / 3;
         list_ad_view_img.setLayoutParams(layoutParams);
+        AdInfo adInfo = BaseSdkAD.newAdInfo(baseAd);
         activity_book_info_ad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(baseAd.getAdId())) {
-                    AdInfo adInfo = new AdInfo();
-                    adInfo.setAdId(baseAd.getAdId());
-                    adInfo.setAdPosId(baseAd.getAdPosId());
-                    adInfo.setAdPosId(baseAd.getRequestId());
+                if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
                 Intent intent = new Intent();

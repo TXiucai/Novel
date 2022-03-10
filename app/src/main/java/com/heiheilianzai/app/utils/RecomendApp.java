@@ -25,6 +25,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.RecommendAppBean;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.mobi.xad.XRequestManager;
@@ -226,17 +227,18 @@ public class RecomendApp {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             RecommendAppHolder appHolder = (RecommendAppHolder) holder;
             RecommendAppBean.AppListBean appListBean = appListBeans.get(position);
-            MyPicasso.GlideImageNoSize(context, appListBean.getApp_logo(), appHolder.ivLogo);
             appHolder.tvName.setText(appListBean.getApp_name());
             String user_parame_need = appListBean.getUser_parame_need();
+            AdInfo adInfo = BaseSdkAD.newAdInfo(appListBean);
+            if (adInfo != null) {
+                MyPicasso.glideSdkAd(context, adInfo, appListBean.getApp_logo(), appHolder.ivLogo);
+            } else {
+                MyPicasso.GlideImageNoSize(context, appListBean.getApp_logo(), appHolder.ivLogo);
+            }
             appHolder.tvInstall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!TextUtils.isEmpty(appListBean.getAdId())) {
-                        AdInfo adInfo = new AdInfo();
-                        adInfo.setAdId(appListBean.getAdId());
-                        adInfo.setAdPosId(appListBean.getAdPosId());
-                        adInfo.setAdPosId(appListBean.getRequestId());
+                    if (adInfo != null) {
                         XRequestManager.INSTANCE.requestEventClick(context, adInfo);
                     }
                     String down_link = appListBean.getDown_link();

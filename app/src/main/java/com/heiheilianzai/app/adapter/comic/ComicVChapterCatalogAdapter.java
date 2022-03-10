@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -150,7 +151,15 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
             layoutParams.height = layoutParams.width / 4;
             myAdViewHolder.ivAD.setLayoutParams(layoutParams);
-            MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            if (!TextUtils.isEmpty(comicChapterCatalog.getAdId())) {
+                AdInfo adInfo = new AdInfo();
+                adInfo.setAdId(comicChapterCatalog.getAdId());
+                adInfo.setAdPosId(comicChapterCatalog.getAdPosId());
+                adInfo.setAdPosId(comicChapterCatalog.getRequestId());
+                MyPicasso.glideSdkAd(activity, adInfo, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            }
             myAdViewHolder.ivAD.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

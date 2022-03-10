@@ -32,6 +32,7 @@ import com.heiheilianzai.app.holder.DiscoverBannerHolderViewBook;
 import com.heiheilianzai.app.holder.DiscoveryBannerHolderViewComic;
 import com.heiheilianzai.app.holder.HomeBannerHolderViewComic;
 import com.heiheilianzai.app.model.BannerItemStore;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
@@ -478,11 +479,8 @@ public class ConvenientBanner<T> extends LinearLayout {
     }
 
     private static void Onclick(BannerItemStore bannerItemStore, Activity activity, int flag) {
-        if (!TextUtils.isEmpty(bannerItemStore.getAdId())) {
-            AdInfo adInfo = new AdInfo();
-            adInfo.setAdId(bannerItemStore.getAdId());
-            adInfo.setAdPosId(bannerItemStore.getAdPosId());
-            adInfo.setAdPosId(bannerItemStore.getRequestId());
+        AdInfo adInfo = BaseSdkAD.newAdInfo(bannerItemStore);
+        if (adInfo != null) {
             XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
         }
         String content = bannerItemStore.getContent();

@@ -65,6 +65,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
 import com.heiheilianzai.app.constant.sa.SaEventConfig;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.model.InfoBookItem;
 import com.heiheilianzai.app.model.NovelBoyinModel;
@@ -494,7 +495,7 @@ public class ReadActivity extends BaseReadActivity {
         bookpage.setLayoutParams(layoutParams);
         bookpage.setADview(insert_todayone2);
         next();
-        acceptNovelBoyin(activity, chapter.getBook_name());
+        acceptNovelBoyin(activity, baseBook.getName());
         getBookInfo();
     }
 
@@ -1291,22 +1292,32 @@ public class ReadActivity extends BaseReadActivity {
 
     private void initAd(Activity activity) {
         mDisPlayAdTime = AppPrefs.getSharedLong(activity, "display_ad_days_novel", 0);
+        AdInfo adInfo = BaseSdkAD.newAdInfo(ReaderConfig.BOTTOM_READ_AD);
         if (ReaderConfig.BOTTOM_READ_AD != null && ReaderConfig.BOTTOM_READ_AD.ad_type == 1 && System.currentTimeMillis() > mDisPlayAdTime) {
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (adInfo != null) {
+                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                    }
                     JumpBookAd(activity, ReaderConfig.BOTTOM_READ_AD);
                 }
             });
             mIvAd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (adInfo != null) {
+                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                    }
                     JumpBookAd(activity, ReaderConfig.BOTTOM_READ_AD);
                 }
             });
             mIvClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (adInfo != null) {
+                        XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
+                    }
                     mRlTopLayout.setVisibility(View.GONE);
                     activity_read_buttom_ad_layout.setVisibility(View.GONE);
                     AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
@@ -1314,20 +1325,31 @@ public class ReadActivity extends BaseReadActivity {
                 }
             });
             activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
-            MyPicasso.GlideImageNoSize(activity, ReaderConfig.BOTTOM_READ_AD.ad_image, mIvAd);
+            if (adInfo != null) {
+                MyPicasso.glideSdkAd(activity, adInfo, ReaderConfig.BOTTOM_READ_AD.ad_image, mIvAd);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, ReaderConfig.BOTTOM_READ_AD.ad_image, mIvAd);
+            }
         } else {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
+        AdInfo adInfoTop = BaseSdkAD.newAdInfo(ReaderConfig.TOP_READ_AD);
         if (ReaderConfig.TOP_READ_AD != null && ReaderConfig.TOP_READ_AD.ad_type == 1 && System.currentTimeMillis() > mDisPlayAdTime) {
             activity_read_top_ad_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (adInfoTop != null) {
+                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                    }
                     JumpBookAd(activity, ReaderConfig.TOP_READ_AD);
                 }
             });
             mIVTopClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (adInfoTop != null) {
+                        XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
+                    }
                     mRlTopLayout.setVisibility(View.GONE);
                     activity_read_buttom_ad_layout.setVisibility(View.GONE);
                     AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
@@ -1335,7 +1357,11 @@ public class ReadActivity extends BaseReadActivity {
                 }
             });
             mRlTopLayout.setVisibility(View.VISIBLE);
-            MyPicasso.GlideImageNoSize(activity, ReaderConfig.TOP_READ_AD.ad_image, activity_read_top_ad_iv);
+            if (adInfoTop != null) {
+                MyPicasso.glideSdkAd(activity, adInfoTop, ReaderConfig.TOP_READ_AD.ad_image, activity_read_top_ad_iv);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, ReaderConfig.TOP_READ_AD.ad_image, activity_read_top_ad_iv);
+            }
         } else {
             mRlTopLayout.setVisibility(View.GONE);
         }

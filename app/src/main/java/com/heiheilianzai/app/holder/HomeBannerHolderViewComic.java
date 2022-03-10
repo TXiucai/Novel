@@ -11,10 +11,12 @@ import android.widget.ImageView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.BannerItemStore;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyGlide;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
+import com.mobi.xad.bean.AdInfo;
 
 /**
  * 轮播图Holder
@@ -53,7 +55,12 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
         //GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, colors);
         //item_store_entrance_comic_bgVIEW.setBackground(g);
         if (flag == 0) {
-            MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
+            AdInfo adInfo = BaseSdkAD.newAdInfo(data);
+            if (adInfo != null) {
+                MyPicasso.glideSdkAd(activity, adInfo, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
+            } else {
+                MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
+            }
             MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.book_def_cross);
         } else {
             MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.comic_def_cross);

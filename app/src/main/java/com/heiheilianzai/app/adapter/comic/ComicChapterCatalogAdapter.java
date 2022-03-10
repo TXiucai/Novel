@@ -164,7 +164,15 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         } else if (viewHolder instanceof MyAdViewHolder) {
             MyAdViewHolder myAdViewHolder = (MyAdViewHolder) viewHolder;
-            MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            if (!TextUtils.isEmpty(comicChapterCatalog.getAdId())) {
+                AdInfo adInfo = new AdInfo();
+                adInfo.setAdId(comicChapterCatalog.getAdId());
+                adInfo.setAdPosId(comicChapterCatalog.getAdPosId());
+                adInfo.setAdPosId(comicChapterCatalog.getRequestId());
+                MyPicasso.glideSdkAd(activity, adInfo, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+            }
             ViewGroup.LayoutParams layoutParams = myAdViewHolder.ivAD.getLayoutParams();
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
             layoutParams.height = layoutParams.width / 4;

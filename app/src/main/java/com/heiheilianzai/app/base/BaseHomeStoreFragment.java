@@ -25,6 +25,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
@@ -610,13 +611,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         homeRecommendAdapter.setOnItemRecommendListener(new HomeRecommendAdapter.OnItemRecommendListener() {
             @Override
             public void onItemRecommendListener(HomeRecommendBean.RecommeListBean recommeListBean) {
-                if (!TextUtils.isEmpty(recommeListBean.getAdId())) {
-                    AdInfo adInfo = new AdInfo();
-                    adInfo.setAdId(recommeListBean.getAdId());
-                    adInfo.setAdPosId(recommeListBean.getAdPosId());
-                    adInfo.setAdPosId(recommeListBean.getRequestId());
-                    XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
-                }
                 int jump_type = Integer.valueOf(recommeListBean.getJump_type());//0跳转链接 1首页-推荐页   2首页完结页  3首页-榜单页  4VIP充值页   5活动中心
                 String jump_url = recommeListBean.getJump_url();
                 int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  小说   1为漫画',

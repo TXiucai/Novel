@@ -23,6 +23,7 @@ import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ApiDomainBean;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.H5UrlBean;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.model.UserInfoItem;
@@ -43,6 +44,8 @@ import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
 import com.heiheilianzai.app.utils.Utils;
 import com.mobi.xad.XAdManager;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 import com.tinstall.tinstall.TInstall;
 
 import org.jetbrains.annotations.NotNull;
@@ -331,18 +334,25 @@ public class SplashActivity extends BaseAdvertisementActivity {
             if (!StringUtils.isEmpty(flieName) && activity != null && !activity.isFinishing()) {
                 Glide.with(activity).load(new File(flieName)).into(activity_splash_im);
             }
+            AdInfo adInfo = BaseSdkAD.newAdInfo(startpage);
             setAdImageView(activity_splash_im, startpage, activity, new AdvertisementActivity.OnAdImageListener() {
                 @Override
                 public void onAnimationEnd() {
                     findViewById(R.id.findchannel).setVisibility(View.GONE);
                     activity_home_viewpager_sex_next.setVisibility(View.VISIBLE);
                     mLlBottom.setVisibility(View.VISIBLE);
+                    if (adInfo != null) {
+                        XRequestManager.INSTANCE.requestEventExposure(activity, adInfo);
+                    }
                     handler.sendEmptyMessageDelayed(1, time == 5 ? 0 : 1000);
                     startPage();
                 }
 
                 @Override
                 public void onFailed() {
+                    if (adInfo != null) {
+                        XRequestManager.INSTANCE.requestErrorLoadImage(activity, adInfo, "获取sdk图片失败");
+                    }
                     handler.sendEmptyMessageDelayed(0, 500);
                 }
 
@@ -350,6 +360,9 @@ public class SplashActivity extends BaseAdvertisementActivity {
                 public void onClick() {
                     skip = false;
                     if (!skip) {
+                        if (adInfo != null) {
+                            XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                        }
                         handler.removeMessages(1);
                         handler.removeMessages(0);
                         AdvertisementActivity.adSkip(startpage, activity);

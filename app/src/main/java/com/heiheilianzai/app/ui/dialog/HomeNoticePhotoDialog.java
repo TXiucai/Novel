@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.event.NoticeEvent;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -40,7 +41,12 @@ public class HomeNoticePhotoDialog {
         mHomeNotice = homeNotices.get(mPosition);
         ImageView homeNoticePhoto = view.findViewById(R.id.home_notice_photo);
         View close = view.findViewById(R.id.home_notice_close);
-        MyPicasso.GlideImageNoSize(activity, mHomeNotice.getImg_content(), homeNoticePhoto);
+        AdInfo adInfo = BaseSdkAD.newAdInfo(mHomeNotice);
+        if (adInfo != null) {
+            MyPicasso.glideSdkAd(activity, adInfo, mHomeNotice.getImg_content(), homeNoticePhoto);
+        } else {
+            MyPicasso.GlideImageNoSize(activity, mHomeNotice.getImg_content(), homeNoticePhoto);
+        }
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,11 +69,7 @@ public class HomeNoticePhotoDialog {
         homeNoticePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(mHomeNotice.getAdId())) {
-                    AdInfo adInfo = new AdInfo();
-                    adInfo.setAdId(mHomeNotice.getAdId());
-                    adInfo.setAdPosId(mHomeNotice.getAdPosId());
-                    adInfo.setAdPosId(mHomeNotice.getRequestId());
+                if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
                 String user_parame_need = mHomeNotice.getUser_parame_need();
@@ -76,12 +78,12 @@ public class HomeNoticePhotoDialog {
                 if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !jump_url.contains("&uid=")) {
                     jump_url += "&uid=" + Utils.getUID(activity);
                 }
-                if (TextUtils.equals(redirect_type,"1")){
+                if (TextUtils.equals(redirect_type, "1")) {
                     activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", jump_url));
-                }else {
+                } else {
                     activity.startActivity(new Intent(activity, AboutActivity.class).
                             putExtra("url", jump_url)
-                            .putExtra("style", "4")  );
+                            .putExtra("style", "4"));
                 }
             }
         });

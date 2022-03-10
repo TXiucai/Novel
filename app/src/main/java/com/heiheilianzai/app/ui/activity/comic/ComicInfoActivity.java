@@ -496,7 +496,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                                 baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
                                 baseAd.setUser_parame_need("1");
                                 baseAd.setAd_url_type(adInfo.getOperation().getType());
-                                MyPicasso.GlideImageNoSize(activity, baseAd.ad_image, list_ad_view_img);
+                                MyPicasso.glideSdkAd(activity, adInfo, baseAd.ad_image, list_ad_view_img);
                                 activity_book_info_ad.setVisibility(View.VISIBLE);
                             } else {
                                 activity_book_info_ad.setVisibility(View.GONE);

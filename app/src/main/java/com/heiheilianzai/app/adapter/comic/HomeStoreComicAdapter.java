@@ -20,6 +20,7 @@ import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
@@ -54,7 +55,7 @@ import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Activity activity;
     List<StroreComicLable> listData;
-    public int WIDTH,HEIGHT, H55, H30;
+    public int WIDTH, HEIGHT, H55, H30;
     public static final int COMIC_UI_STYLE_1 = 1;//风格1
     public static final int COMIC_UI_STYLE_2 = 2;//风格2
     public static final int COMIC_UI_STYLE_3 = 3;//风格3
@@ -130,15 +131,17 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
         layoutParams.height = layoutParams.width / 3;
         holder.list_ad_view_img.setLayoutParams(layoutParams);
-        MyPicasso.GlideImageNoSize(activity, stroreComicLable.ad_image, holder.list_ad_view_img);
+        AdInfo adInfo = BaseSdkAD.newAdInfo(stroreComicLable);
+        if (adInfo != null) {
+            MyPicasso.glideSdkAd(activity, adInfo, stroreComicLable.ad_image, holder.list_ad_view_img);
+        } else {
+            MyPicasso.GlideImageNoSize(activity, stroreComicLable.ad_image, holder.list_ad_view_img);
+        }
+
         holder.list_ad_view_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(stroreComicLable.getAdId())) {
-                    AdInfo adInfo = new AdInfo();
-                    adInfo.setAdId(stroreComicLable.getAdId());
-                    adInfo.setAdPosId(stroreComicLable.getAdPosId());
-                    adInfo.setAdPosId(stroreComicLable.getRequestId());
+                if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
                 Intent intent = new Intent();
@@ -290,7 +293,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comicList.get(0).comic_id));
                         }
                     });
-                    width = WIDTH  / 3;
+                    width = WIDTH / 3;
                     height = width * 4 / 3;
                     raw = 1;
                     fragment_store_gridview1_gridview.setNumColumns(3);

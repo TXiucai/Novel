@@ -12,9 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.view.comic.DisplayUtil;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import java.util.List;
 
@@ -53,12 +56,20 @@ public class HomeRecommendAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
         recommendViewHolder.itemView.setLayoutParams(layoutParams);
         HomeRecommendBean.RecommeListBean recommeListBean = mRecommendLists.get(position);
-        MyPicasso.GlideImageNoSize((Activity) mContext, recommeListBean.getImg_icon(), recommendViewHolder.mIvIcon);
         recommendViewHolder.mTxName.setText(recommeListBean.getTitle());
+        AdInfo adInfo = BaseSdkAD.newAdInfo(recommeListBean);
+        if (adInfo != null) {
+            MyPicasso.glideSdkAd(mContext, adInfo, recommeListBean.getImg_icon(), recommendViewHolder.mIvIcon);
+        } else {
+            MyPicasso.GlideImageNoSize((Activity) mContext, recommeListBean.getImg_icon(), recommendViewHolder.mIvIcon);
+        }
         recommendViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemRecommendListener != null) {
+                    if (adInfo != null) {
+                        XRequestManager.INSTANCE.requestEventClick(mContext, adInfo);
+                    }
                     onItemRecommendListener.onItemRecommendListener(recommeListBean);
                 }
             }
