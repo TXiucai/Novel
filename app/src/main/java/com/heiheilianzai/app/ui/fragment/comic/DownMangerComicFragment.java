@@ -3,9 +3,6 @@ package com.heiheilianzai.app.ui.fragment.comic;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +23,6 @@ import org.litepal.LitePal;
 import org.litepal.crud.callback.FindMultiCallback;
 
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * 下载缓存页面 漫画

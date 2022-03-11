@@ -256,7 +256,7 @@ public class RecomendApp {
 
         @Override
         public int getItemCount() {
-            return appListBeans.size();
+            return appListBeans == null ? 0 : appListBeans.size();
         }
     }
 

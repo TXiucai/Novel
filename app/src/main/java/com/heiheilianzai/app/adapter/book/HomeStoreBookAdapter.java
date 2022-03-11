@@ -110,7 +110,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return listData.size();
+        return listData == null ? 0 : listData.size();
     }
 
     @Override

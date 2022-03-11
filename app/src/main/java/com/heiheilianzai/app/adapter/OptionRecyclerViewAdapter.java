@@ -136,7 +136,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
 
     @Override
     public int getItemCount() {
-        return optionBeenList.size();
+        return optionBeenList == null ? 0 : optionBeenList.size();
     }
 
 

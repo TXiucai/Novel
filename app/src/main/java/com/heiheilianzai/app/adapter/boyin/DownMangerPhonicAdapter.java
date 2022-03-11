@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -17,13 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.DownMangerAdapter;
-import com.heiheilianzai.app.adapter.comic.DownMangerComicAdapter;
-import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
 import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
-import com.heiheilianzai.app.model.comic.BaseComic;
-import com.heiheilianzai.app.ui.activity.boyin.BoyinDownActivity;
 import com.heiheilianzai.app.ui.activity.boyin.BoyinPlayerActivity;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -68,7 +62,7 @@ public class DownMangerPhonicAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public DownMangerPhonicAdapter(Activity activity, List<BoyinInfoBean> list, LinearLayout fragment_bookshelf_noresult) {
-        mSelectList=new ArrayList<>();
+        mSelectList = new ArrayList<>();
         this.list = list;
         this.fragment_bookshelf_noresult = fragment_bookshelf_noresult;
         this.activity = activity;
@@ -84,7 +78,7 @@ public class DownMangerPhonicAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ViewHolder viewHolder= (ViewHolder) holder;
+        ViewHolder viewHolder = (ViewHolder) holder;
         BoyinInfoBean boyinInfoBean = list.get(position);
         viewHolder.item_dowmmanger_LinearLayout2.getLayoutParams().width = WIDTH;
         setIsEditView(viewHolder, mIsEditOpen);
@@ -152,10 +146,10 @@ public class DownMangerPhonicAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list == null ? 0 : list.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_dowmmanger_HorizontalScrollView)
         HorizontalScrollView item_dowmmanger_HorizontalScrollView;
         @BindView(R.id.item_dowmmanger_LinearLayout2)
@@ -188,6 +182,7 @@ public class DownMangerPhonicAdapter extends RecyclerView.Adapter<RecyclerView.V
         intent.putExtra("nid", nid);
         activity.startActivity(intent);
     }
+
     protected void setIsEditView(ViewHolder holder, boolean isEditOpen) {
         if (isEditOpen) {
             holder.mRlCheckBox.setVisibility(View.VISIBLE);

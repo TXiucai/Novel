@@ -204,7 +204,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemCount() {
-        return comicChapterCatalogList.size();
+        return comicChapterCatalogList == null ? 0 : comicChapterCatalogList.size();
     }
 
     public int getCurrentPosition() {

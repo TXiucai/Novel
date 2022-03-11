@@ -33,7 +33,9 @@ public class MyCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyComment
     public interface OnItemClick {
         void OnItemClick(int position, PayGoldDetail optionBeen);
     }
+
     OnItemClick onItemClick;
+
     public MyCommentRecyclerViewAdapter(Activity activity, List<CommentItem> optionBeenList, LayoutInflater layoutInflater, OnItemClick onItemClick) {
         this.activity = activity;
         this.optionBeenList = optionBeenList;
@@ -51,18 +53,18 @@ public class MyCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyComment
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         CommentItem optionBeen = optionBeenList.get(position);
-        MyPicasso.IoadImage(activity,optionBeen.getAvatar(), R.mipmap.icon_def_head,viewHolder.imageView);
+        MyPicasso.IoadImage(activity, optionBeen.getAvatar(), R.mipmap.icon_def_head, viewHolder.imageView);
         viewHolder.content.setText(optionBeen.getContent());
         viewHolder.replay.setText(optionBeen.getReply_info());
         viewHolder.replay.setVisibility(TextUtils.isEmpty(optionBeen.getReply_info()) ? View.GONE : View.VISIBLE);
         viewHolder.nickname.setText(optionBeen.getNickname());
         viewHolder.time.setText(optionBeen.getTime());
-        viewHolder.comment_item_isvip.setVisibility(optionBeen.getIs_vip()==1 ? View.VISIBLE : View.GONE);
+        viewHolder.comment_item_isvip.setVisibility(optionBeen.getIs_vip() == 1 ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return optionBeenList.size();
+        return optionBeenList == null ? 0 : optionBeenList.size();
     }
 
 
@@ -79,6 +81,7 @@ public class MyCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyComment
         TextView time;
         @BindView(R.id.comment_item_isvip)
         View comment_item_isvip;
+
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

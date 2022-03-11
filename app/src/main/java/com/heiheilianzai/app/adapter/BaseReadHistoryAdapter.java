@@ -39,6 +39,7 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
     public getSelectItems mGetSelectItems;
     public boolean mIsEditOpen;
     public boolean mIsSelectAll;
+
     public void setmGetSelectItems(getSelectItems mGetSelectItems) {
         this.mGetSelectItems = mGetSelectItems;
     }
@@ -71,7 +72,7 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list == null ? 0 : list.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -150,7 +151,7 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
         void getPosition(int falg, T t, int position);
     }
 
-    public interface getSelectItems<T>{
+    public interface getSelectItems<T> {
         void getSelectItems(List<T> selectLists);
     }
 }

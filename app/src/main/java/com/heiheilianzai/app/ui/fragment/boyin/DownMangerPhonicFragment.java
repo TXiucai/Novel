@@ -2,7 +2,6 @@ package com.heiheilianzai.app.ui.fragment.boyin;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.BaseAdapter;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;

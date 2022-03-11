@@ -92,7 +92,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return listData.size();
+        return listData == null ? 0 : listData.size();
     }
 
     @Override

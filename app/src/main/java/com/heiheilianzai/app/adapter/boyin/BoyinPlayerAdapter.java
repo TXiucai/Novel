@@ -38,27 +38,27 @@ public class BoyinPlayerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_player_chapter,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_player_chapter, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         BoyinChapterBean boyinChapterBean = mBoyinChapterBeans.get(position);
-        ViewHolder viewHolder= (ViewHolder) holder;
+        ViewHolder viewHolder = (ViewHolder) holder;
         viewHolder.mTvChapter.setText(boyinChapterBean.getChapter_name());
         viewHolder.mTvTime.setText(DateUtils.formatTime(boyinChapterBean.getChapter_play_time()));
-        if (boyinChapterBean.isPlay()){
-           MyPicasso.loadLocalImage((Activity) mContext,R.drawable.ic_speaker,viewHolder.mIvSpeaker);
-        }else {
-            MyPicasso.loadLocalImage((Activity) mContext,R.mipmap.ic_speaker3,viewHolder.mIvSpeaker);
+        if (boyinChapterBean.isPlay()) {
+            MyPicasso.loadLocalImage((Activity) mContext, R.drawable.ic_speaker, viewHolder.mIvSpeaker);
+        } else {
+            MyPicasso.loadLocalImage((Activity) mContext, R.mipmap.ic_speaker3, viewHolder.mIvSpeaker);
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onChapterItemListener!=null){
-                    onChapterItemListener.onItemListener(boyinChapterBean,position);
+                if (onChapterItemListener != null) {
+                    onChapterItemListener.onItemListener(boyinChapterBean, position);
                 }
             }
         });
@@ -66,21 +66,24 @@ public class BoyinPlayerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return mBoyinChapterBeans.size();
+        return mBoyinChapterBeans == null ? 0 : mBoyinChapterBeans.size();
     }
-    class ViewHolder extends RecyclerView.ViewHolder{
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_speaker)
         public ImageView mIvSpeaker;
         @BindView(R.id.tv_chapter)
         public TextView mTvChapter;
         @BindView(R.id.tv_start_time)
         public TextView mTvTime;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
-    public interface OnChapterItemListener{
-        void onItemListener(BoyinChapterBean boyinChapterBean,int position);
+
+    public interface OnChapterItemListener {
+        void onItemListener(BoyinChapterBean boyinChapterBean, int position);
     }
 }

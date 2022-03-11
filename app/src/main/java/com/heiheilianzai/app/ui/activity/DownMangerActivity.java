@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
@@ -30,12 +28,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-//.http.RequestParams;
-//.view.annotation.ContentView;
-//.view.annotation.Event;
-//.view.annotation.ViewInject;
-//.x;
 
 /**
  * Created by abc on 2016/11/4.

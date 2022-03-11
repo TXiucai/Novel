@@ -1,7 +1,6 @@
 package com.heiheilianzai.app;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.model.ChannelBean;
-import com.heiheilianzai.app.utils.MyGlide;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.view.CircleImageView;
 import com.heiheilianzai.app.view.comic.DisplayUtil;
 
@@ -92,7 +89,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     public class ChannelHomeHolder extends RecyclerView.ViewHolder {

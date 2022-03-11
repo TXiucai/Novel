@@ -1,9 +1,6 @@
 package com.heiheilianzai.app.ui.fragment.book;
-
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.BaseAdapter;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,11 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
 import com.heiheilianzai.app.base.BaseDownMangerFragment;
-import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.model.Downoption;
-import com.heiheilianzai.app.model.comic.BaseComic;
-import com.heiheilianzai.app.model.comic.ComicChapter;
-import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 

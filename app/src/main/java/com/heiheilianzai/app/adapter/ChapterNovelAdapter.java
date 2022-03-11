@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -16,7 +17,6 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.model.ChapterItem;
 import com.heiheilianzai.app.utils.StringUtils;
-import com.heiheilianzai.app.utils.Utils;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ViewHolderChapter viewHolder = (ViewHolderChapter) holder;
         ChapterItem chapterItem = mList.get(position);
         if (chapterItem.getChapter_id().equals(current_chapter_id)) {
@@ -116,7 +116,7 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     class ViewHolderChapter extends RecyclerView.ViewHolder {

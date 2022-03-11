@@ -58,7 +58,7 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mListBeans.size();
+        return mListBeans == null ? 0 : mListBeans.size();
     }
 
     public class CountryViewHolder extends RecyclerView.ViewHolder {

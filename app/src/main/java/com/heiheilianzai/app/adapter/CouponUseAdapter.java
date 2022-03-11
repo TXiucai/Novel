@@ -45,7 +45,7 @@ public class CouponUseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return mUseLists.size();
+        return mUseLists == null ? 0 : mUseLists.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

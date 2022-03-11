@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -76,8 +75,8 @@ public class DownMangerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ViewHolder viewHolder= (ViewHolder) holder;
-        final Downoption downoption =list.get(position);
+        ViewHolder viewHolder = (ViewHolder) holder;
+        final Downoption downoption = list.get(position);
         if (!downoption.showHead) {
             viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.GONE);
         } else {
@@ -159,10 +158,10 @@ public class DownMangerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list == null ? 0 : list.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_dowmmanger_HorizontalScrollView)
         public HorizontalScrollView item_dowmmanger_HorizontalScrollView;
         @BindView(R.id.item_dowmmanger_LinearLayout1)

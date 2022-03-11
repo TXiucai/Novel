@@ -71,7 +71,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData == null ? 0 : mData.size();
     }
 
     public class SelectedPicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
