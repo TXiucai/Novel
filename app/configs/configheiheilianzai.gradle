@@ -1,8 +1,8 @@
 gradle.ext {
     //版本号
-    VERSION_CODE = 20220202
+    VERSION_CODE = 20220311
     //版本名
-    VERSION_NAME = "3.1.0"
+    VERSION_NAME = "3.1.1"
     // 应用程序包名
     APPLICATION_ID = 'com.hhhhlianzai.app'
     //项目第三方配置
