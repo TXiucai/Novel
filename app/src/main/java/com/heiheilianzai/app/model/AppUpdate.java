@@ -30,7 +30,6 @@ public class AppUpdate {
     public String book_text_api;
     public String vtapi_license_key;
     public String tts_open_switch;//2开启 1关闭
-    public int display_ad_days;//小说漫画顶部底部广告关闭时长（天）
     public String guide_text;
     public int display_second;
 
@@ -48,14 +47,6 @@ public class AppUpdate {
 
     public void setDisplay_second(int display_second) {
         this.display_second = display_second;
-    }
-
-    public int getDisplay_ad_days() {
-        return display_ad_days;
-    }
-
-    public void setDisplay_ad_days(int display_ad_days) {
-        this.display_ad_days = display_ad_days;
     }
 
     public String getVtapi_license_key() {

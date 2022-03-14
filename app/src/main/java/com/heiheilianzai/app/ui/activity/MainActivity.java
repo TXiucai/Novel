@@ -338,7 +338,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            ReaderConfig.BOTTOM_READ_AD = new Gson().fromJson(result, BaseAd.class);
+                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                            ReaderConfig.BOTTOM_READ_AD = baseAd;
+                            ReaderConfig.display_ad_days_novel = baseAd.getDisplay_ad_days();
                         } catch (Exception e) {
 
                         }
@@ -362,7 +364,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            ReaderConfig.TOP_READ_AD = new Gson().fromJson(result, BaseAd.class);
+                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                            ReaderConfig.TOP_READ_AD = baseAd;
+                            ReaderConfig.display_ad_days_novel = baseAd.getDisplay_ad_days();
                         } catch (Exception e) {
 
                         }

@@ -35,11 +35,12 @@ public class BaseSdkAD {
 
     /**
      * sdk上报事件用
+     *
      * @param baseSdkAD
      * @return
      */
     public static AdInfo newAdInfo(BaseSdkAD baseSdkAD) {
-        if (baseSdkAD != null && TextUtils.isEmpty(baseSdkAD.getAdId())) {
+        if (baseSdkAD != null && !TextUtils.isEmpty(baseSdkAD.getAdId())) {
             AdInfo adInfo = new AdInfo();
             adInfo.setAdId(baseSdkAD.getAdId());
             adInfo.setAdPosId(baseSdkAD.getAdPosId());
