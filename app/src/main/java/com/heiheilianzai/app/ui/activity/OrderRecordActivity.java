@@ -106,7 +106,7 @@ public class OrderRecordActivity extends BaseActivity implements OnRefreshListen
                         try {
                             List<OrderRecordBean> list = new Gson().fromJson(result, new TypeToken<List<OrderRecordBean>>() {
                             }.getType());
-                            adapterView(list);
+                            OrderRecordActivity.this.runOnUiThread(() -> adapterView(list));
                         } catch (Exception e) {
 
                         }
@@ -114,7 +114,7 @@ public class OrderRecordActivity extends BaseActivity implements OnRefreshListen
 
                     @Override
                     public void onErrorResponse(String ex) {
-
+                        OrderRecordActivity.this.runOnUiThread(() -> adapterInvisibility());
                     }
                 }
         );
@@ -129,11 +129,14 @@ public class OrderRecordActivity extends BaseActivity implements OnRefreshListen
             recyclerView.setVisibility(View.VISIBLE);
             orderRecordAdapter.notifyDataSetChanged();
         } else {
-            orderRecordAdapter.setNewData(null);
-            order_no_data.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-
+            adapterInvisibility();
         }
+    }
+
+    private void adapterInvisibility() {
+        orderRecordAdapter.setNewData(null);
+        order_no_data.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override

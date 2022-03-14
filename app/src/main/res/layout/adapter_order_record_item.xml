@@ -131,7 +131,8 @@
         android:textSize="@dimen/dimens_12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_go_pay"
-        app:layout_constraintTop_toBottomOf="@+id/tv_pay_channel" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_pay_channel"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_copy_order"

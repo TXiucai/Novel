@@ -115,12 +115,18 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
             tv_price.setText(Html.fromHtml("<font><small>￥</small></font>" + "<font><big>" + item.getTotal_fee() + "</big></font>"));
             tv_price.setVisibility(View.VISIBLE);
         }
-        tv_go_customer.setOnClickListener(view -> {
-            String kefuOnline = ShareUitls.getString(context, "kefu_online", null);
-            if (!TextUtils.isEmpty(kefuOnline)) {
-                listener.goKeFuOnline(kefuOnline);
-            }
-        });
+
+        String kefuOnline = ShareUitls.getString(context, "kefu_online", null);
+        if (TextUtils.isEmpty(kefuOnline)) {
+            tv_go_customer.setVisibility(View.GONE);
+        } else {
+            tv_go_customer.setVisibility(View.VISIBLE);
+            tv_go_customer.setOnClickListener(view -> {
+                if (!TextUtils.isEmpty(kefuOnline)) {
+                    listener.goKeFuOnline(kefuOnline);
+                }
+            });
+        }
 
     }
 
