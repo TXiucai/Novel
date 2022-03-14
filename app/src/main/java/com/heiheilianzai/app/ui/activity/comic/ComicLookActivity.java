@@ -64,6 +64,7 @@ import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
+import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.dialog.comic.LookComicSetDialog;
 import com.heiheilianzai.app.ui.dialog.comic.PurchaseDialog;
@@ -316,14 +317,26 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.activity_comic_buttom_ad_close:
-                mRlButtom.setVisibility(View.GONE);
-                mRlTop.setVisibility(View.GONE);
-                AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                if (App.isVip(activity)) {
+                    mRlButtom.setVisibility(View.GONE);
+                    mRlTop.setVisibility(View.GONE);
+                    AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                } else {
+                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
+                    myIntent.putExtra("isvip", Utils.isLogin(activity));
+                    activity.startActivity(myIntent);
+                }
                 break;
             case R.id.activity_comic_top_ad_close:
-                mRlButtom.setVisibility(View.GONE);
-                mRlTop.setVisibility(View.GONE);
-                AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                if (App.isVip(activity)) {
+                    mRlButtom.setVisibility(View.GONE);
+                    mRlTop.setVisibility(View.GONE);
+                    AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                } else {
+                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
+                    myIntent.putExtra("isvip", Utils.isLogin(activity));
+                    activity.startActivity(myIntent);
+                }
                 break;
             case R.id.titlebar_back:
                 try {
@@ -1255,7 +1268,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         } else {
                             ReaderConfig.display_ad_days_comic = mSdkTopAd.getDisplay_ad_days();
                         }
-                        initTopAndButtomAd(mSdkTopAd, mRlTop);
+                        initTopAndButtomAd(mSdkTopAd, mRlTop, mImgTopAd);
                     } else {
                         localTopAd(activity);
                     }
@@ -1282,7 +1295,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
-                            initTopAndButtomAd(baseAd, mRlTop);
+                            initTopAndButtomAd(baseAd, mRlTop, mImgTopAd);
                         } catch (Exception e) {
                             mRlTop.setVisibility(View.GONE);
                         }
@@ -1296,15 +1309,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         );
     }
 
-    private void initTopAndButtomAd(BaseAd baseAd, View parentView) {
+    private void initTopAndButtomAd(BaseAd baseAd, View parentView, ImageView imageView) {
         AdInfo adInfo = BaseSdkAD.newAdInfo(baseAd);
         long display_ad_days_comic = AppPrefs.getSharedLong(activity, "display_ad_days_comic", 0);
         if (baseAd != null && System.currentTimeMillis() > display_ad_days_comic) {
             parentView.setVisibility(View.VISIBLE);
             if (adInfo != null) {
-                MyPicasso.glideSdkAd(activity, adInfo, baseAd.getAd_image(), mImgTopAd);
+                MyPicasso.glideSdkAd(activity, adInfo, baseAd.getAd_image(), imageView);
             } else {
-                MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), mImgTopAd);
+                MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), imageView);
             }
             parentView.setOnClickListener((v) -> skipWeb(baseAd, activity));
         } else {
@@ -1395,7 +1408,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         } else {
                             ReaderConfig.display_ad_days_comic = mSdkBottomAd.getDisplay_ad_days();
                         }
-                        initTopAndButtomAd(mSdkBottomAd, mRlButtom);
+                        initTopAndButtomAd(mSdkBottomAd, mRlButtom, mImgBottomAd);
                     } else {
                         mRlButtom.setVisibility(View.GONE);
                     }
@@ -1437,7 +1450,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
-                            initTopAndButtomAd(baseAd, mRlButtom);
+                            initTopAndButtomAd(baseAd, mRlButtom, mImgBottomAd);
                         } catch (Exception e) {
                             mRlButtom.setVisibility(View.GONE);
                         }

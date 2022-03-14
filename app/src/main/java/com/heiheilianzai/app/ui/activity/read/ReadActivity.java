@@ -1318,10 +1318,16 @@ public class ReadActivity extends BaseReadActivity {
                     if (adInfo != null) {
                         XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
                     }
-                    mRlTopLayout.setVisibility(View.GONE);
-                    activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                    AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
-                    flushPage();
+                    if (App.isVip(activity)) {
+                        mRlTopLayout.setVisibility(View.GONE);
+                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                        AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                        flushPage();
+                    } else {
+                        Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
+                        myIntent.putExtra("isvip", Utils.isLogin(activity));
+                        activity.startActivity(myIntent);
+                    }
                 }
             });
             activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
@@ -1350,10 +1356,16 @@ public class ReadActivity extends BaseReadActivity {
                     if (adInfoTop != null) {
                         XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
                     }
-                    mRlTopLayout.setVisibility(View.GONE);
-                    activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                    AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
-                    flushPage();
+                    if (App.isVip(activity)) {
+                        mRlTopLayout.setVisibility(View.GONE);
+                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                        AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                        flushPage();
+                    } else {
+                        Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
+                        myIntent.putExtra("isvip", Utils.isLogin(activity));
+                        activity.startActivity(myIntent);
+                    }
                 }
             });
             mRlTopLayout.setVisibility(View.VISIBLE);
