@@ -95,7 +95,7 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
             tv_order_time.setVisibility(View.INVISIBLE);
         }
 
-        if (!TextUtils.isEmpty(item.getUpdated_at())) {
+        if (!TextUtils.isEmpty(item.getUpdated_at()) && (TextUtils.equals(item.getStatus(), "2") || TextUtils.equals(item.getStatus(), "3"))) {
             String payTime = String.format(context.getResources().getString(R.string.tv_pay_time), item.getUpdated_at());
             tv_pay_time.setText(payTime);
             tv_pay_time.setVisibility(View.VISIBLE);

@@ -396,6 +396,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 selectAcquirePayItem = payList.get(0);
                 vipBaoyuePayAdapter.setSelectPosition(0);
             } else {
+                if (mGoodsId != 0) {
+                    if (TextUtils.equals(selectAcquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
+                        initBottomPay(selectAcquirePayItem);
+                    } else {
+                        MyToash.ToashError(AcquireBaoyueActivity.this, getString(R.string.string_vip_vip_date_off));
+                    }
+                }
                 vipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
             }
             initBottomPay(selectAcquirePayItem);

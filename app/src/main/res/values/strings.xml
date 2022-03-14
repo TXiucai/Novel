@@ -646,5 +646,6 @@
     <string name="tv_order_go_pay">去支付</string>
     <string name="tv_copy_order_number">复制订单</string>
     <string name="order_record_activity_copy">复制成功</string>
+    <string name="string_vip_vip_date_off">改套餐已下架</string>
 
 </resources>
