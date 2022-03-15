@@ -81,9 +81,8 @@ public class OrderRecordActivity extends BaseActivity implements OnRefreshListen
 
             @Override
             public void goPay(String goodsId) {
-                Intent intentVip = AcquireBaoyueActivity.getMyIntent(OrderRecordActivity.this, LanguageUtil.getString(OrderRecordActivity.this, R.string.refer_page_mine), 12);
-                intentVip.putExtra("isvip", Utils.isLogin(OrderRecordActivity.this));
-                intentVip.putExtra("goodsId", goodsId);
+                Intent intentVip = new Intent(OrderRecordActivity.this,AcquireBaoyueActivity.class);
+                intentVip.putExtra("goodsId", Integer.valueOf(goodsId));
                 startActivity(intentVip);
                 finish();
             }

@@ -173,11 +173,6 @@ public class DialogComicChapter {
 
     private void initChapterAd() {
         if (mChapterAd != null) {
-            for (int i = 0; i < comicChapterCatalogs.size(); i++) {
-                if (comicChapterCatalogs.get(i).getAd_type() == 1) {
-                    comicChapterCatalogs.remove(i);
-                }
-            }
             int size = comicChapterCatalogs.size();
             int count = size % 5;
             int adNum = count == 0 ? size / 5 : size / 5 + 1;

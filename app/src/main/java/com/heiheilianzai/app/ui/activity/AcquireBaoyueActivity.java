@@ -198,6 +198,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mGoodsId = intent.getIntExtra("goodsId", 0);
+        initData();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -396,9 +403,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 selectAcquirePayItem = payList.get(0);
                 vipBaoyuePayAdapter.setSelectPosition(0);
             } else {
-                if (mGoodsId != 0) {
+                if (mGoodsId != 0) {//再次唤醒该订单
                     if (TextUtils.equals(selectAcquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
-                        initBottomPay(selectAcquirePayItem);
+                        pay();
                     } else {
                         MyToash.ToashError(AcquireBaoyueActivity.this, getString(R.string.string_vip_vip_date_off));
                     }
@@ -443,23 +450,27 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 skipKeFuOnline();
                 break;
             case R.id.tx_open_vip:
-                if (selectAcquirePayItem != null) {
-                    if (Utils.isLogin(AcquireBaoyueActivity.this)) {
-                        pay(selectAcquirePayItem);
-                    } else {
-                        GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
-                            @Override
-                            public void isOperation() {
-                                MainHttpTask.getInstance().Gotologin(AcquireBaoyueActivity.this);
-                            }
-                        });
-                    }
-                }
+                pay();
                 break;
             case R.id.tv_order_record:
                 startActivity(new Intent(AcquireBaoyueActivity.this, OrderRecordActivity.class));
                 break;
 
+        }
+    }
+
+    private void pay() {
+        if (selectAcquirePayItem != null) {
+            if (Utils.isLogin(AcquireBaoyueActivity.this)) {
+                pay(selectAcquirePayItem);
+            } else {
+                GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
+                    @Override
+                    public void isOperation() {
+                        MainHttpTask.getInstance().Gotologin(AcquireBaoyueActivity.this);
+                    }
+                });
+            }
         }
     }
 

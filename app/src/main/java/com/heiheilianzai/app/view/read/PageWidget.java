@@ -96,7 +96,7 @@ public class PageWidget extends View {
         mAnimationProvider = new SimulationAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
     }
 
-    private void initPage() {
+    public void initPage() {
         mScreenWidth = ScreenSizeUtils.getInstance(mContext).getScreenWidth();
         mScreenHeight = ScreenSizeUtils.getInstance(mContext).getScreenHeight();  //RGB_565
         long display_ad_days_novel = AppPrefs.getSharedLong(mContext, "display_ad_days_novel", 0);

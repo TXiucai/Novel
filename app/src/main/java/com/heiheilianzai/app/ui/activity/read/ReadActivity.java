@@ -489,10 +489,6 @@ public class ReadActivity extends BaseReadActivity {
 
     @Override
     public void initData() {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
-        //layoutParams.height = mScreenHeight - ImageUtil.dp2px(activity, 60);
-        layoutParams.height = mScreenHeight;
-        bookpage.setLayoutParams(layoutParams);
         bookpage.setADview(insert_todayone2);
         next();
         acceptNovelBoyin(activity, baseBook.getName());
@@ -1380,6 +1376,7 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void flushPage() {
+        bookpage.initPage();
         initAd(activity);
         initData();
     }
