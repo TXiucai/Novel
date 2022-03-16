@@ -177,7 +177,11 @@ public class DialogComicChapter {
             int count = size % 5;
             int adNum = count == 0 ? size / 5 : size / 5 + 1;
             for (int i = 0; i < adNum; i++) {
-                comicChapterCatalogs.add((i + 1) * 5 + i, mChapterAd);
+                if (size > 5) {
+                    comicChapterCatalogs.add((i + 1) * 5 + i, mChapterAd);
+                } else {
+                    comicChapterCatalogs.add(mChapterAd);
+                }
             }
             comicChapterCatalogAdapter.notifyDataSetChanged();
         }

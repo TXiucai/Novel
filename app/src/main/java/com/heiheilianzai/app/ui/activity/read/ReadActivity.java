@@ -489,6 +489,9 @@ public class ReadActivity extends BaseReadActivity {
 
     @Override
     public void initData() {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
+        layoutParams.height = mScreenHeight;
+        bookpage.setLayoutParams(layoutParams);
         bookpage.setADview(insert_todayone2);
         next();
         acceptNovelBoyin(activity, baseBook.getName());
@@ -1289,7 +1292,7 @@ public class ReadActivity extends BaseReadActivity {
     private void initAd(Activity activity) {
         mDisPlayAdTime = AppPrefs.getSharedLong(activity, "display_ad_days_novel", 0);
         AdInfo adInfo = BaseSdkAD.newAdInfo(ReaderConfig.BOTTOM_READ_AD);
-        if (ReaderConfig.BOTTOM_READ_AD != null && ReaderConfig.BOTTOM_READ_AD.ad_type == 1 && System.currentTimeMillis() > mDisPlayAdTime) {
+        if (ReaderConfig.BOTTOM_READ_AD != null && System.currentTimeMillis() > mDisPlayAdTime) {
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1336,7 +1339,7 @@ public class ReadActivity extends BaseReadActivity {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
         AdInfo adInfoTop = BaseSdkAD.newAdInfo(ReaderConfig.TOP_READ_AD);
-        if (ReaderConfig.TOP_READ_AD != null && ReaderConfig.TOP_READ_AD.ad_type == 1 && System.currentTimeMillis() > mDisPlayAdTime) {
+        if (ReaderConfig.TOP_READ_AD != null && System.currentTimeMillis() > mDisPlayAdTime) {
             activity_read_top_ad_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

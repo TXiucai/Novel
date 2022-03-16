@@ -201,13 +201,11 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mGoodsId = intent.getIntExtra("goodsId", 0);
-        initData();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initView();
         initData();
         initComentData();
