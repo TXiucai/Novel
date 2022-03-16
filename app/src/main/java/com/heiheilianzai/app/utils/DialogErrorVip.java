@@ -41,7 +41,7 @@ public class DialogErrorVip {
         });
         popupWindow.setContentView(view);
         popupWindow.setCancelable(false);
-        popupWindow.setCanceledOnTouchOutside(false);
+        popupWindow.setCanceledOnTouchOutside(true);
         popupWindow.show();
         return popupWindow;
     }

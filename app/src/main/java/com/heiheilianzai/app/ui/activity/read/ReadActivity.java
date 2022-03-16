@@ -1291,8 +1291,10 @@ public class ReadActivity extends BaseReadActivity {
 
     private void initAd(Activity activity) {
         mDisPlayAdTime = AppPrefs.getSharedLong(activity, "display_ad_days_novel", 0);
+        boolean isChangeAd = isOrNotchangeAd();
         AdInfo adInfo = BaseSdkAD.newAdInfo(ReaderConfig.BOTTOM_READ_AD);
-        if (ReaderConfig.BOTTOM_READ_AD != null && System.currentTimeMillis() > mDisPlayAdTime) {
+        //广告发生改变即使还未到时间也要显示
+        if (ReaderConfig.BOTTOM_READ_AD != null && (isChangeAd || System.currentTimeMillis() > mDisPlayAdTime)) {
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1335,11 +1337,12 @@ public class ReadActivity extends BaseReadActivity {
             } else {
                 MyPicasso.GlideImageNoSize(activity, ReaderConfig.BOTTOM_READ_AD.ad_image, mIvAd);
             }
+            AppPrefs.putSharedString(activity, "novel_bottom_ad", ReaderConfig.BOTTOM_READ_AD.ad_image);
         } else {
             activity_read_buttom_ad_layout.setVisibility(View.GONE);
         }
         AdInfo adInfoTop = BaseSdkAD.newAdInfo(ReaderConfig.TOP_READ_AD);
-        if (ReaderConfig.TOP_READ_AD != null && System.currentTimeMillis() > mDisPlayAdTime) {
+        if (ReaderConfig.TOP_READ_AD != null && (isChangeAd || System.currentTimeMillis() > mDisPlayAdTime)) {
             activity_read_top_ad_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1373,9 +1376,23 @@ public class ReadActivity extends BaseReadActivity {
             } else {
                 MyPicasso.GlideImageNoSize(activity, ReaderConfig.TOP_READ_AD.ad_image, activity_read_top_ad_iv);
             }
+            AppPrefs.putSharedString(activity, "novel_top_ad", ReaderConfig.TOP_READ_AD.ad_image);
         } else {
             mRlTopLayout.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 广告是否发生改变
+     * @return
+     */
+    private boolean isOrNotchangeAd() {
+        String novel_top_ad = AppPrefs.getSharedString(activity, "novel_top_ad", "");
+        String novel_bottom_ad = AppPrefs.getSharedString(activity, "novel_bottom_ad", "");
+        if (!TextUtils.equals(novel_top_ad, ReaderConfig.TOP_READ_AD.ad_image) || !TextUtils.equals(novel_bottom_ad, ReaderConfig.BOTTOM_READ_AD.ad_image)) {
+            return true;
+        }
+        return false;
     }
 
     private void flushPage() {

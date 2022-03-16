@@ -22,6 +22,8 @@
             android:layout_width="@dimen/dimens_20dp"
             android:layout_height="@dimen/dimens_20dp"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:layout_marginRight="@dimen/dimens_5dp"
             android:src="@mipmap/float_close_button" />
     </RelativeLayout>
 
@@ -507,6 +509,8 @@
             android:layout_width="@dimen/dimens_20dp"
             android:layout_height="@dimen/dimens_20dp"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:layout_marginRight="@dimen/dimens_5dp"
             android:src="@mipmap/float_close_button" />
     </RelativeLayout>
 </LinearLayout>

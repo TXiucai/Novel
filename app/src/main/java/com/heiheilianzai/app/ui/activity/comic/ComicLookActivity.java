@@ -1252,13 +1252,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mSdkTopAd.setUser_parame_need("1");
                         mSdkTopAd.setAd_url_type(adInfo.getOperation().getType());
                         mSdkTopAd.setAd_type(1);
-                        mSdkTopAd.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        if (!TextUtils.isEmpty(adInfo.getMaterial().getSubtitle())) {
+                            mSdkTopAd.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        }
                         if (mSdkBottomAd != null) {
                             ReaderConfig.display_ad_days_comic = mSdkTopAd.display_ad_days > mSdkBottomAd.display_ad_days ? mSdkTopAd.display_ad_days : mSdkBottomAd.display_ad_days;
                         } else {
                             ReaderConfig.display_ad_days_comic = mSdkTopAd.getDisplay_ad_days();
                         }
-                        initTopAndButtomAd(mSdkTopAd, mRlTop, mImgTopAd);
+                        initTopAndButtomAd(mSdkTopAd, mRlTop, mImgTopAd, true);
                     } else {
                         localTopAd(activity);
                     }
@@ -1285,7 +1287,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
-                            initTopAndButtomAd(baseAd, mRlTop, mImgTopAd);
+                            initTopAndButtomAd(baseAd, mRlTop, mImgTopAd, true);
                         } catch (Exception e) {
                             mRlTop.setVisibility(View.GONE);
                         }
@@ -1299,21 +1301,41 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         );
     }
 
-    private void initTopAndButtomAd(BaseAd baseAd, View parentView, ImageView imageView) {
+    private void initTopAndButtomAd(BaseAd baseAd, View parentView, ImageView imageView, boolean isTop) {
         ReaderConfig.display_ad_days_comic = baseAd.getDisplay_ad_days();
         AdInfo adInfo = BaseSdkAD.newAdInfo(baseAd);
+        boolean isChange = isOrNotchangeAd();
         long display_ad_days_comic = AppPrefs.getSharedLong(activity, "display_ad_days_comic", 0);
-        if (baseAd != null && System.currentTimeMillis() > display_ad_days_comic) {
+        if (baseAd != null && (isChange || System.currentTimeMillis() > display_ad_days_comic)) {
             parentView.setVisibility(View.VISIBLE);
             if (adInfo != null) {
                 MyPicasso.glideSdkAd(activity, adInfo, baseAd.getAd_image(), imageView);
             } else {
                 MyPicasso.GlideImageNoSize(activity, baseAd.getAd_image(), imageView);
             }
+            if (isTop) {
+                AppPrefs.putSharedString(activity, "comic_top_ad", baseAd.ad_image);
+            } else {
+                AppPrefs.putSharedString(activity, "comic_bottom_ad", baseAd.ad_image);
+            }
             parentView.setOnClickListener((v) -> skipWeb(baseAd, activity));
         } else {
             parentView.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 广告是否发生改变
+     *
+     * @return
+     */
+    private boolean isOrNotchangeAd() {
+        String comic_top_ad = AppPrefs.getSharedString(activity, "comic_top_ad", "");
+        String comic_bottom_ad = AppPrefs.getSharedString(activity, "comic_bottom_ad", "");
+        if (!TextUtils.equals(comic_top_ad, ReaderConfig.TOP_READ_AD.ad_image) || !TextUtils.equals(comic_bottom_ad, ReaderConfig.BOTTOM_READ_AD.ad_image)) {
+            return true;
+        }
+        return false;
     }
 
     private void localChapterAd(Activity activity) {
@@ -1393,13 +1415,15 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mSdkBottomAd.setUser_parame_need("1");
                         mSdkBottomAd.setAd_url_type(adInfo.getOperation().getType());
                         mSdkBottomAd.setAd_type(1);
-                        mSdkBottomAd.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        if (!TextUtils.isEmpty(adInfo.getMaterial().getSubtitle())) {
+                            mSdkBottomAd.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        }
                         if (mSdkTopAd != null) {
                             ReaderConfig.display_ad_days_comic = mSdkTopAd.display_ad_days > mSdkBottomAd.display_ad_days ? mSdkTopAd.display_ad_days : mSdkBottomAd.display_ad_days;
                         } else {
                             ReaderConfig.display_ad_days_comic = mSdkBottomAd.getDisplay_ad_days();
                         }
-                        initTopAndButtomAd(mSdkBottomAd, mRlButtom, mImgBottomAd);
+                        initTopAndButtomAd(mSdkBottomAd, mRlButtom, mImgBottomAd, false);
                     } else {
                         mRlButtom.setVisibility(View.GONE);
                     }
@@ -1441,7 +1465,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = gson.fromJson(result, BaseAd.class);
-                            initTopAndButtomAd(baseAd, mRlButtom, mImgBottomAd);
+                            initTopAndButtomAd(baseAd, mRlButtom, mImgBottomAd, false);
                         } catch (Exception e) {
                             mRlButtom.setVisibility(View.GONE);
                         }

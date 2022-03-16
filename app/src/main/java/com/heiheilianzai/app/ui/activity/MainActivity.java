@@ -273,7 +273,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         ReaderConfig.TOP_READ_AD.setAdId(adInfo.getAdId());
                         ReaderConfig.TOP_READ_AD.setAdPosId(adInfo.getAdPosId());
                         ReaderConfig.TOP_READ_AD.setRequestId(adInfo.getRequestId());
-                        ReaderConfig.TOP_READ_AD.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        if (!TextUtils.isEmpty(adInfo.getMaterial().getSubtitle())) {
+                            ReaderConfig.TOP_READ_AD.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        }
                         if (ReaderConfig.BOTTOM_READ_AD != null) {
                             ReaderConfig.display_ad_days_novel = ReaderConfig.BOTTOM_READ_AD.display_ad_days > ReaderConfig.TOP_READ_AD.display_ad_days ? ReaderConfig.BOTTOM_READ_AD.display_ad_days : ReaderConfig.TOP_READ_AD.display_ad_days;
                         } else {
@@ -309,7 +311,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         ReaderConfig.BOTTOM_READ_AD.setAdId(adInfo.getAdId());
                         ReaderConfig.BOTTOM_READ_AD.setAdPosId(adInfo.getAdPosId());
                         ReaderConfig.BOTTOM_READ_AD.setRequestId(adInfo.getRequestId());
-                        ReaderConfig.BOTTOM_READ_AD.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        if (!TextUtils.isEmpty(adInfo.getMaterial().getSubtitle())) {
+                            ReaderConfig.BOTTOM_READ_AD.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
+                        }
                         if (ReaderConfig.TOP_READ_AD != null) {
                             ReaderConfig.display_ad_days_novel = ReaderConfig.BOTTOM_READ_AD.display_ad_days > ReaderConfig.TOP_READ_AD.display_ad_days ? ReaderConfig.BOTTOM_READ_AD.display_ad_days : ReaderConfig.TOP_READ_AD.display_ad_days;
                         } else {

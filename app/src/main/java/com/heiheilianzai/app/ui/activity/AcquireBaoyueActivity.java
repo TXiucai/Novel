@@ -526,9 +526,14 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                             if (mWaitDialog != null) {
                                 mWaitDialog.dismissDialog();
                             }
-                            DialogVipOrderError dialogVipOrderError = new DialogVipOrderError();
-                            dialogVipOrderError.getDialogVipPop(AcquireBaoyueActivity.this);
-                            dialogVipOrderError.setmOnRepeatListener(() -> pay(selectAcquirePayItem));
+                            DialogErrorVip dialogErrorVip = new DialogErrorVip();
+                            dialogErrorVip.getDialogVipPop(AcquireBaoyueActivity.this);
+                            dialogErrorVip.setVipWakeListener(new DialogErrorVip.VipErrorListener() {
+                                @Override
+                                public void vipErrorBack() {
+                                    pay(selectAcquirePayItem);
+                                }
+                            });
                         }
                     }
             );
