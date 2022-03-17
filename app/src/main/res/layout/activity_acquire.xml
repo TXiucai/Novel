@@ -111,7 +111,8 @@
                 android:paddingRight="@dimen/dimens_10dp"
                 android:text="联系客服"
                 android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:visibility="invisible"/>
         </LinearLayout>
 
         <com.heiheilianzai.app.view.ObservableScrollView
@@ -206,7 +207,8 @@
                             android:layout_marginTop="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dimens_30dp"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="invisible">
 
                             <View
                                 android:layout_width="@dimen/dimens_35dp"
