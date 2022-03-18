@@ -12,10 +12,15 @@ import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
 
+import org.json.JSONArray;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +34,6 @@ public class NotificationUtil {
      * 通过定时闹钟发送通知
      */
     public static void notifyByAlarm(Context context, List<LoaclPushBean> lists) {
-        //将数据存储起来
-        int count = 0;
         for (LoaclPushBean loaclPushBean : lists) {
             String start_time = loaclPushBean.getStart_time();
             if (TextUtils.isEmpty(start_time)) {
@@ -40,21 +43,24 @@ public class NotificationUtil {
                 continue;
             }
             long time = DateUtils.dateToTime(start_time);
-            if (time > 0) {
-                try {
+            try {
+                //时间过去的闹钟加一天设置进去
+                if (time > 0 && time > System.currentTimeMillis()) {
                     Map map = new HashMap<>();
                     map.put("KEY_NOTIFY_ID", String.valueOf(loaclPushBean.getId()));
                     map.put("KEY_NOTIFY", loaclPushBean.to(loaclPushBean));
-                    AlarmTimerUtil.setAlarmTimer(context, ++count, time, "TIMER_ACTION", map);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    AlarmTimerUtil.setAlarmTimer(context, loaclPushBean.getId(), time, map);
+                } else {
+                    Map map = new HashMap<>();
+                    time += 24 * 60 * 60 * 1000;
+                    map.put("KEY_NOTIFY_ID", String.valueOf(loaclPushBean.getId()));
+                    map.put("KEY_NOTIFY", loaclPushBean.to(loaclPushBean));
+                    AlarmTimerUtil.setAlarmTimer(context, loaclPushBean.getId(), time, map);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        SharedPreferences mPreferences = context.getSharedPreferences("SHARE_PREFERENCE_NOTIFICATION", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = mPreferences.edit();
-        edit.putInt("KEY_MAX_ALARM_ID", count);
-        edit.commit();
     }
 
     public static void notifyByAlarmByReceiver(Context context, LoaclPushBean obj) {
@@ -122,17 +128,22 @@ public class NotificationUtil {
      * @param context
      */
 
-    public static void clearAllNotifyMsg(Context context) {
+    public static void clearAllNotifyMsg(Context context, String result) {
         try {
-            NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotifyMgr.cancelAll();
-            SharedPreferences mPreferences = context.getSharedPreferences("SHARE_PREFERENCE_NOTIFICATION", Context.MODE_PRIVATE);
-            int max_id = mPreferences.getInt("KEY_MAX_ALARM_ID", 0);
-            for (int i = 1; i <= max_id; i++) {
-                AlarmTimerUtil.cancelAlarmTimer(context, "TIMER_ACTION", i);
+            if (!TextUtils.isEmpty(result)) {
+                NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyMgr.cancelAll();
+                List<LoaclPushBean> localLists = new ArrayList<>();
+                Gson gson = new Gson();
+                JSONArray jsonArray = new JSONArray(result);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    LoaclPushBean loaclPushBean = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), LoaclPushBean.class);
+                    localLists.add(loaclPushBean);
+                }
+                for (int i = 0; i < localLists.size(); i++) {
+                    AlarmTimerUtil.cancelAlarmTimer(context, localLists.get(i).getId());
+                }
             }
-            //清除数据
-            mPreferences.edit().remove("KEY_MAX_ALARM_ID").commit();
         } catch (Exception ignore) {
         }
     }

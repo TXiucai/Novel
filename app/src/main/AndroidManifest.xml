@@ -380,8 +380,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <service
-            android:name=".localPush.AlarmService"
+        <receiver
+            android:name=".localPush.AlarmNotifyReceive"
             android:enabled="true"
             android:exported="true" />
         <service

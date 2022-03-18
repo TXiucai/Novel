@@ -9,7 +9,8 @@
     <RelativeLayout
         android:id="@+id/activity_comic_top_ad_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/public_read_buttom_ad_hegth2">
+        android:layout_height="@dimen/public_read_buttom_ad_hegth2"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/img_top_ad"
@@ -496,7 +497,8 @@
     <RelativeLayout
         android:id="@+id/activity_comic_buttom_ad_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/public_read_buttom_ad_hegth2">
+        android:layout_height="@dimen/public_read_buttom_ad_hegth2"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/img_bottom_ad"

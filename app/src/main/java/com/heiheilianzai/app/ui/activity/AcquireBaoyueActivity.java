@@ -368,9 +368,15 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             JSONArray listArray = jsonObj.getJSONArray("list");
             for (int i = 0; i < listArray.length(); i++) {
                 AcquirePayItem item = gson.fromJson(listArray.getString(i), AcquirePayItem.class);
-                if (TextUtils.equals(item.getGoods_id(), String.valueOf(mGoodsId)) || TextUtils.equals(item.getDefault_select(), "1")) {
+                //默认选中和再次唤起优先再次唤起
+                if (TextUtils.equals(item.getGoods_id(), String.valueOf(mGoodsId))) {
                     selectAcquirePayItem = item;
                     mSelectPayItemPos = i;
+                } else {
+                    if (TextUtils.equals(item.getDefault_select(), "1") && selectAcquirePayItem == null) {
+                        selectAcquirePayItem = item;
+                        mSelectPayItemPos = i;
+                    }
                 }
                 payList.add(item);
             }

@@ -83,7 +83,7 @@ public class ReaderConfig {
     public static final int XIAOSHUO = 1;//只有小说
     public static final int MANHAU = 2;//只有漫画
     public static final int XIAOSHUOMAHUA = 3;//小说漫画
-    public static final int MANHAUXIAOSHUO = 4;//漫画小说
+    public static final int MANHAUXIAOSHUO = 4;//漫画小
 
     public static final int fragment_store_xiaoshuo_dp = 23;
     public static final int fragment_store_manhau_dp = 15;
@@ -120,6 +120,8 @@ public class ReaderConfig {
     public static final String IMG_CRYPTOGRAPHIC_POSTFIX = "?c";
     public static BaseAd BOTTOM_READ_AD;
     public static BaseAd TOP_READ_AD;
+    public static BaseAd BOTTOM_COMIC_AD;
+    public static BaseAd TOP_COMIC_AD;
 
     /**
      * 分享成功增加金币

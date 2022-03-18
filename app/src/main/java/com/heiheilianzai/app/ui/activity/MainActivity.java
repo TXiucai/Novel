@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.activity;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
@@ -89,6 +90,7 @@ import com.heiheilianzai.app.ui.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.ui.fragment.MineNewFragment;
 import com.heiheilianzai.app.ui.fragment.book.StroeNewFragmentBook;
 import com.heiheilianzai.app.ui.fragment.comic.StroeNewFragmentComic;
+import com.heiheilianzai.app.utils.ADHelper;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.DialogBecomeVip;
@@ -189,8 +191,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private boolean mIsShowTwoNotice = true;
     private boolean mIsFirstTextNotice;
     private Dialog popupWindow;
-    private boolean mIsSdkAd = false;
-    private boolean mIsSdkTopAd = false;
+
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -223,165 +224,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         initView();
         initData();
         setOpenTimeEvent();
-        getWebTopAD(activity);
-        getWebViewAD(activity);
         getLocalPushData();
     }
 
-    public void getWebViewAD(Activity activity) {
-        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-            if (TextUtils.equals(listBean.getPosition(), "12") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
-                mIsSdkAd = true;
-                sdkAd(activity);
-                return;
-            }
-        }
-        if (!mIsSdkAd) {
-            localAd(activity);
-        }
-    }
-
-    public void getWebTopAD(Activity activity) {
-        for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
-            AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
-            if (TextUtils.equals(listBean.getPosition(), "17") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
-                mIsSdkTopAd = true;
-                sdkTopAd(activity);
-                return;
-            }
-        }
-        if (!mIsSdkTopAd) {
-            localTopAd(activity);
-        }
-    }
-
-    private void sdkTopAd(Activity activity) {
-        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_TOP_DEBUG : BuildConfig.XAD_EVN_POS_NOVEL_TOP, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
-            @Override
-            public void onRequestOk(List<AdInfo> list) {
-                try {
-                    AdInfo adInfo = list.get(0);
-                    ReaderConfig.TOP_READ_AD = new BaseAd();
-                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
-                        ReaderConfig.TOP_READ_AD.setAd_skip_url(adInfo.getOperation().getValue());
-                        ReaderConfig.TOP_READ_AD.setAd_title(adInfo.getMaterial().getTitle());
-                        ReaderConfig.TOP_READ_AD.setAd_image(adInfo.getMaterial().getImageUrl());
-                        ReaderConfig.TOP_READ_AD.setUser_parame_need("1");
-                        ReaderConfig.TOP_READ_AD.setAd_url_type(adInfo.getOperation().getType());
-                        ReaderConfig.TOP_READ_AD.setAd_type(1);
-                        ReaderConfig.TOP_READ_AD.setAdId(adInfo.getAdId());
-                        ReaderConfig.TOP_READ_AD.setAdPosId(adInfo.getAdPosId());
-                        ReaderConfig.TOP_READ_AD.setRequestId(adInfo.getRequestId());
-                        if (!TextUtils.isEmpty(adInfo.getMaterial().getSubtitle())) {
-                            ReaderConfig.TOP_READ_AD.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
-                        }
-                        if (ReaderConfig.BOTTOM_READ_AD != null) {
-                            ReaderConfig.display_ad_days_novel = ReaderConfig.BOTTOM_READ_AD.display_ad_days > ReaderConfig.TOP_READ_AD.display_ad_days ? ReaderConfig.BOTTOM_READ_AD.display_ad_days : ReaderConfig.TOP_READ_AD.display_ad_days;
-                        } else {
-                            ReaderConfig.display_ad_days_novel = ReaderConfig.TOP_READ_AD.display_ad_days;
-                        }
-                    }
-                } catch (Exception e) {
-                    localTopAd(activity);
-                }
-            }
-
-            @Override
-            public void onRequestFailed(int i, String s) {
-                localTopAd(activity);
-            }
-        });
-    }
-
-    private void sdkAd(Activity activity) {
-        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG : BuildConfig.XAD_EVN_POS_NOVEL_BOTTOM, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
-            @Override
-            public void onRequestOk(List<AdInfo> list) {
-                try {
-                    AdInfo adInfo = list.get(0);
-                    ReaderConfig.BOTTOM_READ_AD = new BaseAd();
-                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
-                        ReaderConfig.BOTTOM_READ_AD.setAd_skip_url(adInfo.getOperation().getValue());
-                        ReaderConfig.BOTTOM_READ_AD.setAd_title(adInfo.getMaterial().getTitle());
-                        ReaderConfig.BOTTOM_READ_AD.setAd_image(adInfo.getMaterial().getImageUrl());
-                        ReaderConfig.BOTTOM_READ_AD.setUser_parame_need("1");
-                        ReaderConfig.BOTTOM_READ_AD.setAd_url_type(adInfo.getOperation().getType());
-                        ReaderConfig.BOTTOM_READ_AD.setAd_type(1);
-                        ReaderConfig.BOTTOM_READ_AD.setAdId(adInfo.getAdId());
-                        ReaderConfig.BOTTOM_READ_AD.setAdPosId(adInfo.getAdPosId());
-                        ReaderConfig.BOTTOM_READ_AD.setRequestId(adInfo.getRequestId());
-                        if (!TextUtils.isEmpty(adInfo.getMaterial().getSubtitle())) {
-                            ReaderConfig.BOTTOM_READ_AD.setDisplay_ad_days(Integer.valueOf(adInfo.getMaterial().getSubtitle()));
-                        }
-                        if (ReaderConfig.TOP_READ_AD != null) {
-                            ReaderConfig.display_ad_days_novel = ReaderConfig.BOTTOM_READ_AD.display_ad_days > ReaderConfig.TOP_READ_AD.display_ad_days ? ReaderConfig.BOTTOM_READ_AD.display_ad_days : ReaderConfig.TOP_READ_AD.display_ad_days;
-                        } else {
-                            ReaderConfig.display_ad_days_novel = ReaderConfig.BOTTOM_READ_AD.display_ad_days;
-                        }
-                    }
-                } catch (Exception e) {
-                    localAd(activity);
-                }
-            }
-
-            @Override
-            public void onRequestFailed(int i, String s) {
-                localAd(activity);
-            }
-        });
-    }
-
-    private void localAd(Activity activity) {
-        ReaderParams params = new ReaderParams(activity);
-        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
-        params.putExtraParams("type", XIAOSHUO + "");
-        params.putExtraParams("position", "12");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        try {
-                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                            ReaderConfig.BOTTOM_READ_AD = baseAd;
-                            ReaderConfig.display_ad_days_novel = baseAd.getDisplay_ad_days();
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-
-                    }
-                }
-        );
-    }
-
-    private void localTopAd(Activity activity) {
-        ReaderParams params = new ReaderParams(activity);
-        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
-        params.putExtraParams("type", XIAOSHUO + "");
-        params.putExtraParams("position", "17");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        try {
-                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                            ReaderConfig.TOP_READ_AD = baseAd;
-                            ReaderConfig.display_ad_days_novel = baseAd.getDisplay_ad_days();
-                        } catch (Exception e) {
-
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-
-                    }
-                }
-        );
+    private void getAd() {
+        ADHelper adHelper = new ADHelper();
+        adHelper.getComicBottomAD(activity);
+        adHelper.getWebTopAD(activity);
+        adHelper.getWebViewAD(activity);
+        adHelper.getComicTopAD(activity);
     }
 
     private void initView() {
@@ -590,6 +441,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private void initData() {
         syncDevice(activity);
         getSdkAndLocalNotice(activity);
+        getAd();
     }
 
     private void getSdkAndLocalNotice(Activity activity) {
@@ -873,6 +725,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                                 LoaclPushBean loaclPushBean = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), LoaclPushBean.class);
                                 loaclPushBeans.add(loaclPushBean);
                             }
+                            String local_alarm = AppPrefs.getSharedString(activity, "local_alarm", "");
+                            NotificationUtil.clearAllNotifyMsg(activity, local_alarm);
+                            AppPrefs.putSharedString(activity, "local_alarm", result);
                             NotificationUtil.notifyByAlarm(activity, loaclPushBeans);
                         } catch (Exception e) {
                         }
@@ -1113,7 +968,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
                 String title = ShareUitls.getString(App.getContext(), "tab_main_menu_" + i, titles[i]);
                 bytes[i].setText(title);
-
             }
         }
     }
@@ -1130,7 +984,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         if (!file.exists()) {
             return null;
         }
-
         try {
             fis = new FileInputStream(picPath);
         } catch (FileNotFoundException e) {
@@ -1193,7 +1046,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 fl_welfare.setVisibility(View.GONE);
             }
         }
-
     }
 
     /**
@@ -1278,7 +1130,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      * @param url
      */
     private void saveImg2SD(int i, String type, String url) {
-
         String fileName = "rb_btn_" + type + "_" + i + ".png";
         downloadMenus(url, fileName);
     }
@@ -1286,7 +1137,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private void downloadMenus(String url, String fileName) {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
         File dest = new File(dirPath, fileName);
-
         Request request = new Request.Builder().url(url).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
@@ -1303,7 +1153,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     if (!imgFile.exists()) {
                         imgFile.mkdir();
                     }
-
                     sink = Okio.sink(dest);
                     bufferedSink = Okio.buffer(sink);
                     bufferedSink.writeAll(response.body().source());
@@ -1317,9 +1166,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                     }
                     decryptFile(fileName);
                 }
-
             }
-
         });
     }
 
@@ -1334,12 +1181,10 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
         String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
         File dest = new File(dirPath, fileName);
-
         File outp = new File(outPath);
         if (!outp.exists()) {
             outp.mkdir();
         }
-
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(dest);
@@ -1350,11 +1195,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
         }
         iconCount++;
-
         if (iconCount == 10) {
             MainActivity.this.runOnUiThread(this::setRBSelectedState);
         }
-
     }
-
 }

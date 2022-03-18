@@ -18,18 +18,16 @@ public class AlarmTimerUtil {
      *
      * @param context
      * @param alarmId
-     * @param action
      * @param map     要传递的参数
      */
-    public static void setAlarmTimer(Context context, int alarmId, long time, String action, Map<String, String> map) {
-        Intent myIntent = new Intent(context, AlarmService.class);
-        myIntent.setAction(action);
+    public static void setAlarmTimer(Context context, int alarmId, long time, Map<String, String> map) {
+        Intent myIntent = new Intent(context, AlarmNotifyReceive.class);
         if (map != null) {
             for (String key : map.keySet()) {
                 myIntent.putExtra(key, map.get(key));
             }
         }
-        PendingIntent sender = PendingIntent.getService(context, alarmId, myIntent, 0);
+        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, myIntent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //MARSHMALLOW OR ABOVE
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, sender);
@@ -47,12 +45,10 @@ public class AlarmTimerUtil {
      * 取消闹钟
      *
      * @param context
-     * @param action
      */
-    public static void cancelAlarmTimer(Context context, String action, int alarmId) {
-        Intent myIntent = new Intent(context, AlarmService.class);
-        myIntent.setAction(action);
-        PendingIntent sender = PendingIntent.getService(context, alarmId, myIntent, 0);
+    public static void cancelAlarmTimer(Context context, int alarmId) {
+        Intent myIntent = new Intent(context, AlarmNotifyReceive.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, myIntent, 0);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(sender);
     }

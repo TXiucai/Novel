@@ -313,7 +313,7 @@ public class ReadActivity extends BaseReadActivity {
         }
     };
     private Intent mIntent;
-    private long mDisPlayAdTime;
+    private long mDisPlayAdTime = 0;
     private ObjectAnimator mAnimatorOut;
 
     @Override
@@ -1290,8 +1290,12 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void initAd(Activity activity) {
-        mDisPlayAdTime = AppPrefs.getSharedLong(activity, "display_ad_days_novel", 0);
         boolean isChangeAd = isOrNotchangeAd();
+        if (!isChangeAd) {
+            mDisPlayAdTime = AppPrefs.getSharedLong(activity, "display_ad_days_novel", 0);
+        } else {
+            AppPrefs.putSharedLong(activity, "display_ad_days_novel", 0);
+        }
         AdInfo adInfo = BaseSdkAD.newAdInfo(ReaderConfig.BOTTOM_READ_AD);
         //广告发生改变即使还未到时间也要显示
         if (ReaderConfig.BOTTOM_READ_AD != null && (isChangeAd || System.currentTimeMillis() > mDisPlayAdTime)) {
@@ -1384,15 +1388,13 @@ public class ReadActivity extends BaseReadActivity {
 
     /**
      * 广告是否发生改变
+     *
      * @return
      */
     private boolean isOrNotchangeAd() {
         String novel_top_ad = AppPrefs.getSharedString(activity, "novel_top_ad", "");
         String novel_bottom_ad = AppPrefs.getSharedString(activity, "novel_bottom_ad", "");
-        if (!TextUtils.equals(novel_top_ad, ReaderConfig.TOP_READ_AD.ad_image) || !TextUtils.equals(novel_bottom_ad, ReaderConfig.BOTTOM_READ_AD.ad_image)) {
-            return true;
-        }
-        return false;
+        return ReaderConfig.TOP_READ_AD != null && !TextUtils.equals(novel_top_ad, ReaderConfig.TOP_READ_AD.ad_image) || ReaderConfig.BOTTOM_READ_AD != null && !TextUtils.equals(novel_bottom_ad, ReaderConfig.BOTTOM_READ_AD.ad_image);
     }
 
     private void flushPage() {
