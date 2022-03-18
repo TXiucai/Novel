@@ -35,27 +35,34 @@ public class NotificationUtil {
      */
     public static void notifyByAlarm(Context context, List<LoaclPushBean> lists) {
         for (LoaclPushBean loaclPushBean : lists) {
-            String start_time = loaclPushBean.getStart_time();
-            if (TextUtils.isEmpty(start_time)) {
-                continue;
-            }
             if (loaclPushBean == null) {
                 continue;
             }
-            long time = DateUtils.dateToTime(start_time);
+            String push_way = loaclPushBean.getPush_way();
+            String start_time;
+            if (TextUtils.equals(push_way, "1")) {
+                start_time = loaclPushBean.getRelease_time_start_redundant_week();
+            } else {
+                start_time = loaclPushBean.getRelease_time_start_push_way();
+            }
+            if (TextUtils.isEmpty(start_time)) {
+                continue;
+            }
+            String alarm_time = DateUtils.getTodayTime() + " " + start_time;
+            long time = DateUtils.dateToTime(alarm_time);
             try {
                 //时间过去的闹钟加一天设置进去
                 if (time > 0 && time > System.currentTimeMillis()) {
                     Map map = new HashMap<>();
-                    map.put("KEY_NOTIFY_ID", String.valueOf(loaclPushBean.getId()));
-                    map.put("KEY_NOTIFY", loaclPushBean.to(loaclPushBean));
-                    AlarmTimerUtil.setAlarmTimer(context, loaclPushBean.getId(), time, map);
+                    map.put("KEY_NOTIFY_ID", loaclPushBean.getId());
+                    map.put("KEY_NOTIFY", LoaclPushBean.to(loaclPushBean));
+                    AlarmTimerUtil.setAlarmTimer(context, Integer.parseInt(loaclPushBean.getId()), time, map);
                 } else {
                     Map map = new HashMap<>();
                     time += 24 * 60 * 60 * 1000;
-                    map.put("KEY_NOTIFY_ID", String.valueOf(loaclPushBean.getId()));
-                    map.put("KEY_NOTIFY", loaclPushBean.to(loaclPushBean));
-                    AlarmTimerUtil.setAlarmTimer(context, loaclPushBean.getId(), time, map);
+                    map.put("KEY_NOTIFY_ID", loaclPushBean.getId());
+                    map.put("KEY_NOTIFY", LoaclPushBean.to(loaclPushBean));
+                    AlarmTimerUtil.setAlarmTimer(context, Integer.parseInt(loaclPushBean.getId()), time, map);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -66,7 +73,7 @@ public class NotificationUtil {
     public static void notifyByAlarmByReceiver(Context context, LoaclPushBean obj) {
         if (context == null || obj == null) return;
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notifyMsg(context, obj, obj.getId(), System.currentTimeMillis(), manager);
+        notifyMsg(context, obj, Integer.parseInt(obj.getId()), System.currentTimeMillis(), manager);
     }
 
     /**
@@ -141,7 +148,7 @@ public class NotificationUtil {
                     localLists.add(loaclPushBean);
                 }
                 for (int i = 0; i < localLists.size(); i++) {
-                    AlarmTimerUtil.cancelAlarmTimer(context, localLists.get(i).getId());
+                    AlarmTimerUtil.cancelAlarmTimer(context, Integer.parseInt(localLists.get(i).getId()));
                 }
             }
         } catch (Exception ignore) {

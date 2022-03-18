@@ -88,7 +88,7 @@ public class DateUtils {
     }
 
     public static long dateToTime(String date) {
-        return (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(date, new ParsePosition(0)).getTime();
+        return (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(date, new ParsePosition(0)).getTime();
     }
 
     /**

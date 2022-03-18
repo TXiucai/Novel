@@ -22,6 +22,7 @@ public class AlarmTimerUtil {
      */
     public static void setAlarmTimer(Context context, int alarmId, long time, Map<String, String> map) {
         Intent myIntent = new Intent(context, AlarmNotifyReceive.class);
+        myIntent.setAction("alarm_local_notify");
         if (map != null) {
             for (String key : map.keySet()) {
                 myIntent.putExtra(key, map.get(key));
