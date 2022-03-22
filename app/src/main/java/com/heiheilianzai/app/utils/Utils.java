@@ -3,18 +3,22 @@ package com.heiheilianzai.app.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -24,6 +28,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationManagerCompat;
+
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.book.BaseBook;
@@ -765,4 +772,46 @@ public class Utils {
         }
         return false;
     }
+
+    public static boolean canShowNotification(Context context) {
+        return NotificationManagerCompat.from(context).areNotificationsEnabled();
+    }
+    /**
+     * 跳转到打开通知栏界面
+     */
+    private static void goToSettingNotification(Context context) {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= 26) {// android 8.0引导
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("android.provider.extra.APP_PACKAGE", context.getPackageName());
+        } else if (Build.VERSION.SDK_INT >= 21) { // android 5.0-7.0
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", context.getPackageName());
+            intent.putExtra("app_uid", context.getApplicationInfo().uid);
+        } else {//其它
+            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            intent.setData(Uri.fromParts("package", context.getPackageName(), null));
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+    /**
+     * 通知栏权限如果没有开启，测试要求先给一个弹窗
+     */
+    public static void showNotificationPermissionTip(Context context) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setMessage(context.getResources().getString(R.string.string_notification_permission))
+                .setCancelable(true)
+                .setPositiveButton(context.getResources().getString(R.string.public_sure), (dialogInterface, i) -> {
+                    // 调整设置页
+                    dialogInterface.dismiss();
+                    goToSettingNotification(context);
+                })
+                .setNegativeButton(context.getResources().getString(R.string.splashactivity_cancle), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                });
+        dialog.show();
+
+    }
+
 }

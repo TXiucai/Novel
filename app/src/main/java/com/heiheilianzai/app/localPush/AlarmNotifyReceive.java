@@ -20,6 +20,7 @@ public class AlarmNotifyReceive extends BroadcastReceiver {
             try {
                 LoaclPushBean obj = LoaclPushBean.from(str);
                 List<LoaclPushBean> loaclPushBeans = new ArrayList<>();
+                loaclPushBeans.add(obj);
                 NotificationUtil.notifyByAlarmByReceiver(context, obj);
                 //闹钟响起设置明天闹钟
                 NotificationUtil.notifyByAlarm(context, loaclPushBeans);

@@ -413,6 +413,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     } else {
                         MyToash.ToashError(AcquireBaoyueActivity.this, getString(R.string.string_vip_vip_date_off));
                     }
+                    mGoodsId = 0;
                 }
                 vipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
             }

@@ -7,14 +7,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
 
 import org.json.JSONArray;
@@ -138,8 +136,6 @@ public class NotificationUtil {
     public static void clearAllNotifyMsg(Context context, String result) {
         try {
             if (!TextUtils.isEmpty(result)) {
-                NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotifyMgr.cancelAll();
                 List<LoaclPushBean> localLists = new ArrayList<>();
                 Gson gson = new Gson();
                 JSONArray jsonArray = new JSONArray(result);

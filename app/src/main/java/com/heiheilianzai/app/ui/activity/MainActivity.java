@@ -1,7 +1,5 @@
 package com.heiheilianzai.app.ui.activity;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
@@ -63,7 +61,6 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.localPush.LoaclPushBean;
 import com.heiheilianzai.app.localPush.NotificationUtil;
 import com.heiheilianzai.app.model.AppUpdate;
-import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BottomIconMenu;
 import com.heiheilianzai.app.model.HomeNotice;
 import com.heiheilianzai.app.model.PrivilegeWelfare;
@@ -841,6 +838,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         }
         if (!permissionLists.isEmpty()) {//说明肯定有拒绝的权限
             ActivityCompat.requestPermissions(activity, permissionLists.toArray(new String[permissionLists.size()]), 1);
+        }
+        if (!Utils.canShowNotification(activity)) {
+            Utils.showNotificationPermissionTip(activity);
         }
     }
 
