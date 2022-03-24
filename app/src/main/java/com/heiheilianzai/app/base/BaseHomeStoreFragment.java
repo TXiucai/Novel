@@ -584,11 +584,17 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     }
                     for (int i = 0; i < recomme_list.size(); i++) {
                         HomeRecommendBean.RecommeListBean sdkRecomenBean = recomme_list.get(i);
-                        Integer position = Integer.valueOf(sdkRecomenBean.getWeight());
-                        if (localList.size() >= position) {
-                            localList.add(position - 1, sdkRecomenBean);
-                        } else {
-                            localList.add(sdkRecomenBean);
+                        if (!TextUtils.isEmpty(sdkRecomenBean.getWeight())) {
+                            Integer position = Integer.valueOf(sdkRecomenBean.getWeight());
+                            if (localList.size() >= position) {
+                                if (position == 0) {
+                                    localList.add(0, sdkRecomenBean);
+                                } else {
+                                    localList.add(position - 1, sdkRecomenBean);
+                                }
+                            } else {
+                                localList.add(sdkRecomenBean);
+                            }
                         }
                     }
                     initRecommend(recyclerView, localList);
