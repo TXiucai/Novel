@@ -110,13 +110,13 @@ gradle.ext {
     XAD_EVN_POS_APP_RECOMMEND = "\"602575\""//首页推荐APP
     XAD_EVN_POS_COMIC_CHAPTER = "\"602702\""//漫画章节间广告
     XAD_EVN_POS_NOVEL_END = "\"602573\""//小说阅读末尾广告
-    XAD_EVN_POS_COMIC_END = "\"602585\""//漫画阅读末尾广告
+    XAD_EVN_POS_COMIC_END = "\"602703\""//漫画阅读末尾广告
     XAD_EVN_POS_COMIC_DETAIL = "\"602563\""//漫画详情广告
     XAD_EVN_POS_NOVEL_DETAIL = "\"602561\""//小说详情广告
     XAD_EVN_POS_BANNER_COMIC = "\"602551\""//漫画轮播图广告
     XAD_EVN_POS_BANNER_NOVEL = "\"602549\""//小说轮播图广告
     XAD_EVN_POS_NOVEL_TOP = "\"602705\""//小说顶部广告
-    XAD_EVN_POS_COMIC_CHAPTER_INTERVAL = "\"602699\""//漫画章节间广告
+    XAD_EVN_POS_COMIC_CHAPTER_INTERVAL = "\"602703\""//漫画章节间广告
 
     // 测试环境的广告位id
     XAD_EVN_POS_SPLASH_DEBUG = "\"313\""//闪屏页广告id

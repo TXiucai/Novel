@@ -571,13 +571,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         recommeListBean.setAdPosId(adInfo.getAdPosId());
                         recommeListBean.setAdId(adInfo.getAdId());
                         recommeListBean.setImg_icon(adInfo.getMaterial().getImageUrl());
-                        recommeListBean.setJump_url(adInfo.getAdExtra().get("jump_url"));
+                        recommeListBean.setJump_url(adInfo.getOperation().getValue());
                         recommeListBean.setJump_type("0");
                         recommeListBean.setRecommend_type("0");
-                        recommeListBean.setRedirect_type(adInfo.getAdExtra().get("redirect_type"));
+                        recommeListBean.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
                         recommeListBean.setUser_parame_need("1");
                         recommeListBean.setTitle(adInfo.getMaterial().getTitle());
-                        recommeListBean.setWeight(adInfo.getAdExtra().get("weight"));
+                        recommeListBean.setWeight(adInfo.getMaterial().getSubtitle());
                         if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                             recomme_list.add(recommeListBean);
                         }
