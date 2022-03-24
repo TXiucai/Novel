@@ -24,6 +24,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
 import com.heiheilianzai.app.adapter.CommentVipAdapter;
 import com.heiheilianzai.app.adapter.VipBaoyuePayAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
 import com.heiheilianzai.app.component.http.OkHttpEngine;
@@ -235,6 +236,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         setVIPConfirmEvent();
         Intent intent = getIntent();
         mAvatar = intent.getStringExtra("avatar");
+        if (TextUtils.isEmpty(mAvatar)) {
+            mAvatar = App.getUserInfoItem(this).getAvatar();
+        }
         mOriginCode = intent.getIntExtra(ORIGIN_CODE, 13);
         ReaderParams params = new ReaderParams(this);
         String json = params.generateParamsJson();
@@ -347,6 +351,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                         mKeFuOnline += "?uid=" + userObj.getString("uid");
                     }
                     MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar);
+                    MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar2);
                 } else {
                     activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
                     activity_acquire_avatar2.setBackgroundResource(R.mipmap.hold_user_avatar);
