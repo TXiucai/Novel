@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableString;
@@ -421,12 +422,14 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 mHolder = new ChannelHomeHolder(customView);
                 mHolder.mTxChannel.setText(mTittlesList.get(i));
                 if (i == 0) {
-                    mHolder.mTxChannel.setTextSize(20);
+                    mHolder.mTxChannel.setTextSize(21);
                     mHolder.mTxChannel.setSelected(true);
+                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
                     mHolder.mImgBackground.setVisibility(View.VISIBLE);
                 } else {
                     mHolder.mTxChannel.setSelected(false);
-                    mHolder.mTxChannel.setTextSize(14);
+                    mHolder.mTxChannel.setTextSize(15);
+                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
                     mHolder.mImgBackground.setVisibility(View.GONE);
                 }
             }
@@ -437,7 +440,8 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                     mVpChannel.setCurrentItem(tab.getPosition());
                     mHolder = new ChannelHomeHolder(tab.getCustomView());
                     mHolder.mTxChannel.setSelected(true);
-                    mHolder.mTxChannel.setTextSize(20);
+                    mHolder.mTxChannel.setTextSize(21);
+                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
                     mHolder.mImgBackground.setVisibility(View.VISIBLE);
                 }
 
@@ -445,7 +449,8 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 public void onTabUnselected(TabLayout.Tab tab) {
                     mHolder = new ChannelHomeHolder(tab.getCustomView());
                     mHolder.mTxChannel.setSelected(false);
-                    mHolder.mTxChannel.setTextSize(14);
+                    mHolder.mTxChannel.setTextSize(15);
+                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
                     mHolder.mImgBackground.setVisibility(View.GONE);
                 }
 

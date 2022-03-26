@@ -43,6 +43,7 @@ import com.heiheilianzai.app.model.MarqueeVipBean;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.model.OptionItem;
 import com.heiheilianzai.app.model.PaymentWebBean;
+import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.WxPayBean;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -237,7 +238,11 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         Intent intent = getIntent();
         mAvatar = intent.getStringExtra("avatar");
         if (TextUtils.isEmpty(mAvatar)) {
-            mAvatar = App.getUserInfoItem(this).getAvatar();
+            UserInfoItem userInfoItem = App.getUserInfoItem(this);
+            if (userInfoItem == null) {
+            } else {
+                mAvatar = userInfoItem.getAvatar();
+            }
         }
         mOriginCode = intent.getIntExtra(ORIGIN_CODE, 13);
         ReaderParams params = new ReaderParams(this);

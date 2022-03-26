@@ -96,7 +96,13 @@
                 android:layout_height="@dimen/dimens_25dp"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dimens_44dp"
+                app:tabBackground="@null"
+                app:tabGravity="center"
+                app:tabMaxWidth="@dimen/dimens_200dp"
+                app:tabMinWidth="@dimen/dimens_20dp"
                 app:tabMode="scrollable"
+                app:tabPaddingEnd="@dimen/dimens_8dp"
+                app:tabPaddingStart="@dimen/dimens_8dp"
                 app:tabTextColor="@color/color_1a1a1a" />
 
             <ImageView
@@ -115,6 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dimens_30dp" />
+
         <ImageView
             android:id="@+id/main_float_img"
             android:layout_width="@dimen/dimens_50dp"

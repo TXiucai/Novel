@@ -5,8 +5,7 @@
 
     <View
         android:id="@+id/img_background"
-        android:layout_width="@dimen/dimens_30dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="@dimen/dimens_25dp"
         android:layout_height="@dimen/dimens_8dp"
         android:layout_marginTop="@dimen/dimens_15dp"
         android:background="@mipmap/channel_selected" />
@@ -16,8 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimens_25dp"
         android:gravity="bottom"
-        android:paddingLeft="@dimen/dimens_20dp"
-        android:paddingRight="@dimen/dimens_20dp"
         android:textColor="@color/color_1a1a1a"
         android:textSize="14sp" />
 </RelativeLayout>
