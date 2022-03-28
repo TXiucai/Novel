@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
@@ -19,13 +18,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
@@ -49,7 +46,6 @@ import androidx.fragment.app.FragmentManager;
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
-import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -1087,7 +1083,7 @@ public class ReadActivity extends BaseReadActivity {
         readSpeakManager.load();
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             //测试要求要给一个弹窗提示
-           Utils.showNotificationPermissionTip(activity);
+            Utils.showNotificationPermissionTip(activity);
         } else {
             startReadNovelService();
         }
@@ -1323,15 +1319,17 @@ public class ReadActivity extends BaseReadActivity {
                     if (adInfo != null) {
                         XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
                     }
-                    if (App.isVip(activity)) {
-                        mRlTopLayout.setVisibility(View.GONE);
-                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                        AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
-                        flushPage();
-                    } else {
-                        Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
-                        myIntent.putExtra("isvip", Utils.isLogin(activity));
-                        activity.startActivity(myIntent);
+                    if (Utils.isLogin(activity)) {
+                        if (App.isVip(activity)) {//会员
+                            mRlTopLayout.setVisibility(View.GONE);
+                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                            AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                            flushPage();
+                        } else {//普通用户
+                            new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false, false);
+                        }
+                    } else {//未登录
+                        MainHttpTask.getInstance().Gotologin(activity);
                     }
                 }
             });
@@ -1362,15 +1360,17 @@ public class ReadActivity extends BaseReadActivity {
                     if (adInfoTop != null) {
                         XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
                     }
-                    if (App.isVip(activity)) {
-                        mRlTopLayout.setVisibility(View.GONE);
-                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                        AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
-                        flushPage();
-                    } else {
-                        Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
-                        myIntent.putExtra("isvip", Utils.isLogin(activity));
-                        activity.startActivity(myIntent);
+                    if (Utils.isLogin(activity)) {
+                        if (App.isVip(activity)) {//会员
+                            mRlTopLayout.setVisibility(View.GONE);
+                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                            AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                            flushPage();
+                        } else {//普通用户
+                            new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false, false);
+                        }
+                    } else {//未登录
+                        MainHttpTask.getInstance().Gotologin(activity);
                     }
                 }
             });
@@ -1590,11 +1590,10 @@ public class ReadActivity extends BaseReadActivity {
                 // 上报下载次数i
                 postDownloadVerificationCount();
             } else {
-                new DialogVip().getDialogVipPop(activity, false);
+                new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip), false);
             }
         }
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

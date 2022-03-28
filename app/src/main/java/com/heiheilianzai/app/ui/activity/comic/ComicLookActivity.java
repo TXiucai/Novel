@@ -314,14 +314,16 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         switch (view.getId()) {
             case R.id.activity_comic_buttom_ad_close:
             case R.id.activity_comic_top_ad_close:
-                if (App.isVip(activity)) {
-                    mRlButtom.setVisibility(View.GONE);
-                    mRlTop.setVisibility(View.GONE);
-                    AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
-                } else {
-                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
-                    myIntent.putExtra("isvip", Utils.isLogin(activity));
-                    activity.startActivity(myIntent);
+                if (Utils.isLogin(activity)) {
+                    if (App.isVip(activity)) {//会员
+                        mRlButtom.setVisibility(View.GONE);
+                        mRlTop.setVisibility(View.GONE);
+                        AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
+                    } else {//普通用户
+                        new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false);
+                    }
+                } else {//未登录
+                    MainHttpTask.getInstance().Gotologin(activity);
                 }
                 break;
             case R.id.titlebar_back:
@@ -1204,7 +1206,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void initTopAndButtomAd(BaseAd baseAd, View parentView, ImageView imageView, boolean isTop) {
-        if (baseAd!=null){
+        if (baseAd != null) {
             ReaderConfig.display_ad_days_comic = baseAd.getDisplay_ad_days();
             AdInfo adInfo = BaseSdkAD.newAdInfo(baseAd);
             long display_ad_days_comic = 0;
@@ -1230,7 +1232,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             } else {
                 parentView.setVisibility(View.GONE);
             }
-        }else {
+        } else {
             parentView.setVisibility(View.GONE);
         }
     }
@@ -1556,7 +1558,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         String is_vip = chapterItem.getIs_vip();
         if (is_vip != null && is_vip.equals("1") && !App.isVip(activity)) {
             DialogVip dialogVip = new DialogVip();
-            dialogVip.getDialogVipPop(activity, true);
+            dialogVip.getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip), true);
             return;
         } else {
             updateRecord();

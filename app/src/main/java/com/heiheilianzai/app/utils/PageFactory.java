@@ -1818,7 +1818,7 @@ public class PageFactory {
         String is_vip = chapterItem.getIs_vip();
         if (is_vip != null && is_vip.equals("1") && !App.isVip(mActivity)) {
             DialogVip dialogVip = new DialogVip();
-            dialogVip.getDialogVipPop(mActivity, true);
+            dialogVip.getDialogVipPop(mActivity, mActivity.getResources().getString(R.string.dialog_tittle_vip), true);
             return;
         } else {
             updateRecord();

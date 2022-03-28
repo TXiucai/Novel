@@ -78,7 +78,7 @@ public class CatalogActivity extends BaseActivity implements ShowTitle {
                 String is_vip = mItemList.get(position).getIs_vip();
                 if (is_vip != null && is_vip.equals("1") && !App.isVip(CatalogActivity.this)) {
                     DialogVip dialogVip = new DialogVip();
-                    dialogVip.getDialogVipPop(CatalogActivity.this, false);
+                    dialogVip.getDialogVipPop(CatalogActivity.this, getResources().getString(R.string.dialog_tittle_vip),false);
                     return;
                 }
                 ChapterManager.getInstance(CatalogActivity.this).openBook(baseBook, mBookId, chapter_id, mJson);
