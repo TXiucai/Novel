@@ -10,6 +10,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.http.ResultCallback;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.ShareUitls;
 
@@ -122,6 +123,7 @@ public class ReaderConfig {
     public static BaseAd TOP_READ_AD;
     public static BaseAd BOTTOM_COMIC_AD;
     public static BaseAd TOP_COMIC_AD;
+    public static ComicChapter CHAPTER_COMIC_AD;
 
     /**
      * 分享成功增加金币

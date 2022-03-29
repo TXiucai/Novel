@@ -13,6 +13,7 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
 import com.mobi.xad.bean.AdType;
@@ -25,6 +26,26 @@ public class ADHelper {
     private boolean mIsSdkTopAd = false;
     private boolean mIsSdkTopComicAd = false;
     private boolean mIsSdkComicBottomAd = false;
+    private boolean mIsSdkComicChapterAd = false;
+
+    /**
+     * 漫画章节间广告
+     *
+     * @param activity
+     */
+    public void getComicChapterAd(Activity activity) {
+        for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+            AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+            if (TextUtils.equals(listBean.getPosition(), "14") && TextUtils.equals(listBean.getSdk_switch(), "2")) {
+                mIsSdkComicChapterAd = true;
+                sdkChapterComicAd(activity);
+                return;
+            }
+        }
+        if (!mIsSdkComicChapterAd) {
+            localChapterComicAd(activity);
+        }
+    }
 
     /**
      * 小说顶部广告
@@ -278,7 +299,7 @@ public class ADHelper {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            ReaderConfig.BOTTOM_COMIC_AD= new Gson().fromJson(result, BaseAd.class);
+                            ReaderConfig.BOTTOM_COMIC_AD = new Gson().fromJson(result, BaseAd.class);
                             ReaderConfig.display_ad_days_comic = ReaderConfig.BOTTOM_COMIC_AD.getDisplay_ad_days();
                         } catch (Exception e) {
 
@@ -342,7 +363,7 @@ public class ADHelper {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                           ReaderConfig.TOP_COMIC_AD= new Gson().fromJson(result, BaseAd.class);
+                            ReaderConfig.TOP_COMIC_AD = new Gson().fromJson(result, BaseAd.class);
                             ReaderConfig.display_ad_days_comic = ReaderConfig.TOP_COMIC_AD.getDisplay_ad_days();
                         } catch (Exception e) {
                         }
@@ -355,4 +376,67 @@ public class ADHelper {
         );
     }
 
+    private void sdkChapterComicAd(Activity activity) {
+        XRequestManager.INSTANCE.requestAd(activity, BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_COMIC_CHAPTER_DEBUG : BuildConfig.XAD_EVN_POS_COMIC_CHAPTER, AdType.CUSTOM_TYPE_DEFAULT, 1, new XAdRequestListener() {
+            @Override
+            public void onRequestOk(List<AdInfo> list) {
+                try {
+                    AdInfo adInfo = list.get(0);
+                    if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        if (ReaderConfig.CHAPTER_COMIC_AD == null) {
+                            ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
+                        }
+                        ReaderConfig.CHAPTER_COMIC_AD.setRequestId(adInfo.getRequestId());
+                        ReaderConfig.CHAPTER_COMIC_AD.setAdPosId(adInfo.getAdPosId());
+                        ReaderConfig.CHAPTER_COMIC_AD.setAdId(adInfo.getAdId());
+                        ReaderConfig.CHAPTER_COMIC_AD.setAd_skip_url(adInfo.getOperation().getValue());
+                        ReaderConfig.CHAPTER_COMIC_AD.setAd_type(1);
+                        ReaderConfig.CHAPTER_COMIC_AD.setAd_title(adInfo.getMaterial().getTitle());
+                        ReaderConfig.CHAPTER_COMIC_AD.setAd_image(adInfo.getMaterial().getImageUrl());
+                        ReaderConfig.CHAPTER_COMIC_AD.setUser_parame_need("1");
+                        ReaderConfig.CHAPTER_COMIC_AD.setAd_url_type(adInfo.getOperation().getType());
+                    }
+                } catch (Exception e) {
+                    localChapterComicAd(activity);
+                }
+            }
+
+            @Override
+            public void onRequestFailed(int i, String s) {
+                localChapterComicAd(activity);
+            }
+        });
+    }
+
+    private void localChapterComicAd(Activity activity) {
+        ReaderParams params = new ReaderParams(activity);
+        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        params.putExtraParams("type", MANHAU + "");
+        params.putExtraParams("position", "14");
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                            if (ReaderConfig.CHAPTER_COMIC_AD == null) {
+                                ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
+                            }
+                            ReaderConfig.CHAPTER_COMIC_AD.setAd_skip_url(baseAd.getAd_skip_url());
+                            ReaderConfig.CHAPTER_COMIC_AD.setAd_type(baseAd.getAd_type());
+                            ReaderConfig.CHAPTER_COMIC_AD.setAd_title(baseAd.getAd_title());
+                            ReaderConfig.CHAPTER_COMIC_AD.setAd_image(baseAd.getAd_image());
+                            ReaderConfig.CHAPTER_COMIC_AD.setUser_parame_need(baseAd.getUser_parame_need());
+                            ReaderConfig.CHAPTER_COMIC_AD.setAd_url_type(baseAd.getAd_url_type());
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
 }

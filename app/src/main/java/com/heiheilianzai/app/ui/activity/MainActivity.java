@@ -230,6 +230,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         adHelper.getWebTopAD(activity);
         adHelper.getWebViewAD(activity);
         adHelper.getComicTopAD(activity);
+        adHelper.getComicChapterAd(activity);
     }
 
     private void initView() {
