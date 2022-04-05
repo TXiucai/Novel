@@ -25,7 +25,6 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.BaseAd;
-import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
@@ -816,10 +815,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         BannerItemStore bannerItemStore = gson.fromJson(jsonElement, BannerItemStore.class);//解析
                         localList.add(bannerItemStore);
                     }
-                    for (int i = 0; i < bannerItemStores.size(); i++) {
-                        BannerItemStore sdkItemBean = bannerItemStores.get(i);
-                        localList.add(0, sdkItemBean);
-                    }
+                    localList.addAll(0, bannerItemStores);
                     String sdkJson = new Gson().toJson(localList);
                     if (!StringUtils.isEmpty(sdkJson)) {
                         ShareUitls.putMainHttpTaskString(activity, kayCache, sdkJson);

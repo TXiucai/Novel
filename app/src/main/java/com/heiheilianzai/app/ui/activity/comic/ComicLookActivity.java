@@ -320,7 +320,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         mRlTop.setVisibility(View.GONE);
                         AppPrefs.putSharedLong(activity, "display_ad_days_comic", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_comic * 24 * 60 * 60 * 1000);
                     } else {//普通用户
-                        new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false);
+                        new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false, false);
                     }
                 } else {//未登录
                     MainHttpTask.getInstance().Gotologin(activity);

@@ -44,7 +44,7 @@ public class BaseSdkAD {
             AdInfo adInfo = new AdInfo();
             adInfo.setAdId(baseSdkAD.getAdId());
             adInfo.setAdPosId(baseSdkAD.getAdPosId());
-            adInfo.setAdPosId(baseSdkAD.getRequestId());
+            adInfo.setRequestId(baseSdkAD.getRequestId());
             return adInfo;
         } else {
             return null;
