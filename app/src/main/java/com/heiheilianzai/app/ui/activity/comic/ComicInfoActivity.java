@@ -76,7 +76,6 @@ import com.heiheilianzai.app.view.AdaptionGridViewNoMargin;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
 import com.heiheilianzai.app.view.CircleImageView;
-import com.heiheilianzai.app.view.CustomSwipeToRefresh;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.ObservableScrollView;
 import com.heiheilianzai.app.view.foldtextview.ExpandableTextView;
@@ -174,7 +173,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     private Dialog mDialogChapter;
 
     @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back, R.id.list_ad_view_layout,
-            R.id.tx_comic_down, R.id.img_comic_collect, R.id.ll_comic_category, R.id.rl_comic_vip})
+            R.id.ll_comic_collect, R.id.ll_comic_down, R.id.ll_comic_category, R.id.rl_comic_vip})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.tx_comic_start_read:
@@ -190,7 +189,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             case R.id.titlebar_back:
                 finish();
                 break;
-            case R.id.img_comic_collect:
+            case R.id.ll_comic_collect:
                 if (!baseComic.isAddBookSelf()) {
                     baseComic.saveIsexist(true);
                     tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
@@ -207,7 +206,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     EventBus.getDefault().post(new RefreshComic(baseComic, 0));
                 }
                 break;
-            case R.id.tx_comic_down:
+            case R.id.ll_comic_down:
                 if (App.isVip(activity)) {
                     if (baseComic != null && comicChapter != null) {
                         baseComic.saveIsexist(false);

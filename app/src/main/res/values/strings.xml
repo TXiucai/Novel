@@ -395,7 +395,7 @@
     <string name="StoreFragment_towoman">已切换至女频</string>
     <string name="StoreFragment_xianshimianfei">限时免费</string>
 
-    <string name="MineNewFragment_fulitask">福利任务</string>
+    <string name="MineNewFragment_fulitask">阅读有奖</string>
     <string name="MineNewFragment_fulitaskjiangli">完成任务有奖励</string>
     <string name="MineNewFragment_gold_coins">微信客服</string>
 
@@ -456,12 +456,12 @@
     <string name="string_bookself_comic">我的漫画</string>
     <string name="string_bookself_book">我的小说</string>
     <string name="string_top_tittle">榜单排行</string>
-    <string name="coupon_open">书券解锁</string>
-    <string name="dialog_tittle_novel_coupon">书券解锁该章节，开通VIP畅读全本</string>
-    <string name="string_dialog_coupon_total">当前可用书券：</string>
-    <string name="dialog_coupon_open">使用%s书券解锁此章节</string>
-    <string name="string_accept_coupon">赚书券</string>
-    <string name="string_accept_coupon_tittle">您的剩余书券不足，解锁章节失败，赶快去赚取书券吧！</string>
+    <string name="coupon_open">金币解锁</string>
+    <string name="dialog_tittle_novel_coupon">金币解锁该章节，开通VIP畅读全本</string>
+    <string name="string_dialog_coupon_total">当前可用金币：</string>
+    <string name="dialog_coupon_open">使用%s金币解锁此章节</string>
+    <string name="string_accept_coupon">赚金币</string>
+    <string name="string_accept_coupon_tittle">您的剩余金币不足，解锁章节失败，赶快去赚取金币吧！</string>
     <string name="string_right_now_go">立即前往</string>
     <string name="string_novel_boyin_tittle">同名有声《%s》</string>
     <string name="string_comic_vip">本作品VIP会员免费看</string>
@@ -505,15 +505,15 @@
     <string name="share_url">有声爽文H漫，连载不断 复制链接在浏览器中打开下载！%s）</string>
     <string name="loading_tittle">主人别急，奴家马上就来了....</string>
     <string name="splash_website">官方网址：%s</string>
-    <string name="string_coupon_description">书券说明</string>
-    <string name="string_coupon">书券</string>
-    <string name="string_coupon_my">我的书券</string>
+    <string name="string_coupon_description">金币说明</string>
+    <string name="string_coupon">金币</string>
+    <string name="string_coupon_my">我的金币</string>
     <string name="string_coupon_accept">获取记录</string>
     <string name="string_coupon_use">使用记录</string>
     <string name="string_coupon_day">近七天</string>
     <string name="string_coupon_month">1个月</string>
     <string name="string_coupon_all">全部</string>
-    <string name="string_coupon_no_result">书券流水仅可查询进三个月内的获取与使用记录，请见谅。</string>
+    <string name="string_coupon_no_result">金币流水仅可查询进三个月内的获取与使用记录，请见谅。</string>
     <string name="string_un_sign">点击签到</string>
     <string name="string_sign">已签到</string>
     <string name="dialog_vip_comfirm_tittle">充值确认中...</string>
@@ -546,14 +546,14 @@
     <string name="string_read_time_tittle">阅读领奖</string>
     <string name="string_read_time_today">今日已阅读</string>
     <string name="string_read_time_min">分钟</string>
-    <string name="string_read_time_coupon">通过阅读已领取%s书券!</string>
-    <string name="string_read_time_coupon_accept">领取%s书券</string>
+    <string name="string_read_time_coupon">通过阅读已领取%s金币!</string>
+    <string name="string_read_time_coupon_accept">领取%s金币</string>
     <string name="string_rules">活动规则</string>
     <string name="string_exchage_gift">兑换福利</string>
-    <string name="string_accept_coupon_success">书券领取成功</string>
+    <string name="string_accept_coupon_success">金币领取成功</string>
     <string name="string_zero_min">0分钟</string>
     <string name="string_continue_accept_coupon">再看%d分钟可领取</string>
-    <string name="string_exchage_gift_tittle">书券兑换好物</string>
+    <string name="string_exchage_gift_tittle">金币兑换好物</string>
     <string name="string_exchange_go"><![CDATA[前往>]]></string>
     <string name="string_name">姓名</string>
     <string name="string_adrress_name">收货人</string>
@@ -568,7 +568,7 @@
     <string name="AddressActivity_title">收货地址</string>
     <string name="string_edit_address_error">编辑地址信息有问题，请检查</string>
     <string name="dialog_lookcomicset_open_text">自动解锁</string>
-    <string name="dialog_lookcomicset_open_text2">打开后自动扣除书券解锁章节</string>
+    <string name="dialog_lookcomicset_open_text2">打开后自动扣除金币解锁章节</string>
     <string name="ReadActivity_autoread_close">开启自动解锁章节</string>
     <string name="ReadActivity_autoread_open">关闭自动解锁章节</string>
     <string name="string_comment">精品推荐</string>

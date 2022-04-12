@@ -11,7 +11,7 @@ public class PayGoldDetail {
      * date : 10月28日 15:08
      * detail_type : 2
      *
-     * [{"article":"签到获取","detail":"+5书券","date":"06月19日 12:28","detail_type":1
+     * [{"article":"签到获取","detail":"+5金币","date":"06月19日 12:28","detail_type":1
      */
 
     private String article;

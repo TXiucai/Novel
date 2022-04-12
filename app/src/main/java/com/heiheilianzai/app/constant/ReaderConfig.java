@@ -454,17 +454,17 @@ public class ReaderConfig {
     public static final String mUpAll = "/user/post-feedback";
 
     /**
-     * 书券获取记录
+     * 金币获取记录
      */
     public static final String COUPON_ACCEPT = "/user/shuquan-gethistory";
 
     /**
-     * 书券消费
+     * 金币消费
      */
     public static final String COUPON_USE = "/user/shuquan-usehistory";
 
     /**
-     * 书券说明
+     * 金币说明
      */
     public static final String COUPON_DESCRIPTION = "/user/book-description";
 
@@ -682,7 +682,7 @@ public class ReaderConfig {
         if (subUnit != null) {
             return subUnit;
         } else {
-            String cu = ShareUitls.getString(activity, "subUnit", "书券");
+            String cu = ShareUitls.getString(activity, "subUnit", "金币");
             return cu;
         }
     }

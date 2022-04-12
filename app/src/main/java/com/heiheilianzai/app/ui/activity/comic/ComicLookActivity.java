@@ -1585,7 +1585,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1") || is_vip != null && is_vip.equals("1")) && !App.isVip(activity)) {
                 if (Utils.isLogin(activity)) {
                     DialogComicLook dialogNovelCoupon = new DialogComicLook();
-                    //开启自动解锁并需要书券时
+                    //开启自动解锁并需要金币时
                     if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false) && isCoupon) {
                         int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
                         String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_COMICI_PRICE);

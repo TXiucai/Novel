@@ -610,7 +610,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     private void initRecommend(RecyclerView recyclerView, List<HomeRecommendBean.RecommeListBean> recomme_list) {
-        recyclerView.setLayoutManager(new GridLayoutManager(activity, 5));
+        if (recomme_list == null || recomme_list.size() == 0) {
+            return;
+        }
+        int spanCount = recomme_list.size() >= 5 ? 5 : recomme_list.size();
+        recyclerView.setLayoutManager(new GridLayoutManager(activity, spanCount));
         HomeRecommendAdapter homeRecommendAdapter = new HomeRecommendAdapter(activity, recomme_list);
         recyclerView.setAdapter(homeRecommendAdapter);
         homeRecommendAdapter.setOnItemRecommendListener(new HomeRecommendAdapter.OnItemRecommendListener() {
