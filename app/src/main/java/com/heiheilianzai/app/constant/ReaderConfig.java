@@ -357,6 +357,11 @@ public class ReaderConfig {
     public static final String mReadTime = "/usergrandtotalread/minute";
 
     /**
+     * 获取小说底部tips
+     */
+    public static final String mReadTips= "";
+
+    /**
      * 上传阅读记录
      */
     public static final String mReadRecord = "/chapter/add-book-behavior-read-log";

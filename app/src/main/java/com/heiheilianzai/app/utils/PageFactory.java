@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
@@ -198,6 +199,7 @@ public class PageFactory {
     private String is_new_content;
     private Dialog mDialogVip;
     private boolean mIsSdkAd = false;
+    private List<String> mTipStrings;
 
     public enum Status {
         OPENING,
@@ -304,85 +306,6 @@ public class PageFactory {
 
     private void calculateLineCount2() {
         mLineCount = (int) (mVisibleHeight / (m_fontSize + lineSpace));// 可显示的行数
-    }
-
-    public void onDrawReadLine(Bitmap bitmap, List<String> m_lines, Boolean updateChapter, int mReadLine) {
-        try {
-            Canvas c = new Canvas(bitmap);
-            try {
-                c.drawBitmap(getBgBitmap(), 0, 0, null);
-            } catch (Exception e) {
-                c.drawBitmap(getBgBitmap2(), 0, 0, null);
-            }
-            mPaint.setTextSize(getFontSize());
-            mPaint.setColor(getTextColor());
-            mBatteryPaint.setColor(getTextColor());
-            mChapterPaint.setColor(getTextColor());
-            mChapterPaint.setTextSize(RATIO * getFontSize());
-            mPaint.setColor(getTextColor());
-            float y = 0;
-            if (!m_lines.isEmpty()) {
-                if (currentPage.getBegin() == 0) {
-                    y = (OFFSET + 1) * marginHeight - Chapter_height;
-                } else {
-                    y = marginHeight;
-                }
-                DrawText:
-                for (int i = 0; i < m_lines.size(); i++) {
-                    String strLine = m_lines.get(i);
-                    y += m_fontSize + lineSpace;
-                    if (i == mReadLine) {
-                        c.drawRect(measureMarginWidth, mPaint.getFontMetricsInt().top + y, mWidth - measureMarginWidth, mPaint.getFontMetrics().bottom + y, mPaintLine);
-                    }
-                    c.drawText(changeJIanfan(strLine), measureMarginWidth, y, mPaint);
-                }
-              /*  for (String strLine : m_lines) {
-                    y += m_fontSize + lineSpace;
-                    c.drawText(changeJIanfan(strLine), measureMarginWidth, y, mPaint);
-                }*/
-            }
-            float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtil.getBookLen());//进度
-            if (mPageEvent != null) {
-                mPageEvent.changeProgress(fPercent);
-            }
-            float myfPercent = (float) ((mBookUtil.getBookLen() * (chapterItem.getDisplay_order()) + currentPage.getEnd()) * 1.0 / (mBookUtil.getBookLen() * ChapterManager.getInstance(mActivity).mChapterList.size()));//进度
-            // 画白分例
-            String strPercent = df.format(myfPercent * 100);//进度文字
-            c.drawText(strPercent + "%", mWidth - PercentWidth, mHeight - statusMarginBottom, mBatteryPaint);//x y为坐标值
-            baseBook.setAllPercent(strPercent);
-            if (baseBook.isAddBookSelf() == 1) {
-                ContentValues values = new ContentValues();
-                values.put("allPercent", strPercent);
-                LitePal.updateAll(BaseBook.class, values, "book_id = ?", book_id);
-                EventBus.getDefault().post(new RefreshTopbook(book_id, strPercent));
-            }
-            if (currentPage != null && chapterItem != null) {
-                ChapterManager.getInstance(mActivity).getCurrentChapter().setChapteritem_begin(currentPage.getBegin());
-                ContentValues values1 = new ContentValues();
-                values1.put("chapteritem_begin", currentPage.getBegin());
-                LitePal.updateAll(ChapterItem.class, values1, "book_id = ? and chapter_id = ?", book_id, chapter_id);
-            }
-            // 画时间
-            drawBatteryAndDate(c);
-            //画书名
-            c.drawText(chapterTitle, marginWidth, statusMarginBottom + BookNameTop + tendp, mBatteryPaint);
-            if (currentPage.getBegin() == 0) {
-                mChapterPaint.setTextSize(RATIO * getFontSize());
-                for (int i = 100; i > 0; i--) {
-                    int With = (int) (mChapterPaint.measureText(chapterTitle));
-                    if (With < mWidth - chapterRight) {
-                        break;
-                    }
-                    float s = (float) i / 100;
-                    mChapterPaint.setTextSize((s * getFontSize()));
-                }
-                c.drawText(chapterTitle, marginWidth, 2 * marginHeight + Chapter_height, mChapterPaint);
-            }
-            //更新购买view的文字颜色
-            mSupport(mIsPreview);
-            mBookPageWidget.postInvalidate();
-        } catch (Exception e) {
-        }
     }
 
     public void onDraw(Bitmap bitmap, List<String> m_lines, Boolean updateChapter) {
@@ -596,15 +519,32 @@ public class PageFactory {
 
     int AD_text_WIDTH;
 
+    public void setTipStrings(List<String> mTipStrings) {
+        this.mTipStrings = mTipStrings;
+    }
+
     private void drawBatteryAndDate(Canvas c) {
         if (c == null) {
             return;
         }
-        String AD_text = resources.getString(R.string.app_name);
-        if (AD_text_WIDTH == 0) {
-            AD_text_WIDTH = (int) (mBatteryPaint.measureText(AD_text));//;
+        if (mTipStrings != null && mTipStrings.size() > 0) {
+            int i = new Random().nextInt(mTipStrings.size());
+            String tip = mTipStrings.get(i);
+            if (tip.length() > 20) {
+                tip = tip.substring(0, 17) + "...";
+            }
+            AD_text_WIDTH = (int) (mBatteryPaint.measureText(tip));
+            c.drawText(tip, (mWidth - AD_text_WIDTH) / 2, mHeight - statusMarginBottom, mBatteryPaint);
+        } else {
+            String AD_text = resources.getString(R.string.app_name);
+            if (AD_text_WIDTH == 0) {
+                AD_text_WIDTH = (int) (mBatteryPaint.measureText(AD_text));//;
+            }
+
+            c.drawText(AD_text, (mWidth - AD_text_WIDTH) / 2, mHeight - statusMarginBottom, mBatteryPaint);
         }
-        c.drawText(AD_text, (mWidth - AD_text_WIDTH) / 2, mHeight - statusMarginBottom, mBatteryPaint);
+        float width = CommonUtil.convertDpToPixel(mActivity, 18) - mBorderWidth;
+        float height = CommonUtil.convertDpToPixel(mActivity, 9);
         int dateWith = (int) (mBatteryPaint.measureText(date) + mBorderWidth);//时间宽度
         c.drawText(date, marginWidth, mHeight - statusMarginBottom, mBatteryPaint);
         // 画电池
@@ -613,8 +553,6 @@ public class PageFactory {
         mBatteryPercentage = (float) level / scale;
         float rect1Left = marginWidth + dateWith + statusMarginBottom;//电池外框left位置
         //画电池外框
-        float width = CommonUtil.convertDpToPixel(mActivity, 20) - mBorderWidth;
-        float height = CommonUtil.convertDpToPixel(mActivity, 10);
         rect1.set(rect1Left, mHeight - height - statusMarginBottom, rect1Left + width, mHeight - statusMarginBottom);
         rect2.set(rect1Left + mBorderWidth, mHeight - height + mBorderWidth - statusMarginBottom, rect1Left + width - mBorderWidth, mHeight - mBorderWidth - statusMarginBottom);
         c.save();

@@ -554,28 +554,35 @@ public class ReadActivity extends BaseReadActivity {
         ReadTwoBook();
         initDayOrNight();
         initListener();
-        bookpage_scroll_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isShow) {
-                    hideReadSetting();
-                } else {
-                    showReadSetting();
+        getTips();
+        bookpage_scroll_text.setOnClickListener(view -> {
+            if (isShow) {
+                hideReadSetting();
+            } else {
+                showReadSetting();
+            }
+        });
+        activity_read_shangyizhang.setOnClickListener(view -> chengeChapter(false));
+        activity_read_xiayizhang.setOnClickListener(view -> chengeChapter(true));
+    }
+
+    /**
+     * 获取小说底部tips
+     */
+    private void getTips() {
+        ReaderParams params = new ReaderParams(this);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadTips, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
                 }
-            }
-        });
-        activity_read_shangyizhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chengeChapter(false);
-            }
-        });
-        activity_read_xiayizhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chengeChapter(true);
-            }
-        });
+        );
     }
 
     private void chengeChapter(boolean flag) {
