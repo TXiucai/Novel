@@ -32,6 +32,7 @@ import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.CommonUtil;
 import com.heiheilianzai.app.utils.FileManager;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.view.DoubleClickListener;
@@ -202,6 +203,9 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
             } else if (holderr instanceof MyAdViewHolder) {
                 MyAdViewHolder holderAd = (MyAdViewHolder) holderr;
+                ViewGroup.LayoutParams layoutParams = holderAd.rlItem.getLayoutParams();
+                layoutParams.height = HEIGHT - ImageUtil.dp2px(activity, 60);
+                holderAd.rlItem.setLayoutParams(layoutParams);
                 BaseComicImage comicImage = list.get(position);
                 AdInfo adInfo = BaseSdkAD.newAdInfo(comicImage);
                 if (adInfo != null) {
@@ -263,7 +267,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     class MyAdViewHolder extends RecyclerView.ViewHolder {
-
+        @BindView(R.id.item_rl_comic_ad)
+        RelativeLayout rlItem;
         @BindView(R.id.item_comic_ad)
         ImageView ivAD;
 

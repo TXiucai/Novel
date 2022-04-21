@@ -78,6 +78,7 @@ import com.heiheilianzai.app.utils.DialogNovelCoupon;
 import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.HttpUtils;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyShare;
@@ -120,6 +121,7 @@ import okhttp3.OkHttpClient;
 import static com.heiheilianzai.app.constant.ComicConfig.IS_OPEN_DANMU;
 import static com.heiheilianzai.app.constant.ComicConfig.SET_OPEN_DANMU;
 import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
+import static com.heiheilianzai.app.constant.ReaderConfig.READBUTTOM_HEIGHT;
 
 /**
  * 阅读漫画页面
@@ -777,6 +779,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         initTopAndButtomAd(ReaderConfig.BOTTOM_COMIC_AD, mRlButtom, mImgBottomAd, false);
         Glide.with(activity).load(R.drawable.bianfu).format(DecodeFormat.PREFER_ARGB_8888).into(activity_comiclook_lording_img);
         HEIGHT = ScreenSizeUtils.getInstance(activity).getScreenHeight();
+        int ad_heigth = ImageUtil.dp2px(activity, READBUTTOM_HEIGHT);
+        if (ReaderConfig.TOP_COMIC_AD != null) {
+            HEIGHT -= ad_heigth;
+        }
+        if (ReaderConfig.BOTTOM_COMIC_AD != null) {
+            HEIGHT -= ad_heigth;
+        }
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         initRecyclerview();
         item_dialog_downadapter_RotationLoadingView.setIndicator(new LineSpinFadeLoaderIndicator());
