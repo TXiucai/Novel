@@ -111,6 +111,10 @@
     <string name="MineNewFragment_nologin_prompt">登录后才可以购买VIP哦~</string>
     <string name="share_detail">分享记录</string>
     <string name="share_no_result">你还没有任何分享哦</string>
+    <string name="golden_balance">余额：%d</string>
+    <string name="golden_recharge_balance">充值金币</string>
+    <string name="become_vip">成为会员</string>
+    <string name="become_vip_tip">畅听畅读，精品抢先</string>
 
     <!--设置中心-->
     <string name="SettingsActivity_nomark">在手机上没有找到应用市场哦！</string>
