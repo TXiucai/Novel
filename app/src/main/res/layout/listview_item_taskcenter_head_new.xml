@@ -6,8 +6,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimens_360dp"
+        android:layout_height="@dimen/dimens_380dp"
         android:background="@mipmap/task_center_sign_bg">
+
+        <ImageView
+            android:layout_width="@dimen/dimens_180dp"
+            android:layout_height="@dimen/dimens_36dp"
+            android:layout_marginTop="@dimen/dimens_110dp"
+            android:src="@mipmap/task_center_sign_tip" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,9 +51,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dimens_20dp"
                 android:layout_marginRight="@dimen/dp_10"
                 android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginTop="@dimen/dimens_20dp"
                 android:text="@string/sign_rules"
                 android:textColor="@color/color_9a9a9a"
                 android:textSize="12sp" />
@@ -87,9 +93,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/dimens_25dp"
+                android:background="@drawable/shape_taskcenter_orenge"
                 android:gravity="center"
                 android:text="@string/task_go"
-                android:background="@drawable/shape_taskcenter_orenge"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </RelativeLayout>

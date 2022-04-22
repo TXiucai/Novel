@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.TaskCenterAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
@@ -22,7 +22,6 @@ import com.heiheilianzai.app.model.TaskCenter;
 import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.ToStore;
-import com.heiheilianzai.app.ui.activity.read.ReadActivity;
 import com.heiheilianzai.app.ui.dialog.MyPoPwindow;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -58,10 +57,6 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
     public LinearLayout titlebar_back;
     @BindView(R.id.titlebar_text)
     public TextView titlebar_text;
-    @BindView(R.id.titlebar_right)
-    public RelativeLayout titlebar_right;
-    @BindView(R.id.titlebar_right_img)
-    public RelativeLayout titlebar_right_img;
     @BindView(R.id.activity_taskcenter_listview)
     public ListView activity_taskcenter_listview;
     TaskCenter.Sign_info sign_info;
@@ -155,8 +150,12 @@ public class TaskCenterActivity extends BaseButterKnifeTransparentActivity {
                 finish();
                 break;
             case R.id.titlebar_right:
-                if (sign_info != null && sign_info.sign_rules != null) {
-                    startActivity(new Intent(activity, TaskExplainActivity.class).putExtra("sign_rules", sign_info.sign_rules));
+                if (!Utils.isLogin(activity)) {//登录状态跳个人资料
+                    MainHttpTask.getInstance().Gotologin(activity);
+                } else {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, CouponRecordActivity.class).putExtra("COUPON", App.getUserInfoItem(activity).getSilverRemain() + "");
+                    startActivity(intent);
                 }
                 break;
         }
