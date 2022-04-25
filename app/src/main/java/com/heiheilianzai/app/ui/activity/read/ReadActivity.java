@@ -570,19 +570,14 @@ public class ReadActivity extends BaseReadActivity {
      * 获取小说底部tips
      */
     private void getTips() {
-        ReaderParams params = new ReaderParams(this);
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mReadTips, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
+        if (!ReaderConfig.novel_tips.equals("")) {
+            List<String> tips = new ArrayList<>();
+            String[] split = ReaderConfig.novel_tips.split("\r");
+            for (int i = 0; i < split.length; i++) {
+                tips.add(split[i]);
+            }
+            pageFactory.setTipStrings(tips);
+        }
     }
 
     private void chengeChapter(boolean flag) {

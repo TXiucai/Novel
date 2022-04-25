@@ -49,6 +49,15 @@ public class UserInfoItem implements Serializable {
     private Luobo_notice luobo_notice;
     private String vip_expire_note;
     private String user_default_password;
+    private String user_buy_item;
+
+    public String getUser_buy_item() {
+        return user_buy_item;
+    }
+
+    public void setUser_buy_item(String user_buy_item) {
+        this.user_buy_item = user_buy_item;
+    }
 
     public String getUser_default_password() {
         return user_default_password;

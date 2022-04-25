@@ -78,18 +78,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     public String TAG = MineNewFragment.class.getSimpleName();
     @BindView(R.id.fragment_mine_user_info_avatar)
     public CircleImageView fragment_mine_user_info_avatar;
-    @BindView(R.id.fragment_mine_user_info_sex)
-    public ImageView fragment_mine_user_info_sex;
     @BindView(R.id.fragment_mine_user_info_nickname)
     public TextView fragment_mine_user_info_nickname;
     @BindView(R.id.fragment_mine_user_info_id)
     public TextView fragment_mine_user_info_id;
     @BindView(R.id.fragment_mine_user_info_money_layout)
     public LinearLayout fragment_mine_user_info_money_layout;
-    @BindView(R.id.fragment_mine_user_info_paylayout_history)
-    public LinearLayout fragment_mine_user_info_paylayout_history;
-    @BindView(R.id.fragment_mine_user_info_paylayout_downmanager)
-    public LinearLayout fragment_mine_user_info_paylayout_downmanager;
     @BindView(R.id.fragment_mine_user_info_shuquan)
     public TextView fragment_mine_user_info_shuquan;
     @BindView(R.id.fragment_mine_user_type)
@@ -195,7 +189,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_isvip);
                 fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_time.setText(mUserInfo.getVip_end_time());
-                //todo fragment_mine_user_type.setText();
+                fragment_mine_user_type.setText(mUserInfo.getUser_buy_item().equals("") ? getString(R.string.string_unknow_user_type) : mUserInfo.getUser_buy_item());
             } else {
                 fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
@@ -234,7 +228,6 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_isvip.setVisibility(View.GONE);
             fragment_mine_user_info_id.setVisibility(View.GONE);
             fragment_mine_user_time.setText(LanguageUtil.getString(activity, R.string.BaoyueActivity_kaitong));
-            //todo fragment_mine_user_type.setText();
             return;
         }
         ReaderParams params = new ReaderParams(activity);

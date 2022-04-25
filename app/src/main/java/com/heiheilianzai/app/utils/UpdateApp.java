@@ -83,7 +83,7 @@ public class UpdateApp {
                             ReaderConfig.newInstance().app_free_charge = mAppUpdate.pay_switch == 1 ? false : true;
                             ReaderConfig.guide_text = mAppUpdate.getGuide_text();
                             ReaderConfig.display_second = mAppUpdate.getDisplay_second();
-
+                            ReaderConfig.novel_tips = mAppUpdate.book_read_tip_title;
                         } catch (Exception e) {
                         }
                         updateAppInterface.Next(response);

@@ -54,6 +54,7 @@ public class ReaderConfig {
     public static int display_ad_days_comic = 0;//几天之后从新展示
     public static int display_second = 5;//听书按钮引导提示默认5秒
     public static String guide_text = "";//听书文案
+    public static String novel_tips = "";//小说底部中间文案
 
     public static int GETPRODUCT_TYPE(Activity activity) {
         if (PRODUCT_TYPE == 0) {
@@ -355,11 +356,6 @@ public class ReaderConfig {
      * 上传阅读时间
      */
     public static final String mReadTime = "/usergrandtotalread/minute";
-
-    /**
-     * 获取小说底部tips
-     */
-    public static final String mReadTips= "";
 
     /**
      * 上传阅读记录

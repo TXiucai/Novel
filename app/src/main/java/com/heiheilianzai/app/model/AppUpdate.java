@@ -32,6 +32,7 @@ public class AppUpdate {
     public String tts_open_switch;//2开启 1关闭
     public String guide_text;
     public int display_second;
+    public String book_read_tip_title;
 
     public String getGuide_text() {
         return guide_text;
