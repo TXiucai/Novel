@@ -998,9 +998,24 @@ public class ReadActivity extends BaseReadActivity {
     @SuppressLint("NonConstantResourceId")
     @OnClick({R.id.tv_noad, R.id.tv_brightness, R.id.activity_read_top_back_view, R.id.tv_directory, R.id.tv_comment, R.id.tv_setting,
             R.id.bookpop_bottom, R.id.activity_read_bottom_view, R.id.activity_read_change_day_night, R.id.activity_read_buttom_boyin_close,
-            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.rl_listen, R.id.rl_listen_out})
+            R.id.activity_read_buttom_boyin_go, R.id.titlebar_boyin, R.id.rl_listen, R.id.rl_listen_out, R.id.activity_read_top_ad_close, R.id.activity_read_buttom_ad_close})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.activity_read_buttom_ad_close:
+            case R.id.activity_read_top_ad_close:
+                if (Utils.isLogin(activity)) {
+                    if (App.isVip(activity)) {//会员
+                        mRlTopLayout.setVisibility(View.GONE);
+                        activity_read_buttom_ad_layout.setVisibility(View.GONE);
+                        AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
+                        flushPage();
+                    } else {//普通用户
+                        new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false, false);
+                    }
+                } else {//未登录
+                    MainHttpTask.getInstance().Gotologin(activity);
+                }
+                break;
             case R.id.tv_directory:
                 if (CatalogInnerActivity.activity != null) {
                     CatalogInnerActivity.activity.finish();
@@ -1297,42 +1312,13 @@ public class ReadActivity extends BaseReadActivity {
         AdInfo adInfo = BaseSdkAD.newAdInfo(ReaderConfig.BOTTOM_READ_AD);
         //广告发生改变即使还未到时间也要显示
         if (ReaderConfig.BOTTOM_READ_AD != null && (isChangeAd || System.currentTimeMillis() > mDisPlayAdTime)) {
-            insert_todayone2.setOnClickListener(new View.OnClickListener() {
+            activity_read_buttom_ad_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (adInfo != null) {
                         XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                     }
                     JumpBookAd(activity, ReaderConfig.BOTTOM_READ_AD);
-                }
-            });
-            mIvAd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (adInfo != null) {
-                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
-                    }
-                    JumpBookAd(activity, ReaderConfig.BOTTOM_READ_AD);
-                }
-            });
-            mIvClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (adInfo != null) {
-                        XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
-                    }
-                    if (Utils.isLogin(activity)) {
-                        if (App.isVip(activity)) {//会员
-                            mRlTopLayout.setVisibility(View.GONE);
-                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                            AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
-                            flushPage();
-                        } else {//普通用户
-                            new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false, false);
-                        }
-                    } else {//未登录
-                        MainHttpTask.getInstance().Gotologin(activity);
-                    }
                 }
             });
             activity_read_buttom_ad_layout.setVisibility(View.VISIBLE);
@@ -1347,33 +1333,13 @@ public class ReadActivity extends BaseReadActivity {
         }
         AdInfo adInfoTop = BaseSdkAD.newAdInfo(ReaderConfig.TOP_READ_AD);
         if (ReaderConfig.TOP_READ_AD != null && (isChangeAd || System.currentTimeMillis() > mDisPlayAdTime)) {
-            activity_read_top_ad_iv.setOnClickListener(new View.OnClickListener() {
+            mRlTopLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (adInfoTop != null) {
                         XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                     }
                     JumpBookAd(activity, ReaderConfig.TOP_READ_AD);
-                }
-            });
-            mIVTopClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (adInfoTop != null) {
-                        XRequestManager.INSTANCE.requestEventClose(activity, adInfo);
-                    }
-                    if (Utils.isLogin(activity)) {
-                        if (App.isVip(activity)) {//会员
-                            mRlTopLayout.setVisibility(View.GONE);
-                            activity_read_buttom_ad_layout.setVisibility(View.GONE);
-                            AppPrefs.putSharedLong(activity, "display_ad_days_novel", System.currentTimeMillis() + ReaderConfig.newInstance().display_ad_days_novel * 24 * 60 * 60 * 1000);
-                            flushPage();
-                        } else {//普通用户
-                            new DialogVip().getDialogVipPop(activity, getResources().getString(R.string.dialog_tittle_vip_close_ad), false, false);
-                        }
-                    } else {//未登录
-                        MainHttpTask.getInstance().Gotologin(activity);
-                    }
                 }
             });
             mRlTopLayout.setVisibility(View.VISIBLE);

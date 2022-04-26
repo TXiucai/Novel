@@ -23,11 +23,12 @@
 
             <ImageView
                 android:id="@+id/activity_read_top_ad_close"
-                android:layout_width="@dimen/dimens_20dp"
-                android:layout_height="@dimen/dimens_20dp"
+                android:layout_width="@dimen/dimens_30dp"
+                android:layout_height="@dimen/dimens_30dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/dimens_8dp"
                 android:layout_marginRight="@dimen/dimens_8dp"
+                android:padding="@dimen/dimens_5dp"
                 android:src="@mipmap/float_close_button" />
         </RelativeLayout>
 
@@ -392,11 +393,10 @@
 
             <ImageView
                 android:id="@+id/activity_read_buttom_ad_close"
-                android:layout_width="@dimen/dimens_20dp"
-                android:layout_height="@dimen/dimens_20dp"
+                android:layout_width="@dimen/dimens_30dp"
+                android:layout_height="@dimen/dimens_30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginRight="@dimen/dimens_5dp"
+                android:padding="@dimen/dimens_5dp"
                 android:src="@mipmap/float_close_button" />
         </RelativeLayout>
     </LinearLayout>
