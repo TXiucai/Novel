@@ -2,107 +2,64 @@ package com.heiheilianzai.app.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import com.alipay.sdk.app.PayTask;
-import com.google.gson.Gson;
+import com.google.android.material.tabs.TabLayout;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.AcquireBaoyuePrivilegeAdapter;
-import com.heiheilianzai.app.adapter.CommentVipAdapter;
-import com.heiheilianzai.app.adapter.VipBaoyuePayAdapter;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
-import com.heiheilianzai.app.callback.ShowTitle;
-import com.heiheilianzai.app.component.http.OkHttpEngine;
 import com.heiheilianzai.app.component.http.ReaderParams;
-import com.heiheilianzai.app.component.http.ResultCallback;
-import com.heiheilianzai.app.component.pay.alipay.PayResult;
-import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
-import com.heiheilianzai.app.model.AcquirePayItem;
-import com.heiheilianzai.app.model.AcquirePrivilegeItem;
-import com.heiheilianzai.app.model.Announce;
-import com.heiheilianzai.app.model.MarqueeVipBean;
-import com.heiheilianzai.app.model.OptionBeen;
-import com.heiheilianzai.app.model.OptionItem;
-import com.heiheilianzai.app.model.PaymentWebBean;
 import com.heiheilianzai.app.model.UserInfoItem;
-import com.heiheilianzai.app.model.WxPayBean;
 import com.heiheilianzai.app.model.event.LogoutBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
-import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
-import com.heiheilianzai.app.ui.dialog.GetDialog;
-import com.heiheilianzai.app.ui.dialog.PayDialog;
-import com.heiheilianzai.app.ui.dialog.WaitDialog;
+import com.heiheilianzai.app.ui.fragment.GoldFragment;
+import com.heiheilianzai.app.ui.fragment.VIPFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
-import com.heiheilianzai.app.utils.DialogErrorVip;
-import com.heiheilianzai.app.utils.DialogVipComfirm;
-import com.heiheilianzai.app.utils.DialogVipOrderError;
-import com.heiheilianzai.app.utils.DialogWakeVip;
 import com.heiheilianzai.app.utils.DisplayUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
-import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.CircleImageView;
-import com.heiheilianzai.app.view.MarqueeTextView;
-import com.heiheilianzai.app.view.MarqueeTextViewClickListener;
-import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
-import com.heiheilianzai.app.view.ObservableScrollView;
-import com.tencent.mm.opensdk.modelpay.PayReq;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * 包月购买页
  * Created by scb on 2018/8/12.
  */
-public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity implements ShowTitle {
-    @BindView(R.id.titlebar_back)
-    public LinearLayout mBack;
-    @BindView(R.id.titlebar_text)
-    public TextView mTitle;
+public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity implements VIPFragment.SlideListener {
     private String mAvatar;
     @BindView(R.id.activity_acquire_avatar)
     public CircleImageView activity_acquire_avatar;
@@ -112,12 +69,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public TextView activity_acquire_avatar_name;
     @BindView(R.id.activity_acquire_avatar_name2)
     public TextView activity_acquire_avatar_name2;
-    @BindView(R.id.activity_acquire_pay_gridview)
-    public RecyclerView activity_acquire_pay_gridview;
-    @BindView(R.id.tx_privilege)
-    public TextView mTxPrivilege;
-    @BindView(R.id.activity_acquire_privilege_gridview)
-    public RecyclerView activity_acquire_privilege_gridview;
+    @BindView(R.id.activity_acquire_gold_balance)
+    public TextView activity_acquire_gold_balance;
     @BindView(R.id.activity_acquire_avatar_desc)
     public TextView activity_acquire_avatar_desc;
     @BindView(R.id.activity_acquire_customer_service)
@@ -128,39 +81,20 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public ImageView activity_acquire_avatar_isvip;
     @BindView(R.id.activity_acquire_avatar_isvip2)
     public ImageView activity_acquire_avatar_isvip2;
-    @BindView(R.id.marquee)
-    public MarqueeTextView mMarquee;
-    @BindView(R.id.ll_announce_layout)
-    public LinearLayout mLlMarquee;
-    @BindView(R.id.tx_price)
-    public TextView mTxPrice;
-    @BindView(R.id.tx_price_tip)
-    public TextView mTxPriceTip;
-    @BindView(R.id.gv)
-    public AdaptionGridView mGv;
     @BindView(R.id.ll_simple)
     public LinearLayout mLlSimple;
-    @BindView(R.id.scrollView)
-    public ObservableScrollView mScrollView;
     @BindView(R.id.rl_complete)
     public RelativeLayout mRlComplete;
-    @BindView(R.id.tv_order_record)
-    public TextView tv_order_record;
-
+    @BindView(R.id.activity_acquire_tab)
+    public TabLayout activity_acquire_tab;
+    @BindView(R.id.activity_acquire_vp)
+    public ViewPager activity_acquire_vp;
     String mKeFuOnline;//客服链接
-    private static final int SDK_PAY_FLAG = 1;
     private static final String ORIGIN_CODE = "origin_code";
-    private String ALIPAY_SUCCESS = "9000";//支付宝支付成功回调
-    private String ALIPAY = "2";
-    private String WECHAT = "1";
-    private String mInternetIp;//用户IP
-    private VipBaoyuePayAdapter vipBaoyuePayAdapter;
-    private AcquirePayItem selectAcquirePayItem;
-    private WaitDialog mWaitDialog;
     private int mGoodsId;
-    private int mSelectPayItemPos;
     private int mOriginCode = 13;
-    private int WIDTH, HEIGHT;
+    private VipGoldHolder mHolder;
+
 
     @Override
     public int initContentView() {
@@ -168,35 +102,11 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     }
 
     public void initView() {
-        initTitleBarView(LanguageUtil.getString(this, R.string.AcquireBaoyueActivity_title));
         StatusBarUtil.setStatusTextColor(false, AcquireBaoyueActivity.this);
         if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {//适配华为手机虚拟键遮挡tab的问题
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
         mGoodsId = getIntent().getIntExtra("goodsId", 0);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AcquireBaoyueActivity.this);
-        activity_acquire_pay_gridview.setLayoutManager(linearLayoutManager);
-        WIDTH = ScreenSizeUtils.getInstance(this).getScreenWidth();
-        WIDTH = (WIDTH - ImageUtil.dp2px(this, 50)) / 3;//横向排版 图片宽度
-        HEIGHT = (int) (((float) WIDTH * 4f / 3f));//
-        mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > DisplayUtils.dp2px(AcquireBaoyueActivity.this, 70)) {
-                    mLlSimple.setVisibility(View.VISIBLE);
-                    mRlComplete.setVisibility(View.GONE);
-                } else if (scrollY == 0) {
-                    mLlSimple.setVisibility(View.GONE);
-                    mRlComplete.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initData();
     }
 
     @Override
@@ -210,30 +120,10 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         super.onCreate(savedInstanceState);
         initView();
         initData();
-        initComentData();
     }
 
-    private void initComentData() {
-        ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("channel_id", "1");
-        params.putExtraParams("page_num", "1");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mCommentVip, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-                        initComment(result);
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                        mGv.setVisibility(View.GONE);
-                    }
-                }
-        );
-    }
 
     public void initData() {
-        getIpTerritory();//获取用户IP
         setVIPConfirmEvent();
         Intent intent = getIntent();
         mAvatar = intent.getStringExtra("avatar");
@@ -258,82 +148,9 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     }
                 }
         );
-        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mMarqueeVip, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-                        initMarquee(result);
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                        mLlMarquee.setVisibility(View.GONE);
-                    }
-                }
-        );
-    }
-
-    private void initComment(String result) {
-        try {
-            OptionItem optionItem = new Gson().fromJson(result, OptionItem.class);
-            List<OptionBeen> firstList;
-            List<OptionBeen> list = optionItem.getList();
-            if (list.size() > 6) {
-                firstList = list.subList(0, 6);
-            } else {
-                firstList = list;
-            }
-            CommentVipAdapter verticalAdapter = new CommentVipAdapter(this, firstList, WIDTH, HEIGHT);
-            mGv.setAdapter(verticalAdapter);
-            mGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String comic_id = list.get(position).comic_id;
-                    String book_id = list.get(position).book_id;
-                    if (comic_id != null) {
-                        startActivity(ComicInfoActivity.getMyIntent(AcquireBaoyueActivity.this, LanguageUtil.getString(AcquireBaoyueActivity.this, R.string.refer_page_info) + " " + comic_id, comic_id));
-                    } else {
-                        startActivity(BookInfoActivity.getMyIntent(AcquireBaoyueActivity.this, LanguageUtil.getString(AcquireBaoyueActivity.this, R.string.refer_page_info) + " " + book_id, book_id));
-                    }
-                }
-            });
-        } catch (Exception e) {
-            mGv.setVisibility(View.GONE);
-        }
-
-    }
-
-    private void initMarquee(String result) {
-        try {
-            MarqueeVipBean marqueeVipBean = new Gson().fromJson(result, MarqueeVipBean.class);
-            List<MarqueeVipBean.ListBean> list = marqueeVipBean.getList();
-            if (list != null && list.size() > 0) {
-                mLlMarquee.setVisibility(View.VISIBLE);
-                mMarquee.setSelectColor(true);
-                final List<Announce> announceList = new ArrayList<>();
-                for (int i = 0; i < list.size(); i++) {
-                    Announce announce = new Announce();
-                    announce.setContent(String.format(getString(R.string.string_success_vip_marquee), list.get(i).getMobile()) + list.get(i).getGood_title());
-                    announceList.add(announce);
-                }
-                mMarquee.setTextArraysAndClickListener(announceList, new MarqueeTextViewClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        //不需要点击
-                       /* Intent intent = new Intent(AcquireBaoyueActivity.this, AnnounceActivity.class);
-                        intent.putExtra("announce_content", announceList.get(position).getTitle() + "/-/" + announceList.get(position).getContent());
-                        startActivity(intent);*/
-                    }
-                });
-            } else {
-                mLlMarquee.setVisibility(View.GONE);
-            }
-        } catch (Exception e) {
-            mLlMarquee.setVisibility(View.GONE);
-        }
     }
 
     public void initInfos(String json) {
-        Gson gson = new Gson();
         try {
             JSONObject jsonObj = new JSONObject(json);
             mKeFuOnline = jsonObj.getString("kefu_online");
@@ -342,6 +159,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     JSONObject userObj = jsonObj.getJSONObject("user");
                     String nickName = userObj.getString("nickname");
                     String is_vip = userObj.getString("is_vip");
+                    int gold = jsonObj.getInt("silver_remain");
                     activity_acquire_avatar_isvip.setVisibility(View.VISIBLE);
                     if (TextUtils.equals(is_vip, "1")) {
                         activity_acquire_avatar_isvip.setImageResource(R.mipmap.icon_isvip);
@@ -351,6 +169,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     activity_acquire_avatar_name.setText(nickName);
                     activity_acquire_avatar_name2.setText(nickName);
                     activity_acquire_avatar_desc.setText(userObj.getString("display_date"));
+                    activity_acquire_gold_balance.setText(String.format(getString(R.string.BaoyueActivity_gold), gold));
                     int onlineIsNew = jsonObj.getInt("kefu_online_is_new");
                     if (onlineIsNew == 0) {//1 新客服系统 0为久客户系统
                         mKeFuOnline += "?uid=" + userObj.getString("uid");
@@ -358,6 +177,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                     MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar);
                     MyPicasso.IoadImage(this, mAvatar, R.mipmap.hold_user_avatar, activity_acquire_avatar2);
                 } else {
+                    activity_acquire_gold_balance.setVisibility(View.GONE);
                     activity_acquire_avatar.setBackgroundResource(R.mipmap.hold_user_avatar);
                     activity_acquire_avatar2.setBackgroundResource(R.mipmap.hold_user_avatar);
                     activity_acquire_avatar_name.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_no_login));
@@ -371,91 +191,97 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 activity_acquire_avatar_name2.setText(LanguageUtil.getString(this, R.string.BaoyueActivity_no_login));
                 activity_acquire_avatar_isvip.setVisibility(View.GONE);
                 activity_acquire_avatar_isvip2.setVisibility(View.GONE);
+                activity_acquire_gold_balance.setVisibility(View.GONE);
             }
-
+            initFragment(json);
             ShareUitls.putString(AcquireBaoyueActivity.this, "kefu_online", mKeFuOnline);
-            List<AcquirePayItem> payList = new ArrayList<>();
-            JSONArray listArray = jsonObj.getJSONArray("list");
-            for (int i = 0; i < listArray.length(); i++) {
-                AcquirePayItem item = gson.fromJson(listArray.getString(i), AcquirePayItem.class);
-                //默认选中和再次唤起优先再次唤起
-                if (TextUtils.equals(item.getGoods_id(), String.valueOf(mGoodsId))) {
-                    selectAcquirePayItem = item;
-                    mSelectPayItemPos = i;
-                } else {
-                    if (TextUtils.equals(item.getDefault_select(), "1") && selectAcquirePayItem == null) {
-                        selectAcquirePayItem = item;
-                        mSelectPayItemPos = i;
-                    }
-                }
-                payList.add(item);
-            }
             if (!StringUtils.isEmpty(mKeFuOnline)) {
                 activity_acquire_customer_service.setVisibility(View.VISIBLE);
                 activity_acquire_customer_service2.setVisibility(View.VISIBLE);
             }
-            List<AcquirePrivilegeItem> privilegeList = new ArrayList<>();
-            JSONArray privilegeArray = jsonObj.getJSONArray("privilege");
-            for (int i = 0; i < privilegeArray.length(); i++) {
-                AcquirePrivilegeItem item = gson.fromJson(privilegeArray.getString(i), AcquirePrivilegeItem.class);
-                privilegeList.add(item);
-            }
-            AcquireBaoyuePrivilegeAdapter baoyuePrivilegeAdapter = new AcquireBaoyuePrivilegeAdapter(AcquireBaoyueActivity.this);
-            MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(this);
-            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            activity_acquire_privilege_gridview.setLayoutManager(linearLayoutManager);
-            activity_acquire_privilege_gridview.setAdapter(baoyuePrivilegeAdapter);
-            baoyuePrivilegeAdapter.setNewData(privilegeList);
-            if (privilegeList.size() > 0) {
-                mTxPrivilege.setVisibility(View.VISIBLE);
-            } else {
-                mTxPrivilege.setVisibility(View.GONE);
-            }
-            vipBaoyuePayAdapter = new VipBaoyuePayAdapter(this, payList);
-            activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
-            if (selectAcquirePayItem == null) {
-                selectAcquirePayItem = payList.get(0);
-                vipBaoyuePayAdapter.setSelectPosition(0);
-            } else {
-                if (mGoodsId != 0) {//再次唤醒该订单
-                    if (TextUtils.equals(selectAcquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
-                        pay();
-                    } else {
-                        MyToash.ToashError(AcquireBaoyueActivity.this, getString(R.string.string_vip_vip_date_off));
-                    }
-                    mGoodsId = 0;
-                }
-                vipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
-            }
-            initBottomPay(selectAcquirePayItem);
-            vipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
-
-                @Override
-                public void onPayItemClick(AcquirePayItem item, int position) {
-                    vipBaoyuePayAdapter.setSelectPosition(position);
-                    selectAcquirePayItem = item;
-                    initBottomPay(selectAcquirePayItem);
-                }
-            });
         } catch (JSONException e) {
             e.printStackTrace();
             resetLogin(this);
         }
     }
 
-    private void initBottomPay(AcquirePayItem selectAcquirePayItem) {
-        int original_price = selectAcquirePayItem.getOriginal_price();
-        int price = selectAcquirePayItem.getPrice();
-        if (original_price != 0) {
-            mTxPriceTip.setText(String.format(getString(R.string.string_vip_price_tip), original_price, original_price - price));
-            mTxPriceTip.setVisibility(View.VISIBLE);
-        } else {
-            mTxPriceTip.setVisibility(View.GONE);
+    private List<Fragment> mFragmentList = new ArrayList<>();
+
+    private void initFragment(String json) {
+        VIPFragment vipFragment = VIPFragment.newInstance(json, mGoodsId, mOriginCode);
+        mFragmentList.add(vipFragment);
+        mFragmentList.add(new GoldFragment());
+        List<String> mTittlesList = new ArrayList<>();
+        mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title));
+        mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title_gold));
+        activity_acquire_vp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return mFragmentList.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return mFragmentList.size();
+            }
+
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return mTittlesList.get(position);
+            }
+        });
+        activity_acquire_vp.setOffscreenPageLimit(2);
+        activity_acquire_tab.setupWithViewPager(activity_acquire_vp);
+        int tabCount = activity_acquire_tab.getTabCount();
+        for (int i = 0; i < tabCount; i++) {
+            TabLayout.Tab tabAt = activity_acquire_tab.getTabAt(i);
+            tabAt.setCustomView(R.layout.item_vip_gold);
+            View customView = tabAt.getCustomView();
+            mHolder = new VipGoldHolder(customView);
+            mHolder.mTxChannel.setText(mTittlesList.get(i));
+            if (i == 0) {
+                mHolder.mTxChannel.setTextSize(17);
+                mHolder.mTxChannel.setSelected(true);
+                mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
+                mHolder.mTxChannel.setTextColor(getResources().getColor(R.color.color_ef966B));
+            } else {
+                mHolder.mTxChannel.setSelected(false);
+                mHolder.mTxChannel.setTextSize(14);
+                mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
+                mHolder.mTxChannel.setTextColor(getResources().getColor(R.color.color_bfbfbf));
+            }
         }
-        mTxPrice.setText(String.valueOf(price));
+
+        activity_acquire_tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mHolder = new VipGoldHolder(tab.getCustomView());
+                activity_acquire_vp.setCurrentItem(tab.getPosition());
+                mHolder.mTxChannel.setSelected(true);
+                mHolder.mTxChannel.setTextSize(17);
+                mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
+                mHolder.mTxChannel.setTextColor(getResources().getColor(R.color.color_ef966B));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                mHolder = new VipGoldHolder(tab.getCustomView());
+                mHolder.mTxChannel.setSelected(false);
+                mHolder.mTxChannel.setTextSize(14);
+                mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
+                mHolder.mTxChannel.setTextColor(getResources().getColor(R.color.color_bfbfbf));
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
-    @OnClick(value = {R.id.activity_acquire_customer_service, R.id.tx_open_vip, R.id.activity_acquire_customer_service2, R.id.tv_order_record})
+    @OnClick(value = {R.id.activity_acquire_customer_service, R.id.activity_acquire_customer_service2, R.id.tv_order_record, R.id.titlebar_back})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.activity_acquire_customer_service:
@@ -464,40 +290,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             case R.id.activity_acquire_customer_service2:
                 skipKeFuOnline();
                 break;
-            case R.id.tx_open_vip:
-                pay();
-                break;
             case R.id.tv_order_record:
                 startActivity(new Intent(AcquireBaoyueActivity.this, OrderRecordActivity.class));
                 break;
-
-        }
-    }
-
-    private void pay() {
-        if (selectAcquirePayItem != null) {
-            if (Utils.isLogin(AcquireBaoyueActivity.this)) {
-                pay(selectAcquirePayItem);
-            } else {
-                GetDialog.IsOperation(AcquireBaoyueActivity.this, getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
-                    @Override
-                    public void isOperation() {
-                        MainHttpTask.getInstance().Gotologin(AcquireBaoyueActivity.this);
-                    }
-                });
-            }
-        }
-    }
-
-    @Override
-    public void initTitleBarView(String text) {
-        mBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.titlebar_back:
                 finish();
-            }
-        });
-        mTitle.setText(text);
+                break;
+        }
     }
 
     @Override
@@ -506,114 +305,6 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * 获取支付渠道url,跳转支付Dialog
-     */
-    private void pay(AcquirePayItem item) {
-        initDialog();
-        mWaitDialog.setMessage(getString(R.string.string_order_create));
-        mWaitDialog.showDailog();
-        if (Utils.isLogin(this)) {
-            setVIPChoiceEvent(item.getGoods_id());
-            ReaderParams params = new ReaderParams(this);
-            params.putExtraParams("goods_id", item.getGoods_id());
-            params.putExtraParams("mobile", ShareUitls.getString(AcquireBaoyueActivity.this, PrefConst.USER_MOBILE_KAY, ""));
-            params.putExtraParams("user_client_ip", StringUtils.isEmpty(mInternetIp) ? "" : mInternetIp);
-            params.putExtraParams("phoneModel", Build.MANUFACTURER + "-" + Build.MODEL);
-            params.putExtraParams("payment_source_id", String.valueOf(mOriginCode));
-            String json = params.generateParamsJson();
-            HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mNewPayVip, json, false, new HttpUtils.ResponseListener() {
-                        @Override
-                        public void onResponse(final String result) {
-                            if (mWaitDialog != null) {
-                                mWaitDialog.dismissDialog();
-                            }
-                            if (!cn.jmessage.support.qiniu.android.utils.StringUtils.isNullOrEmpty(result)) {
-                                try {
-                                    JSONObject jsonObj = new JSONObject(result);
-                                    String pay_url = jsonObj.getString("pay_link");
-                                    showPayDialog(pay_url);
-                                } catch (Exception e) {
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onErrorResponse(String ex) {
-                            if (mWaitDialog != null) {
-                                mWaitDialog.dismissDialog();
-                            }
-                            DialogErrorVip dialogErrorVip = new DialogErrorVip();
-                            dialogErrorVip.getDialogVipPop(AcquireBaoyueActivity.this);
-                            dialogErrorVip.setVipWakeListener(new DialogErrorVip.VipErrorListener() {
-                                @Override
-                                public void vipErrorBack() {
-                                    pay(selectAcquirePayItem);
-                                }
-                            });
-                        }
-                    }
-            );
-        } else {
-            MainHttpTask.getInstance().Gotologin(this);
-        }
-    }
-
-
-    private void initDialog() {
-        if (mWaitDialog != null) {
-            mWaitDialog.dismissDialog();
-        }
-        mWaitDialog = null;
-        mWaitDialog = new WaitDialog(AcquireBaoyueActivity.this, "");
-        mWaitDialog.setCancleable(true);
-    }
-
-    /**
-     * 跳转到支付Dialog
-     */
-    void showPayDialog(String url) {
-        View view = this.getWindow().getDecorView();
-        if (view != null) {
-            PayDialog payDialog = new PayDialog();
-            payDialog.showDialog(this, view, url);
-            payDialog.setPayInterface(new PayDialog.PayInterface() {
-                @Override
-                public void onPayFinish() {
-                    showPayFinishDialog();
-                }
-
-                @Override
-                public void nativePay(String payType, String jsonData) {//跳入原生支付，（现在H5支付中并没有原生渠道）
-                    AcquireBaoyueActivity.this.nativePay(payType, jsonData);
-                }
-
-                @Override
-                public void onWake() {
-                    DialogWakeVip dialogWakeVip = new DialogWakeVip();
-                    dialogWakeVip.getDialogVipPop(AcquireBaoyueActivity.this);
-                    dialogWakeVip.setVipWakeListener(new DialogWakeVip.VipWakeListener() {
-                        @Override
-                        public void vipWakeBack() {
-                            pay(selectAcquirePayItem);
-                        }
-                    });
-                }
-
-                @Override
-                public void onError() {
-                    DialogErrorVip dialogErrorVip = new DialogErrorVip();
-                    dialogErrorVip.getDialogVipPop(AcquireBaoyueActivity.this);
-                    dialogErrorVip.setVipWakeListener(new DialogErrorVip.VipErrorListener() {
-                        @Override
-                        public void vipErrorBack() {
-                            pay(selectAcquirePayItem);
-                        }
-                    });
-                }
-            });
-        }
-    }
 
     /**
      * 客服链接跳转浏览器
@@ -623,98 +314,6 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             startActivity(new Intent(this, AboutActivity.class).putExtra("url", mKeFuOnline).putExtra("flag", "notitle"));
         }
     }
-
-    /**
-     * 完成支付订单，关闭支付Dialog后显示该提示弹框 根据订单刷新用户信息
-     */
-    private void showPayFinishDialog() {
-        AppPrefs.putSharedBoolean(AcquireBaoyueActivity.this, PrefConst.ORDER, true);
-        DialogVipComfirm dialogVipComfirm = new DialogVipComfirm();
-        dialogVipComfirm.getDialogVipPop(this);
-        dialogVipComfirm.setmOnOpenKefuListener(() -> skipKeFuOnline());
-        dialogVipComfirm.setmOnRepeatListener(() -> pay(selectAcquirePayItem));
-    }
-
-    /**
-     * 跳入原生支付 微信或支付宝
-     */
-    public void nativePay(String payType, String jsonData) {
-        PaymentWebBean bean = new Gson().fromJson(jsonData, PaymentWebBean.class);
-        String payInfo = bean.data;
-        if (TextUtils.isEmpty(payInfo)) {
-            return;
-        }
-        if (payType.equals(ALIPAY)) {
-            aliPay(payInfo);
-        } else if (payType.equals(WECHAT)) {
-            wechatPay(payInfo);
-        }
-    }
-
-    /**
-     * 原生支付宝支付
-     *
-     * @param orderInfo
-     */
-    private void aliPay(String orderInfo) {
-        final Runnable payRunnable = new Runnable() {
-            @Override
-            public void run() {
-                PayTask alipay = new PayTask(AcquireBaoyueActivity.this);
-                Map<String, String> result = alipay.payV2(orderInfo, true);
-                Message msg = new Message();
-                msg.what = SDK_PAY_FLAG;
-                msg.obj = result;
-                mHandler.sendMessage(msg);
-            }
-        };
-        // 必须异步调用
-        Thread payThread = new Thread(payRunnable);
-        payThread.start();
-    }
-
-    /**
-     * 原生微信支付
-     *
-     * @param payInfo
-     */
-    private void wechatPay(String payInfo) {
-        WxPayBean wxPayBean = new Gson().fromJson(payInfo, WxPayBean.class);
-        IWXAPI api = WXAPIFactory.createWXAPI(this, wxPayBean.getAppid());
-        api.registerApp(wxPayBean.getAppid());
-        if (!api.isWXAppInstalled()) {
-            MyToash.ToashError(this, "请安装微信");
-        }
-        PayReq payRequest = new PayReq();
-        payRequest.appId = wxPayBean.getAppid();
-        payRequest.partnerId = wxPayBean.getPartnerid();
-        payRequest.prepayId = wxPayBean.getPrepayid();
-        payRequest.packageValue = "Sign=WXPay";//固定值
-        payRequest.nonceStr = wxPayBean.getNoncestr();
-        payRequest.timeStamp = wxPayBean.getTimestamp();
-        payRequest.sign = wxPayBean.getSign();
-        api.sendReq(payRequest);
-    }
-
-    //支付宝原生支付，回调监听
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SDK_PAY_FLAG: {
-                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                    String resultStatus = payResult.getResultStatus();
-                    if (TextUtils.equals(resultStatus, ALIPAY_SUCCESS)) {
-                    } else {
-                        MyToash.ToashError(AcquireBaoyueActivity.this, payResult.getMemo());
-                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-    };
 
     /**
      * 进入VIP会员购买必传参数
@@ -755,52 +354,6 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     }
 
     /**
-     * 神策埋点 选购vip套餐类型
-     *
-     * @param goodsId 套餐ID
-     */
-    private void setVIPChoiceEvent(String goodsId) {
-        try {
-            SensorsDataHelper.setVIPChoiceEvent(Integer.valueOf(goodsId));
-        } catch (Exception e) {
-        }
-    }
-
-    /**
-     * 获取用户IP
-     */
-    public void getIpTerritory() {
-        OkHttpEngine.getInstance(AcquireBaoyueActivity.this).getAsyncHttp(ReaderConfig.thirdpartyGetCity, new ResultCallback() {
-
-            @Override
-            public void onError(Request request, Exception e) {
-            }
-
-            @Override
-            public void onResponse(String response) {
-            }
-
-            @Override
-            public void onResponse(Response response) {
-                try {
-                    String body = response.body().string();
-                    if (!StringUtils.isEmpty(body)) {
-                        StringBuilder builder = new StringBuilder();
-                        builder.append(body);
-                        int satrtIndex = builder.indexOf("{");//包含[
-                        int endIndex = builder.indexOf("}");//包含]
-                        String json = builder.substring(satrtIndex, endIndex + 1);
-                        JSONObject jo = new JSONObject(json);
-                        mInternetIp = jo.getString("cip");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
      * 清空登录信息
      */
     public static void resetLogin(Context context) {
@@ -815,10 +368,22 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     }
 
     @Override
-    protected void onDestroy() {
-        if (vipBaoyuePayAdapter != null) {
-            vipBaoyuePayAdapter.cancelAllTimers();
+    public void slide(int slide) {
+                        if (slide > DisplayUtils.dp2px(AcquireBaoyueActivity.this, 70)) {
+                    mLlSimple.setVisibility(View.VISIBLE);
+                    mRlComplete.setVisibility(View.GONE);
+                } else if (slide == 0) {
+                    mLlSimple.setVisibility(View.GONE);
+                    mRlComplete.setVisibility(View.VISIBLE);
+                }
+
+    }
+
+    private class VipGoldHolder {
+        TextView mTxChannel;
+
+        public VipGoldHolder(View itemView) {
+            mTxChannel = itemView.findViewById(R.id.tx_channel);
         }
-        super.onDestroy();
     }
 }
