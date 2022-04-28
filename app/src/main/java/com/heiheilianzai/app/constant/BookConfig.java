@@ -84,31 +84,29 @@ public class BookConfig {
 
     public static final String mDiscoveryUrl =  "/book/new-featured";
 
-
     /**
      * 我的评论
      */
     public static final String mUserCommentsUrl = "/user/comments";
-
-
 
     /**
      * 用户书架
      */
     public static final String mBookCollectUrl = "/user/book-collect";
 
-
-
     /**
      * 包月购买页
      */
     public static final String mPayBaoyueCenterUrl = "/pay/baoyue-center";
 
+    /**
+     * 包月购买页
+     */
+    public static final String mPayGoldCenterUrl = "/pay/gold-center";
 
     /**
      * 阅读历史
      */
-
     public static final String read_log =  "/user/read-log";
     /**
      * 删除阅读历史

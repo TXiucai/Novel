@@ -345,9 +345,13 @@ public class ReaderConfig {
     public static final String mNewPayVip = "/paynew/start-pay";
 
     /**
-     * 订单成功的跑马灯
+     * 会员订单成功的跑马灯
      */
     public static final String mMarqueeVip = "/success-order/index";
+    /**
+     * 金币订单成功的跑马灯
+     */
+    public static final String mMarqueeGold = "success-order/gold";
     /**
      * vip猜你喜欢
      */

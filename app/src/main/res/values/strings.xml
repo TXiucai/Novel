@@ -655,5 +655,6 @@
     <string name="dialog_tittle_vip_close_ad">立即购买会员\n享受免广告特权</string>
     <string name="string_unknow_user_type">未知会员</string>
     <string name="AcquireBaoyueActivity_title_gold">充值金币</string>
+    <string name="BaoyueActivity_gold_gift">赠%s</string>
 
 </resources>

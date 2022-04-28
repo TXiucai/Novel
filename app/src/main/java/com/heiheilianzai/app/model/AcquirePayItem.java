@@ -39,6 +39,24 @@ public class AcquirePayItem {
     private List<String> privilege_list_name;
     private List<String> pay_channel;
     private List<?> tag;
+    private String content;
+    private String giving;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getGiving() {
+        return giving;
+    }
+
+    public void setGiving(String giving) {
+        this.giving = giving;
+    }
 
     public String getGoods_id() {
         return goods_id;

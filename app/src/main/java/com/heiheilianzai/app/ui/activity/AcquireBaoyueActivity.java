@@ -210,10 +210,12 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private void initFragment(String json) {
         VIPFragment vipFragment = VIPFragment.newInstance(json, mGoodsId, mOriginCode);
         mFragmentList.add(vipFragment);
-        mFragmentList.add(new GoldFragment());
+        GoldFragment goldFragment = GoldFragment.newInstance(mGoodsId, mOriginCode);
+        mFragmentList.add(goldFragment);
         List<String> mTittlesList = new ArrayList<>();
         mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title));
         mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title_gold));
+        activity_acquire_vp.setOffscreenPageLimit(2);
         activity_acquire_vp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @NonNull
             @Override
@@ -232,7 +234,6 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 return mTittlesList.get(position);
             }
         });
-        activity_acquire_vp.setOffscreenPageLimit(2);
         activity_acquire_tab.setupWithViewPager(activity_acquire_vp);
         int tabCount = activity_acquire_tab.getTabCount();
         for (int i = 0; i < tabCount; i++) {
@@ -369,14 +370,13 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
 
     @Override
     public void slide(int slide) {
-                        if (slide > DisplayUtils.dp2px(AcquireBaoyueActivity.this, 70)) {
-                    mLlSimple.setVisibility(View.VISIBLE);
-                    mRlComplete.setVisibility(View.GONE);
-                } else if (slide == 0) {
-                    mLlSimple.setVisibility(View.GONE);
-                    mRlComplete.setVisibility(View.VISIBLE);
-                }
-
+        if (slide > DisplayUtils.dp2px(AcquireBaoyueActivity.this, 70)) {
+            mLlSimple.setVisibility(View.VISIBLE);
+            mRlComplete.setVisibility(View.GONE);
+        } else if (slide == 0) {
+            mLlSimple.setVisibility(View.GONE);
+            mRlComplete.setVisibility(View.VISIBLE);
+        }
     }
 
     private class VipGoldHolder {

@@ -202,7 +202,7 @@ public class VIPFragment extends BaseButterKnifeFragment {
             } else {
                 mTxPrivilege.setVisibility(View.GONE);
             }
-            vipBaoyuePayAdapter = new VipBaoyuePayAdapter(getActivity(), payList);
+            vipBaoyuePayAdapter = new VipBaoyuePayAdapter(getActivity(), payList, 0);
             activity_acquire_pay_gridview.setAdapter(vipBaoyuePayAdapter);
             if (selectAcquirePayItem == null) {
                 selectAcquirePayItem = payList.get(0);
