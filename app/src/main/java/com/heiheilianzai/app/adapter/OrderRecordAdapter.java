@@ -63,7 +63,7 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
                 tv_go_pay.setVisibility(View.VISIBLE);
                 tv_go_pay.setOnClickListener(view -> {
                     if (!TextUtils.isEmpty(item.getGoods_id())) {
-                        listener.goPay(item.getGoods_id());
+                        listener.goPay(item.getGoods_id(), item.getOrder_type());
                     }
                 });
             } else {

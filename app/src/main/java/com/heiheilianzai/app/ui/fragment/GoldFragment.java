@@ -102,7 +102,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mSlideListener = (SlideListener) context;
+        //mSlideListener = (SlideListener) context;
     }
 
     @Override
@@ -177,9 +177,10 @@ public class GoldFragment extends BaseButterKnifeFragment {
         try {
             jsonObj = new JSONObject(result);
             if (Utils.isLogin(getActivity())) {
-                mKeFuOnline = jsonObj.getString("kefu_online");
-                mGoldBalance = jsonObj.getInt("silver_remain");
+                JSONObject userObj = jsonObj.getJSONObject("user");
+                mGoldBalance = userObj.getInt("silver_remain");
             }
+            mKeFuOnline = jsonObj.getString("kefu_online");
             List<AcquirePayItem> payList = new ArrayList<>();
             JSONArray listArray = jsonObj.getJSONArray("list");
             for (int i = 0; i < listArray.length(); i++) {

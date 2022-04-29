@@ -28,6 +28,15 @@ public class OrderRecordBean {
     private String status;
     private String user_vip_name;
     private String pay_channel_name;
+    private int order_type;
+
+    public int getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(int order_type) {
+        this.order_type = order_type;
+    }
 
     public String getId() {
         return id;
