@@ -59,7 +59,7 @@ import butterknife.OnClick;
  * 包月购买页
  * Created by scb on 2018/8/12.
  */
-public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity implements VIPFragment.SlideListener {
+public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity implements VIPFragment.SlideListener, GoldFragment.SlideListener {
     private String mAvatar;
     @BindView(R.id.activity_acquire_avatar)
     public CircleImageView activity_acquire_avatar;
@@ -91,7 +91,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public ViewPager activity_acquire_vp;
     String mKeFuOnline;//客服链接
     private static final String ORIGIN_CODE = "origin_code";
-    private int mGoodsId;
+    private int mGoodsId, mType;
     private int mOriginCode = 13;
     private VipGoldHolder mHolder;
 
@@ -113,6 +113,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mGoodsId = intent.getIntExtra("goodsId", 0);
+        mType = intent.getIntExtra("type", 0);
+        initData();
     }
 
     @Override
@@ -254,7 +256,6 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
                 mHolder.mTxChannel.setTextColor(getResources().getColor(R.color.color_bfbfbf));
             }
         }
-
         activity_acquire_tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -280,6 +281,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
 
             }
         });
+        activity_acquire_tab.getTabAt(mType).select();
     }
 
     @OnClick(value = {R.id.activity_acquire_customer_service, R.id.activity_acquire_customer_service2, R.id.tv_order_record, R.id.titlebar_back})

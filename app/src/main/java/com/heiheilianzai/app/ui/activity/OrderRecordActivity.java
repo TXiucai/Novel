@@ -80,9 +80,10 @@ public class OrderRecordActivity extends BaseActivity implements OnRefreshListen
             }
 
             @Override
-            public void goPay(String goodsId) {
+            public void goPay(String goodsId,int type) {
                 Intent intentVip = new Intent(OrderRecordActivity.this,AcquireBaoyueActivity.class);
                 intentVip.putExtra("goodsId", Integer.valueOf(goodsId));
+                intentVip.putExtra("type", Integer.valueOf(type));
                 startActivity(intentVip);
                 finish();
             }

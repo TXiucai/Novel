@@ -154,7 +154,7 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
     public interface OrderRecordListener {
         void goKeFuOnline(String kefuUrl);
 
-        void goPay(String goodsId);
+        void goPay(String goodsId, int type);
     }
 
 }

@@ -39,6 +39,7 @@ import com.heiheilianzai.app.utils.DialogVipComfirm;
 import com.heiheilianzai.app.utils.DialogWakeVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -101,7 +102,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //mSlideListener = (SlideListener) context;
+        mSlideListener = (SlideListener) context;
     }
 
     @Override
@@ -202,6 +203,14 @@ public class GoldFragment extends BaseButterKnifeFragment {
                 mSelectAcquirePayItem = payList.get(0);
                 mVipBaoyuePayAdapter.setSelectPosition(0);
             } else {
+                if (mGoodsId != 0) {//再次唤醒该订单
+                    if (TextUtils.equals(mSelectAcquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
+                        pay();
+                    } else {
+                        MyToash.ToashError(getActivity(), getString(R.string.string_vip_vip_date_off));
+                    }
+                    mGoodsId = 0;
+                }
                 mVipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
             }
             mVipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
