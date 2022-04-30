@@ -85,6 +85,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
     private WaitDialog mWaitDialog;
     private int mSelectPayItemPos;
     private VipBaoyuePayAdapter mVipBaoyuePayAdapter;
+    private List<AcquirePayItem> mPayItems;
 
     public static GoldFragment newInstance(int goodsId, int originCode) {
         GoldFragment fragment = new GoldFragment();
@@ -181,7 +182,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
                 mGoldBalance = userObj.getInt("silver_remain");
             }
             mKeFuOnline = jsonObj.getString("kefu_online");
-            List<AcquirePayItem> payList = new ArrayList<>();
+            mPayItems = new ArrayList<>();
             JSONArray listArray = jsonObj.getJSONArray("list");
             for (int i = 0; i < listArray.length(); i++) {
                 AcquirePayItem item = gson.fromJson(listArray.getString(i), AcquirePayItem.class);
@@ -195,24 +196,16 @@ public class GoldFragment extends BaseButterKnifeFragment {
                         mSelectPayItemPos = i;
                     }
                 }
-                payList.add(item);
+                mPayItems.add(item);
             }
-            mVipBaoyuePayAdapter = new VipBaoyuePayAdapter(getActivity(), payList, 1);
+            mVipBaoyuePayAdapter = new VipBaoyuePayAdapter(getActivity(), mPayItems, 1);
             activity_acquire_pay_gridview.setLayoutManager(new GridLayoutManager(activity, 3));
             activity_acquire_pay_gridview.setAdapter(mVipBaoyuePayAdapter);
             if (mSelectAcquirePayItem == null) {
-                mSelectAcquirePayItem = payList.get(0);
+                mSelectAcquirePayItem = mPayItems.get(0);
                 mVipBaoyuePayAdapter.setSelectPosition(0);
             } else {
-                if (mGoodsId != 0) {//再次唤醒该订单
-                    if (TextUtils.equals(mSelectAcquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
-                        pay();
-                    } else {
-                        MyToash.ToashError(getActivity(), getString(R.string.string_vip_vip_date_off));
-                    }
-                    mGoodsId = 0;
-                }
-                mVipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
+                wakeOrder(mGoodsId);
             }
             mVipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
 
@@ -226,6 +219,29 @@ public class GoldFragment extends BaseButterKnifeFragment {
             initBottomPay(mSelectAcquirePayItem);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void wakeOrder(int goodId) {
+        mGoodsId = goodId;
+        if (mPayItems != null) {
+            for (int i = 0; i < mPayItems.size(); i++) {
+                AcquirePayItem acquirePayItem = mPayItems.get(i);
+                if (TextUtils.equals(acquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
+                    mSelectAcquirePayItem = acquirePayItem;
+                    mSelectPayItemPos = i;
+                    break;
+                }
+            }
+            if (mGoodsId != 0) {//再次唤醒该订单
+                if (TextUtils.equals(mSelectAcquirePayItem.getGoods_id(), String.valueOf(mGoodsId))) {
+                    pay();
+                } else {
+                    MyToash.ToashError(getActivity(), getString(R.string.string_vip_vip_date_off));
+                }
+                mGoodsId = 0;
+            }
+            mVipBaoyuePayAdapter.setSelectPosition(mSelectPayItemPos);
         }
     }
 

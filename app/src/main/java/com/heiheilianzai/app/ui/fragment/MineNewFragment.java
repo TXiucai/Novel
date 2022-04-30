@@ -302,11 +302,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         Intent intent = new Intent();
         intent.setClass(activity, WebViewActivity.class);
         String user_parame_need = baseAd.user_parame_need;
-        String jump_url = "";
+        String jump_url = baseAd.ad_skip_url;;
         if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2")) {
             jump_url += "&uid=" + Utils.getUID(activity);
-        } else {
-            jump_url = baseAd.ad_skip_url;
         }
         intent.putExtra("url", jump_url);
         intent.putExtra("title", baseAd.ad_title);

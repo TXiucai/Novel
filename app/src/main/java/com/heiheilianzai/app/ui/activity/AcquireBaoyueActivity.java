@@ -95,6 +95,8 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private int mGoodsId, mType;
     private int mOriginCode = 13;
     private VipGoldHolder mHolder;
+    private VIPFragment mVipFragment;
+    private GoldFragment mGoldFragment;
 
 
     @Override
@@ -116,7 +118,12 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
         super.onNewIntent(intent);
         mGoodsId = intent.getIntExtra("goodsId", 0);
         mType = intent.getIntExtra("type", 0);
-        initData();
+        activity_acquire_tab.getTabAt(mType).select();
+        if (mType == 0) {
+            if (mVipFragment != null) mVipFragment.wakeOrder(mGoodsId);
+        } else {
+            if (mGoldFragment != null) mGoldFragment.wakeOrder(mGoodsId);
+        }
     }
 
     @Override
@@ -212,10 +219,10 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     private List<Fragment> mFragmentList = new ArrayList<>();
 
     private void initFragment(String json) {
-        VIPFragment vipFragment = VIPFragment.newInstance(json, mGoodsId, mOriginCode);
-        mFragmentList.add(vipFragment);
-        GoldFragment goldFragment = GoldFragment.newInstance(mGoodsId, mOriginCode);
-        mFragmentList.add(goldFragment);
+        mVipFragment = VIPFragment.newInstance(json, mGoodsId, mOriginCode);
+        mFragmentList.add(mVipFragment);
+        mGoldFragment = GoldFragment.newInstance(mGoodsId, mOriginCode);
+        mFragmentList.add(mGoldFragment);
         List<String> mTittlesList = new ArrayList<>();
         mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title));
         mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title_gold));
