@@ -351,7 +351,7 @@ public class ReaderConfig {
     /**
      * 金币订单成功的跑马灯
      */
-    public static final String mMarqueeGold = "success-order/gold";
+    public static final String mMarqueeGold = "/success-order/gold";
     /**
      * vip猜你喜欢
      */

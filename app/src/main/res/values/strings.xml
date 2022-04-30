@@ -513,6 +513,7 @@
     <string name="string_coupon_description">金币说明</string>
     <string name="string_coupon">金币</string>
     <string name="string_coupon_my">我的金币</string>
+    <string name="string_recharge_gold">充值金币</string>
     <string name="string_coupon_accept">获取记录</string>
     <string name="string_coupon_use">使用记录</string>
     <string name="string_coupon_day">近七天</string>
@@ -653,7 +654,7 @@
     <string name="order_record_activity_copy">复制成功</string>
     <string name="string_vip_vip_date_off">该套餐已下架</string>
     <string name="dialog_tittle_vip_close_ad">立即购买会员\n享受免广告特权</string>
-    <string name="string_unknow_user_type">未知会员</string>
+    <string name="string_unknow_user_type">体验会员</string>
     <string name="AcquireBaoyueActivity_title_gold">充值金币</string>
     <string name="BaoyueActivity_gold_gift">赠%s</string>
 

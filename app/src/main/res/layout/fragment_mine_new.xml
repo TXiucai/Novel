@@ -185,7 +185,7 @@
                             android:id="@+id/fragment_mine_user_info_shuquan_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/string_coupon_my"
+                            android:text="@string/string_recharge_gold"
                             android:textColor="@color/color_392E1D"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -201,8 +201,8 @@
                     </RelativeLayout>
 
                     <ImageView
-                        android:layout_width="@dimen/dp_10"
-                        android:layout_height="@dimen/dp_10"
+                        android:layout_width="@dimen/dimens_10dp"
+                        android:layout_height="@dimen/dimens_10dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="0dp"

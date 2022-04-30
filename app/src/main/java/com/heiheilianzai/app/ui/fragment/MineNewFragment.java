@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -180,6 +181,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_info_isvip.setVisibility(View.GONE);
                 fragment_mine_user_info_shuquan.setText("--");
                 fragment_mine_user_info_avatar.setImageResource(R.mipmap.hold_user_avatar);
+                fragment_mine_user_type.setText(getString(R.string.become_vip));
+                fragment_mine_user_time.setText(getString(R.string.become_vip_tip));
                 AppPrefs.putSharedString(activity, ReaderConfig.UID, "");
                 AppPrefs.putSharedString(activity, ReaderConfig.BOYIN_LOGIN_TOKEN, "");
                 AppPrefs.putSharedString(activity, PrefConst.USER_INFO_KAY, "");
@@ -191,6 +194,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_time.setText(mUserInfo.getVip_end_time());
                 fragment_mine_user_type.setText(mUserInfo.getUser_buy_item().equals("") ? getString(R.string.string_unknow_user_type) : mUserInfo.getUser_buy_item());
             } else {
+                fragment_mine_user_type.setText(getString(R.string.become_vip));
+                fragment_mine_user_time.setText(getString(R.string.become_vip_tip));
                 fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
             }
@@ -227,7 +232,8 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_avatar.setImageResource(R.mipmap.hold_user_avatar);
             fragment_mine_user_info_isvip.setVisibility(View.GONE);
             fragment_mine_user_info_id.setVisibility(View.GONE);
-            fragment_mine_user_time.setText(LanguageUtil.getString(activity, R.string.BaoyueActivity_kaitong));
+            fragment_mine_user_type.setText(getString(R.string.become_vip));
+            fragment_mine_user_time.setText(getString(R.string.become_vip_tip));
             return;
         }
         ReaderParams params = new ReaderParams(activity);
@@ -295,7 +301,14 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     private void JumpAd(BaseAd baseAd) {
         Intent intent = new Intent();
         intent.setClass(activity, WebViewActivity.class);
-        intent.putExtra("url", baseAd.ad_skip_url);
+        String user_parame_need = baseAd.user_parame_need;
+        String jump_url = "";
+        if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2")) {
+            jump_url += "&uid=" + Utils.getUID(activity);
+        } else {
+            jump_url = baseAd.ad_skip_url;
+        }
+        intent.putExtra("url", jump_url);
         intent.putExtra("title", baseAd.ad_title);
         intent.putExtra("advert_id", baseAd.advert_id);
         intent.putExtra("ad_url_type", baseAd.ad_url_type);
@@ -412,6 +425,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 case "fragment_mine_user_info_paylayout_vip":
                     intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 11);
                     intent.putExtra("isvip", Utils.isLogin(activity));
+                    intent.putExtra("type", 0);
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_rechargenotes":
@@ -419,7 +433,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_paylayout_rechargenotes2":
-                    intent.setClass(activity, CouponRecordActivity.class).putExtra("COUPON", mUserInfo.getSilverRemain() + "");
+                    intent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 11);
+                    intent.putExtra("isvip", Utils.isLogin(activity));
+                    intent.putExtra("type", 1);
                     startActivity(intent);
                     break;
                 case "fragment_mine_user_info_tasklayout_layout":

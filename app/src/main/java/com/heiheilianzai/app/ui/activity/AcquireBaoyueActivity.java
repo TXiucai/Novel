@@ -91,6 +91,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     public ViewPager activity_acquire_vp;
     String mKeFuOnline;//客服链接
     private static final String ORIGIN_CODE = "origin_code";
+    private static final String TYPE = "type";
     private int mGoodsId, mType;
     private int mOriginCode = 13;
     private VipGoldHolder mHolder;
@@ -107,6 +108,7 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
         mGoodsId = getIntent().getIntExtra("goodsId", 0);
+        mType = getIntent().getIntExtra(TYPE, 0);
     }
 
     @Override
