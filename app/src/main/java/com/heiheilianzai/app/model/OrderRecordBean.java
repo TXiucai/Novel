@@ -13,7 +13,7 @@ public class OrderRecordBean {
      * "user_vip_name": "月卡会员"
      * ”pay_channel_name“:“支付宝”
      * }
-     *
+     * <p>
      * status      订单状态 1未付款  2付款成功  3付款失败  4 已过期
      */
 
@@ -29,6 +29,24 @@ public class OrderRecordBean {
     private String user_vip_name;
     private String pay_channel_name;
     private int order_type;
+    private String gold_num;//充值金币数
+    private String silver_num;//赠送金币数（不赠送为0）
+
+    public String getGold_num() {
+        return gold_num;
+    }
+
+    public void setGold_num(String gold_num) {
+        this.gold_num = gold_num;
+    }
+
+    public String getSilver_num() {
+        return silver_num;
+    }
+
+    public void setSilver_num(String silver_num) {
+        this.silver_num = silver_num;
+    }
 
     public int getOrder_type() {
         return order_type;

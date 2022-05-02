@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.OrderRecordBean;
+import com.heiheilianzai.app.utils.CommonUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -49,7 +51,17 @@ public class OrderRecordAdapter extends BaseQuickAdapter<OrderRecordBean, BaseVi
 
         if (!TextUtils.isEmpty(item.getUser_vip_name())) {
             tv_type_vip.setText(item.getUser_vip_name());
-            tv_type_vip.setVisibility(View.VISIBLE);
+//            tv_type_vip.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(item.getGold_num())) {
+            if (TextUtils.equals(item.getSilver_num(), "0")) {
+                tv_type_vip.setText(item.getGold_num());
+            } else {
+                tv_type_vip.setText(String.format(context.getString(R.string.string_record_gold_title), item.getGold_num(), item.getSilver_num()));
+            }
+            Drawable drawable = context.getDrawable(R.mipmap.coins);
+            drawable.setBounds(0, 0, (int) CommonUtil.convertDpToPixel(context, 15), (int) CommonUtil.convertDpToPixel(context, 15));
+            tv_type_vip.setCompoundDrawablePadding( (int) CommonUtil.convertDpToPixel(context, 5));
+            tv_type_vip.setCompoundDrawables(drawable, null, null, null);
         } else {
             tv_type_vip.setVisibility(View.INVISIBLE);
         }

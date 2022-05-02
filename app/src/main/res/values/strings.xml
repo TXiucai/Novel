@@ -109,6 +109,7 @@
     <string name="MineNewFragment_fuli">福利任务</string>
     <string name="MineNewFragment_nologin">未登录</string>
     <string name="MineNewFragment_nologin_prompt">登录后才可以购买VIP哦~</string>
+    <string name="MineNewFragment_nologin_prompt_gold">登录后才可以购买金币哦~</string>
     <string name="share_detail">分享记录</string>
     <string name="share_no_result">你还没有任何分享哦</string>
     <string name="golden_balance">余额：%d</string>
@@ -579,6 +580,7 @@
     <string name="ReadActivity_autoread_open">关闭自动解锁章节</string>
     <string name="string_comment">精品推荐</string>
     <string name="string_success_vip_marquee">恭喜%s开通vip套餐</string>
+    <string name="string_success_vip_marquee_gold">恭喜%s</string>
     <string name="string_vip_price">实付：¥</string>
     <string name="string_vip_price_tip">(标价￥%d，已优惠￥%d)</string>
     <string name="string_accept_gift_success">恭喜您，兑换成功！</string>
@@ -657,5 +659,6 @@
     <string name="string_unknow_user_type">体验会员</string>
     <string name="AcquireBaoyueActivity_title_gold">充值金币</string>
     <string name="BaoyueActivity_gold_gift">赠%s</string>
+    <string name="string_record_gold_title">%s赠%s</string>
 
 </resources>

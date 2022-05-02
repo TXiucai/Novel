@@ -170,7 +170,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.mTxLabel.setVisibility(View.VISIBLE);
                 viewHolder.mTxLabel.setText(acquirePayItem.getGoods_label());
             } else {
-                viewHolder.mTxLabel.setVisibility(View.GONE);
+                viewHolder.mTxLabel.setVisibility(View.INVISIBLE);
             }
             viewHolder.mTxNum.setText(acquirePayItem.getContent());
             if (!TextUtils.isEmpty(acquirePayItem.getGiving()) && !TextUtils.equals(acquirePayItem.getGiving(), "0")) {

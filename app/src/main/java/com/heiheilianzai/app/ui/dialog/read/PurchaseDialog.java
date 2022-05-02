@@ -138,11 +138,10 @@ public class PurchaseDialog extends Dialog {
                             JSONObject dataObjJ = new JSONObject(result);
                             JSONObject dataObj = dataObjJ.getJSONObject("base_info");
                             final int remainNum = dataObj.getInt("remain");
-                            final String remainNum0 = dataObj.getString("gold_remain");
                             final String remainNum1 = dataObj.getString("unit");
                             final String remainNum2 = dataObj.getString("subUnit");
                             final String remainNum3 = dataObj.getString("silver_remain");
-                            dialog_purchase_some_remain.setText(remainNum0 + remainNum1 + " / " + remainNum3 + remainNum2);
+                            dialog_purchase_some_remain.setText(remainNum3 + remainNum2);
                             final List<PurchaseItem> list = new ArrayList<PurchaseItem>();
                             if (!isdown) {
                                 JSONArray optionArr = dataObjJ.getJSONArray("buy_option");
@@ -184,8 +183,8 @@ public class PurchaseDialog extends Dialog {
                                 moren = list.get(1);
                             }
                             if (moren != null) {
-                                dialog_purchase_some_total_price.setText(moren.actual_cost.gold_cost + remainNum1 + "+" + moren.actual_cost.silver_cost + remainNum2);
-                                dialog_purchase_some_original_price.setText(moren.original_cost.gold_cost + remainNum1 + "+" + moren.original_cost.silver_cost + remainNum2);
+                                dialog_purchase_some_total_price.setText(moren.actual_cost.gold_cost + remainNum2);
+                                dialog_purchase_some_original_price.setText(moren.original_cost.gold_cost + remainNum2);
                                 mNum = moren.getBuy_num();
                                 //余额不足，提示"充值并购买"
                                 if (remainNum < moren.getTotal_price()) {
@@ -199,8 +198,8 @@ public class PurchaseDialog extends Dialog {
                             dialog_purchase_some_select_rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                    dialog_purchase_some_total_price.setText(list.get(checkedId).actual_cost.gold_cost + remainNum1 + "+" + list.get(checkedId).actual_cost.silver_cost + remainNum2);
-                                    dialog_purchase_some_original_price.setText(list.get(checkedId).original_cost.gold_cost + remainNum1 + "+" + list.get(checkedId).original_cost.silver_cost + remainNum2);
+                                    dialog_purchase_some_total_price.setText(list.get(checkedId).actual_cost.gold_cost + remainNum2);
+                                    dialog_purchase_some_original_price.setText(list.get(checkedId).original_cost.gold_cost + remainNum2);
                                     mNum = list.get(checkedId).getBuy_num();
                                     if (remainNum < list.get(checkedId).getTotal_price()) {
                                         dialog_purchase_some_buy.setText(LanguageUtil.getString(mContext, R.string.ReadActivity_chongzhibuy));

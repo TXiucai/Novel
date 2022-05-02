@@ -44,7 +44,6 @@ import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
-import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.MarqueeTextView;
 import com.heiheilianzai.app.view.ObservableScrollView;
 
@@ -103,7 +102,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //mSlideListener = (SlideListener) context;
+        mSlideListener = (SlideListener) context;
     }
 
     @Override
@@ -136,7 +135,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
                     intent.setClass(activity, CouponRecordActivity.class).putExtra("COUPON", mGoldBalance + "");
                     startActivity(intent);
                 } else {
-                    GetDialog.IsOperation(getActivity(), getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
+                    GetDialog.IsOperation(getActivity(), getString(R.string.MineNewFragment_nologin_prompt_gold), "", new GetDialog.IsOperationInterface() {
                         @Override
                         public void isOperation() {
                             MainHttpTask.getInstance().Gotologin(getActivity());
@@ -284,7 +283,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
                 final List<Announce> announceList = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
                     Announce announce = new Announce();
-                    announce.setContent(String.format(getString(R.string.string_success_vip_marquee), list.get(i).getMobile()) + list.get(i).getGood_title());
+                    announce.setContent(String.format(getString(R.string.string_success_vip_marquee_gold), list.get(i).getMobile()) + list.get(i).getGood_title());
                     announceList.add(announce);
                 }
                 mMarquee.setTextArraysAndClickListener(announceList, (view, position) -> {
@@ -302,7 +301,7 @@ public class GoldFragment extends BaseButterKnifeFragment {
             if (Utils.isLogin(getActivity())) {
                 pay(mSelectAcquirePayItem);
             } else {
-                GetDialog.IsOperation(getActivity(), getString(R.string.MineNewFragment_nologin_prompt), "", new GetDialog.IsOperationInterface() {
+                GetDialog.IsOperation(getActivity(), getString(R.string.MineNewFragment_nologin_prompt_gold), "", new GetDialog.IsOperationInterface() {
                     @Override
                     public void isOperation() {
                         MainHttpTask.getInstance().Gotologin(getActivity());
