@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.fragment.comic;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -83,7 +85,7 @@ public class DownMangerComicFragment extends BaseDownMangerFragment<BaseComic> {
     @Override
     protected void initData() {
         DownMangerComicFragment = true;
-        LitePal.where("down_chapters != ?", "0").findAsync(BaseComic.class).listen(new FindMultiCallback<BaseComic>() {
+        LitePal.where("down_chapters != ? and uid = ?", "0", Utils.getUID(activity)).findAsync(BaseComic.class).listen(new FindMultiCallback<BaseComic>() {
             @Override
             public void onFinish(List<BaseComic> list) {
                 refreshData(list);
@@ -104,7 +106,7 @@ public class DownMangerComicFragment extends BaseDownMangerFragment<BaseComic> {
 
     @Override
     protected void setClickSeleckAll(boolean mIsSelectAll) {
-        DownMangerComicAdapter aeAdapter = (DownMangerComicAdapter)this.downMangerAdapter;
+        DownMangerComicAdapter aeAdapter = (DownMangerComicAdapter) this.downMangerAdapter;
         aeAdapter.setmIsSelectAll(mIsSelectAll);
     }
 

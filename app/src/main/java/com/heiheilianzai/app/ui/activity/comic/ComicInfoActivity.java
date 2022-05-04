@@ -191,7 +191,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 break;
             case R.id.ll_comic_collect:
                 if (!baseComic.isAddBookSelf()) {
-                    baseComic.saveIsexist(true);
+                    baseComic.saveIsexist(true, Utils.getUID(activity));
                     tx_comic_add.setText(LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                     img_comic_collect.setImageDrawable(getResources().getDrawable(R.mipmap.comic_collect));
                     MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));

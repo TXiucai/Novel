@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
-  >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/dialog_purchase_some_tite"
@@ -134,9 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/mainColor"
-                    android:textSize="@dimen/public_10_dp"
-
-                    />
+                    android:textSize="@dimen/public_10_dp" />
 
             </LinearLayout>
 
@@ -144,7 +141,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -158,9 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray"
-                    android:textSize="@dimen/public_8_dp"
-
-                    />
+                    android:textSize="@dimen/public_8_dp" />
 
             </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.boyin;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.heiheilianzai.app.model.event.DownMangerDeleteAllChapterEvent;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -82,7 +84,7 @@ public class DownMangerPhonicFragment extends BaseDownMangerFragment<BoyinInfoBe
     @Override
     protected void initData() {
         try {
-            LitePal.where("down_chapter != ?", "0").findAsync(BoyinInfoBean.class).listen(new FindMultiCallback<BoyinInfoBean>() {
+            LitePal.where("down_chapter != ? and uid = ? ", "0", Utils.getUID(activity)).findAsync(BoyinInfoBean.class).listen(new FindMultiCallback<BoyinInfoBean>() {
                 @Override
                 public void onFinish(List<BoyinInfoBean> list) {
                     refreshData(list);

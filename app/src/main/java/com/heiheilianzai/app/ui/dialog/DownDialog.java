@@ -24,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.DownloadUtil;
@@ -42,6 +43,7 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 import com.wang.avi.AVLoadingIndicatorView;
 import com.wang.avi.indicators.LineSpinFadeLoaderIndicator;
 
@@ -180,7 +182,7 @@ public class DownDialog {
     /**
      * 获取小说下载的章节列表
      */
-    public void getDownoption(final Activity activity, final BaseBook baseBook, ChapterItem chapterItem) {
+    public void getDownoption(final Activity activity, BaseBook baseBook, ChapterItem chapterItem) {
         if (!MainHttpTask.getInstance().Gotologin(activity)) {
             return;
         }
@@ -193,18 +195,26 @@ public class DownDialog {
             isreaderbook = true;
         }
         ChapterItem = chapterItem;
+        BaseBook basebookData = LitePal.where("book_id = ? and uid = ?", baseBook.getBook_id(), Utils.getUID(activity)).findFirst(BaseBook.class);
+        if (basebookData != null) {
+            baseBook = basebookData;
+        } else {
+            baseBook.setUid(Utils.getUID(activity));
+            baseBook.save();
+        }
         String chapter_id = chapterItem != null ? chapterItem.getChapter_id() : (baseBook.getCurrent_chapter_id() == null ? "" : baseBook.getCurrent_chapter_id());
         MyToash.Log("chapter_iddd", (chapterItem == null) + "   " + chapter_id);
         ReaderParams readerParams = new ReaderParams(activity);
         readerParams.putExtraParams("book_id", baseBook.getBook_id());
         readerParams.putExtraParams("chapter_id", chapter_id);
         String json = readerParams.generateParamsJson();
+        BaseBook finalBaseBook = baseBook;
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + "/chapter/down-option", json, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
                             JSONObject JsonObject = new JSONObject(result);
-                            List<Downoption> downoptions = LitePal.where("book_id= ?", baseBook.getBook_id()).find(Downoption.class);
+                            List<Downoption> downoptions = LitePal.where("book_id= ? and uid = ?", finalBaseBook.getBook_id(), Utils.getUID(activity)).find(Downoption.class);
                             JSONArray jsonArray = JsonObject.getJSONArray("down_option");
                             if (jsonArray.length() > 0) {
                                 List<Downoption> list = new ArrayList<>();
@@ -217,15 +227,16 @@ public class DownDialog {
                                     downoption.down_num = jsonObject.getInt("down_num");
                                     downoption.file_name = jsonObject.getString("file_name");
                                     downoption.tag = jsonObject.getString("tag");
-                                    downoption.book_id = baseBook.getBook_id();
-                                    downoption.cover = baseBook.getCover();
-                                    downoption.bookname = baseBook.getName();
-                                    downoption.description = baseBook.getDescription();
+                                    downoption.book_id = finalBaseBook.getBook_id();
+                                    downoption.cover = finalBaseBook.getCover();
+                                    downoption.bookname = finalBaseBook.getName();
+                                    downoption.description = finalBaseBook.getDescription();
                                     downoption.start_order = jsonObject.getInt("start_order");
                                     downoption.end_order = jsonObject.getInt("end_order");
                                     downoption.isdown = false;
+                                    downoption.uid = Utils.getUID(activity);
                                     for (Downoption downoption1 : downoptions) {//去重 起始 和结束序号 包含在已下载内 设为已下载
-                                        if (downoption1.start_order <= downoption.start_order && downoption.end_order <= downoption1.end_order) {
+                                        if (downoption1.start_order <= downoption.start_order && downoption.end_order <= downoption1.end_order && TextUtils.equals(downoption1.uid, downoption.uid)) {
                                             downoption.isdown = true;
                                         }
                                     }
@@ -327,18 +338,21 @@ public class DownDialog {
                         Activity = activity;
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                         downoption.downoption_date = formatter.format(System.currentTimeMillis());
+                        downoption.uid = Utils.getUID(activity);
                         ShareUitls.putDown(activity, downoption.book_id, downoption.start_order + "-" + downoption.end_order);
-                        List<Downoption> downoptions = LitePal.where("book_id= ?", downoption.book_id).find(Downoption.class);
-                        for (Downoption downoption1 : downoptions) {//当前开始序号 包含在 已经下载的 某条序号记录内   重新记录最新的下载记录 为两个叠加
-                            if (downoption.start_order <= downoption1.start_order && downoption1.end_order <= downoption.end_order) {
-                                LitePal.deleteAll(Downoption.class, "file_name=?", downoption1.file_name);
-                            } else if (downoption1.start_order <= downoption.start_order && downoption.start_order <= downoption1.end_order && downoption.end_order > downoption1.end_order) {
-                                LitePal.deleteAll(Downoption.class, "file_name=?", downoption1.file_name);
-                                downoption.start_order = downoption1.start_order;
-                            } else {
-                                if (downoption1.start_order <= downoption.end_order && downoption.end_order <= downoption1.end_order && downoption.start_order < downoption1.start_order) {
+                        List<Downoption> downoptions = LitePal.where("book_id= ? and uid = ?", downoption.book_id, Utils.getUID(activity)).find(Downoption.class);
+                        if (downoptions != null && downoptions.size() > 0) {
+                            for (Downoption downoption1 : downoptions) {//当前开始序号 包含在 已经下载的 某条序号记录内   重新记录最新的下载记录 为两个叠加
+                                if (downoption.start_order <= downoption1.start_order && downoption1.end_order <= downoption.end_order) {
                                     LitePal.deleteAll(Downoption.class, "file_name=?", downoption1.file_name);
-                                    downoption.end_order = downoption1.end_order;
+                                } else if (downoption1.start_order <= downoption.start_order && downoption.start_order <= downoption1.end_order && downoption.end_order > downoption1.end_order) {
+                                    LitePal.deleteAll(Downoption.class, "file_name=?", downoption1.file_name);
+                                    downoption.start_order = downoption1.start_order;
+                                } else {
+                                    if (downoption1.start_order <= downoption.end_order && downoption.end_order <= downoption1.end_order && downoption.start_order < downoption1.start_order) {
+                                        LitePal.deleteAll(Downoption.class, "file_name=?", downoption1.file_name);
+                                        downoption.end_order = downoption1.end_order;
+                                    }
                                 }
                             }
                         }

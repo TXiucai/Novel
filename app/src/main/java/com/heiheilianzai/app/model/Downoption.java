@@ -25,6 +25,7 @@ public class Downoption extends LitePalSupport implements Serializable, Comparab
                 ", start_order=" + start_order +
                 ", end_order=" + end_order +
                 ", down_cunrrent_num=" + down_cunrrent_num +
+                ", uid=" + uid +
                 '}';
     }
 
@@ -49,6 +50,7 @@ public class Downoption extends LitePalSupport implements Serializable, Comparab
     public int start_order;
     public int end_order;
     public boolean showHead;
+    public String uid;
 
     @Override
     public boolean equals(Object obj) {

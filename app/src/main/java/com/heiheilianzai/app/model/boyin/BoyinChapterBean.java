@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.model.boyin;
 
-import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
@@ -28,13 +27,21 @@ public class BoyinChapterBean extends LitePalSupport implements Serializable, Co
     private int numbers;
     private String url;
     private String chapter_name;
-    @Column(unique = true)
     private int chapter_id;
     private int chapter_play_time;
     private String savePath = "";
     private int downloadStatus; //0 未下载  1 下载成功 2 下载中 3下载失败
     private int downloadId;
     private boolean isPlay;
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public boolean isPlay() {
         return isPlay;

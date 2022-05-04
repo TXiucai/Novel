@@ -4,6 +4,7 @@ import android.content.ContentValues;
 
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.litepal.LitePal;
 import org.litepal.annotation.Column;
@@ -13,7 +14,6 @@ import java.io.Serializable;
 
 public class BaseComic extends LitePalSupport implements Serializable, Comparable<BaseComic> {
     private long id;
-    @Column(unique = true, defaultValue = "0")
     private String comic_id;//": 26470, //漫画id
     private String name;//": "一拳超人", //漫画名
     @Column(ignore = true)
@@ -24,8 +24,6 @@ public class BaseComic extends LitePalSupport implements Serializable, Comparabl
     // private String cover;//":  //封面
     @Column(ignore = true)
     public String horizontal_cover; //水平封面
-
-
     public String vertical_cover; //竖封面
     @Column(ignore = true)
     private String last_chapter;//": "番外7", //最新章节
@@ -39,34 +37,18 @@ public class BaseComic extends LitePalSupport implements Serializable, Comparabl
     private String issue_time;//": "2018年", //发布时间
     @Column(ignore = true)
     private String sort_id;//": 1 //分类id
-
     private String description;
-
-
     private String author;//"": "黎明C", //作者
-
     @Column(ignore = true)
     private int recentChapter;//最近更新章节数
-
-
     private String current_chapter_id;//最近阅读章节ID
-
     private int current_display_order;//最近阅读章节序号
-
     private String current_chapter_name;//最近阅读章节name
-
     private String Chapter_text;//本书的目录数据的MD5
-
     private String last_chapter_time;
-
-    @Column(defaultValue = "none")
     private String uid;
-
     private boolean isAddBookSelf;//是否加入书架
-
-
     private int down_chapters;//下载过章节数 等于0  表示没有下载过
-
 
     public int getDown_chapters() {
         return down_chapters;
@@ -169,20 +151,38 @@ public class BaseComic extends LitePalSupport implements Serializable, Comparabl
 
         if (id == 0) {
             isAddBookSelf = addbook;
-            MyToash.Log("saveIsexist",id+"  "+isAddBookSelf);
+            MyToash.Log("saveIsexist", id + "  " + isAddBookSelf);
             return super.save();
         } else {
             if (addbook) {
-                isAddBookSelf=true;
+                isAddBookSelf = true;
                 ContentValues values = new ContentValues();
                 values.put("isAddBookSelf", true);
-                LitePal.update(BaseBook.class, values,id);
+                LitePal.update(BaseBook.class, values, id);
             }
         }
-        MyToash.Log("saveIsexist",id+"  "+isAddBookSelf);
-        return  isAddBookSelf;
+        MyToash.Log("saveIsexist", id + "  " + isAddBookSelf);
+        return isAddBookSelf;
     }
 
+    public boolean saveIsexist(boolean addbook, String uid) {
+
+        if (id == 0) {
+            isAddBookSelf = addbook;
+            MyToash.Log("saveIsexist", id + "  " + isAddBookSelf);
+            return super.save();
+        } else {
+            if (addbook) {
+                isAddBookSelf = true;
+                ContentValues values = new ContentValues();
+                values.put("isAddBookSelf", true);
+                values.put("uid", uid);
+                LitePal.update(BaseBook.class, values, id);
+            }
+        }
+        MyToash.Log("saveIsexist", id + "  " + isAddBookSelf);
+        return isAddBookSelf;
+    }
 
     public String getComic_id() {
         return comic_id;
@@ -322,8 +322,8 @@ public class BaseComic extends LitePalSupport implements Serializable, Comparabl
     }
 
     @Override
-    public boolean equals( Object obj) {
-        return this.comic_id.equals(((BaseComic)obj).getComic_id());
+    public boolean equals(Object obj) {
+        return this.comic_id.equals(((BaseComic) obj).getComic_id());
     }
 
     @Override

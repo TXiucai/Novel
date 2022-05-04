@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.book;
+
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -7,10 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.DownMangerAdapter;
+import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.model.Downoption;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -77,21 +81,9 @@ public class DownMangerBookFragment extends BaseDownMangerFragment<Downoption> {
 
     @Override
     protected void initData() {
-        LitePal.where().findAsync(Downoption.class).listen(new FindMultiCallback<Downoption>() {
+        LitePal.where("uid =?", Utils.getUID(activity)).findAsync(Downoption.class).listen(new FindMultiCallback<Downoption>() {
             @Override
             public void onFinish(List<Downoption> list) {
-                List<String> stringList = new ArrayList<>();
-                if (list.size() != 0) {
-                    Collections.sort(list);//按bookid 排序
-                    for (Downoption downoption : list) {
-                        if (stringList.contains(downoption.book_id)) {
-                            downoption.showHead = false;
-                        } else {
-                            downoption.showHead = true;
-                            stringList.add(downoption.book_id);
-                        }
-                    }
-                }
                 refreshData(list);
             }
         });

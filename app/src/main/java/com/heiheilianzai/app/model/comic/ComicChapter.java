@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 public class ComicChapter extends LitePalSupport implements Serializable, Comparable<ComicChapter> {
     private long id;
-    @Column(unique = true, defaultValue = "0")
     public String chapter_id;//": 837923, //章节id
     public String chapter_title;//": "0.预告", //章节名
     @Column(ignore = true)
@@ -42,6 +41,23 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
     private String requestId;
     private String adId;
     private String adPosId;
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getDisplay_label() {
+        return display_label;
+    }
+
+    public void setDisplay_label(String display_label) {
+        this.display_label = display_label;
+    }
 
     public String getRequestId() {
         return requestId;
@@ -396,6 +412,7 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
                 ", current_read_img_order=" + current_read_img_order +
                 ", current_read_img_image_id='" + current_read_img_image_id + '\'' +
                 ", ISDown=" + ISDown +
+                ", uid=" + uid +
                 '}';
     }
 

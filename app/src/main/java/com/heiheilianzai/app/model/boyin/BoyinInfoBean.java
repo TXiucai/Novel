@@ -31,7 +31,6 @@ public class BoyinInfoBean extends LitePalSupport implements Serializable, Compa
     private String anchor_img;
     @SerializedName("id")
     private int nid;
-    @Column (unique = true, defaultValue = "0")
     private String name;
     private int numbers;
     private String img;
@@ -42,6 +41,15 @@ public class BoyinInfoBean extends LitePalSupport implements Serializable, Compa
     private int listen_true;
     private String category_name;
     private int down_chapter;
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public int getDown_chapter() {
         return down_chapter;

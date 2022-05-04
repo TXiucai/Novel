@@ -36,6 +36,7 @@ import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -225,12 +226,13 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
      */
     private void localData(String nid) {
         mBoyinChapterBeans.clear();
-        List<BoyinChapterBean> boyinChapterBeanList = LitePal.where("nid = ?", nid).find(BoyinChapterBean.class);
+        List<BoyinChapterBean> boyinChapterBeanList = LitePal.where("nid = ? and uid = ?", nid, Utils.getUID(activity)).find(BoyinChapterBean.class);
         if (boyinChapterBeanList != null && boyinChapterBeanList.size() > 0) {
             mBoyinChapterBeans.addAll(boyinChapterBeanList);
-            List<BoyinInfoBean> infoBeanList = LitePal.where("nid != ?", nid).find(BoyinInfoBean.class);
+            List<BoyinInfoBean> infoBeanList = LitePal.where("nid != ? and uid = ?", nid, Utils.getUID(activity)).find(BoyinInfoBean.class);
             if (infoBeanList != null && infoBeanList.size() > 0) {
                 mBoyInfoBean = infoBeanList.get(0);
+                mBoyInfoBean.setUid(Utils.getUID(activity));
                 setCatalogStatus(mBoyInfoBean);
             }
             ContentValues values1 = new ContentValues();
@@ -265,6 +267,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
                     JsonArray jsonElements = jsonParser.parse(data.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
                     String novel_info = data.getString("novel_info");
                     mBoyInfoBean = gson.fromJson(novel_info, BoyinInfoBean.class);
+                    mBoyInfoBean.setUid(Utils.getUID(activity));
                     for (JsonElement jsonElement : jsonElements) {
                         BoyinChapterBean boyinChapterBean = gson.fromJson(jsonElement, BoyinChapterBean.class);
                         mBoyinChapterBeans.add(boyinChapterBean);
@@ -317,15 +320,17 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
             for (int i = 0; i < mBoyinChapterBeans.size(); i++) {
                 BoyinChapterBean boyinChapterBean = mBoyinChapterBeans.get(i);
                 int chapter_id = boyinChapterBean.getChapter_id();
-                if (!LitePal.isExist(BoyinChapterBean.class, "chapter_id = ?", String.valueOf(chapter_id))) {
-                    boyinChapterBean.save();
+                if (!LitePal.isExist(BoyinChapterBean.class, "chapter_id = ? and uid = ?", String.valueOf(chapter_id), Utils.getUID(activity))) {
+                    boyinChapterBean.setUid(Utils.getUID(activity));
+                    //boyinChapterBean.save();
+                    boyinChapterBean.saveThrows();
                     MyToash.Log("FileDownloader", "保存章节" + chapter_id);
                 } else {
                     MyToash.Log("FileDownloader", "不保存章节" + chapter_id);
                 }
 
             }
-            if (!LitePal.isExist(BoyinInfoBean.class, "nid = ?", String.valueOf(mBoyInfoBean.getId()))) {
+            if (!LitePal.isExist(BoyinInfoBean.class, "nid = ? and uid = ?", String.valueOf(mBoyInfoBean.getId()), Utils.getUID(activity))) {
                 mBoyInfoBean.save();
                 MyToash.Log("FileDownloader", "保存小说" + mBoyInfoBean.getId());
             } else {
@@ -342,7 +347,7 @@ public class BoyinDownActivity extends BaseButterKnifeActivity {
      * @param nid
      */
     private void getSplChapter(String nid) {
-        LitePal.where("nid = ?", nid).findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
+        LitePal.where("nid = ? and uid = ?", nid, Utils.getUID(activity)).findAsync(BoyinChapterBean.class).listen(new FindMultiCallback<BoyinChapterBean>() {
             @Override
             public void onFinish(List<BoyinChapterBean> list) {
                 int min = Math.min(list.size(), mBoyinChapterBeans.size());

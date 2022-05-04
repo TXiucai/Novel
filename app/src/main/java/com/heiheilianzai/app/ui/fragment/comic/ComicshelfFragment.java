@@ -365,7 +365,7 @@ public class ComicshelfFragment extends Fragment {
                                         }
                                     }
                                     if (!isflag) {
-                                        BaseComic.setAddBookSelf(BaseComic.saveIsexist(true));
+                                        BaseComic.setAddBookSelf(BaseComic.saveIsexist(true, Utils.getUID(activity)));
                                         BaseComic.setAddBookSelf(true);
                                         bookLists.add(BaseComic);
                                     }
@@ -383,7 +383,7 @@ public class ComicshelfFragment extends Fragment {
                                             try {
                                                 LitePal.updateAll(BaseComic.class, values, "comic_id = ?", BaseComict.getComic_id());
                                             } catch (Exception E) {
-                                                BaseComict.saveIsexist(true);
+                                                BaseComict.saveIsexist(true, Utils.getUID(activity));
                                             }
                                         } else {
                                             LitePal.update(BaseComic.class, values, BaseComict.getId());

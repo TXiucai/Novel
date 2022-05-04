@@ -18,6 +18,7 @@ import com.heiheilianzai.app.model.boyin.BoyinInfoBean;
 import com.heiheilianzai.app.model.event.BoyinDownloadEvent;
 import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
 import com.heiheilianzai.app.utils.MyToash;
+import com.heiheilianzai.app.utils.Utils;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloadListener;
@@ -166,7 +167,7 @@ public class DownloadBoyinService extends Service implements NetStateChangeRecei
                 downloadTaskModel.setDownloadStatus(BoyinChapterBean.STATUS_DOWNLOAD_ERROR);
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("downloadstatus", BoyinChapterBean.STATUS_DOWNLOAD_ERROR);
-                LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ?", String.valueOf(downloadTaskModel.getChapter_id()));
+                LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ? and uid = ?", String.valueOf(downloadTaskModel.getChapter_id()), Utils.getUID(getApplicationContext()));
                 EventBus.getDefault().post(new BoyinDownloadEvent(ERROR, Arrays.asList(downloadTaskModel)));
                 startNextDownloadTask();
             }
@@ -186,13 +187,13 @@ public class DownloadBoyinService extends Service implements NetStateChangeRecei
         ContentValues contentValues = new ContentValues();
         contentValues.put("savepath", downloadTask.getSavePath());
         contentValues.put("downloadstatus", BoyinChapterBean.STATUS_COMPLETE);
-        LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ?", String.valueOf(downloadTask.getChapter_id()));
+        LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ? and uid = ?", String.valueOf(downloadTask.getChapter_id()), Utils.getUID(getApplicationContext()));
         MyToash.Log("FileDownloader", "完成 更新章节数据库");
-        List<BoyinChapterBean> boyinChapterBeans = LitePal.where("nid = ? and downloadstatus = ?", String.valueOf(downloadTask.getNid()), "1").find(BoyinChapterBean.class);
+        List<BoyinChapterBean> boyinChapterBeans = LitePal.where("nid = ? and downloadstatus = ? and uid = ?", String.valueOf(downloadTask.getNid()), "1", Utils.getUID(getApplicationContext())).find(BoyinChapterBean.class);
         if (boyinChapterBeans != null && boyinChapterBeans.size() > 0) {
-            contentValues.clear();
-            contentValues.put("down_chapter", boyinChapterBeans.size());
-            LitePal.updateAll(BoyinInfoBean.class, contentValues, "nid = ?", String.valueOf(downloadTask.getNid()));
+            ContentValues values = new ContentValues();
+            values.put("down_chapter", boyinChapterBeans.size());
+            LitePal.updateAll(BoyinInfoBean.class, values, "nid = ? and uid = ?", String.valueOf(downloadTask.getNid()), Utils.getUID(getApplicationContext()));
         }
         BoyinDownloadEvent boyinDownloadEvent = new BoyinDownloadEvent(COMPLETE_DOWNLOAD, Arrays.asList(downloadTask));
         boyinDownloadEvent.setDownComplete(mComplteChapter);
@@ -292,7 +293,7 @@ public class DownloadBoyinService extends Service implements NetStateChangeRecei
         // 更新数据库数据状态
         ContentValues contentValues = new ContentValues();
         contentValues.put("downloadstatus", BoyinChapterBean.STATUS_DOWNLOADING);
-        LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ?", String.valueOf(downloadEntity.getChapter_id()));
+        LitePal.updateAll(BoyinChapterBean.class, contentValues, "chapter_id = ? and uid = ?", String.valueOf(downloadEntity.getChapter_id()), Utils.getUID(getApplicationContext()));
         start(downloadEntity);
     }
 

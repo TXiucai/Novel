@@ -27,6 +27,7 @@ import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -150,7 +151,7 @@ public class MyPoPwindow {
                                     baseComic.setRecentChapter(addrecommendProducs.total_chapter);
                                     baseComic.setTotal_chapters(addrecommendProducs.total_chapter);
                                     baseComic.setDescription(addrecommendProducs.description);
-                                    baseComic.saveIsexist(true);
+                                    baseComic.saveIsexist(true, Utils.getUID(activity));
                                     baseComic.setAddBookSelf(true);
                                     comics.add(baseComic);
                                 }

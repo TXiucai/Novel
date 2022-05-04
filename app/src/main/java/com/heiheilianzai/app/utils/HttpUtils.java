@@ -138,7 +138,8 @@ public class HttpUtils {
                                         break;
                                     case 802://余额不足 充值
                                         MyToash.ToashError(context, msg);
-                                        Intent intent = AcquireBaoyueActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_mine), 11);
+                                        int originCode = body.contains("book_id") ? 3 : 4;
+                                        Intent intent = AcquireBaoyueActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_mine), originCode);
                                         intent.putExtra("isvip", Utils.isLogin(context));
                                         intent.putExtra("type", 1);
                                         context.startActivity(intent);

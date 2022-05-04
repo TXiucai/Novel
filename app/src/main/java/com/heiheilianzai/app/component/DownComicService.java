@@ -19,6 +19,7 @@ import com.heiheilianzai.app.model.event.comic.DownComicEvenbus;
 import com.heiheilianzai.app.utils.FileManager;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.decode.AESUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,6 +80,7 @@ public class DownComicService extends IntentService {
             ++TotalChapter;
             String s = gson.toJson(comicChapterItem);
             String chapter_id = comicChapterItem.chapter_id;
+            downComicEvenbus.chapter_id = chapter_id;
             process = 0;
             int lengthTemp = comicChapterItem.image_list.size();
             MyToash.Log("XXomicChapter22", chapter_id + "   " + process + "   " + lengthTemp);
@@ -130,14 +132,17 @@ public class DownComicService extends IntentService {
                                 if (process == lengthTemp) {
                                     ShareUitls.putComicDownStatus(activity, chapter_id, 1);
                                     downComicEvenbus.flag = false;
+                                    downComicEvenbus.status = 1;
                                     EventBus.getDefault().post(downComicEvenbus);
                                 }
                             } catch (Exception e) {
                                 ShareUitls.putComicDownStatus(activity, chapter_id, 3);
+                                downComicEvenbus.status = 3;
                                 e.printStackTrace();
                             }
                         } catch (IOException e) {
                             ShareUitls.putComicDownStatus(activity, chapter_id, 3);
+                            downComicEvenbus.status = 3;
                             e.printStackTrace();
                         }
                     }
@@ -150,6 +155,7 @@ public class DownComicService extends IntentService {
             values1.put("down_chapters", down_chapters);
             values1.put("current_chapter_id", comicChapterItem.getChapter_id());
             LitePal.update(BaseComic.class, values1, id);
+            LitePal.updateAll(BaseComic.class, values1, "comic_id = ? and uid = ?", comic_id, Utils.getUID(activity));
             if (DownMangerComicFragment) {
                 baseComic.setDown_chapters(down_chapters);
                 EventBus.getDefault().post(baseComic);//更新上一界面的 数据
@@ -158,13 +164,7 @@ public class DownComicService extends IntentService {
             values.put("ImagesText", s);
             values.put("ISDown", "1");
             if (comicChapterItem.display_order < comicChapterCatalogs.size()) {//如果服务器display_order参数有问题会导致Bounds
-                long chapterid = comicChapterCatalogs.get(comicChapterItem.display_order).getId();
-                int i;
-                if (id == 0) {
-                    i = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ?", comicChapterItem.getComic_id(), chapter_id);
-                } else {
-                    i = LitePal.update(ComicChapter.class, values, chapterid);
-                }
+                int all = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ? and uid = ?", comicChapterItem.getComic_id(), chapter_id, Utils.getUID(activity));
             }
         }
         downComicEvenbus.flag = true;

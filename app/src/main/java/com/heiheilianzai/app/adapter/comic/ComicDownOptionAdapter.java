@@ -2,6 +2,7 @@ package com.heiheilianzai.app.adapter.comic;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.ShareUitls;
+import com.heiheilianzai.app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,31 +72,14 @@ public class ComicDownOptionAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         ComicChapter comicDownOption = getItem(position);
-
-        String display_label = (comicDownOption.display_order + 1)+"";
-
-
-       /* if (comicDownOption.display_order < 10) {
-            display_label = "00" + (comicDownOption.display_order + 1);
-        } else if (comicDownOption.display_order < 100) {
-            display_label = "0" + (comicDownOption.display_order + 1);
-
-        }*/
-        viewHolder.item_comicdownoption_text.setText((comicDownOption.display_label==null?"":comicDownOption.display_label)+ "");
-
-        //  File file=new File(FileManager.getManhuaSDCardRoot().concat(comicDownOption.comic_id + "/").concat(comicDownOption.chapter_id ));
-        int status = 1;
-        if (!flag) {
-            status = ShareUitls.getComicDownStatus(activity, comicDownOption.chapter_id, 0);
-        }
+        viewHolder.item_comicdownoption_text.setText((comicDownOption.display_label == null ? "" : comicDownOption.display_label) + "");
+        int status = comicDownOption.getISDown();
         if (status == 0 || status == 3) {
             viewHolder.item_comicdownoption_downstatus.setVisibility(View.GONE);
             if (comicDownOptionListChooseDwn.contains(comicDownOption)) {
                 viewHolder.item_comicdownoption_text.setBackgroundResource(R.drawable.shape_comicdownoption_maincolor);
                 viewHolder.item_comicdownoption_text.setTextColor(Color.WHITE);
                 viewHolder.item_comicdownoption_vip.setImageResource(R.mipmap.lock_white);
-
-
             } else {
                 viewHolder.item_comicdownoption_text.setBackgroundResource(R.drawable.shape_comicdownoption_white);
                 viewHolder.item_comicdownoption_text.setTextColor(Color.BLACK);
@@ -138,7 +123,6 @@ public class ComicDownOptionAdapter extends BaseAdapter {
                     }
                     refreshBtn(comicDownOptionListChooseDwn.size());
                 } else {
-                    int status = ShareUitls.getComicDownStatus(activity, comicDownOption.chapter_id, 0);
                     if (status == 0 || status == 3) {
                         if (!comicDownOptionListChooseDwn.contains(comicDownOption)) {
                             comicDownOptionListChooseDwn.add(comicDownOption);

@@ -346,7 +346,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 initData();
                 break;
             case R.id.activity_comiclook_shoucang:
-                baseComic.saveIsexist(true);
+                baseComic.saveIsexist(true, Utils.getUID(activity));
                 activity_comiclook_shoucang.setVisibility(View.GONE);
                 MyToash.ToashSuccess(activity, LanguageUtil.getString(this, R.string.fragment_comic_info_yishoucang));
                 EventBus.getDefault().post(new RefreshComic(baseComic, 1));
@@ -1423,7 +1423,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                baseComic.saveIsexist(true);
+                baseComic.saveIsexist(true, Utils.getUID(activity));
                 MyToash.ToashSuccess(activity, LanguageUtil.getString(getApplicationContext(), R.string.fragment_comic_info_yishoucang));
                 EventBus.getDefault().post(new RefreshComic(baseComic, 1));
                 EventBus.getDefault().post(new RefreashComicInfoActivity(true));

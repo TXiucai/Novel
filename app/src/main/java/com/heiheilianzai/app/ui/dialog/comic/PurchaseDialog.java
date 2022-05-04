@@ -173,8 +173,8 @@ public class PurchaseDialog extends Dialog {
                             PurchaseItem moren = null;
                             moren = list.get(0);
                             if (moren != null) {
-                                dialog_purchase_some_total_price.setText(moren.actual_cost.gold_cost + remainNum2);
-                                dialog_purchase_some_original_price.setText(moren.original_cost.gold_cost + remainNum2);
+                                dialog_purchase_some_total_price.setText(moren.getTotal_price() + remainNum2);
+                                dialog_purchase_some_original_price.setText(moren.getOriginal_price() + remainNum2);
                                 mNum = moren.getBuy_num();
                                 //余额不足，提示"充值并购买"
                                 if (remainNum < moren.getTotal_price()) {
@@ -188,8 +188,8 @@ public class PurchaseDialog extends Dialog {
                             dialog_purchase_some_select_rgs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                    dialog_purchase_some_total_price.setText(list.get(checkedId).actual_cost.gold_cost + remainNum2);
-                                    dialog_purchase_some_original_price.setText(list.get(checkedId).original_cost.gold_cost + remainNum2);
+                                    dialog_purchase_some_total_price.setText(list.get(checkedId).getTotal_price() + remainNum2);
+                                    dialog_purchase_some_original_price.setText(list.get(checkedId).getOriginal_price() + remainNum2);
                                     mNum = list.get(checkedId).getBuy_num();
 
                                     if (remainNum < list.get(checkedId).getTotal_price()) {

@@ -220,7 +220,7 @@ public class DialogComicLook {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                baseComic.saveIsexist(true);
+                baseComic.saveIsexist(true, Utils.getUID(activity));
                 MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.fragment_comic_info_yishoucang));
                 EventBus.getDefault().post(new RefreshComic(baseComic, 1));
                 EventBus.getDefault().post(new RefreashComicInfoActivity(true));

@@ -77,11 +77,7 @@ public class DownMangerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         final Downoption downoption = list.get(position);
-        if (!downoption.showHead) {
-            viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.GONE);
-        } else {
-            viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.VISIBLE);
-        }
+        viewHolder.item_dowmmanger_HorizontalScrollView.setVisibility(View.VISIBLE);
         setIsEditView(viewHolder, mIsEditOpen);
         setIsSelectAllView(viewHolder, mIsSelectAll);
         viewHolder.mRlCheckBox.setOnClickListener(new View.OnClickListener() {
