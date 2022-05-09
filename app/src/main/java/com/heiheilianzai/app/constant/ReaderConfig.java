@@ -125,6 +125,8 @@ public class ReaderConfig {
     public static BaseAd BOTTOM_COMIC_AD;
     public static BaseAd TOP_COMIC_AD;
     public static ComicChapter CHAPTER_COMIC_AD;
+    public static List<String> pay_lunxun_domain;
+    public static String pay_lunxun_domain_switch = "0";//0关闭 1开启
 
     /**
      * 分享成功增加金币

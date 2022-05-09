@@ -239,6 +239,8 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         if (!StringUtils.isEmpty(dataBean.getTts_open_switch())) {
                             ReaderConfig.TTS_OPEN = dataBean.getTts_open_switch();
                         }
+                        ReaderConfig.pay_lunxun_domain_switch = dataBean.pay_lunxun_domain_switch;
+                        ReaderConfig.pay_lunxun_domain = dataBean.pay_lunxun_domain.getList();
                         ReaderConfig.NOVEL_SDK_AD.clear();
                         ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());
                         ReaderConfig.COMIC_SDK_AD.clear();

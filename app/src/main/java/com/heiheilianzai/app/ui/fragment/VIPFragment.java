@@ -332,8 +332,16 @@ public class VIPFragment extends BaseButterKnifeFragment {
                             if (!cn.jmessage.support.qiniu.android.utils.StringUtils.isNullOrEmpty(result)) {
                                 try {
                                     JSONObject jsonObj = new JSONObject(result);
+                                    String url = "";
                                     String pay_url = jsonObj.getString("pay_link");
-                                    showPayDialog(pay_url);
+                                    String pay_link_lunxun = jsonObj.getString("pay_link_lunxun");
+                                    String payUrl = ShareUitls.getString(activity, "payUrl", "");
+                                    if (TextUtils.equals(ReaderConfig.pay_lunxun_domain_switch, "1") && !TextUtils.isEmpty(payUrl)) {
+                                        url = payUrl + pay_link_lunxun;
+                                    } else {
+                                        url = pay_url;
+                                    }
+                                    showPayDialog(url);
                                 } catch (Exception e) {
                                 }
                             }

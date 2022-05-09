@@ -33,6 +33,8 @@ public class AppUpdate {
     public String guide_text;
     public int display_second;
     public String book_read_tip_title;
+    public String pay_lunxun_domain_switch;
+    public PayLunxunDomainBean pay_lunxun_domain;
 
     public String getGuide_text() {
         return guide_text;
@@ -234,6 +236,18 @@ public class AppUpdate {
 
     public void setBoyin_switch(int boyin_switch) {
         this.boyin_switch = boyin_switch;
+    }
+
+    public class PayLunxunDomainBean{
+        private List<String> list;
+
+        public List<String> getList() {
+            return list;
+        }
+
+        public void setList(List<String> list) {
+            this.list = list;
+        }
     }
 
     public class Unit_tag {

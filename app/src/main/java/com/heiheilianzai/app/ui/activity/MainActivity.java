@@ -95,6 +95,7 @@ import com.heiheilianzai.app.utils.DialogExpirerdVip;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.ListDomainSort;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.RecomendApp;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
@@ -222,6 +223,24 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         initData();
         setOpenTimeEvent();
         getLocalPushData();
+        getPayUrl();
+    }
+
+    /**
+     * 支付url测速
+     */
+    private void getPayUrl() {
+        if (TextUtils.equals(ReaderConfig.pay_lunxun_domain_switch, "1")) {
+            List<String> pay_lunxun_domain = ReaderConfig.pay_lunxun_domain;
+            ListDomainSort.getSortUtil().startSort(pay_lunxun_domain, 1, true, ListDomainSort.DOMAIN_TYPE, new ListDomainSort.CallHostsDomain() {
+                @Override
+                public void callHostList(List<String> newList) {
+                    if (newList != null && newList.size() > 0) {
+                        ShareUitls.putString(activity, "payUrl", newList.get(0));
+                    }
+                }
+            });
+        }
     }
 
     private void getAd() {
