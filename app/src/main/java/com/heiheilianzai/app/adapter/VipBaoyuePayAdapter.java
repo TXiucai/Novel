@@ -164,7 +164,7 @@ public class VipBaoyuePayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.iv_selected_icon.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.mLlGoldItem.setBackgroundResource(R.drawable.bg_stroke_39383_5);
-                viewHolder.iv_selected_icon.setVisibility(View.GONE);
+                viewHolder.iv_selected_icon.setVisibility(View.INVISIBLE);
             }
             if (!TextUtils.isEmpty(acquirePayItem.getGoods_label())) {
                 viewHolder.mTxLabel.setVisibility(View.VISIBLE);

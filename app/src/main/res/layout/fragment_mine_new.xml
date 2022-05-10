@@ -113,10 +113,10 @@
             <LinearLayout
                 android:id="@+id/fragment_mine_user_info_money_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_85dp"
-                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_height="@dimen/dimens_100dp"
+                android:layout_marginLeft="@dimen/dimens_8dp"
+                android:layout_marginRight="@dimen/dimens_8dp"
                 android:layout_marginTop="-80dp"
-                android:layout_marginRight="@dimen/dimens_15dp"
                 android:gravity="center_vertical">
 
                 <RelativeLayout
@@ -124,8 +124,8 @@
                     android:layout_width="@dimen/dimens_0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@mipmap/mine_fragment_user_bg"
-                    android:paddingLeft="@dimen/dimens_12dp"
+                    android:background="@drawable/mine_fragment_user_bg"
+                    android:paddingLeft="@dimen/dimens_20dp"
                     android:paddingRight="@dimen/dimens_15dp">
 
                     <RelativeLayout
@@ -161,19 +161,15 @@
                         android:src="@mipmap/right_white" />
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="@dimen/dp_10"
-                    android:layout_height="match_parent" />
-
                 <RelativeLayout
                     android:id="@+id/fragment_mine_user_info_shuquan_layout"
                     android:layout_width="@dimen/dimens_0dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_weight="1"
-                    android:background="@mipmap/mine_fragment_gold_bg"
+                    android:background="@drawable/mine_fragment_gold_bg"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/dimens_12dp"
+                    android:paddingLeft="@dimen/dimens_20dp"
                     android:paddingRight="@dimen/dimens_15dp">
 
                     <RelativeLayout

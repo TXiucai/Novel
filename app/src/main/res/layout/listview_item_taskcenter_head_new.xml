@@ -7,13 +7,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_380dp"
-        android:background="@mipmap/task_center_sign_bg">
+        android:background="@drawable/task_center_sign_bg">
 
         <ImageView
             android:layout_width="@dimen/dimens_180dp"
             android:layout_height="@dimen/dimens_36dp"
             android:layout_marginTop="@dimen/dimens_110dp"
-            android:src="@mipmap/task_center_sign_tip" />
+            android:src="@drawable/task_center_sign_tip" />
 
         <LinearLayout
             android:layout_width="match_parent"

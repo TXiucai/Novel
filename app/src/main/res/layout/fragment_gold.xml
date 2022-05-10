@@ -49,9 +49,8 @@
                 android:id="@+id/activity_acquire_pay_gridview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_8dp"
-                android:layout_marginTop="@dimen/dimens_10dp"
-                android:layout_marginRight="@dimen/dimens_8dp" />
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_10dp" />
 
             <View
                 android:layout_width="match_parent"

@@ -190,9 +190,9 @@ public class StepView extends View {
         // 第三天图标完成
         mThreeCompleteIcon = ContextCompat.getDrawable(getContext(), R.mipmap.sign_three_complete);
         // 第七天图标未完成
-        mSevenUnCompleteIcon = ContextCompat.getDrawable(getContext(), R.mipmap.sign_seven_uncomplete);
+        mSevenUnCompleteIcon = ContextCompat.getDrawable(getContext(), R.drawable.coins);
         // 第七天图标完成
-        mSevenCompleteIcon = ContextCompat.getDrawable(getContext(), R.mipmap.sign_seven_complete);
+        mSevenCompleteIcon = ContextCompat.getDrawable(getContext(), R.drawable.coins);
     }
 
     @Override

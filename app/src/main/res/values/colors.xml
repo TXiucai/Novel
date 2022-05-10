@@ -204,5 +204,7 @@
     <color name="color_B9B7B7">#B9B7B7</color>
     <color name="color_FFD278">#FFD278</color>
     <color name="color_FB4F57">#FB4F57</color>
+    <color name="color_FF8133">#FF8133</color>
+    <color name="color_FFF8EF">#FFF8EF</color>
     <!--色值定义END-->
 </resources>
