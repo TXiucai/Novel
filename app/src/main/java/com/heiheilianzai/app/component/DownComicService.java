@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -27,7 +28,6 @@ import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -55,20 +55,21 @@ public class DownComicService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Down(intent);
+        down(intent);
     }
 
-    private void Down(Intent intent) {
+    private void down(Intent intent) {
         DownComicEvenbus downComicEvenbus = new DownComicEvenbus();
         List<ComicChapter> comicChapterCatalogs;
         BaseComic baseComic;
         int down_chapters;
         long id;
-        String result;
         Bundle bundle2 = intent.getBundleExtra("downcomic");
         baseComic = (BaseComic) bundle2.getSerializable("baseComic");
-        result = bundle2.getString("result");
-        comicChapterCatalogs = (List<ComicChapter>) (bundle2.getSerializable("comicChapter"));
+        String result = ShareUitls.getString(activity, "comicChapterCatalogs", "");
+        if (TextUtils.isEmpty(result)) {
+            return;
+        }
         downComicEvenbus.baseComic = baseComic;
         String comic_id = baseComic.getComic_id();
         id = baseComic.getId();
@@ -83,12 +84,10 @@ public class DownComicService extends IntentService {
             downComicEvenbus.chapter_id = chapter_id;
             process = 0;
             int lengthTemp = comicChapterItem.image_list.size();
-            MyToash.Log("XXomicChapter22", chapter_id + "   " + process + "   " + lengthTemp);
             Flag:
             for (BaseComicImage baseComicImage : comicChapterItem.image_list) {
                 baseComicImage.comic_id = comic_id;
                 baseComicImage.chapter_id = chapter_id;
-                MyToash.Log("XXomicChapter33", baseComicImage.image);
                 String ImgName = "";
                 try {
                     String localPath = FileManager.getManhuaSDCardRoot().concat(comic_id + "/").concat(chapter_id + "/");
@@ -107,7 +106,6 @@ public class DownComicService extends IntentService {
                     if (file.exists()) {
                         process++;
                         if (process == lengthTemp) {
-                            ShareUitls.putComicDownStatus(this, chapter_id, 1);
                             downComicEvenbus.flag = false;
                             EventBus.getDefault().post(downComicEvenbus);
                         }
@@ -116,38 +114,27 @@ public class DownComicService extends IntentService {
                         if (!dir.exists()) {
                             dir.mkdirs();
                         }
-                        try {
-                            file.createNewFile();
-                            try {
-                                File filee = Glide.with(activity)
-                                        .load(baseComicImage.image)
-                                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                        .get();
-                                if (baseComicImage.image.substring(baseComicImage.image.length() - 2, baseComicImage.image.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)) {//是否解密文件
-                                    InputStream inputStream = new FileInputStream(filee);
-                                    filee = AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + filee.getName());
-                                }
-                                GlideCopy(filee, file);
-                                process++;
-                                if (process == lengthTemp) {
-                                    ShareUitls.putComicDownStatus(activity, chapter_id, 1);
-                                    downComicEvenbus.flag = false;
-                                    downComicEvenbus.status = 1;
-                                    EventBus.getDefault().post(downComicEvenbus);
-                                }
-                            } catch (Exception e) {
-                                ShareUitls.putComicDownStatus(activity, chapter_id, 3);
-                                downComicEvenbus.status = 3;
-                                e.printStackTrace();
-                            }
-                        } catch (IOException e) {
-                            ShareUitls.putComicDownStatus(activity, chapter_id, 3);
-                            downComicEvenbus.status = 3;
-                            e.printStackTrace();
+                        file.createNewFile();
+                        File filee = Glide.with(activity)
+                                .load(baseComicImage.image)
+                                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                .get();
+                        if (baseComicImage.image.substring(baseComicImage.image.length() - 2, baseComicImage.image.length()).equals(ReaderConfig.IMG_CRYPTOGRAPHIC_POSTFIX)) {//是否解密文件
+                            InputStream inputStream = new FileInputStream(filee);
+                            filee = AESUtil.decryptFile(AESUtil.key, inputStream, AESUtil.desFile + filee.getName());
+                        }
+                        GlideCopy(filee, file);
+                        process++;
+                        if (process == lengthTemp) {
+                            downComicEvenbus.flag = false;
+                            downComicEvenbus.status = 1;
+                            EventBus.getDefault().post(downComicEvenbus);
                         }
                     }
                 } catch (Exception e) {
-                    ShareUitls.putComicDownStatus(activity, chapter_id, 3);
+                    downComicEvenbus.flag = false;
+                    downComicEvenbus.status = 3;
+                    EventBus.getDefault().post(downComicEvenbus);
                 }
             }
             ++down_chapters;
@@ -163,12 +150,14 @@ public class DownComicService extends IntentService {
             ContentValues values = new ContentValues();
             values.put("ImagesText", s);
             values.put("ISDown", "1");
-            if (comicChapterItem.display_order < comicChapterCatalogs.size()) {//如果服务器display_order参数有问题会导致Bounds
-                int all = LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ? and uid = ?", comicChapterItem.getComic_id(), chapter_id, Utils.getUID(activity));
-            }
+            LitePal.updateAll(ComicChapter.class, values, "comic_id = ? and chapter_id = ? and uid = ?", comicChapterItem.getComic_id(), chapter_id, Utils.getUID(activity));
         }
-        downComicEvenbus.flag = true;
-        downComicEvenbus.Down_Size = TotalChapter;
-        EventBus.getDefault().post(downComicEvenbus);
+        //全部结束提示整体更新
+        List<ComicChapter> comicChapters = LitePal.where("ISDown != ? and comic_id = ? and uid = ?", "2", comic_id, Utils.getUID(activity)).find(ComicChapter.class);
+        if (comicChapters.size() == comicChapterItemList.size()) {
+            downComicEvenbus.flag = true;
+            downComicEvenbus.Down_Size = TotalChapter;
+            EventBus.getDefault().post(downComicEvenbus);
+        }
     }
 }

@@ -18,14 +18,12 @@ import com.google.gson.JsonParser;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.ComicDownOptionAdapter;
-import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.base.BaseDownMangerFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.boyin.BoyinChapterBean;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.model.comic.ComicDownOptionData;
@@ -51,7 +49,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -94,6 +91,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
     int Size;
     PurchaseDialog purchaseDialog;
     boolean mIsDeleteItem;//是否有删除漫画章节
+    private List<ComicChapter> mDownList;
 
     @Override
     public int initContentView() {
@@ -264,27 +262,28 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                         }
                         ComicDownOptionData comicDownOptionData = gson.fromJson(result, ComicDownOptionData.class);
                         fragment_comicinfo_mulu_zhuangtai.setText(comicDownOptionData.base_info.display_label);
-                        List<ComicChapter> down_list = comicDownOptionData.down_list;
-                        if (!down_list.isEmpty()) {
+                        mDownList = comicDownOptionData.down_list;
+                        if (!mDownList.isEmpty()) {
                             if (comicDownOptionList != null && comicDownOptionList.size() > 0) {//当前账号数据库有数据
                                 for (int i = 0; i < Size; i++) {
                                     ComicChapter comicChapter = comicDownOptionList.get(i);
-                                    for (int j = 0; j < down_list.size(); j++) {
-                                        ComicChapter boyinChapterNetBean = down_list.get(j);
+                                    for (int j = 0; j < mDownList.size(); j++) {
+                                        ComicChapter boyinChapterNetBean = mDownList.get(j);
                                         boyinChapterNetBean.setUid(Utils.getUID(activity));
                                         if (TextUtils.equals(boyinChapterNetBean.getChapter_id(), comicChapter.getChapter_id())) {
                                             boyinChapterNetBean.setUid(comicChapter.getUid());
                                             boyinChapterNetBean.setISDown(1);
+                                            break;
                                         }
                                     }
                                 }
                             } else {
-                                for (int i = 0; i < down_list.size(); i++) {
-                                    down_list.get(i).setUid(Utils.getUID(activity));
+                                for (int i = 0; i < mDownList.size(); i++) {
+                                    mDownList.get(i).setUid(Utils.getUID(activity));
                                 }
                             }
                             comicDownOptionList.clear();
-                            comicDownOptionList.addAll(down_list);
+                            comicDownOptionList.addAll(mDownList);
                             comicDownOptionAdapter = new ComicDownOptionAdapter(activity, comicDownOptionList, activity_comicdown_choose_count, activity_comicdown_down, Flag);
                             activity_comicdown_gridview.setAdapter(comicDownOptionAdapter);
                         }
@@ -314,10 +313,7 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                                 comicDownOption.setISDown(2);
                                 ShareUitls.putComicDownStatus(activity, comicDownOption.chapter_id, 2);
                                 if (!comicDownOption.isSaved()) {
-                                    boolean save = comicDownOption.save();
-                                    if (save) {
-                                        String s = "";
-                                    }
+                                    comicDownOption.save();
                                 }
                             }
                             BaseComic baseComicData = LitePal.where("comic_id = ? and uid = ?", comic_id, Utils.getUID(activity)).findFirst(BaseComic.class);
@@ -325,28 +321,23 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
                                 baseComic = baseComicData;
                             } else {
                                 baseComic.setDown_chapters(Size);
-                                boolean save = baseComic.save();
-                                if (save) {
-                                    String s = "";
-                                }
+                                baseComic.save();
                             }
                             comicDownOptionAdapter.notifyDataSetChanged();
                             comicDownOptionAdapter.comicDownOptionListChooseDwn.clear();
                             comicDownOptionAdapter.refreshBtn(0);
                             MyToash.Log("XXomicChapter22", "333");
                             MyToash.ToashSuccess(activity, LanguageUtil.getString(activity, R.string.BookInfoActivity_down_adddown));
+                            ShareUitls.putString(activity, "comicChapterCatalogs", result);
                             Intent intent = new Intent();
                             intent.setAction("com.heiheilianzai.app.ui.activity.comic.DownComicService");
                             intent.setPackage(BuildConfig.APPLICATION_ID);
                             Bundle bundle2 = new Bundle();
                             bundle2.putSerializable("baseComic", baseComic);
-                            bundle2.putString("result", result);
-                            bundle2.putSerializable("comicChapter", (Serializable) comicChapterCatalogs);
                             intent.putExtra("downcomic", bundle2);
                             startService(intent);
                             waitDialog.dismissDialog();
                         } catch (Exception e) {
-                            String s = e.toString();
                         }
                     }
 
@@ -377,16 +368,39 @@ public class ComicDownActivity extends BaseButterKnifeActivity {
         try {
             if (downComicEvenbus.baseComic.getComic_id().equals(comic_id)) {
                 if (downComicEvenbus.flag) {
+                    //下载完成从数据库拿数据对比后，重新展示
+                    List<ComicChapter> comicChapters = LitePal.where("comic_id = ? and ISDown = ? and uid = ?", comic_id, "1", Utils.getUID(activity)).find(ComicChapter.class);
+                    if (comicChapters != null && comicChapters.size() > 0) {//当前账号数据库有数据
+                        for (int i = 0; i < comicChapters.size(); i++) {
+                            ComicChapter comicChapter = comicChapters.get(i);
+                            for (int j = 0; j < mDownList.size(); j++) {
+                                ComicChapter boyinChapterNetBean = mDownList.get(j);
+                                boyinChapterNetBean.setUid(Utils.getUID(activity));
+                                if (TextUtils.equals(boyinChapterNetBean.getChapter_id(), comicChapter.getChapter_id())) {
+                                    boyinChapterNetBean.setUid(comicChapter.getUid());
+                                    boyinChapterNetBean.setISDown(1);
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < mDownList.size(); i++) {
+                            mDownList.get(i).setUid(Utils.getUID(activity));
+                        }
+                    }
+                    comicDownOptionList.clear();
+                    comicDownOptionList.addAll(mDownList);
                     MyToash.ToashSuccess(activity, String.format(LanguageUtil.getString(activity, R.string.BookInfoActivity_down_downcompleteSize), downComicEvenbus.Down_Size));
                 } else {
                     for (int i = 0; i < comicDownOptionList.size(); i++) {
                         ComicChapter comicChapter = comicDownOptionList.get(i);
                         if (TextUtils.equals(comicChapter.getChapter_id(), downComicEvenbus.chapter_id)) {
                             comicChapter.setISDown(downComicEvenbus.status);
+                            break;
                         }
                     }
-                    comicDownOptionAdapter.notifyDataSetChanged();
                 }
+                comicDownOptionAdapter.notifyDataSetChanged();
             }
         } catch (Exception e) {
         }

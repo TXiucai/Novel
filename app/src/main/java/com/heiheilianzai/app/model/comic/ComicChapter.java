@@ -185,7 +185,7 @@ public class ComicChapter extends LitePalSupport implements Serializable, Compar
         return ISDown;
     }
 
-    public int ISDown;//是否下载过
+    public int ISDown;//1本地2下载中3下载失败
 
     public String getSubtitle() {
         return subtitle;

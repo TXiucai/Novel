@@ -339,16 +339,16 @@ public class ADHelper {
                             ReaderConfig.display_ad_days_comic = ReaderConfig.TOP_COMIC_AD.getDisplay_ad_days();
                         }
                     } else {
-                        localTopAd(activity);
+                        localComicTopAd(activity);
                     }
                 } catch (Exception e) {
-                    localTopAd(activity);
+                    localComicTopAd(activity);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                localTopAd(activity);
+                localComicTopAd(activity);
             }
         });
     }

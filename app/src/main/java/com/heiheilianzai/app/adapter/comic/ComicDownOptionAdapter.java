@@ -144,27 +144,23 @@ public class ComicDownOptionAdapter extends BaseAdapter {
     }
 
     public void selectAll() {
-
         if (Size != comicDownOptionListChooseDwn.size()) {
             comicDownOptionListChooseDwn.clear();
             if (!flag) {
                 for (ComicChapter comicChapter : comicDownOptionList) {
-                    int status = ShareUitls.getComicDownStatus(activity, comicChapter.chapter_id, 0);
+                    int status = comicChapter.getISDown();
                     if (status == 0 || status == 3) {
                         comicDownOptionListChooseDwn.add(comicChapter);
                     }
                 }
             } else
                 comicDownOptionListChooseDwn.addAll(comicDownOptionList);
-
-
             refreshBtn(Size);
         } else {
             comicDownOptionListChooseDwn.clear();
             refreshBtn(0);
         }
         notifyDataSetChanged();
-
     }
 
     public void refreshBtn(int size) {
@@ -185,7 +181,6 @@ public class ComicDownOptionAdapter extends BaseAdapter {
         ImageView item_comicdownoption_vip;
         @BindView(R.id.item_comicdownoption_text)
         TextView item_comicdownoption_text;
-
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
