@@ -3,10 +3,8 @@ package com.heiheilianzai.app.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -118,6 +116,7 @@ public class DialogNovelCoupon {
             public void onClick(View v) {
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 3);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
+                myIntent.putExtra("type", 1);
                 activity.startActivity(myIntent);
             }
         });

@@ -1757,7 +1757,6 @@ public class PageFactory {
         if (is_vip != null && is_vip.equals("1") && !App.isVip(mActivity)) {
             DialogVip dialogVip = new DialogVip();
             dialogVip.getDialogVipPop(mActivity, mActivity.getResources().getString(R.string.dialog_tittle_vip), true);
-            return;
         } else {
             updateRecord();
         }
@@ -1766,7 +1765,6 @@ public class PageFactory {
     public void checkIsCoupon(ChapterItem chapterItem) {
         if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
             updateRecord();
-            return;
         } else {
             if (Utils.isLogin(mActivity)) {
                 checkIsBuyCoupon(mActivity, chapterItem, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
@@ -1785,7 +1783,6 @@ public class PageFactory {
                     });
                 }
             }
-
         }
     }
 
@@ -1799,38 +1796,20 @@ public class PageFactory {
                     public void onResponse(final String result) {
                         ChapterContent chapterContent = new Gson().fromJson(result, ChapterContent.class);
                         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-                        if (!chapterContent.isIs_buy_status()) {
-                            if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1") && !App.isVip(mActivity)) {
-                                DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
-                                if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
-                                    if (AppPrefs.getSharedBoolean(activity, "novelOpen_ToggleButton", false)) {
-                                        int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
-                                        String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_PRICE);
-                                        if (couponNum >= Integer.valueOf(couponPrice)) {
-                                            dialogNovelCoupon.openCoupon(mActivity, chapterItem, couponPrice, couponNum);
-                                        } else {
-                                            DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
-                                            dialogCouponNotMore.getDialogVipPop(activity, true);
-                                        }
-                                    } else {
-                                        if (mDialogVip == null || !mDialogVip.isShowing()) {
-                                            mDialogVip = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
-                                        }
-                                    }
-                                }
-                                dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
-                                    @Override
-                                    public void onOpenCoupon(boolean isBuy) {
-                                        if (mDialogVip != null) {
-                                            mDialogVip.dismiss();
-                                        }
-                                        chapterItem.setIs_buy_status(true);
+                        if (!chapterContent.isIs_buy_status()) {//无购买
+                            if (TextUtils.equals(is_book_coupon_pay, "1")) {//是否需要金币
+                                if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {
+                                    if (App.isVip(activity)) {
                                         updateRecord();
+                                    } else {
+                                        showGoldDialog(chapterItem);
                                     }
-                                });
-                                return;
+                                } else {
+                                    showGoldDialog(chapterItem);
+                                }
+                            } else {
+                                checkIsVip(chapterItem);
                             }
-                            checkIsVip(chapterItem);
                         } else {
                             updateRecord();
                         }
@@ -1842,5 +1821,33 @@ public class PageFactory {
                     }
                 }
         );
+    }
+
+    private void showGoldDialog(ChapterItem chapterItem) {
+        DialogNovelCoupon dialogNovelCoupon = new DialogNovelCoupon();
+        if (AppPrefs.getSharedBoolean(mActivity, "novelOpen_ToggleButton", false)) {
+            int couponNum = AppPrefs.getSharedInt(mActivity, PrefConst.COUPON, 0);
+            String couponPrice = AppPrefs.getSharedString(mActivity, PrefConst.COUPON_PRICE);
+            if (couponNum >= Integer.valueOf(couponPrice)) {
+                dialogNovelCoupon.openCoupon(mActivity, chapterItem, couponPrice, couponNum);
+            } else {
+                DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
+                dialogCouponNotMore.getDialogVipPop(mActivity, true);
+            }
+        } else {
+            if (mDialogVip == null || !mDialogVip.isShowing()) {
+                mDialogVip = dialogNovelCoupon.getDialogVipPop(mActivity, chapterItem, true);
+            }
+        }
+        dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+            @Override
+            public void onOpenCoupon(boolean isBuy) {
+                if (mDialogVip != null) {
+                    mDialogVip.dismiss();
+                }
+                chapterItem.setIs_buy_status(true);
+                updateRecord();
+            }
+        });
     }
 }

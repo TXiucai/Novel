@@ -401,14 +401,6 @@ public class GoldFragment extends BaseButterKnifeFragment {
 
                 @Override
                 public void onWake() {
-                    DialogWakeVip dialogWakeVip = new DialogWakeVip();
-                    dialogWakeVip.getDialogVipPop(getActivity());
-                    dialogWakeVip.setVipWakeListener(new DialogWakeVip.VipWakeListener() {
-                        @Override
-                        public void vipWakeBack() {
-                            pay(mSelectAcquirePayItem);
-                        }
-                    });
                 }
 
                 @Override

@@ -1580,65 +1580,71 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         String is_limited_free = chapterItem.getIs_limited_free();
         if (!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) {
             updateRecord();
-            return;
-        }
-        if (Utils.isLogin(activity)) {
-            boolean isCoupon = false;
-            if (chapterItem.isIs_buy_status()) {
-                updateRecord();
-                return;
-            }
-            if (is_book_coupon_pay != null && is_book_coupon_pay.equals("1")) {
-                isCoupon = true;
-            }
-            if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1") || is_vip != null && is_vip.equals("1")) && !App.isVip(activity)) {
-                if (Utils.isLogin(activity)) {
-                    DialogComicLook dialogNovelCoupon = new DialogComicLook();
-                    //开启自动解锁并需要金币时
-                    if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false) && isCoupon) {
-                        int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
-                        String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_COMICI_PRICE);
-                        if (couponNum >= Integer.valueOf(couponPrice)) {
-                            dialogNovelCoupon.openCoupon(activity, chapterItem, couponPrice, couponNum);
-                        } else {
-                            DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
-                            dialogCouponNotMore.getDialogVipPop(activity, true);
+        } else {
+            if (Utils.isLogin(activity)) {
+                if (chapterItem.isIs_buy_status()) {
+                    updateRecord();
+                } else {
+                    if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1"))) {//需要金币
+                        if (TextUtils.equals(chapterItem.getIs_vip(),"1")){//需要会员
+                            if (App.isVip(activity)){
+                                updateRecord();
+                            }else {
+                                showGoldDialog(chapterItem);
+                            }
+                        }else {
+                            showGoldDialog(chapterItem);
                         }
                     } else {
-                        if (dialogVipPop == null || !dialogVipPop.isShowing()) {
-                            dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, isCoupon);
-                        }
+                        checkIsVip(chapterItem);
                     }
-                    dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+                }
+            } else {
+                if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
+                    DialogRegister dialogRegister = new DialogRegister();
+                    dialogRegister.setFinish(true);
+                    dialogRegister.getDialogLoginPop(activity);
+                    dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
                         @Override
-                        public void onOpenCoupon(boolean isBuy) {
-                            if (dialogVipPop != null) {
-                                dialogVipPop.dismiss();
+                        public void onRegisterBack(boolean isSuccess) {
+                            if (isSuccess) {
+                                checkIsCoupon(chapterItem);
                             }
-                            chapterItem.setIs_book_coupon_pay("0");
-                            updateRecord();
                         }
                     });
-                    return;
+                } else {
+                    updateRecord();
                 }
             }
-            checkIsVip(chapterItem);
-        } else {
-            if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
-                DialogRegister dialogRegister = new DialogRegister();
-                dialogRegister.setFinish(true);
-                dialogRegister.getDialogLoginPop(activity);
-                dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
-                    @Override
-                    public void onRegisterBack(boolean isSuccess) {
-                        if (isSuccess) {
-                            checkIsCoupon(chapterItem);
-                        }
-                    }
-                });
+        }
+    }
+
+    private void showGoldDialog(ComicChapterItem chapterItem) {
+        DialogComicLook dialogNovelCoupon = new DialogComicLook();
+        //开启自动解锁并需要金币时
+        if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false)) {
+            int couponNum = AppPrefs.getSharedInt(activity, PrefConst.COUPON, 0);
+            String couponPrice = AppPrefs.getSharedString(activity, PrefConst.COUPON_COMICI_PRICE);
+            if (couponNum >= Integer.valueOf(couponPrice)) {
+                dialogNovelCoupon.openCoupon(activity, chapterItem, couponPrice, couponNum);
             } else {
-                updateRecord();
+                DialogCouponNotMore dialogCouponNotMore = new DialogCouponNotMore();
+                dialogCouponNotMore.getDialogVipPop(activity, true);
+            }
+        } else {
+            if (dialogVipPop == null || !dialogVipPop.isShowing()) {
+                dialogVipPop = dialogNovelCoupon.getDialogVipPop(activity, chapterItem, baseComic, true);
             }
         }
+        dialogNovelCoupon.setOnOpenCouponListener(new DialogNovelCoupon.OnOpenCouponListener() {
+            @Override
+            public void onOpenCoupon(boolean isBuy) {
+                if (dialogVipPop != null) {
+                    dialogVipPop.dismiss();
+                }
+                chapterItem.setIs_book_coupon_pay("0");
+                updateRecord();
+            }
+        });
     }
 }

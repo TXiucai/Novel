@@ -17,13 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
-import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.utils.DateUtils;
-import com.heiheilianzai.app.utils.DialogVip;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -95,54 +93,49 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
             }
 
             MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.small_cover, holder.item_comicchaptercatalog_img, R.mipmap.comic_def_cross);
-            if (!StringUtils.isEmpty(comicChapterCatalog.getIs_limited_free()) && TextUtils.equals(comicChapterCatalog.getIs_limited_free(), "1")) {
-                holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
-                holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
+            if (!StringUtils.isEmpty(comicChapterCatalog.getIs_limited_free()) && TextUtils.equals(comicChapterCatalog.getIs_limited_free(), "1")) {//设置免费
+                holder.item_comic_chapter_lock.setVisibility(View.GONE);
                 holder.item_comic_chapter_bg.setVisibility(View.GONE);
             } else {
-                if (App.isVip(activity)) {
-                    if (comicChapterCatalog.getIs_vip() == 1 || TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {
+                if (comicChapterCatalog.getIs_vip() == 1 && TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {//都设置了，满足其中一个就行
+                    if (App.isVip(activity)) {//会员展示已解锁
                         holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
                         holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
                         holder.item_comic_chapter_bg.setVisibility(View.GONE);
-                    } else {
-                        holder.item_comic_chapter_lock.setVisibility(View.GONE);
-                        holder.item_comic_chapter_bg.setVisibility(View.GONE);
-                    }
-
-                } else {
-                    if (comicChapterCatalog.getIs_vip() == 0) {//免费
-                        if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "0")) {
-                            holder.item_comic_chapter_lock.setVisibility(View.GONE);
+                    } else {//非会员
+                        if (comicChapterCatalog.isIs_buy_status()) {//已购买
+                            holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                            holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
                             holder.item_comic_chapter_bg.setVisibility(View.GONE);
-                        } else {
-                            if (comicChapterCatalog.isIs_buy_status()) {
-                                holder.item_comic_chapter_bg.setVisibility(View.GONE);
-                                holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
-                                holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
-                            } else {
-                                holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
-                                holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
-                                holder.item_comic_chapter_bg.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    } else {
-                        if (TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {
-                            if (comicChapterCatalog.isIs_buy_status()) {
-                                holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
-                                holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
-                                holder.item_comic_chapter_bg.setVisibility(View.GONE);
-                            } else {
-                                holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
-                                holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
-                                holder.item_comic_chapter_bg.setVisibility(View.VISIBLE);
-                            }
                         } else {
                             holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
                             holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
                             holder.item_comic_chapter_bg.setVisibility(View.VISIBLE);
                         }
                     }
+                } else if (comicChapterCatalog.getIs_vip() == 1 && !TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {//只设置会员
+                    if (App.isVip(activity)) {
+                        holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                        holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
+                        holder.item_comic_chapter_bg.setVisibility(View.GONE);
+                    } else {
+                        holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
+                        holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                        holder.item_comic_chapter_bg.setVisibility(View.VISIBLE);
+                    }
+                } else if (comicChapterCatalog.getIs_vip() != 1 && TextUtils.equals(comicChapterCatalog.getIs_book_coupon_pay(), "1")) {//只设置金币
+                    if (comicChapterCatalog.isIs_buy_status()) {//已购买
+                        holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                        holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_unlock));
+                        holder.item_comic_chapter_bg.setVisibility(View.GONE);
+                    } else {
+                        holder.item_comic_chapter_lock.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_lock));
+                        holder.item_comic_chapter_lock.setVisibility(View.VISIBLE);
+                        holder.item_comic_chapter_bg.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    holder.item_comic_chapter_lock.setVisibility(View.GONE);
+                    holder.item_comic_chapter_bg.setVisibility(View.GONE);
                 }
             }
         } else if (viewHolder instanceof MyAdViewHolder) {
