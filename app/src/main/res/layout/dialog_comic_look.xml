@@ -81,7 +81,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/string_dialog_comic_tittle"
+                    android:text="@string/coupon_open"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
@@ -89,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_5dp"
-                    android:text="@string/string_dialog_comic_subtittle"
+                    android:text="@string/dialog_tittle_novel_coupon"
                     android:textColor="@color/white"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -159,7 +159,7 @@
                 android:layout_marginTop="@dimen/dimens_20dp"
                 android:background="@mipmap/dialog_comic_vip_bg"
                 android:gravity="center"
-                android:text="@string/string_dialog_comic_vip"
+                android:text="@string/AcquireBaoyueActivity_title_gold"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 

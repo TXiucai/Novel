@@ -125,6 +125,7 @@ public class DialogComicLook {
             public void onClick(View v) {
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 4);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
+                myIntent.putExtra("type", 1);
                 activity.startActivity(myIntent);
                 activity.finish();
             }
