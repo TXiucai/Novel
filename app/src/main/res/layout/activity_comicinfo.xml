@@ -45,6 +45,7 @@
                             android:layout_height="wrap_content">
 
                             <TextView
+                                android:id="@+id/tx_type_tip"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/dimens_45dp"
                                 android:background="@mipmap/comic_vip_bg"

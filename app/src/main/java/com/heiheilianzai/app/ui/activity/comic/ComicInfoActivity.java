@@ -121,6 +121,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     public ImageView activity_comic_cover_bg;
     @BindView(R.id.rl_comic_vip)
     public RelativeLayout rl_comic_vip;
+    @BindView(R.id.tx_type_tip)
+    public TextView tx_type_tip;
     @BindView(R.id.tx_comic_name)
     public TextView tx_comic_name;
     @BindView(R.id.tx_comic_description)
@@ -171,6 +173,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     private int lastVisibleItemPosition;
     private boolean isShowSdkAd = false;
     private Dialog mDialogChapter;
+    private int mIsPureGold;
 
     @OnClick(value = {R.id.tx_comic_start_read, R.id.titlebar_back, R.id.list_ad_view_layout,
             R.id.ll_comic_collect, R.id.ll_comic_down, R.id.ll_comic_category, R.id.rl_comic_vip})
@@ -228,8 +231,10 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 mDialogChapter = dialogComicChapter.getDialogVipPop(activity, baseComic);
                 break;
             case R.id.rl_comic_vip:
+                int type = mIsPureGold == 2 ? 1 : 0;
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 5);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
+                myIntent.putExtra("type", type);
                 activity.startActivity(myIntent);
                 break;
             case R.id.list_ad_view_layout:
@@ -366,6 +371,17 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             tx_comic_flag.setText(String.format(getString(R.string.comicinfo_total_chapter), comic.total_chapters));
             titlebar_text.setText(comic.name);
             titlebar_text.setAlpha(0);
+
+            //0免费隐藏  1混合  2 纯金币
+            if (mIsPureGold == 0) {
+                rl_comic_vip.setVisibility(View.GONE);
+            } else if (mIsPureGold == 1) {
+                tx_type_tip.setText(getResources().getString(R.string.string_comic_vip));
+                rl_comic_vip.setVisibility(View.VISIBLE);
+            } else {
+                tx_type_tip.setText(getResources().getString(R.string.string_comic_gold));
+                rl_comic_vip.setVisibility(View.VISIBLE);
+            }
 
             book_info_titlebar_container_shadow.setAlpha(0);
             baseComic.setVertical_cover(comic.vertical_cover);
@@ -582,6 +598,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                                 stroreComicLable = mComicInfo.label.get(0);
                                 bookInfoComment = mComicInfo.comment;
                                 baseAd = mComicInfo.advert;
+                                mIsPureGold = mComicInfo.is_pure_gold_read;
                             }
                             handdata();
                             setMHIntroPageEvent();

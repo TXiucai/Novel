@@ -7,7 +7,8 @@ import java.util.List;
 
 public class ComicInfo {
     public StroreComicLable.Comic comic;
-    public  List< BookInfoComment>  comment;
-    public   List< StroreComicLable>  label;
+    public List<BookInfoComment> comment;
+    public List<StroreComicLable> label;
     public BaseAd advert;
+    public int is_pure_gold_read;
 }
