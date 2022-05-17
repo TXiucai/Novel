@@ -1,10 +1,12 @@
 package com.heiheilianzai.app.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.OptionBeen;
+import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
 
 import java.util.List;
@@ -52,68 +57,96 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         OptionBeen optionBeen = optionBeenList.get(position);
-        viewHolder.item_store_label_male_vertical_layout.setVisibility(View.VISIBLE);
-        viewHolder.item_store_label_male_vertical_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnSelectTopListItemListener != null) {
-                    mOnSelectTopListItemListener.onSelctTopListItem(optionBeen, position);
+        if (optionBeen.ad_type == 0) {
+            viewHolder.list_ad_view_layout.setVisibility(View.GONE);
+            viewHolder.item_store_label_male_vertical_layout.setVisibility(View.VISIBLE);
+            viewHolder.item_store_label_male_vertical_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnSelectTopListItemListener != null) {
+                        mOnSelectTopListItemListener.onSelctTopListItem(optionBeen, position);
+                    }
                 }
+            });
+            if (PRODUCT) {
+                MyPicasso.GlideImageNoSize(activity, optionBeen.getCover(), viewHolder.imageView, R.mipmap.book_def_v);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, optionBeen.getCover(), viewHolder.imageView, R.mipmap.comic_def_v);
             }
-        });
-        if (PRODUCT) {
-            MyPicasso.GlideImageNoSize(activity, optionBeen.getCover(), viewHolder.imageView, R.mipmap.book_def_v);
-        } else {
-            MyPicasso.GlideImageNoSize(activity, optionBeen.getCover(), viewHolder.imageView, R.mipmap.comic_def_v);
-        }
-        if (position < 3) {
-            viewHolder.imgTop.setVisibility(View.VISIBLE);
-            if (position == 0) {
-                viewHolder.imgTop.setImageDrawable(activity.getResources().getDrawable(R.mipmap.top_one));
-            } else if (position == 1) {
-                viewHolder.imgTop.setImageDrawable(activity.getResources().getDrawable(R.mipmap.top_two));
-            } else if (position == 2) {
-                viewHolder.imgTop.setImageDrawable(activity.getResources().getDrawable(R.mipmap.top_three));
+            if (position < 3) {
+                viewHolder.imgTop.setVisibility(View.VISIBLE);
+                if (position == 0) {
+                    viewHolder.imgTop.setImageDrawable(activity.getResources().getDrawable(R.mipmap.top_one));
+                } else if (position == 1) {
+                    viewHolder.imgTop.setImageDrawable(activity.getResources().getDrawable(R.mipmap.top_two));
+                } else if (position == 2) {
+                    viewHolder.imgTop.setImageDrawable(activity.getResources().getDrawable(R.mipmap.top_three));
+                }
+            } else {
+                viewHolder.imgTop.setVisibility(View.GONE);
             }
-        } else {
-            viewHolder.imgTop.setVisibility(View.GONE);
-        }
-        viewHolder.name.setText(optionBeen.getName());
-        viewHolder.description.setText(optionBeen.getDescription());
-        String total_favors = optionBeen.getTotal_favors();
-        String updated_at = optionBeen.getUpdated_at();
-        int total_views = optionBeen.getTotal_views();
-        int total_downs = optionBeen.getTotal_downs();
-        if (mShowType != null) {
-            if (TextUtils.equals(mShowType, "2")) {
-                viewHolder.author.setText(String.valueOf(total_downs));
-                viewHolder.imgType.setVisibility(View.VISIBLE);
-                viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_down));
-            } else if (TextUtils.equals(mShowType, "3") && total_favors != null && !StringUtils.isEmpty(total_favors)) {
-                viewHolder.author.setText(total_favors);
-                viewHolder.imgType.setVisibility(View.VISIBLE);
-                viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_collect));
-            } else if (TextUtils.equals(mShowType, "4") && updated_at != null && !StringUtils.isEmpty(updated_at)) {
-                viewHolder.author.setText("更新于" + updated_at);
-                viewHolder.imgType.setVisibility(View.GONE);
+            viewHolder.name.setText(optionBeen.getName());
+            viewHolder.description.setText(optionBeen.getDescription());
+            String total_favors = optionBeen.getTotal_favors();
+            String updated_at = optionBeen.getUpdated_at();
+            int total_views = optionBeen.getTotal_views();
+            int total_downs = optionBeen.getTotal_downs();
+            if (mShowType != null) {
+                if (TextUtils.equals(mShowType, "2")) {
+                    viewHolder.author.setText(String.valueOf(total_downs));
+                    viewHolder.imgType.setVisibility(View.VISIBLE);
+                    viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_down));
+                } else if (TextUtils.equals(mShowType, "3") && total_favors != null && !StringUtils.isEmpty(total_favors)) {
+                    viewHolder.author.setText(total_favors);
+                    viewHolder.imgType.setVisibility(View.VISIBLE);
+                    viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_collect));
+                } else if (TextUtils.equals(mShowType, "4") && updated_at != null && !StringUtils.isEmpty(updated_at)) {
+                    viewHolder.author.setText("更新于" + updated_at);
+                    viewHolder.imgType.setVisibility(View.GONE);
+                } else {
+                    viewHolder.author.setText(String.valueOf(total_views));
+                    viewHolder.imgType.setVisibility(View.VISIBLE);
+                    viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_eye));
+                }
             } else {
                 viewHolder.author.setText(String.valueOf(total_views));
                 viewHolder.imgType.setVisibility(View.VISIBLE);
                 viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_eye));
             }
-        } else {
-            viewHolder.author.setText(String.valueOf(total_views));
-            viewHolder.imgType.setVisibility(View.VISIBLE);
-            viewHolder.imgType.setImageDrawable(activity.getResources().getDrawable(R.mipmap.home_item_eye));
-        }
-        String str = "";
-        if (optionBeen.getIs_finish() == 0) {
-            str = activity.getResources().getString(R.string.book_loading);
-        } else {
-            str = activity.getResources().getString(R.string.book_finished);
-        }
-        viewHolder.item_store_label_male_horizontal_tag.setText(str);
+            String str = "";
+            if (optionBeen.getIs_finish() == 0) {
+                str = activity.getResources().getString(R.string.book_loading);
+            } else {
+                str = activity.getResources().getString(R.string.book_finished);
+            }
+            viewHolder.item_store_label_male_horizontal_tag.setText(str);
 
+        } else {
+            viewHolder.item_store_label_male_vertical_layout.setVisibility(View.GONE);
+            viewHolder.list_ad_view_layout.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams layoutParams = viewHolder.list_ad_view_img.getLayoutParams();
+
+            layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+            layoutParams.height = layoutParams.width / 3;
+            viewHolder.list_ad_view_img.setLayoutParams(layoutParams);
+            if (PRODUCT) {
+                MyPicasso.GlideImageNoSize(activity, optionBeen.ad_image, viewHolder.list_ad_view_img, R.mipmap.book_def_v);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, optionBeen.ad_image, viewHolder.list_ad_view_img, R.mipmap.comic_def_v);
+            }
+            viewHolder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, WebViewActivity.class);
+                    intent.putExtra("url", optionBeen.ad_skip_url);
+                    intent.putExtra("title", optionBeen.ad_title);
+                    intent.putExtra("advert_id", optionBeen.advert_id);
+                    intent.putExtra("ad_url_type", optionBeen.ad_url_type);
+                    activity.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -138,6 +171,10 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ImageView imgTop;
         @BindView(R.id.img_type)
         ImageView imgType;
+        @BindView(R.id.list_ad_view_layout)
+        FrameLayout list_ad_view_layout;
+        @BindView(R.id.list_ad_view_img)
+        ImageView list_ad_view_img;
 
         public ViewHolder(View view) {
             super(view);

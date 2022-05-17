@@ -111,6 +111,23 @@
         android:layout_marginLeft="@dimen/dimens_36dp"
         android:layout_marginTop="@dimen/dimens_11dp" />
 
+    <FrameLayout
+        android:id="@+id/list_ad_view_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/dimens_20dp"
+        android:paddingRight="@dimen/dimens_20dp">
+
+        <ImageView
+            android:id="@+id/list_ad_view_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY" />
+    </FrameLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_1dp"
