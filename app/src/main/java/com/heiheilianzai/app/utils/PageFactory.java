@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -30,8 +29,6 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
 import com.heiheilianzai.app.component.http.ReaderParams;
-import com.heiheilianzai.app.component.task.MainHttpTask;
-import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.ReadingConfig;
@@ -44,8 +41,6 @@ import com.heiheilianzai.app.model.book.ReadHistory;
 import com.heiheilianzai.app.model.event.RefreshTopbook;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.activity.read.ReadActivity;
-import com.heiheilianzai.app.ui.dialog.read.PurchaseDialog;
-import com.heiheilianzai.app.view.BorderTextView;
 import com.heiheilianzai.app.view.MScrollView;
 import com.heiheilianzai.app.view.read.PageWidget;
 import com.mobi.xad.XRequestManager;
@@ -54,7 +49,6 @@ import com.mobi.xad.bean.AdType;
 import com.mobi.xad.net.XAdRequestListener;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONArray;
 import org.litepal.LitePal;
 
 import java.io.File;
@@ -167,16 +161,6 @@ public class PageFactory {
     //是否是预览章节，1 预览章节  2 非预览章节
     private String mIsPreview;
     private static Status mStatus = Status.OPENING;
-    private LinearLayout mPurchaseLayout;
-    private BorderTextView mPurchaseOne;
-    private BorderTextView mPurchaseSome;
-    private TextView mSupport;
-    private View activity_read_line_left, activity_read_line_right;
-    private LinearLayout mPurchaseLayout2;
-    private BorderTextView mPurchaseOne2;
-    private BorderTextView mPurchaseSome2;
-    private TextView mSupport2;
-    private View activity_read_line_left2, activity_read_line_right2;
     private boolean hasNotchScreen;
     private float tendp, chapterRight;
     int Chapter_height;
@@ -186,7 +170,6 @@ public class PageFactory {
     BaseAd baseAd;
     ImageView list_ad_view_img;
     private Activity mActivity;
-    private PurchaseDialog mPurchaseDialog;
     TextView bookpage_scroll_text;
     FrameLayout insert_todayone2;
     MScrollView bookpage_scroll;
@@ -213,7 +196,6 @@ public class PageFactory {
         this.baseBook = baseBook;
         this.bookpage_scroll = bookpage_scroll;
         this.insert_todayone2 = insert_todayone2;
-        mPurchaseDialog = new PurchaseDialog(context, false);
         mBookUtil = new BookUtil();
         config = ReadingConfig.getInstance();
         resources = context.getResources();
@@ -372,75 +354,9 @@ public class PageFactory {
                 }
                 c.drawText(chapterTitle, marginWidth, 2 * marginHeight + Chapter_height, mChapterPaint);
             }
-            //更新购买view的文字颜色
-            mSupport(mIsPreview);
             mBookPageWidget.postInvalidate();
         } catch (Exception e) {
         }
-    }
-
-    private void mSupport(String mIsPreview) {
-        if (mIsPreview.equals("1")) {
-            activity_read_line_left.setBackgroundColor(mPaint.getColor());
-            activity_read_line_right.setBackgroundColor(mPaint.getColor());
-            mSupport.setTextColor(mPaint.getColor());
-            mPurchaseOne.setBorder(mPaint.getColor(), new int[]{2, 2, 2, 2}, new int[]{6, 6, 6, 6});
-            mPurchaseSome.setBorder(mPaint.getColor(), new int[]{2, 2, 2, 2}, new int[]{6, 6, 6, 6});
-        }
-    }
-
-    private void mSupport2(int color) {
-        if (mIsPreview.equals("1")) {
-            mPurchaseLayout2.setVisibility(View.VISIBLE);
-            activity_read_line_left2.setBackgroundColor(color);
-            activity_read_line_right2.setBackgroundColor(color);
-            mSupport2.setTextColor(color);
-            mPurchaseOne2.setBorder(color, new int[]{2, 2, 2, 2}, new int[]{6, 6, 6, 6});
-            mPurchaseSome2.setBorder(color, new int[]{2, 2, 2, 2}, new int[]{6, 6, 6, 6});
-        } else {
-            mPurchaseLayout2.setVisibility(View.GONE);
-        }
-    }
-
-    public void setPurchaseLayout(LinearLayout view, LinearLayout view2) {
-        mPurchaseLayout = view;
-        mPurchaseOne = mPurchaseLayout.findViewById(R.id.activity_read_purchase_one);
-        mPurchaseSome = mPurchaseLayout.findViewById(R.id.activity_read_purchase_some);
-        mSupport = mPurchaseLayout.findViewById(R.id.activity_read_support);
-        activity_read_line_left = mPurchaseLayout.findViewById(R.id.activity_read_line_left);
-        activity_read_line_right = mPurchaseLayout.findViewById(R.id.activity_read_line_right);
-        mPurchaseOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                purchaseSingleChapter(book_id, chapter_id, 1);
-            }
-        });
-        mPurchaseSome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPurchaseDialog.initData(book_id, chapter_id, null, null);
-                mPurchaseDialog.show();
-            }
-        });
-        mPurchaseLayout2 = view2;
-        mPurchaseOne2 = mPurchaseLayout2.findViewById(R.id.activity_read_purchase_one);
-        mPurchaseSome2 = mPurchaseLayout2.findViewById(R.id.activity_read_purchase_some);
-        mSupport2 = mPurchaseLayout2.findViewById(R.id.activity_read_support);
-        activity_read_line_left2 = mPurchaseLayout2.findViewById(R.id.activity_read_line_left);
-        activity_read_line_right2 = mPurchaseLayout2.findViewById(R.id.activity_read_line_right);
-        mPurchaseOne2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                purchaseSingleChapter(book_id, chapter_id, 1);
-            }
-        });
-        mPurchaseSome2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPurchaseDialog.initData(book_id, chapter_id, null, null);
-                mPurchaseDialog.show();
-            }
-        });
     }
 
     /**
@@ -510,8 +426,6 @@ public class PageFactory {
                 mChapterPaint.setTextSize((s * getFontSize()));
             }
             c.drawText(chapterTitle, marginWidth, 2 * marginHeight + Chapter_height, mChapterPaint);
-            //更新购买view的文字颜色
-            mSupport(mIsPreview);
             mBookPageWidget.postInvalidate();
         } catch (Exception e) {
         }
@@ -617,9 +531,6 @@ public class PageFactory {
                 for (String strLine : m_lines) {
                     y += m_fontSize + lineSpace;
                     c.drawText(strLine, measureMarginWidth, y, mPaint);
-                    if (mIsPreview.equals("1")) {
-                        break DrawText;
-                    }
                 }
             }
             //画进度及时间
@@ -641,8 +552,6 @@ public class PageFactory {
             drawBatteryAndDate(c);
             //画书名
             c.drawText(chapterTitle, marginWidth, statusMarginBottom + BookNameTop + tendp, mBatteryPaint);
-            //更新购买view的文字颜色
-            mSupport(mIsPreview);
             mBookPageWidget.postInvalidate();
         } catch (Exception e) {
         }
@@ -669,8 +578,6 @@ public class PageFactory {
         bookpage_scroll_text.setText("");
         mBookPageWidget.setVisibility(View.GONE);
         bookpage_scroll.setVisibility(View.VISIBLE);
-        mSupport.setVisibility(View.GONE);
-        mPurchaseLayout.setVisibility(View.GONE);
         if (ADview2 != null) {
             if (!close_AD) {
                 ADview2.setVisibility(View.VISIBLE);
@@ -719,7 +626,6 @@ public class PageFactory {
                     public void switchPreChapter() {
                         insert_todayone2.setVisibility(View.VISIBLE);
                         IS_CHAPTERFirst = false;
-                        mPurchaseLayout.setVisibility(View.GONE);
                     }
                 });
                 return;
@@ -803,7 +709,6 @@ public class PageFactory {
                     public void switchNextChapter() {
                         insert_todayone2.setVisibility(View.VISIBLE);
                         IS_CHAPTERLast = false;
-                        mPurchaseLayout.setVisibility(View.GONE);
                     }
                 });
             } else {
@@ -910,11 +815,6 @@ public class PageFactory {
             if (bookUtil == null) {
                 try {
                     mBookUtil.openBook(mActivity, chapterItem, book_id, chapter_id);
-                    if (mIsPreview.equals("1")) {
-                        ViewUtils.setVisibility(mPurchaseLayout, View.VISIBLE);
-                    } else if (mIsPreview.equals("0")) {
-                        ViewUtils.setVisibility(mPurchaseLayout, View.GONE);
-                    }
                     PageFactory.mStatus = PageFactory.Status.FINISH;
                     if (chapterItem.getBegin() == 0) {
                         calculateLineCount1();
@@ -928,11 +828,6 @@ public class PageFactory {
                 }
             } else {
                 mBookUtil = bookUtil;
-                if (mIsPreview.equals("1")) {
-                    ViewUtils.setVisibility(mPurchaseLayout, View.VISIBLE);
-                } else if (mIsPreview.equals("0")) {
-                    ViewUtils.setVisibility(mPurchaseLayout, View.GONE);
-                }
                 PageFactory.mStatus = PageFactory.Status.FINISH;
                 currentPage = getPageForBegin(chapterItem.getBegin());
             }
@@ -954,81 +849,6 @@ public class PageFactory {
 
                     @Override
                     public void onErrorResponse(String ex) {
-                    }
-                }
-        );
-    }
-
-    /**
-     * 单章购买
-     */
-    public void purchaseSingleChapter(final String book_id, final String chapter_id, int num) {
-        if (!MainHttpTask.getInstance().Gotologin(mActivity)) {
-            return;
-        }
-        ReaderParams params = new ReaderParams(mActivity);
-        params.putExtraParams("book_id", book_id);
-        params.putExtraParams("chapter_id", chapter_id);
-        params.putExtraParams("num", num + "");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mChapterBuy, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        ReaderConfig.REFREASH_USERCENTER = true;
-                        downloadWithoutAutoBuy(book_id, chapter_id, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.mChapterDownUrl);
-                        ReaderConfig.integerList.add(1);
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                    }
-                }
-        );
-    }
-
-    public void downloadWithoutAutoBuy(final String book_id, final String chapter_id, String api) {
-        ReaderParams params = new ReaderParams(mActivity);
-        params.putExtraParams("book_id", book_id);
-        params.putExtraParams("chapter_id", chapter_id);
-        params.putExtraParams("num", "1");
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(api, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(final String result) {
-                        try {
-                            JSONArray jsonArray = new JSONArray(result);
-                            ChapterContent chapterContent = new Gson().fromJson(jsonArray.getString(0), ChapterContent.class);
-                            chapterItem.setIs_preview(chapterContent.getIs_preview());
-                            chapterItem.setUpdate_time(chapterContent.getUpdate_time());
-                            ContentValues values = new ContentValues();
-                            String filepath = FileManager.getSDCardRoot().concat("Reader/book/").concat(book_id + "/").concat(chapter_id + "/").concat(chapterItem.getIs_preview() + "/").concat(chapterItem.getIs_new_content() + "/").concat(chapterItem.getUpdate_time()).concat(".txt");
-                            if (!TextUtils.isEmpty(chapterContent.getContent())) {
-                                FileManager.createFile(filepath, chapterContent.getContent().getBytes());
-                            }
-                            values.put("chapteritem_begin", 0);
-                            values.put("chapter_path", filepath);
-                            values.put("is_preview", "0");
-                            values.put("update_time", chapterContent.getUpdate_time());
-                            LitePal.updateAll(ChapterItem.class, values, "book_id = ? and chapter_id = ?", book_id, chapter_id);
-                            if (mActivity != null) {
-                                MyToash.ToashSuccess(mActivity, LanguageUtil.getString(mActivity, R.string.ReadActivity_buysuccess));
-                                ChapterManager.getInstance(mActivity).getCurrentChapter().setIs_preview("0");
-                                ChapterManager.getInstance(mActivity).getCurrentChapter().setChapter_path(filepath);
-                                ChapterManager.getInstance(mActivity).getCurrentChapter().setUpdate_time(chapterContent.getUpdate_time());
-                                if (config.getPageMode() != 4) {
-                                    ChapterManager.getInstance(mActivity).openCurrentChapter(chapter_id);
-                                } else {
-                                    openBook(4, ChapterManager.getInstance(mActivity).getCurrentChapter(), null);
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                        downloadWithoutAutoBuy(book_id, chapter_id, ReaderConfig.getBaseUrl() + ReaderConfig.mChapterDownUrl);
                     }
                 }
         );
@@ -1061,7 +881,6 @@ public class PageFactory {
         trPage.setEnd(mBookUtil.getPosition());
         return trPage;
     }
-
 
     public List<String> getNextLines() {
         List<String> lines = new ArrayList<>();
@@ -1289,7 +1108,6 @@ public class PageFactory {
             }
             bookpage_scroll.setBackgroundColor(bgcolor);
             bookpage_scroll_text.setTextColor(color);
-            mSupport2(color);
         }
     }
 
@@ -1490,26 +1308,18 @@ public class PageFactory {
         BookUtil bookUtiltemp = getBookUtil(querychapterItem, preChapterId);
         final BookUtil bookUtil = bookUtiltemp;
         TRPage page = new TRPage();
-        if (preChapter.getIs_preview().equals("0")) {
-            for (int i = 1; (bookUtil.getPosition() < bookUtil.getBookLen() - 2); i++) {
-                aapo = bookUtil.getPosition();
-                bookUtil.getNextLines1(PageFactory.this, i);
-            }
-            long lastPageStartPosition = aapo + 1;
-            MyToash.Log("lastPageStartPosition", lastPageStartPosition + "");
-            bookUtil.setPostition(lastPageStartPosition - 1);
-            calculateLineCount2();
-            page.setLines(bookUtil.getNextLines(PageFactory.this));
-            page.setEnd(bookUtil.getPosition());
-            preChapter.setBegin(lastPageStartPosition);
-            page.setBegin(lastPageStartPosition);
-        } else {
-            bookUtil.setPostition(-1);
-            page.setBegin(0);
-            calculateLineCount1();
-            page.setLines(bookUtil.getNextLines(PageFactory.this));
-            page.setEnd(bookUtil.getBookLen());
+        for (int i = 1; (bookUtil.getPosition() < bookUtil.getBookLen() - 2); i++) {
+            aapo = bookUtil.getPosition();
+            bookUtil.getNextLines1(PageFactory.this, i);
         }
+        long lastPageStartPosition = aapo + 1;
+        MyToash.Log("lastPageStartPosition", lastPageStartPosition + "");
+        bookUtil.setPostition(lastPageStartPosition - 1);
+        calculateLineCount2();
+        page.setLines(bookUtil.getNextLines(PageFactory.this));
+        page.setEnd(bookUtil.getPosition());
+        preChapter.setBegin(lastPageStartPosition);
+        page.setBegin(lastPageStartPosition);
         mBookPageWidget.setOnSwitchPreListener(new PageWidget.OnSwitchPreListener() {
             @Override
             public void switchPreChapter() {
@@ -1533,11 +1343,7 @@ public class PageFactory {
             onDraw(mBookPageWidget.getCurPage(), currentPage.getLines(), true);
         float fPercent = (float) (page.getBegin() * 1.0 / bookUtil.getBookLen());//进度
         String strPercent = df.format(fPercent * 100) + "%";//进度文字
-        if (preChapter.getIs_preview().equals("1")) {
-            onDraw2("1", mBookPageWidget.getNextPage(), preChapter.getChapter_title(), page.getLines(), strPercent, true);
-        } else {
-            onDraw2("", mBookPageWidget.getNextPage(), preChapter.getChapter_title(), page.getLines(), strPercent, false);
-        }
+        onDraw2("", mBookPageWidget.getNextPage(), preChapter.getChapter_title(), page.getLines(), strPercent, false);
         if (AD_SHOW) {
             CANCLE_AD_SHOW = true;
         } else {

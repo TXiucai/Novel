@@ -192,10 +192,6 @@ public class ReadActivity extends BaseReadActivity {
     Button activity_read_shangyizhang;
     @BindView(R.id.activity_read_xiayizhang)
     Button activity_read_xiayizhang;
-    @BindView(R.id.activity_read_purchase_layout)
-    LinearLayout activity_read_purchase_layout;
-    @BindView(R.id.activity_read_purchase_layout2)
-    public LinearLayout activity_read_purchase_layout2;
     @BindView(R.id.activity_read_buttom_boyin_item)
     public RelativeLayout activity_read_buttom_boyin_item;
     @BindView(R.id.activity_read_buttom_boyin_img)
@@ -513,7 +509,6 @@ public class ReadActivity extends BaseReadActivity {
         baseBook = (BaseBook) mIntent.getSerializableExtra(EXTRA_BOOK);
         mReferPage = mIntent.getStringExtra(REFER_PAGE_EXT_KAY);
         pageFactory = new PageFactory(baseBook, bookpage_scroll, bookpage_scroll_text, insert_todayone2, this);
-        pageFactory.setPurchaseLayout(activity_read_purchase_layout, activity_read_purchase_layout2);
         pageFactory.getWebViewAD(ReadActivity.this);//获取广告
         IntentFilter mfilter = new IntentFilter();
         mfilter.addAction(Intent.ACTION_BATTERY_CHANGED);
