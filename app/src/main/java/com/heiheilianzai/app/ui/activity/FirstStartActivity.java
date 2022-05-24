@@ -132,7 +132,6 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                                 Intent intent = new Intent(activity, MainActivity.class);
                                 intent.putExtra(SplashActivity.OPEN_TIME_KAY, mOpenAppTime);
                                 intent.putExtra("mBaseBooks", (ArrayList<? extends Serializable>) list);
-                                intent.putExtra("mBaseBooks", (ArrayList<? extends Serializable>) list);
                                 intent.putExtra("mBaseComics", (ArrayList<? extends Serializable>) comics);
                                 startActivity(intent);
                                 waitDialog.dismissDialog();

@@ -32,8 +32,6 @@ import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
-import com.heiheilianzai.app.ui.activity.MainActivity;
-import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicLookActivity;
 import com.heiheilianzai.app.ui.fragment.BookshelfFragment;
@@ -96,7 +94,6 @@ public class ComicshelfFragment extends Fragment {
     public ComicAdapterNew adapter;
     private TextView mDeleteBtn;
     LinearLayout shelf_book_delete_btn;
-    View MainActivityNavigationView;
     Activity activity;
     public TextView fragment_novel_allchoose;
     public TextView fragment_novel_cancle;
@@ -117,7 +114,6 @@ public class ComicshelfFragment extends Fragment {
             if (adapter != null && adapter.isDeletable()) {
                 adapter.setDeletable(false);
                 adapter.notifyDataSetChanged();
-                MainActivityNavigationView.setVisibility(View.VISIBLE);
                 shelf_book_delete_btn.setVisibility(View.GONE);
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
                 if (showGuangbo) {
@@ -167,7 +163,6 @@ public class ComicshelfFragment extends Fragment {
                 return true;
             }
         });
-        MainActivityNavigationView = ((MainActivity) activity).getNavigationView();
         return view;
     }
 
@@ -500,7 +495,6 @@ public class ComicshelfFragment extends Fragment {
 
     private void setLongClickListener(int position) {
         fragment_bookshelf_head.setVisibility(View.GONE);
-        MainActivityNavigationView.setVisibility(View.INVISIBLE);
         shelf_book_delete_btn.setVisibility(View.VISIBLE);
         fragment_novel_allchoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -518,7 +512,6 @@ public class ComicshelfFragment extends Fragment {
             @Override
             public void success() {
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
-                MainActivityNavigationView.setVisibility(View.VISIBLE);
                 shelf_book_delete_btn.setVisibility(View.GONE);
                 if (showGuangbo) {
                     fragment_bookshelf_marquee_layout.setVisibility(View.VISIBLE);

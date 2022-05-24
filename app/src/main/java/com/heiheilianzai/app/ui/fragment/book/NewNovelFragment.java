@@ -46,8 +46,6 @@ import com.heiheilianzai.app.model.event.RefreshTopbook;
 import com.heiheilianzai.app.model.event.ToStore;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
-import com.heiheilianzai.app.ui.activity.MainActivity;
-import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.fragment.BookshelfFragment;
 import com.heiheilianzai.app.utils.DisplayUtils;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -119,7 +117,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
     LinearLayout fragment_shelf_banner_layout;
     //点击的书本的position
     private int mPosition;
-    View MainActivityNavigationView;
     int read_background_paperYellow;
     boolean openbooking;
     Activity activity;
@@ -144,7 +141,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
             if (adapter != null && adapter.isDeletable()) {
                 adapter.setDeletable(false);
                 adapter.notifyDataSetChanged();
-                MainActivityNavigationView.setVisibility(View.VISIBLE);
                 shelf_book_delete_btn.setVisibility(View.GONE);
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
                 if (showGuangbo) {
@@ -192,7 +188,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
                 return true;
             }
         });
-        MainActivityNavigationView = ((MainActivity) activity).getNavigationView();
         view.findViewById(R.id.fragment_bookshelf_go_shelf).setOnClickListener(this);
         return view;
     }
@@ -716,7 +711,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
 
     private void setLongClickListener(int position) {
         fragment_bookshelf_head.setVisibility(View.GONE);
-        MainActivityNavigationView.setVisibility(View.INVISIBLE);
         shelf_book_delete_btn.setVisibility(View.VISIBLE);
         fragment_novel_allchoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -734,7 +728,6 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void success() {
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
-                MainActivityNavigationView.setVisibility(View.VISIBLE);
                 shelf_book_delete_btn.setVisibility(View.GONE);
 
                 if (showGuangbo) {

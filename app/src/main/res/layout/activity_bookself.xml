@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dimens_20dp">
+
+    <include layout="@layout/common_titlebar" />
+
+    <FrameLayout
+        android:id="@+id/fragment_bookself"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/shelf_book_delete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_60dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fragment_novel_allchoose"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/select_all"
+            android:textColor="@color/black"
+            android:textSize="@dimen/public_14_dp" />
+
+        <TextView
+            android:id="@+id/shelf_book_delete_del"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/red"
+            android:gravity="center"
+            android:text="@string/ReadHistoryFragment_shangchu"
+            android:textColor="@color/white"
+            android:textSize="@dimen/public_14_dp" />
+
+        <TextView
+            android:id="@+id/fragment_novel_cancle"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/splashactivity_cancle"
+            android:textColor="@color/black"
+            android:textSize="@dimen/public_14_dp" />
+    </LinearLayout>
+</LinearLayout>

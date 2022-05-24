@@ -2,7 +2,6 @@ package com.heiheilianzai.app.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -33,7 +32,6 @@ import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.SizeAnmotionTextview;
-import com.heiheilianzai.app.view.UnderlinePageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -177,7 +175,7 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         if (GETPRODUCT_TYPE(activity) == XIAOSHUOMAHUA || GETPRODUCT_TYPE(activity) == MANHAUXIAOSHUO) {
             if (NotchScreen.hasNotchScreen(getActivity()) || android.os.Build.VERSION.SDK_INT <= 23) {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_bookself_topbar.getLayoutParams();
-                layoutParams.height = ImageUtil.dp2px(activity, 90);
+                layoutParams.height = ImageUtil.dp2px(activity, 60);
                 fragment_bookself_topbar.setLayoutParams(layoutParams);
             }
             int LastFragment = ShareUitls.getTab(activity, "BookshelfFragment", 0);

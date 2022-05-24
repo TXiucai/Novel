@@ -31,6 +31,8 @@ import com.heiheilianzai.app.holder.CBViewHolderCreator;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.LoginModel;
 import com.heiheilianzai.app.model.UserInfoItem;
+import com.heiheilianzai.app.model.book.BaseBook;
+import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
@@ -38,11 +40,14 @@ import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.AddressActivity;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
+import com.heiheilianzai.app.ui.activity.BookSelfActivity;
 import com.heiheilianzai.app.ui.activity.CouponRecordActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
+import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.ReadTimeActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
+import com.heiheilianzai.app.ui.activity.SplashActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.UserInfoActivity;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -71,6 +76,10 @@ import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
 import static com.heiheilianzai.app.constant.ReaderConfig.LIUSHUIJIELU;
 import static com.heiheilianzai.app.constant.ReaderConfig.MYCOMMENT;
 import static com.heiheilianzai.app.constant.ReaderConfig.READHISTORY;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 我的
@@ -110,6 +119,24 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     Gson gson = new Gson();
     public UserInfoItem mUserInfo;
     private UserInfoItem.Luobo_notice luobo_notice;
+    private List<BaseBook> bookLists;
+    private List<BaseComic> comicList;
+
+    public List<BaseBook> getBookLists() {
+        return bookLists;
+    }
+
+    public void setBookLists(List<BaseBook> bookLists) {
+        this.bookLists = bookLists;
+    }
+
+    public List<BaseComic> getComicList() {
+        return comicList;
+    }
+
+    public void setComicList(List<BaseComic> comicList) {
+        this.comicList = comicList;
+    }
 
     @Override
     public int initContentView() {
@@ -302,7 +329,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         Intent intent = new Intent();
         intent.setClass(activity, WebViewActivity.class);
         String user_parame_need = baseAd.user_parame_need;
-        String jump_url = baseAd.ad_skip_url;;
+        String jump_url = baseAd.ad_skip_url;
         if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2")) {
             jump_url += "&uid=" + Utils.getUID(activity);
         }
@@ -338,7 +365,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
         }
     }
 
-    @OnClick(value = {R.id.fragment_mine_user_info_avatar,
+    @OnClick(value = {R.id.fragment_mine_user_info_avatar, R.id.fragment_mine_book_self,
             R.id.fragment_mine_user_info_paylayout_recharge, R.id.fragment_mine_user_layout,
             R.id.fragment_mine_user_info_tasklayout_mybookcomment, R.id.fragment_mine_user_info_tasklayout_taskcenter,
             R.id.fragment_mine_user_info_tasklayout_feedback, R.id.fragment_mine_user_info_tasklayout_set,
@@ -403,6 +430,12 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 } else {
                     startActivity(new Intent(activity, ReadTimeActivity.class));
                 }
+                break;
+            case R.id.fragment_mine_book_self:
+                Intent intent = new Intent(activity, BookSelfActivity.class);
+                intent.putExtra("mBaseBooks", (ArrayList<? extends Serializable>) getBookLists());
+                intent.putExtra("mBaseComics", (ArrayList<? extends Serializable>) getComicList());
+                startActivity(intent);
                 break;
         }
     }

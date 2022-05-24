@@ -309,6 +309,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             loadYouSheng = false;
         }
         mineFragment = new MineNewFragment();
+        mineFragment.setBookLists(bookLists);
+        mineFragment.setComicList(comicList);
         mFragmentList.add(mineFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, mFragmentList);
         customScrollViewPage.setAdapter(myFragmentPagerAdapter);

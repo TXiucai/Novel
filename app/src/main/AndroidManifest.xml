@@ -318,6 +318,9 @@
         <activity
             android:name=".ui.activity.OrderRecordActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BookSelfActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

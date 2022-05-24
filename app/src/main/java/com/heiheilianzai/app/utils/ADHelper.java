@@ -213,13 +213,11 @@ public class ADHelper {
                             ReaderConfig.BOTTOM_READ_AD = baseAd;
                             ReaderConfig.display_ad_days_novel = baseAd.getDisplay_ad_days();
                         } catch (Exception e) {
-
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
         );
@@ -239,13 +237,11 @@ public class ADHelper {
                             ReaderConfig.TOP_READ_AD = baseAd;
                             ReaderConfig.display_ad_days_novel = baseAd.getDisplay_ad_days();
                         } catch (Exception e) {
-
                         }
                     }
 
                     @Override
                     public void onErrorResponse(String ex) {
-
                     }
                 }
         );
