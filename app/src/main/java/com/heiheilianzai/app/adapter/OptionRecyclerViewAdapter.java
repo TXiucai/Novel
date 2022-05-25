@@ -36,8 +36,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
     Activity activity;
     LayoutInflater layoutInflater;
     List<OptionBeen> optionBeenList;
-    int OPTION, HEIGHT, WIDTH;
-    boolean PRODUCT;
+    int OPTION, HEIGHT, WIDTH, PRODUCT;
 
     public interface OnItemClick {
         void OnItemClick(int position, OptionBeen optionBeen);
@@ -45,7 +44,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
 
     OnItemClick onItemClick;
 
-    public OptionRecyclerViewAdapter(Activity activity, List<OptionBeen> optionBeenList, int OPTION, boolean PRODUCT, LayoutInflater layoutInflater, OnItemClick onItemClick) {
+    public OptionRecyclerViewAdapter(Activity activity, List<OptionBeen> optionBeenList, int OPTION, int PRODUCT, LayoutInflater layoutInflater, OnItemClick onItemClick) {
         this.activity = activity;
         this.optionBeenList = optionBeenList;
         this.OPTION = OPTION;
@@ -77,11 +76,14 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
                     onItemClick.OnItemClick(position, optionBeen);
                 }
             });
-            if (PRODUCT) {
+            if (PRODUCT == 1) {
                 MyPicasso.GlideImage(activity, optionBeen.getCover(), viewHolder.imageView, WIDTH, HEIGHT, R.mipmap.book_def_v);
                 viewHolder.author.setText(String.valueOf(optionBeen.getViews()));
-            } else {
+            } else if (PRODUCT == 2) {
                 MyPicasso.GlideImage(activity, optionBeen.getCover(), viewHolder.imageView, WIDTH, HEIGHT, R.mipmap.comic_def_v);
+                viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
+            } else {
+                MyPicasso.GlideImage(activity, optionBeen.getCover(), viewHolder.imageView, WIDTH, HEIGHT, R.mipmap.cartoon_def_v);
                 viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
             }
             viewHolder.name.setText(optionBeen.getName());
@@ -113,10 +115,12 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
             layoutParams.height = layoutParams.width / 3;
             viewHolder.list_ad_view_img.setLayoutParams(layoutParams);
-            if (PRODUCT) {
+            if (PRODUCT == 1) {
                 MyPicasso.GlideImageNoSize(activity, optionBeen.ad_image, viewHolder.list_ad_view_img, R.mipmap.book_def_v);
-            } else {
+            } else if (PRODUCT == 2) {
                 MyPicasso.GlideImageNoSize(activity, optionBeen.ad_image, viewHolder.list_ad_view_img, R.mipmap.comic_def_v);
+            } else {
+                MyPicasso.GlideImageNoSize(activity, optionBeen.ad_image, viewHolder.list_ad_view_img, R.mipmap.cartoon_def_v);
             }
             viewHolder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,7 +135,6 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
                 }
             });
         }
-
     }
 
     @Override
@@ -145,8 +148,6 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
         ImageView imageView;
         @BindView(R.id.item_store_label_male_horizontal_name)
         TextView name;
-        //  @BindView(R.id.item_store_label_male_horizontal_flag)
-        //  TextView flag;
         @BindView(R.id.item_store_label_male_horizontal_description)
         TextView description;
         @BindView(R.id.item_store_label_male_horizontal_author)
@@ -166,7 +167,6 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
             super(view);
             ButterKnife.bind(this, view);
         }
-
     }
 }
 

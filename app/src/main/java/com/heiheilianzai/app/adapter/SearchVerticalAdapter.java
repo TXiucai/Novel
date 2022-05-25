@@ -22,10 +22,10 @@ import java.util.List;
  */
 public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
     public int WIDTH, HEIGHT, H20, H33;
-    boolean PRODUCT;
+    int PRODUCT;
     Activity mActivity;
 
-    public SearchVerticalAdapter(Activity activity, List<SearchItem> list, boolean PRODUCT) {
+    public SearchVerticalAdapter(Activity activity, List<SearchItem> list, int PRODUCT) {
         super(activity, list, list.size());
         mActivity = activity;
         WIDTH = ScreenSizeUtils.getInstance(mContext).getScreenWidth();
@@ -40,10 +40,12 @@ public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
     public View getOwnView(int position, View convertView, ViewGroup parent) {
         View contentView = LayoutInflater.from(mContext).inflate(R.layout.item_store_label_male_vertical, null, false);
         int defaultImgr = R.mipmap.book_def_v;
-        if (PRODUCT) {
+        if (PRODUCT == 1) {
             defaultImgr = R.mipmap.book_def_v;
-        } else {
+        } else if (PRODUCT == 2) {
             defaultImgr = R.mipmap.comic_def_v;
+        } else {
+            defaultImgr = R.mipmap.cartoon_def_v;
         }
         ImageView imageView = contentView.findViewById(R.id.item_store_label_male_vertical_img);
         imageView.setImageResource(defaultImgr);

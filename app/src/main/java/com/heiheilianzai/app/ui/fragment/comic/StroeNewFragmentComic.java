@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class StroeNewFragmentComic extends StroeNewFragment {
-    public static boolean PRODUCT = false;//小说true; 漫画false 进入分享页面使用
+    public static int PRODUCT = 2;//小说1; 漫画2 动漫3
 
     @Override
     protected void initView() {
@@ -30,7 +30,7 @@ public class StroeNewFragmentComic extends StroeNewFragment {
     }
 
     @Override
-    protected boolean getProduct() {
+    protected int getProduct() {
         return PRODUCT;
     }
 }

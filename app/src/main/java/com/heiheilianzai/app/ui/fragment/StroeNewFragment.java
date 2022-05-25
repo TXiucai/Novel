@@ -22,17 +22,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
-import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
+import com.heiheilianzai.app.constant.CartoonConfig;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.constant.ReaderConfig;
@@ -67,7 +65,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
@@ -236,7 +233,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         }*/
     }
 
-    protected abstract boolean getProduct();
+    protected abstract int getProduct();
 
     protected void setBgWhite() {
         if (IS_NOTOP) {
@@ -300,12 +297,14 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         }
     }
 
-    private void getFloat(Activity activity, boolean product) {
+    private void getFloat(Activity activity, int product) {
         ReaderParams params = new ReaderParams(activity);
-        if (product) {
+        if (product == 1) {
             params.putExtraParams("window_type", "1");
-        } else {
+        } else if (product == 2) {
             params.putExtraParams("window_type", "2");
+        } else {
+            params.putExtraParams("window_type", "3");
         }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.mHomeFloat, json, false, new HttpUtils.ResponseListener() {
@@ -343,11 +342,13 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         String url;
         ReaderParams params = new ReaderParams(activity);
         String json = params.generateParamsJson();
-        boolean product = getProduct();
-        if (product) {
+        int product = getProduct();
+        if (product == 1) {
             url = ReaderConfig.mBookChannelUrl;
-        } else {
+        } else if (product == 2) {
             url = ComicConfig.COMIC_channel;
+        } else {
+            url = CartoonConfig.CARTOON_channel;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, false, new HttpUtils.ResponseListener() {
             @Override
@@ -378,20 +379,22 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             for (int i = 0; i < channelBean.getList().size(); i++) {
                 ChannelBean.ListBean listBean = channelBean.getList().get(i);
                 mTittlesList.add(listBean.getChannel_name());
-                if (getProduct()) {
+                if (getProduct() == 1) {
                     NewStoreBookFragment newStoreBookFragment = NewStoreBookFragment.newInstance(listBean, i);
                     mFragmentList.add(newStoreBookFragment);
                     String novel_channel_id = ShareUitls.getString(getContext(), "NOVEL_CHANNEL_ID", "");
                     if (TextUtils.equals(novel_channel_id, listBean.getId())) {
                         selectChannel = i;
                     }
-                } else {
+                } else if (getProduct() == 2) {
                     NewStoreComicFragment newStoreComicFragment = NewStoreComicFragment.newInstance(listBean, i);
                     mFragmentList.add(newStoreComicFragment);
                     String comic_channel_id = ShareUitls.getString(getContext(), "COMIC_CHANNEL_ID", "");
                     if (TextUtils.equals(comic_channel_id, listBean.getId())) {
                         selectChannel = i;
                     }
+                } else {
+                    //todo
                 }
             }
             mVpChannel.setOffscreenPageLimit(channelBean.getList().size());

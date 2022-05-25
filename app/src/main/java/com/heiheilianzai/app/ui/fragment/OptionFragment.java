@@ -34,6 +34,7 @@ import com.heiheilianzai.app.model.OptionItem;
 import com.heiheilianzai.app.model.SearchBox;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
+import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
@@ -108,7 +109,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
     public XRecyclerView fragment_option_listview;
 
 
-    boolean PRODUCT;
+    int PRODUCT;
     boolean isTopYear;
     int SEX, OPTION;
     String httpUrl;
@@ -126,7 +127,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
 
     //普通列表
     @SuppressLint("ValidFragment")
-    public OptionFragment(boolean PRODUCT, int OPTION, int SEX) {
+    public OptionFragment(int PRODUCT, int OPTION, int SEX) {
         MyToash.Log("OptionFragment", PRODUCT + "  " + OPTION);
         this.PRODUCT = PRODUCT;
         this.SEX = SEX;
@@ -139,7 +140,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
 
     //推荐列表
     @SuppressLint("ValidFragment")
-    public OptionFragment(boolean PRODUCT, int OPTION, String recommend_id, TextView titlebar_text, boolean isTopYear) {
+    public OptionFragment(int PRODUCT, int OPTION, String recommend_id, TextView titlebar_text, boolean isTopYear) {
         this.PRODUCT = PRODUCT;
         this.recommend_id = recommend_id;
         this.OPTION = OPTION;
@@ -152,7 +153,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
     String rank_type;
 
     @SuppressLint("ValidFragment")
-    public OptionFragment(boolean PRODUCT, int OPTION, String rank_type, int SEX) {
+    public OptionFragment(int PRODUCT, int OPTION, String rank_type, int SEX) {
         this.PRODUCT = PRODUCT;
         this.rank_type = rank_type;
         this.OPTION = OPTION;
@@ -208,7 +209,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
 
         temphead = (LinearLayout) layoutInflater.inflate(R.layout.item_list_head, null);
         optionBeenList = new ArrayList<>();
-        if (!PRODUCT) {
+        if (PRODUCT == 2) {
 
             switch (OPTION) {
                 case MIANFEI:
@@ -340,10 +341,12 @@ public class OptionFragment extends BaseButterKnifeFragment {
         @Override
         public void OnItemClick(int position, OptionBeen optionBeen) {
             Intent intent = new Intent();
-            if (PRODUCT) {
+            if (PRODUCT == 1) {
                 intent = BookInfoActivity.getMyIntent(activity, getActivity().getIntent().getStringExtra("title"), optionBeen.getBook_id());
-            } else {
+            } else if (PRODUCT == 2) {
                 intent = ComicInfoActivity.getMyIntent(activity, getActivity().getIntent().getStringExtra("title"), optionBeen.getComic_id());
+            } else {
+                intent = CartoonInfoActivity.getMyIntent(activity, getActivity().getIntent().getStringExtra("title"), optionBeen.getVideo_id());
             }
             startActivity(intent);
         }
@@ -453,12 +456,12 @@ public class OptionFragment extends BaseButterKnifeFragment {
                                 params.rightMargin = 30;
                                 radioButton.setText(searchBoxLabe.getDisplay());
                                 srach_head_RadioGroup.addView(radioButton, params);
-                                if (PRODUCT) {
+                                if (PRODUCT == 1) {
                                     if (searchBoxLabe.checked == 1) {
                                         map.put(searchBox.field, searchBoxLabe.value);
                                         radioButton.setChecked(true);
                                     }
-                                } else {
+                                } else if (PRODUCT == 2) {
                                     if (id == 0) {
                                         map.put(searchBox.field, searchBoxLabe.value);
                                         radioButton.setChecked(true);
@@ -468,7 +471,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
                                     @Override
                                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                                         MyToash.Log("RadioGroup", radioButton.getField() + "  ");
-                                        if (PRODUCT) {//小说 男女频道下 分类选项不一样 要重新刷新
+                                        if (PRODUCT == 1) {//小说 男女频道下 分类选项不一样 要重新刷新
                                             if (radioButton.getField().equals("channel_id")) {
                                                 isRefarshHead = true;
                                                 map.clear();

@@ -18,6 +18,7 @@ import com.heiheilianzai.app.adapter.RankAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.CartoonConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.RankItem;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -46,7 +47,7 @@ public class RankIndexFragment extends BaseButterKnifeFragment {
     @BindView(R.id.fragment_rankindex_listview)
     public ListView fragment_rankindex_listview;
 
-    boolean PRODUCT;
+    int PRODUCT;
     int SEX, OPTION;
     String httpUrl;
     Gson gson = new Gson();
@@ -57,7 +58,7 @@ public class RankIndexFragment extends BaseButterKnifeFragment {
 
 
     @SuppressLint("ValidFragment")
-    public RankIndexFragment(boolean PRODUCT, int OPTION, int SEX) {
+    public RankIndexFragment(int PRODUCT, int OPTION, int SEX) {
         this.PRODUCT = PRODUCT;
         this.SEX = SEX;
         this.OPTION = OPTION;
@@ -71,10 +72,11 @@ public class RankIndexFragment extends BaseButterKnifeFragment {
     private void initHttpUrl() {
         layoutInflater = LayoutInflater.from(activity);
         temphead = (LinearLayout) layoutInflater.inflate(R.layout.item_list_head, null);
-        if (!PRODUCT) {
+        if (PRODUCT == 1) {
             httpUrl = ReaderConfig.getBaseUrl() + COMIC_rank_index;
+        } else if (PRODUCT == 2) {
+            httpUrl = ReaderConfig.getBaseUrl() + mRankUrl;
         } else {
-
             httpUrl = ReaderConfig.getBaseUrl() + mRankUrl;
         }
 
@@ -108,7 +110,7 @@ public class RankIndexFragment extends BaseButterKnifeFragment {
         if (mRankItemList == null || mRankItemList.isEmpty()) {
             fragment_option_noresult.setVisibility(View.VISIBLE);
         } else {
-            rankAdapter = new RankAdapter(activity, mRankItemList, mRankItemList.size(),PRODUCT);
+            rankAdapter = new RankAdapter(activity, mRankItemList, mRankItemList.size(), PRODUCT);
             fragment_rankindex_listview.setAdapter(rankAdapter);
         }
     }

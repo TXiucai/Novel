@@ -1,10 +1,6 @@
 package com.heiheilianzai.app.ui.fragment.book;
 
 import android.os.Bundle;
-import android.text.TextUtils;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.book.HomeStoreBookAdapter;
@@ -13,8 +9,6 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.event.StoreBookEvent;
-import com.heiheilianzai.app.ui.fragment.comic.NewStoreComicFragment;
-
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 

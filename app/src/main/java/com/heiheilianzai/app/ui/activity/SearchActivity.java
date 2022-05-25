@@ -22,6 +22,7 @@ import com.heiheilianzai.app.adapter.SearchVerticalAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.BookConfig;
+import com.heiheilianzai.app.constant.CartoonConfig;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.constant.sa.SaVarConfig;
@@ -29,6 +30,7 @@ import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.model.OptionItem;
 import com.heiheilianzai.app.model.SearchItem;
 import com.heiheilianzai.app.model.SerachItem;
+import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -92,7 +94,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
     OptionRecyclerViewAdapter optionAdapter;
     LayoutInflater layoutInflater;
     List<OptionBeen> optionBeenList;
-    boolean PRODUCT;//true小说  false漫画
+    int PRODUCT;//1小说  2漫画 3动漫
     boolean mIsHotSearch = false;
     int Size;
 
@@ -106,12 +108,14 @@ public class SearchActivity extends BaseButterKnifeActivity {
         @Override
         public void OnItemClick(int position, OptionBeen optionBeen) {
             upHotWord(optionBeen);
-            Intent intent;
+            Intent intent = null;
             int stringId = mIsHotSearch ? R.string.refer_page_hot_search : R.string.refer_page_search;
-            if (PRODUCT) {
+            if (PRODUCT == 1) {
                 intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, stringId), optionBeen.getBook_id());
-            } else {
+            } else if (PRODUCT == 2) {
                 intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, stringId), optionBeen.getComic_id());
+            } else {
+                intent = CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, stringId), optionBeen.getVideo_id());
             }
             startActivity(intent);
         }
@@ -122,15 +126,17 @@ public class SearchActivity extends BaseButterKnifeActivity {
         params.putExtraParams("hot_word", optionBeen.getName());
         String json = params.generateParamsJson();
         String url;
-        if (PRODUCT) {
+        if (PRODUCT == 1) {
             url = ReaderConfig.getBaseUrl() + BookConfig.mUpBookWord;
-        } else {
+        } else if (PRODUCT == 2) {
             url = ReaderConfig.getBaseUrl() + ComicConfig.mUpComicWord;
+        } else {
+            url = ReaderConfig.getBaseUrl() + CartoonConfig.mUpCartoonWord;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
-
+                        initInfo(result);
                     }
 
                     @Override
@@ -147,7 +153,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragment_option_listview.setLayoutManager(layoutManager);
         fragment_option_listview.addHeaderView((LinearLayout) layoutInflater.inflate(R.layout.item_list_head, null));
-        PRODUCT = getIntent().getBooleanExtra("PRODUCT", false);
+        PRODUCT = getIntent().getIntExtra("PRODUCT", 0);
         mKeyWord = getIntent().getStringExtra("mKeyWord");
         if (mKeyWord != null) {
             mKeyWordHint = mKeyWord;
@@ -216,10 +222,12 @@ public class SearchActivity extends BaseButterKnifeActivity {
         ReaderParams params = new ReaderParams(activity);
         String json = params.generateParamsJson();
         String url;
-        if (PRODUCT) {
+        if (PRODUCT == 1) {
             url = ReaderConfig.getBaseUrl() + BookConfig.mSearchIndexUrl;
-        } else {
+        } else if (PRODUCT == 2) {
             url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search_index;
+        } else {
+            url = ReaderConfig.getBaseUrl() + CartoonConfig.mUpCartoonWord;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -258,11 +266,13 @@ public class SearchActivity extends BaseButterKnifeActivity {
         activity_search_book_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent;
-                if (PRODUCT) {
+                Intent intent = null;
+                if (PRODUCT == 1) {
                     intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), serachItem.list.get(position).getBook_id());
-                } else {
+                } else if (PRODUCT == 2) {
                     intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), serachItem.list.get(position).getComic_id());
+                } else {
+                    intent = CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), serachItem.list.get(position).getVideo_id());
                 }
                 startActivity(intent);
             }
@@ -290,10 +300,12 @@ public class SearchActivity extends BaseButterKnifeActivity {
         params.putExtraParams("page_num", current_page + "");
         String json = params.generateParamsJson();
         String url;
-        if (PRODUCT) {
+        if (PRODUCT == 1) {
             url = ReaderConfig.getBaseUrl() + BookConfig.mSearchUrl;
-        } else {
+        } else if (PRODUCT == 2) {
             url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search;
+        } else {
+            url = ReaderConfig.getBaseUrl() + CartoonConfig.mSearchUrl;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -377,7 +389,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
         }
         if (serachItem.list != null) {
             for (SearchItem searchItem : serachItem.list) {
-                hotList.add(PRODUCT ? searchItem.book_id : searchItem.comic_id);
+                hotList.add(PRODUCT == 1 ? searchItem.book_id : searchItem.comic_id);
             }
             setSearchRecommendationEvent(LanguageUtil.getString(activity, R.string.refer_page_hot_search_list), hotList);
         }
@@ -385,6 +397,6 @@ public class SearchActivity extends BaseButterKnifeActivity {
     }
 
     private void setSearchRecommendationEvent(String recommendType, List<String> work_id) {
-        SensorsDataHelper.setSearchRecommendationEvent(PRODUCT ? SaVarConfig.WORKS_TYPE_BOOK : SaVarConfig.WORKS_TYPE_COMICS, recommendType, work_id);
+        SensorsDataHelper.setSearchRecommendationEvent(PRODUCT == 1 ? SaVarConfig.WORKS_TYPE_BOOK : SaVarConfig.WORKS_TYPE_COMICS, recommendType, work_id);
     }
 }

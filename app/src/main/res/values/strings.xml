@@ -31,6 +31,7 @@
     <!--主界面-->
     <string name="MainActivity_exit">再按一次退出程序</string>
     <string name="MainActivity_shujia">书架</string>
+    <string name="MainActivity_cartoon">动漫</string>
     <string name="MainActivity_shuchen">书城</string>
     <string name="MainActivity_faxian">发现</string>
     <string name="MainActivity_my">我的</string>

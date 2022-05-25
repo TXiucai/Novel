@@ -85,10 +85,11 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     MyFragmentPagerAdapter myFragmentPagerAdapter;
     Fragment baseButterKnifeFragment1, baseButterKnifeFragment2, baseButterKnifeFragment3;
     int OPTION;
-    boolean PRODUCT;// false 漫画  true  小说
+    int PRODUCT;// 2漫画  1 小说 3
     Intent IntentFrom;
     private boolean is_top_year;
     private boolean mIsEditOpen = false;
+
     @Override
     public int initContentView() {
         return R.layout.activity_baseoption;
@@ -150,7 +151,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         fragmentManager = getSupportFragmentManager();
         IntentFrom = getIntent();
         OPTION = IntentFrom.getIntExtra("OPTION", 0);
-        PRODUCT = IntentFrom.getBooleanExtra("PRODUCT", false);
+        PRODUCT = IntentFrom.getIntExtra("PRODUCT", 0);
         is_top_year = IntentFrom.getBooleanExtra("IS_TOP_YEAR", false);
         if (OPTION != LOOKMORE) {
             String title = IntentFrom.getStringExtra("title");
@@ -367,7 +368,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 case PAIHANGINSEX:
                 case WANBEN:
                 case LOOKMORE:
-                    SensorsDataHelper.setSubpagesRecommendationEvent(PRODUCT ? SaVarConfig.WORKS_TYPE_BOOK : SaVarConfig.WORKS_TYPE_COMICS, IntentFrom.getStringExtra("title"));
+                    SensorsDataHelper.setSubpagesRecommendationEvent(PRODUCT == 1 ? SaVarConfig.WORKS_TYPE_BOOK : SaVarConfig.WORKS_TYPE_COMICS, IntentFrom.getStringExtra("title"));
                     break;
             }
         } catch (Exception e) {

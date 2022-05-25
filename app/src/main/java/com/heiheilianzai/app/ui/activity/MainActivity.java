@@ -86,6 +86,7 @@ import com.heiheilianzai.app.ui.fragment.DiscoveryNewFragment;
 import com.heiheilianzai.app.ui.fragment.HomeBoYinFragment;
 import com.heiheilianzai.app.ui.fragment.MineNewFragment;
 import com.heiheilianzai.app.ui.fragment.book.StroeNewFragmentBook;
+import com.heiheilianzai.app.ui.fragment.cartoon.StroeNewFragmentCartoon;
 import com.heiheilianzai.app.ui.fragment.comic.StroeNewFragmentComic;
 import com.heiheilianzai.app.utils.ADHelper;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -175,10 +176,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     List<BaseComic> comicList;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
     private int possition = 5;
-    BookshelfFragment bookshelfFragment;
+
     public static Activity activity;
     StroeNewFragmentBook stroeNewFragmentBook;//首页漫画
     StroeNewFragmentComic stroeNewFragmentComic;//首页小说
+    StroeNewFragmentCartoon stroeNewFragmentCartoon;//首页动漫
     HomeBoYinFragment homeBoYinFragment;
     DiscoveryNewFragment discoveryFragment;
     MineNewFragment mineFragment;
@@ -262,9 +264,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      * 设置底部按钮图片
      */
     private void setBottomButtonImgs() {
-        setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
         setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
         setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
+        setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
         if (getAppUpdate() != null && getBoyinSwitch() == 1) {
             setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
             home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
@@ -289,12 +291,13 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             comicList = (List<BaseComic>) (intent.getSerializableExtra("mBaseComics"));
         }
         mFragmentList = new ArrayList<>();
-        bookshelfFragment = new BookshelfFragment(bookLists, comicList, shelf_book_delete_btn);
-        mFragmentList.add(bookshelfFragment);
+
         stroeNewFragmentBook = new StroeNewFragmentBook();
         mFragmentList.add(stroeNewFragmentBook);
         stroeNewFragmentComic = new StroeNewFragmentComic();
         mFragmentList.add(stroeNewFragmentComic);
+        stroeNewFragmentCartoon = new StroeNewFragmentCartoon();
+        mFragmentList.add(stroeNewFragmentCartoon);
         if (getAppUpdate() != null && getBoyinSwitch() == 1) {
             homeBoYinFragment = new HomeBoYinFragment();
             Bundle bundle = new Bundle();
@@ -322,13 +325,13 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         int LastFragment = ShareUitls.getTab(activity, "LastFragment", 1);
         switch (LastFragment) {
             case 0:
-                initViewPageChecked(home_novel_layout, 0, true);
+                initViewPageChecked(home_store_layout, 0, true);
                 break;
             case 1:
-                initViewPageChecked(home_store_layout, 1, true);
+                initViewPageChecked(home_store_layout_comic, 1, true);
                 break;
             case 2:
-                initViewPageChecked(home_store_layout_comic, 2, true);
+                initViewPageChecked(home_novel_layout, 2, true);
                 break;
             case 3:
                 initViewPageChecked(home_discovery_layout, 3, true);
@@ -343,18 +346,18 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 switch (checkedId) {
                     case R.id.home_novel_layout:
                         if (possition != 0) {
-                            setChangedView(0, true);
+                            setChangedView(2, true);
                             EventBus.getDefault().post(new HomeShelfRefreshEvent());
                         }
                         break;
                     case R.id.home_store_layout:
                         if (possition != 1) {
-                            setChangedView(1, stroeNewFragmentBook.IS_NOTOP);
+                            setChangedView(0, stroeNewFragmentBook.IS_NOTOP);
                         }
                         break;
                     case R.id.home_store_layout_comic:
                         if (possition != 2) {
-                            setChangedView(2, stroeNewFragmentComic.IS_NOTOP);
+                            setChangedView(1, stroeNewFragmentComic.IS_NOTOP);
                         }
                         break;
                     case R.id.home_discovery_layout:
@@ -964,9 +967,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     private void setRBSelectedState() {
         String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
         RadioButton[] bytes = {home_novel_layout, home_store_layout, home_store_layout_comic, home_discovery_layout, home_mine_layout};
-        int[] bytesmipNormal = {R.mipmap.main_rb_menu_normal_1, R.mipmap.main_rb_menu_normal_2, R.mipmap.comic1, R.mipmap.activity_home_boyin_normal, R.mipmap.activity_home_mine_normal};
-        int[] bytesmipSelected = {R.mipmap.main_rb_menu_selected_1, R.mipmap.main_rb_menu_selected_2, R.mipmap.comic2, R.mipmap.activity_home_boyin_press, R.mipmap.activity_home_mine_press};
-        String[] titles = {getString(R.string.MainActivity_shujia), getString(R.string.noverfragment_xiaoshuo), getString(R.string.noverfragment_manhua), getString(R.string.MainActivity_boyin), getString(R.string.MainActivity_my)};
+        int[] bytesmipNormal = {R.mipmap.main_rb_menu_normal_2, R.mipmap.comic1, R.mipmap.main_rb_menu_normal_1, R.mipmap.activity_home_boyin_normal, R.mipmap.activity_home_mine_normal};
+        int[] bytesmipSelected = {R.mipmap.main_rb_menu_selected_2, R.mipmap.comic2, R.mipmap.main_rb_menu_selected_1, R.mipmap.activity_home_boyin_press, R.mipmap.activity_home_mine_press};
+        String[] titles = {getString(R.string.noverfragment_xiaoshuo), getString(R.string.noverfragment_manhua), getString(R.string.MainActivity_cartoon), getString(R.string.MainActivity_boyin), getString(R.string.MainActivity_my)};
 
         for (int i = 0; i < bytes.length; i++) {
             String picNameNormal = "rb_btn_normal_" + i + ".png";

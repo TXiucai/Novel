@@ -100,12 +100,6 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/home_novel_layout"
-                style="@style/home_menu_style"
-                android:layout_height="@dimen/dimens_58dp"
-                android:text="@string/MainActivity_shujia" />
-
-            <RadioButton
                 android:id="@+id/home_store_layout"
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
@@ -117,6 +111,12 @@
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
                 android:text="@string/noverfragment_manhua" />
+
+            <RadioButton
+                android:id="@+id/home_novel_layout"
+                style="@style/home_menu_style"
+                android:layout_height="@dimen/dimens_58dp"
+                android:text="@string/MainActivity_cartoon" />
 
             <RadioButton
                 android:id="@+id/home_discovery_layout"

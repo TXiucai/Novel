@@ -17,14 +17,14 @@ import java.util.List;
  * 书城banner下方的gridview的adapter
  */
 public class RankAdapter extends ReaderBaseAdapter<RankItem> {
-    boolean PRODUCT;
+    int PRODUCT;
     Activity mActivity;
 
     public RankAdapter(Activity activity, List<RankItem> list, int count) {
         super(activity, list, count);
     }
 
-    public RankAdapter(Activity activity, List<RankItem> list, int count, boolean PRODUCT) {
+    public RankAdapter(Activity activity, List<RankItem> list, int count, int PRODUCT) {
         super(activity, list, count);
         mActivity = activity;
         this.PRODUCT = PRODUCT;
@@ -33,10 +33,12 @@ public class RankAdapter extends ReaderBaseAdapter<RankItem> {
     @Override
     public View getOwnView(int position, View convertView, ViewGroup parent) {
         int defaultImgr = R.mipmap.book_def_v;
-        if (PRODUCT) {
+        if (PRODUCT==1) {
             defaultImgr = R.mipmap.book_def_v;
-        } else {
+        } else if (PRODUCT==2){
             defaultImgr = R.mipmap.comic_def_v;
+        }else {
+            defaultImgr = R.mipmap.cartoon_def_v;
         }
         View contentView = LayoutInflater.from(mContext).inflate(R.layout.item_store_rank_male, null, false);
         ImageView img1 = contentView.findViewById(R.id.item_store_rank_male_img_1);
