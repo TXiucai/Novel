@@ -72,16 +72,16 @@ public class RecomendApp {
                     List<RecommendAppBean.AppListBean> appListBeans = new ArrayList<>();
                     RecommendAppBean recommendAppBean = new RecommendAppBean();
                     for (int i = 0; i < list.size(); i++) {
-                        RecommendAppBean.AppListBean appListBean = new RecommendAppBean.AppListBean();
                         AdInfo adInfo = list.get(i);
-                        appListBean.setAdId(adInfo.getAdId());
-                        appListBean.setRequestId(adInfo.getRequestId());
-                        appListBean.setAdPosId(adInfo.getAdPosId());
-                        appListBean.setApp_logo(adInfo.getMaterial().getImageUrl());
-                        appListBean.setUser_parame_need("1");
-                        appListBean.setDown_link(adInfo.getOperation().getValue());
-                        appListBean.setApp_name(adInfo.getMaterial().getTitle());
                         if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                            RecommendAppBean.AppListBean appListBean = new RecommendAppBean.AppListBean();
+                            appListBean.setAdId(adInfo.getAdId());
+                            appListBean.setRequestId(adInfo.getRequestId());
+                            appListBean.setAdPosId(adInfo.getAdPosId());
+                            appListBean.setApp_logo(adInfo.getMaterial().getImageUrl());
+                            appListBean.setUser_parame_need("1");
+                            appListBean.setDown_link(adInfo.getOperation().getValue());
+                            appListBean.setApp_name(adInfo.getMaterial().getTitle());
                             appListBeans.add(appListBean);
                         }
                     }

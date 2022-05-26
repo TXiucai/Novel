@@ -610,20 +610,20 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 try {
                     List<HomeRecommendBean.RecommeListBean> recomme_list = new ArrayList<>();
                     for (int i = 0; i < list.size(); i++) {
-                        HomeRecommendBean.RecommeListBean recommeListBean = new HomeRecommendBean.RecommeListBean();
                         AdInfo adInfo = list.get(i);
-                        recommeListBean.setRequestId(adInfo.getRequestId());
-                        recommeListBean.setAdPosId(adInfo.getAdPosId());
-                        recommeListBean.setAdId(adInfo.getAdId());
-                        recommeListBean.setImg_icon(adInfo.getMaterial().getImageUrl());
-                        recommeListBean.setJump_url(adInfo.getOperation().getValue());
-                        recommeListBean.setJump_type("0");
-                        recommeListBean.setRecommend_type("0");
-                        recommeListBean.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
-                        recommeListBean.setUser_parame_need("1");
-                        recommeListBean.setTitle(adInfo.getMaterial().getTitle());
-                        recommeListBean.setWeight(adInfo.getMaterial().getSubtitle());
                         if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                            HomeRecommendBean.RecommeListBean recommeListBean = new HomeRecommendBean.RecommeListBean();
+                            recommeListBean.setRequestId(adInfo.getRequestId());
+                            recommeListBean.setAdPosId(adInfo.getAdPosId());
+                            recommeListBean.setAdId(adInfo.getAdId());
+                            recommeListBean.setImg_icon(adInfo.getMaterial().getImageUrl());
+                            recommeListBean.setJump_url(adInfo.getOperation().getValue());
+                            recommeListBean.setJump_type("0");
+                            recommeListBean.setRecommend_type("0");
+                            recommeListBean.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
+                            recommeListBean.setUser_parame_need("1");
+                            recommeListBean.setTitle(adInfo.getMaterial().getTitle());
+                            recommeListBean.setWeight(adInfo.getMaterial().getSubtitle());
                             recomme_list.add(recommeListBean);
                         }
                     }
@@ -846,17 +846,17 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 try {
                     List<BannerItemStore> bannerItemStores = new ArrayList<>();
                     for (int i = 0; i < list.size(); i++) {
-                        BannerItemStore bannerItemStore = new BannerItemStore();
                         AdInfo adInfo = list.get(i);
-                        bannerItemStore.setAdPosId(adInfo.getAdPosId());
-                        bannerItemStore.setRequestId(adInfo.getRequestId());
-                        bannerItemStore.setAdId(adInfo.getAdId());
-                        bannerItemStore.setAction(3);
-                        bannerItemStore.setContent(adInfo.getOperation().getValue());
-                        bannerItemStore.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
-                        bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
                         //第三方广告素材描述和频道id相对应
                         if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType()) && TextUtils.equals(mTopChannelId, adInfo.getMaterial().subtitle)) {
+                            BannerItemStore bannerItemStore = new BannerItemStore();
+                            bannerItemStore.setAdPosId(adInfo.getAdPosId());
+                            bannerItemStore.setRequestId(adInfo.getRequestId());
+                            bannerItemStore.setAdId(adInfo.getAdId());
+                            bannerItemStore.setAction(3);
+                            bannerItemStore.setContent(adInfo.getOperation().getValue());
+                            bannerItemStore.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
+                            bannerItemStore.setImage(adInfo.getMaterial().getImageUrl());
                             bannerItemStores.add(bannerItemStore);
                         }
                     }

@@ -129,8 +129,8 @@ public class ADHelper {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    ReaderConfig.TOP_READ_AD = new BaseAd();
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        ReaderConfig.TOP_READ_AD = new BaseAd();
                         ReaderConfig.TOP_READ_AD.setAd_skip_url(adInfo.getOperation().getValue());
                         ReaderConfig.TOP_READ_AD.setAd_title(adInfo.getMaterial().getTitle());
                         ReaderConfig.TOP_READ_AD.setAd_image(adInfo.getMaterial().getImageUrl());
@@ -167,8 +167,8 @@ public class ADHelper {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    ReaderConfig.BOTTOM_READ_AD = new BaseAd();
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        ReaderConfig.BOTTOM_READ_AD = new BaseAd();
                         ReaderConfig.BOTTOM_READ_AD.setAd_skip_url(adInfo.getOperation().getValue());
                         ReaderConfig.BOTTOM_READ_AD.setAd_title(adInfo.getMaterial().getTitle());
                         ReaderConfig.BOTTOM_READ_AD.setAd_image(adInfo.getMaterial().getImageUrl());
@@ -253,8 +253,8 @@ public class ADHelper {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    ReaderConfig.BOTTOM_COMIC_AD = new BaseAd();
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        ReaderConfig.BOTTOM_COMIC_AD = new BaseAd();
                         ReaderConfig.BOTTOM_COMIC_AD.setAdId(adInfo.getAdId());
                         ReaderConfig.BOTTOM_COMIC_AD.setRequestId(adInfo.getRequestId());
                         ReaderConfig.BOTTOM_COMIC_AD.setAdPosId(adInfo.getAdPosId());
@@ -334,8 +334,6 @@ public class ADHelper {
                         } else {
                             ReaderConfig.display_ad_days_comic = ReaderConfig.TOP_COMIC_AD.getDisplay_ad_days();
                         }
-                    } else {
-                        localComicTopAd(activity);
                     }
                 } catch (Exception e) {
                     localComicTopAd(activity);

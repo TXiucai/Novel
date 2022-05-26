@@ -466,6 +466,9 @@ public class ReadActivity extends BaseReadActivity {
     protected void onRestart() {
         super.onRestart();
         initReadSetting();
+        if (mIsActive) {
+            pageFactory.checkIsCoupon(ChapterManager.getInstance(activity).mCurrentChapter);
+        }
     }
 
     @Override

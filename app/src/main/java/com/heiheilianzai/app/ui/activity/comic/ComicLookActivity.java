@@ -1156,6 +1156,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         mReadStarTime = System.currentTimeMillis();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (isActive) {
+            checkIsCoupon(comicChapterItem);
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshComicChapterList(ComicChapterEventbus comicChapterte) {//更新当前目录集合的 最近阅读图片记录
@@ -1288,10 +1295,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    if (mChapterBaseAd == null) {
-                        mChapterBaseAd = new BaseAd();
-                    }
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                        if (mChapterBaseAd == null) {
+                            mChapterBaseAd = new BaseAd();
+                        }
                         mIsShowChapterAd = true;
                         mChapterBaseAd.setRequestId(adInfo.getRequestId());
                         mChapterBaseAd.setAdPosId(adInfo.getAdPosId());
@@ -1586,13 +1593,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     updateRecord();
                 } else {
                     if ((is_book_coupon_pay != null && is_book_coupon_pay.equals("1"))) {//需要金币
-                        if (TextUtils.equals(chapterItem.getIs_vip(),"1")){//需要会员
-                            if (App.isVip(activity)){
+                        if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {//需要会员
+                            if (App.isVip(activity)) {
                                 updateRecord();
-                            }else {
+                            } else {
                                 showGoldDialog(chapterItem);
                             }
-                        }else {
+                        } else {
                             showGoldDialog(chapterItem);
                         }
                     } else {

@@ -480,17 +480,17 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                             adInfoList = list;
                         }
                         for (int i = 0; i < adInfoList.size(); i++) {
-                            HomeNotice homeNotice = new HomeNotice();
                             AdInfo adInfo = list.get(i);
-                            homeNotice.setAdId(adInfo.getAdId());
-                            homeNotice.setRequestId(adInfo.getRequestId());
-                            homeNotice.setAdPosId(adInfo.getAdPosId());
-                            homeNotice.setImg_content(adInfo.getMaterial().getImageUrl());
-                            homeNotice.setTitle(adInfo.getMaterial().getTitle());
-                            homeNotice.setUser_parame_need("1");
-                            homeNotice.setJump_url(adInfo.getOperation().getValue());
-                            homeNotice.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
                             if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                                HomeNotice homeNotice = new HomeNotice();
+                                homeNotice.setAdId(adInfo.getAdId());
+                                homeNotice.setRequestId(adInfo.getRequestId());
+                                homeNotice.setAdPosId(adInfo.getAdPosId());
+                                homeNotice.setImg_content(adInfo.getMaterial().getImageUrl());
+                                homeNotice.setTitle(adInfo.getMaterial().getTitle());
+                                homeNotice.setUser_parame_need("1");
+                                homeNotice.setJump_url(adInfo.getOperation().getValue());
+                                homeNotice.setRedirect_type(String.valueOf(adInfo.getOperation().getType()));
                                 homeNotices.add(homeNotice);
                             }
                         }
