@@ -261,6 +261,11 @@ public class SearchActivity extends BaseButterKnifeActivity {
                 }
             });
         }
+        if (PRODUCT == 3) {
+            activity_search_book_grid.setNumColumns(2);
+        } else {
+            activity_search_book_grid.setNumColumns(3);
+        }
         SearchVerticalAdapter adapter = new SearchVerticalAdapter(activity, serachItem.list, PRODUCT);
         activity_search_book_grid.setAdapter(adapter);
         activity_search_book_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {

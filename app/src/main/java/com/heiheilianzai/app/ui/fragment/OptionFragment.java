@@ -68,6 +68,9 @@ import static com.heiheilianzai.app.constant.BookConfig.mFreeTimeUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mRankListUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mRecommendTopYearUrl;
 import static com.heiheilianzai.app.constant.BookConfig.mRecommendUrl;
+import static com.heiheilianzai.app.constant.CartoonConfig.CARTTON_free_time;
+import static com.heiheilianzai.app.constant.CartoonConfig.CartoonRecommendTopYearUrl;
+import static com.heiheilianzai.app.constant.CartoonConfig.CartoonRecommendUrl;
 import static com.heiheilianzai.app.constant.ComicConfig.COMIC_TOP_YEAR_recommend;
 import static com.heiheilianzai.app.constant.ComicConfig.COMIC_baoyue;
 import static com.heiheilianzai.app.constant.ComicConfig.COMIC_baoyue_list;
@@ -252,7 +255,7 @@ public class OptionFragment extends BaseButterKnifeFragment {
 
 
             }
-        } else {
+        } else if (PRODUCT == 1) {
             switch (OPTION) {
                 case MIANFEI:
                     httpUrl = ReaderConfig.getBaseUrl() + mFreeTimeUrl;
@@ -272,7 +275,6 @@ public class OptionFragment extends BaseButterKnifeFragment {
                 case BAOYUE_SEARCH:
                     temphead = new LinearLayout(activity);
                     temphead.setOrientation(LinearLayout.VERTICAL);
-
                     httpUrl = ReaderConfig.getBaseUrl() + mBaoyueIndexUrl;
                     map = new <String, String>HashMap();
                     break;
@@ -281,7 +283,6 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     temphead = (LinearLayout) layoutInflater.inflate(R.layout.header_baoyue, null, false);
                     baoyueHeadHolder = new BaoyueHeadHolder(temphead);
                     break;
-
                 case LOOKMORE:
                     if (isTopYear) {
                         httpUrl = ReaderConfig.getBaseUrl() + mRecommendTopYearUrl;
@@ -294,10 +295,21 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     }
                     break;
             }
-
+        } else {
+            switch (OPTION) {//动漫
+                case LOOKMORE:
+                    if (isTopYear) {//年度榜单
+                        httpUrl = ReaderConfig.getBaseUrl() + CartoonRecommendTopYearUrl;
+                    } else {
+                        if (recommend_id != null) {
+                            httpUrl = ReaderConfig.getBaseUrl() + CartoonRecommendUrl;
+                        } else {
+                            httpUrl = ReaderConfig.getBaseUrl() + CARTTON_free_time;
+                        }
+                    }
+                    break;
+            }
         }
-
-
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragment_option_listview.setLayoutManager(layoutManager);

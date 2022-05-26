@@ -7,7 +7,7 @@ import java.util.List;
 public class OptionBeen extends BaseAd {
     public String book_id;//": 100,
     public String comic_id;//": 10086, //漫画id
-    public String Video_id;//": 10086, //漫画id
+    public String video_id;//": 10086, //漫画id
     public String name;//"": "乔乔的奇妙冒险", //漫画名称
     public String cover;//水平封面
     public String author;//"": "黎明C", //作者
@@ -23,11 +23,11 @@ public class OptionBeen extends BaseAd {
     public int views;
 
     public String getVideo_id() {
-        return Video_id;
+        return video_id;
     }
 
     public void setVideo_id(String video_id) {
-        Video_id = video_id;
+        video_id = video_id;
     }
 
     public int getViews() {

@@ -70,7 +70,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     protected void getSdkLableAd() {
-        getSdkLableAd(0);
+        getSdkLableAd(1);
     }
 
     @Override
@@ -124,12 +124,12 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
      */
     @Override
     public void getBannerData() {
-        getBannerData("StoreBookBannerData", ReaderConfig.BOOK_STORE_BANNER, 0);
+        getBannerData("StoreBookBannerData", ReaderConfig.BOOK_STORE_BANNER, 1);
     }
 
     @Override
     public void getCacheBannerData() {
-        getCacheBannerData("StoreBookBannerData", 0);
+        getCacheBannerData("StoreBookBannerData", 1);
     }
 
     @Override
@@ -161,6 +161,6 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     protected void getHomeRecommend() {
-        getHomeRecommend(0);
+        getHomeRecommend(1);
     }
 }

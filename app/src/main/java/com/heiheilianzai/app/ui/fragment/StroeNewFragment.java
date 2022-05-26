@@ -45,6 +45,7 @@ import com.heiheilianzai.app.ui.activity.SearchActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.book.NewStoreBookFragment;
+import com.heiheilianzai.app.ui.fragment.cartoon.NewStoreCartoonFragment;
 import com.heiheilianzai.app.ui.fragment.comic.NewStoreComicFragment;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DateUtils;
@@ -394,7 +395,12 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                         selectChannel = i;
                     }
                 } else {
-                    //todo
+                    NewStoreCartoonFragment newStoreComicFragment = NewStoreCartoonFragment.newInstance(listBean, i);
+                    mFragmentList.add(newStoreComicFragment);
+                    String comic_channel_id = ShareUitls.getString(getContext(), "CARTOON_CHANNEL_ID", "");
+                    if (TextUtils.equals(comic_channel_id, listBean.getId())) {
+                        selectChannel = i;
+                    }
                 }
             }
             mVpChannel.setOffscreenPageLimit(channelBean.getList().size());

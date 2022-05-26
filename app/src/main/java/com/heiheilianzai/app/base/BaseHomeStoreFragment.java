@@ -21,12 +21,14 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.HomeRecommendBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
+import com.heiheilianzai.app.model.cartoon.StroreCartoonLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
@@ -323,8 +325,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         ReaderParams params = new ReaderParams(activity);
         if (TextUtils.equals(url, ReaderConfig.mBookChannelDetailUrl)) {
             params.putExtraParams("book_channel_id", mTopChannelId);
-        } else {
+        } else if (TextUtils.equals(url, ComicConfig.COMIC_Detail_channel)) {
             params.putExtraParams("comic_channel_id", mTopChannelId);
+        } else {
+            params.putExtraParams("video_channel_id", mTopChannelId);
         }
         params.putExtraParams("recommend_id", mChannelId);
         params.putExtraParams("page", "" + page);
@@ -397,7 +401,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     protected void getSdkLableAd(int recommendType) {
         String type;
-        if (recommendType == 0) {
+        if (recommendType == 1) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_NOVLE;
             for (int i = 0; i < ReaderConfig.NOVEL_SDK_AD.size(); i++) {
                 AppUpdate.ListBean listBean = ReaderConfig.NOVEL_SDK_AD.get(i);
@@ -410,8 +414,21 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             if (!mIsNovelLabelSdk) {
                 localLabelAd(recommendType);
             }
-        } else {
+        } else if (recommendType == 2) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_COMIC;
+            for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+                if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
+                    mIsComicLabelSdk = true;
+                    sdkLableAd(recommendType, type);
+                    return;
+                }
+            }
+            if (!mIsComicLabelSdk) {
+                localLabelAd(recommendType);
+            }
+        } else {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_CARTOON;
             for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
                 AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
                 if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
@@ -427,24 +444,26 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     }
 
     private void localLabelAd(int recommendType) {
-        String json;
+        String json = "";
         String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
-        if (recommendType == 0) {
+        if (recommendType == 1) {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("type", XIAOSHUO + "");
             params.putExtraParams("position", "1");
             json = params.generateParamsJson();
-        } else {
+        } else if (recommendType == 2) {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("type", MANHAU + "");
             params.putExtraParams("position", "1");
             json = params.generateParamsJson();
+        } else {
+            //todo
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            if (recommendType == 0) {//小说
+                            if (recommendType == 1) {//小说
                                 StroreBookcLable lableAd = new StroreBookcLable();
                                 BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
                                 lableAd.setAd_image(baseAd.getAd_image());
@@ -453,8 +472,17 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                                 lableAd.setAd_url_type(baseAd.getAd_url_type());
                                 lableAd.setAd_skip_url(baseAd.getAd_skip_url());
                                 initLable(lableAd);
-                            } else {//漫画
+                            } else if (recommendType == 2) {//漫画
                                 StroreComicLable lableAd = new StroreComicLable();
+                                BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
+                                lableAd.setAd_image(baseAd.getAd_image());
+                                lableAd.setAd_title(baseAd.getAd_title());
+                                lableAd.setAd_type(baseAd.getAd_type());
+                                lableAd.setAd_url_type(baseAd.getAd_url_type());
+                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());
+                                initLable(lableAd);
+                            } else {
+                                StroreCartoonLable lableAd = new StroreCartoonLable();
                                 BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
                                 lableAd.setAd_image(baseAd.getAd_image());
                                 lableAd.setAd_title(baseAd.getAd_title());
@@ -480,30 +508,43 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onRequestOk(List<AdInfo> list) {
                 try {
                     AdInfo adInfo = list.get(0);
-                    if (recommendType == 0) {//小说
-                        StroreBookcLable lableAd = new StroreBookcLable();
-                        lableAd.setRequestId(adInfo.getRequestId());
-                        lableAd.setAdId(adInfo.getAdId());
-                        lableAd.setAdPosId(adInfo.getAdPosId());
-                        lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        lableAd.setAd_title(adInfo.getMaterial().getTitle());
-                        lableAd.setAd_type(1);
-                        lableAd.setAd_url_type(adInfo.getOperation().getType());
-                        lableAd.setAd_skip_url(adInfo.getOperation().getValue());
+                    if (recommendType == 1) {//小说
                         if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                            StroreBookcLable lableAd = new StroreBookcLable();
+                            lableAd.setRequestId(adInfo.getRequestId());
+                            lableAd.setAdId(adInfo.getAdId());
+                            lableAd.setAdPosId(adInfo.getAdPosId());
+                            lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                            lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                            lableAd.setAd_type(1);
+                            lableAd.setAd_url_type(adInfo.getOperation().getType());
+                            lableAd.setAd_skip_url(adInfo.getOperation().getValue());
                             initLable(lableAd);
                         }
-                    } else {//漫画
-                        StroreComicLable lableAd = new StroreComicLable();
-                        lableAd.setRequestId(adInfo.getRequestId());
-                        lableAd.setAdId(adInfo.getAdId());
-                        lableAd.setAdPosId(adInfo.getAdPosId());
-                        lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
-                        lableAd.setAd_title(adInfo.getMaterial().getTitle());
-                        lableAd.setAd_type(1);
-                        lableAd.setAd_url_type(adInfo.getOperation().getType());
-                        lableAd.setAd_skip_url(adInfo.getOperation().getValue());
+                    } else if (recommendType == 2) {//漫画
                         if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                            StroreComicLable lableAd = new StroreComicLable();
+                            lableAd.setRequestId(adInfo.getRequestId());
+                            lableAd.setAdId(adInfo.getAdId());
+                            lableAd.setAdPosId(adInfo.getAdPosId());
+                            lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                            lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                            lableAd.setAd_type(1);
+                            lableAd.setAd_url_type(adInfo.getOperation().getType());
+                            lableAd.setAd_skip_url(adInfo.getOperation().getValue());
+                            initLable(lableAd);
+                        }
+                    } else {
+                        if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
+                            StroreCartoonLable lableAd = new StroreCartoonLable();
+                            lableAd.setRequestId(adInfo.getRequestId());
+                            lableAd.setAdId(adInfo.getAdId());
+                            lableAd.setAdPosId(adInfo.getAdPosId());
+                            lableAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                            lableAd.setAd_title(adInfo.getMaterial().getTitle());
+                            lableAd.setAd_type(1);
+                            lableAd.setAd_url_type(adInfo.getOperation().getType());
+                            lableAd.setAd_skip_url(adInfo.getOperation().getValue());
                             initLable(lableAd);
                         }
                     }
@@ -553,10 +594,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     private void sdkIconAd(RecyclerView recyclerView, int recommendType, List<HomeRecommendBean.RecommeListBean> localList) {
         String type;
-        if (recommendType == 0) {
+        if (recommendType == 1) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_NOVEL;
-        } else {
+        } else if (recommendType == 2) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_COMIC;
+        } else {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_ICON_CARTOON_DEBUG : BuildConfig.XAD_EVN_POS_HOME_ICON_CARTOON;
         }
         XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
             @Override
@@ -787,10 +830,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     private void sdkBannerAd(String kayCache, String url, String json, int flag) {
         String type;
-        if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER)) {
+        if (flag == 1) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_NOVEL_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_NOVEL;
-        } else {
+        } else if (flag == 2) {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_COMIC_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_COMIC;
+        } else {
+            type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_BANNER_CARTOON_DEBUG : BuildConfig.XAD_EVN_POS_BANNER_CARTOON;
         }
         XRequestManager.INSTANCE.requestAd(activity, type, AdType.CUSTOM_TYPE_DEFAULT, 99, new XAdRequestListener() {
             @Override
@@ -842,10 +887,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         if (TextUtils.isEmpty(mTopChannelId)) {
             return;
         }
-        if (TextUtils.equals(url, ReaderConfig.BOOK_STORE_BANNER)) {
+        if (flag == 1) {
             params.putExtraParams("book_channel_id", mTopChannelId);
-        } else {
+        } else if (flag == 2) {
             params.putExtraParams("comic_channel_id", mTopChannelId);
+        } else {
+            //todo
         }
         params.putExtraParams("channel_id", "1");
         String json = params.generateParamsJson();

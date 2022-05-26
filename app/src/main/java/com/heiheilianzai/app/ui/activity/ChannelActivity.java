@@ -50,12 +50,14 @@ public class ChannelActivity extends BaseWarmStartActivity {
         }
 
         Bundle extras = getIntent().getExtras();
-        boolean produce = extras.getBoolean("PRODUCE");
+        int produce = extras.getInt("PRODUCE", 0);
         ChannelBean channelBean = (ChannelBean) extras.getSerializable("CHANNEL");
-        if (produce) {
+        if (produce == 1) {
             mRlHead.setBackground(getResources().getDrawable(R.mipmap.channel_novel_background));
-        } else {
+        } else if (produce == 2) {
             mRlHead.setBackground(getResources().getDrawable(R.mipmap.channel_comic_background));
+        } else {
+            mRlHead.setBackground(getResources().getDrawable(R.mipmap.channel_cartoon_background));
         }
         mImgBack.setOnClickListener((v -> finish()));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 3);
@@ -69,7 +71,7 @@ public class ChannelActivity extends BaseWarmStartActivity {
                 intent.putExtra("CHANNEL", item);
                 intent.putExtra("PRODUCE", produce);
                 intent.putExtra("POSITION", positon);
-                setResult(2,intent);
+                setResult(2, intent);
                 finish();
             }
         });

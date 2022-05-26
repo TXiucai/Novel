@@ -64,9 +64,11 @@ android {
         buildConfigField "String", "XAD_EVN_POS_SPLASH", gradle.ext.XAD_EVN_POS_SPLASH
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_NOVEL", gradle.ext.XAD_EVN_POS_HOME_ICON_NOVEL
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_COMIC", gradle.ext.XAD_EVN_POS_HOME_ICON_COMIC
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON_CARTOON", gradle.ext.XAD_EVN_POS_HOME_ICON_CARTOON
         buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG", gradle.ext.XAD_EVN_POS_HOME_DIALOG
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_CARTOON", gradle.ext.XAD_EVN_POS_HOME_COLUMN_CARTOON
         buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM
         buildConfigField "String", "XAD_EVN_POS_COMIC_TOP", gradle.ext.XAD_EVN_POS_COMIC_TOP
         buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND", gradle.ext.XAD_EVN_POS_APP_RECOMMEND
@@ -77,15 +79,18 @@ android {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC", gradle.ext.XAD_EVN_POS_BANNER_COMIC
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL", gradle.ext.XAD_EVN_POS_BANNER_NOVEL
+        buildConfigField "String", "XAD_EVN_POS_BANNER_CARTOON", gradle.ext.XAD_EVN_POS_BANNER_CARTOON
         buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP", gradle.ext.XAD_EVN_POS_NOVEL_TOP
         buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL
 
         buildConfigField "String", "XAD_EVN_POS_SPLASH_DEBUG", gradle.ext.XAD_EVN_POS_SPLASH_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON_CARTOON_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_CARTOON_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG_DEBUG", gradle.ext.XAD_EVN_POS_HOME_DIALOG_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG
         buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG
         buildConfigField "String", "XAD_EVN_POS_COMIC_TOP_DEEBUG", gradle.ext.XAD_EVN_POS_COMIC_TOP_DEEBUG
         buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND_DEBUG", gradle.ext.XAD_EVN_POS_APP_RECOMMEND_DEBUG
@@ -96,6 +101,7 @@ android {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_COMIC_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_NOVEL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_BANNER_CARTOON_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_CARTOON_DEBUG
         buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_TOP_DEBUG
         buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG
         ndk {
@@ -235,9 +241,11 @@ def getAppConfig() {
         buildConfigField "String", "XAD_EVN_POS_SPLASH", gradle.ext.XAD_EVN_POS_SPLASH
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_NOVEL", gradle.ext.XAD_EVN_POS_HOME_ICON_NOVEL
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_COMIC", gradle.ext.XAD_EVN_POS_HOME_ICON_COMIC
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON_CARTOON", gradle.ext.XAD_EVN_POS_HOME_ICON_CARTOON
         buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG", gradle.ext.XAD_EVN_POS_HOME_DIALOG
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_CARTOON", gradle.ext.XAD_EVN_POS_HOME_COLUMN_CARTOON
         buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM
         buildConfigField "String", "XAD_EVN_POS_COMIC_TOP", gradle.ext.XAD_EVN_POS_COMIC_TOP
         buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND", gradle.ext.XAD_EVN_POS_APP_RECOMMEND
@@ -248,15 +256,18 @@ def getAppConfig() {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC", gradle.ext.XAD_EVN_POS_BANNER_COMIC
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL", gradle.ext.XAD_EVN_POS_BANNER_NOVEL
+        buildConfigField "String", "XAD_EVN_POS_BANNER_CARTOON", gradle.ext.XAD_EVN_POS_BANNER_CARTOON
         buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP", gradle.ext.XAD_EVN_POS_NOVEL_TOP
         buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL
 
         buildConfigField "String", "XAD_EVN_POS_SPLASH_DEBUG", gradle.ext.XAD_EVN_POS_SPLASH_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_NOVEL_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_ICON_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_ICON_CARTOON_DEBUG", gradle.ext.XAD_EVN_POS_HOME_ICON_CARTOON_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_DIALOG_DEBUG", gradle.ext.XAD_EVN_POS_HOME_DIALOG_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_NOVLE_DEBUG
         buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_COMIC_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG", gradle.ext.XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG
         buildConfigField "String", "XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG", gradle.ext.XAD_EVN_POS_NOVEL_BOTTOM_DEEBUG
         buildConfigField "String", "XAD_EVN_POS_COMIC_TOP_DEEBUG", gradle.ext.XAD_EVN_POS_COMIC_TOP_DEEBUG
         buildConfigField "String", "XAD_EVN_POS_APP_RECOMMEND_DEBUG", gradle.ext.XAD_EVN_POS_APP_RECOMMEND_DEBUG
@@ -267,6 +278,7 @@ def getAppConfig() {
         buildConfigField "String", "XAD_EVN_POS_NOVEL_DETAIL_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_DETAIL_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_COMIC_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_COMIC_DEBUG
         buildConfigField "String", "XAD_EVN_POS_BANNER_NOVEL_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_NOVEL_DEBUG
+        buildConfigField "String", "XAD_EVN_POS_BANNER_CARTOON_DEBUG", gradle.ext.XAD_EVN_POS_BANNER_CARTOON_DEBUG
         buildConfigField "String", "XAD_EVN_POS_NOVEL_TOP_DEBUG", gradle.ext.XAD_EVN_POS_NOVEL_TOP_DEBUG
         buildConfigField "String", "XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG", gradle.ext.XAD_EVN_POS_COMIC_CHAPTER_INTERVAL_DEBUG
 

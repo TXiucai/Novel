@@ -89,19 +89,21 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<OptionRecycl
             viewHolder.name.setText(optionBeen.getName());
             viewHolder.description.setText(optionBeen.getDescription());
             viewHolder.item_store_label_male_horizontal_tag.removeAllViews();
-            for (int i = 0; i < optionBeen.tag.size(); i++) {
-                if (i < 3) {
-                    BaseTag baseTag = optionBeen.tag.get(i);
-                    String str = "&nbsp&nbsp<font color='" + baseTag.color + "'>" + baseTag.tab.trim() + "</font>";
-                    TextView textView = new TextView(activity);
-                    textView.setTextSize(10);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins(10, 0, 10, 0);
-                    textView.setPadding(10, 5, 20, 10);
-                    textView.setLayoutParams(layoutParams);
-                    textView.setText(Html.fromHtml(str));
-                    textView.setBackground(activity.getDrawable(R.drawable.shape_announce));
-                    viewHolder.item_store_label_male_horizontal_tag.addView(textView);
+            if (optionBeen.tag != null && optionBeen.tag.size() > 0) {
+                for (int i = 0; i < optionBeen.tag.size(); i++) {
+                    if (i < 3) {
+                        BaseTag baseTag = optionBeen.tag.get(i);
+                        String str = "&nbsp&nbsp<font color='" + baseTag.color + "'>" + baseTag.tab.trim() + "</font>";
+                        TextView textView = new TextView(activity);
+                        textView.setTextSize(10);
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        layoutParams.setMargins(10, 0, 10, 0);
+                        textView.setPadding(10, 5, 20, 10);
+                        textView.setLayoutParams(layoutParams);
+                        textView.setText(Html.fromHtml(str));
+                        textView.setBackground(activity.getDrawable(R.drawable.shape_announce));
+                        viewHolder.item_store_label_male_horizontal_tag.addView(textView);
+                    }
                 }
             }
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewHolder.item_store_label_male_vertical_layout.getLayoutParams();
