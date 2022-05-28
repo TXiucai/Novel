@@ -310,9 +310,15 @@ public class OptionFragment extends BaseButterKnifeFragment {
                     break;
             }
         }
-        MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        fragment_option_listview.setLayoutManager(layoutManager);
+        if (OPTION == LOOKMORE && PRODUCT == 3) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(activity, 2);
+
+            fragment_option_listview.setLayoutManager(gridLayoutManager);
+        } else {
+            MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            fragment_option_listview.setLayoutManager(layoutManager);
+        }
         if (OPTION != SHUKU && OPTION != BAOYUE_SEARCH) {
             fragment_option_listview.addHeaderView(temphead);
         }

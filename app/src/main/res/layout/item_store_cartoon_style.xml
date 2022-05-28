@@ -19,6 +19,7 @@
                 android:id="@+id/liem_store_comic_style1_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/icon_comic_def" />
 

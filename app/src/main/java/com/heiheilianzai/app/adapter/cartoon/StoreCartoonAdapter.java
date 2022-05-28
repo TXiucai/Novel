@@ -113,7 +113,7 @@ public class StoreCartoonAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder {
+   public class ViewHolder {
         @BindView(R.id.liem_store_comic_style1_layout)
         LinearLayout liem_store_comic_style1_layout;
         @BindView(R.id.liem_store_comic_style1_img)
