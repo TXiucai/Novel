@@ -256,11 +256,11 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String cartoon_id;
                 if (style != COMIC_UI_STYLE_3) {
-                    cartoon_id = cartoonList.get(position).cartoon_id;
+                    cartoon_id = cartoonList.get(position).video_id;
                 } else {
-                    cartoon_id = cartoonList.get(position + 1).cartoon_id;
+                    cartoon_id = cartoonList.get(position + 1).video_id;
                 }
-                Intent intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoon_id);
+                Intent intent = CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoon_id);
                 activity.startActivity(intent);
             }
         });
@@ -291,7 +291,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(0).cartoon_id));
+                            activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(0).video_id));
                         }
                     });
                     width = WIDTH / 2;
@@ -373,7 +373,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             List<String> workId = new ArrayList<>();
             for (StroreCartoonLable.Cartoon cartoon : subListComics) {
-                workId.add(cartoon.cartoon_id);
+                workId.add(cartoon.video_id);
             }
             SensorsDataHelper.setChangeRecommendationEvent(WORKS_TYPE_COMICS, Integer.valueOf(column_id), workId);
         } catch (Exception e) {

@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.model.cartoon;
 
+import static cn.jpush.im.android.api.enums.ContentType.video;
+
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 
@@ -71,7 +73,7 @@ public class StroreCartoonLable extends BaseAd {
     }
 
     public static class Cartoon {
-        public String cartoon_id;//": 10086, //漫画id
+        public String video_id;//": 10086, //漫画id
         public String name;//"": "乔乔的奇妙冒险", //漫画名称
         public String cover; //水平封面
         public String author;//"": "黎明C", //作者
@@ -90,8 +92,8 @@ public class StroreCartoonLable extends BaseAd {
 
         @Override
         public String toString() {
-            return "Comic{" +
-                    "comic_id='" + cartoon_id + '\'' +
+            return "Cartoon{" +
+                    "video='" + video + '\'' +
                     ", name='" + name + '\'' +
                     ", cover='" + cover + '\'' +
                     ", author='" + author + '\'' +

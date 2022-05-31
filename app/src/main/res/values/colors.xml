@@ -206,5 +206,10 @@
     <color name="color_FB4F57">#FB4F57</color>
     <color name="color_FF8133">#FF8133</color>
     <color name="color_FFF8EF">#FFF8EF</color>
+    <color name="color_35363B">#35363B</color>
+    <color name="color_f0f0f0">#f0f0f0</color>
+    <color name="color_979797">#979797</color>
+    <color name="color_fa4560">#fa4560</color>
+    <color name="color_ff773d">#ff773d</color>
     <!--色值定义END-->
 </resources>

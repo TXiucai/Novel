@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.adapter;
 
-import static com.heiheilianzai.app.component.ChapterManager.mContext;
 import static com.heiheilianzai.app.constant.ReaderConfig.LOOKMORE;
 
 import android.annotation.SuppressLint;
