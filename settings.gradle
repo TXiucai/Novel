@@ -1,1 +1,3 @@
 include ':app', 'extras:shswiperefresh', 'extras:niceimageview'
+include ':encrypt'
+include ':player2'

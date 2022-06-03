@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        flavorDimensions "default"
+        versionCode 1
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        preRelease {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //noinspection GradleCompatible
+    implementation "androidx.appcompat:appcompat:${rootProject.xAppcompat}"
+
+    api "tv.danmaku.ijk.media:ijkplayer-exo:${rootProject.ijkplayer}"
+    api "tv.danmaku.ijk.media:ijkplayer-java:${rootProject.ijkplayer}"
+    api "com.google.android.exoplayer:exoplayer:${rootProject.exoplayer}"
+    api "com.google.android.exoplayer:extension-rtmp:${rootProject.exoplayer}"
+    api "com.andkulikov:transitionseverywhere:${rootProject.transitionseverywhere}"
+    api "org.greenrobot:eventbus:${rootProject.eventbus}"
+    implementation project(':encrypt')
+}

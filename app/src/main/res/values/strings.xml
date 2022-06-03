@@ -667,5 +667,20 @@
     <string name="string_guess_like">猜你喜欢</string>
     <string name="BaoyueActivity_gold_gift">赠%s</string>
     <string name="string_record_gold_title">%s赠%s</string>
-
+    <string name="speed">倍速</string>
+    <string name="speed_1.0">1.0x · 正常</string>
+    <string name="speed_0.5">0.5x</string>
+    <string name="speed_2.0">2.0x</string>
+    <string name="speed_1.5">1.5x</string>
+    <string name="make_gif">生成GIF</string>
+    <string name="save_gif_max_second">当前%s秒，最多可录制8秒</string>
+    <string name="record_gif">录制GIF</string>
+    <string name="screen_shot">截图</string>
+    <string name="gif">GIF</string>
+    <string name="share_picture_friend">分享本地相册中的美图给朋友吧～</string>
+    <string name="make_gif_loading">GIF生成中，请勿息屏或退出</string>
+    <string name="make_gif_success_share_now">GIF相册保存成功，分享给朋友吧</string>
+    <string name="make_gif_fail">GIF生成失败，请稍后重试</string>
+    <string name="click_make_gif">点击即可录制GIF</string>
+    <string name="next">下一步</string>
 </resources>

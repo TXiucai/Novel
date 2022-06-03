@@ -50,7 +50,14 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
+import com.heiheilianzai.app.view.video.CustomGSYVideoPlayer;
+import com.heiheilianzai.app.view.video.VideoPlayView;
 import com.jaeger.library.StatusBarUtil;
+import com.live.eggplant.player.player.IjkPlayerManager;
+import com.live.eggplant.player.player.PlayerFactory;
+import com.live.eggplant.player.video.StandardGSYVideoPlayer;
+import com.live.eggplant.player.video.base.GSYVideoViewBridge;
+import com.live.eggplant.widget.video.GSYVideoOptionHelper;
 import com.zcw.togglebutton.ToggleButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -90,6 +97,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     public TextView mTxCartoonTime;
     @BindView(R.id.gv_guess)
     public AdaptionGridView mGv;
+//    @BindView(R.id.video)
+//    public VideoPlayView videoPlayer;
+    @BindView(R.id.video)
+    public StandardGSYVideoPlayer videoPlayer;
     private String mCartoonId;
     private Activity mActivity;
     private CartoonInfo mCartoonInfo;
@@ -202,6 +213,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     mCartoonChapterAdapter.notifyDataSetChanged();
                     checkIsCoupon(cartoonChapter);
                 });
+                checkIsCoupon(mChapterItem);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -210,6 +222,13 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
 
     private void playVideo(CartoonChapter cartoonChapter) {
         updateRecord();
+        //videoPlayer.play(cartoonChapter.getContent(),true);
+        //videoPlayer.play("https://qzvd-hw.testzone.cn/20211109/kZF0haVU/index.m3u8",true);
+        //videoPlayer.setUp("https://qzvd-hw.testzone.cn/20211109/kZF0haVU/index.m3u8",false,"");
+        PlayerFactory.setPlayManager(IjkPlayerManager.class);
+        GSYVideoOptionHelper.INSTANCE.getGSYVideoOptionBuilder("https://qzvd-hw-new.testzone.cn/20211109/kZF0haVU/index.m3u8", "", true)
+                .build(videoPlayer);
+        videoPlayer.startPlayLogic();
     }
 
     private void checkIsVip(CartoonChapter chapterItem) {
@@ -226,7 +245,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
         String is_vip = chapterItem.getIs_vip();
         String is_limited_free = chapterItem.getIs_limited_free();
-        if (!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) {
+        if ((!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) || (TextUtils.equals(is_vip, "0") && TextUtils.equals(is_book_coupon_pay, "0"))) {
             playVideo(chapterItem);
         } else {
             if (Utils.isLogin(mActivity)) {

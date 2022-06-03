@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_top_white_12"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dimens_12dp"
+    android:paddingBottom="@dimen/dimens_12dp">
+
+    <TextView
+        android:id="@+id/tv_speed_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/dimens_12dp"
+        android:paddingBottom="@dimen/dimens_12dp"
+        android:text="@string/speed_2.0"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_speed_1.5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/dimens_12dp"
+        android:paddingBottom="@dimen/dimens_12dp"
+        android:text="@string/speed_1.5"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_speed_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/dimens_12dp"
+        android:paddingBottom="@dimen/dimens_12dp"
+        android:text="@string/speed_1.0"
+        android:textColor="@color/color_FF9900"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_speed_0.5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/dimens_12dp"
+        android:paddingBottom="@dimen/dimens_12dp"
+        android:text="@string/speed_0.5"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/dimens_24dp"
+        android:paddingBottom="@dimen/dimens_12dp"
+        android:text="@string/pickerview_cancel"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="16sp" />
+</LinearLayout>

@@ -51,6 +51,15 @@
             android:layout_height="@dimen/dimens_220dp"
             tools:ignore="MissingConstraints">
 
+           <!-- <com.heiheilianzai.app.view.video.VideoPlayView
+                android:id="@+id/video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />-->
+            <com.live.eggplant.player.video.StandardGSYVideoPlayer
+                android:id="@+id/video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
             <LinearLayout
                 android:id="@+id/ll_gold"
                 android:layout_width="match_parent"

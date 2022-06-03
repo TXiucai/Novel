@@ -110,4 +110,9 @@ ext {
     pickView = '4.1.9'
     nanohttpd = '2.3.1'
     retrofit2 = '2.7.0'
+    xlog = "1.6.1"
+    ijkplayer = "0.8.8"
+    espresso = "3.2.0"
+    exoplayer = "2.9.3"
+    transitionseverywhere = "1.7.0"
 }

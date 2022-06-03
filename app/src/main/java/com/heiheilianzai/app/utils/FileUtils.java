@@ -1,5 +1,8 @@
 package com.heiheilianzai.app.utils;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Xml;
@@ -10,6 +13,7 @@ import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -244,5 +248,32 @@ public class FileUtils {
 
         return newStr;
     }
-
+    /**
+     * 保存资源文件中的图片到本地相册,实时刷新
+     */
+    public static Intent saveImageToGallery(Bitmap bmp, String storePath)  {
+        // BUG 保存到相册之后，相册的图片时间显示不正确，显示的是1970年1月1日
+        String fileName = null;
+        File appDir = new File(storePath, System.currentTimeMillis() + ".jpg");
+        if (!appDir.exists()) {
+            appDir.getParentFile().mkdir();
+        }
+        fileName = appDir.toString();
+        try {
+            FileOutputStream fos = new FileOutputStream(fileName);
+            //通过io流的方式来压缩保存图片(80代表压缩20%)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //插入到系统图库
+        //MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, fileName, "");
+        //发送广播通知系统图库刷新数据
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.fromFile(appDir);
+        intent.setData(uri);
+        return intent;
+    }
 }

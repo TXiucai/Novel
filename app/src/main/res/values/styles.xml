@@ -302,5 +302,8 @@
         <!-- 背景模糊 -->
         <!--<item name="android:backgroundDimEnabled">true</item>-->
     </style>
-
+    <style name="BottomInAndOutStyle">
+        <item name="android:windowEnterAnimation">@anim/in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/out_bottom</item>
+    </style>
 </resources>

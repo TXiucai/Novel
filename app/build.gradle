@@ -456,6 +456,9 @@ dependencies {
 
     // tinstall
     implementation(name: "api_scyfnq_com", ext: "aar")
+
+    implementation project(path: ':player2')
+    implementation project(':encrypt')
 }
 
 /**
@@ -509,7 +512,6 @@ if (SDK_DIR == null) {
 }
 
 dependencies {
-
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     compileOnly files("${SDK_DIR}/platforms/android-20/data/layoutlib.jar")
 }

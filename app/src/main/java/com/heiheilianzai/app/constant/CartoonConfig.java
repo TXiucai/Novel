@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.constant;
 
 public class CartoonConfig {
+    public static float SPEED;
     /**
      * 动漫频道
      */
@@ -68,7 +69,7 @@ public class CartoonConfig {
     /**
      * 上传动漫播放记录
      */
-    public static final String CARTOON_play_log = "/comic-video/catalog";
+    public static final String CARTOON_play_log = "/comic-video/user-watch-log";
 
     /**
      * 动画视频章节内容解锁购买
