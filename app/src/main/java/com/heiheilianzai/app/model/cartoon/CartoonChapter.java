@@ -1,6 +1,10 @@
 package com.heiheilianzai.app.model.cartoon;
 
-public class CartoonChapter {
+import com.heiheilianzai.app.model.BaseAd;
+
+import java.io.Serializable;
+
+public class CartoonChapter extends BaseAd implements Serializable {
 
     /**
      * chapter_id : 911
@@ -13,7 +17,7 @@ public class CartoonChapter {
      * update_time : 2022-02-17 11:08:08
      * display_order : 0
      */
-
+    private String video_id;
     private String chapter_id;
     private String chapter_title;
     private String is_vip;
@@ -22,6 +26,58 @@ public class CartoonChapter {
     private int is_preview;
     private String is_limited_free;
     private boolean is_buy_status;
+    private String cover;
+    private String name;//历史记录
+    private String log_id;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLog_id() {
+        return log_id;
+    }
+
+    public void setLog_id(String log_id) {
+        this.log_id = log_id;
+    }
+
+    public String getVideo_id() {
+        return video_id;
+    }
+
+    public void setVideo_id(String video_id) {
+        this.video_id = video_id;
+    }
+
+    public int getAd_type() {
+        return ad_type;
+    }
+
+    public void setAd_type(int ad_type) {
+        this.ad_type = ad_type;
+    }
 
     public boolean isIs_buy_status() {
         return is_buy_status;

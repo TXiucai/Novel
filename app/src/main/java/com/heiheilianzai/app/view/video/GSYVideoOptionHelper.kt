@@ -21,38 +21,31 @@ object GSYVideoOptionHelper {
      * @param isEncrypt m3u8文件是否加密，只有老版本下载的本地视频播放时为非加密的，其他时候为true
      */
     fun getGSYVideoOptionBuilder(
-            url: String?, title: String?,
-            isEncrypt: Boolean): GSYVideoOptionBuilder? {
+        url: String?, title: String?,
+        isEncrypt: Boolean
+    ): GSYVideoOptionBuilder? {
         return if (!TextUtils.isEmpty(url)) {
-            val uri = URI.create(ReaderConfig.getBaseUrl())
             val mMapHeadDat: Map<String, String> = HashMap()
-            val referer = StringBuilder("Referer: ")
-                    .append(uri.scheme)
-                    .append("://")
-                    .append(uri.host)
-                    .append("/")
-                    .toString()
-            // mMapHeadDat.put("Referer",referer);
-            //IjkPlayerManager.headersReferer = referer
             IjkPlayerManager.sIsEncrypt = isEncrypt
             GSYVideoOptionBuilder()
-                    .setUrl(url)
-                    .setMapHeadData(mMapHeadDat)
-                    .setCacheWithPlay(true)
-                    .setVideoTitle(title)
-                    .setIsTouchWiget(true)
-                    .setRotateViewAuto(false)
-                    .setLockLand(false) // .setAutoFullWithSize(true) //单向旋转屏幕
-                    .setShowFullAnimation(false) //打开动画
-                    .setNeedLockFull(true)
-                    .setSeekRatio(1f)
+                .setUrl(url)
+                .setMapHeadData(mMapHeadDat)
+                .setCacheWithPlay(true)
+                .setVideoTitle(title)
+                .setIsTouchWiget(true)
+                .setAutoFullWithSize(true)
+                .setRotateViewAuto(true)
+                .setLockLand(true) // .setAutoFullWithSize(true) //单向旋转屏幕
+                .setShowFullAnimation(false) //打开动画
+                .setNeedLockFull(true)
+                .setSeekRatio(1f)
         } else {
             GSYVideoOptionBuilder()
-                    .setCacheWithPlay(true)
-                    .setVideoTitle(title)
-                    .setIsTouchWiget(true)
-                    .setLockLand(true)
-                    .setSeekRatio(1f)
+                .setCacheWithPlay(true)
+                .setVideoTitle(title)
+                .setIsTouchWiget(true)
+                .setLockLand(true)
+                .setSeekRatio(1f)
         }
     }
 }

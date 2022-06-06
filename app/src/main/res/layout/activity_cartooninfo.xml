@@ -13,39 +13,6 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/dimens_20dp">
 
-        <RelativeLayout
-            android:id="@+id/book_info_titlebar_container"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <LinearLayout
-                android:id="@+id/titlebar_back"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="10dp">
-
-                <ImageView
-                    android:id="@+id/back"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@mipmap/back_white" />
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/titlebar_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/public_13_dp" />
-
-        </RelativeLayout>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_220dp"

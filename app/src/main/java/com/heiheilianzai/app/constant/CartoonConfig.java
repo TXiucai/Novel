@@ -29,7 +29,7 @@ public class CartoonConfig {
     /**
      * 首页漫画 BANNER
      */
-    public static final String CARTOON_STORE_BANNER = "/";
+    public static final String CARTOON_STORE_BANNER = "/comic-video/index-banner";
 
     /**
      * 限时免费
@@ -69,11 +69,29 @@ public class CartoonConfig {
     /**
      * 上传动漫播放记录
      */
-    public static final String CARTOON_play_log = "/comic-video/user-watch-log";
+    public static final String CARTOON_play_log = "/comic-video/add-video-watch-log";
+
+    /**
+     * 上传动漫播放节点
+     */
+    public static final String CARTOON_play_node = "/comic-video/update-play-node";
 
     /**
      * 动画视频章节内容解锁购买
      */
     public static final String CARTOON_chapter_unlock= "/comic-video/unlock-video";
+
+    /**
+     * 动画视频历史记录
+     */
+    public static final String CARTOON_history_log= "/comic-video/user-watch-log";
+    /**
+     * 动画视频历史记录删除
+     */
+    public static final String CARTOON_read_log_del= "/comic-video/user-watch-log";
+/**
+     * 动画视频历史记录删除
+     */
+    public static final String CARTOON_read_log_del_MORE= "/comic-video/batch-del-read-log";
 
 }

@@ -44,9 +44,10 @@ public class ReaderConfig {
     public static final String QQ_SECRET = BuildConfig.app_qq_secret;
     // 当前产品类型 1: 只使用小说
     //              2: 只使用漫画
-    //              3: 小说 漫画
+    //              3: 小说 漫画 有声
     //              4: 漫画小说
-    private static int PRODUCT_TYPE = 3;
+    //              12小说 漫画 有声 视频
+    private static int PRODUCT_TYPE = 12;
 
     public static boolean app_free_charge = true;//免费频道
 
@@ -86,6 +87,7 @@ public class ReaderConfig {
     public static final int MANHAU = 2;//只有漫画
     public static final int XIAOSHUOMAHUA = 3;//小说漫画
     public static final int MANHAUXIAOSHUO = 4;//漫画小
+    public static final int CARTOON = 12;//视频
 
     public static final int fragment_store_xiaoshuo_dp = 23;
     public static final int fragment_store_manhau_dp = 15;

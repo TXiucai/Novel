@@ -25,6 +25,7 @@ import com.heiheilianzai.app.ui.fragment.boyin.DownMangerPhonicFragment;
 import com.heiheilianzai.app.ui.fragment.boyin.ReadHistoryPhonicFragment;
 import com.heiheilianzai.app.ui.fragment.book.DownMangerBookFragment;
 import com.heiheilianzai.app.ui.fragment.book.ReadHistoryBookFragment;
+import com.heiheilianzai.app.ui.fragment.cartoon.ReadHistoryCartoonFragment;
 import com.heiheilianzai.app.ui.fragment.comic.DownMangerComicFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ReadHistoryComicFragment;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -43,6 +44,7 @@ import butterknife.OnClick;
 import static com.heiheilianzai.app.constant.PrefConst.UPDATE_JSON_KAY;
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE;
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE_SEARCH;
+import static com.heiheilianzai.app.constant.ReaderConfig.CARTOON;
 import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
 import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.constant.ReaderConfig.LIUSHUIJIELU;
@@ -71,6 +73,8 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     public TextView channel_bar_female_text;
     @BindView(R.id.channel_bar_yousheng_text)
     public TextView channel_bar_yousheng_text;
+    @BindView(R.id.channel_bar_cartoon_text)
+    public TextView channel_bar_cartoon_text;
     @BindView(R.id.top_channel_layout)
     public LinearLayout top_channel_layout;
     @BindView(R.id.channel_bar_indicator)
@@ -83,7 +87,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     FragmentManager fragmentManager;
     List<Fragment> fragmentList;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
-    Fragment baseButterKnifeFragment1, baseButterKnifeFragment2, baseButterKnifeFragment3;
+    Fragment baseButterKnifeFragment1, baseButterKnifeFragment2, baseButterKnifeFragment3, baseButterKnifeFragment4;
     int OPTION;
     int PRODUCT;// 2漫画  1 小说 3
     Intent IntentFrom;
@@ -95,7 +99,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         return R.layout.activity_baseoption;
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text, R.id.activity_baseoption_edit})
+    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text,R.id.channel_bar_cartoon_text, R.id.activity_baseoption_edit})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -112,6 +116,10 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
             case R.id.channel_bar_yousheng_text:
                 setTabColor(2);
                 activity_baseoption_viewpage.setCurrentItem(2);
+                break;
+            case R.id.channel_bar_cartoon_text:
+                setTabColor(3);
+                activity_baseoption_viewpage.setCurrentItem(3);
                 break;
             case R.id.activity_baseoption_edit:
                 mIsEditOpen = !mIsEditOpen;
@@ -131,16 +139,25 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 channel_bar_male_text.setTextColor(getResources().getColor(R.color.mainColor));
                 channel_bar_female_text.setTextColor(getResources().getColor(R.color.color_606060));
                 channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.color_606060));
                 break;
             case 1:
                 channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
                 channel_bar_female_text.setTextColor(getResources().getColor(R.color.mainColor));
                 channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.color_606060));
                 break;
             case 2:
                 channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
                 channel_bar_female_text.setTextColor(getResources().getColor(R.color.color_606060));
                 channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.mainColor));
+                channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.color_606060));
+                break;
+            case 3:
+                channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_female_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.color_606060));
+                channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.mainColor));
                 break;
         }
     }
@@ -241,6 +258,18 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                         channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                         channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                         break;
+                    case CARTOON:
+                        baseButterKnifeFragment1 = new ReadHistoryBookFragment();
+                        baseButterKnifeFragment2 = new ReadHistoryComicFragment();
+                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
+                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
+                        if (boYinSwitch != 0) {
+                            baseButterKnifeFragment3 = new ReadHistoryPhonicFragment();
+                            channel_bar_yousheng_text.setVisibility(View.VISIBLE);
+                        }
+                        baseButterKnifeFragment4 = new ReadHistoryCartoonFragment();
+                        break;
+
                 }
                 mTxEdit.setVisibility(View.VISIBLE);
                 break;
@@ -297,6 +326,8 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         }
         if (baseButterKnifeFragment3 != null) {
             fragmentList.add(baseButterKnifeFragment3);
+        } if (baseButterKnifeFragment4 != null) {
+            fragmentList.add(baseButterKnifeFragment4);
         }
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         activity_baseoption_viewpage.setAdapter(myFragmentPagerAdapter);

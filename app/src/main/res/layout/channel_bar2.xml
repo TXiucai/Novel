@@ -43,6 +43,16 @@
             android:textColor="@color/black"
             android:textSize="15sp"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/channel_bar_cartoon_text"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/MainActivity_cartoon"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <com.heiheilianzai.app.view.UnderlinePageIndicatorHalf

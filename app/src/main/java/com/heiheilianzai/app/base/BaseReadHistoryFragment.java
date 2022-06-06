@@ -43,6 +43,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
     public static final int BOOK_SON_TYPE = 1;//小说
     public static final int COMIC_SON_TYPE = 2;//漫画
     public static final int PhONIC_SON_TYPE = 3;//有声
+    public static final int CARTOON_SON_TYPE = 4;//视频
 
     @BindView(R.id.fragment_readhistory_readhistory)
     public XRecyclerView fragment_option_listview;
@@ -348,6 +349,7 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
                 stringId = R.string.MainActivity_boyin;
                 break;
             default:
+                stringId = R.string.MainActivity_cartoon;
                 break;
         }
         return LanguageUtil.getString(activity, stringId);

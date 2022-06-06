@@ -72,6 +72,7 @@ import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
 import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
+import static com.heiheilianzai.app.constant.ReaderConfig.mAdvert;
 
 /**
  * 首页小说，首页漫画内容基类。
@@ -445,7 +446,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     private void localLabelAd(int recommendType) {
         String json = "";
-        String requestParams = ReaderConfig.getBaseUrl() + "/advert/info";
+        String requestParams = ReaderConfig.getBaseUrl() + mAdvert;
         if (recommendType == 1) {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("type", XIAOSHUO + "");
@@ -457,7 +458,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             params.putExtraParams("position", "1");
             json = params.generateParamsJson();
         } else {
-            //todo
+            ReaderParams params = new ReaderParams(activity);
+            params.putExtraParams("position", "30");
+            json = params.generateParamsJson();
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {
                     @Override
@@ -569,7 +572,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         }
         RecyclerView ryRecommend = headerView.findViewById(R.id.ry_recommend);
         ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("recommend_type", String.valueOf(recommendType));//男频
+        params.putExtraParams("recommend_type", String.valueOf(recommendType - 1));
         params.putExtraParams("icon_channel_id", mTopChannelId);
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(App.getBaseUrl() + ReaderConfig.mHomeRecomment, json, false, new HttpUtils.ResponseListener() {
@@ -892,7 +895,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         } else if (flag == 2) {
             params.putExtraParams("comic_channel_id", mTopChannelId);
         } else {
-            //todo
+            params.putExtraParams("video_channel_id", mTopChannelId);
         }
         params.putExtraParams("channel_id", "1");
         String json = params.generateParamsJson();

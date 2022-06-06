@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,6 +46,7 @@ import com.heiheilianzai.app.utils.DialogCouponNotMore;
 import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
@@ -53,8 +56,12 @@ import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.video.CustomGSYVideoPlayer;
 import com.heiheilianzai.app.view.video.VideoPlayView;
 import com.jaeger.library.StatusBarUtil;
+import com.live.eggplant.player.GSYVideoManager;
+import com.live.eggplant.player.listener.GSYSampleCallBack;
+import com.live.eggplant.player.listener.LockClickListener;
 import com.live.eggplant.player.player.IjkPlayerManager;
 import com.live.eggplant.player.player.PlayerFactory;
+import com.live.eggplant.player.utils.OrientationUtils;
 import com.live.eggplant.player.video.StandardGSYVideoPlayer;
 import com.live.eggplant.player.video.base.GSYVideoViewBridge;
 import com.live.eggplant.widget.video.GSYVideoOptionHelper;
@@ -73,8 +80,7 @@ import butterknife.OnClick;
 
 public class CartoonInfoActivity extends BaseWarmStartActivity {
     private static String CARTOON_ID_EXT_KAY = "CARTOON_ID";
-    @BindView(R.id.titlebar_text)
-    public TextView mTxTitle;
+    private static String CARTOON_HiSTORY_EXT_KAY = "CARTOON_HISTORY";
     @BindView(R.id.ll_gold)
     public LinearLayout mLlGold;
     @BindView(R.id.tx_gold_num)
@@ -97,10 +103,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     public TextView mTxCartoonTime;
     @BindView(R.id.gv_guess)
     public AdaptionGridView mGv;
-//    @BindView(R.id.video)
+    //    @BindView(R.id.video)
 //    public VideoPlayView videoPlayer;
     @BindView(R.id.video)
-    public StandardGSYVideoPlayer videoPlayer;
+    public StandardGSYVideoPlayer mVideoPlayer;
     private String mCartoonId;
     private Activity mActivity;
     private CartoonInfo mCartoonInfo;
@@ -110,6 +116,8 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     private String mPrice;
     private int mGoldNum;
     private CartoonChapter mChapterItem;
+    private OrientationUtils mOrientationUtils;
+    private CartoonChapter mHistoryCartoonChapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,6 +137,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         mCartoonChapters = new ArrayList<>();
         mActivity = this;
         mCartoonId = getIntent().getStringExtra(CARTOON_ID_EXT_KAY);
+        mHistoryCartoonChapter = (CartoonChapter) getIntent().getSerializableExtra(CARTOON_HiSTORY_EXT_KAY);
         initView();
         getInfo();
     }
@@ -148,12 +157,9 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         mRyChapter.setAdapter(mCartoonChapterAdapter);
     }
 
-    @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open, R.id.titlebar_back})
+    @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.titlebar_back:
-                finish();
-                break;
             case R.id.tx_vip_charge:
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(mActivity, LanguageUtil.getString(mActivity, R.string.refer_page_mine), 4);
                 myIntent.putExtra("isvip", Utils.isLogin(mActivity));
@@ -221,14 +227,47 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     }
 
     private void playVideo(CartoonChapter cartoonChapter) {
-        updateRecord();
-        //videoPlayer.play(cartoonChapter.getContent(),true);
-        //videoPlayer.play("https://qzvd-hw.testzone.cn/20211109/kZF0haVU/index.m3u8",true);
-        //videoPlayer.setUp("https://qzvd-hw.testzone.cn/20211109/kZF0haVU/index.m3u8",false,"");
+        updateRecord(cartoonChapter);
         PlayerFactory.setPlayManager(IjkPlayerManager.class);
-        GSYVideoOptionHelper.INSTANCE.getGSYVideoOptionBuilder("https://qzvd-hw-new.testzone.cn/20211109/kZF0haVU/index.m3u8", "", true)
-                .build(videoPlayer);
-        videoPlayer.startPlayLogic();
+        //增加封面
+        ImageView imageView = new ImageView(this);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        MyPicasso.GlideImageNoSize(mActivity, mCartoonInfo.getAuthor(), imageView);
+        //外部辅助的旋转，帮助全屏
+        mOrientationUtils = new OrientationUtils(this, mVideoPlayer);
+        //初始化不打开外部的旋转
+        mOrientationUtils.setEnable(false);
+        GSYVideoOptionHelper.INSTANCE.getGSYVideoOptionBuilder(cartoonChapter.getContent(), cartoonChapter.getChapter_title(), true)
+                .setThumbImageView(imageView)
+                .setVideoAllCallBack(new GSYSampleCallBack() {
+                    @Override
+                    public void onPrepared(String url, Object... objects) {
+                        super.onPrepared(url, objects);
+                        //开始播放了才能旋转和全屏
+                        mOrientationUtils.setEnable(mVideoPlayer.isRotateWithSystem());
+                    }
+
+                    @Override
+                    public void onClickStop(String url, Object... objects) {
+                        updateDetailRecord(cartoonChapter);
+                        super.onClickStop(url, objects);
+                    }
+                }).setLockClickListener(new LockClickListener() {
+            @Override
+            public void onClick(View view, boolean lock) {
+                if (mOrientationUtils != null) {
+                    //配合下方的onConfigurationChanged
+                    mOrientationUtils.setEnable(!lock);
+                }
+            }
+        }).build(mVideoPlayer);
+        mVideoPlayer.getFullscreenButton().setOnClickListener(v -> {
+            mOrientationUtils.resolveByClick();
+
+            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+            mVideoPlayer.startWindowFullscreen(mActivity, true, true);
+        });
+        mVideoPlayer.startPlayLogic();
     }
 
     private void checkIsVip(CartoonChapter chapterItem) {
@@ -344,7 +383,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
             mCartoonInfo = mGson.fromJson(video.toString(), CartoonInfo.class);
             if (mCartoonInfo != null) {
                 getChapter();
-                mTxTitle.setText(mCartoonInfo.getName());
                 mTxCartoonTitle.setText(mCartoonInfo.getName());
                 mTxCartoonDes.setText(mCartoonInfo.getDescription());
                 mTxCartoonTime.setText(mCartoonInfo.getUpdated_at());
@@ -394,6 +432,13 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         return intent;
     }
 
+    public static Intent getHistoryIntent(Context context,CartoonChapter cartoonChapter){
+        Intent intent = new Intent(context, CartoonInfoActivity.class);
+        intent.putExtra(CARTOON_HiSTORY_EXT_KAY,cartoonChapter);
+        return intent;
+    }
+
+
     public void openCoupon(CartoonChapter chapterItem, String couponPrice, int couponNum) {
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("video_id", mCartoonId);
@@ -415,9 +460,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         );
     }
 
-    private void updateRecord() {
+    private void updateRecord(CartoonChapter cartoonChapter) {
         ReaderParams params = new ReaderParams(this);
-        params.putExtraParams("video", mCartoonId);
+        params.putExtraParams("video_id", mCartoonId);
+        params.putExtraParams("chapter_id", cartoonChapter.getChapter_id());
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_log, json, false, new HttpUtils.ResponseListener() {
                     @Override
@@ -426,6 +472,66 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+    }
+    @Override
+    public void onBackPressed() {
+        //先返回正常状态
+        if (mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            mVideoPlayer.getFullscreenButton().performClick();
+            return;
+        }
+        //释放所有
+        mVideoPlayer.setVideoAllCallBack(null);
+        GSYVideoManager.releaseAllVideos();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            super.onBackPressed();
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
+                }
+            }, 500);
+        }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        updateDetailRecord(mChapterItem);
+    }
+
+    @Override
+    protected void onDestroy() {
+        updateDetailRecord(mChapterItem);
+        mVideoPlayer.release();
+        if (mOrientationUtils != null)
+            mOrientationUtils.releaseListener();
+        super.onDestroy();
+    }
+
+    /**
+     * 上传视频节点
+     *
+     * @param cartoonChapter
+     */
+    private void updateDetailRecord(CartoonChapter cartoonChapter) {
+        ReaderParams params = new ReaderParams(mActivity);
+        params.putExtraParams("video_id", mCartoonId);
+        params.putExtraParams("chapter_id", cartoonChapter.getChapter_id());
+        params.putExtraParams("play_node", String.valueOf(mVideoPlayer.getDuration() * mVideoPlayer.getPlayPosition() / 100));
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_node, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+
                     }
                 }
         );
