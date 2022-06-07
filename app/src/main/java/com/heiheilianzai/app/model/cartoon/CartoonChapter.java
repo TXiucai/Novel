@@ -30,6 +30,15 @@ public class CartoonChapter extends BaseAd implements Serializable {
     private String name;//历史记录
     private String log_id;
     private String description;
+    private int play_node;
+
+    public int getPlay_node() {
+        return play_node;
+    }
+
+    public void setPlay_node(int play_node) {
+        this.play_node = play_node;
+    }
 
     public String getDescription() {
         return description;

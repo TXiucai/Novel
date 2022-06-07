@@ -56,6 +56,7 @@ import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.heiheilianzai.app.view.video.CustomGSYVideoPlayer;
 import com.heiheilianzai.app.view.video.VideoPlayView;
 import com.jaeger.library.StatusBarUtil;
+import com.live.eggplant.player.GSYVideoADManager;
 import com.live.eggplant.player.GSYVideoManager;
 import com.live.eggplant.player.listener.GSYSampleCallBack;
 import com.live.eggplant.player.listener.LockClickListener;
@@ -138,6 +139,9 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         mActivity = this;
         mCartoonId = getIntent().getStringExtra(CARTOON_ID_EXT_KAY);
         mHistoryCartoonChapter = (CartoonChapter) getIntent().getSerializableExtra(CARTOON_HiSTORY_EXT_KAY);
+        if (mHistoryCartoonChapter != null) {
+            mCartoonId = mHistoryCartoonChapter.getVideo_id();
+        }
         initView();
         getInfo();
     }
@@ -203,8 +207,20 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
             mCartoonChapters.addAll(mGson.fromJson(jsonObject.getString("chapter_list"), new TypeToken<List<CartoonChapter>>() {
             }.getType()));
             if (mCartoonChapters != null && mCartoonChapters.size() > 0) {
-                mChapterItem = mCartoonChapters.get(0);
-                mChapterItem.setSelect(true);
+                if (mHistoryCartoonChapter != null) {
+                    for (int i = 0; i < mCartoonChapters.size(); i++) {
+                        CartoonChapter chapter = mCartoonChapters.get(i);
+                        if (TextUtils.equals(mHistoryCartoonChapter.getChapter_id(), chapter.getChapter_id())) {
+                            mHistoryCartoonChapter.setSelect(true);
+                            mChapterItem = mHistoryCartoonChapter;
+                            chapter.setSelect(true);
+                            break;
+                        }
+                    }
+                } else {
+                    mChapterItem = mCartoonChapters.get(0);
+                    mChapterItem.setSelect(true);
+                }
                 mCartoonChapterAdapter.notifyDataSetChanged();
                 mCartoonChapterAdapter.setmOnBackChapterListener((cartoonChapter, position) -> {
                     for (int i = 0; i < mCartoonChapters.size(); i++) {
@@ -238,6 +254,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         //初始化不打开外部的旋转
         mOrientationUtils.setEnable(false);
         GSYVideoOptionHelper.INSTANCE.getGSYVideoOptionBuilder(cartoonChapter.getContent(), cartoonChapter.getChapter_title(), true)
+                .setSeekOnStart(cartoonChapter.getPlay_node() * 1000)
                 .setThumbImageView(imageView)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
@@ -263,9 +280,16 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         }).build(mVideoPlayer);
         mVideoPlayer.getFullscreenButton().setOnClickListener(v -> {
             mOrientationUtils.resolveByClick();
-
             //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
             mVideoPlayer.startWindowFullscreen(mActivity, true, true);
+        });
+        mVideoPlayer.getBackButton().setOnClickListener(v -> {
+            if (mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                mVideoPlayer.getFullscreenButton().performClick();
+                return;
+            } else {
+                finish();
+            }
         });
         mVideoPlayer.startPlayLogic();
     }
@@ -432,9 +456,9 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         return intent;
     }
 
-    public static Intent getHistoryIntent(Context context,CartoonChapter cartoonChapter){
+    public static Intent getHistoryIntent(Context context, CartoonChapter cartoonChapter) {
         Intent intent = new Intent(context, CartoonInfoActivity.class);
-        intent.putExtra(CARTOON_HiSTORY_EXT_KAY,cartoonChapter);
+        intent.putExtra(CARTOON_HiSTORY_EXT_KAY, cartoonChapter);
         return intent;
     }
 
@@ -476,10 +500,11 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 }
         );
     }
+
     @Override
     public void onBackPressed() {
         //先返回正常状态
-        if (mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (mOrientationUtils != null && mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             mVideoPlayer.getFullscreenButton().performClick();
             return;
         }
@@ -487,7 +512,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         mVideoPlayer.setVideoAllCallBack(null);
         GSYVideoManager.releaseAllVideos();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            super.onBackPressed();
+            finish();
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -498,10 +523,11 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
             }, 500);
         }
     }
+
     @Override
     protected void onStop() {
-        super.onStop();
         updateDetailRecord(mChapterItem);
+        super.onStop();
     }
 
     @Override
@@ -522,7 +548,9 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("video_id", mCartoonId);
         params.putExtraParams("chapter_id", cartoonChapter.getChapter_id());
-        params.putExtraParams("play_node", String.valueOf(mVideoPlayer.getDuration() * mVideoPlayer.getPlayPosition() / 100));
+        long currentPosition = GSYVideoManager.instance().getCurrentPosition();
+        int playTime = (int) currentPosition / 1000;
+        params.putExtraParams("play_node", String.valueOf(playTime));
         String json = params.generateParamsJson();
         HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_node, json, true, new HttpUtils.ResponseListener() {
                     @Override

@@ -10,6 +10,8 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.model.cartoon.CartoonChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
+import com.heiheilianzai.app.utils.DateUtils;
+import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 
 import java.util.List;
@@ -26,9 +28,11 @@ public class ReadHistoryRecycleViewCartoonAdapter extends BaseReadHistoryAdapter
             setView(holder);
             holder.recyclerview_item_readhistory_name.setText(cartoonChapter.getName());
             holder.recyclerview_item_readhistory_des.setText(cartoonChapter.getChapter_title());
+            holder.recyclerview_item_readhistory_goon.setText(String.format(LanguageUtil.getString(activity, R.string.history_cartoon_play), DateUtils.secToTime(cartoonChapter.getPlay_node())));
             MyPicasso.GlideImageNoSize(activity, cartoonChapter.getCover(), holder.recyclerview_item_readhistory_img, R.mipmap.cartoon_def_v);
             setIsEditView(holder, mIsEditOpen);
             setIsSelectAllView(holder, mIsSelectAll);
+            holder.recyclerview_item_readhistory_goon.setText(activity.getString(R.string.string_continue_play));
             holder.mRlCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

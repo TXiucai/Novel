@@ -8,7 +8,6 @@ import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.adapter.cartoon.ReadHistoryRecycleViewCartoonAdapter;
 import com.heiheilianzai.app.base.BaseReadHistoryFragment;
 import com.heiheilianzai.app.constant.CartoonConfig;
-import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.model.cartoon.CartoonChapter;
 import com.heiheilianzai.app.model.cartoon.CartoonReadHistory;
 import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
@@ -30,6 +29,7 @@ public class ReadHistoryCartoonFragment extends BaseReadHistoryFragment<CartoonC
 
     @Override
     protected void initView() {
+        super.initView();
         mSonType = COMIC_SON_TYPE;
         optionAdapter = new ReadHistoryRecycleViewCartoonAdapter(activity, optionBeenList, getPosition);
         optionAdapter.setmGetSelectItems(new BaseReadHistoryAdapter.getSelectItems() {
@@ -66,7 +66,6 @@ public class ReadHistoryCartoonFragment extends BaseReadHistoryFragment<CartoonC
                 }
             }
         });
-        super.initView();
     }
 
     BaseReadHistoryAdapter.GetPosition getPosition = new BaseReadHistoryAdapter.GetPosition<CartoonChapter>() {
@@ -75,8 +74,6 @@ public class ReadHistoryCartoonFragment extends BaseReadHistoryFragment<CartoonC
             Intent intent;
             switch (falg) {
                 case 1:
-
-                    break;
                 case 0:
                     intent = CartoonInfoActivity.getHistoryIntent(activity,cartoonChapter);
                     startActivityForResult(intent, RefarchrequestCode);

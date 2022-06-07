@@ -33,10 +33,9 @@ object GSYVideoOptionHelper {
                 .setCacheWithPlay(true)
                 .setVideoTitle(title)
                 .setIsTouchWiget(true)
-                .setAutoFullWithSize(true)
-                .setRotateViewAuto(true)
-                .setLockLand(true) // .setAutoFullWithSize(true) //单向旋转屏幕
-                .setShowFullAnimation(false) //打开动画
+                 .setRotateViewAuto(false)
+                .setLockLand(false)
+                .setShowFullAnimation(false)//打开动画
                 .setNeedLockFull(true)
                 .setSeekRatio(1f)
         } else {
