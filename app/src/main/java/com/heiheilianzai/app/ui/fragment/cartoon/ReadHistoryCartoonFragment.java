@@ -29,7 +29,6 @@ public class ReadHistoryCartoonFragment extends BaseReadHistoryFragment<CartoonC
 
     @Override
     protected void initView() {
-        super.initView();
         mSonType = COMIC_SON_TYPE;
         optionAdapter = new ReadHistoryRecycleViewCartoonAdapter(activity, optionBeenList, getPosition);
         optionAdapter.setmGetSelectItems(new BaseReadHistoryAdapter.getSelectItems() {
@@ -66,6 +65,7 @@ public class ReadHistoryCartoonFragment extends BaseReadHistoryFragment<CartoonC
                 }
             }
         });
+        super.initView();
     }
 
     BaseReadHistoryAdapter.GetPosition getPosition = new BaseReadHistoryAdapter.GetPosition<CartoonChapter>() {

@@ -39,6 +39,7 @@ import com.heiheilianzai.app.ui.activity.FeedBackActivity;
 import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
+import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.activity.setting.SettingsActivity;
@@ -489,8 +490,10 @@ public class ConvenientBanner<T> extends LinearLayout {
                 Intent intent;
                 if (flag == 2 || flag == 0) {
                     intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
-                } else {
+                } else if (flag == 1) {
                     intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
+                } else {
+                    intent = CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
                 }
                 activity.startActivity(intent);
                 break;

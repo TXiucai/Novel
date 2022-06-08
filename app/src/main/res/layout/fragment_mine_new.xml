@@ -255,6 +255,29 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/fragment_mine_book_self"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dimens_90dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dimens_20dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
+                        android:src="@mipmap/book_self_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_6dp"
+                        android:text="@string/MainActivity_shujia"
+                        android:textColor="@color/color_35363b"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_downmanager"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/dimens_90dp"
@@ -267,7 +290,6 @@
                         android:layout_width="@dimen/dimens_25dp"
                         android:layout_height="@dimen/dimens_25dp"
                         android:src="@mipmap/icon_novel_down" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -300,7 +322,6 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_mybookcomment"
                     android:layout_width="0dp"
@@ -323,6 +344,14 @@
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_friends"
@@ -346,14 +375,6 @@
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_15dp"
-                android:layout_marginRight="@dimen/dimens_15dp"
-                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_feedback"
@@ -432,6 +453,15 @@
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_recharge"
@@ -452,38 +482,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_6dp"
                         android:text="@string/string_address"
-                        android:textColor="@color/color_35363b"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_15dp"
-                android:layout_marginRight="@dimen/dimens_15dp"
-                android:orientation="horizontal"
-                android:weightSum="4">
-
-                <LinearLayout
-                    android:id="@+id/fragment_mine_book_self"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dimens_90dp"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/dimens_20dp">
-
-                    <ImageView
-                        android:layout_width="@dimen/dimens_25dp"
-                        android:layout_height="@dimen/dimens_25dp"
-                        android:src="@mipmap/book_self_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_6dp"
-                        android:text="@string/MainActivity_shujia"
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>

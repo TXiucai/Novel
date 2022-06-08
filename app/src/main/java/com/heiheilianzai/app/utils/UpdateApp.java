@@ -30,20 +30,16 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
-import com.heiheilianzai.app.ui.activity.Main2Activity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.dialog.GetDialog;
 import com.heiheilianzai.app.view.ProgressBarView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.PUTPRODUCT_TYPE;
 
 /**
  * 版本更新 工具类
@@ -92,52 +88,6 @@ public class UpdateApp {
                     @Override
                     public void onErrorResponse(String ex) {
                         updateAppInterface.onError(ex);
-                    }
-                }
-        );
-    }
-
-    public void getCheck_switch(final UpdateAppInterface updateAppInterface) {
-        ReaderParams params = new ReaderParams(activity);
-        params.putExtraParams("channel", getChannelName(activity));
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.check_switch, json, false, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        ShareUitls.putString(activity, "Check_switch", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            try {
-                                PUTPRODUCT_TYPE(activity, jsonObject.getInt("ui"));
-                            } catch (Exception e) {
-                            }
-                            if (jsonObject.getInt("service") == 1) {//开启壳子
-                                activity.startActivity(new Intent(activity, Main2Activity.class));
-                            } else {
-                                updateAppInterface.Next(response);
-                            }
-                        } catch (Exception e) {
-                            updateAppInterface.Next(response);
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(String ex) {
-                        String response = ShareUitls.getString(activity, "Check_switch", "");
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            try {
-                                PUTPRODUCT_TYPE(activity, jsonObject.getInt("ui"));
-                            } catch (Exception e) {
-                            }
-                            if (jsonObject.getInt("service") == 1) {//开启壳子
-                                activity.startActivity(new Intent(activity, Main2Activity.class));
-                            } else {
-                                updateAppInterface.Next(response);
-                            }
-                        } catch (Exception e) {
-                            updateAppInterface.Next(response);
-                        }
                     }
                 }
         );

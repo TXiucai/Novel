@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.presenter;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 
 import android.app.Activity;
@@ -88,12 +87,8 @@ public class LoginPresenter {
                 });
                 EventBus.getDefault().post(new RefreshMine(userInfoItem));
                 EventBus.getDefault().post(new RegisterLoginWelfareEvent());
-                if (GETPRODUCT_TYPE(activity) != 2) {
-                    EventBus.getDefault().post(new RefreshBookSelf(null));
-                }
-                if (GETPRODUCT_TYPE(activity) != 1) {
-                    EventBus.getDefault().post(new RefreshComic(null));
-                }
+                EventBus.getDefault().post(new RefreshBookSelf(null));
+                EventBus.getDefault().post(new RefreshComic(null));
                 SensorsDataHelper.profileSet(DateUtils.getTodayTimeHMS());
                 loginSuccess.success();
                 JPushUtil.setAlias(activity);

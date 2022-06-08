@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.utils;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 
 import android.app.Activity;
@@ -148,12 +147,8 @@ public class DialogRegister {
                                         }
                                     });
                                     EventBus.getDefault().post(new RefreshMine(userInfoItem));
-                                    if (GETPRODUCT_TYPE(activity) != 2) {
-                                        EventBus.getDefault().post(new RefreshBookSelf(null));
-                                    }
-                                    if (GETPRODUCT_TYPE(activity) != 1) {
-                                        EventBus.getDefault().post(new RefreshComic(null));
-                                    }
+                                    EventBus.getDefault().post(new RefreshBookSelf(null));
+                                    EventBus.getDefault().post(new RefreshComic(null));
                                     SensorsDataHelper.profileSet(DateUtils.getTodayTimeHMS());
                                     JPushUtil.setAlias(activity);
                                 }

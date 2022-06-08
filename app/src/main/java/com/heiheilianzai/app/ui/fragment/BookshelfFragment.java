@@ -17,7 +17,6 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.task.MainHttpTask;
-import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
@@ -26,7 +25,6 @@ import com.heiheilianzai.app.ui.fragment.book.NewNovelFragment;
 import com.heiheilianzai.app.ui.fragment.comic.ComicshelfFragment;
 import com.heiheilianzai.app.utils.DateUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
-import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.NotchScreen;
 import com.heiheilianzai.app.utils.ShareUitls;
@@ -42,12 +40,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAUXIAOSHUO;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUOMAHUA;
 
 /**
  * 首页书架 界面
@@ -148,85 +140,63 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
 
     /**
      * 这里写的有点复杂可能和之前产品变动有关
-     * 参考{@link ReaderConfig#GETPRODUCT_TYPE}
      */
     private void initOption() {
         fragmentList = new ArrayList<>();
-        switch (GETPRODUCT_TYPE(activity)) {
-            case XIAOSHUO:
-                addNovelFragmentNew(bookLists, shelf_book_delete_btn);
-                break;
-            case MANHAU:
-                addComicshelfFragment(baseComics, shelf_book_delete_btn);
-                break;
-            case XIAOSHUOMAHUA:
-                addNovelFragmentNew(bookLists, shelf_book_delete_btn);
-                addComicshelfFragment(baseComics, shelf_book_delete_btn);
-                break;
-            case MANHAUXIAOSHUO:
-                addComicshelfFragment(baseComics, shelf_book_delete_btn);
-                addNovelFragmentNew(bookLists, shelf_book_delete_btn);
-                fragment_shelf_xiaoshuo.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                fragment_shelf_manhau.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                break;
-        }
+        addNovelFragmentNew(bookLists, shelf_book_delete_btn);
+        addComicshelfFragment(baseComics, shelf_book_delete_btn);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         fragment_newbookself_viewpager.setAdapter(myFragmentPagerAdapter);
-        if (GETPRODUCT_TYPE(activity) == XIAOSHUOMAHUA || GETPRODUCT_TYPE(activity) == MANHAUXIAOSHUO) {
-            if (NotchScreen.hasNotchScreen(getActivity()) || android.os.Build.VERSION.SDK_INT <= 23) {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_bookself_topbar.getLayoutParams();
-                layoutParams.height = ImageUtil.dp2px(activity, 60);
-                fragment_bookself_topbar.setLayoutParams(layoutParams);
-            }
-            int LastFragment = ShareUitls.getTab(activity, "BookshelfFragment", 0);
-            if (LastFragment == 1) {
-                fragment_newbookself_viewpager.setCurrentItem(1);
-                fragment_comic_select.setVisibility(View.VISIBLE);
-                fragment_novel_select.setVisibility(View.GONE);
-                fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
-                fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
-                chooseWho = true;
-            } else {
-                fragment_comic_select.setVisibility(View.GONE);
-                fragment_novel_select.setVisibility(View.VISIBLE);
-                fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
-                fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
-            }
-            position = true;
-            fragment_newbookself_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    chooseWho = position == 1;
-                    if (GETPRODUCT_TYPE(activity) == XIAOSHUOMAHUA || GETPRODUCT_TYPE(activity) == MANHAUXIAOSHUO) {
-                        ShareUitls.putTab(activity, "BookshelfFragment", position);
-                        novelFragment.AllchooseAndCancleOnclick(false);
-                        comicshelfFragment.AllchooseAndCancleOnclick(false);
-                    }
-                    if (!chooseWho) {
-                        fragment_comic_select.setVisibility(View.GONE);
-                        fragment_novel_select.setVisibility(View.VISIBLE);
-                        fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
-                        fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
-                    } else {
-                        fragment_comic_select.setVisibility(View.VISIBLE);
-                        fragment_novel_select.setVisibility(View.GONE);
-                        fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
-                        fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
-                    }
-                    setBookshelfRecommendationEvent();
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                }
-            });
-        } else {
-            fragment_bookself_topbar.setVisibility(View.GONE);
+        if (NotchScreen.hasNotchScreen(getActivity()) || android.os.Build.VERSION.SDK_INT <= 23) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_bookself_topbar.getLayoutParams();
+            layoutParams.height = ImageUtil.dp2px(activity, 60);
+            fragment_bookself_topbar.setLayoutParams(layoutParams);
         }
+        int LastFragment = ShareUitls.getTab(activity, "BookshelfFragment", 0);
+        if (LastFragment == 1) {
+            fragment_newbookself_viewpager.setCurrentItem(1);
+            fragment_comic_select.setVisibility(View.VISIBLE);
+            fragment_novel_select.setVisibility(View.GONE);
+            fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
+            fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
+            chooseWho = true;
+        } else {
+            fragment_comic_select.setVisibility(View.GONE);
+            fragment_novel_select.setVisibility(View.VISIBLE);
+            fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
+            fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
+        }
+        position = true;
+        fragment_newbookself_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                chooseWho = position == 1;
+
+                ShareUitls.putTab(activity, "BookshelfFragment", position);
+                novelFragment.AllchooseAndCancleOnclick(false);
+                comicshelfFragment.AllchooseAndCancleOnclick(false);
+                if (!chooseWho) {
+                    fragment_comic_select.setVisibility(View.GONE);
+                    fragment_novel_select.setVisibility(View.VISIBLE);
+                    fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
+                    fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
+                } else {
+                    fragment_comic_select.setVisibility(View.VISIBLE);
+                    fragment_novel_select.setVisibility(View.GONE);
+                    fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
+                    fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
+                }
+                setBookshelfRecommendationEvent();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     public interface DeleteBook {

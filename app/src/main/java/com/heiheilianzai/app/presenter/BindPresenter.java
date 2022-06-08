@@ -14,9 +14,6 @@ import com.heiheilianzai.app.utils.MyToash;
 
 import org.greenrobot.eventbus.EventBus;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-
-
 /**
  * 绑定手机号
  * Created by scb on 2018/8/10.
@@ -49,12 +46,8 @@ public class BindPresenter {
             @Override
             public void getResult(final String jsonStr) {
                 EventBus.getDefault().post(new RefreshMine(null));
-                if (GETPRODUCT_TYPE((Activity) mLoginView) != 2) {
-                    EventBus.getDefault().post(new RefreshBookSelf(null));
-                }
-                if (GETPRODUCT_TYPE((Activity) mLoginView) != 1) {
-                    EventBus.getDefault().post(new RefreshComic(null));
-                }
+                EventBus.getDefault().post(new RefreshBookSelf(null));
+                EventBus.getDefault().post(new RefreshComic(null));
                 ((Activity) mLoginView).finish();
             }
         });

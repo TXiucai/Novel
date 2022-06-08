@@ -44,13 +44,9 @@ import butterknife.OnClick;
 import static com.heiheilianzai.app.constant.PrefConst.UPDATE_JSON_KAY;
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE;
 import static com.heiheilianzai.app.constant.ReaderConfig.BAOYUE_SEARCH;
-import static com.heiheilianzai.app.constant.ReaderConfig.CARTOON;
 import static com.heiheilianzai.app.constant.ReaderConfig.DOWN;
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.constant.ReaderConfig.LIUSHUIJIELU;
 import static com.heiheilianzai.app.constant.ReaderConfig.LOOKMORE;
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAUXIAOSHUO;
 import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.constant.ReaderConfig.MYCOMMENT;
 import static com.heiheilianzai.app.constant.ReaderConfig.PAIHANG;
@@ -58,8 +54,6 @@ import static com.heiheilianzai.app.constant.ReaderConfig.PAIHANGINSEX;
 import static com.heiheilianzai.app.constant.ReaderConfig.READHISTORY;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
 import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUOMAHUA;
 import static com.heiheilianzai.app.constant.ReaderConfig.getCurrencyUnit;
 import static com.heiheilianzai.app.constant.ReaderConfig.getSubUnit;
 import static com.heiheilianzai.app.ui.fragment.comic.ReadHistoryComicFragment.RefarchrequestCodee;
@@ -99,7 +93,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         return R.layout.activity_baseoption;
     }
 
-    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text,R.id.channel_bar_cartoon_text, R.id.activity_baseoption_edit})
+    @OnClick(value = {R.id.titlebar_back, R.id.channel_bar_male_text, R.id.channel_bar_female_text, R.id.channel_bar_yousheng_text, R.id.channel_bar_cartoon_text, R.id.activity_baseoption_edit})
     public void getEvent(View view) {
         switch (view.getId()) {
             case R.id.titlebar_back:
@@ -208,69 +202,26 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 baseButterKnifeFragment1 = new OptionFragment(PRODUCT, OPTION, 1);
                 break;
             case DOWN:
-                switch (GETPRODUCT_TYPE(activity)) {
-                    case XIAOSHUO:
-                        baseButterKnifeFragment1 = new DownMangerBookFragment();
-                        break;
-                    case MANHAU:
-                        baseButterKnifeFragment1 = new DownMangerComicFragment();
-                        break;
-                    case XIAOSHUOMAHUA:
-                        baseButterKnifeFragment1 = new DownMangerBookFragment();
-                        baseButterKnifeFragment2 = new DownMangerComicFragment();
-                        if (boYinSwitch != 0) {
-                            baseButterKnifeFragment3 = new DownMangerPhonicFragment();
-                            channel_bar_yousheng_text.setVisibility(View.VISIBLE);
-                        }
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        break;
-                    case MANHAUXIAOSHUO:
-                        baseButterKnifeFragment2 = new DownMangerBookFragment();
-                        baseButterKnifeFragment1 = new DownMangerComicFragment();
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        break;
+                baseButterKnifeFragment1 = new DownMangerBookFragment();
+                baseButterKnifeFragment2 = new DownMangerComicFragment();
+                if (boYinSwitch != 0) {
+                    baseButterKnifeFragment3 = new DownMangerPhonicFragment();
+                    channel_bar_yousheng_text.setVisibility(View.VISIBLE);
                 }
+                channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
+                channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
                 mTxEdit.setVisibility(View.VISIBLE);
                 break;
             case READHISTORY:
-                switch (GETPRODUCT_TYPE(activity)) {
-                    case XIAOSHUO:
-                        baseButterKnifeFragment1 = new ReadHistoryBookFragment();
-                        break;
-                    case MANHAU:
-                        baseButterKnifeFragment1 = new ReadHistoryComicFragment();
-                        break;
-                    case XIAOSHUOMAHUA:
-                        baseButterKnifeFragment1 = new ReadHistoryBookFragment();
-                        baseButterKnifeFragment2 = new ReadHistoryComicFragment();
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        if (boYinSwitch != 0) {
-                            baseButterKnifeFragment3 = new ReadHistoryPhonicFragment();
-                            channel_bar_yousheng_text.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    case MANHAUXIAOSHUO:
-                        baseButterKnifeFragment2 = new ReadHistoryBookFragment();
-                        baseButterKnifeFragment1 = new ReadHistoryComicFragment();
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        break;
-                    case CARTOON:
-                        baseButterKnifeFragment1 = new ReadHistoryBookFragment();
-                        baseButterKnifeFragment2 = new ReadHistoryComicFragment();
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        if (boYinSwitch != 0) {
-                            baseButterKnifeFragment3 = new ReadHistoryPhonicFragment();
-                            channel_bar_yousheng_text.setVisibility(View.VISIBLE);
-                        }
-                        baseButterKnifeFragment4 = new ReadHistoryCartoonFragment();
-                        break;
-
+                baseButterKnifeFragment1 = new ReadHistoryBookFragment();
+                baseButterKnifeFragment2 = new ReadHistoryComicFragment();
+                channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
+                channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
+                if (boYinSwitch != 0) {
+                    baseButterKnifeFragment3 = new ReadHistoryPhonicFragment();
+                    channel_bar_yousheng_text.setVisibility(View.VISIBLE);
                 }
+                baseButterKnifeFragment4 = new ReadHistoryCartoonFragment();
                 mTxEdit.setVisibility(View.VISIBLE);
                 break;
             case LIUSHUIJIELU:
@@ -292,27 +243,10 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 }
                 break;
             case MYCOMMENT:
-                switch (GETPRODUCT_TYPE(activity)) {
-                    case XIAOSHUO:
-                        baseButterKnifeFragment1 = new MyCommentFragment(true);
-                        break;
-                    case MANHAU:
-                        baseButterKnifeFragment1 = new MyCommentFragment(false);
-                        break;
-                    case XIAOSHUOMAHUA:
-                        baseButterKnifeFragment1 = new MyCommentFragment(true);
-                        baseButterKnifeFragment2 = new MyCommentFragment(false);
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        break;
-                    case MANHAUXIAOSHUO:
-                        baseButterKnifeFragment2 = new MyCommentFragment(true);
-                        baseButterKnifeFragment1 = new MyCommentFragment(false);
-                        channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
-                        channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
-                        break;
-                }
-                break;
+                baseButterKnifeFragment2 = new MyCommentFragment(true);
+                baseButterKnifeFragment1 = new MyCommentFragment(false);
+                channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
+                channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
         }
         if (baseButterKnifeFragment1 != null) {
             fragmentList.add(baseButterKnifeFragment1);
@@ -326,8 +260,13 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         }
         if (baseButterKnifeFragment3 != null) {
             fragmentList.add(baseButterKnifeFragment3);
-        } if (baseButterKnifeFragment4 != null) {
+        }else {
+            top_channel_layout.setVisibility(View.GONE);
+        }
+        if (baseButterKnifeFragment4 != null) {
             fragmentList.add(baseButterKnifeFragment4);
+        }else {
+            top_channel_layout.setVisibility(View.GONE);
         }
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         activity_baseoption_viewpage.setAdapter(myFragmentPagerAdapter);
@@ -366,25 +305,10 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RefarchrequestCodee) {//登录后刷新 阅读历史
-            switch (GETPRODUCT_TYPE(activity)) {
-                case XIAOSHUO:
-                    ((ReadHistoryBookFragment) (baseButterKnifeFragment1)).initdata();
-                    break;
-                case MANHAU:
-                    ((ReadHistoryComicFragment) (baseButterKnifeFragment1)).initdata();
-                    break;
-                case XIAOSHUOMAHUA:
-                    ((ReadHistoryBookFragment) (baseButterKnifeFragment1)).initdata();
-                    ((ReadHistoryComicFragment) (baseButterKnifeFragment2)).initdata();
-                    if (baseButterKnifeFragment3 != null) {
-                        ((ReadHistoryPhonicFragment) (baseButterKnifeFragment3)).initdata();
-                    }
-                    break;
-                case MANHAUXIAOSHUO:
-                    ((ReadHistoryBookFragment) (baseButterKnifeFragment2)).initdata();
-                    ((ReadHistoryComicFragment) (baseButterKnifeFragment1)).initdata();
-                    break;
-            }
+            ((ReadHistoryBookFragment) (baseButterKnifeFragment1)).initdata();
+            ((ReadHistoryComicFragment) (baseButterKnifeFragment2)).initdata();
+            ((ReadHistoryPhonicFragment) (baseButterKnifeFragment3)).initdata();
+            ((ReadHistoryCartoonFragment) (baseButterKnifeFragment4)).initdata();
         }
     }
 

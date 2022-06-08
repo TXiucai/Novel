@@ -1,6 +1,5 @@
 package com.heiheilianzai.app.wxapi;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
 import static com.heiheilianzai.app.constant.ReaderConfig.syncDevice;
 import static com.heiheilianzai.app.utils.AppPrefs.putSharedString;
 
@@ -129,12 +128,8 @@ public class WXEntryActivity extends WXCallbackActivity implements IWXAPIEventHa
                             EventBus.getDefault().post(new RefreshMine(userInfoItem));
                             EventBus.getDefault().post(new RefreshUserInfo(userInfoItem));
                             EventBus.getDefault().post(new BuyLoginSuccessEvent());
-                            if (GETPRODUCT_TYPE(activity) != 2) {
-                                EventBus.getDefault().post(new RefreshBookSelf(null));
-                            }
-                            if (GETPRODUCT_TYPE(activity) != 1) {
-                                EventBus.getDefault().post(new RefreshComic(null));
-                            }
+                            EventBus.getDefault().post(new RefreshBookSelf(null));
+                            EventBus.getDefault().post(new RefreshComic(null));
                             syncDevice(activity);
                             FirstStartActivity.save_recommend(activity, new FirstStartActivity.Save_recommend() {
                                 @Override

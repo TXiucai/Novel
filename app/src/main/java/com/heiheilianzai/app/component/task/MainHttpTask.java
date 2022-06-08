@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.google.gson.Gson;
-import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.ComicConfig;
@@ -14,14 +13,9 @@ import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.HttpUtils;
-import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
-
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 
 //主界面接口数据缓存
 public class MainHttpTask {
@@ -46,26 +40,6 @@ public class MainHttpTask {
 
     private String DiscoverBook;
     private String DiscoverComic;
-
-    private String Mine;
-
-    public void InitHttpData(Activity activity) {
-        if (GETPRODUCT_TYPE(activity) != MANHAU) {
-            httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mBookStoreUrl, "StoreBookMan", null);
-            httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mBookStoreUrl, "StoreBookWoMan", null);
-            httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mDiscoveryUrl, "DiscoverBook", null);
-            httpSend(activity, ReaderConfig.getBaseUrl() + BookConfig.mBookCollectUrl, "ShelfBook", null);
-        }
-        if (GETPRODUCT_TYPE(activity) != XIAOSHUO) {
-            httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_stock, "StoreComicMan", null);
-            httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_home_stock, "StoreComicWoMan", null);
-            httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_featured, "DiscoverComic", null);
-            httpSend(activity, ReaderConfig.getBaseUrl() + ComicConfig.COMIC_SHELF, "ShelfComic", null);
-        }
-        if (Utils.isLogin(activity)) {
-            httpSend(activity, ReaderConfig.getBaseUrl() + ReaderConfig.mUserCenterUrl, "Mine", null);
-        }
-    }
 
     public interface GetHttpData {
         void getHttpData(String result);
@@ -119,7 +93,6 @@ public class MainHttpTask {
                                     DiscoverComic = result;
                                     break;
                                 case "Mine":
-                                    Mine = result;
                                     ReaderConfig.REFREASH_USERCENTER = false;
                                     UserInfoItem mUserInfo = new Gson().fromJson(result, UserInfoItem.class);
                                     AppPrefs.putSharedString(activity, ReaderConfig.TOKEN, mUserInfo.getUser_token());

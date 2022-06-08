@@ -42,12 +42,6 @@ public class ReaderConfig {
     public static final String QQ_APPID = BuildConfig.app_qq_id;
     //QQ_SECRET
     public static final String QQ_SECRET = BuildConfig.app_qq_secret;
-    // 当前产品类型 1: 只使用小说
-    //              2: 只使用漫画
-    //              3: 小说 漫画 有声
-    //              4: 漫画小说
-    //              12小说 漫画 有声 视频
-    private static int PRODUCT_TYPE = 12;
 
     public static boolean app_free_charge = true;//免费频道
 
@@ -56,18 +50,6 @@ public class ReaderConfig {
     public static int display_second = 5;//听书按钮引导提示默认5秒
     public static String guide_text = "";//听书文案
     public static String novel_tips = "";//小说底部中间文案
-
-    public static int GETPRODUCT_TYPE(Activity activity) {
-        if (PRODUCT_TYPE == 0) {
-            PRODUCT_TYPE = ShareUitls.getInt(activity, "PRODUCT_TYPE", 3);
-        }
-        return PRODUCT_TYPE;
-    }
-
-    public static void PUTPRODUCT_TYPE(Activity activity, int UI) {
-        PRODUCT_TYPE = UI;
-        ShareUitls.putInt(activity, "PRODUCT_TYPE", PRODUCT_TYPE);
-    }
 
     public static final int MIANFEI = 0;//免费频道
     public static final int WANBEN = 1;//完本频道
@@ -83,11 +65,8 @@ public class ReaderConfig {
     public static final int LOOKMORE = 9;//查看更多
     public static final int MYCOMMENT = 11;//我的评论
 
-    public static final int XIAOSHUO = 1;//只有小说
-    public static final int MANHAU = 2;//只有漫画
-    public static final int XIAOSHUOMAHUA = 3;//小说漫画
-    public static final int MANHAUXIAOSHUO = 4;//漫画小
-    public static final int CARTOON = 12;//视频
+    public static final int XIAOSHUO = 1;
+    public static final int MANHAU = 2;
 
     public static final int fragment_store_xiaoshuo_dp = 23;
     public static final int fragment_store_manhau_dp = 15;

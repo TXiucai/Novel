@@ -1,67 +1,29 @@
 package com.heiheilianzai.app.ui.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.github.dfqin.grantor.PermissionListener;
-import com.github.dfqin.grantor.PermissionsUtil;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseActivity;
-import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.observe.SMSContentObserver;
-import com.heiheilianzai.app.presenter.LoginPresenter;
-import com.heiheilianzai.app.presenter.LoginView;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.NickNameLoginFragment;
 import com.heiheilianzai.app.ui.fragment.PhoneLoginFragment;
-import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.view.SizeAnmotionTextview;
-import com.tencent.mm.opensdk.modelmsg.SendAuth;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.UMAuthListener;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.heiheilianzai.app.constant.ReaderConfig.GETPRODUCT_TYPE;
-import static com.heiheilianzai.app.constant.ReaderConfig.MANHAUXIAOSHUO;
-import static com.heiheilianzai.app.constant.ReaderConfig.USE_WEIXIN;
-import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUOMAHUA;
 
 /**
  * 用户登录页
