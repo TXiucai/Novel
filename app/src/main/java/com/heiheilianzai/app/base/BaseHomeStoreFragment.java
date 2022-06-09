@@ -430,8 +430,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             }
         } else {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_CARTOON;
-            for (int i = 0; i < ReaderConfig.COMIC_SDK_AD.size(); i++) {
-                AppUpdate.ListBean listBean = ReaderConfig.COMIC_SDK_AD.get(i);
+            for (int i = 0; i < ReaderConfig.VIDEO_SDK_AD.size(); i++) {
+                AppUpdate.ListBean listBean = ReaderConfig.VIDEO_SDK_AD.get(i);
                 if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
                     mIsComicLabelSdk = true;
                     sdkLableAd(recommendType, type);
@@ -904,7 +904,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     public void onResponse(final String result) {
                         if (!StringUtils.isEmpty(result)) {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
-                            if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2 || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2) {
+                            if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2
+                                    || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2
+                                    || ReaderConfig.OTHER_SDK_AD.getVideo_banner_index() == 2) {
                                 sdkBannerAd(kayCache, url, result, flag);
                             } else {
                                 getHeaderView(result, flag);

@@ -5,41 +5,47 @@
     android:layout_height="wrap_content"
     app:ignore="NamespaceTypo">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_70dp"
-            android:layout_marginBottom="@dimen/dimens_minus_2dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/recomment_app_top" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_sol_ffffff_cor_bottom_16"
-            android:paddingLeft="@dimen/dimens_18dp"
-            android:paddingTop="@dimen/dimens_25dp"
-            android:paddingRight="@dimen/dimens_18dp"
-            android:paddingBottom="@dimen/dimens_25dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_70dp"
+                android:layout_marginBottom="@dimen/dimens_minus_2dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/recomment_app_top" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center" />
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_sol_ffffff_cor_bottom_16"
+                android:paddingLeft="@dimen/dimens_18dp"
+                android:paddingTop="@dimen/dimens_25dp"
+                android:paddingRight="@dimen/dimens_18dp"
+                android:paddingBottom="@dimen/dimens_25dp">
 
-        <ImageView
-            android:id="@+id/img_close"
-            android:layout_width="@dimen/dimens_25dp"
-            android:layout_height="@dimen/dimens_25dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dimens_25dp"
-            android:src="@mipmap/ic_home_notice_close" />
-    </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/img_close"
+                android:layout_width="@dimen/dimens_25dp"
+                android:layout_height="@dimen/dimens_25dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimens_25dp"
+                android:src="@mipmap/ic_home_notice_close" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 </RelativeLayout>

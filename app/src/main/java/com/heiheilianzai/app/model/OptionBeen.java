@@ -21,6 +21,7 @@ public class OptionBeen extends BaseAd {
     public String total_favors;
     public String updated_at;
     public int views;
+    public int view_counts;
 
     public String getVideo_id() {
         return video_id;

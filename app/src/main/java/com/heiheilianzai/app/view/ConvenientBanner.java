@@ -412,7 +412,7 @@ public class ConvenientBanner<T> extends LinearLayout {
             BannerItemStore bannerItemStore = gson.fromJson(jsonElement, BannerItemStore.class);//解析
             mBannerItemListMale.add(bannerItemStore);
         }
-        if (flag == 0 || flag == 1) {
+        if (flag == 0 || flag == 1 || flag == 2 || flag == 3) {
             if (!mBannerItemListMale.isEmpty()) {
                 mStoreBannerMale.setVisibility(View.VISIBLE);
                 mStoreBannerMale.setPages(new CBViewHolderCreator<HomeBannerHolderViewComic>() {
@@ -435,13 +435,13 @@ public class ConvenientBanner<T> extends LinearLayout {
             if (!mBannerItemListMale.isEmpty()) {
                 mStoreBannerMale.setVisibility(View.VISIBLE);
                 final int WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
-                if (flag == 2) {
+                if (flag == 4) {
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mStoreBannerMale.getLayoutParams();
                     layoutParams.width = WIDTH;
                     layoutParams.height = layoutParams.width / 4;
                     mStoreBannerMale.setLayoutParams(layoutParams);
                 }
-                if (flag == 2) {
+                if (flag == 4) {
                     mStoreBannerMale.setPages(new CBViewHolderCreator<DiscoverBannerHolderViewBook>() {
                         @Override
                         public DiscoverBannerHolderViewBook createHolder() {

@@ -42,7 +42,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:text="我真不是开玩笑"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/color_3b3b3b"
                     android:textSize="14sp" />
 

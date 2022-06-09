@@ -191,7 +191,7 @@ public class DiscoveryComicFragment extends BaseButterKnifeFragment {
             JSONObject jsonObject = new JSONObject(json);
             //1.初始化男频banner控件数据
             if (current_page == 1) {
-                ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 2000, 3);
+                ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 2000, 4);
             }
             initWaterfall(jsonObject.getString("item_list"));
             postAsyncHttpEngine_ing = false;

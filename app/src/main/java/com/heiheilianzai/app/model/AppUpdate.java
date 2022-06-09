@@ -26,6 +26,7 @@ public class AppUpdate {
     public String website_android;
     public AdPositionBookBean ad_position_book;
     public AdPositionComicBean ad_position_comic;
+    public AdPositionComicBean ad_position_video;
     public AdPositionOtherBean ad_position_other;
     public String book_text_api;
     public String vtapi_license_key;
@@ -35,6 +36,14 @@ public class AppUpdate {
     public String book_read_tip_title;
     public String pay_lunxun_domain_switch;
     public PayLunxunDomainBean pay_lunxun_domain;
+
+    public AdPositionComicBean getAd_position_video() {
+        return ad_position_video;
+    }
+
+    public void setAd_position_video(AdPositionComicBean ad_position_video) {
+        this.ad_position_video = ad_position_video;
+    }
 
     public String getGuide_text() {
         return guide_text;
@@ -425,6 +434,15 @@ public class AppUpdate {
             private int alert_index;
             private int book_banner_index;
             private int comic_banner_index;
+            private int video_banner_index;
+
+            public int getVideo_banner_index() {
+                return video_banner_index;
+            }
+
+            public void setVideo_banner_index(int video_banner_index) {
+                this.video_banner_index = video_banner_index;
+            }
 
             public int getIcon_index() {
                 return icon_index;

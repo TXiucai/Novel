@@ -111,7 +111,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
                 } else {
                     MyPicasso.GlideImage(activity, optionBeen.getCover(), viewHolder.imageView, WIDTH, HEIGHT, R.mipmap.cartoon_def_v);
-                    viewHolder.author.setText(String.valueOf(optionBeen.getTotal_views()));
+                    viewHolder.author.setText(String.valueOf(optionBeen.view_counts));
                 }
                 viewHolder.name.setText(optionBeen.getName());
                 viewHolder.description.setText(optionBeen.getDescription());

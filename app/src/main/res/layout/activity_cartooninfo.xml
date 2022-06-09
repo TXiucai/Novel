@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@mipmap/cartoon_play_bg"
         android:orientation="vertical"
         android:paddingTop="@dimen/dimens_20dp">
 
@@ -18,26 +17,29 @@
             android:layout_height="@dimen/dimens_220dp"
             tools:ignore="MissingConstraints">
 
-           <!-- <com.heiheilianzai.app.view.video.VideoPlayView
-                android:id="@+id/video"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />-->
             <com.live.eggplant.player.video.StandardGSYVideoPlayer
                 android:id="@+id/video"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:id="@+id/ll_gold"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@mipmap/cartoon_play_bg"
                 android:orientation="vertical"
                 android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_gold_back"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dimens_35dp"
+                    android:padding="@dimen/dimens_8dp"
+                    android:src="@mipmap/back_white" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_25dp"
                     android:gravity="center"
                     android:text="@string/dialog_tittle_cartoon_coupon"
                     android:textColor="@color/white"
@@ -123,14 +125,22 @@
                 android:id="@+id/ll_vip"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@mipmap/cartoon_play_bg"
                 android:orientation="vertical"
                 android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_vip_back"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dimens_35dp"
+                    android:padding="@dimen/dimens_8dp"
+                    android:src="@mipmap/back_white" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimens_34dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dimens_60dp"
+                    android:layout_marginTop="@dimen/dimens_30dp"
                     android:background="@drawable/bookself_store_bg"
                     android:gravity="center"
                     android:paddingRight="@dimen/dp_10">

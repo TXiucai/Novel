@@ -53,10 +53,7 @@ import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
-import com.heiheilianzai.app.view.video.CustomGSYVideoPlayer;
-import com.heiheilianzai.app.view.video.VideoPlayView;
 import com.jaeger.library.StatusBarUtil;
-import com.live.eggplant.player.GSYVideoADManager;
 import com.live.eggplant.player.GSYVideoManager;
 import com.live.eggplant.player.listener.GSYSampleCallBack;
 import com.live.eggplant.player.listener.LockClickListener;
@@ -64,7 +61,6 @@ import com.live.eggplant.player.player.IjkPlayerManager;
 import com.live.eggplant.player.player.PlayerFactory;
 import com.live.eggplant.player.utils.OrientationUtils;
 import com.live.eggplant.player.video.StandardGSYVideoPlayer;
-import com.live.eggplant.player.video.base.GSYVideoViewBridge;
 import com.live.eggplant.widget.video.GSYVideoOptionHelper;
 import com.zcw.togglebutton.ToggleButton;
 
@@ -104,8 +100,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     public TextView mTxCartoonTime;
     @BindView(R.id.gv_guess)
     public AdaptionGridView mGv;
-    //    @BindView(R.id.video)
-//    public VideoPlayView videoPlayer;
     @BindView(R.id.video)
     public StandardGSYVideoPlayer mVideoPlayer;
     private String mCartoonId;
@@ -161,9 +155,13 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         mRyChapter.setAdapter(mCartoonChapterAdapter);
     }
 
-    @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open})
+    @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open, R.id.img_vip_back, R.id.img_gold_back})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.img_vip_back:
+            case R.id.img_gold_back:
+                finish();
+                break;
             case R.id.tx_vip_charge:
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(mActivity, LanguageUtil.getString(mActivity, R.string.refer_page_mine), 4);
                 myIntent.putExtra("isvip", Utils.isLogin(mActivity));
@@ -223,6 +221,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 }
                 mCartoonChapterAdapter.notifyDataSetChanged();
                 mCartoonChapterAdapter.setmOnBackChapterListener((cartoonChapter, position) -> {
+                    updateDetailRecord(mChapterItem);
                     for (int i = 0; i < mCartoonChapters.size(); i++) {
                         CartoonChapter chapter = mCartoonChapters.get(i);
                         if (i != position) {
@@ -233,6 +232,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     }
                     mChapterItem = cartoonChapter;
                     mCartoonChapterAdapter.notifyDataSetChanged();
+                    mVideoPlayer.release();
                     checkIsCoupon(cartoonChapter);
                 });
                 checkIsCoupon(mChapterItem);
@@ -414,7 +414,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 if (mCartoonInfo.getTag() != null && mCartoonInfo.getTag().size() > 0) {
                     for (int i = 0; i < mCartoonInfo.getTag().size(); i++) {
                         String tag = mCartoonInfo.getTag().get(i);
-                        tags = tags + (tag + " ");
+                        tags = tags + ("#" + tag + " ");
                     }
                     mTxCartoonTag.setText(tags);
                     mTxCartoonTag.setVisibility(View.VISIBLE);
@@ -508,9 +508,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
             mVideoPlayer.getFullscreenButton().performClick();
             return;
         }
-        //释放所有
-        mVideoPlayer.setVideoAllCallBack(null);
-        GSYVideoManager.releaseAllVideos();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             finish();
         } else {
@@ -518,10 +515,18 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 @Override
                 public void run() {
                     finish();
-                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
                 }
             }, 500);
         }
+    }
+
+    private void exitVideo() {
+        //释放所有
+        mVideoPlayer.release();
+        mVideoPlayer.setVideoAllCallBack(null);
+        GSYVideoManager.releaseAllVideos();
+        if (mOrientationUtils != null)
+            mOrientationUtils.releaseListener();
     }
 
     @Override
@@ -532,10 +537,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
 
     @Override
     protected void onDestroy() {
-        updateDetailRecord(mChapterItem);
-        mVideoPlayer.release();
-        if (mOrientationUtils != null)
-            mOrientationUtils.releaseListener();
+        exitVideo();
         super.onDestroy();
     }
 

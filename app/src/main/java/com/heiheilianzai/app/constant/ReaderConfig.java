@@ -96,6 +96,7 @@ public class ReaderConfig {
 
     public static List<AppUpdate.ListBean> NOVEL_SDK_AD = new ArrayList<>();
     public static List<AppUpdate.ListBean> COMIC_SDK_AD = new ArrayList<>();
+    public static List<AppUpdate.ListBean> VIDEO_SDK_AD = new ArrayList<>();
     public static AppUpdate.AdPositionOtherBean.ListBean OTHER_SDK_AD = new AppUpdate.AdPositionOtherBean.ListBean();
     public static String TTS_OPEN = "";
     public static final int READBUTTOM_HEIGHT = 60;//yeudulibu AD

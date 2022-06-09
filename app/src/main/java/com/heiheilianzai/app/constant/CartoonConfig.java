@@ -76,7 +76,7 @@ public class CartoonConfig {
      */
     public static final String CARTOON_play_node = "/comic-video/update-play-node";
 
-    /**
+    /**comic
      * 动画视频章节内容解锁购买
      */
     public static final String CARTOON_chapter_unlock= "/comic-video/unlock-video";

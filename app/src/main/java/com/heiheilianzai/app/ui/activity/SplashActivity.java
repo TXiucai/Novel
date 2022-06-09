@@ -245,6 +245,8 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         ReaderConfig.NOVEL_SDK_AD.addAll(dataBean.getAd_position_book().getList());
                         ReaderConfig.COMIC_SDK_AD.clear();
                         ReaderConfig.COMIC_SDK_AD.addAll(dataBean.getAd_position_comic().getList());
+                        ReaderConfig.VIDEO_SDK_AD.clear();
+                        ReaderConfig.VIDEO_SDK_AD.addAll(dataBean.getAd_position_video().getList());
                         ReaderConfig.OTHER_SDK_AD = dataBean.getAd_position_other().getList();
                         App.putDailyStartPageMax(dataBean.daily_max_start_page);
                         getOpenScreen();

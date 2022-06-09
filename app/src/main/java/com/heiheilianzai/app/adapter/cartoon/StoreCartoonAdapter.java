@@ -82,30 +82,19 @@ public class StoreCartoonAdapter extends BaseAdapter {
         } else {
             viewHolder.liem_store_comic_style1_flag.setVisibility(View.GONE);
         }*/
-        String jiao_biao = cartoon.jiao_biao;
-        if (jiao_biao != null && !StringUtils.isEmpty(jiao_biao)) {
-            viewHolder.item_corner.setText(jiao_biao);
-            if (jiao_biao.contains("新书")) {
-                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_new));
-            } else if (jiao_biao.contains("乱伦")) {
-                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_luanlun));
-            } else if (jiao_biao.contains("人妻")) {
-                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_wife));
-            } else if (jiao_biao.contains("完结")) {
-                viewHolder.item_corner.setBackground(activity.getDrawable(R.mipmap.home_novel_corner_finish));
-            }
-        }
         viewHolder.liem_store_comic_style1_name.setText(cartoon.name);
-        if (cartoon.description != null) {
-            viewHolder.liem_store_comic_style1_description.setText(cartoon.description);
-        } else if (cartoon.tag != null && !cartoon.tag.isEmpty()) {
+        if (cartoon.tag != null && !cartoon.tag.isEmpty()) {
             String str = "";
             for (BaseTag tag : cartoon.tag) {
-                str += tag.tab + "  ";
+                str +=   "#"+tag.tab+" ";
             }
             viewHolder.liem_store_comic_style1_description.setText(str);
         } else {
-            viewHolder.liem_store_comic_style1_description.setVisibility(View.GONE);
+            if (cartoon.description != null) {
+                viewHolder.liem_store_comic_style1_description.setText(cartoon.description);
+            } else {
+                viewHolder.liem_store_comic_style1_description.setVisibility(View.GONE);
+            }
         }
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewHolder.liem_store_comic_style1_layout.getLayoutParams();
         layoutParams.height = HEIGHT + height;
@@ -113,7 +102,7 @@ public class StoreCartoonAdapter extends BaseAdapter {
         return convertView;
     }
 
-   public class ViewHolder {
+    public class ViewHolder {
         @BindView(R.id.liem_store_comic_style1_layout)
         LinearLayout liem_store_comic_style1_layout;
         @BindView(R.id.liem_store_comic_style1_img)

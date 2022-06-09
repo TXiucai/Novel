@@ -136,7 +136,7 @@ public class DiscoveryBookFragment extends BaseButterKnifeFragment {
         try {
             JSONObject jsonObject = new JSONObject(info);
             //1.初始化banner控件数据
-            ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 2000, 2);
+            ConvenientBanner.initbanner(activity, gson, jsonObject.getString("banner"), mStoreBannerMale, 2000, 4);
             initWaterfall(jsonObject.getString("label"));
         } catch (JSONException e) {
             e.printStackTrace();
