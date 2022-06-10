@@ -82,7 +82,7 @@ public class ReadTimeActivity extends BaseButterKnifeTransparentActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
         setStatusTextColor(false, mActivity);
-        mTittle.setText(LanguageUtil.getString(mActivity, R.string.string_read_time_tittle));
+        mTittle.setText(LanguageUtil.getString(mActivity, R.string.string_exchage_gift));
         getData();
     }
 

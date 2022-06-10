@@ -100,7 +100,8 @@ public abstract class BaseReadHistoryAdapter<T> extends RecyclerView.Adapter<Rec
         public CheckBox mCheckBox;
         @BindView(R.id.recyclerview_item_readhistory_check_rl)
         public RelativeLayout mRlCheckBox;
-
+        @BindView(R.id.recyclerview_item_readhistory_tag)
+        public TextView mTxTag;
         public MyViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);

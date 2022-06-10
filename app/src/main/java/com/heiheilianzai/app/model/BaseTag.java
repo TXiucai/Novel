@@ -1,6 +1,8 @@
 package com.heiheilianzai.app.model;
 
-public class BaseTag {
+import java.io.Serializable;
+
+public class BaseTag implements Serializable {
     public String tab;
     public String color;
 

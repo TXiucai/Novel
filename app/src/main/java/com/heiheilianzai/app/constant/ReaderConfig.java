@@ -67,6 +67,7 @@ public class ReaderConfig {
 
     public static final int XIAOSHUO = 1;
     public static final int MANHAU = 2;
+    public static final int CARTOON = 4;
 
     public static final int fragment_store_xiaoshuo_dp = 23;
     public static final int fragment_store_manhau_dp = 15;

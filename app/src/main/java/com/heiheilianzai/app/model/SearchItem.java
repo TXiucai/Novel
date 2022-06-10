@@ -1,5 +1,7 @@
 package com.heiheilianzai.app.model;
 
+import java.util.List;
+
 /**
  * 搜索页下方的图书列表的bean
  * Created by scb on 2018/6/28.
@@ -20,7 +22,7 @@ public class SearchItem {
     public String name;
     public String cover;
     public String flag;
-
+    public List<BaseTag> tag;
     public String getVideo_id() {
         return video_id;
     }

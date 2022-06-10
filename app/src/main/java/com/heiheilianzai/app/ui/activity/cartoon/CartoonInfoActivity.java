@@ -49,6 +49,7 @@ import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.utils.ToastUtil;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridView;
 import com.heiheilianzai.app.view.AndroidWorkaround;
@@ -78,6 +79,8 @@ import butterknife.OnClick;
 public class CartoonInfoActivity extends BaseWarmStartActivity {
     private static String CARTOON_ID_EXT_KAY = "CARTOON_ID";
     private static String CARTOON_HiSTORY_EXT_KAY = "CARTOON_HISTORY";
+    @BindView(R.id.img_back)
+    public ImageView mImgBack;
     @BindView(R.id.ll_gold)
     public LinearLayout mLlGold;
     @BindView(R.id.tx_gold_num)
@@ -153,13 +156,39 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         mRyChapter.setLayoutManager(linearLayoutManager);
         mCartoonChapterAdapter = new CartoonChapterAdapter(mCartoonChapters, mActivity);
         mRyChapter.setAdapter(mCartoonChapterAdapter);
+
+        mVideoPlayer.getFullscreenButton().setOnClickListener(v -> {
+            mOrientationUtils.resolveByClick();
+            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+            mVideoPlayer.startWindowFullscreen(mActivity, true, true);
+        });
+        mVideoPlayer.getBackButton().setOnClickListener(v -> {
+            if (mOrientationUtils != null && mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                mVideoPlayer.getFullscreenButton().performClick();
+            } else {
+                finish();
+            }
+        });
+        mCartoonChapterAdapter.setmOnBackChapterListener((cartoonChapter, position) -> {
+            for (int i = 0; i < mCartoonChapters.size(); i++) {
+                CartoonChapter chapter = mCartoonChapters.get(i);
+                if (i != position) {
+                    chapter.setSelect(false);
+                } else {
+                    chapter.setSelect(true);
+                }
+            }
+            mChapterItem = cartoonChapter;
+            mCartoonChapterAdapter.notifyDataSetChanged();
+            mVideoPlayer.release();
+            checkIsCoupon(cartoonChapter);
+        });
     }
 
-    @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open, R.id.img_vip_back, R.id.img_gold_back})
+    @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open, R.id.img_back})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_vip_back:
-            case R.id.img_gold_back:
+            case R.id.img_back:
                 finish();
                 break;
             case R.id.tx_vip_charge:
@@ -201,6 +230,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     private void initChapter(String result) {
         try {
             JSONObject jsonObject = new JSONObject(result);
+            mCartoonChapters.clear();
             mPrice = jsonObject.getString("coupon_pay_price");
             mCartoonChapters.addAll(mGson.fromJson(jsonObject.getString("chapter_list"), new TypeToken<List<CartoonChapter>>() {
             }.getType()));
@@ -220,21 +250,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     mChapterItem.setSelect(true);
                 }
                 mCartoonChapterAdapter.notifyDataSetChanged();
-                mCartoonChapterAdapter.setmOnBackChapterListener((cartoonChapter, position) -> {
-                    updateDetailRecord(mChapterItem);
-                    for (int i = 0; i < mCartoonChapters.size(); i++) {
-                        CartoonChapter chapter = mCartoonChapters.get(i);
-                        if (i != position) {
-                            chapter.setSelect(false);
-                        } else {
-                            chapter.setSelect(true);
-                        }
-                    }
-                    mChapterItem = cartoonChapter;
-                    mCartoonChapterAdapter.notifyDataSetChanged();
-                    mVideoPlayer.release();
-                    checkIsCoupon(cartoonChapter);
-                });
                 checkIsCoupon(mChapterItem);
             }
         } catch (JSONException e) {
@@ -243,6 +258,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     }
 
     private void playVideo(CartoonChapter cartoonChapter) {
+        mImgBack.setVisibility(View.GONE);
+        mLlVip.setVisibility(View.GONE);
+        mLlGold.setVisibility(View.GONE);
+        mVideoPlayer.setVisibility(View.VISIBLE);
         updateRecord(cartoonChapter);
         PlayerFactory.setPlayManager(IjkPlayerManager.class);
         //增加封面
@@ -269,6 +288,13 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                         updateDetailRecord(cartoonChapter);
                         super.onClickStop(url, objects);
                     }
+
+                    @Override
+                    public void onPlayError(int what, String url, Object... objects) {
+                        super.onPlayError(what, url, objects);
+                        ToastUtil.getInstance().showLongT(getString(R.string.play_video_error));
+                        mImgBack.setVisibility(View.VISIBLE);
+                    }
                 }).setLockClickListener(new LockClickListener() {
             @Override
             public void onClick(View view, boolean lock) {
@@ -278,19 +304,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 }
             }
         }).build(mVideoPlayer);
-        mVideoPlayer.getFullscreenButton().setOnClickListener(v -> {
-            mOrientationUtils.resolveByClick();
-            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-            mVideoPlayer.startWindowFullscreen(mActivity, true, true);
-        });
-        mVideoPlayer.getBackButton().setOnClickListener(v -> {
-            if (mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                mVideoPlayer.getFullscreenButton().performClick();
-                return;
-            } else {
-                finish();
-            }
-        });
         mVideoPlayer.startPlayLogic();
     }
 
@@ -299,12 +312,15 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         if (is_vip != null && is_vip.equals("1") && !App.isVip(mActivity)) {
             mLlVip.setVisibility(View.VISIBLE);
             mLlGold.setVisibility(View.GONE);
+            mVideoPlayer.setVisibility(View.GONE);
+            mImgBack.setVisibility(View.VISIBLE);
         } else {
             playVideo(chapterItem);
         }
     }
 
     private void checkIsCoupon(CartoonChapter chapterItem) {
+        mImgBack.setVisibility(View.VISIBLE);
         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
         String is_vip = chapterItem.getIs_vip();
         String is_limited_free = chapterItem.getIs_limited_free();
@@ -368,6 +384,8 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         } else {
             mLlGold.setVisibility(View.VISIBLE);
             mLlVip.setVisibility(View.GONE);
+            mVideoPlayer.setVisibility(View.GONE);
+            mImgBack.setVisibility(View.VISIBLE);
         }
         mTbOpen.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
@@ -547,23 +565,25 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
      * @param cartoonChapter
      */
     private void updateDetailRecord(CartoonChapter cartoonChapter) {
-        ReaderParams params = new ReaderParams(mActivity);
-        params.putExtraParams("video_id", mCartoonId);
-        params.putExtraParams("chapter_id", cartoonChapter.getChapter_id());
-        long currentPosition = GSYVideoManager.instance().getCurrentPosition();
-        int playTime = (int) currentPosition / 1000;
-        params.putExtraParams("play_node", String.valueOf(playTime));
-        String json = params.generateParamsJson();
-        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_node, json, true, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String result) {
-                    }
+        if (cartoonChapter != null) {
+            ReaderParams params = new ReaderParams(mActivity);
+            params.putExtraParams("video_id", mCartoonId);
+            params.putExtraParams("chapter_id", cartoonChapter.getChapter_id());
+            long currentPosition = GSYVideoManager.instance().getCurrentPosition();
+            int playTime = (int) currentPosition / 1000;
+            params.putExtraParams("play_node", String.valueOf(playTime));
+            String json = params.generateParamsJson();
+            HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_node, json, true, new HttpUtils.ResponseListener() {
+                        @Override
+                        public void onResponse(String result) {
+                        }
 
-                    @Override
-                    public void onErrorResponse(String ex) {
+                        @Override
+                        public void onErrorResponse(String ex) {
 
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 }

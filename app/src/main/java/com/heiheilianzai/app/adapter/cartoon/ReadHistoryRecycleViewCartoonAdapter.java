@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
+import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.cartoon.CartoonChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.DateUtils;
@@ -28,8 +29,15 @@ public class ReadHistoryRecycleViewCartoonAdapter extends BaseReadHistoryAdapter
             setView(holder);
             holder.recyclerview_item_readhistory_name.setText(cartoonChapter.getName());
             holder.recyclerview_item_readhistory_des.setText(cartoonChapter.getChapter_title());
-            holder.recyclerview_item_readhistory_goon.setText(String.format(LanguageUtil.getString(activity, R.string.history_cartoon_play), DateUtils.secToTime(cartoonChapter.getPlay_node())));
+            holder.recyclerview_item_readhistory_time.setText(String.format(LanguageUtil.getString(activity, R.string.history_cartoon_play), DateUtils.secToTime(cartoonChapter.getPlay_node())));
             MyPicasso.GlideImageNoSize(activity, cartoonChapter.getCover(), holder.recyclerview_item_readhistory_img, R.mipmap.cartoon_def_v);
+            if (cartoonChapter.getTag() != null && !cartoonChapter.getTag().isEmpty()) {
+                String str = "";
+                for (BaseTag tag : cartoonChapter.getTag()) {
+                    str += "#" + tag.tab + " ";
+                }
+                holder.mTxTag.setText(str);
+            }
             setIsEditView(holder, mIsEditOpen);
             setIsSelectAllView(holder, mIsSelectAll);
             holder.recyclerview_item_readhistory_goon.setText(activity.getString(R.string.string_continue_play));

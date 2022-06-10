@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.SearchItem;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
@@ -30,7 +31,7 @@ public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
         super(activity, list, list.size());
         mActivity = activity;
         int screenWidth = ScreenSizeUtils.getInstance(mContext).getScreenWidth();
-        H20 = ImageUtil.dp2px(mContext, 40);
+        H20 = ImageUtil.dp2px(mContext, 55);
         H10 = ImageUtil.dp2px(mContext, 20);
         H33 = ImageUtil.dp2px(mContext, 28);
         WIDTH = (screenWidth - H20) / 3;//横向排版 图片宽度
@@ -69,6 +70,7 @@ public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
             View contentView = LayoutInflater.from(mContext).inflate(R.layout.item_store_cartoon_style, null, false);
             ImageView imageView = contentView.findViewById(R.id.liem_store_comic_style1_img);
             TextView name = contentView.findViewById(R.id.liem_store_comic_style1_name);
+            TextView tags = contentView.findViewById(R.id.liem_store_comic_style1_description);
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.liem_store_comic_style1_layout);
             RelativeLayout.LayoutParams layoutParamss = (RelativeLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
             layoutParamss.width = CARTOON_WIDTH;
@@ -82,6 +84,13 @@ public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             MyPicasso.GlideImageNoSize(mActivity, mList.get(position).getCover(), imageView, R.mipmap.cartoon_def_v);
             name.setText(mList.get(position).getName());
+            if (mList.get(position).tag != null && !mList.get(position).tag.isEmpty()) {
+                String str = "";
+                for (BaseTag tag : mList.get(position).tag) {
+                    str += "#" + tag.tab + " ";
+                }
+                tags.setText(str);
+            }
             return contentView;
         }
     }

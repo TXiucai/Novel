@@ -67,6 +67,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.CARTOON;
 import static com.heiheilianzai.app.constant.ReaderConfig.MANHAU;
 import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
 import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
@@ -460,6 +461,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         } else {
             ReaderParams params = new ReaderParams(activity);
             params.putExtraParams("position", "30");
+            params.putExtraParams("type", CARTOON + "");
             json = params.generateParamsJson();
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(requestParams, json, false, new HttpUtils.ResponseListener() {

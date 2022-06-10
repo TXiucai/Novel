@@ -685,4 +685,5 @@
     <string name="next">下一步</string>
     <string name="string_continue_play">继续播放</string>
     <string name="history_cartoon_play">上次观看到:%s</string>
+    <string name="play_video_error">播放链接出问题了</string>
 </resources>

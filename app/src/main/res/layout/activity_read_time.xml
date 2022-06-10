@@ -61,7 +61,8 @@
             android:layout_height="@dimen/dimens_170dp"
             android:layout_marginLeft="@dimen/dimens_15dp"
             android:layout_marginRight="@dimen/dimens_15dp"
-            android:background="@mipmap/read_time_head_bg">
+            android:background="@mipmap/read_time_head_bg"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -211,7 +212,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -249,8 +251,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_36dp"
-            android:layout_marginTop="@dimen/dimens_15dp">
+            android:layout_height="@dimen/dimens_36dp">
 
             <View
                 android:layout_width="@dimen/dp_4"

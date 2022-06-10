@@ -449,7 +449,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_6dp"
-                        android:text="@string/MineNewFragment_fulitask"
+                        android:text="@string/string_exchage_gift"
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>

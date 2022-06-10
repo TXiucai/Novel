@@ -1,8 +1,10 @@
 package com.heiheilianzai.app.model.cartoon;
 
 import com.heiheilianzai.app.model.BaseAd;
+import com.heiheilianzai.app.model.BaseTag;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CartoonChapter extends BaseAd implements Serializable {
 
@@ -109,11 +111,19 @@ public class CartoonChapter extends BaseAd implements Serializable {
      * color : #778899
      */
 
-    private TagBean tag;
+    private List<BaseTag> tag;
     private String update_time;
     private String display_order;
     private String content;
     private boolean select;
+
+    public List<BaseTag> getTag() {
+        return tag;
+    }
+
+    public void setTag(List<BaseTag> tag) {
+        this.tag = tag;
+    }
 
     public boolean isSelect() {
         return select;
@@ -179,14 +189,6 @@ public class CartoonChapter extends BaseAd implements Serializable {
         this.is_preview = is_preview;
     }
 
-    public TagBean getTag() {
-        return tag;
-    }
-
-    public void setTag(TagBean tag) {
-        this.tag = tag;
-    }
-
     public String getUpdate_time() {
         return update_time;
     }
@@ -203,24 +205,4 @@ public class CartoonChapter extends BaseAd implements Serializable {
         this.display_order = display_order;
     }
 
-    public static class TagBean {
-        private String tab;
-        private String color;
-
-        public String getTab() {
-            return tab;
-        }
-
-        public void setTab(String tab) {
-            this.tab = tab;
-        }
-
-        public String getColor() {
-            return color;
-        }
-
-        public void setColor(String color) {
-            this.color = color;
-        }
-    }
 }
