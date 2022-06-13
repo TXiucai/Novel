@@ -466,6 +466,7 @@
     <string name="coupon_open">金币解锁</string>
     <string name="dialog_tittle_novel_coupon">金币解锁该章节</string>
     <string name="dialog_tittle_cartoon_coupon">金币解锁该视频</string>
+    <string name="dialog_tittle_cartoon_coupon_vip">金币解锁该视频,开通会员免费畅享</string>
     <string name="tittle_cartoon_vip">会员专享视频</string>
     <string name="tittle_cartoon_char">选集</string>
     <string name="string_dialog_coupon_total">当前可用金币：</string>
@@ -662,7 +663,7 @@
     <string name="string_vip_vip_date_off">该套餐已下架</string>
     <string name="dialog_tittle_vip_close_ad">立即购买会员\n享受免广告特权</string>
     <string name="string_unknow_user_type">体验会员</string>
-    <string name="AcquireBaoyueActivity_title_gold">充值金币</string>
+    <string name="AcquireBaoyueActivity_title_gold">充值开通</string>
     <string name="AcquireBaoyueActivity_title_vip">立即充值</string>
     <string name="string_guess_like">猜你喜欢</string>
     <string name="BaoyueActivity_gold_gift">赠%s</string>

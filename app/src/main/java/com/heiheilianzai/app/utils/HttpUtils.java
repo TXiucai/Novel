@@ -136,6 +136,10 @@ public class HttpUtils {
                                         }
                                         responseListener.onErrorResponse(null);
                                         break;
+                                    case 403://动漫下架
+                                        MyToash.ToashError(context, msg);
+                                        responseListener.onErrorResponse(null);
+                                        break;
                                     case 802://余额不足 充值
                                         MyToash.ToashError(context, msg);
                                         int originCode = body.contains("book_id") ? 3 : 4;

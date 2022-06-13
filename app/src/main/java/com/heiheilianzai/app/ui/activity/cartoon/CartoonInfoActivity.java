@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.ui.activity.cartoon;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +13,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +28,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.cartoon.CartoonChapterAdapter;
 import com.heiheilianzai.app.adapter.cartoon.StoreCartoonAdapter;
 import com.heiheilianzai.app.base.App;
-import com.heiheilianzai.app.base.BaseWarmStartActivity;
+import com.heiheilianzai.app.base.BaseButterKnifeActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.CartoonConfig;
@@ -47,14 +46,13 @@ import com.heiheilianzai.app.utils.DialogRegister;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.LanguageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
+import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.ToastUtil;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AdaptionGridView;
-import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
-import com.jaeger.library.StatusBarUtil;
 import com.live.eggplant.player.GSYVideoManager;
 import com.live.eggplant.player.listener.GSYSampleCallBack;
 import com.live.eggplant.player.listener.LockClickListener;
@@ -76,13 +74,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CartoonInfoActivity extends BaseWarmStartActivity {
+public class CartoonInfoActivity extends BaseButterKnifeActivity {
     private static String CARTOON_ID_EXT_KAY = "CARTOON_ID";
     private static String CARTOON_HiSTORY_EXT_KAY = "CARTOON_HISTORY";
     @BindView(R.id.img_back)
     public ImageView mImgBack;
     @BindView(R.id.ll_gold)
     public LinearLayout mLlGold;
+    @BindView(R.id.tx_gold_title)
+    public TextView mTxGoldTitle;
     @BindView(R.id.tx_gold_num)
     public TextView mTxGoldNum;
     @BindView(R.id.tx_gold_open)
@@ -118,22 +118,17 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     private CartoonChapter mHistoryCartoonChapter;
 
     @Override
+    public int initContentView() {
+        return R.layout.activity_cartooninfo;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
-        //侵染状态栏
-        StatusBarUtil.setTransparent(this);
-        setContentView(R.layout.activity_cartooninfo);
         ButterKnife.bind(this);
-        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {                                  //适配华为手机虚拟键遮挡tab的问题
-            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
-        }
         mGson = new Gson();
-        mCartoonChapters = new ArrayList<>();
         mActivity = this;
+        mCartoonChapters = new ArrayList<>();
         mCartoonId = getIntent().getStringExtra(CARTOON_ID_EXT_KAY);
         mHistoryCartoonChapter = (CartoonChapter) getIntent().getSerializableExtra(CARTOON_HiSTORY_EXT_KAY);
         if (mHistoryCartoonChapter != null) {
@@ -171,7 +166,8 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         });
         mCartoonChapterAdapter.setmOnBackChapterListener((cartoonChapter, position) -> {
             for (int i = 0; i < mCartoonChapters.size(); i++) {
-                CartoonChapter chapter = mCartoonChapters.get(i);
+                CartoonChapter chapter;
+                chapter = mCartoonChapters.get(i);
                 if (i != position) {
                     chapter.setSelect(false);
                 } else {
@@ -185,6 +181,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open, R.id.img_back})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -221,12 +218,14 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
 
                     @Override
                     public void onErrorResponse(String ex) {
-
+                        mVideoPlayer.setVisibility(View.GONE);
+                        mImgBack.setVisibility(View.VISIBLE);
                     }
                 }
         );
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initChapter(String result) {
         try {
             JSONObject jsonObject = new JSONObject(result);
@@ -239,8 +238,8 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     for (int i = 0; i < mCartoonChapters.size(); i++) {
                         CartoonChapter chapter = mCartoonChapters.get(i);
                         if (TextUtils.equals(mHistoryCartoonChapter.getChapter_id(), chapter.getChapter_id())) {
-                            mHistoryCartoonChapter.setSelect(true);
-                            mChapterItem = mHistoryCartoonChapter;
+                            chapter.setPlay_node(mHistoryCartoonChapter.getPlay_node());
+                            mChapterItem = chapter;
                             chapter.setSelect(true);
                             break;
                         }
@@ -258,6 +257,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     }
 
     private void playVideo(CartoonChapter cartoonChapter) {
+        if (TextUtils.isEmpty(cartoonChapter.getContent())) {
+            MyToash.ToashError(mActivity, getString(R.string.play_video_error));
+            return;
+        }
         mImgBack.setVisibility(View.GONE);
         mLlVip.setVisibility(View.GONE);
         mLlGold.setVisibility(View.GONE);
@@ -292,7 +295,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     @Override
                     public void onPlayError(int what, String url, Object... objects) {
                         super.onPlayError(what, url, objects);
-                        ToastUtil.getInstance().showLongT(getString(R.string.play_video_error));
+                        MyToash.ToashError(mActivity, getString(R.string.play_video_error));
                         mImgBack.setVisibility(View.VISIBLE);
                     }
                 }).setLockClickListener(new LockClickListener() {
@@ -350,12 +353,9 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     DialogRegister dialogRegister = new DialogRegister();
                     dialogRegister.setFinish(true);
                     dialogRegister.getDialogLoginPop(mActivity);
-                    dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
-                        @Override
-                        public void onRegisterBack(boolean isSuccess) {
-                            if (isSuccess) {
-                                checkIsCoupon(chapterItem);
-                            }
+                    dialogRegister.setmRegisterBackListener(isSuccess -> {
+                        if (isSuccess) {
+                            checkIsCoupon(chapterItem);
                         }
                     });
                 } else {
@@ -366,7 +366,11 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     }
 
     private void showLimitDialog(CartoonChapter chapterItem) {
-
+        if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {
+            mTxGoldTitle.setText(getResources().getString(R.string.dialog_tittle_cartoon_coupon_vip));
+        } else {
+            mTxGoldTitle.setText(getResources().getString(R.string.dialog_tittle_cartoon_coupon));
+        }
         String format = String.format(mActivity.getResources().getString(R.string.dialog_coupon_open), mPrice);
         SpannableString spannableString = new SpannableString(format);
         UnderlineSpan underlineSpan = new UnderlineSpan();
@@ -428,13 +432,13 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 mTxCartoonTitle.setText(mCartoonInfo.getName());
                 mTxCartoonDes.setText(mCartoonInfo.getDescription());
                 mTxCartoonTime.setText(mCartoonInfo.getUpdated_at());
-                String tags = "";
+                StringBuilder tags = new StringBuilder();
                 if (mCartoonInfo.getTag() != null && mCartoonInfo.getTag().size() > 0) {
                     for (int i = 0; i < mCartoonInfo.getTag().size(); i++) {
                         String tag = mCartoonInfo.getTag().get(i);
-                        tags = tags + ("#" + tag + " ");
+                        tags.append("#").append(tag).append(" ");
                     }
-                    mTxCartoonTag.setText(tags);
+                    mTxCartoonTag.setText(tags.toString());
                     mTxCartoonTag.setVisibility(View.VISIBLE);
                 } else {
                     mTxCartoonTag.setVisibility(View.GONE);
@@ -447,12 +451,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                 int height = width * 2 / 3;
                 StoreCartoonAdapter storeCartoonAdapter = new StoreCartoonAdapter(cartoonList, mActivity, width, height);
                 mGv.setAdapter(storeCartoonAdapter);
-                mGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mCartoonId = cartoonList.get(position).video_id;
-                        getInfo();
-                    }
+                mGv.setOnItemClickListener((parent, view, position, id) -> {
+                    mVideoPlayer.release();
+                    mCartoonId = cartoonList.get(position).video_id;
+                    getInfo();
                 });
             }
         } catch (JSONException e) {
@@ -463,7 +465,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
     /**
      * 进入动漫简介页必传参数
      *
-     * @param context
      * @param referPage 神策埋点数据从哪个页面进入
      * @return Intent
      */
@@ -490,7 +491,7 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
                     @Override
                     public void onResponse(String result) {
                         EventBus.getDefault().post(new RefreshMine(null));
-                        AppPrefs.putSharedInt(mActivity, PrefConst.COUPON, couponNum - Integer.valueOf(couponPrice));
+                        AppPrefs.putSharedInt(mActivity, PrefConst.COUPON, couponNum - Integer.parseInt(couponPrice));
                         playVideo(chapterItem);
                     }
 
@@ -540,8 +541,10 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
 
     private void exitVideo() {
         //释放所有
-        mVideoPlayer.release();
-        mVideoPlayer.setVideoAllCallBack(null);
+        if (mVideoPlayer != null) {
+            mVideoPlayer.release();
+            mVideoPlayer.setVideoAllCallBack(null);
+        }
         GSYVideoManager.releaseAllVideos();
         if (mOrientationUtils != null)
             mOrientationUtils.releaseListener();
@@ -561,8 +564,6 @@ public class CartoonInfoActivity extends BaseWarmStartActivity {
 
     /**
      * 上传视频节点
-     *
-     * @param cartoonChapter
      */
     private void updateDetailRecord(CartoonChapter cartoonChapter) {
         if (cartoonChapter != null) {

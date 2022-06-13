@@ -9,15 +9,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_220dp"
-        android:paddingTop="@dimen/dimens_20dp"
-        android:background="@color/color_1a2629"
+        android:background="@mipmap/cartoon_play_bg"
         tools:ignore="MissingConstraints">
 
         <com.live.eggplant.player.video.StandardGSYVideoPlayer
             android:id="@+id/video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_gold"
@@ -25,14 +24,15 @@
             android:layout_height="match_parent"
             android:background="@mipmap/cartoon_play_bg"
             android:orientation="vertical"
+            android:paddingTop="@dimen/dimens_20dp"
             android:visibility="gone">
 
-
             <TextView
+                android:id="@+id/tx_gold_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginTop="@dimen/dimens_15dp"
+                android:gravity="center"
                 android:text="@string/dialog_tittle_cartoon_coupon"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
@@ -119,6 +119,7 @@
             android:layout_height="match_parent"
             android:background="@mipmap/cartoon_play_bg"
             android:orientation="vertical"
+            android:paddingTop="@dimen/dimens_45dp"
             android:visibility="gone">
 
             <LinearLayout
@@ -161,9 +162,9 @@
 
         <ImageView
             android:id="@+id/img_back"
-            android:layout_width="@dimen/dp_40"
-            android:layout_height="@dimen/dimens_35dp"
-            android:padding="@dimen/dimens_8dp"
+            android:layout_width="@dimen/dimens_45dp"
+            android:layout_height="@dimen/dp_40"
+            android:padding="@dimen/dp_10"
             android:src="@mipmap/back_white" />
 
     </FrameLayout>
