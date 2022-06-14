@@ -299,7 +299,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                     double size3 = Math.min(4, cartoonList.size());
                     raw = (int) (Math.ceil(size3 / 2d));
                     fragment_store_gridview1_gridview.setNumColumns(2);
-                    storeCartoonAdapter = new StoreCartoonAdapter(cartoonList.subList(1, Math.min(4, cartoonList.size())), activity, width, height);
+                    storeCartoonAdapter = new StoreCartoonAdapter(cartoonList.subList(1, Math.min(5, cartoonList.size())), activity, width, height);
                 }
                 break;
         }

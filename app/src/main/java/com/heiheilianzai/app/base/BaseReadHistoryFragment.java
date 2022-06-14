@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
@@ -14,6 +15,7 @@ import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.BookConfig;
 import com.heiheilianzai.app.constant.BoyinConfig;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.event.EditEvent;
 import com.heiheilianzai.app.model.event.ToStore;
@@ -264,8 +266,10 @@ public abstract class BaseReadHistoryFragment<T> extends BaseButterKnifeFragment
             params.putExtraParams("hhlz_uid", String.valueOf(App.getUserInfoItem(activity).getUid()));
         } else if (BookConfig.del_read_log_MORE.equals(url)) { //小说
             params.putExtraParams("book_id", log_id);
-        } else { //漫画
+        } else if (ComicConfig.COMIC_read_log_del_MORE.equals(url)) { //漫画
             params.putExtraParams("comic_id", log_id);
+        } else {//动漫
+            params.putExtraParams("video_id", log_id);
         }
         String json = params.generateParamsJson();
         HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + url, json, true, new HttpUtils.ResponseListener() {

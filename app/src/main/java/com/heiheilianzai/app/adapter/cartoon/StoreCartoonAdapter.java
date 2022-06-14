@@ -86,7 +86,7 @@ public class StoreCartoonAdapter extends BaseAdapter {
         if (cartoon.tag != null && !cartoon.tag.isEmpty()) {
             String str = "";
             for (BaseTag tag : cartoon.tag) {
-                str +=   "#"+tag.tab+" ";
+                str += new StringBuilder().append("#").append(tag.tab).append(" ").toString();
             }
             viewHolder.liem_store_comic_style1_description.setText(str);
         } else {

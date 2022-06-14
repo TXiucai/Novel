@@ -76,22 +76,23 @@ public class CartoonConfig {
      */
     public static final String CARTOON_play_node = "/comic-video/update-play-node";
 
-    /**comic
+    /**
+     * comic
      * 动画视频章节内容解锁购买
      */
-    public static final String CARTOON_chapter_unlock= "/comic-video/unlock-video";
+    public static final String CARTOON_chapter_unlock = "/comic-video/unlock-video";
 
     /**
      * 动画视频历史记录
      */
-    public static final String CARTOON_history_log= "/comic-video/user-watch-log";
+    public static final String CARTOON_history_log = "/comic-video/user-watch-log";
     /**
      * 动画视频历史记录删除
      */
-    public static final String CARTOON_read_log_del= "/comic-video/user-watch-log";
-/**
+    public static final String CARTOON_read_log_del = "/comic-video/del-read-log";
+    /**
      * 动画视频历史记录删除
      */
-    public static final String CARTOON_read_log_del_MORE= "/comic-video/batch-del-read-log";
+    public static final String CARTOON_read_log_del_MORE = "/comic-video/batch-del-read-log";
 
 }

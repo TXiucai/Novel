@@ -91,6 +91,8 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
     public ToggleButton mTbOpen;
     @BindView(R.id.ll_vip)
     public LinearLayout mLlVip;
+    @BindView(R.id.tx_gold_charge)
+    public TextView mTxGoldCharge;
     @BindView(R.id.ry_chapter)
     public RecyclerView mRyChapter;
     @BindView(R.id.tx_title_cartoon)
@@ -197,7 +199,11 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
             case R.id.tx_gold_charge:
                 Intent intent = AcquireBaoyueActivity.getMyIntent(mActivity, LanguageUtil.getString(mActivity, R.string.refer_page_mine), 4);
                 intent.putExtra("isvip", Utils.isLogin(mActivity));
-                intent.putExtra("type", 1);
+                if (TextUtils.equals(mChapterItem.getIs_vip(), "1")) {
+                    intent.putExtra("type", 0);
+                } else {
+                    intent.putExtra("type", 1);
+                }
                 mActivity.startActivity(intent);
                 break;
             case R.id.tx_gold_open:
@@ -258,8 +264,14 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
 
     private void playVideo(CartoonChapter cartoonChapter) {
         if (TextUtils.isEmpty(cartoonChapter.getContent())) {
+            mVideoPlayer.setVisibility(View.GONE);
+            mImgBack.setVisibility(View.VISIBLE);
             MyToash.ToashError(mActivity, getString(R.string.play_video_error));
             return;
+        }
+        if (GSYVideoManager.instance().isPlaying()) {
+            mVideoPlayer.release();
+            GSYVideoManager.instance().stop();
         }
         mImgBack.setVisibility(View.GONE);
         mLlVip.setVisibility(View.GONE);
@@ -296,6 +308,7 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
                     public void onPlayError(int what, String url, Object... objects) {
                         super.onPlayError(what, url, objects);
                         MyToash.ToashError(mActivity, getString(R.string.play_video_error));
+                        mVideoPlayer.setVisibility(View.GONE);
                         mImgBack.setVisibility(View.VISIBLE);
                     }
                 }).setLockClickListener(new LockClickListener() {
@@ -368,8 +381,10 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
     private void showLimitDialog(CartoonChapter chapterItem) {
         if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {
             mTxGoldTitle.setText(getResources().getString(R.string.dialog_tittle_cartoon_coupon_vip));
+            mTxGoldCharge.setText(getResources().getString(R.string.AcquireBaoyueActivity_title_vip));
         } else {
             mTxGoldTitle.setText(getResources().getString(R.string.dialog_tittle_cartoon_coupon));
+            mTxGoldCharge.setText(getResources().getString(R.string.AcquireBaoyueActivity_title_gold));
         }
         String format = String.format(mActivity.getResources().getString(R.string.dialog_coupon_open), mPrice);
         SpannableString spannableString = new SpannableString(format);
@@ -574,7 +589,7 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
             int playTime = (int) currentPosition / 1000;
             params.putExtraParams("play_node", String.valueOf(playTime));
             String json = params.generateParamsJson();
-            HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_node, json, true, new HttpUtils.ResponseListener() {
+            HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_node, json, false, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(String result) {
                         }
