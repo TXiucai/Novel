@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -65,6 +67,19 @@ public class DialogComicLook {
         vipHolder.txTittle.setText(chapterItem.getChapter_title());
         vipHolder.txChapter.setText(spannableString);
         vipHolder.txNum.setText(String.valueOf(couponNum));
+        if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {
+            SpannableString stringVip = new SpannableString(activity.getResources().getString(R.string.dialog_tittle_comic_coupon_vip));
+            UnderlineSpan span = new UnderlineSpan();
+            stringVip.setSpan(span, 8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            stringVip.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.color_ff8350)), 8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            vipHolder.txTitle.setText(stringVip);
+            vipHolder.txSubTitle.setText(activity.getResources().getString(R.string.coupon_vip_open));
+            vipHolder.txVip.setText(activity.getResources().getString(R.string.AcquireBaoyueActivity_title_vip));
+        } else {
+            vipHolder.txTitle.setText(activity.getResources().getString(R.string.dialog_tittle_novel_coupon));
+            vipHolder.txSubTitle.setText(activity.getResources().getString(R.string.coupon_open));
+            vipHolder.txVip.setText(activity.getResources().getString(R.string.AcquireBaoyueActivity_title_gold));
+        }
         if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false)) {
             vipHolder.tbOpen.setToggleOn();
         } else {
@@ -125,7 +140,11 @@ public class DialogComicLook {
             public void onClick(View v) {
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 4);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
-                myIntent.putExtra("type", 1);
+                if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {
+                    myIntent.putExtra("type", 0);
+                } else {
+                    myIntent.putExtra("type", 1);
+                }
                 activity.startActivity(myIntent);
                 activity.finish();
             }
@@ -180,6 +199,10 @@ public class DialogComicLook {
         public TextView txQuanji;
         @BindView(R.id.tb_open)
         public ToggleButton tbOpen;
+        @BindView(R.id.dialog_title)
+        public TextView txTitle;
+        @BindView(R.id.dialog_title_sub)
+        public TextView txSubTitle;
 
         public VipHolder(View view) {
             ButterKnife.bind(this, view);

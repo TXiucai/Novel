@@ -464,9 +464,11 @@
     <string name="string_bookself_book">我的小说</string>
     <string name="string_top_tittle">榜单排行</string>
     <string name="coupon_open">金币解锁</string>
+    <string name="coupon_vip_open">金币会员解锁</string>
     <string name="dialog_tittle_novel_coupon">金币解锁该章节</string>
+    <string name="dialog_tittle_comic_coupon_vip">金币解锁该章节,<font color='#ff8350'>开通会员</font>免费畅享</string>
     <string name="dialog_tittle_cartoon_coupon">金币解锁该视频</string>
-    <string name="dialog_tittle_cartoon_coupon_vip">金币解锁该视频,开通会员免费畅享</string>
+    <string name="dialog_tittle_cartoon_coupon_vip">金币解锁该视频,<font color='#ff8350'>开通会员</font>免费畅享</string>
     <string name="tittle_cartoon_vip">会员专享视频</string>
     <string name="tittle_cartoon_char">选集</string>
     <string name="string_dialog_coupon_total">当前可用金币：</string>

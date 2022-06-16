@@ -210,6 +210,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 }
                 channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                 channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
+                channel_bar_cartoon_text.setVisibility(View.GONE);
                 mTxEdit.setVisibility(View.VISIBLE);
                 break;
             case READHISTORY:
@@ -265,8 +266,6 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         }
         if (baseButterKnifeFragment4 != null) {
             fragmentList.add(baseButterKnifeFragment4);
-        }else {
-            top_channel_layout.setVisibility(View.GONE);
         }
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, fragmentList);
         activity_baseoption_viewpage.setAdapter(myFragmentPagerAdapter);

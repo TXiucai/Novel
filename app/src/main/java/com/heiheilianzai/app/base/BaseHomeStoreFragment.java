@@ -105,6 +105,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     int mFirstIndex = -1;//上次列表滚动到的位置
     private boolean mIsNovelLabelSdk;
     private boolean mIsComicLabelSdk;
+    private boolean mIsCartoonLabelSdk;
     private String mChannelId = "";
     private String mTopChannelId = "";
     private int mPosition;
@@ -433,13 +434,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             type = BuildConfig.DEBUG ? BuildConfig.XAD_EVN_POS_HOME_COLUMN_CARTOON_DEBUG : BuildConfig.XAD_EVN_POS_HOME_COLUMN_CARTOON;
             for (int i = 0; i < ReaderConfig.VIDEO_SDK_AD.size(); i++) {
                 AppUpdate.ListBean listBean = ReaderConfig.VIDEO_SDK_AD.get(i);
-                if (TextUtils.equals(listBean.getPosition(), "1") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
-                    mIsComicLabelSdk = true;
+                if (TextUtils.equals(listBean.getPosition(), "30") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//漫画栏目间广告 第三方打开
+                    mIsCartoonLabelSdk = true;
                     sdkLableAd(recommendType, type);
                     return;
                 }
             }
-            if (!mIsComicLabelSdk) {
+            if (!mIsCartoonLabelSdk) {
                 localLabelAd(recommendType);
             }
         }
@@ -582,10 +583,18 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(String response) throws JSONException {
                 HomeRecommendBean homeRecommendBean = new Gson().fromJson(response, HomeRecommendBean.class);
                 List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
+                boolean isCartoonIconSDK = false;
+                for (int i = 0; i < ReaderConfig.VIDEO_SDK_AD.size(); i++) {
+                    AppUpdate.ListBean listBean = ReaderConfig.VIDEO_SDK_AD.get(i);
+                    if (TextUtils.equals(listBean.getPosition(), "29") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//动漫icon
+                        isCartoonIconSDK = true;
+                        break;
+                    }
+                }
                 //只有第一个频道才展示第三方icon
-                if (ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2 && mPosition == 0) {
+                if ((ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2 || (recommendType == 3 && isCartoonIconSDK)) && mPosition == 0) {//小说漫画
                     sdkIconAd(ryRecommend, recommendType, recomme_list);
-                } else {
+                } else{
                     initRecommend(ryRecommend, recomme_list);
                 }
             }
@@ -906,9 +915,16 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     public void onResponse(final String result) {
                         if (!StringUtils.isEmpty(result)) {
                             ShareUitls.putMainHttpTaskString(activity, kayCache, result);
+                            boolean isCartoonBannerSDK = false;
+                            for (int i = 0; i < ReaderConfig.VIDEO_SDK_AD.size(); i++) {
+                                AppUpdate.ListBean listBean = ReaderConfig.VIDEO_SDK_AD.get(i);
+                                if (TextUtils.equals(listBean.getPosition(), "28") && TextUtils.equals(listBean.getSdk_switch(), "2")) {//动漫banner
+                                    isCartoonBannerSDK = true;
+                                    break;
+                                }
+                            }
                             if (ReaderConfig.OTHER_SDK_AD.getBook_banner_index() == 2
-                                    || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2
-                                    || ReaderConfig.OTHER_SDK_AD.getVideo_banner_index() == 2) {
+                                    || ReaderConfig.OTHER_SDK_AD.getComic_banner_index() == 2 || isCartoonBannerSDK) {
                                 sdkBannerAd(kayCache, url, result, flag);
                             } else {
                                 getHeaderView(result, flag);

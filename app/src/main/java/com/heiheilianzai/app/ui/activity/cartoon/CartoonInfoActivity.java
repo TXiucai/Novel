@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.ImageView;
@@ -381,6 +382,11 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
     private void showLimitDialog(CartoonChapter chapterItem) {
         if (TextUtils.equals(chapterItem.getIs_vip(), "1")) {
             mTxGoldTitle.setText(getResources().getString(R.string.dialog_tittle_cartoon_coupon_vip));
+            SpannableString stringVip = new SpannableString(activity.getResources().getString(R.string.dialog_tittle_cartoon_coupon_vip));
+            UnderlineSpan span = new UnderlineSpan();
+            stringVip.setSpan(span, 8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            stringVip.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_ff8350)),8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            mTxGoldTitle.setText(stringVip);
             mTxGoldCharge.setText(getResources().getString(R.string.AcquireBaoyueActivity_title_vip));
         } else {
             mTxGoldTitle.setText(getResources().getString(R.string.dialog_tittle_cartoon_coupon));

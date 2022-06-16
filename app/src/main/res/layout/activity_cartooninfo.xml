@@ -131,10 +131,21 @@
                 android:gravity="center"
                 android:paddingRight="@dimen/dp_10">
 
-                <ImageView
-                    android:layout_width="@dimen/dimens_48dp"
-                    android:layout_height="@dimen/dimens_28dp"
-                    android:src="@mipmap/cartoon_vip" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_50dp"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/cartoon_vip_bg" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_48dp"
+                        android:layout_height="@dimen/dimens_24dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/cartoon_vip" />
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

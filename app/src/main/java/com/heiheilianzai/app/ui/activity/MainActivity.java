@@ -633,9 +633,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void ToStore(ToStore toStore) {
         if (toStore.PRODUCT == 1) {//小说
-            initViewPageChecked(home_store_layout, 1, true);
+            initViewPageChecked(home_store_layout, 0, true);
         } else if (toStore.PRODUCT == 2) {//漫画
-            initViewPageChecked(home_store_layout_comic, 2, true);
+            initViewPageChecked(home_store_layout_comic, 1, true);
         } else if (toStore.PRODUCT == 3) {//有声 or 推荐
             initViewPageChecked(home_discovery_layout, 3, true);
         }
