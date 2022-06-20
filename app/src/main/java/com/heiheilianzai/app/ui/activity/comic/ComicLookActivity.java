@@ -1583,12 +1583,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
     private void checkIsCoupon(ComicChapterItem chapterItem) {
         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
-        String is_vip = chapterItem.getIs_vip();
         String is_limited_free = chapterItem.getIs_limited_free();
-        if (!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) {
-            updateRecord();
-        } else {
-            if (Utils.isLogin(activity)) {
+        if (Utils.isLogin(activity)) {
+            if (!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) {
+                updateRecord();
+            } else {
                 if (chapterItem.isIs_buy_status()) {
                     updateRecord();
                 } else {
@@ -1606,23 +1605,19 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                         checkIsVip(chapterItem);
                     }
                 }
-            } else {
-                if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
-                    DialogRegister dialogRegister = new DialogRegister();
-                    dialogRegister.setFinish(true);
-                    dialogRegister.getDialogLoginPop(activity);
-                    dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
-                        @Override
-                        public void onRegisterBack(boolean isSuccess) {
-                            if (isSuccess) {
-                                checkIsCoupon(chapterItem);
-                            }
-                        }
-                    });
-                } else {
-                    updateRecord();
-                }
             }
+        } else {
+            DialogRegister dialogRegister = new DialogRegister();
+            dialogRegister.setFinish(true);
+            dialogRegister.getDialogLoginPop(activity);
+            dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
+                @Override
+                public void onRegisterBack(boolean isSuccess) {
+                    if (isSuccess) {
+                        checkIsCoupon(chapterItem);
+                    }
+                }
+            });
         }
     }
 

@@ -184,6 +184,12 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getInfo();
+    }
+
     @SuppressLint("NonConstantResourceId")
     @OnClick(value = {R.id.tx_vip_charge, R.id.tx_gold_charge, R.id.tx_gold_open, R.id.img_back})
     public void onClick(View view) {
@@ -341,10 +347,10 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
         String is_book_coupon_pay = chapterItem.getIs_book_coupon_pay();
         String is_vip = chapterItem.getIs_vip();
         String is_limited_free = chapterItem.getIs_limited_free();
-        if ((!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) || (TextUtils.equals(is_vip, "0") && TextUtils.equals(is_book_coupon_pay, "0"))) {
-            playVideo(chapterItem);
-        } else {
-            if (Utils.isLogin(mActivity)) {
+        if (Utils.isLogin(mActivity)) {
+            if ((!StringUtils.isEmpty(is_limited_free) && TextUtils.equals(is_limited_free, "1")) || (TextUtils.equals(is_vip, "0") && TextUtils.equals(is_book_coupon_pay, "0"))) {
+                playVideo(chapterItem);
+            } else {
                 if (chapterItem.isIs_buy_status()) {
                     playVideo(chapterItem);
                 } else {
@@ -362,20 +368,16 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
                         checkIsVip(chapterItem);
                     }
                 }
-            } else {
-                if (TextUtils.equals(is_book_coupon_pay, "1") || TextUtils.equals(is_vip, "1")) {
-                    DialogRegister dialogRegister = new DialogRegister();
-                    dialogRegister.setFinish(true);
-                    dialogRegister.getDialogLoginPop(mActivity);
-                    dialogRegister.setmRegisterBackListener(isSuccess -> {
-                        if (isSuccess) {
-                            checkIsCoupon(chapterItem);
-                        }
-                    });
-                } else {
-                    playVideo(chapterItem);
-                }
             }
+        } else {
+            DialogRegister dialogRegister = new DialogRegister();
+            dialogRegister.setFinish(true);
+            dialogRegister.getDialogLoginPop(mActivity);
+            dialogRegister.setmRegisterBackListener(isSuccess -> {
+                if (isSuccess) {
+                    checkIsCoupon(chapterItem);
+                }
+            });
         }
     }
 
@@ -385,7 +387,7 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
             SpannableString stringVip = new SpannableString(activity.getResources().getString(R.string.dialog_tittle_cartoon_coupon_vip));
             UnderlineSpan span = new UnderlineSpan();
             stringVip.setSpan(span, 8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            stringVip.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_ff8350)),8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            stringVip.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_ff8350)), 8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             mTxGoldTitle.setText(stringVip);
             mTxGoldCharge.setText(getResources().getString(R.string.AcquireBaoyueActivity_title_vip));
         } else {

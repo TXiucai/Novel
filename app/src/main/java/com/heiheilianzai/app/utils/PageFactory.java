@@ -1569,26 +1569,24 @@ public class PageFactory {
     }
 
     public void checkIsCoupon(ChapterItem chapterItem) {
-        if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
-            updateRecord();
-        } else {
-            if (Utils.isLogin(mActivity)) {
-                checkIsBuyCoupon(mActivity, chapterItem, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
+        if (Utils.isLogin(mActivity)) {
+            if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {
+                updateRecord();
             } else {
-                if (TextUtils.equals(chapterItem.getIs_book_coupon_pay(), "1") || TextUtils.equals(chapterItem.getIs_vip(), "1")) {
-                    DialogRegister dialogRegister = new DialogRegister();
-                    dialogRegister.setFinish(true);
-                    dialogRegister.getDialogLoginPop(mActivity);
-                    dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
-                        @Override
-                        public void onRegisterBack(boolean isSuccess) {
-                            if (isSuccess) {
-                                checkIsCoupon(chapterItem);
-                            }
-                        }
-                    });
-                }
+                checkIsBuyCoupon(mActivity, chapterItem, ShareUitls.getString(mActivity, PrefConst.NOVEL_API, "") + ReaderConfig.chapter_text);
             }
+        } else {
+            DialogRegister dialogRegister = new DialogRegister();
+            dialogRegister.setFinish(true);
+            dialogRegister.getDialogLoginPop(mActivity);
+            dialogRegister.setmRegisterBackListener(new DialogRegister.RegisterBackListener() {
+                @Override
+                public void onRegisterBack(boolean isSuccess) {
+                    if (isSuccess) {
+                        checkIsCoupon(chapterItem);
+                    }
+                }
+            });
         }
     }
 

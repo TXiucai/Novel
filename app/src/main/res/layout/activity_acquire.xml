@@ -20,7 +20,7 @@
 
             <LinearLayout
                 android:id="@+id/titlebar_back"
-                android:layout_width="@dimen/dimens_80dp"
+                android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dimens_40dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
@@ -47,10 +47,12 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/activity_acquire_tab"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_40"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dimens_90dp"
+                android:layout_marginRight="@dimen/dimens_90dp"
                 app:tabGravity="center"
-                android:layout_marginLeft="@dimen/dimens_80dp"
-                android:layout_marginRight="@dimen/dimens_80dp"
                 app:tabIndicatorColor="@color/color_ef966B"
                 app:tabIndicatorFullWidth="false"
                 app:tabMode="scrollable" />
