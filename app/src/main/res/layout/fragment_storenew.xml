@@ -24,7 +24,7 @@
                 android:layout_height="@dimen/dimens_30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dimens_10dp"
-                android:layout_weight="8"
+                android:layout_weight="1"
                 android:background="@drawable/shape_comic_store_search"
                 android:paddingLeft="@dimen/dimens_10dp">
 
@@ -59,6 +59,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_fili"
                 android:layout_width="@dimen/dimens_28dp"
                 android:layout_height="@dimen/dimens_28dp"
                 android:layout_gravity="center_vertical"

@@ -26,6 +26,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -98,6 +99,8 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
     public ViewPager mVpChannel;
     @BindView(R.id.rl_channel)
     public RelativeLayout mRlChannel;
+    @BindView(R.id.rl_fili)
+    public RelativeLayout mRlFili;
     FragmentManager fragmentManager;
     public String hot_word[];
     int hot_word_size, hot_word_position;
@@ -258,6 +261,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
 
     @Override
     protected void initView() {
+        mRlFili.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         mTbChannel.setSelectedTabIndicatorHeight(0);
         fragmentManager = getChildFragmentManager();
         if (NotchScreen.hasNotchScreen(getActivity())) {

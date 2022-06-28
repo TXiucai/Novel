@@ -155,15 +155,14 @@ public class DialogRegister {
                                 if (mRegisterBackListener != null) {
                                     mRegisterBackListener.onRegisterBack(true);
                                 }
-                                MyToash.Toash(activity, String.format(activity.getResources().getString(R.string.string_register_success), user_default_password));
                                 popupWindow.dismiss();
                                 EventBus.getDefault().post(new RegisterLoginWelfareEvent());
+                                new DialogSavePic().getDialogLoginPop(activity, name, user_default_password);
+                                ShareUitls.putString(App.getContext(), ReaderConfig.tinstall_code, "");
+                                TInstall.registered(App.getAppContext());
                             } catch (JSONException e) {
 
                             }
-
-                            ShareUitls.putString(App.getContext(), ReaderConfig.tinstall_code, "");
-                            TInstall.registered(App.getAppContext());
                         }
 
                         @Override

@@ -193,7 +193,6 @@ public class UpdateApp {
         updateHolder.dialog_updateapp_version.setText(activity.getText(R.string.app_update));
         updateHolder.dialog_updateapp_sec.setText(mAppUpdate.getMsg());
         updateHolder.dialog_updateapp_sec.setMovementMethod(ScrollingMovementMethod.getInstance());
-        updateHolder.tv_link.setText(mAppUpdate.website_android_title);
         SpannableString spannableString = new SpannableString(activity.getResources().getString(R.string.string_go_web));
         UnderlineSpan underlineSpan = new UnderlineSpan();
         spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

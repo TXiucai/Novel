@@ -37,7 +37,7 @@ gradle.ext {
     //传入波音平台源
     APP_SOURCE_BOYIN = "\"2\""
     //是否为免费
-    FREE_CHARGE = 'true'
+    FREE_CHARGE = 'false'
     // 友盟相关
     UMENG_KEY = "\"5cf72381570df38285000505\""
     UMENG_NAME = "\"default\""

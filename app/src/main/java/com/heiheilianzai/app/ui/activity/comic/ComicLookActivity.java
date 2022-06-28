@@ -656,6 +656,9 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     }
 
     private void showComicGuide() {
+        if (BuildConfig.free_charge) {
+            return;
+        }
         NewbieGuide.with(activity)
                 .setLabel("guideComicOpen")
                 .setShowCounts(1)//控制次数

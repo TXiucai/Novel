@@ -126,7 +126,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.list_ad_view_layout.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams layoutParams = viewHolder.list_ad_view_img.getLayoutParams();
 
-            layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+            layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth();
             layoutParams.height = layoutParams.width / 3;
             viewHolder.list_ad_view_img.setLayoutParams(layoutParams);
             if (PRODUCT) {

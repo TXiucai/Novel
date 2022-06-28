@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.App;
@@ -107,6 +109,8 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
     public TextView activity_book_info_content_views;
     @BindView(R.id.activity_comic_info_top_bookname)
     public TextView activity_comic_info_top_bookname;
+    @BindView(R.id.ll_down)
+    public LinearLayout mLldown;
 
     public String mBookId;
     public BaseBook mBaseBook;
@@ -201,6 +205,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
         EventBus.getDefault().register(this);
+        mLldown.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         layoutInflater = LayoutInflater.from(activity);
         WIDTH = (WIDTH - ImageUtil.dp2px(activity, 40)) / 3;//横向排版 图片宽度

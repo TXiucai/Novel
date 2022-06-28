@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.ui.dialog.ReadScreenSetDialog;
@@ -34,6 +35,8 @@ public class ReadSetActivity extends BaseActivity {
     public ToggleButton mBtScreen;
     @BindView(R.id.readActivity_auto_button)
     public ToggleButton mBtAuto;
+    @BindView(R.id.rl_auto_unlock)
+    public RelativeLayout mRlUnlock;
     private Context mContext;
     private ReadScreenSetDialog mReadScreenSetDialog;
 
@@ -49,7 +52,7 @@ public class ReadSetActivity extends BaseActivity {
         mReadScreenSetDialog = new ReadScreenSetDialog();
         String novelTime_screen = AppPrefs.getSharedString(this, "novelTime_Screen", "0");
         initScreenTime(novelTime_screen);
-
+        mRlUnlock.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         if (AppPrefs.getSharedBoolean(mContext, "novelVoice_ToggleButton", false)) {
             mBtVoice.setToggleOn();
         } else {

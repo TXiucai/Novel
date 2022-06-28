@@ -14,7 +14,9 @@ public class RabbitConfig {
     private static final String mAppkey_uat = BuildConfig.api_key_uat;
 
     public static final String DOMAIN_DEBUGG = "https://raw.githubusercontent.com/2116245820/hhlz-uat/main/hhlzuatapi.json";
+    public static final String JK_DOMAIN_DEBUGG = "https://raw.githubusercontent.com/tdopops/heiheilianzhai/main/uat-jk.json";
     public static final String DOMAIN_RELEASE = "https://raw.githubusercontent.com/tdopops/heiheilianzhai/main/hhlzline.json";
+    public static final String JK_DOMAIN_RELEASE = "https://raw.githubusercontent.com/tdopops/heiheilianzhai/main/hhlzline.json";
 
     private static final String mAppSecretKey_online = BuildConfig.api_secret_key;
     private static final String mAppSecretKey_uat = BuildConfig.api_secret_key_uat;

@@ -267,11 +267,12 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setBottomButtonImg(home_store_layout, R.drawable.selector_home_store);
         setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
         setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
-        if (getAppUpdate() != null && getBoyinSwitch() == 1) {
+        if (getBoyinSwitch()) {
+            home_novel_layout.setVisibility(View.GONE);
+        } else {
+            home_novel_layout.setVisibility(View.VISIBLE);
             setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
             home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
-        } else {
-            setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_discovery);
         }
         setBottomButtonImg(home_mine_layout, R.drawable.selector_home_mine);
     }
@@ -298,7 +299,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         mFragmentList.add(stroeNewFragmentComic);
         stroeNewFragmentCartoon = new StroeNewFragmentCartoon();
         mFragmentList.add(stroeNewFragmentCartoon);
-        if (getAppUpdate() != null && getBoyinSwitch() == 1) {
+        if (getBoyinSwitch()) {
+            loadYouSheng = false;
+        } else {
             homeBoYinFragment = new HomeBoYinFragment();
             Bundle bundle = new Bundle();
             bundle.putString(HomeBoYinFragment.BUNDLE_URL_KAY, getBoYinUrl());
@@ -306,10 +309,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             mFragmentList.add(homeBoYinFragment);
             loadYouSheng = true;
             //showYouShengGuideOne();
-        } else {
-            discoveryFragment = new DiscoveryNewFragment();
-            mFragmentList.add(discoveryFragment);
-            loadYouSheng = false;
         }
         mineFragment = new MineNewFragment();
         mineFragment.setBookLists(bookLists);
@@ -334,7 +333,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 initViewPageChecked(home_novel_layout, 2, true);
                 break;
             case 3:
-                initViewPageChecked(home_discovery_layout, 3, true);
+                if (getBoyinSwitch()){
+                    initViewPageChecked(home_mine_layout, 3, true);
+                }else {
+                    initViewPageChecked(home_discovery_layout, 3, true);
+                }
                 break;
             case 4:
                 initViewPageChecked(home_mine_layout, 4, true);
@@ -369,9 +372,16 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         }
                         break;
                     case R.id.home_mine_layout:
-                        if (possition != 4) {
-                            setChangedView(4, true);
-                            EventBus.getDefault().post(new AcceptMineFragment());
+                        if (getBoyinSwitch()) {
+                            if (possition != 3) {
+                                setChangedView(3, true);
+                                EventBus.getDefault().post(new AcceptMineFragment());
+                            }
+                        } else {
+                            if (possition != 4) {
+                                setChangedView(4, true);
+                                EventBus.getDefault().post(new AcceptMineFragment());
+                            }
                         }
                         break;
                 }
@@ -921,8 +931,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     /**
      * 波音是否开启
      */
-    private int getBoyinSwitch() {
-        return getAppUpdate().boyin_switch;
+    private Boolean getBoyinSwitch() {
+        return BuildConfig.free_charge;
     }
 
     /**
@@ -965,11 +975,16 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      * 动态设置radio button selector
      */
     private void setRBSelectedState() {
-        String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
-        RadioButton[] bytes = {home_novel_layout, home_store_layout, home_store_layout_comic, home_discovery_layout, home_mine_layout};
-        int[] bytesmipNormal = {R.mipmap.main_rb_menu_normal_2, R.mipmap.comic1, R.mipmap.main_rb_menu_normal_1, R.mipmap.activity_home_boyin_normal, R.mipmap.activity_home_mine_normal};
-        int[] bytesmipSelected = {R.mipmap.main_rb_menu_selected_2, R.mipmap.comic2, R.mipmap.main_rb_menu_selected_1, R.mipmap.activity_home_boyin_press, R.mipmap.activity_home_mine_press};
-        String[] titles = {getString(R.string.noverfragment_xiaoshuo), getString(R.string.noverfragment_manhua), getString(R.string.MainActivity_cartoon), getString(R.string.MainActivity_boyin), getString(R.string.MainActivity_my)};
+        String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hhlz/";
+        RadioButton[] bytes;
+        String[] titles;
+        if (getBoyinSwitch()) {
+            bytes = new RadioButton[]{home_novel_layout, home_store_layout, home_store_layout_comic, home_mine_layout};
+            titles = new String[]{getString(R.string.noverfragment_xiaoshuo), getString(R.string.noverfragment_manhua), getString(R.string.MainActivity_cartoon), getString(R.string.MainActivity_my)};
+        } else {
+            bytes = new RadioButton[]{home_novel_layout, home_store_layout, home_store_layout_comic, home_discovery_layout, home_mine_layout};
+            titles = new String[]{getString(R.string.noverfragment_xiaoshuo), getString(R.string.noverfragment_manhua), getString(R.string.MainActivity_cartoon), getString(R.string.MainActivity_boyin), getString(R.string.MainActivity_my)};
+        }
 
         for (int i = 0; i < bytes.length; i++) {
             String picNameNormal = "rb_btn_normal_" + i + ".png";
@@ -1096,8 +1111,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
      * 主动删掉 之前保存的 bottom icons
      */
     private void deleteBottomIcons() {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
-        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hhlz/";
         File file1 = new File(dirPath);
         File file2 = new File(outPath);
         if (file1.exists()) {
@@ -1160,7 +1175,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     }
 
     private void downloadMenus(String url, String fileName) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hhlz/decode/";
         File dest = new File(dirPath, fileName);
         Request request = new Request.Builder().url(url).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -1203,8 +1218,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     int iconCount = 0;
 
     private void decryptFile(String fileName) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/decode/";
-        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pictures/hhlz/";
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hhlz/decode/";
+        String outPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hhlz/";
         File dest = new File(dirPath, fileName);
         File outp = new File(outPath);
         if (!outp.exists()) {
@@ -1220,8 +1235,15 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
         }
         iconCount++;
-        if (iconCount == 10) {
-            MainActivity.this.runOnUiThread(this::setRBSelectedState);
+        if (getBoyinSwitch()){
+            if (iconCount == 8) {
+                MainActivity.this.runOnUiThread(this::setRBSelectedState);
+            }
+        }else {
+            if (iconCount == 10) {
+                MainActivity.this.runOnUiThread(this::setRBSelectedState);
+            }
         }
+
     }
 }

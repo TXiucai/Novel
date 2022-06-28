@@ -46,6 +46,7 @@ import androidx.fragment.app.FragmentManager;
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.ChapterManager;
@@ -217,7 +218,6 @@ public class ReadActivity extends BaseReadActivity {
     @BindView(R.id.rl_listen)
     public RelativeLayout activity_read_listen;
 
-
     private ReadSpeakManager readSpeakManager;
     private ReadSpeakDialogFragment readSpeakDialogFragment;
     private FragmentManager mFragmentManager;
@@ -347,6 +347,7 @@ public class ReadActivity extends BaseReadActivity {
         super.onCreate(savedInstanceState);
         ReaderConfig.BANG_SCREEN = NotchScreen.hasNotchScreen(this);
         mReadStarTime = System.currentTimeMillis();
+        titlebar_down.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         int MHeight = ScreenSizeUtils.getInstance(this).getScreenHeight();
         //首次阅读 显示引导图
         if (ShareUitls.getString(ReadActivity.this, "FirstRead", "yes").equals("yes")) {
@@ -494,7 +495,7 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void next() {
-        if (TextUtils.equals(ReaderConfig.TTS_OPEN, "2")) {
+        if (TextUtils.equals(ReaderConfig.TTS_OPEN, "2") && !BuildConfig.free_charge) {
             activity_read_listen.setVisibility(View.VISIBLE);
             activity_read_listen_out.setVisibility(View.VISIBLE);
         } else {
@@ -953,14 +954,16 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     private void showNovelGuide() {
-        NewbieGuide.with(activity)
-                .setLabel("guideNovelOpen")
-                .setShowCounts(1)//控制次数
-                .addGuidePage(GuidePage.newInstance()
-                        .addHighLight(bookpop_bottom)
-                        .setLayoutRes(R.layout.novel_look_guide, R.id.img_know)
-                        .setEverywhereCancelable(false))
-                .show();
+        if (!BuildConfig.free_charge) {
+            NewbieGuide.with(activity)
+                    .setLabel("guideNovelOpen")
+                    .setShowCounts(1)//控制次数
+                    .addGuidePage(GuidePage.newInstance()
+                            .addHighLight(bookpop_bottom)
+                            .setLayoutRes(R.layout.novel_look_guide, R.id.img_know)
+                            .setEverywhereCancelable(false))
+                    .show();
+        }
     }
 
     //设置菜单

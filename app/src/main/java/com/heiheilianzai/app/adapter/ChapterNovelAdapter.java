@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.model.ChapterItem;
@@ -61,6 +62,8 @@ public class ChapterNovelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         viewHolder.title.setText(chapterItem.getChapter_title());
         viewHolder.coupon.setText(coupon_pay_price + mContext.getResources().getString(R.string.coupon_open));
+        viewHolder.coupon.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
+        viewHolder.vip.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         if (!StringUtils.isEmpty(chapterItem.getIs_limited_free()) && TextUtils.equals(chapterItem.getIs_limited_free(), "1")) {//设置免费
             viewHolder.vip.setBackgroundResource(R.mipmap.limited_free);
             viewHolder.coupon.setVisibility(View.GONE);

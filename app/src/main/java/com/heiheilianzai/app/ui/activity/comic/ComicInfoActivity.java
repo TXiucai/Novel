@@ -155,6 +155,8 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     public TextView tx_comic_flag;
     @BindView(R.id.list_ad_view_img)
     ImageView list_ad_view_img;
+    @BindView(R.id.ll_comic_down)
+            LinearLayout mLlDown;
     Activity activity;
     BaseComic baseComic, baseComicLocal;
     String comic_id;
@@ -280,6 +282,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
         }
         EventBus.getDefault().register(this);
+        mLlDown.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ry_comic_category.setLayoutManager(linearLayoutManager);

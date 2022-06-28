@@ -26,14 +26,18 @@ var localDomains: List<String>? = null
 /**
  * 并发请求域名
  */
-private suspend fun requestDomains(scope: CoroutineScope, domains: List<String>, onComplete: OnCompletUrl) {
+private suspend fun requestDomains(
+    scope: CoroutineScope,
+    domains: List<String>,
+    onComplete: OnCompletUrl
+) {
 
     val listTask = domains.map { domain ->
         scope.Get<String>(
-                "${domain}/domain/check",
-                absolutePath = true,
-                tag = RESPONSE,
-                uid = 0
+            "${domain}/domain/check",
+            absolutePath = true,
+            tag = RESPONSE,
+            uid = 0
         ).transform {
             App.setBaseUrl(domain)
             NetConfig.host = domain
@@ -50,10 +54,10 @@ private suspend fun requestDomains(scope: CoroutineScope, domains: List<String>,
 private suspend fun requestH5Domains(scope: CoroutineScope, domains: List<String>) {
     val listTask = domains.map { domain ->
         scope.Get<String>(
-                "${domain}/images/default-loading.jpg",
-                absolutePath = true,
-                tag = RESPONSE,
-                uid = 0
+            "${domain}/images/default-loading.jpg",
+            absolutePath = true,
+            tag = RESPONSE,
+            uid = 0
         ).transform {
             App.setBaseh5Url(domain)
             NetConfig.host = domain
@@ -108,33 +112,41 @@ fun getFastH5Url(h5domains: List<String>) {
 @JvmOverloads
 fun requestThree(onThirdComlete: OnThirdComlete, onThirdError: OnThirdError) {
     val path = if (BuildConfig.DEBUG) {
-        RabbitConfig.DOMAIN_DEBUGG
+        if (BuildConfig.free_charge) {
+            RabbitConfig.JK_DOMAIN_DEBUGG
+        } else {
+            RabbitConfig.DOMAIN_DEBUGG
+        }
     } else {
-        RabbitConfig.DOMAIN_RELEASE
+        if (BuildConfig.free_charge) {
+            RabbitConfig.JK_DOMAIN_RELEASE
+        } else {
+            RabbitConfig.DOMAIN_RELEASE
+        }
     }
     val okHttpClient = OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
+        .retryOnConnectionFailure(true)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
+        .build()
     val request = Request.Builder()
-            .url(path)
-            .get()
-            .addHeader("Accept", "application/json")
-            .addHeader("Connection", "close").build()
+        .url(path)
+        .get()
+        .addHeader("Accept", "application/json")
+        .addHeader("Connection", "close").build()
     okHttpClient
-            .newCall(request)
-            .enqueue(object : Callback {
-                override fun onResponse(arg0: Call, response: Response) {
-                    onThirdResponse(response, onThirdComlete)
-                }
+        .newCall(request)
+        .enqueue(object : Callback {
+            override fun onResponse(arg0: Call, response: Response) {
+                onThirdResponse(response, onThirdComlete)
+            }
 
-                override fun onFailure(arg0: Call, arg1: IOException) {
-                    val s = arg1.toString()
-                    onThirdError.onThirdCError()
-                }
-            })
+            override fun onFailure(arg0: Call, arg1: IOException) {
+                val s = arg1.toString()
+                onThirdError.onThirdCError()
+            }
+        })
 }
 
 private fun onThirdResponse(response: Response, onThirdComlete: OnThirdComlete) {
@@ -145,7 +157,8 @@ private fun onThirdResponse(response: Response, onThirdComlete: OnThirdComlete) 
     if (result == null) {
         return
     }
-    val decryptThirdDomainString = AESUtil.decrypt(result.trim(), AESUtil.API_ASE_KEY, AESUtil.API_IV)
+    val decryptThirdDomainString =
+        AESUtil.decrypt(result.trim(), AESUtil.API_ASE_KEY, AESUtil.API_IV)
     if (decryptThirdDomainString != null) {
         val bootStrap = Gson().fromJson(decryptThirdDomainString, ThreeDomainEntity::class.java)
         if (bootStrap != null && bootStrap.api_domains.size > 0) {

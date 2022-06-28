@@ -1,12 +1,12 @@
 gradle.ext {
     //版本号
-    VERSION_CODE = 20200625
+    VERSION_CODE = 20220625
 
     //版本名
-    VERSION_NAME = "2.2.2"
+    VERSION_NAME = "1.0.0"
 
     // 应用程序包名
-    APPLICATION_ID = 'com.hello.pumpkin'
+    APPLICATION_ID = 'com.comic.jk'
 
     MANIFESTPLACEHOLDERS = [
             JPUSH_PKGNAME       : APPLICATION_ID,
@@ -19,12 +19,12 @@ gradle.ext {
             OPPO_APPKEY         : "OP-3dcf9da320e44230ac43eec57db631cb", // OPPO平台注册的appkey
             OPPO_APPID          : "OP-30155632", // OPPO平台注册的appid
             OPPO_APPSECRET      : "OP-b95aa885ab1345cf8aed64b198cd7d8b", //OPPO平台注册的appsecret
-            UMENG_KEY           : "5e60b7fd167edd6aa900088f",//友盟 KEY
-            UMENG_NAME          : "com.hello.pumpkin", //友盟 NAME
+            UMENG_KEY           : "62b27b4305844627b5bf1ac2",//友盟 KEY
+            UMENG_NAME          : APPLICATION_ID, //友盟 NAME
             ALI_APP_KEY         : "27537597", //阿里云推送 KEY
             ALI_APP_SECRET      : "cba287b79cf881606ad8ab748b0fc3af", //阿里云推送 SECRET
             APP_KEY_OPEN_INSTALL: "kyxjqz",// openInstall
-            SA_SERVER_SCHEME    : "",//神策SCHEME
+            SA_SERVER_SCHEME    : "sa2b123708",//神策SCHEME
             TINSTALL_KEY        : "",// TInstall key
     ]
 
@@ -36,13 +36,13 @@ gradle.ext {
     //是否为免费
     FREE_CHARGE = 'true'
     // 签名相关
-    STORE_FILE = 'configs/sign/x.jks'
-    STORE_PASSWORD = 'x'
-    KEY_ALIAS = 'x'
-    KEY_PASSWORD = 'x'
+    STORE_FILE = 'configs/sign/jk.jks'
+    STORE_PASSWORD = 'jk123456'
+    KEY_ALIAS = 'key0'
+    KEY_PASSWORD = 'jk123456'
     // 友盟相关
-    UMENG_KEY = "\"5e60b7fd167edd6aa900088f\""
-    UMENG_NAME = "\"com.hello.pumpkin\""
+    UMENG_KEY = "\"62b27b4305844627b5bf1ac2\""
+    UMENG_NAME = "\"com.comic.jk\""
     // tinstall key
     TINSTALL_KEY = "\"\""
     //微信等
@@ -52,8 +52,20 @@ gradle.ext {
     APP_QQ_SECRET = "\"20a1d89d8d265e90d6825be24e013da0\""
     // Server host
     DOMAIN_HOSTS = "\"https://api.a3559f.com\""
-    API_HOSTS = "\"http://api.d31f3c3.com\""
-    API_HOSTS_UAT = "\"http://api.2a7a93.com\""
+    API_HOSTS = "{" +
+            "\"https://api.x51d23.com\"," +
+            "\"https://api.orbopv.com\"," +
+            "\"https://api.he0jys.com\"," +
+            "\"https://api.1rephm.com\"," +
+            "\"https://api.askoc8.com\"," +
+            "}"
+    API_HOSTS_UAT = "{" +
+            "\"https://uat-jk-api1.08bea5.com\"," +
+            "\"https://uat-jk-api2.08bea5.com\"," +
+            "\"https://uat-jk-api3.08bea5.com\"," +
+            "\"https://uat-jk-api4.08bea5.com\"," +
+            "\"https://uat-jk-api5.08bea5.com\"," +
+            "}"
     DOMAIN_HOSTS_RESERVE = "\"https://api.ffee7f.com@https://api.fcef46.com\""
     // API key  服务器验证相关配置
     API_KEY = "\"faetheiy8ahzeiPh2ier9ba0uash3ohs\""
@@ -76,9 +88,9 @@ gradle.ext {
     AD_APPKEY = "\"\""
     AD_SECRET = "\"\""
     //神策
-    SA_SERVER_URL = "\"\""
-    SA_SERVER_URL_UAT = "\"\""
-    SA_SERVER_APP_ID = "\"\""
+    SA_SERVER_URL_UAT = "\"https://shence.jiushengliye.com/sa?project=YSA27TEST\""
+    SA_SERVER_URL = "\"https://shence.jiushengliye.com/sa?project=YDA44\""
+    SA_SERVER_APP_ID = "\"A71\""
 
     //uat
     XAD_ENV_APP_ID_DEBUG = "\"k75b488bb7d834da8b3e0e3739247b977\""//APP_id

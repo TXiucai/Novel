@@ -124,6 +124,7 @@
             toggle:tbOnColor="@color/mainColor" />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_auto_unlock"
         android:layout_marginTop="@dimen/dimens_1dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_64dp"

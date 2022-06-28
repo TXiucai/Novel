@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.sensorsdata.analytics.android'
-apply from: 'configs/configpumpkin.gradle'
+apply from: 'configs/configheiheilianzai.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -138,8 +138,8 @@ android {
             storePassword gradle.ext.KEY_PASSWORD
         }
 
-        pumpkinRelease { // 南瓜阅读
-            getProductConfig(pumpkin)
+        jkRelease { //jk
+            getProductConfig(jk)
             keyAlias gradle.ext.KEY_ALIAS
             keyPassword gradle.ext.STORE_PASSWORD
             storeFile file(gradle.ext.STORE_FILE)
@@ -153,9 +153,9 @@ android {
         // 嘿嘿连载
         heiheilianzai getProductConfig(heiheilianzai)
         getSigningConfig(heiheilianzai)
-        //南瓜阅读
-        pumpkin getProductConfig(pumpkin)
-        getSigningConfig(pumpkin)
+        //jk
+        jk getProductConfig(jk)
+        getSigningConfig(jk)
     }
 
     buildTypes {
@@ -206,6 +206,7 @@ android {
         main {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
+        jk.res.srcDir'src/jk'
     }
 
     compileOptions {
@@ -472,11 +473,11 @@ ProductFlavor getSigningConfig(ProductFlavor productFlavors) {
         case heiheilianzai.toLowerCase(): // 嘿嘿连载
             productFlavors.signingConfig android.signingConfigs.heiheilianzaiRelease
             break
-        case pumpkin.toLowerCase(): // 南瓜阅读
-            productFlavors.signingConfig android.signingConfigs.pumpkinRelease
+        case jk.toLowerCase(): //jk
+            productFlavors.signingConfig android.signingConfigs.jkRelease
             break
         default:
-            productFlavors.signingConfig android.signingConfigs.pumpkinRelease
+            productFlavors.signingConfig android.signingConfigs.heiheilianzaiRelease
             break
     }
     return productFlavors

@@ -188,6 +188,7 @@
     <string name="ShareActivity_title">我的分享</string>
     <string name="ShareActivity_save_qr_code">保存二维码</string>
     <string name="ShareActivity_qr_code_file_name">heiheilianzai_share.jpg</string>
+    <string name="pic_name">acount.jpg</string>
     <string name="ShareActivity_save_qr_toast">已保存二维码到相册</string>
     <string name="ShareActivity_save">分享</string>
     <string name="ShareActivity_save_toast">已保存分享地址到粘贴板</string>
@@ -595,8 +596,13 @@
     <string name="string_edit_address_success">收货地址修改成功</string>
     <string name="string_registe_fast">快速注册</string>
     <string name="string_register_fast">一键注册</string>
-    <string name="string_registe_have">已有账号？</string>
+    <string name="string_register_save_pic">保存图片，用于登录个人账号</string>
+    <string name="string_registe_have">我有账号</string>
+    <string name="string_registe_name">账号</string>
     <string name="string_registe_login">立即登陆</string>
+    <string name="string_registe_login_dialog">去登陆>></string>
+    <string name="string_registe_bind_phone">去绑定>></string>
+    <string name="string_registe_bind_phone_no">还未绑定手机号</string>
     <string name="string_register_error">用户名不符合规定，请重新输入</string>
     <string name="string_register_success">恭喜您，注册成功，您的默认登录密码为：%s</string>
     <string name="string_register_hint">请输入用户名</string>
@@ -689,4 +695,7 @@
     <string name="string_continue_play">继续播放</string>
     <string name="history_cartoon_play">上次观看到:%s</string>
     <string name="play_video_error">播放链接出问题了</string>
+    <string name="string_save_tip">用于登录个人账号，请勿删除</string>
+    <string name="string_jk_acount">JK账号</string>
+    <string name="string_heihei_acount">嘿嘿账号</string>
 </resources>

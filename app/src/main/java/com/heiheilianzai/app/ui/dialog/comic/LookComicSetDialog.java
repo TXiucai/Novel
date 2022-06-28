@@ -6,7 +6,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.utils.AppPrefs;
 import com.heiheilianzai.app.utils.BrightnessUtil;
@@ -23,10 +25,12 @@ public class LookComicSetDialog {
     public static void getLookComicSetDialog(Activity activity) {
         Dialog bottomDialog = new Dialog(activity, R.style.BottomDialog);
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_lookcomicset, null);
+        RelativeLayout dialog_unlock = view.findViewById(R.id.rl_unlock);
         ToggleButton dialog_lookcomicset_fanye_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_fanye_ToggleButton);
         ToggleButton dialog_lookcomicset_yejian_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_yejian_ToggleButton);
         ToggleButton dialog_lookcomicset_small_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_small_ToggleButton);
         ToggleButton dialog_lookcomicset_open_ToggleButton = view.findViewById(R.id.dialog_lookcomicset_open_ToggleButton);
+        dialog_unlock.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         if (AppPrefs.getSharedBoolean(activity, "comicOpen_ToggleButton", false)) {
             dialog_lookcomicset_open_ToggleButton.setToggleOn();
         } else {

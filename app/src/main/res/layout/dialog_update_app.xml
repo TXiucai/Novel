@@ -1,45 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:ignore="NamespaceTypo">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@mipmap/update_bg"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_70dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_70dp"
-                android:layout_marginBottom="@dimen/dimens_minus_2dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/update_top" />
-
-            <TextView
-                android:id="@+id/tv_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_90dp"
-                android:layout_marginTop="@dimen/dimens_35dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/dimens_12sp" />
-        </RelativeLayout>
 
         <TextView
             android:id="@+id/dialog_updateapp_version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:gravity="center"
+            android:layout_marginTop="@dimen/dimens_100dp"
             android:paddingTop="@dimen/dimens_10dp"
             android:singleLine="true"
+            android:textStyle="bold"
             android:text="@string/app_update"
             android:textColor="@color/color_282727"
             android:textSize="@dimen/dimens_16dp" />
@@ -48,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimens_200dp"
             android:layout_below="@+id/imageView"
-            android:background="@drawable/shape_sol_ffffff_cor_bottom_16"
             android:orientation="vertical">
 
             <TextView
@@ -141,13 +122,13 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/img_close"
-            android:layout_width="@dimen/dimens_25dp"
-            android:layout_height="@dimen/dimens_25dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dimens_25dp"
-            android:src="@mipmap/ic_home_notice_close" />
     </LinearLayout>
-</RelativeLayout>
+
+    <ImageView
+        android:id="@+id/img_close"
+        android:layout_width="@dimen/dimens_25dp"
+        android:layout_height="@dimen/dimens_25dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimens_25dp"
+        android:src="@mipmap/ic_home_notice_close" />
+</LinearLayout>
