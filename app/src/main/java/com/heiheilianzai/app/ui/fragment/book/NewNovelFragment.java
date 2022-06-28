@@ -705,6 +705,7 @@ public class NewNovelFragment extends Fragment implements View.OnClickListener, 
             case R.id.fragment_bookshelf_go_shelf:
                 //去书城逛逛
                 EventBus.getDefault().post(new ToStore(1));
+                activity.finish();
                 break;
         }
     }

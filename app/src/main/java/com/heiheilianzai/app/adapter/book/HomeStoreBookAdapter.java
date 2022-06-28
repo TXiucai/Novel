@@ -197,7 +197,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                     activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                             .putExtra("OPTION", LOOKMORE)
                             .putExtra("IS_TOP_YEAR", isTopYear)
-                            .putExtra("PRODUCT", true)
+                            .putExtra("PRODUCT", 1)
                             .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                             .putExtra("recommend_id", stroreComicLable.recommend_id));
                 } catch (Exception E) {

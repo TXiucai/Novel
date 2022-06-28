@@ -72,6 +72,16 @@ public class CartoonConfig {
     public static final String CARTOON_play_log = "/comic-video/add-video-watch-log";
 
     /**
+     * 上传动漫点击记录
+     */
+    public static final String CARTOON_click_log = "/comic-video/add-video-behavior-log";
+
+    /**
+     * 上传动漫播放次数记录
+     */
+    public static final String CARTOON_play_num_log = "/comic-video/add-video-behavior-read-log";
+
+    /**
      * 上传动漫播放节点
      */
     public static final String CARTOON_play_node = "/comic-video/update-play-node";

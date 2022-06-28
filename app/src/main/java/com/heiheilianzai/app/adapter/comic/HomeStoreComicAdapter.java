@@ -187,7 +187,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     try {
                         activity.startActivity(new Intent(activity, BaseOptionActivity.class)
                                 .putExtra("OPTION", LOOKMORE)
-                                .putExtra("PRODUCT", false)
+                                .putExtra("PRODUCT", 2)
                                 .putExtra("IS_TOP_YEAR", isTopYear)
                                 .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
                                 .putExtra("recommend_id", stroreComicLable.recommend_id)

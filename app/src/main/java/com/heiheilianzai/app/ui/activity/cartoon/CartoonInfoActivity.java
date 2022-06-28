@@ -443,6 +443,17 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
                     }
                 }
         );
+        HttpUtils.getInstance(mActivity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_click_log, json, true, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+
+                    }
+                }
+        );
     }
 
     private void initInfo(String result) {
@@ -532,6 +543,16 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
         params.putExtraParams("chapter_id", cartoonChapter.getChapter_id());
         String json = params.generateParamsJson();
         HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_log, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(String result) {
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
+        HttpUtils.getInstance(this).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + CartoonConfig.CARTOON_play_num_log, json, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String result) {
                     }

@@ -488,9 +488,9 @@ public class ConvenientBanner<T> extends LinearLayout {
         switch (bannerItemStore.getAction()) {
             case 1:
                 Intent intent;
-                if (flag == 2 || flag == 0) {
+                if (flag == 1 || flag == 0) {
                     intent = BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
-                } else if (flag == 1) {
+                } else if (flag == 2) {
                     intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);
                 } else {
                     intent = CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), content);

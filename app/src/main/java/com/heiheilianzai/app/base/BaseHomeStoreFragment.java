@@ -594,8 +594,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 //只有第一个频道才展示第三方icon
                 if ((ReaderConfig.OTHER_SDK_AD.getIcon_index() == 2 || (recommendType == 3 && isCartoonIconSDK)) && mPosition == 0) {//小说漫画
                     sdkIconAd(ryRecommend, recommendType, recomme_list);
-                } else{
-                    initRecommend(ryRecommend, recomme_list);
+                } else {
+                    initRecommend(ryRecommend, recomme_list, recommendType);
                 }
             }
 
@@ -653,20 +653,20 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                             }
                         }
                     }
-                    initRecommend(recyclerView, localList);
+                    initRecommend(recyclerView, localList, recommendType);
                 } catch (Exception e) {
-                    initRecommend(recyclerView, localList);
+                    initRecommend(recyclerView, localList, recommendType);
                 }
             }
 
             @Override
             public void onRequestFailed(int i, String s) {
-                initRecommend(recyclerView, localList);
+                initRecommend(recyclerView, localList, recommendType);
             }
         });
     }
 
-    private void initRecommend(RecyclerView recyclerView, List<HomeRecommendBean.RecommeListBean> recomme_list) {
+    private void initRecommend(RecyclerView recyclerView, List<HomeRecommendBean.RecommeListBean> recomme_list, int recommendType) {
         if (recomme_list == null || recomme_list.size() == 0) {
             return;
         }
@@ -683,7 +683,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 int redirect_type = Integer.valueOf(recommeListBean.getRedirect_type());//默认为0  内置应用  1为内置浏览器   2为外部浏览器
                 int user_parame_need = Integer.valueOf(recommeListBean.getUser_parame_need());//用户参数是否需要拼接 1为不需要   2为强制需要拼接
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
-                intent.putExtra("PRODUCT", recommend_type == 0);
+                intent.putExtra("PRODUCT", recommendType);
                 if (jump_type == 0 || jump_type == 5) {
                     if (Utils.isLogin(activity) && user_parame_need == 2 && !jump_url.contains("&uid=")) {
                         jump_url += "&uid=" + Utils.getUID(activity);

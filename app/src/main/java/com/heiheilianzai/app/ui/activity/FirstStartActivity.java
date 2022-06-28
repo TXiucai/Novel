@@ -188,10 +188,10 @@ public class FirstStartActivity extends BaseButterKnifeActivity {
                 final Recommend.RecommendProduc recommendProduc = getItem(i);
                 int def = R.mipmap.book_def_v;
                 if (recommendProduc.book_id != null) {
-                    activity_home_flag.setVisibility(View.GONE);
+                    activity_home_flag.setText(getString(R.string.noverfragment_xiaoshuo));
                     def = R.mipmap.book_def_v;
                 } else {
-                    activity_home_flag.setVisibility(View.VISIBLE);
+                    activity_home_flag.setText(getString(R.string.noverfragment_manhua));
                     def = R.mipmap.comic_def_v;
                 }
                 MyPicasso.GlideImage(activity, recommendProduc.cover, activity_home_viewpager_classfy_GridView_img, WIDTH, HEIGHT, def);

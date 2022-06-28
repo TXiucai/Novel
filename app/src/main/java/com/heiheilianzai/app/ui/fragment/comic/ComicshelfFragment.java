@@ -196,6 +196,7 @@ public class ComicshelfFragment extends Fragment {
             case R.id.fragment_bookshelf_go_shelf:
                 //去书城逛逛
                 EventBus.getDefault().post(new ToStore(2));
+                activity.finish();
                 break;
 
         }
