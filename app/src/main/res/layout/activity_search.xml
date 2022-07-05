@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main_vitualkey"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -13,7 +12,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_marginTop="@dimen/dimens_30dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,15 +89,13 @@
             </LinearLayout>
 
 
-
-
             <com.jcodecraeer.xrecyclerview.XRecyclerView
                 android:id="@+id/activity_search_keywords_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:visibility="gone"
-                android:listSelector="@drawable/selector_listview_item" />
+                android:listSelector="@drawable/selector_listview_item"
+                android:visibility="gone" />
 
 
             <com.heiheilianzai.app.view.ObservableScrollView
@@ -112,29 +110,37 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:orientation="vertical">
-
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/ll_hotwords"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:text="@string/SearchActivity_hotsearch"
-                        android:textColor="@color/gray"
-                        android:textSize="@dimen/public_10_dp" />
+                        android:orientation="vertical">
 
-                    <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
-                        android:id="@+id/activity_search_hotwords_grid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:gravity="center"
-                        android:horizontalSpacing="5dp"
-                        android:numColumns="2" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:padding="@dimen/dp_10"
+                            android:text="@string/SearchActivity_hotsearch"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/public_10_dp" />
+
+                        <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
+                            android:id="@+id/activity_search_hotwords_grid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:horizontalSpacing="5dp"
+                            android:numColumns="2"
+                            android:padding="@dimen/dp_10" />
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@color/white"
+                        android:background="@mipmap/lable_bg"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:text="@string/SearchActivity_hotrank"
@@ -153,7 +159,5 @@
                 </LinearLayout>
             </com.heiheilianzai.app.view.ObservableScrollView>
         </FrameLayout>
-
-
     </LinearLayout>
 </RelativeLayout>

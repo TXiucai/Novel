@@ -112,8 +112,14 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 activity_baseoption_viewpage.setCurrentItem(2);
                 break;
             case R.id.channel_bar_cartoon_text:
-                setTabColor(3);
-                activity_baseoption_viewpage.setCurrentItem(3);
+                if (BuildConfig.free_charge){
+                    setTabColor(2);
+                    activity_baseoption_viewpage.setCurrentItem(2);
+                }else {
+                    setTabColor(3);
+                    activity_baseoption_viewpage.setCurrentItem(3);
+                }
+
                 break;
             case R.id.activity_baseoption_edit:
                 mIsEditOpen = !mIsEditOpen;
@@ -145,7 +151,11 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
                 channel_bar_female_text.setTextColor(getResources().getColor(R.color.color_606060));
                 channel_bar_yousheng_text.setTextColor(getResources().getColor(R.color.mainColor));
-                channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.color_606060));
+                if (BuildConfig.free_charge){
+                    channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.mainColor));
+                }else {
+                    channel_bar_cartoon_text.setTextColor(getResources().getColor(R.color.color_606060));
+                }
                 break;
             case 3:
                 channel_bar_male_text.setTextColor(getResources().getColor(R.color.color_606060));
@@ -181,6 +191,7 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
             AppUpdate mAppUpdate = new Gson().fromJson(str, AppUpdate.class);
             boYinSwitch = mAppUpdate.getBoyin_switch();
         }
+        boYinSwitch = BuildConfig.free_charge ? 0 : 1;
         fragmentList = new ArrayList<>();
         switch (OPTION) {
             case MIANFEI:
@@ -248,6 +259,8 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
                 baseButterKnifeFragment1 = new MyCommentFragment(false);
                 channel_bar_female_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_xiaoshuo));
                 channel_bar_male_text.setText(LanguageUtil.getString(activity, R.string.noverfragment_manhua));
+                channel_bar_cartoon_text.setVisibility(View.GONE);
+                break;
         }
         if (baseButterKnifeFragment1 != null) {
             fragmentList.add(baseButterKnifeFragment1);
@@ -261,8 +274,6 @@ public class BaseOptionActivity extends BaseButterKnifeActivity {
         }
         if (baseButterKnifeFragment3 != null) {
             fragmentList.add(baseButterKnifeFragment3);
-        }else {
-            top_channel_layout.setVisibility(View.GONE);
         }
         if (baseButterKnifeFragment4 != null) {
             fragmentList.add(baseButterKnifeFragment4);

@@ -124,7 +124,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_store_comic_content_head, null);
         fragment_newbookself_top = ((StroeNewFragment) getParentFragment()).fragment_newbookself_top;
         hot_word = ((StroeNewFragment) getParentFragment()).myHotWord;
-        fragment_newbookself_top.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
         layoutManager = new MyContentLinearLayoutManager(getContext());
         smartRecyclerAdapter = new SmartRecyclerAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);

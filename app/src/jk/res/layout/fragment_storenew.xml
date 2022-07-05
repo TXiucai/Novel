@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/page_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/fragment_store_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_80dp"
+        android:paddingRight="@dimen/dimens_15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dimens_5dp">
+
+            <RelativeLayout
+                android:id="@+id/fragment_store_search"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dimens_10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_comic_store_search"
+                android:paddingLeft="@dimen/dimens_10dp">
+
+                <TextView
+                    android:id="@+id/fragment_store_search_bookname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dimens_10dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/fragment_store_search_bookname2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dimens_11dp"
+                    android:textColor="@color/white"
+                    android:textSize="10dp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/fragment_store_search_img"
+                    android:layout_width="@dimen/dimens_14dp"
+                    android:layout_height="@dimen/dimens_14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dimens_12dp"
+                    android:src="@mipmap/search" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_fili"
+                android:layout_width="@dimen/dimens_28dp"
+                android:layout_height="@dimen/dimens_28dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dimens_15dp">
+
+                <ImageView
+                    android:id="@+id/fragment_store_fili"
+                    android:layout_width="@dimen/dimens_28dp"
+                    android:layout_height="@dimen/dimens_28dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_gift" />
+
+                <ImageView
+                    android:id="@+id/fragment_store_point"
+                    android:layout_width="@dimen/dimens_7dp"
+                    android:layout_height="@dimen/dimens_7dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/red_point" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_channel"
+            android:layout_width="match_parent"
+            android:background="@mipmap/channel_bg"
+            android:layout_height="@dimen/dimens_45dp"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tb_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_25dp"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dimens_44dp"
+                app:tabBackground="@null"
+                app:tabGravity="center"
+                app:tabMaxWidth="@dimen/dimens_200dp"
+                app:tabMinWidth="@dimen/dimens_20dp"
+                app:tabMode="scrollable"
+                app:tabPaddingEnd="@dimen/dimens_8dp"
+                app:tabPaddingStart="@dimen/dimens_8dp"
+                app:tabTextColor="@color/color_1a1a1a" />
+
+            <ImageView
+                android:id="@+id/img_channel_more"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_10"
+                android:src="@mipmap/channel_more_icon" />
+
+        </RelativeLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_channel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimens_45dp" />
+
+        <ImageView
+            android:id="@+id/main_float_img"
+            android:layout_width="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            android:layout_marginBottom="@dimen/dimens_170dp" />
+
+        <RelativeLayout
+            android:id="@+id/fragment_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_32dp"
+                android:background="@drawable/shape_ff000000_20"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimens_15dp"
+                android:paddingRight="@dimen/dimens_20dp">
+
+                <ImageView
+                    android:id="@+id/fragment_order_close"
+                    android:layout_width="@dimen/dimens_22dp"
+                    android:layout_height="@dimen/dimens_22dp"
+                    android:src="@mipmap/ic_home_notice_close" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:text="@string/string_ordeer_undeal"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/fragment_order_go"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/dimens_25dp"
+                    android:text="@string/string_order_go"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
+

@@ -5,6 +5,7 @@ import static com.heiheilianzai.app.constant.ReaderConfig.XIAOSHUO;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
@@ -389,6 +390,7 @@ public class ADHelper {
                         ReaderConfig.CHAPTER_COMIC_AD.setAd_image(adInfo.getMaterial().getImageUrl());
                         ReaderConfig.CHAPTER_COMIC_AD.setUser_parame_need("1");
                         ReaderConfig.CHAPTER_COMIC_AD.setAd_url_type(adInfo.getOperation().getType());
+                        System.out.println("======sdkad  url:" + adInfo.getOperation().getValue());
                     }
                 } catch (Exception e) {
                     localChapterComicAd(activity);
@@ -416,6 +418,8 @@ public class ADHelper {
                             if (ReaderConfig.CHAPTER_COMIC_AD == null) {
                                 ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
                             }
+                            Log.e("====", "ad  url:" + baseAd.getAd_skip_url());
+                            System.out.println("======ad  url:" + baseAd.getAd_skip_url());
                             ReaderConfig.CHAPTER_COMIC_AD.setAd_skip_url(baseAd.getAd_skip_url());
                             ReaderConfig.CHAPTER_COMIC_AD.setAd_type(baseAd.getAd_type());
                             ReaderConfig.CHAPTER_COMIC_AD.setAd_title(baseAd.getAd_title());

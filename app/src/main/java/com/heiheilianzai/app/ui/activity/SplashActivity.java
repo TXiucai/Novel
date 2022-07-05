@@ -366,10 +366,10 @@ public class SplashActivity extends BaseAdvertisementActivity {
                     if (!skip) {
                         if (adInfo != null) {
                             XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
+                            handler.removeMessages(1);
+                            handler.removeMessages(0);
+                            AdvertisementActivity.adSkip(startpage, activity);
                         }
-                        handler.removeMessages(1);
-                        handler.removeMessages(0);
-                        AdvertisementActivity.adSkip(startpage, activity);
                     }
                 }
             });

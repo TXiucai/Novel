@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
@@ -98,6 +99,9 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         EventBus.getDefault().register(this);
         fragmentManager = getChildFragmentManager();
         refreshTime = DateUtils.currentTime();
+        if (BuildConfig.free_charge) {
+            fragment_book_sign.setVisibility(View.GONE);
+        }
         try {
             initOption();
         } catch (Exception e) {

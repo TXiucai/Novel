@@ -289,7 +289,9 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.user_info_phone_container:
                 //绑定手机号
-                bindPhone();
+                if (mUserInfo.getBind_list() != null && mUserInfo.getBind_list().get(0).getStatus() == 0) {
+                    bindPhone();
+                }
                 break;
             case R.id.user_info_weixin_container:
                 if (user_info_weixin.getText().length() == 0) {

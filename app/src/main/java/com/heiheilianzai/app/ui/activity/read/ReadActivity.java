@@ -569,7 +569,7 @@ public class ReadActivity extends BaseReadActivity {
      * 获取小说底部tips
      */
     private void getTips() {
-        if (!ReaderConfig.novel_tips.equals("")) {
+        if (!TextUtils.isEmpty(ReaderConfig.novel_tips)) {
             List<String> tips = new ArrayList<>();
             String[] split = ReaderConfig.novel_tips.split("\r");
             for (int i = 0; i < split.length; i++) {

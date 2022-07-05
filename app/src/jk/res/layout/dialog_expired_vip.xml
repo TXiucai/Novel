@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:ignore="NamespaceTypo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_sol_ffffff_cor_50_str_1_ff5349"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_35363b"
+            android:textSize="14sp"
+            android:text="@string/string_friend_tip"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:layout_gravity="center_horizontal"/>
+        <TextView
+            android:id="@+id/dialog_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:gravity="center"
+            android:text="@string/dialog_tittle_vip"
+            android:textColor="@color/color_444444"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/dialog_updateapp_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimens_15dp"
+            android:layout_marginTop="@dimen/dimens_24dp"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            android:layout_marginBottom="@dimen/dimens_24dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/dialog_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_38dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/dialog_no"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/shape_sol_ffffff_cor_50_str_1_ff5349"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:text="@string/dialog_close__expired_vip"
+                    android:textColor="@color/color_ff5349" />
+
+                <View
+                    android:id="@+id/dialog_updateapp_view"
+                    android:layout_width="@dimen/dimens_10dp"
+                    android:layout_height="@dimen/dimens_1dp" />
+
+                <TextView
+                    android:id="@+id/dialog_yes"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="14sp"
+                    android:background="@drawable/shape_update_blue"
+                    android:gravity="center"
+                    android:text="@string/dialog_buy_expired_vip"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

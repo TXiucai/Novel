@@ -11,4 +11,5 @@ public class ComicInfo {
     public List<StroreComicLable> label;
     public BaseAd advert;
     public int is_pure_gold_read;
+    public String introduce_text;
 }

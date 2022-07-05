@@ -6,20 +6,19 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/fragment_comicinfo_mulu_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/dimens_80dp"
         android:paddingLeft="13dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dimens_50dp"
+        android:layout_marginTop="@dimen/dimens_30dp"
         android:background="@color/white"
         android:orientation="horizontal"
-
         android:paddingRight="15dp">
 
         <LinearLayout
@@ -37,10 +36,7 @@
                 android:layout_height="20dp"
                 android:background="@mipmap/back_gray"
                 android:scaleType="centerCrop" />
-
         </LinearLayout>
-
-
 
         <TextView
             android:id="@+id/titlebar_text"
@@ -50,13 +46,11 @@
             android:text="@string/BookInfoActivity_mulu"
             android:textSize="@dimen/public_13_dp" />
 
-
-
         <RelativeLayout
-            android:layout_alignParentRight="true"
             android:id="@+id/fragment_comicinfo_mulu_layout"
             android:layout_width="@dimen/dimens_45dp"
             android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
             android:layout_gravity="center_vertical">
 
             <ImageView
@@ -100,8 +94,6 @@
                 android:src="@mipmap/comicdetail_gotocurrent" />
 
             <TextView
-
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

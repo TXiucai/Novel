@@ -1,7 +1,6 @@
 package com.heiheilianzai.app.adapter;
 
 import android.app.Activity;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,7 +112,7 @@ public class VerticalAdapter extends BaseAdapter {
             layoutParams11.width = WIDTH;
             imageView.setLayoutParams(layoutParams11);
             if (isHorizontal) {
-                MyPicasso.GlideImageNoSize(activity, book.getH_cover(), imageView, R.mipmap.book_def_cross);
+                MyPicasso.GlideImageNoSize(activity, book.getH_cover(), imageView, R.mipmap.comic_def_cross);
             } else {
                 MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
             }

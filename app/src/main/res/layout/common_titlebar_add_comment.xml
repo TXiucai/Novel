@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dimens_50dp"
+    android:layout_height="@dimen/dimens_80dp"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dimens_30dp">
 
     <RelativeLayout
         android:id="@+id/book_info_titlebar_container"
@@ -51,8 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/black"
                 android:text="@string/FeedBackActivity_tijiao"
+                android:textColor="@color/black"
                 android:textSize="@dimen/public_10_dp" />
 
         </LinearLayout>

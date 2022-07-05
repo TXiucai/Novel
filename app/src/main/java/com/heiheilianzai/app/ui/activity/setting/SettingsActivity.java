@@ -94,6 +94,9 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         activity = this;
         initTitleBarView(LanguageUtil.getString(this, R.string.MineNewFragment_set));
         setVersionView();
+        if (BuildConfig.free_charge) {
+            activity_settings_auto.setVisibility(View.GONE);
+        }
         if (ReaderConfig.USE_PAY) {
             activity_settings_switch_container.setVisibility(Utils.isLogin(this) ? View.VISIBLE : View.GONE);
             activity_settings_logout.setVisibility(Utils.isLogin(this) ? View.VISIBLE : View.GONE);

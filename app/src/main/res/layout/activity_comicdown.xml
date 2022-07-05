@@ -15,6 +15,7 @@
         android:numColumns="4"
         android:scrollbars="none"
         android:verticalSpacing="22dp" />
+
     <LinearLayout
         android:id="@+id/fragment_bookshelf_noresult"
         android:layout_width="match_parent"
@@ -51,15 +52,17 @@
             android:background="@drawable/shape_go_shelf_button"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:visibility="gone"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="@dimen/public_12_dp" />
+            android:textSize="@dimen/public_12_dp"
+            android:visibility="gone" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="@dimen/dimens_30dp"
         android:background="@color/white"
         android:gravity="top"
         android:orientation="vertical">

@@ -9,6 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_220dp"
+        android:layout_marginTop="@dimen/dimens_30dp"
         android:background="@mipmap/cartoon_play_bg"
         tools:ignore="MissingConstraints">
 

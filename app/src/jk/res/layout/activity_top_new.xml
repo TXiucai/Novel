@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@mipmap/book_def_v" />
+    <View
+        android:background="@color/color_990C0200"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dimens_15dp"
+        android:layout_marginTop="@dimen/dimens_32dp"
+        android:layout_marginRight="@dimen/dimens_15dp"
+        android:layout_marginBottom="@dimen/dimens_20dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/dimens_24dp"
+            android:layout_height="@dimen/dimens_24dp"
+            android:src="@mipmap/back_white" />
+
+        <TextView
+            android:id="@+id/tx_tittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/white"
+            android:textSize="38sp" />
+
+        <TextView
+            android:id="@+id/tx_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:background="@drawable/shape_ffffff_20"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimens_12dp"
+            android:paddingRight="@dimen/dimens_12dp">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tb_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_42dp"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/color_ff8350"
+                app:tabTextColor="@color/color_606060" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_1dp"
+                android:background="@color/gray2" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/vp_top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

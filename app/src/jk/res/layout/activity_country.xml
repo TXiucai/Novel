@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/page_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/activity_login_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@mipmap/lable_bg"
+        android:layout_marginTop="@dimen/dimens_30dp">
+
+        <TextView
+            android:id="@+id/activity_login_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/CountryActivity_title"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_close"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@mipmap/activity_login_close" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:background="@color/white_80"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ry_country"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.othershe.groupindexlib.weiget.SideBar
+            android:id="@+id/side_bar"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dimens_50dp"
+            android:layout_marginBottom="@dimen/dimens_50dp" />
+
+        <TextView
+            android:id="@+id/tx_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/read_dialog_bg"
+            android:textColor="@color/white"
+            android:textSize="60sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

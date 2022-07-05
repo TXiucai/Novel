@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_380dp"
+        android:background="@drawable/task_center_sign_bg">
+
+        <ImageView
+            android:layout_width="@dimen/dimens_180dp"
+            android:layout_height="@dimen/dimens_36dp"
+            android:layout_marginTop="@dimen/dimens_110dp"
+            android:src="@drawable/task_center_sign_tip" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_205dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dimens_15dp"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/shape_ffffff_10"
+            android:orientation="vertical">
+
+            <com.heiheilianzai.app.view.StepView
+                android:id="@+id/activity_task_sign_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_45dp"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:layout_marginRight="@dimen/dp_10" />
+
+            <TextView
+                android:id="@+id/activity_taskcenter_sign"
+                android:layout_width="@dimen/dimens_170dp"
+                android:layout_height="@dimen/dimens_36dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:background="@drawable/gradient_ff2f00_ffbd5c"
+                android:gravity="center"
+                android:text="@string/string_un_sign"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/activity_taskcenter_getshuquan"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:text="@string/sign_rules"
+                android:textColor="@color/color_9a9a9a"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/rl_task_invite"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_64dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_8dp"
+            android:background="@color/gray2" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dimens_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimens_10dp"
+                android:text="@string/task_invite_code"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tx_task_invite_go"
+                android:layout_width="@dimen/dimens_50dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dimens_25dp"
+                android:background="@drawable/shape_taskcenter_orenge"
+                android:gravity="center"
+                android:text="@string/task_go"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/page_bg"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_220dp"
+        android:layout_marginTop="@dimen/dimens_30dp"
+        android:background="@mipmap/cartoon_play_bg"
+        tools:ignore="MissingConstraints">
+
+        <com.live.eggplant.player.video.StandardGSYVideoPlayer
+            android:id="@+id/video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_gold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@mipmap/cartoon_play_bg"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimens_20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tx_gold_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_15dp"
+                android:gravity="center"
+                android:text="@string/dialog_tittle_cartoon_coupon"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:background="@drawable/bookself_store_bg"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimens_25dp"
+                android:paddingRight="@dimen/dimens_25dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_dialog_coupon_total"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tx_gold_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_ff8350"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_25dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tx_gold_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/dialog_coupon_open"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_18dp"
+                    android:text="@string/dialog_lookcomicset_open_text"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <com.zcw.togglebutton.ToggleButton
+                    android:id="@+id/tb_open"
+                    android:layout_width="@dimen/dimens_36dp"
+                    android:layout_height="@dimen/dimens_18dp"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    toggle:tbBorderWidth="1dp"
+                    toggle:tbOffBorderColor="@color/color_1a1a1a"
+                    toggle:tbOffColor="@color/color_1a1a1a"
+                    toggle:tbOnColor="@color/mainColor2" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tx_gold_charge"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_34dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimens_25dp"
+                android:background="@drawable/shape_update_blue"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimens_20dp"
+                android:paddingRight="@dimen/dimens_20dp"
+                android:text="@string/AcquireBaoyueActivity_title_gold"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_vip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@mipmap/cartoon_play_bg"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimens_45dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_34dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimens_30dp"
+                android:background="@drawable/bookself_store_bg"
+                android:gravity="center"
+                android:paddingRight="@dimen/dp_10">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_50dp"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/cartoon_vip_bg" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_48dp"
+                        android:layout_height="@dimen/dimens_24dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/cartoon_vip" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tittle_cartoon_vip"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tx_vip_charge"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_34dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_40"
+                android:background="@drawable/shape_update_blue"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dimens_20dp"
+                android:paddingRight="@dimen/dimens_20dp"
+                android:text="@string/AcquireBaoyueActivity_title_vip"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="@dimen/dimens_45dp"
+            android:layout_height="@dimen/dp_40"
+            android:padding="@dimen/dp_10"
+            android:src="@mipmap/back_white" />
+
+    </FrameLayout>
+
+    <com.heiheilianzai.app.view.ObservableScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tx_chapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:text="@string/tittle_cartoon_char"
+                android:textColor="@color/color_35363B"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ry_chapter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimens_15dp" />
+
+            <TextView
+                android:id="@+id/tx_title_cartoon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:textColor="@color/color_35363B"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tx_description_cartoon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:textColor="@color/color_666666"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tx_tag_cartoon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:textColor="@color/color_666666"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tx_time_cartoon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:textColor="@color/color_666666"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_15dp"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dimens_15dp"
+                    android:text="@string/string_guess_like"
+                    android:textColor="@color/color_35363B"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.heiheilianzai.app.view.AdaptionGridView
+                    android:id="@+id/gv_guess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimens_15dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:horizontalSpacing="@dimen/dp_10"
+                    android:numColumns="2"
+                    android:verticalSpacing="@dimen/dp_10" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.heiheilianzai.app.view.ObservableScrollView>
+</LinearLayout>

@@ -30,7 +30,7 @@ gradle.ext {
 
     SUPPORT_VERSION = "28.0.0"
     //与服务器约定的公参
-    APP_ID = "\"2\""
+    APP_ID = "\"1\""
     //传入波音平台源 未配置
     APP_SOURCE_BOYIN = "\"\""
     //是否为免费
@@ -53,18 +53,18 @@ gradle.ext {
     // Server host
     DOMAIN_HOSTS = "\"https://api.a3559f.com\""
     API_HOSTS = "{" +
-            "\"https://api.x51d23.com\"," +
-            "\"https://api.orbopv.com\"," +
-            "\"https://api.he0jys.com\"," +
-            "\"https://api.1rephm.com\"," +
-            "\"https://api.askoc8.com\"," +
+            "\"http://api.x51d23.com\"," +
+            "\"http://api.orbopv.com\"," +
+            "\"http://api.he0jys.com\"," +
+            "\"http://api.1rephm.com\"," +
+            "\"http://api.askoc8.com\"," +
             "}"
     API_HOSTS_UAT = "{" +
-            "\"https://uat-jk-api1.08bea5.com\"," +
-            "\"https://uat-jk-api2.08bea5.com\"," +
-            "\"https://uat-jk-api3.08bea5.com\"," +
-            "\"https://uat-jk-api4.08bea5.com\"," +
-            "\"https://uat-jk-api5.08bea5.com\"," +
+            "\"http://uat-jk-api1.08bea5.com\"," +
+            "\"http://uat-jk-api2.08bea5.com\"," +
+            "\"http://uat-jk-api3.08bea5.com\"," +
+            "\"http://uat-jk-api4.08bea5.com\"," +
+            "\"http://uat-jk-api5.08bea5.com\"," +
             "}"
     DOMAIN_HOSTS_RESERVE = "\"https://api.ffee7f.com@https://api.fcef46.com\""
     // API key  服务器验证相关配置
@@ -88,7 +88,7 @@ gradle.ext {
     AD_APPKEY = "\"\""
     AD_SECRET = "\"\""
     //神策
-    SA_SERVER_URL_UAT = "\"https://shence.jiushengliye.com/sa?project=YSA27TEST\""
+    SA_SERVER_URL_UAT = "\"https://shence.jiushengliye.com/sa?project=YDA44TEST\""
     SA_SERVER_URL = "\"https://shence.jiushengliye.com/sa?project=YDA44\""
     SA_SERVER_APP_ID = "\"A71\""
 

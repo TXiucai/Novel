@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimens_450dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_50dp"
+        android:orientation="horizontal"
+        android:background="@drawable/shape_comicinfo_bg2"
+        android:paddingLeft="@dimen/dimens_15dp"
+        android:paddingRight="@dimen/dimens_25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/string_comic_chapter_tittle"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="@dimen/dimens_1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginRight="@dimen/dimens_10dp">
+
+            <ImageView
+                android:id="@+id/fragment_comicinfo_mulu_xu"
+                android:src="@mipmap/comic_up"
+                android:layout_width="@dimen/dimens_45dp"
+                android:layout_height="@dimen/dimens_20dp"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/fragment_comicinfo_mulu_xu_img"
+                android:layout_width="@dimen/dimens_15dp"
+                android:layout_height="@dimen/dimens_15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:src="@mipmap/icon_close" />
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:paddingLeft="@dimen/dimens_15dp"
+        android:paddingRight="@dimen/dimens_15dp"
+        android:paddingBottom="@dimen/dimens_10dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_400dp">
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/fragment_comicinfo_mulu_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_400dp"
+            android:listSelector="@drawable/selector_listview_item" />
+    </RelativeLayout>
+</LinearLayout>

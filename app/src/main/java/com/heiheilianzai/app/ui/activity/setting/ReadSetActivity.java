@@ -1,10 +1,6 @@
 package com.heiheilianzai.app.ui.activity.setting;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -16,6 +12,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.ui.dialog.ReadScreenSetDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
+import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.zcw.togglebutton.ToggleButton;
 
 import butterknife.BindView;
@@ -47,6 +44,7 @@ public class ReadSetActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        StatusBarUtil.transparencyBar(this);
         mContext = this;
         mTxTittle.setText(getResources().getString(R.string.string_read_set));
         mReadScreenSetDialog = new ReadScreenSetDialog();

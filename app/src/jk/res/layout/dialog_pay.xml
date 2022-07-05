@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_60000000">
+
+    <com.heiheilianzai.app.view.webview.ReaderWebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dimens_20dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/dimens_200dp"
+        android:background="@drawable/bg_gray"
+        android:orientation="vertical"
+        android:padding="@dimen/dimens_12dp"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="@dimen/dimens_24dp"
+            android:layout_height="@dimen/dimens_24dp"
+            android:layout_gravity="center"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/anim_loading"
+            android:indeterminateOnly="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_12dp"
+            android:text="正在为你加载中，请稍后..."
+            android:textColor="@color/color_3b3b3b"
+            android:textSize="@dimen/dimens_14dp" />
+    </LinearLayout>
+</RelativeLayout>

@@ -8,14 +8,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.component.task.MainHttpTask;
-import com.heiheilianzai.app.ui.activity.ShareActivity;
+import com.heiheilianzai.app.ui.activity.BindPhoneActivity;
 import com.heiheilianzai.app.ui.activity.UserInfoActivity;
 
 import butterknife.BindView;
@@ -30,7 +28,7 @@ public class DialogSavePic {
     }
 
     public Dialog getDialogLoginPop(Activity activity, String name, String password) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_registe, null);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_save_pic, null);
         Dialog popupWindow = new Dialog(activity, R.style.updateapp);
         Window window = popupWindow.getWindow();
         //设置弹出位置
@@ -40,7 +38,7 @@ public class DialogSavePic {
         vipHolder.mTxNamePic.setText(name);
         vipHolder.mTxPassword.setText(password);
         vipHolder.mTxPasswordPic.setText(password);
-        if (BuildConfig.free_charge) {
+        if (!BuildConfig.free_charge) {
             vipHolder.mTxTitle.setText(activity.getString(R.string.string_heihei_acount));
         } else {
             vipHolder.mTxTitle.setText(activity.getString(R.string.string_jk_acount));
@@ -61,7 +59,7 @@ public class DialogSavePic {
                     popupWindow.dismiss();
                 }
                 Intent intent = new Intent();
-                intent.setClass(activity, UserInfoActivity.class);
+                intent.setClass(activity, BindPhoneActivity.class);
                 activity.startActivity(intent);
             }
         });

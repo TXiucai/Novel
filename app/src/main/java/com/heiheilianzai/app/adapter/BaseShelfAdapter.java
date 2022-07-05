@@ -141,6 +141,7 @@ public abstract class BaseShelfAdapter<T> extends BaseAdapter {
                     public void onClick(View view) {
                         if (!mIsDeletable) {
                             EventBus.getDefault().post(new ToStore(type));
+                            mActivity.finish();
                         }
                     }
                 });

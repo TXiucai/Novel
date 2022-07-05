@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:id="@+id/recyclerview_item_readhistory_HorizontalScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="114dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/recyclerview_item_readhistory_check_rl"
+                android:layout_width="@dimen/dimens_54dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <CheckBox
+                    android:id="@+id/recyclerview_item_readhistory_check"
+                    android:layout_width="@dimen/dimens_16dp"
+                    android:layout_height="@dimen/dimens_16dp"
+                    android:button="@drawable/selector_history_checkbox"
+                    android:clickable="false"
+                    android:gravity="center" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recyclerview_item_readhistory_book"
+                android:layout_width="match_parent"
+                android:layout_height="94dp"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp">
+
+                <ImageView
+                    android:id="@+id/recyclerview_item_readhistory_img"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/recyclerview_item_readhistory_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:textColor="@color/color_1a1a1a"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/recyclerview_item_readhistory_des"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_3dp"
+                        android:lines="1"
+                        android:textColor="@color/color_9a9a9a"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/recyclerview_item_readhistory_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_3dp"
+                        android:layout_marginBottom="10dp"
+                        android:lines="1"
+                        android:textColor="@color/color_9a9a9a"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/recyclerview_item_readhistory_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:textColor="@color/color_9a9a9a"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/recyclerview_item_readhistory_goon"
+                    android:layout_width="@dimen/dimens_60dp"
+                    android:layout_height="@dimen/dimens_25dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/shape_ff8350_20"
+                    android:gravity="center"
+                    android:text="继续阅读"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/recyclerview_item_readhistory_del"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:background="@color/mainColor2"
+                android:gravity="center"
+                android:text="@string/ReadHistoryFragment_shangchu"
+                android:textColor="@color/white"
+                android:textSize="@dimen/public_10_dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <include layout="@layout/list_ad_view" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_F5F5F5" />
+</RelativeLayout>

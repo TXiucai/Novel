@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
+    <include layout="@layout/common_titlebar" />
 
     <LinearLayout
         android:id="@+id/activity_finish_listview_noresult"
@@ -59,8 +60,8 @@
         android:focusableInTouchMode="true"
         android:minHeight="45dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:paddingRight="10dp">
 
         <EditText
             android:id="@+id/activity_comment_list_add_comment"
@@ -73,15 +74,9 @@
             android:inputType="text"
             android:paddingLeft="10dp"
             android:singleLine="true"
-            android:textSize="10dp"
-            android:textColor="@color/gray" />
+            android:textColor="@color/gray"
+            android:textSize="10dp" />
 
     </RelativeLayout>
 
-    <include
-        layout="@layout/common_titlebar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top" />
-
-</FrameLayout>
+</LinearLayout>

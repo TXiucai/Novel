@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimens_140dp"
+    android:paddingRight="@dimen/dimens_15dp"
+    android:paddingBottom="@dimen/dimens_20dp">
+
+    <LinearLayout
+        android:id="@+id/ll_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_label"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimens_20dp"
+            android:background="@drawable/bg_corner_member_label"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dimens_6dp"
+            android:paddingRight="@dimen/dimens_6dp"
+            android:scaleType="centerInside"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/dimens_15dp"
+                android:layout_height="@dimen/dimens_15dp"
+                android:src="@drawable/coins" />
+
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_2dp"
+                android:textColor="#5D402F"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tx_gift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_2dp"
+            android:maxLines="1"
+            android:text="@string/BaoyueActivity_gold_gift"
+            android:textColor="#5D402F"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_original_price_gold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/color_B9B7B7"
+            android:textSize="10sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_5dp">
+
+            <TextView
+                android:id="@+id/tv_current_price_gold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/dimens_5dp"
+                android:textColor="@color/color_d68547"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/iv_selected_icon"
+                android:layout_width="@dimen/dimens_35dp"
+                android:layout_height="@dimen/dimens_35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:scaleType="fitXY"
+                android:src="@mipmap/iv_item_selected"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

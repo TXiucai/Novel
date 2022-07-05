@@ -156,7 +156,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
     @BindView(R.id.list_ad_view_img)
     ImageView list_ad_view_img;
     @BindView(R.id.ll_comic_down)
-            LinearLayout mLlDown;
+    LinearLayout mLlDown;
     Activity activity;
     BaseComic baseComic, baseComicLocal;
     String comic_id;
@@ -233,6 +233,9 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                 mDialogChapter = dialogComicChapter.getDialogVipPop(activity, baseComic);
                 break;
             case R.id.rl_comic_vip:
+                if (BuildConfig.free_charge) {
+                    return;
+                }
                 int type = mIsPureGold == 2 ? 1 : 0;
                 Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 5);
                 myIntent.putExtra("isvip", Utils.isLogin(activity));
@@ -376,16 +379,19 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             titlebar_text.setAlpha(0);
 
             //0免费隐藏  1混合  2 纯金币
-            if (mIsPureGold == 0) {
-                rl_comic_vip.setVisibility(View.GONE);
-            } else if (mIsPureGold == 1) {
-                tx_type_tip.setText(getResources().getString(R.string.string_comic_vip));
-                rl_comic_vip.setVisibility(View.VISIBLE);
+            if (!BuildConfig.free_charge) {
+                if (mIsPureGold == 0) {
+                    rl_comic_vip.setVisibility(View.GONE);
+                } else if (mIsPureGold == 1) {
+                    tx_type_tip.setText(getResources().getString(R.string.string_comic_vip));
+                    rl_comic_vip.setVisibility(View.VISIBLE);
+                } else {
+                    tx_type_tip.setText(getResources().getString(R.string.string_comic_gold));
+                    rl_comic_vip.setVisibility(View.VISIBLE);
+                }
             } else {
-                tx_type_tip.setText(getResources().getString(R.string.string_comic_gold));
-                rl_comic_vip.setVisibility(View.VISIBLE);
+                tx_type_tip.setText(mComicInfo.introduce_text);
             }
-
             book_info_titlebar_container_shadow.setAlpha(0);
             baseComic.setVertical_cover(comic.vertical_cover);
             baseComic.setHorizontal_cover(comic.horizontal_cover);

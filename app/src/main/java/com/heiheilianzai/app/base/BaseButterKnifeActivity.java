@@ -26,6 +26,8 @@ public abstract class BaseButterKnifeActivity extends BaseWarmStartActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         }
+        //侵染状态栏
+        com.jaeger.library.StatusBarUtil.setTransparent(this);
         //注入布局
         setContentView(initContentView());
         // 初始化View注入
@@ -35,6 +37,6 @@ public abstract class BaseButterKnifeActivity extends BaseWarmStartActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        StatusBarUtil.transparencyBar2(this, R.color.white, true);
+        //StatusBarUtil.transparencyBar2(this, R.color.white, true);
     }
 }

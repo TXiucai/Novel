@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_ffffff_20"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimens_35dp"
+            android:paddingTop="@dimen/dimens_50dp"
+            android:paddingRight="@dimen/dimens_35dp"
+            android:paddingBottom="@dimen/dimens_45dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/string_registe_fast"
+                android:textColor="@color/color_35363b"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/ed_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_25dp"
+                android:background="@null"
+                android:hint="@string/string_register_hint"
+                android:lines="1"
+                android:singleLine="true"
+                android:textColor="@color/color_929292"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:background="@color/color_f3f3f3" />
+
+            <TextView
+                android:id="@+id/tx_register"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dimens_30dp"
+                android:background="@drawable/shape_e6e6e6_20"
+                android:clickable="false"
+                android:gravity="center"
+                android:text="@string/string_register_fast"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_30dp"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/gradient_ffeae0_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_20dp"
+                    android:text="@string/string_registe_have"
+                    android:textColor="@color/color_8D94A5"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tx_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_registe_login_dialog"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/dimens_20dp"
+                    android:textColor="@color/color_FF697A"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/home_notice_close"
+            android:layout_width="@dimen/dimens_25dp"
+            android:layout_height="@dimen/dimens_25dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_30dp"
+            android:background="@mipmap/ic_home_notice_close" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.heiheilianzai.app.view.ObservableScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tx_privilege"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimens_15dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:text="@string/string_vip_power"
+                    android:textColor="@color/color_323334"
+                    android:textSize="14sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activity_acquire_privilege_gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:id="@+id/ll_announce_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimens_26dp"
+                    android:layout_marginLeft="@dimen/dimens_15dp"
+                    android:layout_marginRight="@dimen/dimens_15dp"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
+                    android:background="@drawable/shape_announce"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/dimens_12dp"
+                        android:layout_height="@dimen/dimens_12dp"
+                        android:layout_marginLeft="@dimen/dimens_15dp"
+                        android:background="@mipmap/mine_announce_icon" />
+
+                    <com.heiheilianzai.app.view.MarqueeTextView
+                        android:id="@+id/marquee"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimens_26dp"
+                        android:layout_marginLeft="@dimen/dimens_10dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_10dp"
+                android:background="@color/color_f6f6f6" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activity_acquire_pay_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:layout_marginRight="@dimen/dimens_15dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_10dp"
+                android:background="@color/color_f6f6f6" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
+                android:text="@string/string_comment"
+                android:textColor="@color/color_323334"
+                android:textSize="14sp" />
+
+            <com.heiheilianzai.app.view.AdaptionGridView
+                android:id="@+id/gv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:background="@color/white"
+                android:gravity="center"
+                android:numColumns="3" />
+        </LinearLayout>
+    </com.heiheilianzai.app.view.ObservableScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_45dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/color_1a1a1a"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dimens_25dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_vip_price"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tx_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tx_price_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_9a9a9a"
+                android:textSize="10sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tx_open_vip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/color_ffd97a"
+            android:gravity="center"
+            android:text="@string/mine_vip_open"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>

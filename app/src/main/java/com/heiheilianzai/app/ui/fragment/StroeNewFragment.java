@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -435,14 +436,24 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 mHolder = new ChannelHomeHolder(customView);
                 mHolder.mTxChannel.setText(mTittlesList.get(i));
                 if (i == 0) {
-                    mHolder.mTxChannel.setTextSize(21);
                     mHolder.mTxChannel.setSelected(true);
-                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
-                    mHolder.mImgBackground.setVisibility(View.VISIBLE);
+                    if (BuildConfig.free_charge) {
+                        mHolder.mTxChannel.setTextColor(activity.getResources().getColor(R.color.white));
+                        mHolder.mTxChannel.setBackground(activity.getResources().getDrawable(R.drawable.shape_channel_select));
+                    } else {
+                        mHolder.mTxChannel.setTextSize(21);
+                        mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
+                        mHolder.mImgBackground.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     mHolder.mTxChannel.setSelected(false);
-                    mHolder.mTxChannel.setTextSize(15);
-                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
+                    if (BuildConfig.free_charge) {
+                        mHolder.mTxChannel.setTextColor(activity.getResources().getColor(R.color.color_434A5C));
+                        mHolder.mTxChannel.setBackground(null);
+                    } else {
+                        mHolder.mTxChannel.setTextSize(15);
+                        mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
+                    }
                     mHolder.mImgBackground.setVisibility(View.GONE);
                 }
             }
@@ -453,17 +464,27 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                     mVpChannel.setCurrentItem(tab.getPosition());
                     mHolder = new ChannelHomeHolder(tab.getCustomView());
                     mHolder.mTxChannel.setSelected(true);
-                    mHolder.mTxChannel.setTextSize(21);
-                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
-                    mHolder.mImgBackground.setVisibility(View.VISIBLE);
+                    if (BuildConfig.free_charge) {
+                        mHolder.mTxChannel.setTextColor(activity.getResources().getColor(R.color.white));
+                        mHolder.mTxChannel.setBackground(activity.getResources().getDrawable(R.drawable.shape_channel_select));
+                    } else {
+                        mHolder.mTxChannel.setTextSize(21);
+                        mHolder.mTxChannel.setTypeface(Typeface.DEFAULT_BOLD);
+                        mHolder.mImgBackground.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
                     mHolder = new ChannelHomeHolder(tab.getCustomView());
                     mHolder.mTxChannel.setSelected(false);
-                    mHolder.mTxChannel.setTextSize(15);
-                    mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
+                    if (BuildConfig.free_charge) {
+                        mHolder.mTxChannel.setTextColor(activity.getResources().getColor(R.color.color_434A5C));
+                        mHolder.mTxChannel.setBackground(null);
+                    } else {
+                        mHolder.mTxChannel.setTextSize(15);
+                        mHolder.mTxChannel.setTypeface(Typeface.DEFAULT);
+                    }
                     mHolder.mImgBackground.setVisibility(View.GONE);
                 }
 

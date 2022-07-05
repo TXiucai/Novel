@@ -136,8 +136,6 @@ public class UpdateApp {
         public TextView dialog_updateapp_version;
         @BindView(R.id.img_close)
         public ImageView dialog_close;
-        @BindView(R.id.tv_link)
-        public TextView tv_link;
         @BindView(R.id.dialog_ll_website)
         public LinearLayout dialog_ll_website;
         @BindView(R.id.dialog_tx_web)

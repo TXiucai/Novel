@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main_vitualkey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/page_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_80"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_titlebar" />
+
+        <TextView
+            android:id="@+id/activity_announce_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/public_14_dp" />
+
+        <TextView
+            android:id="@+id/activity_announce_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/public_12_dp" />
+
+    </LinearLayout>
+</RelativeLayout>

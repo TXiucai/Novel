@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical"
     android:paddingLeft="6dp"
     android:paddingRight="6dp">
@@ -19,15 +18,12 @@
             android:layout_marginLeft="3dp"
             android:src="@mipmap/store_labe" />
 
-
         <TextView
             android:id="@+id/fragment_store_gridview3_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="3dp"
-
-            android:text="精品推荐"
             android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -94,12 +90,9 @@
                 android:text="00"
                 android:textColor="@color/white"
                 android:textSize="@dimen/public_11_dp" />
-
-
         </LinearLayout>
 
         <View
-
             android:layout_width="2dp"
             android:layout_height="5dp"
             android:layout_weight="1" />
@@ -118,14 +111,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-
-
                 android:text="@string/Discover_end"
                 android:textColor="@color/white"
                 android:textSize="@dimen/public_10_dp" />
         </RelativeLayout>
     </LinearLayout>
-
 
     <com.heiheilianzai.app.view.AdaptionGridView
         android:id="@+id/fragment_store_gridview3_gridview_fore"
@@ -181,13 +171,13 @@
                 android:layout_weight="1" />
 
 
-
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:src="@mipmap/comic_mall_more" />
+
             <TextView
 
                 android:layout_width="wrap_content"

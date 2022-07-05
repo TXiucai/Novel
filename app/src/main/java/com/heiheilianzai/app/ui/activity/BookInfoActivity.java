@@ -285,7 +285,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
 
                         @Override
                         public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.book_def_cross, null);
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.comic_def_cross, null);
                             activity_book_info_content_cover_bg.setBackground(BlurImageview.BlurImages2(bitmap, BookInfoActivity.this));
                         }
                     });

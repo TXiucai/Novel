@@ -2,8 +2,6 @@ package com.heiheilianzai.app.holder;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +55,11 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
         if (flag == 0) {
             AdInfo adInfo = BaseSdkAD.newAdInfo(data);
             if (adInfo != null) {
-                MyPicasso.glideSdkAd(activity, adInfo, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
+                MyPicasso.glideSdkAd(activity, adInfo, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.comic_def_cross);
             } else {
-                MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
+                MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.comic_def_cross);
             }
-            MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.book_def_cross);
+            MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.comic_def_cross);
         } else {
             MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.comic_def_cross);
             MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.comic_def_cross);

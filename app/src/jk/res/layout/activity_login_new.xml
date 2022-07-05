@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main_vitualkey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/activity_login_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_50dp">
+
+        <LinearLayout
+            android:id="@+id/activity_login_close"
+            android:layout_width="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimens_20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/dimens_25dp"
+                android:layout_height="@dimen/dimens_25dp"
+                android:background="@mipmap/activity_login_close" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dimens_90dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_40"
+        android:paddingRight="@dimen/dp_40">
+
+        <LinearLayout
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.heiheilianzai.app.view.SizeAnmotionTextview
+                android:id="@+id/fragment_shelf_xiaoshuo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/string_login_phone"
+                android:textColor="@color/color_ff8350"
+                android:textSize="20sp" />
+
+            <View
+                android:id="@+id/fragment_xiaoshuo_select"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_5dp"
+                android:layout_marginTop="@dimen/dimens_2dp"
+                android:background="@mipmap/fragment_bookself_select" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.heiheilianzai.app.view.SizeAnmotionTextview
+                android:id="@+id/fragment_shelf_manhau"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/string_login_nick"
+                android:textColor="@color/color_929292"
+                android:textSize="20sp" />
+
+            <View
+                android:id="@+id/fragment_manhua_select"
+                android:layout_width="@dimen/dimens_20dp"
+                android:layout_height="@dimen/dimens_5dp"
+                android:layout_marginTop="@dimen/dimens_2dp"
+                android:background="@mipmap/fragment_bookself_select"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimens_130dp"
+        android:layout_marginBottom="@dimen/dimens_60dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/LoginActivity_agree"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/public_9_dp" />
+
+        <TextView
+            android:id="@+id/activity_login_contract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/LoginActivity_xieyi"
+            android:textColor="@color/mainColor"
+            android:textSize="@dimen/public_9_dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

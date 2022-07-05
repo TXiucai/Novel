@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:ignore="NamespaceTypo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_90dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_90dp"
+                android:layout_marginBottom="@dimen/dimens_minus_2dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/update_top" />
+
+            <TextView
+                android:id="@+id/tv_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_90dp"
+                android:layout_marginTop="@dimen/dimens_35dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_12sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/dialog_updateapp_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingTop="@dimen/dimens_10dp"
+            android:singleLine="true"
+            android:text="@string/app_update"
+            android:textColor="@color/color_282727"
+            android:textSize="@dimen/dimens_16dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_200dp"
+            android:layout_below="@+id/imageView"
+            android:background="@drawable/shape_sol_ffffff_cor_bottom_16"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dialog_updateapp_sec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:lineSpacingExtra="@dimen/dimens_3dp"
+                android:maxHeight="@dimen/dimens_130dp"
+                android:paddingLeft="@dimen/dimens_30dp"
+                android:textColor="@color/updategray"
+                android:textSize="@dimen/dimens_12dp" />
+
+            <LinearLayout
+                android:id="@+id/dialog_updateapp_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:layout_marginBottom="@dimen/dimens_15dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <com.heiheilianzai.app.view.ProgressBarView
+                    android:id="@+id/materialSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimens_20dp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/dialog_ll_website"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_10"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/string_no_down"
+                        android:textColor="@color/color_1a1a1a"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_tx_web"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/string_go_web"
+                        android:textColor="@color/color_196cf2"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dialog_updateapp_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimens_38dp"
+                    android:layout_marginTop="@dimen/dimens_5dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/dialog_updateapp_no"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/shape_sol_ffffff_cor_50_str_1_ff5349"
+                        android:gravity="center"
+                        android:text="@string/MainActivity_holdon"
+                        android:textColor="@color/color_ff5349" />
+
+                    <View
+                        android:id="@+id/dialog_updateapp_view"
+                        android:layout_width="@dimen/dimens_15dp"
+                        android:layout_height="@dimen/dimens_1dp" />
+
+                    <TextView
+                        android:id="@+id/dialog_updateapp_yes"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/shape_update_blue"
+                        android:gravity="center"
+                        android:text="@string/MainActivity_nowupdate"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/img_close"
+            android:layout_width="@dimen/dimens_25dp"
+            android:layout_height="@dimen/dimens_25dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimens_25dp"
+            android:src="@mipmap/ic_home_notice_close" />
+    </LinearLayout>
+</RelativeLayout>

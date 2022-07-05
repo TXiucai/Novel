@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,13 +170,14 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
                     if (Utils.isLogin(activity) && TextUtils.equals(comicChapterCatalog.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
                         ad_skip_url += "&uid=" + Utils.getUID(activity);
                     }
+                    Log.e("====", "web  url:" + ad_skip_url);
+                    System.out.println("======click  url:"+ad_skip_url);
                     intent.putExtra("url", comicChapterCatalog.getAd_skip_url());
                     intent.putExtra("ad_url_type", comicChapterCatalog.getAd_url_type());
                     activity.startActivity(intent);
                 }
             });
         }
-
     }
 
     @Override

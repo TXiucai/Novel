@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/page_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_titlebar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_screen_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_64dp"
+        android:layout_marginTop="@dimen/dimens_15dp"
+        android:layout_marginBottom="@dimen/dimens_15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:text="@string/readActivity_set_screenTime"
+            android:textColor="@color/color_323334"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tx_screen_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_40"
+            android:textColor="@color/color_9a9a9a"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="@dimen/dimens_30dp"
+            android:layout_height="@dimen/dimens_30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimens_10dp"
+            android:background="@mipmap/right_arrow" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_64dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/raadActivity_voice_page"
+                android:textColor="@color/color_323334"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_lookcomicset_fanye_text2"
+                android:textColor="@color/gray"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <com.zcw.togglebutton.ToggleButton
+            android:id="@+id/readActivity_voice_button"
+            android:layout_width="@dimen/dimens_35dp"
+            android:layout_height="@dimen/dimens_20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            toggle:tbBorderWidth="1dp"
+            toggle:tbOffBorderColor="@color/gray"
+            toggle:tbOffColor="@color/gray"
+            toggle:tbOnColor="@color/mainColor" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_64dp"
+        android:layout_marginTop="@dimen/dimens_1dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/readActivity_screen_page"
+                android:textColor="@color/color_323334"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_lookcomicset_fanye_text2"
+                android:textColor="@color/gray"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <com.zcw.togglebutton.ToggleButton
+            android:id="@+id/readActivity_screen_button"
+            android:layout_width="@dimen/dimens_35dp"
+            android:layout_height="@dimen/dimens_20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            toggle:tbBorderWidth="1dp"
+            toggle:tbOffBorderColor="@color/gray"
+            toggle:tbOffColor="@color/gray"
+            toggle:tbOnColor="@color/mainColor" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_auto_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_64dp"
+        android:layout_marginTop="@dimen/dimens_1dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ReadActivity_autoread_close"
+                android:textColor="@color/color_323334"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_lookcomicset_fanye_text2"
+                android:textColor="@color/gray"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <com.zcw.togglebutton.ToggleButton
+            android:id="@+id/readActivity_auto_button"
+            android:layout_width="@dimen/dimens_35dp"
+            android:layout_height="@dimen/dimens_20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            toggle:tbBorderWidth="1dp"
+            toggle:tbOffBorderColor="@color/gray"
+            toggle:tbOffColor="@color/gray"
+            toggle:tbOnColor="@color/mainColor" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -17,6 +17,7 @@ import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.MineIconAdAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
@@ -172,6 +173,9 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     }
 
     private void showGuide() {
+        if (BuildConfig.free_charge) {
+            return;
+        }
         NewbieGuide.with(activity)
                 .setLabel("guideMine")
                 .setShowCounts(1)//控制次数
@@ -226,6 +230,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
             }
+            fragment_mine_user_info_isvip.setVisibility(BuildConfig.free_charge?View.GONE:View.VISIBLE);
             if (mUserInfo.getAuto_sub() == 0) {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, false);
             } else {

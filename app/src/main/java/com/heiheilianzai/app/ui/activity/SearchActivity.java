@@ -87,7 +87,8 @@ public class SearchActivity extends BaseButterKnifeActivity {
     public LinearLayout activity_search_keywords_listview_noresult;
     @BindView(R.id.activity_search_keywords_scrollview)
     public ObservableScrollView activity_search_keywords_scrollview;
-
+    @BindView(R.id.ll_hotwords)
+    public LinearLayout mLlHotwords;
     public String mKeyWord, mKeyWordHint;
     Gson gson = new Gson();
     int total_page, current_page = 1;
@@ -227,7 +228,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
         } else if (PRODUCT == 2) {
             url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search_index;
         } else {
-            url = ReaderConfig.getBaseUrl() + CartoonConfig.mUpCartoonWord;
+            url = ReaderConfig.getBaseUrl() + CartoonConfig.mCartoonSearchWord;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {
                     @Override
@@ -248,6 +249,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
             if (mKeyWordHint == null) {
                 activity_search_keywords.setHint(serachItem.hot_word[0]);
             }
+
             HotWordsAdapter hotWordsAdapter = new HotWordsAdapter(activity, serachItem.hot_word);
             activity_search_hotwords_grid.setAdapter(hotWordsAdapter);
             activity_search_hotwords_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -260,6 +262,8 @@ public class SearchActivity extends BaseButterKnifeActivity {
                     gotoSearch(mKeyWord);
                 }
             });
+        } else {
+            mLlHotwords.setVisibility(View.GONE);
         }
         if (PRODUCT == 3) {
             activity_search_book_grid.setNumColumns(2);

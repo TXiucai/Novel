@@ -39,7 +39,6 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AcceptGiftHeadBean;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.AddressActivity;
-import com.heiheilianzai.app.ui.activity.LoginActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.AppPrefs;

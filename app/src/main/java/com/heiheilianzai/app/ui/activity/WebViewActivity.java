@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
@@ -60,6 +61,8 @@ public class WebViewActivity extends BaseButterKnifeActivity {
         if (title != null) {
             titlebar_text.setText(title);
         }
+        Log.e("====","web  url:"+url);
+        System.out.println("======web  url:"+url);
         if (url == null) {
             return;
         }

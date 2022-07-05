@@ -206,7 +206,8 @@ android {
         main {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
-        jk.res.srcDir'src/jk'
+        jk.res.srcDir'src/jk/res'
+        jk.assets.srcDir'src/jk/assets'
     }
 
     compileOptions {

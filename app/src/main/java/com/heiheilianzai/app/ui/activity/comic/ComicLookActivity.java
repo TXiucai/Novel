@@ -85,6 +85,7 @@ import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
+import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.utils.decode.GlideEncypeImageLoader;
@@ -253,6 +254,12 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
     @Override
     public int initContentView() {
         return R.layout.activity_comiclook;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        StatusBarUtil.transparencyBar2(this, R.color.white, true);
     }
 
     private void getBuy() {

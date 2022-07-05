@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_comicchaptercatalog_current_bg"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimens_76dp"
+    android:layout_marginTop="@dimen/dimens_10dp"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="@dimen/dimens_132dp"
+        android:layout_height="@dimen/dimens_76dp"
+        android:layout_gravity="center_vertical">
+
+        <RelativeLayout
+            android:id="@+id/item_comicchaptercatalog_needbuy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/item_comicchaptercatalog_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+            <ImageView
+                android:id="@+id/item_comicchaptercatalog_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/color_60000000"  />
+            <ImageView
+                android:id="@+id/item_comic_chapter_lock"
+                android:layout_width="@dimen/dimens_22dp"
+                android:layout_height="@dimen/dimens_22dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/comic_lock" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="@dimen/dimens_12dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_comicchaptercatalog_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/item_chapter_catalog_time"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_9a9a9a"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</LinearLayout>

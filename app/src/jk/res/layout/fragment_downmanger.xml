@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/activity_downmanger_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:divider="@color/lightgray1"
+        android:dividerHeight="0.3dp" />
+
+    <LinearLayout
+        android:id="@+id/fragment_bookshelf_noresult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="170dp"
+            android:background="@mipmap/no_data"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/BookInfoActivity_down_nobooks"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/public_12_dp" />
+
+        <Button
+            android:id="@+id/fragment_bookshelf_go_shelf"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_go_shelf_button"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/public_12_dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_edit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimens_55dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/ll_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_f5f5f5_line"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_select"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_marginRight="@dimen/dimens_3dp"
+                android:src="@mipmap/check_all_yes" />
+
+            <TextView
+                android:id="@+id/tx_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/string_all_select"
+                android:textColor="@color/color_3b3b3b"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_delete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_f5f5f5_line"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_delete"
+                android:layout_width="@dimen/dimens_18dp"
+                android:layout_height="@dimen/dimens_18dp"
+                android:layout_marginRight="@dimen/dimens_3dp"
+                android:src="@mipmap/delet_yes" />
+
+            <TextView
+                android:id="@+id/tx_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ReadHistoryFragment_shangchu"
+                android:textColor="@color/color_9a9a9a"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

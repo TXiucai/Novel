@@ -32,9 +32,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.squareup.okhttp.Request;
-//import com.squareup.okhttp.Response;
-//.http.RequestParams;
 
 /**
  * 作品评论列表

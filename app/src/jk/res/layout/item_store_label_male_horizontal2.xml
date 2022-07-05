@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/item_store_label_male_vertical_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/home_novel_13_red"
+        android:layout_marginBottom="@dimen/dimens_10dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimens_10dp"
+        android:paddingTop="@dimen/dimens_14dp"
+        android:paddingRight="@dimen/dimens_20dp"
+        android:paddingBottom="@dimen/dimens_14dp">
+
+        <ImageView
+            android:id="@+id/item_store_label_male_horizontal_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimens_10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/LinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="我真不是开玩笑"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_flag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="gone"
+                    android:background="@drawable/shape_book_flag"
+                    android:paddingLeft="3dp"
+                    android:paddingTop="1dp"
+                    android:paddingRight="3dp"
+                    android:paddingBottom="1dp"
+                    android:text="免费"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/public_10_dp" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/item_store_label_male_horizontal_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/LinearLayout"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="@dimen/dimens_1dp"
+                android:lines="4"
+                android:textColor="@color/color_c0c0c0"
+                android:textSize="11sp" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="作者"
+                    android:textColor="@color/color_c0c0c0"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/item_store_label_male_horizontal_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimens_16dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_ff8350_20"
+                    android:paddingLeft="@dimen/dimens_8dp"
+                    android:paddingRight="@dimen/dimens_8dp"
+                    android:textSize="10sp" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

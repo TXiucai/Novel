@@ -268,9 +268,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         setBottomButtonImg(home_store_layout_comic, R.drawable.selector_home_store_comic);
         setBottomButtonImg(home_novel_layout, R.drawable.selector_home_novel);
         if (getBoyinSwitch()) {
-            home_novel_layout.setVisibility(View.GONE);
+            home_discovery_layout.setVisibility(View.GONE);
         } else {
-            home_novel_layout.setVisibility(View.VISIBLE);
+            home_discovery_layout.setVisibility(View.VISIBLE);
             setBottomButtonImg(home_discovery_layout, R.drawable.selector_home_boyin);
             home_discovery_layout.setText(getString(R.string.MainActivity_boyin));
         }
@@ -316,7 +316,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         mFragmentList.add(mineFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fragmentManager, mFragmentList);
         customScrollViewPage.setAdapter(myFragmentPagerAdapter);
-        customScrollViewPage.setOffscreenPageLimit(5);
+        customScrollViewPage.setOffscreenPageLimit(mFragmentList.size());
         setOption();
     }
 
@@ -333,9 +333,9 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                 initViewPageChecked(home_novel_layout, 2, true);
                 break;
             case 3:
-                if (getBoyinSwitch()){
+                if (getBoyinSwitch()) {
                     initViewPageChecked(home_mine_layout, 3, true);
-                }else {
+                } else {
                     initViewPageChecked(home_discovery_layout, 3, true);
                 }
                 break;
@@ -646,8 +646,14 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             initViewPageChecked(home_store_layout, 0, true);
         } else if (toStore.PRODUCT == 2) {//漫画
             initViewPageChecked(home_store_layout_comic, 1, true);
-        } else if (toStore.PRODUCT == 3) {//有声 or 推荐
+        } else if (toStore.PRODUCT == 3) {//有声
             initViewPageChecked(home_discovery_layout, 3, true);
+        } else {// 动漫
+            if (BuildConfig.free_charge) {
+                initViewPageChecked(home_novel_layout, 2, true);
+            } else {
+                initViewPageChecked(home_novel_layout, 3, true);
+            }
         }
     }
 
@@ -1235,11 +1241,11 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             AESUtil.decryptFile(AESUtil.key, inputStream, outPath + fileName);
         }
         iconCount++;
-        if (getBoyinSwitch()){
+        if (getBoyinSwitch()) {
             if (iconCount == 8) {
                 MainActivity.this.runOnUiThread(this::setRBSelectedState);
             }
-        }else {
+        } else {
             if (iconCount == 10) {
                 MainActivity.this.runOnUiThread(this::setRBSelectedState);
             }

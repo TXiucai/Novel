@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/item_comic_recyclerview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+        <com.github.piasy.biv.view.BigImageView
+            android:id="@+id/item_comic_recyclerview_photoview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:clickable="false"
+            app:failureImage="@mipmap/icon_comic_def"
+            app:failureImageInitScaleType="center"
+            app:initScaleType="custom"
+            app:optimizeDisplay="true"
+            app:tapToRetry="true" />
+
+        <com.heiheilianzai.app.view.comic.DanmuRelativeLayout
+            android:id="@+id/item_comic_recyclerview_danmu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/ban_touch_float"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent" />
+    </FrameLayout>
+</RelativeLayout>
