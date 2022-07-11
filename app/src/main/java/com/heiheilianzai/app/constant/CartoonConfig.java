@@ -14,10 +14,10 @@ public class CartoonConfig {
     /**
      * 动画视频搜索
      */
-    public static final String mCartoonSearchWord = "/comic-video/search-index";
+    public static final String mSeachCartoonWord = "/comic-video/search-index";
 
     /**
-     * 动画上传热词
+     * 动画视频搜索
      */
     public static final String mUpCartoonWord = "/comic-video/add-hotwords";
 

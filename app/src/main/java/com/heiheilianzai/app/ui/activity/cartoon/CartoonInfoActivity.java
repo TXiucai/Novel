@@ -426,7 +426,6 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
             }
         });
     }
-
     private void getInfo() {
         ReaderParams params = new ReaderParams(mActivity);
         params.putExtraParams("video_id", mCartoonId);

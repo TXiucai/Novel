@@ -228,7 +228,7 @@ public class SearchActivity extends BaseButterKnifeActivity {
         } else if (PRODUCT == 2) {
             url = ReaderConfig.getBaseUrl() + ComicConfig.COMIC_search_index;
         } else {
-            url = ReaderConfig.getBaseUrl() + CartoonConfig.mCartoonSearchWord;
+            url = ReaderConfig.getBaseUrl() + CartoonConfig.mSeachCartoonWord;
         }
         HttpUtils.getInstance(activity).sendRequestRequestParams3(url, json, true, new HttpUtils.ResponseListener() {
                     @Override
