@@ -4,7 +4,6 @@ import android.content.ContentValues;
 
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.utils.MyToash;
-import com.heiheilianzai.app.utils.Utils;
 
 import org.litepal.LitePal;
 import org.litepal.annotation.Column;
