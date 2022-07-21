@@ -29,7 +29,7 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
 
     @Override
     public int initContentView() {
-        return R.layout.fragment_comic_store_new;
+        return R.layout.fragment_book_store_new;
     }
 
     @Override

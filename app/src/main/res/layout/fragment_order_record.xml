@@ -22,7 +22,6 @@
             android:paddingLeft="@dimen/dimens_10dp">
 
             <ImageView
-                android:id="@+id/iv_order_back"
                 android:layout_width="@dimen/dimens_20dp"
                 android:layout_height="@dimen/dimens_20dp"
                 android:background="@mipmap/back_black" />

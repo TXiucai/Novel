@@ -159,16 +159,24 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
         int LastFragment = ShareUitls.getTab(activity, "BookshelfFragment", 0);
         if (LastFragment == 1) {
             fragment_newbookself_viewpager.setCurrentItem(1);
-            fragment_comic_select.setVisibility(View.VISIBLE);
+            fragment_comic_select.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
             fragment_novel_select.setVisibility(View.GONE);
             fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
+            if (BuildConfig.free_charge) {
+                fragment_shelf_manhau.setBackground(getResources().getDrawable(R.drawable.shape_ffffff_5));
+            }
             fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
+            fragment_shelf_xiaoshuo.setBackground(null);
             chooseWho = true;
         } else {
             fragment_comic_select.setVisibility(View.GONE);
-            fragment_novel_select.setVisibility(View.VISIBLE);
+            fragment_novel_select.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
             fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
+            if (BuildConfig.free_charge) {
+                fragment_shelf_xiaoshuo.setBackground(getResources().getDrawable(R.drawable.shape_ffffff_5));
+            }
             fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
+            fragment_shelf_manhau.setBackground(null);
         }
         position = true;
         fragment_newbookself_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -185,14 +193,22 @@ public class BookshelfFragment extends BaseButterKnifeFragment {
                 comicshelfFragment.AllchooseAndCancleOnclick(false);
                 if (!chooseWho) {
                     fragment_comic_select.setVisibility(View.GONE);
-                    fragment_novel_select.setVisibility(View.VISIBLE);
+                    fragment_novel_select.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
                     fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.color_ff8350));
+                    if (BuildConfig.free_charge) {
+                        fragment_shelf_xiaoshuo.setBackground(getResources().getDrawable(R.drawable.shape_ffffff_5));
+                    }
+                    fragment_shelf_manhau.setBackground(null);
                     fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.black));
                 } else {
-                    fragment_comic_select.setVisibility(View.VISIBLE);
+                    fragment_comic_select.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
                     fragment_novel_select.setVisibility(View.GONE);
                     fragment_shelf_manhau.setTextColor(getResources().getColor(R.color.color_ff8350));
+                    if (BuildConfig.free_charge) {
+                        fragment_shelf_manhau.setBackground(getResources().getDrawable(R.drawable.shape_ffffff_5));
+                    }
                     fragment_shelf_xiaoshuo.setTextColor(getResources().getColor(R.color.black));
+                    fragment_shelf_xiaoshuo.setBackground(null);
                 }
                 setBookshelfRecommendationEvent();
             }

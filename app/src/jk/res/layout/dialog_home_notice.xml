@@ -12,9 +12,9 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_80dp"
+            android:layout_height="@dimen/dimens_70dp"
             android:scaleType="fitXY"
-            android:src="@mipmap/home_notice_top_bg" />
+            android:src="@mipmap/update_top" />
 
         <LinearLayout
             android:layout_width="match_parent"

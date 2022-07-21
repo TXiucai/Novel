@@ -248,7 +248,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         dialog.setContentView(view);
         dialog.setCanceledOnTouchOutside(true);
         //设置对话框的大小
-        view.setMinimumHeight((int) (ScreenSizeUtils.getInstance(this).getScreenHeight() * 0.23f));
         Window dialogWindow = dialog.getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.width = (int) (ScreenSizeUtils.getInstance(this).getScreenWidth() * 0.75f);

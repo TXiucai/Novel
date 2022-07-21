@@ -267,7 +267,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         switch (style) {
             case COMIC_UI_STYLE_1:
                 width = WIDTH / 2;
-                height = width * 2 / 3;
+                height = width * 3 / 5;
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size1 = Math.min(4, comicList.size());
                 raw = (int) (Math.ceil(size1 / 2d));
@@ -301,7 +301,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case COMIC_UI_STYLE_4:
                 width = WIDTH / 2;
-                height = width * 2 / 3;
+                height = width * 3 / 5;
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size2 = Math.min(4, comicList.size());
                 raw = (int) (Math.ceil(size2 / 2d));
@@ -309,7 +309,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case COMIC_UI_STYLE_5:
                 width = WIDTH / 2;
-                height = width * 2 / 3;
+                height = width * 3 / 5;
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size3 = Math.min(6, comicList.size());
                 raw = (int) (Math.ceil(size3 / 2d));

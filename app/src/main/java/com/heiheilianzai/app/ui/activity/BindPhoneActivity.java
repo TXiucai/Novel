@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
@@ -67,7 +68,7 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
 
                     if (!TextUtils.isEmpty(activity_bind_phone_message.getText().toString())) {
                         activity_bind_phone_btn.setEnabled(true);
-                        activity_bind_phone_btn.setBackgroundResource(R.drawable.shape_login_enable_bg);
+                        activity_bind_phone_btn.setBackgroundResource(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_login_enable_bg);
                         activity_bind_phone_btn.setTextColor(Color.WHITE);
                     } else {
                         activity_bind_phone_btn.setEnabled(false);
@@ -102,7 +103,7 @@ public class BindPhoneActivity extends BaseActivity implements ShowTitle, LoginV
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(s)) {
                     activity_bind_phone_btn.setEnabled(true);
-                    activity_bind_phone_btn.setBackgroundResource(R.drawable.shape_login_enable_bg);
+                    activity_bind_phone_btn.setBackgroundResource(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_login_enable_bg);
                     activity_bind_phone_btn.setTextColor(Color.WHITE);
                 } else {
                     activity_bind_phone_btn.setEnabled(false);

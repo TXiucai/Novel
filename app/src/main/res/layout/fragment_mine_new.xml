@@ -56,7 +56,6 @@
                             android:src="@mipmap/icon_def_head" />
 
                         <ImageView
-                            android:id="@+id/fragment_mine_user_info_sex"
                             android:layout_width="@dimen/dimens_25dp"
                             android:layout_height="@dimen/dimens_25dp"
                             android:layout_alignParentRight="true"

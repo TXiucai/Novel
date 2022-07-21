@@ -7,7 +7,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@mipmap/lable_bg"
         android:orientation="horizontal">
 
         <ImageView
@@ -46,7 +45,6 @@
         android:id="@+id/liem_store_comic_style1_style3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:gravity="center"
         android:numColumns="1" />
 
@@ -62,7 +60,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:background="@color/white"
         android:gravity="center"
         android:horizontalSpacing="@dimen/dimens_10dp"
         android:numColumns="3" />
@@ -73,7 +70,6 @@
         android:layout_height="@dimen/dimens_36dp"
         android:layout_marginTop="@dimen/dimens_5dp"
         android:layout_marginBottom="@dimen/dimens_5dp"
-        android:background="@color/white"
         android:orientation="horizontal">
 
         <View
@@ -87,7 +83,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@drawable/shape_f6f6f6_20"
+            android:background="@drawable/shape_e6e6e6_20"
             android:orientation="horizontal">
 
             <View
@@ -128,7 +124,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@drawable/shape_f6f6f6_20"
+            android:background="@drawable/shape_e6e6e6_20"
             android:orientation="horizontal">
 
             <View

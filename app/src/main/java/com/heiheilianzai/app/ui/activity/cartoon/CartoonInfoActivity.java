@@ -289,7 +289,8 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        MyPicasso.GlideImageNoSize(mActivity, mCartoonInfo.getAuthor(), imageView);
+        imageView.setImageDrawable(getResources().getDrawable(R.mipmap.cartoon_play_bg));
+        //MyPicasso.GlideImageNoSize(mActivity, mCartoonInfo.getAuthor(), imageView);
         //外部辅助的旋转，帮助全屏
         mOrientationUtils = new OrientationUtils(this, mVideoPlayer);
         //初始化不打开外部的旋转
@@ -298,6 +299,12 @@ public class CartoonInfoActivity extends BaseButterKnifeActivity {
                 .setSeekOnStart(cartoonChapter.getPlay_node() * 1000)
                 .setThumbImageView(imageView)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
+                    @Override
+                    public void onAutoComplete(String url, Object... objects) {
+                        super.onAutoComplete(url, objects);
+                        GSYVideoManager.releaseAllVideos();
+                    }
+
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);

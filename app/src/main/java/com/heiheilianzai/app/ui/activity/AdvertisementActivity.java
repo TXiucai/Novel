@@ -11,11 +11,14 @@ import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.base.BaseAdvertisementActivity;
 import com.heiheilianzai.app.constant.PrefConst;
 import com.heiheilianzai.app.model.AppUpdate;
+import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.Startpage;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.UpdateApp;
+import com.mobi.xad.XRequestManager;
+import com.mobi.xad.bean.AdInfo;
 
 import java.io.File;
 
@@ -118,6 +121,7 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
         if (startpage != null && startpage.image != null && startpage.image.length() != 0) {
             if (App.isShowSdkAd(activity, startpage.getAd_show_type())) {
                 time = Integer.valueOf(startpage.getCountdown_second());
+                AdInfo adInfo = BaseSdkAD.newAdInfo(startpage);
                 setAdImageView(activity_splash_im, startpage, activity, new OnAdImageListener() {
                     @Override
                     public void onAnimationEnd() {
@@ -134,9 +138,11 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
                     public void onClick() {
                         skip = false;
                         if (!skip) {
-                            handler.removeMessages(1);
-                            handler.removeMessages(0);
-                            adSkip(startpage, activity);
+                            if (adInfo != null) {
+                                handler.removeMessages(1);
+                                handler.removeMessages(0);
+                                adSkip(startpage, activity);
+                            }
                         }
                     }
                 });

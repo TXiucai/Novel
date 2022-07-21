@@ -5,9 +5,7 @@
     android:background="@mipmap/page_bg"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/activity_home_book_layout"
-        layout="@layout/activity_home_viewpager_book" />
+    <include layout="@layout/activity_home_viewpager_book" />
 
 
 <!--    <include

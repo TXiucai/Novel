@@ -35,10 +35,10 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dimens_10dp"
                     android:textColor="@color/white"
+                    android:text="@string/main_search_tip"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/fragment_store_search_bookname2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -88,7 +88,6 @@
         <RelativeLayout
             android:id="@+id/rl_channel"
             android:layout_width="match_parent"
-            android:background="@mipmap/channel_bg"
             android:layout_height="@dimen/dimens_45dp"
             android:paddingTop="@dimen/dp_10"
             android:paddingBottom="@dimen/dp_10">
@@ -106,6 +105,7 @@
                 app:tabMode="scrollable"
                 app:tabPaddingEnd="@dimen/dimens_8dp"
                 app:tabPaddingStart="@dimen/dimens_8dp"
+                app:tabRippleColor="@color/transparent"
                 app:tabTextColor="@color/color_1a1a1a" />
 
             <ImageView

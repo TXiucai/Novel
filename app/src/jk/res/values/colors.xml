@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="updategray">#6e6e6e</color>
-    <color name="updateblue">#376ee5</color>
     <!--主题绿色-->
     <color name="mainColor">#FF697A</color>
     <color name="yijianrushujia">#4Dff9966</color>
-    <color name="mainColor3">#ff9966</color>
-    <color name="comic_info_tag_text">#FF96D1CF</color>
-    <color name="comic_info_tag_bg">#FFF0FAFC</color>
-    <color name="mainColor2">#ff9966</color>
+    <color name="mainColor3">#FF697A</color>
+    <color name="mainColor2">#FF697A</color>
     <!--透明色 -->
     <color name="transparent">#00000000</color>
     <!--白色 -->
     <color name="white">#FFFFFF</color>
-    <color name="white_80">#ccFFFFFF</color>
+    <color name="white_80">#B3FFFFFF</color>
     <!--珊瑚色 -->
-    <color name="coral">#FF7F50</color>
+    <color name="coral">#FF697A</color>
     <!--红色 -->
     <color name="red">#E25754</color>
-    <color name="bookshelf_sign">#FF408CED</color>
     <!--亮珊瑚色 -->
     <color name="lightcoral">#F08080</color>
     <!--实木色 -->
@@ -32,7 +28,6 @@
     <!--亮灰色3 -->
     <color name="lightgray3">#f1f1f1</color>
     <!--天蓝色 -->
-    <color name="skyblue">#87CEEB</color>
     <!--灰色 -->
     <color name="gray">#A9A9A9</color>
 
@@ -43,7 +38,6 @@
     <color name="gray3">#b2b2b3</color>
     <color name="gray4">#6B6B6B</color>
     <!--菊兰色 -->
-    <color name="cornflowerblue">#6495ED</color>
     <!--橙绿色 -->
     <color name="limegreen">#28ac28</color>
     <!--青色 -->
@@ -54,10 +48,8 @@
     <color name="black">#000000</color>
     <!--阅读器-->
     <color name="read_dialog_bg">#2C2C2C</color>
-    <color name="half_transparent">#aa000000</color>
     <!-- Reader Color -->
     <color name="read_textColor">#3B3A38</color>
-    <color name="read_dialog_button_select">#E25754</color>
     <color name="read_bg_default">#F5D9AB</color>
     <color name="read_bg_1">#d6ead5</color>
     <color name="read_bg_2">#cbdeef</color>
@@ -83,15 +75,7 @@
     <color name="search_bg">#edeeee</color>
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1E88E5</color>
-    <color name="colorPrimaryLight">#90CAF9</color>
-    <color name="nightColorPrimary">#555555</color>
-    <color name="nightColorPrimaryDark">#424242</color>
-    <color name="nightColorPrimaryLight">#757575</color>
     <color name="whitest">#FFFFFF</color>
-    <color name="dayModeBackgroundColor">#FCECDF</color>
-    <color name="dayModeTextColor">#424242</color>
-    <color name="nightModeBackgroundColor">#424242</color>
-    <color name="nightModeTextColor">#E0E0E0</color>
     <!--day theme-->
     <!--night theme-->
     <color name="fileSearcherPrimaryColor">#3F51B5</color>
@@ -105,7 +89,6 @@
     <color name="color_60000000">#60000000</color>
     <color name="color_606060">#606060</color>
     <color name="color_3b3b3b">#3b3b3b</color>
-    <color name="color_bbbbbb">#BBBBBB</color>
 
     <!--自定义图片加载进度-->
     <color name="ProgressPieView_progress_color">#22F7C13B</color>
@@ -117,7 +100,7 @@
     <color name="color_ffd04f">#ffd04f</color>
     <color name="color_eed03e">#eed03e</color>
     <color name="color_fe9373">#FE9373</color>
-    <color name="color_ff5349">#FF5349</color>
+    <color name="color_ff5349">#FF697A</color>
     <color name="color_dfdfdf">#DFDFDF</color>
     <color name="color_ccea7788">#CCEA7788</color>
     <color name="color_cc9a5fba">#CC9A5FBA</color>
@@ -130,12 +113,11 @@
     <color name="color_f7f7f7">#F7F7F7</color>
     <color name="color_444444">#444444</color>
     <color name="color_282727">#282727</color>
-    <color name="color_ff8350">#FF8350</color>
+    <color name="color_ff8350">#FF697A</color>
     <color name="color_33ff8350">#33FF8350</color>
     <color name="color_f6f6f6">#F6F6F6</color>
     <color name="color_c0c0c0">#C0C0C0</color>
     <color name="color_929292">#929292</color>
-    <color name="color_FF7E38">#4DFF7E38</color>
     <color name="color_F5F5F5">#F5F5F5</color>
     <color name="color_c3c3c3">#C3C3C3</color>
     <color name="color_666666">#666666</color>
@@ -146,20 +128,13 @@
     <color name="color_9a9a9a">#9A9A9A</color>
     <color name="color_1a2629">#1A2629</color>
     <color name="color_ffdbc7">#FFDBC7</color>
-    <color name="color_fdd59d">#FDD59D</color>
     <color name="color_35363b">#35363B</color>
     <color name="color_f7f3f7">#F7F3F7</color>
-    <color name="color_f7f7ff">#F7F7FF</color>
     <color name="color_999999">#999999</color>
-    <color name="color_FF8350">#FF8350</color>
     <color name="color_ef966B">#EF966B</color>
-    <color name="color_fefefe">#FEFFFE</color>
     <color name="color_e6e6e6">#E6E6E6</color>
     <color name="color_d68547">#D68547</color>
-    <color name="color_fff8ef">#FFF8EF</color>
-    <color name="color_a9a9a9">#A9A9A9</color>
     <color name="color_F82658">#F82658</color>
-    <color name="color_38CDBB">#38CDBB</color>
     <color name="color_4c4c4c">#4C4C4C</color>
     <color name="color_b57979">#B57979</color>
     <color name="color_eeeeee">#EEEEEE</color>
@@ -199,7 +174,6 @@
     <color name="color_2628292d">#2628292D</color>
     <color name="color_353636">#353636</color>
     <color name="color_bfbfbf">#BFBFBF</color>
-    <color name="color_00003F">#00003F</color>
     <color name="color_9C8A8B">#9C8A8B</color>
     <color name="color_392E1D">#392E1D</color>
     <color name="color_7D654D">#7D654D</color>

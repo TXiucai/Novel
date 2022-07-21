@@ -25,7 +25,6 @@
         android:visibility="visible">
 
         <ProgressBar
-            android:id="@+id/loading"
             android:layout_width="@dimen/dimens_24dp"
             android:layout_height="@dimen/dimens_24dp"
             android:layout_gravity="center"

@@ -15,6 +15,6 @@
         android:id="@+id/fragment_store_comic_content_commend"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/white_80"
         android:orientation="vertical" />
 </com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout>

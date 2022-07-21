@@ -114,7 +114,7 @@ public class ComicshelfFragment extends Fragment {
             if (adapter != null && adapter.isDeletable()) {
                 adapter.setDeletable(false);
                 adapter.notifyDataSetChanged();
-                shelf_book_delete_btn.setVisibility(View.GONE);
+                shelf_book_delete_btn.setVisibility(View.INVISIBLE);
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
                 if (showGuangbo) {
                     fragment_bookshelf_marquee_layout.setVisibility(View.VISIBLE);
@@ -513,7 +513,7 @@ public class ComicshelfFragment extends Fragment {
             @Override
             public void success() {
                 fragment_bookshelf_head.setVisibility(View.VISIBLE);
-                shelf_book_delete_btn.setVisibility(View.GONE);
+                shelf_book_delete_btn.setVisibility(View.INVISIBLE);
                 if (showGuangbo) {
                     fragment_bookshelf_marquee_layout.setVisibility(View.VISIBLE);
                 }

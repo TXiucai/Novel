@@ -102,7 +102,6 @@
                     android:scaleType="centerCrop" />
 
                 <TextView
-                    android:id="@+id/fragment_bookself_tip1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_15dp"
@@ -112,7 +111,6 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/fragment_bookself_tip2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_4dp"

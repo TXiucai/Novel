@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:toggle="http://schemas.android.com/tools"
     android:id="@+id/activity_main_vitualkey"
-    android:background="@mipmap/page_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@mipmap/page_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,10 +48,6 @@
                     toggle:tbOnColor="@color/mainColor2" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/lightgray2" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -83,8 +79,7 @@
             <View
                 android:id="@+id/automation_buy_next_lv"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/white_80" />
+                android:layout_height="@dimen/dimens_1dp" />
 
             <RelativeLayout
                 android:id="@+id/automation_buy_next"
@@ -116,14 +111,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_10dp"
-            android:background="@color/white_80"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/activity_settings_clear_cache"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_80"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimens_10dp">
 
@@ -143,15 +137,11 @@
                     android:background="@mipmap/right_arrow" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/lightgray2" />
-
             <RelativeLayout
                 android:id="@+id/activity_settings_support"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_80"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimens_10dp"
                 android:visibility="gone">
@@ -172,15 +162,11 @@
                     android:background="@mipmap/right_arrow" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/lightgray2" />
-
             <RelativeLayout
                 android:id="@+id/activity_settings_share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_80"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimens_10dp"
                 android:visibility="gone">
@@ -210,6 +196,7 @@
                 android:id="@+id/activity_settings_language"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_80"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimens_10dp"
                 android:visibility="gone">
@@ -232,14 +219,13 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/lightgray2"
-                android:visibility="gone" />
+                android:layout_height="@dimen/dimens_1dp" />
 
             <RelativeLayout
                 android:id="@+id/activity_settings_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_80"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimens_10dp"
                 android:visibility="visible">
@@ -272,14 +258,13 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/lightgray2"
-                android:visibility="gone" />
+                android:layout_height="@dimen/dimens_1dp" />
 
             <RelativeLayout
                 android:id="@+id/activity_settings_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white_80"
                 android:gravity="center_vertical"
                 android:padding="@dimen/dimens_10dp"
                 android:visibility="visible">
@@ -304,11 +289,12 @@
         <TextView
             android:id="@+id/activity_settings_logout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_10dp"
-            android:background="@color/white_80"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dimens_15dp"
+            android:layout_marginTop="@dimen/dimens_76dp"
+            android:layout_marginRight="@dimen/dimens_15dp"
+            android:background="@drawable/shape_ffffff_20"
             android:gravity="center"
-            android:padding="@dimen/dimens_20dp"
             android:text="@string/SettingsActivity_exit"
             android:textColor="@color/red"
             android:textSize="@dimen/public_12_dp" />

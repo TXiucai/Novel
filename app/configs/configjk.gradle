@@ -53,11 +53,11 @@ gradle.ext {
     // Server host
     DOMAIN_HOSTS = "\"https://api.a3559f.com\""
     API_HOSTS = "{" +
-            "\"http://api.x51d23.com\"," +
-            "\"http://api.orbopv.com\"," +
-            "\"http://api.he0jys.com\"," +
-            "\"http://api.1rephm.com\"," +
-            "\"http://api.askoc8.com\"," +
+            "\"http://api.rdyznatxe8.com\"," +
+            "\"http://api.jr4evkw3jp.com\"," +
+            "\"http://api.ezi5f6g8cv.com\"," +
+            "\"http://api.h6nthsg9u5.com\"," +
+            "\"http://api.5mhmfshxtt.com\"," +
             "}"
     API_HOSTS_UAT = "{" +
             "\"http://uat-jk-api1.08bea5.com\"," +

@@ -49,10 +49,10 @@ public class MyPicasso {
     }
 
     public static void GlideImageNoSize(Activity activity, String url, ImageView imageView, int def) {
+        imageView.setImageResource(def);
         if (url == null || url.length() == 0) {
             return;
         } else {
-            imageView.setImageResource(def);
             if (activity != null && !activity.isFinishing()) {
                 Glide.with(activity).load(url).apply(getRequestOptions(def, imageView)).into(imageView);
             }
@@ -64,10 +64,10 @@ public class MyPicasso {
     }
 
     public static void GlideImage(Activity activity, String url, ImageView imageView, int width, int height, int def) {
+        imageView.setImageResource(def);
         if (url == null || url.length() == 0) {
             return;
         } else {
-            imageView.setImageResource(def);
             RequestOptions options = getRequestOptions(width, height, def, true, false, imageView);
             if (activity != null && !activity.isFinishing()) {
                 Glide.with(activity).load(url).apply(options).into(imageView);
@@ -82,10 +82,10 @@ public class MyPicasso {
     }
 
     public static void GlideImageRoundedCorners(int radius, Activity activity, String url, ImageView imageView, int width, int height, int def) {
+        imageView.setImageResource(def);
         if (url == null || url.length() == 0) {
             return;
         } else {
-            imageView.setImageResource(def);
             RequestOptions options = getRequestOptions(width, height, def, radius, activity, imageView);
             if (activity != null && !activity.isFinishing()) {
                 Glide.with(activity).load(url).apply(options).into(imageView);
@@ -99,10 +99,10 @@ public class MyPicasso {
     }
 
     public static void GlideImageRoundedGasoMohu(Activity activity, String url, ImageView imageView, int width, int height, int def) {
+        imageView.setImageResource(def);
         if (url == null || url.length() == 0) {
             return;
         } else {
-            imageView.setImageResource(def);
             RequestOptions options = getRequestOptions(width, height, def, true, true, imageView);
             if (activity != null && !activity.isFinishing()) {
                 Glide.with(activity).load(url).apply(options).into(imageView);

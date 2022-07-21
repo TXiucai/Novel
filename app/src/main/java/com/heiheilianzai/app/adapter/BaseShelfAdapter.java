@@ -146,7 +146,7 @@ public abstract class BaseShelfAdapter<T> extends BaseAdapter {
                     }
                 });
                 viewHolder2.listview_item_nover_add_image.setImageResource(mIsDeletable ? 0 : R.mipmap.icon_addbook);
-                viewHolder2.listview_item_nover_add_layout.setBackgroundColor(mIsDeletable ? 0 : -526087);
+                viewHolder2.listview_item_nover_add_layout.setBackgroundColor(mIsDeletable ? 0 : mActivity.getResources().getColor(R.color.white_80));
             }
 
         } catch (Exception e) {

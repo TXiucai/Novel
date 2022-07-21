@@ -7,7 +7,6 @@
     android:clickable="true">
 
     <RelativeLayout
-        android:id="@+id/layout_gif_img"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
@@ -36,7 +35,6 @@
             tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/tv_gif_save_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/progress_bar_gif"
@@ -49,7 +47,6 @@
             tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/tv_gif_save_success"
             android:layout_width="@dimen/dimens_360dp"
             android:layout_height="30dp"
             android:layout_below="@+id/progress_bar_gif"
@@ -66,7 +63,6 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/iv_gif_save_loading"
         android:layout_width="84dp"
         android:layout_height="84dp"
         android:layout_centerInParent="true"
@@ -76,7 +72,6 @@
         tools:visibility="visible" />
 
     <LinearLayout
-        android:id="@+id/layout_gif_save_fail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -117,7 +112,6 @@
         android:orientation="vertical" />
 
     <TextView
-        android:id="@+id/tv_gif_save_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_video_gif"
@@ -129,7 +123,6 @@
         tools:visibility="visible" />
 
     <ImageView
-        android:id="@+id/iv_exit_gif"
         android:layout_width="@dimen/dimens_44dp"
         android:layout_height="@dimen/dimens_44dp"
         android:layout_marginLeft="10dp"
@@ -137,7 +130,6 @@
         android:src="@drawable/ic_gif_delete" />
 
     <TextView
-        android:id="@+id/tv_gif_save_title"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimens_44dp"
         android:layout_centerHorizontal="true"
@@ -147,7 +139,6 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tv_gif_finish"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_alignParentRight="true"

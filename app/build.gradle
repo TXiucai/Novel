@@ -54,7 +54,6 @@ android {
         buildConfigField "String", "sa_server_url", gradle.ext.SA_SERVER_URL
         buildConfigField "String", "sa_server_url_uat", gradle.ext.SA_SERVER_URL_UAT
         buildConfigField "String", "sa_server_app_id", gradle.ext.SA_SERVER_APP_ID
-        resValue "string", "tray__authority", gradle.ext.APPLICATION_ID + ".tray"
         buildConfigField "String", "XAD_ENV_APP_ID_DEBUG", gradle.ext.XAD_ENV_APP_ID_DEBUG
         buildConfigField "String", "XAD_EVN_APP_SECRET_DEBUG", gradle.ext.XAD_EVN_APP_SECRET_DEBUG
         buildConfigField "String", "XAD_ENV_APP_ID", gradle.ext.XAD_ENV_APP_ID

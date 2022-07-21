@@ -164,20 +164,6 @@
     </style>
 
 
-    <style name="AppDayTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryLight</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <style name="AppNightTheme" parent="AppDayTheme">
-        <item name="colorPrimary">@color/nightColorPrimary</item>
-        <item name="colorPrimaryDark">@color/nightColorPrimaryDark</item>
-        <item name="colorAccent">@color/nightColorPrimaryLight</item>
-    </style>
-
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:textColorSecondary">@color/whitest</item>
     </style>
@@ -185,26 +171,6 @@
     <style name="AppDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
-
-    <style name="noAnimation">
-        <item name="android:activityOpenEnterAnimation">@null</item>
-        <item name="android:activityOpenExitAnimation">@null</item>
-        <item name="android:activityCloseEnterAnimation">@null</item>
-        <item name="android:activityCloseExitAnimation">@null</item>
-        <item name="android:taskOpenEnterAnimation">@null</item>
-        <item name="android:taskOpenExitAnimation">@null</item>
-        <item name="android:taskCloseEnterAnimation">@null</item>
-        <item name="android:taskCloseExitAnimation">@null</item>
-        <item name="android:taskToFrontEnterAnimation">@null</item>
-        <item name="android:taskToFrontExitAnimation">@null</item>
-        <item name="android:taskToBackEnterAnimation">@null</item>
-        <item name="android:taskToBackExitAnimation">@null</item>
-    </style>
-
-    <style name="AppThemeNoAnimation" parent="AppTheme">
-        <item name="android:windowAnimationStyle">@style/noAnimation</item>
-    </style>
-
 
 
     <!-- Base application theme. -->

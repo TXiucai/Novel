@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -253,6 +254,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
 
     @Override
     public int initContentView() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         return R.layout.activity_comiclook;
     }
 
@@ -629,6 +631,10 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     showMenu(false);
                 }
             } else if (y <= HEIGHT * 2 / 3) {
+                if (isSoftShowing()) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 showMenu(!MenuSHOW);
             } else {
                 if (AppPrefs.getSharedBoolean(activity, "fanye_ToggleButton", true)) {
@@ -1285,7 +1291,11 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     public void onResponse(final String result) {
                         try {
                             mChapterBaseAd = gson.fromJson(result, BaseAd.class);
-                            mIsShowChapterAd = true;
+                            if (mChapterBaseAd == null) {
+                                mIsShowChapterAd = false;
+                            } else {
+                                mIsShowChapterAd = true;
+                            }
                         } catch (Exception e) {
                             mIsShowChapterAd = false;
                         }
@@ -1658,5 +1668,17 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 updateRecord();
             }
         });
+    }
+
+    /**
+     * 判单键盘是否弹起
+     *
+     * @return
+     */
+    private boolean isSoftShowing() {
+        int screenHeight = ScreenSizeUtils.getInstance(this).getScreenHeight();
+        Rect rect = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+        return screenHeight * 2 / 3 > rect.bottom;
     }
 }

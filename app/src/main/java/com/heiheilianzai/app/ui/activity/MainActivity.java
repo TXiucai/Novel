@@ -279,7 +279,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
 
     private void setBottomButtonImg(RadioButton button, int drawable) {
         Drawable drawable_novel = getResources().getDrawable(drawable);
-        drawable_novel.setBounds(0, 0, ImageUtil.dp2px(activity, 28), ImageUtil.dp2px(activity, 28));
+        drawable_novel.setBounds(0, 0, ImageUtil.dp2px(activity, 20), ImageUtil.dp2px(activity, 20));
         button.setCompoundDrawables(null, drawable_novel, null, null);
     }
 
@@ -1010,8 +1010,8 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
                         drawSelected);
                 arriveddrawable.addState(new int[]{-android.R.attr.state_checked},
                         drawNormal);
-                bytes[i].setCompoundDrawablesWithIntrinsicBounds(null, arriveddrawable, null, null);
-
+                arriveddrawable.setBounds(0, 0, ImageUtil.dp2px(activity, 20), ImageUtil.dp2px(activity, 20));
+                bytes[i].setCompoundDrawables(null, arriveddrawable, null, null);
                 String title = ShareUitls.getString(App.getContext(), "tab_main_menu_" + i, titles[i]);
                 bytes[i].setText(title);
             }

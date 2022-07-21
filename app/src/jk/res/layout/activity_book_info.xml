@@ -15,8 +15,8 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/activity_comic_info_AppBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_240dp"
-            android:background="@color/white"
+            android:layout_height="260dp"
+            android:background="@color/transparent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
@@ -24,7 +24,6 @@
                 android:id="@+id/activity_comic_info_CollapsingToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimens_210dp"
-                android:background="@color/white"
                 android:minHeight="@dimen/dimens_72dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -133,9 +132,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_50dp"
-                android:layout_marginTop="-15dp"
-                android:background="@drawable/shape_comicinfo_bg2">
+                android:layout_height="@dimen/dimens_50dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -217,7 +214,6 @@
             android:id="@+id/fragment_comicinfo_viewpage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -225,22 +221,21 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_60dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/dimens_20dp">
+        android:background="@color/white_80"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
             android:layout_marginLeft="@dimen/dimens_15dp"
             android:layout_marginRight="@dimen/dimens_15dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/ll_add"
                 android:layout_width="@dimen/dimens_0dp"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/dp_40"
                 android:layout_weight="2"
                 android:background="@drawable/shape_ffffff_20"
                 android:gravity="center">
@@ -270,7 +265,7 @@
                 android:layout_height="@dimen/dimens_40dp"
                 android:layout_gravity="center"
                 android:layout_weight="2"
-                android:background="@drawable/shape_start_bg"
+                android:background="@drawable/shape_read_bg"
                 android:gravity="center"
                 android:text="@string/BookInfoActivity_startyuedu"
                 android:textColor="@color/white"

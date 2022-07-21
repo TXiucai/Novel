@@ -1173,6 +1173,9 @@ public class ReadActivity extends BaseReadActivity {
     }
 
     public void acceptNovelBoyin(Activity activity, String name) {
+        if (BuildConfig.free_charge) {
+            return;
+        }
         MyPicasso.GlideImageNoSize(activity, baseBook.getCover(), activity_read_buttom_boyin_img, R.mipmap.book_def_v);
         activity_read_buttom_boyin_tittle.setText(String.format(getString(R.string.string_novel_boyin_tittle), name));
         ReaderParams params = new ReaderParams(activity);

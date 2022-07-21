@@ -36,6 +36,7 @@ import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseActivity;
 import com.heiheilianzai.app.callback.ShowTitle;
@@ -498,7 +499,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 if (s.toString().matches(math)) {
                     txPasswordError.setVisibility(View.INVISIBLE);
                     if (etPasswordSure.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
-                        confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                        confirm.setBackground(getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_ff8350_20));
                         confirm.setClickable(true);
                     } else {
                         confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
@@ -523,7 +524,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 if (s.toString().matches(math)) {
                     txPasswordErrorSure.setVisibility(View.INVISIBLE);
                     if (mEtPassword.getText().toString() != null && TextUtils.equals(mEtPassword.getText().toString(), etPasswordSure.getText().toString())) {
-                        confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                        confirm.setBackground(getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_ff8350_20));
                         confirm.setClickable(true);
                     } else {
                         confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
@@ -612,7 +613,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().matches(math) && FileUtils.isSimpleOrComplex(name)) {
-                    confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                    confirm.setBackground(getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_ff8350_20));
                     confirm.setClickable(true);
                 }
             }
@@ -622,10 +623,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (name.matches(math) && FileUtils.isSimpleOrComplex(name)) {
-                        confirm.setBackground(getDrawable(R.drawable.shape_ff8350_20));
+                        confirm.setBackground(getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_ff8350_20));
                         confirm.setClickable(true);
                     } else {
-                        confirm.setBackground(getDrawable(R.drawable.shape_e6e6e6_20));
+                        confirm.setBackground(getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg : R.drawable.shape_e6e6e6_20));
                         confirm.setClickable(false);
                         MyToash.Toash(activity, activity.getResources().getString(R.string.string_register_error));
                     }
@@ -800,5 +801,11 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 return null;
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActive = true;//禁止热启动
     }
 }

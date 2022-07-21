@@ -2,7 +2,6 @@
 
     <string name="app_name">嘿嘿连载</string>
     <string name="app_nomore">没有更多内容了</string>
-    <string name="app_sharegold">分享得金币</string>
     <string name="app_noresult">暂无结果～</string>
     <string name="app_update">嘿嘿连载有新版本啦</string>
 
@@ -21,10 +20,6 @@
     <string name="splashactivity_cannot_link">您所在区域暂时无法打开应用，我们加急处理中。请您稍后再试...</string>
 
     <!--首次启动引导页-->
-    <string name="firstStartactivity_welcome">你终于来了</string>
-    <string name="firstStartactivity_choosesex">现在快选择你的性别吧</string>
-    <string name="firstStartactivity_zongyounixihuan">总有你喜欢</string>
-    <string name="firstStartactivity_chooseclassfy">请选择你喜欢的书库</string>
     <string name="firstStartactivity_dutedeni">独特的你</string>
     <string name="firstStartactivity_choosebooks">请选择你感兴趣的书籍</string>
 
@@ -32,14 +27,12 @@
     <string name="MainActivity_exit">再按一次退出程序</string>
     <string name="MainActivity_shujia">书架</string>
     <string name="MainActivity_cartoon">动画</string>
-    <string name="MainActivity_shuchen">书城</string>
     <string name="MainActivity_faxian">发现</string>
     <string name="MainActivity_my">我的</string>
     <string name="MainActivity_boyin">有声</string>
     <string name="Discover_end">活动已结束</string>
     <string name="MainActivity_holdon">官网下载</string>
     <string name="MainActivity_nowupdate">立即升级</string>
-    <string name="MainActivity_pay_complete">您的支付订单已处理哦~</string>
 
     <!--书架-->
     <string name="noverfragment_xiaoshuo">小说</string>
@@ -65,7 +58,6 @@
     <string name="ReadHistoryFragment_gologin">去登录</string>
     <string name="ReadHistoryFragment_total_chapter">更新至第%s章</string>
     <string name="comicinfo_total_chapter">更新至第%d话</string>
-    <string name="ReadHistoryFragment_noread">还未阅读任何书籍</string>
 
     <!--书城-->
     <string name="storeFragment_more">更多</string>
@@ -73,11 +65,8 @@
     <string name="storeFragment_boy">男生</string>
     <string name="storeFragment_gril">女生</string>
     <string name="storeFragment_fenlei">分类</string>
-    <string name="storeFragment_paihang">榜单</string>
-    <string name="storeFragment_baoyue">会员</string>
     <string name="storeFragment_wanben">完结</string>
     <string name="storeFragment_xianmian">推荐</string>
-    <string name="storeFragment_lookmore">查看更多</string>
 
     <string name="public_sure">确定</string>
     <string name="public_close">返回</string>
@@ -97,24 +86,16 @@
     <string name="home_store_edit_data_refresh">新推荐书籍加载完毕，快去看看吧!</string>
     <!--个人中心-->
     <string name="user_login">登录 / 注册</string>
-    <string name="MineNewFragment_chongzhi">%s充值</string>
-    <string name="MineNewFragment_song">送%s</string>
-    <string name="MineNewFragment_kaitongVIP">我的VIP</string>
     <string name="MineNewFragment_shuping">我的评论</string>
-    <string name="MineNewFragment_share">我要分享</string>
-    <string name="MineNewFragment_read">阅读领奖</string>
     <string name="MineNewFragment_friend">分享好友</string>
     <string name="MineNewFragment_fankui">意见反馈</string>
     <string name="MineNewFragment_lianxikefu">联系客服</string>
     <string name="MineNewFragment_set">设置</string>
-    <string name="MineNewFragment_fuli">福利任务</string>
-    <string name="MineNewFragment_nologin">未登录</string>
     <string name="MineNewFragment_nologin_prompt">登录后才可以购买VIP哦~</string>
     <string name="MineNewFragment_nologin_prompt_gold">登录后才可以购买金币哦~</string>
     <string name="share_detail">分享记录</string>
     <string name="share_no_result">你还没有任何分享哦</string>
     <string name="golden_balance">余额：%d</string>
-    <string name="golden_recharge_balance">充值金币</string>
     <string name="become_vip">成为会员</string>
     <string name="become_vip_tip">畅听畅读，精品抢先</string>
 
@@ -175,28 +156,23 @@
     <string name="FeedBackActivity_title">意见回馈</string>
     <string name="FeedBackActivity_tijiao">提交</string>
     <string name="FeedBackActivity_some">写点什么吧</string>
-    <string name="FeedBackActivity_some1">请上传图片哦</string>
     <string name="FeedBackActivity_some2">请选择反馈类型哦</string>
     <string name="FeedBackActivity_sub_type">%s必填内容，请填写！</string>
     <string name="FeedBackActivity_des">请详细描述您遇到的问题并告知具体操作步骤，我们会尽快答复您的问题哦～</string>
     <string name="FeedBackActivity_success">反馈成功</string>
 
     <!--我的评论-->
-    <string name="MineCommentListActivity_title">我的评论</string>
 
     <!--我要分享-->
     <string name="ShareActivity_title">我的分享</string>
     <string name="ShareActivity_save_qr_code">保存二维码</string>
     <string name="ShareActivity_qr_code_file_name">heiheilianzai_share.jpg</string>
     <string name="pic_name">acount.jpg</string>
-    <string name="ShareActivity_save_qr_toast">已保存二维码到相册</string>
     <string name="ShareActivity_save">分享</string>
     <string name="ShareActivity_save_toast">已保存分享地址到粘贴板</string>
     <string name="save_or_share_pic">保存图片分享</string>
     <string name="copy_or_share_link">复制分享链接</string>
     <string name="share_rule1">分享规则</string>
-    <string name="share_rule2">作品简介打开应用提示已损坏是因为新系统的原</string>
-    <string name="share_rule3">因。新的系统为了加…</string>
     <string name="share_code">邀请码</string>
     <string name="share_friend">已成功邀请%s位好友</string>
     <string name="share_friend2">已成功邀请%s位好友,已达上限</string>
@@ -226,7 +202,6 @@
     <!--会员书库-->
     <!--开通会员-->
     <string name="AcquireBaoyueActivity_title">开通会员</string>
-    <string name="AcquireBaoyueActivity_fore">VIP特权</string>
 
     <!--充值中心-->
     <string name="RechargeActivity_keyongyue">可用余额</string>
@@ -242,8 +217,6 @@
     <string name="PayActivity_order_remind">我们正在处理您的订单，请耐心等待~</string>
 
     <!--签到-->
-    <string name="SigninActivity_title">签到</string>
-    <string name="SigninActivity_dengluqiandao">登录后才能签到哦</string>
     <string name="SigninActivity_no">不用了,谢谢</string>
     <string name="SigninActivity_yes">全部加入书架</string>
     <string name="SigninActivity_rule">签到规则</string>
@@ -251,9 +224,6 @@
 
     <!--任务中心-->
     <string name="TaskCenterActivity_titl">福利中心</string>
-    <string name="TaskCenterActivity_lianxuday">您已连续签到</string>
-    <string name="TaskCenterActivity_lianxuday_day">天</string>
-    <string name="TaskCenterActivity_lianxuday_lianxureward">连续签到最高可获得</string>
 
 
     <!--书籍详情-->
@@ -261,7 +231,6 @@
     <string name="BookInfoActivity_jiarushujias">已加入书架</string>
     <string name="BookInfoActivity_lookpinglun">查看全部评论(%s条)</string>
     <string name="BookInfoActivity_nopinglun">暂无评论点击抢沙发</string>
-    <string name="BookInfoActivity_renpinglun">人评论</string>
     <string name="BookInfoActivity_startyuedu">开始阅读</string>
 
     <string name="BookInfoActivity_xieshuping">写评论</string>
@@ -327,9 +296,8 @@
     <string name="ReadActivity_chapterfail">没有更多内容了</string>
     <string name="ReadActivity_endpage">全书完</string>
     <string name="ReadActivity_buysuccess">购买成功</string>
-    <string name="ReadActivity_buyed">已订阅</string>
     <string name="ReadActivity_buysuccessyidown">购买成功已添加下载</string>
-    <string name="ReadActivity_addbookself">是否加入书架</string>
+    <string name="ReadActivity_addbookself">是否加入书架?</string>
     <string name="ReadActivity_addbookselfno">再看看</string>
     <string name="ReadActivity_closeautoread">关闭自动阅读</string>
 
@@ -365,7 +333,6 @@
     <string name="fragment_comic_info_yishoucang">已收藏</string>
     <string name="fragment_comic_info_delshoucang">已取消收藏</string>
     <string name="fragment_comic_info_xiangqing">详情</string>
-    <string name="fragment_comic_info_wanjie">已完结</string>
     <string name="fragment_comic_info_zhengxu">正序</string>
     <string name="fragment_comic_info_daoxu">倒序</string>
     <string name="fragment_comic_info_dangqian">当前</string>
@@ -375,21 +342,18 @@
     <string name="ComicLookActivity_quanji">全集</string>
     <string name="ComicLookActivity_danmu">弹幕</string>
     <string name="ComicLookActivity_fashe">发射</string>
-    <string name="ComicLookActivity_fashesuccess">发射成功</string>
     <string name="ComicLookActivity_fadanmu">发一条弹幕吧~</string>
     <string name="ComicLookActivity_fapinglun">发一条评论吧~</string>
     <string name="ComicLookActivity_fasong">发送</string>
     <string name="ComicLookActivity_dangqianhua">当前话</string>
     <string name="ComicLookActivity_shangyipian">上一篇</string>
     <string name="ComicLookActivity_xiayipian">下一篇</string>
-    <string name="ComicLookActivity_nowbuy">立即购买</string>
 
     <string name="ComicLookActivity_end">已经是最后一话了~</string>
     <string name="ComicLookActivity_start">不能再往前翻了</string>
 
     <string name="ComicDownActivity_title">漫画下载</string>
     <string name="BoyinDownActivity_title">有声下载</string>
-    <string name="ComicDownActivity_xuhandi">续看第%s话</string>
     <string name="ComicDownActivity_choosecount">已选%s话</string>
     <string name="ComicDownActivity_downing">下载中</string>
     <string name="ComicDownActivity_downfail">下载失败</string>#
@@ -397,20 +361,12 @@
     <string name="ComicDownActivity_yixiazai">已下载%s话</string>
     <string name="ComicDownActivity_downprocess">下载完成%s</string>
     <string name="ComicDownActivity_total"> 共%s话</string>
-    <string name="ComicDownActivity_choose">请选择下载章节</string>
 
-    <string name="StoreFragment_toman">已切换至男频</string>
-    <string name="StoreFragment_towoman">已切换至女频</string>
     <string name="StoreFragment_xianshimianfei">限时免费</string>
-
-    <string name="MineNewFragment_fulitask">阅读有奖</string>
-    <string name="MineNewFragment_fulitaskjiangli">完成任务有奖励</string>
-    <string name="MineNewFragment_gold_coins">微信客服</string>
 
     <string name="AboutActivity_weixin">微信客服</string>
 
     <string name="chapterupdateing">章节正在更新中~</string>
-    <string name="nologin">还没有登录哦~</string>
     <string name="load_more">加载更多中...</string>
     <string name="load_over">已加载所有内容！</string>
     <string name="progress_zero">0%</string>
@@ -481,19 +437,11 @@
     <string name="string_comic_vip">本作品VIP会员免费看</string>
     <string name="string_comic_gold">本作品使用金币解锁观看</string>
     <string name="string_comic_chapter_tittle">目录/选集</string>
-    <string name="string_dialog_comic_tittle">VIP<font color='#ff8350'>免费</font>会员</string>
-    <string name="string_dialog_comic_subtittle"><![CDATA[开通VIP免费看所有漫画>>]]></string>
-    <string name="string_dialog_comic_vip">开通VIP会员</string>
-    <string name="string_mine_no_login_tip">登录后享受更多服务</string>
-    <string name="mine_vip_tittle">VIP专享</string>
-    <string name="mine_vip_tip">免费畅听畅读，精品抢先</string>
     <string name="mine_vip_open">立即支付</string>
-    <string name="mine_vip_continue">立即续费</string>
     <string name="string_sign_invite_code">填邀请码送好礼</string>
     <string name="feedback_type">反馈类型</string>
     <string name="up_picture">上传图片</string>
     <string name="hint">（最多上传6张）</string>
-    <string name="string_baoyue_vip_tittle">VIP会员</string>
     <string name="string_friend_tip">温馨提示</string>
     <string name="dialog_close__expired_vip">我再想想</string>
     <string name="dialog_buy_expired_vip">我要续费</string>
@@ -535,8 +483,6 @@
     <string name="dialog_vip_comfirm_tittle">充值确认中...</string>
     <string name="string_dialog_comfirm_tip">若在30分钟内未到账，请联系客服查询</string>
     <string name="string_yes">好的</string>
-    <string name="dialog_vip_order_error">由于某些原因无法唤起支付，请重试</string>
-    <string name="dialog_vip_repeat">重试</string>
     <string name="string_order_create">订单生成中...</string>
     <string name="string_ordeer_undeal">您有1笔订单尚未支付哦~</string>
     <string name="string_order_go">立即前往</string>
@@ -559,7 +505,6 @@
     <string name="string_no_last">没有下一则啦！</string>
     <string name="dialog_lookcomicset_small_text1">小图模式</string>
     <string name="dialog_lookcomicset_small_text2">打开后可点击查看大图</string>
-    <string name="string_read_time_tittle">阅读领奖</string>
     <string name="string_read_time_today">今日已阅读</string>
     <string name="string_read_time_min">分钟</string>
     <string name="string_read_time_coupon">通过阅读已领取%s金币!</string>
@@ -567,7 +512,6 @@
     <string name="string_rules">活动规则</string>
     <string name="string_exchage_gift">兑换福利</string>
     <string name="string_accept_coupon_success">金币领取成功</string>
-    <string name="string_zero_min">0分钟</string>
     <string name="string_continue_accept_coupon">再看%d分钟可领取</string>
     <string name="string_exchage_gift_tittle">金币兑换好物</string>
     <string name="string_exchange_go"><![CDATA[前往>]]></string>
@@ -586,7 +530,6 @@
     <string name="dialog_lookcomicset_open_text">自动解锁</string>
     <string name="dialog_lookcomicset_open_text2">打开后自动扣除金币解锁章节</string>
     <string name="ReadActivity_autoread_close">开启自动解锁章节</string>
-    <string name="ReadActivity_autoread_open">关闭自动解锁章节</string>
     <string name="string_comment">精品推荐</string>
     <string name="string_success_vip_marquee">恭喜%s开通vip套餐</string>
     <string name="string_success_vip_marquee_gold">恭喜%s</string>
@@ -599,19 +542,17 @@
     <string name="string_register_save_pic">保存图片，用于登录个人账号</string>
     <string name="string_registe_have">我有账号</string>
     <string name="string_registe_name">账号</string>
-    <string name="string_registe_login">立即登陆</string>
-    <string name="string_registe_login_dialog">去登陆>></string>
-    <string name="string_registe_bind_phone">去绑定>></string>
+    <string name="string_registe_login_dialog">登录>></string>
+    <string name="string_registe_bind_phone">绑定>></string>
     <string name="string_registe_bind_phone_no">还未绑定手机号</string>
     <string name="string_register_error">用户名不符合规定，请重新输入</string>
-    <string name="string_register_success">恭喜您，注册成功，您的默认登录密码为：%s</string>
     <string name="string_register_hint">请输入用户名</string>
     <string name="string_password_hint">新密码</string>
     <string name="string_password_hint_sure">确认密码</string>
     <string name="string_password_error">格式错误，4-20位数字或字母组成</string>
     <string name="string_password_error_sure">输入的密码不一致</string>
-    <string name="string_login_phone">手机号登陆</string>
-    <string name="string_login_nick">用户名登陆</string>
+    <string name="string_login_phone">手机号登录</string>
+    <string name="string_login_nick">用户名登录</string>
     <string name="string_login_register">未注册用户，登录后自动创建帐户</string>
     <string name="string_no_down">无法下载？</string>
     <string name="string_go_web">前往官网</string>
@@ -625,7 +566,6 @@
     <string name="string_read_time_fivty">15分钟</string>
     <string name="string_read_time_half">30分钟</string>
     <string name="string_read_time_sixty">60分钟</string>
-    <string name="string_read_time_permission"> 」需要开启修改系统权限才能正常使用</string>
     <string name="string_posting">正在提交中...</string>
     <string name="string_read_equipment_enable">设备管理器启用</string>
     <string name="string_read_equipment_unenable">设备管理器禁用</string>
@@ -634,19 +574,8 @@
     <string name="read_activity_exit_listen">退出听书模式</string>
     <string name="read_activity_listen_timer">定时</string>
     <string name="read_activity_listen_yingse">音色</string>
-    <string name="read_activity_listen_gao">高</string>
-    <string name="read_activity_listen_di">低</string>
     <string name="read_activity_listen_shengdiao">声调</string>
-    <string name="read_activity_listen_kuai">快</string>
-    <string name="read_activity_listen_man">慢</string>
     <string name="read_activity_listen_speed">速度</string>
-    <string name="read_activity_read_0_5">0.5倍</string>
-    <string name="read_activity_read_0_75">0.75倍</string>
-    <string name="read_activity_read_1">正常</string>
-    <string name="read_activity_read_1_25">1.25倍</string>
-    <string name="read_activity_read_1_5">1.5倍</string>
-    <string name="read_activity_read_1_75">1.75倍</string>
-    <string name="read_activity_read_2">2.0倍</string>
     <string name="read_activity_read_ying_1">女生</string>
     <string name="read_activity_read_ying_2">台湾女生</string>
     <string name="read_license_download_error">"read license key download failed"</string>
@@ -686,7 +615,6 @@
     <string name="record_gif">录制GIF</string>
     <string name="screen_shot">截图</string>
     <string name="gif">GIF</string>
-    <string name="share_picture_friend">分享本地相册中的美图给朋友吧～</string>
     <string name="make_gif_loading">GIF生成中，请勿息屏或退出</string>
     <string name="make_gif_success_share_now">GIF相册保存成功，分享给朋友吧</string>
     <string name="make_gif_fail">GIF生成失败，请稍后重试</string>

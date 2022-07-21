@@ -263,22 +263,38 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
             if (handler != null)
                 handler.removeCallbacksAndMessages(null);
         }
-        paused = false;
+
         MobclickAgent.onResume(this); // 基础指标统计，不能遗漏
-        if (time != 5) {
+       /* if (time != 5) {
             next();
         } else if (time == 5 && activity_home_viewpager_sex_next.getVisibility() == View.VISIBLE) {
             if (handler != null) {
                 handler.sendEmptyMessageDelayed(1, 0);
             }
+        }*/
+        if (paused) {
+            if (handler != null) {
+                handler.sendEmptyMessageDelayed(1, 0);
+            }
         }
+        paused = false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this); // 基础指标统计，不能遗漏
-        paused = true;
+        if (handler != null) {
+            paused = true;
+            handler.removeMessages(1);
+        }
+
     }
 
     @Override

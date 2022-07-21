@@ -137,7 +137,7 @@
                     android:layout_marginRight="@dimen/dimens_70dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/dimens_18dp"

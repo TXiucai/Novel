@@ -13,7 +13,6 @@
         android:minWidth="90dp">
 
         <FrameLayout
-            android:id="@+id/shelfitem_img_container"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             >

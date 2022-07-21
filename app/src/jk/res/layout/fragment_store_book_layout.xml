@@ -120,7 +120,6 @@
         android:id="@+id/fragment_store_gridview3_gridview_fore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:gravity="center"
         android:numColumns="1"
         android:visibility="gone" />
@@ -129,7 +128,6 @@
         android:id="@+id/fragment_store_gridview3_gridview_first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:gravity="center"
         android:numColumns="3" />
 
@@ -137,7 +135,6 @@
         android:id="@+id/fragment_store_gridview3_gridview_second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:gravity="center"
         android:numColumns="1"
         android:visibility="gone" />
@@ -147,7 +144,6 @@
         android:layout_height="@dimen/dimens_36dp"
         android:layout_marginTop="@dimen/dimens_5dp"
         android:layout_marginBottom="@dimen/dimens_5dp"
-        android:background="@color/white"
         android:orientation="horizontal">
 
         <View
@@ -217,7 +213,6 @@
                 android:src="@mipmap/comic_mall_refresh" />
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_58dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/shape_main_bottom_bg"
+        android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -94,30 +94,36 @@
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
                 android:checked="true"
+                android:drawablePadding="-10dp"
+                android:drawableTop="@drawable/selector_home_store"
                 android:text="@string/noverfragment_xiaoshuo" />
 
             <RadioButton
                 android:id="@+id/home_store_layout_comic"
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
+                android:drawableTop="@drawable/selector_home_store_comic"
                 android:text="@string/noverfragment_manhua" />
 
             <RadioButton
                 android:id="@+id/home_novel_layout"
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
+                android:drawableTop="@drawable/selector_home_novel"
                 android:text="@string/MainActivity_cartoon" />
 
             <RadioButton
                 android:id="@+id/home_discovery_layout"
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
+                android:drawableTop="@drawable/selector_home_boyin"
                 android:text="@string/MainActivity_faxian" />
 
             <RadioButton
                 android:id="@+id/home_mine_layout"
                 style="@style/home_menu_style"
                 android:layout_height="@dimen/dimens_58dp"
+                android:drawableTop="@drawable/selector_home_mine"
                 android:text="@string/MainActivity_my" />
         </RadioGroup>
     </LinearLayout>

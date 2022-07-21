@@ -61,6 +61,7 @@ public class ChannelActivity extends BaseWarmStartActivity {
         }
         mImgBack.setOnClickListener((v -> finish()));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 3);
+        mRyChannel.setItemAnimator(null);
         mRyChannel.setLayoutManager(gridLayoutManager);
         ChannelAdapter channelAdapter = new ChannelAdapter(channelBean.getList(), mActivity, 1);
         mRyChannel.setAdapter(channelAdapter);

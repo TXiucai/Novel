@@ -29,8 +29,9 @@
                 android:padding="5dp">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="@dimen/dimens_14dp"
+                    android:layout_height="@dimen/dimens_14dp"
+                    android:layout_marginLeft="@dimen/dimens_3dp"
                     android:background="@mipmap/search" />
 
                 <EditText
@@ -71,7 +72,7 @@
 
                 <ImageView
                     android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_height="@dimen/dimens_80dp"
                     android:layout_marginTop="110dp"
                     android:background="@mipmap/no_data"
                     android:scaleType="centerCrop" />
@@ -86,15 +87,13 @@
                     android:textSize="@dimen/public_12_dp" />
             </LinearLayout>
 
-
             <com.jcodecraeer.xrecyclerview.XRecyclerView
                 android:id="@+id/activity_search_keywords_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/white_80"
                 android:listSelector="@drawable/selector_listview_item"
                 android:visibility="gone" />
-
 
             <com.heiheilianzai.app.view.ObservableScrollView
                 android:id="@+id/activity_search_keywords_scrollview"
@@ -115,17 +114,21 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
+                            android:background="@color/white_80"
                             android:padding="@dimen/dp_10"
                             android:text="@string/SearchActivity_hotsearch"
                             android:textColor="@color/gray"
                             android:textSize="@dimen/public_10_dp" />
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dimens_1dp" />
+
                         <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
                             android:id="@+id/activity_search_hotwords_grid"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
+                            android:background="@color/white_80"
                             android:gravity="center"
                             android:horizontalSpacing="5dp"
                             android:numColumns="2"
@@ -148,7 +151,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/dimens_5dp"
-                        android:background="@color/white"
                         android:gravity="center"
                         android:horizontalSpacing="10dp"
                         android:numColumns="3"
@@ -156,7 +158,6 @@
                 </LinearLayout>
             </com.heiheilianzai.app.view.ObservableScrollView>
         </FrameLayout>
-
 
     </LinearLayout>
 </RelativeLayout>

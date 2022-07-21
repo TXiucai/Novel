@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/white_80"
     android:orientation="vertical">
 
     <HorizontalScrollView
@@ -98,7 +98,7 @@
                     android:layout_width="@dimen/dimens_60dp"
                     android:layout_height="@dimen/dimens_25dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/shape_ff8350_20"
+                    android:background="@drawable/shape_read_bg"
                     android:gravity="center"
                     android:text="继续阅读"
                     android:textColor="@color/white"
@@ -110,7 +110,7 @@
                 android:id="@+id/recyclerview_item_readhistory_del"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
-                android:background="@color/mainColor2"
+                android:background="@color/color_FF897B"
                 android:gravity="center"
                 android:text="@string/ReadHistoryFragment_shangchu"
                 android:textColor="@color/white"

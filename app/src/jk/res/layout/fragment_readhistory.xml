@@ -23,8 +23,8 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="@dimen/dimens_120dp"
+            android:layout_height="@dimen/dimens_80dp"
             android:layout_gravity="center_horizontal"
             android:background="@mipmap/no_data"
             android:scaleType="centerCrop" />
@@ -61,8 +61,11 @@
     <LinearLayout
         android:id="@+id/ll_edit"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimens_55dp"
+        android:layout_height="@dimen/dimens_36dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/dimens_15dp"
+        android:layout_marginRight="@dimen/dimens_15dp"
+        android:layout_marginBottom="@dimen/dimens_25dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -70,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/shape_f5f5f5_line"
+            android:background="@drawable/shape_e6e6e6_20"
             android:gravity="center">
 
             <ImageView
@@ -89,12 +92,16 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <View
+            android:layout_width="@dimen/dimens_25dp"
+            android:layout_height="match_parent" />
+
         <LinearLayout
             android:id="@+id/ll_delete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/shape_f5f5f5_line"
+            android:background="@drawable/shape_e6e6e6_20"
             android:gravity="center">
 
             <ImageView

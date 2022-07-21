@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
@@ -112,7 +113,7 @@ public class VerticalAdapter extends BaseAdapter {
             layoutParams11.width = WIDTH;
             imageView.setLayoutParams(layoutParams11);
             if (isHorizontal) {
-                MyPicasso.GlideImageNoSize(activity, book.getH_cover(), imageView, R.mipmap.comic_def_cross);
+                MyPicasso.GlideImageNoSize(activity, book.getH_cover(), imageView, R.mipmap.book_def_cross);
             } else {
                 MyPicasso.GlideImageNoSize(activity, book.getCover(), imageView, R.mipmap.book_def_v);
             }
@@ -129,9 +130,7 @@ public class VerticalAdapter extends BaseAdapter {
             TextView item_store_label_male_horizontal_tag = contentView.findViewById(R.id.item_store_label_male_horizontal_tag);
             LinearLayout item_store_label_male_vertical_layout = contentView.findViewById(R.id.item_store_label_male_vertical_layout);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_store_label_male_vertical_layout.getLayoutParams();
-            if (isNeedBackground){
-                layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
-                item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10),ImageUtil.dp2px(activity, 14),ImageUtil.dp2px(activity, 18),ImageUtil.dp2px(activity, 14));
+            if (isNeedBackground && !BuildConfig.free_charge) {
                 if (isBackground) {
                     item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.mipmap.home_novel_13_red));
                     isBackground = false;
@@ -141,13 +140,23 @@ public class VerticalAdapter extends BaseAdapter {
                 }
                 description.setTextColor(activity.getResources().getColor(R.color.white));
                 name.setTextColor(activity.getResources().getColor(R.color.white));
-            }else {
+            } else {
                 layoutParams.height = HEIGHT;
-                item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10),ImageUtil.dp2px(activity, 4),ImageUtil.dp2px(activity, 18),ImageUtil.dp2px(activity, 4));
+                item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10), ImageUtil.dp2px(activity, 4), ImageUtil.dp2px(activity, 18), ImageUtil.dp2px(activity, 4));
                 item_store_label_male_vertical_layout.setBackground(null);
                 description.setTextColor(activity.getResources().getColor(R.color.color_666666));
                 name.setTextColor(activity.getResources().getColor(R.color.color_1a1a1a));
             }
+            if (BuildConfig.free_charge) {
+                item_store_label_male_vertical_layout.setBackground(activity.getDrawable(R.drawable.shape_book_lable_big_bg));
+                description.setTextColor(activity.getResources().getColor(R.color.color_8D94A5));
+                name.setTextColor(activity.getResources().getColor(R.color.color_434A5C));
+                author.setTextColor(activity.getResources().getColor(R.color.color_434A5C));
+                item_store_label_male_horizontal_tag.setTextColor(activity.getResources().getColor(R.color.color_434A5C));
+                item_store_label_male_horizontal_tag.setBackground(activity.getResources().getDrawable(R.drawable.shape_ffffff_10));
+            }
+            layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
+            item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10), ImageUtil.dp2px(activity, 14), ImageUtil.dp2px(activity, 18), ImageUtil.dp2px(activity, 14));
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
             LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
             layoutParamsIm.height = HEIGHT;

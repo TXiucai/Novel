@@ -137,8 +137,10 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
 
     @Override
     public void onDestroy() {
+        if (!BuildConfig.free_charge) {
+            handler.removeMessages(0);
+        }
         super.onDestroy();
-        handler.removeMessages(0);
     }
 
     public interface HotWord {
@@ -151,7 +153,9 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             if (hotWord != null && hotWord.length > 0) {
                 hot_word = hotWord;
                 hot_word_size = hot_word.length;
-                handler.sendEmptyMessage(0);
+                if (!BuildConfig.free_charge) {
+                    handler.sendEmptyMessage(0);
+                }
             }
         }
     }

@@ -237,10 +237,12 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
                 chooseWho = position == 1;
                 if (!chooseWho) {
                     activity_book_info_content_mulu_text.setTextColor(Color.BLACK);
+                    activity_book_info_content_mulu_flag.setTextColor(Color.BLACK);
                     activity_book_info_content_xiangqing_text.setTextColor(ContextCompat.getColor(activity, R.color.color_ff8350));
                 } else {
                     activity_book_info_content_xiangqing_text.setTextColor(Color.BLACK);
                     activity_book_info_content_mulu_text.setTextColor(ContextCompat.getColor(activity, R.color.color_ff8350));
+                    activity_book_info_content_mulu_flag.setTextColor(ContextCompat.getColor(activity, R.color.color_ff8350));
                 }
             }
 

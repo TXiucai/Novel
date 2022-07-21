@@ -11,7 +11,6 @@
     <include layout="@layout/refresh_head" />
 
     <com.heiheilianzai.app.view.ObservableScrollView
-        android:id="@+id/scrollViewMale"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 

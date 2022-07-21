@@ -108,7 +108,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="@color/white"
         android:paddingLeft="@dimen/dimens_20dp"
         android:paddingRight="@dimen/dimens_20dp">
 

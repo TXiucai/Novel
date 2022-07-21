@@ -162,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_40"
                 android:layout_marginTop="@dimen/dimens_30dp"
-                android:background="@drawable/shape_ff8350_20"
+                android:background="@drawable/shape_read_bg"
                 android:gravity="center"
                 android:text="@string/string_register_save_pic"
                 android:textColor="@color/white"

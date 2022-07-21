@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">JK漫画</string>
     <string name="app_update">JK漫画有新版本啦</string>
+    <string name="LoginActivity_agree">点击登录即表示已同意「JK漫画」</string>
+    <string name="public_sure">确认</string>
+    <string name="main_search_tip">点击输入关键字搜索</string>
 </resources>

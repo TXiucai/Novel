@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.component.http.ReaderParams;
@@ -74,7 +75,7 @@ public class DialogRegister {
             public void afterTextChanged(Editable s) {
                 if (s.toString().matches(mMath) && FileUtils.isSimpleOrComplex(s.toString())) {
                     vipHolder.mTxRegister.setClickable(true);
-                    vipHolder.mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_ff8350_20));
+                    vipHolder.mTxRegister.setBackground(activity.getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg :R.drawable.shape_ff8350_20));
                 }
             }
         });
@@ -189,7 +190,7 @@ public class DialogRegister {
                             String user_name = new JSONObject(result).getString("user_name");
                             mEdName.setText(user_name);
                             mTxRegister.setClickable(true);
-                            mTxRegister.setBackground(activity.getDrawable(R.drawable.shape_ff8350_20));
+                            mTxRegister.setBackground(activity.getDrawable(BuildConfig.free_charge ? R.drawable.shape_read_bg :R.drawable.shape_ff8350_20));
                         } catch (Exception e) {
                             getName(activity, mEdName, mTxRegister);
                         }

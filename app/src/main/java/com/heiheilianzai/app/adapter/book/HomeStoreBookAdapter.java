@@ -79,7 +79,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         WIDTH = (WIDTH - H20) / 3;//横向排版 图片宽度
         HEIGHT = (int) (((float) WIDTH * 4f / 3f));//
         HWIDTH = (ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 10)) / 2;
-        HHEIGHT = HWIDTH / 2;
+        HHEIGHT = HWIDTH * 3 / 5;
         HorizontalSpacing = ImageUtil.dp2px(activity, 3);//横间距
         WIDTHV = WIDTH - ImageUtil.dp2px(activity, 26);//竖向 图片宽度
         HEIGHTV = (int) (((float) WIDTHV * 4f / 3f));//
@@ -291,7 +291,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             fragment_store_gridview3_gridview_first.setNumColumns(3);
             if (size > 3) {
                 final List<StroreBookcLable.Book> secondList = bookList.subList(3, Math.min(size, 6));
-                ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing * 2) * secondList.size();
+                ItemHeigth = H100 + HEIGHT + (HEIGHTV + H50) * secondList.size();
                 fragment_store_gridview3_gridview_second.setVisibility(View.VISIBLE);
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
                 horizontalAdapter.setNeedBackground(false);

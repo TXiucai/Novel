@@ -6,8 +6,9 @@
     app:ignore="NamespaceTypo">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="@dimen/dimens_265dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,5 +48,4 @@
                 android:src="@mipmap/ic_home_notice_close" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </RelativeLayout>

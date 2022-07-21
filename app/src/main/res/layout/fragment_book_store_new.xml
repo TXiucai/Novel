@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/store_comic_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:guidance_text_color="@color/lightcoral"
+    app:guidance_view_bg_color="@color/transparent"
+    app:load_text="@string/pullup_to_load"
+    app:loadmore_enable="false"
+    app:progress_bar_color="@color/lightcoral"
+    app:refresh_text="@string/pull_to_refresh">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_store_comic_content_commend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical" />
+</com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout>
