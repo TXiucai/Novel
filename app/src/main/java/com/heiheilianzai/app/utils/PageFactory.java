@@ -624,7 +624,7 @@ public class PageFactory {
                 mBookPageWidget.setOnSwitchPreListener(new PageWidget.OnSwitchPreListener() {
                     @Override
                     public void switchPreChapter() {
-                        //insert_todayone2.setVisibility(View.VISIBLE);
+                        insert_todayone2.setVisibility(View.VISIBLE);
                         IS_CHAPTERFirst = false;
                     }
                 });
@@ -707,7 +707,7 @@ public class PageFactory {
                 mBookPageWidget.setOnSwitchNextListener(new PageWidget.OnSwitchNextListener() {
                     @Override
                     public void switchNextChapter() {
-                        //insert_todayone2.setVisibility(View.VISIBLE);
+                        insert_todayone2.setVisibility(View.VISIBLE);
                         IS_CHAPTERLast = false;
                     }
                 });
