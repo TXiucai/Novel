@@ -156,7 +156,7 @@
                     android:layout_marginRight="15dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/dimens_18dp"
@@ -362,7 +362,8 @@
                             android:layout_weight="1"
                             android:drawableTop="@mipmap/comment_icon"
                             android:gravity="center"
-                            android:text="@string/CommentListActivity_pinglun" />
+                            android:text="@string/CommentListActivity_pinglun"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </RelativeLayout>
 

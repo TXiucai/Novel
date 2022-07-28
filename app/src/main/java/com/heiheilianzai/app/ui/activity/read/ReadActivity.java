@@ -327,8 +327,7 @@ public class ReadActivity extends BaseReadActivity {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         if (requestCode == 301) {
-            int is_vip = data.getIntExtra("is_vip", 0);
-            if (is_vip == 1) {
+            if (App.isVip(this)) {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bookpage.getLayoutParams();
                 layoutParams.height = mScreenHeight;
                 bookpage.setLayoutParams(layoutParams);

@@ -17,17 +17,13 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
-import com.heiheilianzai.app.adapter.MyFragmentPagerAdapter;
-import com.heiheilianzai.app.adapter.TopListAdapter;
 import com.heiheilianzai.app.base.BaseButterKnifeTransparentActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ReaderConfig;
-import com.heiheilianzai.app.model.BannerItem;
 import com.heiheilianzai.app.model.RankItem;
 import com.heiheilianzai.app.ui.fragment.TopFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.MyPicasso;
-import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 
 import java.util.ArrayList;

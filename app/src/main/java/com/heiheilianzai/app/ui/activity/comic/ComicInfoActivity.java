@@ -285,7 +285,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));                   //需要在setContentView()方法后面执行
         }
         EventBus.getDefault().register(this);
-        mLlDown.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
+        //mLlDown.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ry_comic_category.setLayoutManager(linearLayoutManager);

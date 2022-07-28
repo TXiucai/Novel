@@ -205,7 +205,7 @@ public class BookInfoActivity extends BaseButterKnifeTransparentActivity {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));//需要在setContentView()方法后面执行
         }
         EventBus.getDefault().register(this);
-        mLldown.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
+        //mLldown.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         WIDTH = ScreenSizeUtils.getInstance(activity).getScreenWidth();
         layoutInflater = LayoutInflater.from(activity);
         WIDTH = (WIDTH - ImageUtil.dp2px(activity, 40)) / 3;//横向排版 图片宽度

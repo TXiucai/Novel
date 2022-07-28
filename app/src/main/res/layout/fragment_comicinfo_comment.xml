@@ -36,9 +36,9 @@
 
         <include
             layout="@layout/list_ad_view"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:visibility="gone" />
 
         <LinearLayout
@@ -48,7 +48,8 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="20dp">
+            android:paddingLeft="20dp"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -71,8 +72,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:drawablePadding="@dimen/dimens_3dp"
                     android:drawableLeft="@mipmap/novel_comment_book"
+                    android:drawablePadding="@dimen/dimens_3dp"
                     android:gravity="center_vertical"
                     android:text="@string/BookInfoActivity_xieshuping"
                     android:textColor="@color/black"
@@ -95,6 +96,7 @@
             android:layout_marginRight="10dp"
             android:background="@color/lightgray2"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:orientation="vertical">
 
         </LinearLayout>

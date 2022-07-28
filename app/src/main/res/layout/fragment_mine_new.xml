@@ -283,12 +283,14 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/dimens_20dp">
+                    android:paddingTop="@dimen/dimens_20dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/dimens_25dp"
                         android:layout_height="@dimen/dimens_25dp"
                         android:src="@mipmap/icon_novel_down" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -328,7 +330,8 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/dimens_20dp">
+                    android:paddingTop="@dimen/dimens_20dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/dimens_25dp"
@@ -340,37 +343,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_4"
                         android:text="@string/MineNewFragment_shuping"
-                        android:textColor="@color/color_35363b"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_15dp"
-                android:layout_marginRight="@dimen/dimens_15dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/fragment_mine_user_info_tasklayout_friends"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dimens_80dp"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/dimens_20dp">
-
-                    <ImageView
-                        android:layout_width="@dimen/dimens_25dp"
-                        android:layout_height="@dimen/dimens_25dp"
-                        android:src="@mipmap/mine_share_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_4"
-                        android:text="@string/MineNewFragment_friend"
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -429,6 +401,39 @@
                         android:textSize="9sp" />
 
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <LinearLayout
+                    android:id="@+id/fragment_mine_user_info_tasklayout_friends"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dimens_80dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dimens_20dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimens_25dp"
+                        android:layout_height="@dimen/dimens_25dp"
+                        android:src="@mipmap/mine_share_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_4"
+                        android:text="@string/MineNewFragment_friend"
+                        android:textColor="@color/color_35363b"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_tasklayout_share"
@@ -452,15 +457,6 @@
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_15dp"
-                android:layout_marginRight="@dimen/dimens_15dp"
-                android:orientation="horizontal"
-                android:weightSum="4">
 
                 <LinearLayout
                     android:id="@+id/fragment_mine_user_info_paylayout_recharge"
@@ -484,6 +480,17 @@
                         android:textColor="@color/color_35363b"
                         android:textSize="12sp" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimens_15dp"
+                android:layout_marginRight="@dimen/dimens_15dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
