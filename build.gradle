@@ -115,4 +115,5 @@ ext {
     espresso = "3.2.0"
     exoplayer = "2.9.3"
     transitionseverywhere = "1.7.0"
+    okhttpprofiler = "1.0.8"
 }

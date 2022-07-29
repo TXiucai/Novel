@@ -61,8 +61,8 @@ public class HomeBannerHolderViewComic implements Holder<BannerItemStore> {
             }
             MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.comic_def_cross);
         } else {
-            MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.comic_def_cross);
-            MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.comic_def_cross);
+            MyPicasso.GlideImage(activity, data.getImage(), item_store_entrance_comic_img, width2, height, R.mipmap.book_def_cross);
+            MyGlide.GlideImagePalette(activity, data.getImage(), item_store_entrance_comic_bg, width, height, R.mipmap.book_def_cross);
         }
     }
 }

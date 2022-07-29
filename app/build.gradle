@@ -418,6 +418,7 @@ dependencies {
     implementation "commons-codec:commons-codec:${rootProject.commons_codec}"
     // OK网络库
     implementation "com.squareup.okhttp3:okhttp:${rootProject.okhttp}"
+    implementation "com.localebro:okhttpprofiler:${rootProject.okhttpprofiler}"
     // Glide图片加载
     implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
     kapt "com.github.bumptech.glide:compiler:${rootProject.glide}"

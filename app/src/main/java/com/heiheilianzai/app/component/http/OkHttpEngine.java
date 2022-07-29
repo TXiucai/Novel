@@ -3,11 +3,13 @@ package com.heiheilianzai.app.component.http;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.base.App;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.utils.InternetUtils;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.decode.AESUtil;
+import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +66,9 @@ public class OkHttpEngine {
         mContext = context;
         mGson = new Gson();
         mBuilder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            mBuilder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
         mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager).hostnameVerifier(new TrustAllHostnameVerifier());
         mBuilder.connectTimeout(50, TimeUnit.SECONDS).writeTimeout(50, TimeUnit.SECONDS).readTimeout(50, TimeUnit.SECONDS);
         mOkHttpClient = mBuilder.build();
