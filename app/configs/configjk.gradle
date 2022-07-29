@@ -1,9 +1,9 @@
 gradle.ext {
     //版本号
-    VERSION_CODE = 20220625
+    VERSION_CODE = 20220728
 
     //版本名
-    VERSION_NAME = "1.0.0"
+    VERSION_NAME = "1.0.1"
 
     // 应用程序包名
     APPLICATION_ID = 'com.comic.jk'
@@ -88,8 +88,8 @@ gradle.ext {
     AD_APPKEY = "\"\""
     AD_SECRET = "\"\""
     //神策
-    SA_SERVER_URL_UAT = "\"https://shence.jiushengliye.com/sa?project=YDA44TEST\""
-    SA_SERVER_URL = "\"https://shence.jiushengliye.com/sa?project=YDA44\""
+    SA_SERVER_URL_UAT = "\"https://scapi.tdqtnuvpci.com/sa?project=YDA44TEST\""
+    SA_SERVER_URL = "\"https://scapi.tdqtnuvpci.com/sa?project=YDA44\""
     SA_SERVER_APP_ID = "\"A71\""
 
     //uat
