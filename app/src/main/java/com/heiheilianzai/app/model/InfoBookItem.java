@@ -5,10 +5,10 @@ import com.heiheilianzai.app.model.book.StroreBookcLable;
 import java.util.List;
 
 public class InfoBookItem {
-    public  InfoBook book;
-    public   List<BookInfoComment> comment;
-    public   List<  StroreBookcLable > label;
-    public  BaseAd advert;
+    public InfoBook book;
+    public List<BookInfoComment> comment;
+    public List<StroreBookcLable> label;
+    public BaseAd advert;
 
     public BaseAd getAdvert() {
         return advert;

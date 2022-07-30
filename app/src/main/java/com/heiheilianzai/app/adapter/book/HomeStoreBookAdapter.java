@@ -20,6 +20,7 @@ import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
@@ -163,13 +164,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
-                Intent intent = new Intent();
-                intent.setClass(activity, WebViewActivity.class);
-                intent.putExtra("url", stroreComicLable.ad_skip_url);
-                intent.putExtra("title", stroreComicLable.ad_title);
-                intent.putExtra("advert_id", stroreComicLable.advert_id);
-                intent.putExtra("ad_url_type", stroreComicLable.ad_url_type);
-                activity.startActivity(intent);
+                BaseAd.jumpADInfo(stroreComicLable, activity);
             }
         });
     }

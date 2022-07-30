@@ -381,16 +381,17 @@ public class ADHelper {
                         if (ReaderConfig.CHAPTER_COMIC_AD == null) {
                             ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
                         }
-                        ReaderConfig.CHAPTER_COMIC_AD.setRequestId(adInfo.getRequestId());
-                        ReaderConfig.CHAPTER_COMIC_AD.setAdPosId(adInfo.getAdPosId());
-                        ReaderConfig.CHAPTER_COMIC_AD.setAdId(adInfo.getAdId());
-                        ReaderConfig.CHAPTER_COMIC_AD.setAd_skip_url(adInfo.getOperation().getValue());
-                        ReaderConfig.CHAPTER_COMIC_AD.setAd_type(1);
-                        ReaderConfig.CHAPTER_COMIC_AD.setAd_title(adInfo.getMaterial().getTitle());
-                        ReaderConfig.CHAPTER_COMIC_AD.setAd_image(adInfo.getMaterial().getImageUrl());
-                        ReaderConfig.CHAPTER_COMIC_AD.setUser_parame_need("1");
-                        ReaderConfig.CHAPTER_COMIC_AD.setAd_url_type(adInfo.getOperation().getType());
-                        System.out.println("======sdkad  url:" + adInfo.getOperation().getValue());
+                        BaseAd baseAd=new BaseAd();
+                        baseAd.setRequestId(adInfo.getRequestId());
+                        baseAd.setAdPosId(adInfo.getAdPosId());
+                        baseAd.setAdId(adInfo.getAdId());
+                        baseAd.setAd_skip_url(adInfo.getOperation().getValue());
+                        baseAd.setAd_type(1);
+                        baseAd.setAd_title(adInfo.getMaterial().getTitle());
+                        baseAd.setAd_image(adInfo.getMaterial().getImageUrl());
+                        baseAd.setUser_parame_need("1");
+                        baseAd.setAd_url_type(adInfo.getOperation().getType());
+                        ReaderConfig.CHAPTER_COMIC_AD.setBaseAd(baseAd);
                     }
                 } catch (Exception e) {
                     localChapterComicAd(activity);
@@ -418,14 +419,7 @@ public class ADHelper {
                             if (ReaderConfig.CHAPTER_COMIC_AD == null) {
                                 ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
                             }
-                            Log.e("====", "ad  url:" + baseAd.getAd_skip_url());
-                            System.out.println("======ad  url:" + baseAd.getAd_skip_url());
-                            ReaderConfig.CHAPTER_COMIC_AD.setAd_skip_url(baseAd.getAd_skip_url());
-                            ReaderConfig.CHAPTER_COMIC_AD.setAd_type(baseAd.getAd_type());
-                            ReaderConfig.CHAPTER_COMIC_AD.setAd_title(baseAd.getAd_title());
-                            ReaderConfig.CHAPTER_COMIC_AD.setAd_image(baseAd.getAd_image());
-                            ReaderConfig.CHAPTER_COMIC_AD.setUser_parame_need(baseAd.getUser_parame_need());
-                            ReaderConfig.CHAPTER_COMIC_AD.setAd_url_type(baseAd.getAd_url_type());
+                            ReaderConfig.CHAPTER_COMIC_AD.setBaseAd(baseAd);
                         } catch (Exception e) {
 
                         }

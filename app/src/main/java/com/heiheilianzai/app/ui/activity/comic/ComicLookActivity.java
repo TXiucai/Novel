@@ -963,13 +963,13 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (mChapterBaseAd != null) {
             titlebar_text.setText("");
             baseComicImages.clear();
-            BaseComicImage baseComicImage = new BaseComicImage();
+            BaseComicImage baseComicImage = (BaseComicImage) mChapterBaseAd;
             baseComicImagesSize = 0;
             baseComicImage.setAd(1);
-            baseComicImage.setAd_skip_url(mChapterBaseAd.getAd_skip_url());
+           /* baseComicImage.setAd_skip_url(mChapterBaseAd.getAd_skip_url());
             baseComicImage.setImage(mChapterBaseAd.getAd_image());
             baseComicImage.setAd_type(mChapterBaseAd.getAd_type());
-            baseComicImage.setAd_url_type(mChapterBaseAd.getAd_url_type());
+            baseComicImage.setAd_url_type(mChapterBaseAd.getAd_url_type());*/
             if (!TextUtils.isEmpty(mChapterBaseAd.getAdId())) {
                 baseComicImage.setAdId(mChapterBaseAd.getAdId());
                 baseComicImage.setRequestId(mChapterBaseAd.getRequestId());
@@ -1349,13 +1349,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
         if (adInfo != null) {
             XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
         }
-        Intent intent = new Intent();
-        intent.setClass(activity, WebViewActivity.class);
-        intent.putExtra("url", baseAd.ad_skip_url);
-        intent.putExtra("title", baseAd.ad_title);
-        intent.putExtra("advert_id", baseAd.advert_id);
-        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-        activity.startActivity(intent);
+        BaseAd.jumpADInfo(baseAd, activity);
     }
 
     @Override

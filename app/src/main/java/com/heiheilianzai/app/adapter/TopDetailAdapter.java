@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.DateUtils;
@@ -54,7 +56,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         OptionBeen optionBeen = optionBeenList.get(position);
         if (optionBeen.ad_type == 0) {
@@ -137,13 +139,7 @@ public class TopDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setClass(activity, WebViewActivity.class);
-                    intent.putExtra("url", optionBeen.ad_skip_url);
-                    intent.putExtra("title", optionBeen.ad_title);
-                    intent.putExtra("advert_id", optionBeen.advert_id);
-                    intent.putExtra("ad_url_type", optionBeen.ad_url_type);
-                    activity.startActivity(intent);
+                    BaseAd.jumpADInfo(optionBeen, activity);
                 }
             });
         }

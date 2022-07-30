@@ -172,12 +172,10 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
         try {
             jsonObject = new JSONObject(result);
             JsonParser jsonParser = new JsonParser();
-            String is_limited_free = jsonObject.getString("is_limited_free");
             JsonArray jsonElements = jsonParser.parse(jsonObject.getString("chapter_list")).getAsJsonArray();//获取JsonArray对象
             ArrayList<ComicChapter> comicChapters = new ArrayList<>();
             for (JsonElement jsonElement : jsonElements) {
                 ComicChapter comicChapter = new Gson().fromJson(jsonElement, ComicChapter.class);
-                comicChapter.setIs_limited_free(is_limited_free);
                 comicChapters.add(comicChapter);
             }
             if (ReaderConfig.CHAPTER_COMIC_AD != null) {

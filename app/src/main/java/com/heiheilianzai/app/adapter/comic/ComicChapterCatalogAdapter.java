@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.App;
+import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.comic.ComicChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -160,35 +162,28 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         } else if (viewHolder instanceof MyAdViewHolder) {
             MyAdViewHolder myAdViewHolder = (MyAdViewHolder) viewHolder;
-            if (!TextUtils.isEmpty(comicChapterCatalog.getAdId())) {
+            if (!TextUtils.isEmpty(comicChapterCatalog.getBaseAd().getAdId())) {
                 AdInfo adInfo = new AdInfo();
-                adInfo.setAdId(comicChapterCatalog.getAdId());
-                adInfo.setAdPosId(comicChapterCatalog.getAdPosId());
-                adInfo.setAdPosId(comicChapterCatalog.getRequestId());
-                MyPicasso.glideSdkAd(activity, adInfo, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+                adInfo.setAdId(comicChapterCatalog.getBaseAd().getAdId());
+                adInfo.setAdPosId(comicChapterCatalog.getBaseAd().getAdPosId());
+                adInfo.setAdPosId(comicChapterCatalog.getBaseAd().getRequestId());
+                MyPicasso.glideSdkAd(activity, adInfo, comicChapterCatalog.getBaseAd().getAd_image(), myAdViewHolder.ivAD);
             } else {
-                MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getAd_image(), myAdViewHolder.ivAD);
+                MyPicasso.GlideImageNoSize(activity, comicChapterCatalog.getBaseAd().getAd_image(), myAdViewHolder.ivAD);
             }
             ViewGroup.LayoutParams layoutParams = myAdViewHolder.ivAD.getLayoutParams();
             layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
             layoutParams.height = layoutParams.width / 4;
             myAdViewHolder.ivAD.setLayoutParams(layoutParams);
-            myAdViewHolder.ivAD.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!TextUtils.isEmpty(comicChapterCatalog.getAdId())) {
-                        AdInfo adInfo = new AdInfo();
-                        adInfo.setAdId(comicChapterCatalog.getAdId());
-                        adInfo.setAdPosId(comicChapterCatalog.getAdPosId());
-                        adInfo.setAdPosId(comicChapterCatalog.getRequestId());
-                        XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
-                    }
-                    Intent intent = new Intent();
-                    intent.setClass(activity, WebViewActivity.class);
-                    intent.putExtra("url", comicChapterCatalog.getAd_skip_url());
-                    intent.putExtra("ad_url_type", comicChapterCatalog.getAd_url_type());
-                    activity.startActivity(intent);
+            myAdViewHolder.ivAD.setOnClickListener(v -> {
+                if (!TextUtils.isEmpty(comicChapterCatalog.getBaseAd().getAdId())) {
+                    AdInfo adInfo = new AdInfo();
+                    adInfo.setAdId(comicChapterCatalog.getBaseAd().getAdId());
+                    adInfo.setAdPosId(comicChapterCatalog.getBaseAd().getAdPosId());
+                    adInfo.setAdPosId(comicChapterCatalog.getBaseAd().getRequestId());
+                    XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
+                BaseAd.jumpADInfo(comicChapterCatalog.getBaseAd(), activity);
             });
         }
     }
@@ -210,7 +205,7 @@ public class ComicChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemViewType(int position) {
         ComicChapter comicChapter = comicChapterCatalogList.get(position);
-        String comic_id = comicChapter.getAd_image();
+        String comic_id = comicChapter.getBaseAd().getAd_image();
         if (comic_id != null) {
             return ad;
         } else {

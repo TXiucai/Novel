@@ -142,7 +142,7 @@ public class DialogComicChapter {
                     }
                 }
             }
-            System.out.println("====  dialog"+ReaderConfig.CHAPTER_COMIC_AD.getAd_skip_url());
+            System.out.println("====  dialog"+ReaderConfig.CHAPTER_COMIC_AD.getBaseAd().getAd_skip_url());
             comicChapterCatalogs.addAll(comicChapters);
         } catch (JSONException e) {
             e.printStackTrace();

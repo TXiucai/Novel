@@ -251,17 +251,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                         adInfo.setAdPosId(baseAd.getRequestId());
                         XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                     }
-                    Intent intent = new Intent();
-                    intent.setClass(activity, WebViewActivity.class);
-                    String ad_skip_url = baseAd.ad_skip_url;
-                    if (Utils.isLogin(activity) && TextUtils.equals(baseAd.getUser_parame_need(), "2") && !ad_skip_url.contains("&uid=")) {
-                        ad_skip_url += "&uid=" + Utils.getUID(activity);
-                    }
-                    intent.putExtra("url", ad_skip_url);
-                    intent.putExtra("title", baseAd.ad_title);
-                    intent.putExtra("advert_id", baseAd.advert_id);
-                    intent.putExtra("ad_url_type", baseAd.ad_url_type);
-                    activity.startActivity(intent);
+                    BaseAd.jumpADInfo(baseAd, activity);
                 }
                 break;
         }

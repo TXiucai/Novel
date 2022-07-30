@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.OptionBeen;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -77,20 +78,20 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder1, @SuppressLint("RecyclerView") int position) {
         OptionBeen optionBeen = optionBeenList.get(position);
         if (OPTION == LOOKMORE && PRODUCT == 3) {
-            ViewHolderCartoon viewHolderCartoon= (ViewHolderCartoon) viewHolder1;
-            RelativeLayout.LayoutParams layoutParamss = (RelativeLayout.LayoutParams)viewHolderCartoon.liem_store_comic_style1_layout.getLayoutParams();
+            ViewHolderCartoon viewHolderCartoon = (ViewHolderCartoon) viewHolder1;
+            RelativeLayout.LayoutParams layoutParamss = (RelativeLayout.LayoutParams) viewHolderCartoon.liem_store_comic_style1_layout.getLayoutParams();
             layoutParamss.width = CARTOON_WIDTH;
             layoutParamss.height = CARTOON_HEIGHT + H50;
             viewHolderCartoon.liem_store_comic_style1_layout.setLayoutParams(layoutParamss);
 
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)viewHolderCartoon. liem_store_comic_style1_img.getLayoutParams();
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewHolderCartoon.liem_store_comic_style1_img.getLayoutParams();
             layoutParams.width = CARTOON_WIDTH;
             layoutParams.height = CARTOON_HEIGHT;
-            viewHolderCartoon. liem_store_comic_style1_img.setLayoutParams(layoutParams);
-            viewHolderCartoon. liem_store_comic_style1_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            MyPicasso.GlideImageNoSize(activity, optionBeen.getCover(), viewHolderCartoon. liem_store_comic_style1_img, R.mipmap.cartoon_def_v);
+            viewHolderCartoon.liem_store_comic_style1_img.setLayoutParams(layoutParams);
+            viewHolderCartoon.liem_store_comic_style1_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            MyPicasso.GlideImageNoSize(activity, optionBeen.getCover(), viewHolderCartoon.liem_store_comic_style1_img, R.mipmap.cartoon_def_v);
             viewHolderCartoon.liem_store_comic_style1_name.setText(optionBeen.getName());
-            viewHolderCartoon.liem_store_comic_style1_layout.setOnClickListener(v->onItemClick.OnItemClick(position, optionBeen));
+            viewHolderCartoon.liem_store_comic_style1_layout.setOnClickListener(v -> onItemClick.OnItemClick(position, optionBeen));
         } else {
             ViewHolder viewHolder = (ViewHolder) viewHolder1;
             if (optionBeen.ad_type == 0) {
@@ -154,13 +155,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 viewHolder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(activity, WebViewActivity.class);
-                        intent.putExtra("url", optionBeen.ad_skip_url);
-                        intent.putExtra("title", optionBeen.ad_title);
-                        intent.putExtra("advert_id", optionBeen.advert_id);
-                        intent.putExtra("ad_url_type", optionBeen.ad_url_type);
-                        activity.startActivity(intent);
+                        BaseAd.jumpADInfo(optionBeen, activity);
                     }
                 });
             }

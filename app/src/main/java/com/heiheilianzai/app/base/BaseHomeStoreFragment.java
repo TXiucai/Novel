@@ -468,32 +468,25 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     @Override
                     public void onResponse(final String result) {
                         try {
+                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
                             if (recommendType == 1) {//小说
-                                StroreBookcLable lableAd = new StroreBookcLable();
-                                BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                                lableAd.setAd_image(baseAd.getAd_image());
-                                lableAd.setAd_title(baseAd.getAd_title());
-                                lableAd.setAd_type(baseAd.getAd_type());
-                                lableAd.setAd_url_type(baseAd.getAd_url_type());
-                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());
+                                StroreBookcLable lableAd =(StroreBookcLable) baseAd;
                                 initLable(lableAd);
                             } else if (recommendType == 2) {//漫画
-                                StroreComicLable lableAd = new StroreComicLable();
-                                BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                                lableAd.setAd_image(baseAd.getAd_image());
+                                StroreComicLable lableAd = (StroreComicLable) baseAd;
+                               /* lableAd.setAd_image(baseAd.getAd_image());
                                 lableAd.setAd_title(baseAd.getAd_title());
                                 lableAd.setAd_type(baseAd.getAd_type());
                                 lableAd.setAd_url_type(baseAd.getAd_url_type());
-                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());
+                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());*/
                                 initLable(lableAd);
                             } else {
-                                StroreCartoonLable lableAd = new StroreCartoonLable();
-                                BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                                lableAd.setAd_image(baseAd.getAd_image());
+                                StroreCartoonLable lableAd= (StroreCartoonLable) baseAd;
+                               /* lableAd.setAd_image(baseAd.getAd_image());
                                 lableAd.setAd_title(baseAd.getAd_title());
                                 lableAd.setAd_type(baseAd.getAd_type());
                                 lableAd.setAd_url_type(baseAd.getAd_url_type());
-                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());
+                                lableAd.setAd_skip_url(baseAd.getAd_skip_url());*/
                                 initLable(lableAd);
                             }
                         } catch (Exception e) {
@@ -678,7 +671,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onItemRecommendListener(HomeRecommendBean.RecommeListBean recommeListBean) {
                 int jump_type = Integer.valueOf(recommeListBean.getJump_type());//0跳转链接 1首页-推荐页   2首页完结页  3首页-榜单页  4VIP充值页   5活动中心
                 String jump_url = recommeListBean.getJump_url();
-                int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  小说   1为漫画',
+                int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  1小说   2为漫画',3动漫
                 int redirect_type = Integer.valueOf(recommeListBean.getRedirect_type());//默认为0  内置应用  1为内置浏览器   2为外部浏览器
                 int user_parame_need = Integer.valueOf(recommeListBean.getUser_parame_need());//用户参数是否需要拼接 1为不需要   2为强制需要拼接
                 Intent intent = new Intent(activity, BaseOptionActivity.class);

@@ -1,10 +1,10 @@
 package com.heiheilianzai.app.model.comic;
 
-import com.heiheilianzai.app.model.BaseSdkAD;
+import com.heiheilianzai.app.model.BaseAd;
 
 import java.util.List;
 
-public class BaseComicImage extends BaseSdkAD {
+public class BaseComicImage extends BaseAd {
     public String comic_id;//": 26470, //漫画id
     public String chapter_id;//": 837923, //章节id
     public String image_id;//": 3576961, //图片id
@@ -18,15 +18,6 @@ public class BaseComicImage extends BaseSdkAD {
     private String ad_skip_url;
     private int ad_url_type;
     private int ad_type;
-    private int advert_id;
-
-    public int getAdvert_id() {
-        return advert_id;
-    }
-
-    public void setAdvert_id(int advert_id) {
-        this.advert_id = advert_id;
-    }
 
     public int getAd() {
         return ad;
