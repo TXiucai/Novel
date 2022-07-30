@@ -39,6 +39,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AcceptGiftHeadBean;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.AddressActivity;
+import com.heiheilianzai.app.ui.activity.BindPhoneActivity;
 import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.dialog.WaitDialog;
 import com.heiheilianzai.app.utils.AppPrefs;
@@ -48,9 +49,14 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.http.PUT;
 
 /**
  * 内嵌WebView Activity
@@ -317,10 +323,65 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
     }
 
     public class AndroidToJs {
-
+        /**
+         * 回到主页
+         */
         @JavascriptInterface
         public void backToHome() {
             finish();
+        }
+
+        /**
+         * 绑定手机号
+         *
+         * @param s
+         */
+        @JavascriptInterface
+        public void pandaBindPhone(String s) {
+            startActivityForResult(new Intent(AboutActivity.this, BindPhoneActivity.class), 111);
+        }
+
+        /**
+         * 跳转到vip充值页
+         */
+        @JavascriptInterface
+        public void openPage(String s) {
+            Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog), fromspot);
+            startActivity(intent);
+        }
+
+        /**
+         * 打开一个新的游戏页面
+         * @param s
+         */
+        @JavascriptInterface
+        public void openNewPayUrl(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                String url = jsonObject.getString("url");
+                if (!StringUtils.isEmpty(url)) {
+                    startActivity(new Intent(AboutActivity.this, AboutActivity.class).putExtra("url", url).putExtra("flag", "notitle"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * 外部浏览器打开
+         * @param s
+         */
+        @JavascriptInterface
+        public void openOutSideUrl(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                String url = jsonObject.getString("url");
+                if (!StringUtils.isEmpty(url)) {
+                    startActivity(new Intent(AboutActivity.this, AboutActivity.class).putExtra("url", url).putExtra("style", "4");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
