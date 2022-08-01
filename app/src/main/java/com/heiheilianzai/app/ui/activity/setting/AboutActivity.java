@@ -346,7 +346,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
          */
         @JavascriptInterface
         public void openPage(String s) {
-            Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog), fromspot);
+            Intent intent = AcquireBaoyueActivity.getMyIntent(AboutActivity.this, LanguageUtil.getString(AboutActivity.this, R.string.refer_page_vip_dialog), 13);
             startActivity(intent);
         }
 
@@ -377,7 +377,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
                 JSONObject jsonObject = new JSONObject(s);
                 String url = jsonObject.getString("url");
                 if (!StringUtils.isEmpty(url)) {
-                    startActivity(new Intent(AboutActivity.this, AboutActivity.class).putExtra("url", url).putExtra("style", "4");
+                    startActivity(new Intent(AboutActivity.this, AboutActivity.class).putExtra("url", url).putExtra("style", "4"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

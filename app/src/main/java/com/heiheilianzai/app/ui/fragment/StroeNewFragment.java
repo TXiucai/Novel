@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseButterKnifeFragment;
+import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.CartoonConfig;
@@ -39,12 +40,20 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.FloatMainBean;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
+import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.StoreEvent;
 import com.heiheilianzai.app.model.event.TaskRedPointEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.ChannelActivity;
+import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.SearchActivity;
 import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
+import com.heiheilianzai.app.ui.activity.TopNewActivity;
+import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
+import com.heiheilianzai.app.ui.activity.TopYearComicActivity;
+import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
+import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.book.NewStoreBookFragment;
 import com.heiheilianzai.app.ui.fragment.cartoon.NewStoreCartoonFragment;
@@ -70,6 +79,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.heiheilianzai.app.constant.ReaderConfig.MIANFEI;
+import static com.heiheilianzai.app.constant.ReaderConfig.SHUKU;
+import static com.heiheilianzai.app.constant.ReaderConfig.WANBEN;
 import static com.heiheilianzai.app.utils.StatusBarUtil.setStatusTextColor;
 
 /**
@@ -188,7 +200,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                 if (mFloatMainBean != null) {
                     String url_type = mFloatMainBean.getUrl_type();// 1 内置浏览器  2外部浏览器（活动中心）  3 内置应用
                     String link_url = mFloatMainBean.getLink_url();
-                    String link_type = mFloatMainBean.getLink_type();//1 配置连接 2活动中心  3福利中心
+                    int link_type = Integer.parseInt(mFloatMainBean.getLink_type());//1 配置连接 2活动中心  3福利中心
                     String user_parame_need = mFloatMainBean.getUser_parame_need();
                     if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2") && !link_url.contains("&uid=")) {
                         link_url += "&uid=" + Utils.getUID(activity);
@@ -201,11 +213,80 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                             startActivity(new Intent(activity, AboutActivity.class).
                                     putExtra("url", link_url)
                                     .putExtra("style", "4"));
-                        } else if (!TextUtils.isEmpty(link_url) && TextUtils.equals(url_type, "3")) {
-                            if (Utils.isLogin(activity)) {
-                                startActivity(new Intent(activity, TaskCenterActivity.class));
-                            } else {
-                                MainHttpTask.getInstance().Gotologin(activity);
+                        } else {
+                            Intent intentFloat = new Intent(activity, BaseOptionActivity.class);
+                            int recommendType = mFloatMainBean.book_id == null ? 0 : 1;
+                            if (recommendType != 0) {
+                                recommendType = mFloatMainBean.comic_id == null ? 0 : 2;
+                            }
+                            if (recommendType != 0) {
+                                recommendType = mFloatMainBean.video_id == null ? 0 : 3;
+                            }
+                            intentFloat.putExtra("PRODUCT", recommendType);
+                            switch (link_type) {
+                                case 3:
+                                    if (Utils.isLogin(activity)) {
+                                        startActivity(new Intent(activity, TaskCenterActivity.class));
+                                    } else {
+                                        MainHttpTask.getInstance().Gotologin(activity);
+                                    }
+                                    break;
+                                case 4:
+                                    activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), mFloatMainBean.book_id));
+                                    break;
+                                case 5:
+                                    activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), mFloatMainBean.comic_id));
+                                    break;
+                                case 6:
+                                    activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), mFloatMainBean.video_id));
+                                    break;
+                                case 7:
+                                case 11:
+                                    intentFloat.putExtra("OPTION", MIANFEI);
+                                    intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
+                                    activity.startActivity(intentFloat);
+                                    break;
+                                case 8:
+                                case 12:
+                                    intentFloat.putExtra("OPTION", WANBEN);
+                                    intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_wanben));
+                                    activity.startActivity(intentFloat);
+                                    break;
+                                case 9:
+                                case 13:
+                                    activity.startActivity(new Intent(activity, TopNewActivity.class).putExtra("PRODUCT", recommendType == 1));
+                                    break;
+                                case 10:
+                                case 14:
+                                    intentFloat.putExtra("OPTION", SHUKU);
+                                    intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
+                                    activity.startActivity(intentFloat);
+                                    break;
+                                case 15:
+                                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_mine), 13);
+                                    myIntent.putExtra("isvip", Utils.isLogin(activity));
+                                    activity.startActivity(myIntent);
+                                    break;
+                                case 16:
+                                    activity.startActivity(new Intent(activity, TopYearBookActivity.class));
+                                    break;
+                                case 17:
+                                    activity.startActivity(new Intent(activity, TopYearComicActivity.class));
+                                    break;
+                                case 18:
+                                    activity.startActivity(new Intent(activity, MyShareActivity.class));
+                                    break;
+                                case 19:
+                                    break;
+                                case 20:
+                                    EventBus.getDefault().post(new SkipToBoYinEvent(""));
+                                    break;
+                                case 21:
+                                    String panda_game_link = mFloatMainBean.getPanda_game_link();
+                                    if (!TextUtils.isEmpty(panda_game_link)) {
+                                        activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
+                                    }
+                                    break;
                             }
                         }
                     }
