@@ -60,6 +60,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public static final int COMIC_UI_STYLE_3 = 3;//风格3
     public static final int COMIC_UI_STYLE_4 = 4;//横4
     public static final int COMIC_UI_STYLE_5 = 5;//横6
+    public static final int COMIC_UI_STYLE_6 = 7;// 横一如果不是3个可以无线下拉（只能配置在最下面）
     private boolean isTopYear;
 
     public HomeStoreComicAdapter(Activity activity, List<StroreComicLable> listData, boolean isTopYear) {
@@ -173,7 +174,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postHuanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
+                    postHuanyihuan(stroreComicLable, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
                 }
             });
         } else {
@@ -199,11 +200,15 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         } else {
             holder.fragment_store_gridview1_more.setVisibility(View.GONE);
         }
+        //横一无限不需要更多以及换一换
+        if (stroreComicLable.style == COMIC_UI_STYLE_6 && stroreComicLable.work_num_type == 2) {
+            holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
+        }
         if (comicList.isEmpty()) {
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int ItemHeigth = setItemData(stroreComicLable.recommend_id, stroreComicLable.style, comicList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
+        int ItemHeigth = setItemData(stroreComicLable, comicList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
         if (comicList.isEmpty()) {
             ItemHeigth = 0;
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
@@ -248,7 +253,9 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    private int setItemData(String recommend_id, int style, List<StroreComicLable.Comic> comicList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
+    private int setItemData(StroreComicLable stroreComicLable, List<StroreComicLable.Comic> comicList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
+        String recommend_id = stroreComicLable.recommend_id;
+        int style = stroreComicLable.style;
         fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -315,6 +322,21 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 raw = (int) (Math.ceil(size3 / 2d));
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size3), activity, style, width, height);
                 break;
+            case COMIC_UI_STYLE_6:
+                if (comicList.size() > 0) {
+                    liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
+                    StoreComicAdapter storeComicAdapter3 = new StoreComicAdapter(comicList, activity, style, WIDTH, WIDTH * 5 / 9);
+                    liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
+                    liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comicList.get(0).comic_id));
+                        }
+                    });
+                    height = WIDTH * 5 / 9;
+                    raw = comicList.size();
+                }
+                break;
         }
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_gridview.getLayoutParams();
         fragment_store_gridview1_gridview.setAdapter(storeComicAdapter);
@@ -333,7 +355,9 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         fragment_store_gridview1_view1.setLayoutParams(layoutParams3);
     }
 
-    public void postHuanyihuan(String recommend_id, int style, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin type1) {
+    public void postHuanyihuan(StroreComicLable stroreComicLable, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin type1) {
+        String recommend_id = stroreComicLable.recommend_id;
+        int style = stroreComicLable.style;
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id + "");
         String json = params.generateParamsJson();
@@ -354,7 +378,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             e.printStackTrace();
                         }
                         if (comicList != null && !comicList.isEmpty()) {
-                            setItemData(recommend_id, style, comicList, fragment_store_gridview1_gridview, type1);
+                            setItemData(stroreComicLable, comicList, fragment_store_gridview1_gridview, type1);
                             setChangeRecommendationEvent(recommend_id, style, comicList);
                         }
                     }

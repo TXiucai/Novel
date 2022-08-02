@@ -72,7 +72,7 @@ public class StoreComicAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         StroreComicLable.Comic comic = getItem(i);
-        if (style == 1 || style == 3 || style == 4 || style == 5) {
+        if (style == 1 || style == 3 || style == 4 || style == 5 || style == 7) {
             if (comic.horizontal_cover != null && !TextUtils.isEmpty(comic.horizontal_cover))
                 MyPicasso.GlideImageNoSize(activity, comic.horizontal_cover, viewHolder.liem_store_comic_style1_img, R.mipmap.comic_def_cross);
             else

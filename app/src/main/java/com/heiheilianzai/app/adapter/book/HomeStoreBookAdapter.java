@@ -66,6 +66,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int BOOK_UI_STYLE_4 = 4;//风格4
     public static final int BOOK_UI_STYLE_5 = 5;//风格5 横4
     public static final int BOOK_UI_STYLE_6 = 6;//风格6 横六  一排2 3排
+    public static final int BOOK_UI_STYLE_8 = 8;// 左右无限滑动
     private boolean isTopYear;
     private boolean isHorizontal = false;
     private boolean isBackground = false;

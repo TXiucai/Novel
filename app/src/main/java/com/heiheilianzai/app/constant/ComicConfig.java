@@ -37,6 +37,8 @@ public class ComicConfig {
 
     public static final String COMIC_Detail_channel = "/comic-channel-list/label";
 
+    public static final String COMIC_Detail_channel_no_limit = "/comic-channel-list/comic-style-no-limit";
+
     /**
      * 漫画换一换
      */

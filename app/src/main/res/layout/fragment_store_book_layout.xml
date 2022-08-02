@@ -143,6 +143,12 @@
         android:numColumns="1"
         android:visibility="gone" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_store_ry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_36dp"

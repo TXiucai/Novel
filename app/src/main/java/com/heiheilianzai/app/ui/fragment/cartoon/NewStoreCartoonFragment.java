@@ -57,7 +57,7 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
 
     @Override
     protected void getChannelDetailData() {
-        getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail);
+        getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail,3);
     }
 
     @Override

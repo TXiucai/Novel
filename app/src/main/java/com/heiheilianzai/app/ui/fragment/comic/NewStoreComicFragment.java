@@ -1,6 +1,7 @@
 package com.heiheilianzai.app.ui.fragment.comic;
 
 import android.os.Bundle;
+
 import com.google.gson.reflect.TypeToken;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.comic.HomeStoreComicAdapter;
@@ -9,10 +10,13 @@ import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.utils.MyToash;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.heiheilianzai.app.constant.ComicConfig.COMIC_Detail_channel_no_limit;
 import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 
 
@@ -66,7 +70,12 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
     @Override
     protected void getChannelDetailData() {
-        getChannelDetailData(ComicConfig.COMIC_Detail_channel);
+        StroreComicLable stroreComicLable = listData.get(listData.size() - 1);
+        if (stroreComicLable.work_num_type == 2) {
+            getChannelDetailData(ComicConfig.COMIC_Detail_channel_no_limit, 2);
+        }else{
+             getChannelDetailData(ComicConfig.COMIC_Detail_channel, 2);
+        }
     }
 
     @Override
@@ -84,8 +93,13 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
                 }
             }
             int sizeData = listData.size();
+            //添加广告
             for (int i = 0; i < sizeData; i++) {
                 listData.add(2 * i + 1, stroreBookcLable);
+            }
+            //横一样式最后一个不需要广告
+            if (listData.get(listData.size() - 2).work_num_type == 2) {
+                listData.remove(listData.size() - 1);
             }
             adapter.notifyDataSetChanged();
         }

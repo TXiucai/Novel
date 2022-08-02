@@ -30,18 +30,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!--    <LinearLayout
-            android:id="@+id/liem_store_comic_style1_style3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <include
-                layout="@layout/liem_store_comic_style1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>-->
-
     <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
         android:id="@+id/liem_store_comic_style1_style3"
         android:layout_width="match_parent"
@@ -49,12 +37,6 @@
         android:background="@color/white"
         android:gravity="center"
         android:numColumns="1" />
-
-    <!--   <include
-           android:id="@+id/liem_store_comic_style1_style4"
-           layout="@layout/item_store_label_male_horizontal4"
-           android:visibility="gone" />-->
-
 
     <com.heiheilianzai.app.view.AdaptionGridViewNoMargin
         android:id="@+id/fragment_store_gridview1_gridview"

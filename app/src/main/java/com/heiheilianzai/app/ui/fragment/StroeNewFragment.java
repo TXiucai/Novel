@@ -493,7 +493,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                     }
                 }
             }
-            mVpChannel.setOffscreenPageLimit(channelBean.getList().size());
+            //mVpChannel.setOffscreenPageLimit(channelBean.getList().size());
             mVpChannel.setAdapter(new FragmentPagerAdapter(fragmentManager) {
                 @NonNull
                 @Override

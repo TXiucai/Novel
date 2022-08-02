@@ -13,7 +13,7 @@ public class StroreComicLable extends BaseAd {
     public String can_refresh;
     public int total;//": 15, //漫画数
     public List<Comic> list;
-
+    public int work_num_type;//2为作品无限（仅横一样式）
     public String getRecommend_id() {
         return recommend_id;
     }

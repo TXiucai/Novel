@@ -312,7 +312,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getChannelDetailData();
     }
 
-    protected void getChannelDetailData(String url) {
+    protected void getChannelDetailData(String url, int type) {
         if (TextUtils.isEmpty(mChannelId)) {
             listData.clear();
             adapter.notifyDataSetChanged();
@@ -325,9 +325,9 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             return;
         }
         ReaderParams params = new ReaderParams(activity);
-        if (TextUtils.equals(url, ReaderConfig.mBookChannelDetailUrl)) {
+        if (type == 1) {
             params.putExtraParams("book_channel_id", mTopChannelId);
-        } else if (TextUtils.equals(url, ComicConfig.COMIC_Detail_channel)) {
+        } else if (type == 2) {
             params.putExtraParams("comic_channel_id", mTopChannelId);
         } else {
             params.putExtraParams("video_channel_id", mTopChannelId);
@@ -470,7 +470,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         try {
                             BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
                             if (recommendType == 1) {//小说
-                                StroreBookcLable lableAd =(StroreBookcLable) baseAd;
+                                StroreBookcLable lableAd = (StroreBookcLable) baseAd;
                                 initLable(lableAd);
                             } else if (recommendType == 2) {//漫画
                                 StroreComicLable lableAd = (StroreComicLable) baseAd;
@@ -481,7 +481,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                                 lableAd.setAd_skip_url(baseAd.getAd_skip_url());*/
                                 initLable(lableAd);
                             } else {
-                                StroreCartoonLable lableAd= (StroreCartoonLable) baseAd;
+                                StroreCartoonLable lableAd = (StroreCartoonLable) baseAd;
                                /* lableAd.setAd_image(baseAd.getAd_image());
                                 lableAd.setAd_title(baseAd.getAd_title());
                                 lableAd.setAd_type(baseAd.getAd_type());

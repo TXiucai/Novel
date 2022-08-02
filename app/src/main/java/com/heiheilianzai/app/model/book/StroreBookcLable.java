@@ -12,7 +12,6 @@ public class StroreBookcLable extends BaseAd {
     public int expire_time;
     public boolean can_more;
     public boolean can_refresh;
-
     // public String can_more;//": true, //是否有更多 true有，false没有
     //  public int total;//": 15, //漫画数
     public List<Book> list;
