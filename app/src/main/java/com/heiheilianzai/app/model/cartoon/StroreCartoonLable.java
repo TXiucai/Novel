@@ -15,6 +15,7 @@ public class StroreCartoonLable extends BaseAd {
     public String can_refresh;
     public int total;//": 15, //漫画数
     public List<Cartoon> list;
+    public int work_num_type;
 
     public String getRecommend_id() {
         return recommend_id;

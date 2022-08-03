@@ -56,13 +56,13 @@ public class DialogComicChapter {
         //设置弹出位置
         window.setGravity(Gravity.BOTTOM);
         VipHolder vipHolder = new VipHolder(view);
-        httpData(activity, baseComic.getComic_id(), vipHolder);
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         vipHolder.ryChapter.setLayoutManager(layoutManager);
         comicChapterCatalogs = new ArrayList<>();
         comicChapterCatalogAdapter = new ComicVChapterCatalogAdapter(baseComic, activity, comicChapterCatalogs);
         vipHolder.ryChapter.setAdapter(comicChapterCatalogAdapter);
+        httpData(activity, baseComic.getComic_id(), vipHolder);
         if (orderby == 1) {
             vipHolder.imgSequence.setImageDrawable(activity.getResources().getDrawable(R.mipmap.comic_up));
         } else {

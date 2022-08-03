@@ -179,8 +179,8 @@ public class ComicVChapterCatalogAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemViewType(int position) {
         ComicChapter comicChapter = comicChapterCatalogList.get(position);
-        String comic_id = comicChapter.getBaseAd().getAd_image();
-        if (comic_id != null) {
+        BaseAd baseAd = comicChapter.getBaseAd();
+        if (baseAd != null) {
             return ad;
         } else {
             return 2;

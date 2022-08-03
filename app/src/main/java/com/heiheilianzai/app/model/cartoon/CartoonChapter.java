@@ -19,7 +19,6 @@ public class CartoonChapter extends BaseAd implements Serializable {
      * update_time : 2022-02-17 11:08:08
      * display_order : 0
      */
-    private String video_id;
     private String chapter_id;
     private String chapter_title;
     private String is_vip;

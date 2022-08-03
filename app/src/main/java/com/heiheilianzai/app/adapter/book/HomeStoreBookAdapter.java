@@ -2,7 +2,6 @@ package com.heiheilianzai.app.adapter.book;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,11 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.VerticalAdapter;
 import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
-import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.ui.activity.BookInfoActivity;
-import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.utils.HttpUtils;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.LanguageUtil;
@@ -33,9 +30,9 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
 import com.heiheilianzai.app.view.AdaptionGridView;
+import com.heiheilianzai.app.view.MyContentLinearLayoutManager;
 import com.mobi.xad.XRequestManager;
 import com.mobi.xad.bean.AdInfo;
-import com.mobi.xad.bean.Material;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
@@ -66,7 +64,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int BOOK_UI_STYLE_4 = 4;//风格4
     public static final int BOOK_UI_STYLE_5 = 5;//风格5 横4
     public static final int BOOK_UI_STYLE_6 = 6;//风格6 横六  一排2 3排
-    public static final int BOOK_UI_STYLE_8 = 8;// 左右无限滑动
+    public static final int BOOK_UI_STYLE_7 = 7;// 左右无限滑动
     private boolean isTopYear;
     private boolean isHorizontal = false;
     private boolean isBackground = false;
@@ -204,16 +202,19 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postHuanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore);
+                    postHuanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore, holder.fragment_store_ry);
                 }
             });
         } else {
             holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
         }
-        int ItemHeigth = Huanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, stroreComicLable.list, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore);
+        int ItemHeigth = Huanyihuan(stroreComicLable.recommend_id, stroreComicLable.style, stroreComicLable.list, holder.fragment_store_gridview3_gridview_first, holder.fragment_store_gridview3_gridview_second, holder.fragment_store_gridview3_gridview_fore, holder.fragment_store_ry);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.height = ItemHeigth;
-        if (!stroreComicLable.can_more && !stroreComicLable.can_refresh) {
+        if (stroreComicLable.style == BOOK_UI_STYLE_7) {
+            holder.fragment_store_gridview1_label.setVisibility(View.GONE);
+        }
+        if ((!stroreComicLable.can_more && !stroreComicLable.can_refresh) || stroreComicLable.style == BOOK_UI_STYLE_7) {
             params.height = ItemHeigth - H50;
         } else if (!(stroreComicLable.can_more && stroreComicLable.can_refresh)) {
             buttomonlyOne(holder.fragment_store_gridview1_view1, holder.fragment_store_gridview1_view2, holder.fragment_store_gridview1_view3);
@@ -242,6 +243,10 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         LinearLayout fragment_store_gridview1_more;
         @BindView(R.id.fragment_store_gridview_huanyihuan)
         LinearLayout fragment_store_gridview_huanyihuan;
+        @BindView(R.id.fragment_store_ry)
+        RecyclerView fragment_store_ry;
+        @BindView(R.id.fragment_store_gridview1_label)
+        LinearLayout fragment_store_gridview1_label;
 
         public BookViewHolder(View view) {
             super(view);
@@ -259,7 +264,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         fragment_store_gridview1_view1.setLayoutParams(layoutParams3);
     }
 
-    private int Huanyihuan(String recommend_id, int style, List<StroreBookcLable.Book> bookList, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore) {
+    private int Huanyihuan(String recommend_id, int style, List<StroreBookcLable.Book> bookList, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore, RecyclerView fragment_store_ry) {
         int size = bookList.size();
         int minSize = 0;
         int ItemHeigth = 0, raw = 0, start = 0;
@@ -339,8 +344,15 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             } else {
                 ItemHeigth = H100 + (H50 + HHEIGHT) * 3;
             }
-
             fragment_store_gridview3_gridview_first.setNumColumns(2);
+        } else if (style == BOOK_UI_STYLE_7) {
+            LableAdapterH lableAdapterH = new LableAdapterH(bookList, activity, WIDTHV, HEIGHTV);
+            MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            fragment_store_ry.setLayoutManager(linearLayoutManager);
+            fragment_store_ry.setAdapter(lableAdapterH);
+            ItemHeigth = H100 + HEIGHT + H50;
+            return ItemHeigth;
         }
         if (bookList.size() > 0) {
             List<StroreBookcLable.Book> firstList = bookList.subList(start, minSize);
@@ -371,7 +383,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         return ItemHeigth;
     }
 
-    public void postHuanyihuan(String recommend_id, int style, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore) {
+    public void postHuanyihuan(String recommend_id, int style, AdaptionGridView fragment_store_gridview3_gridview_first, AdaptionGridView fragment_store_gridview3_gridview_second, AdaptionGridView fragment_store_gridview3_gridview_fore, RecyclerView fragment_store_ry) {
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id);
         String json = params.generateParamsJson();
@@ -389,7 +401,7 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                             List<StroreBookcLable.Book> bookList = gson.fromJson(new JSONObject(result).getString("list"), new TypeToken<List<StroreBookcLable.Book>>() {
                             }.getType());
                             if (!bookList.isEmpty()) {
-                                Huanyihuan(recommend_id, style, bookList, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore);
+                                Huanyihuan(recommend_id, style, bookList, fragment_store_gridview3_gridview_first, fragment_store_gridview3_gridview_second, fragment_store_gridview3_gridview_fore, fragment_store_ry);
                                 setChangeRecommendationEvent(style, recommend_id, bookList);
                             }
                         } catch (JSONException e) {

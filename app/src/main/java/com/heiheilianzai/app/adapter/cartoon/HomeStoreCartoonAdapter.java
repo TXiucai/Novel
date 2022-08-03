@@ -62,6 +62,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
     public static final int COMIC_UI_STYLE_1 = 1;//风格1 横2*2
     public static final int COMIC_UI_STYLE_2 = 2;//风格2 横2*3
     public static final int COMIC_UI_STYLE_3 = 3;//风格3 横1+ 横2*2
+    public static final int COMIC_UI_STYLE_4 = 4;//风格4 横1
     private boolean isTopYear;
 
     public HomeStoreCartoonAdapter(Activity activity, List<StroreCartoonLable> listData, boolean isTopYear) {
@@ -204,6 +205,10 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (cartoonList.isEmpty()) {
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
         }
+        //横一无限不需要更多以及换一换
+        if (stroreCartoonLable.style == COMIC_UI_STYLE_4 && stroreCartoonLable.work_num_type == 2) {
+            holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
+        }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int ItemHeigth = setItemData(stroreCartoonLable.recommend_id, stroreCartoonLable.style, cartoonList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
         if (cartoonList.isEmpty()) {
@@ -300,6 +305,21 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                     raw = (int) (Math.ceil(size3 / 2d));
                     fragment_store_gridview1_gridview.setNumColumns(2);
                     storeCartoonAdapter = new StoreCartoonAdapter(cartoonList.subList(1, Math.min(5, cartoonList.size())), activity, width, height);
+                }
+                break;
+            case COMIC_UI_STYLE_4:
+                if (cartoonList.size() > 0) {
+                    liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
+                    StoreCartoonAdapter storeComicAdapter3 = new StoreCartoonAdapter(cartoonList, activity, WIDTH, WIDTH * 5 / 9);
+                    liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
+                    liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(0).video_id));
+                        }
+                    });
+                    height = WIDTH * 5 / 9;
+                    raw = cartoonList.size();
                 }
                 break;
         }

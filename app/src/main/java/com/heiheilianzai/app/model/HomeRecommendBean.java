@@ -42,6 +42,41 @@ public class HomeRecommendBean {
         private String redirect_type;
         private String user_parame_need;
         private String weight;//第三方广告插入位置
+        private String book_id;
+        private String comic_id;
+        private String video_id;
+        private String panda_game_link;
+
+        public String getPanda_game_link() {
+            return panda_game_link;
+        }
+
+        public void setPanda_game_link(String panda_game_link) {
+            this.panda_game_link = panda_game_link;
+        }
+        public String getBook_id() {
+            return book_id;
+        }
+
+        public void setBook_id(String book_id) {
+            this.book_id = book_id;
+        }
+
+        public String getComic_id() {
+            return comic_id;
+        }
+
+        public void setComic_id(String comic_id) {
+            this.comic_id = comic_id;
+        }
+
+        public String getVideo_id() {
+            return video_id;
+        }
+
+        public void setVideo_id(String video_id) {
+            this.video_id = video_id;
+        }
 
         public String getWeight() {
             return weight;

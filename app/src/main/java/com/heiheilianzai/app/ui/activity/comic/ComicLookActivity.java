@@ -740,7 +740,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     if (comicChapterList != null && !comicChapterList.isEmpty() && comicChapterList.size() > 0) {
                         for (int i = 0; i < comicChapterList.size(); i++) {
                             ComicChapter comicChapterTemp = comicChapterList.get(i);
-                            if (comicChapterTemp.getBaseAd().getAd_image() == null) {
+                            if (comicChapterTemp.getBaseAd() == null) {
                                 comicChapter.add(comicChapterTemp);
                             }
                         }

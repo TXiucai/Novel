@@ -21,6 +21,7 @@ import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
+import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
@@ -31,11 +32,17 @@ import com.heiheilianzai.app.model.book.StroreBookcLable;
 import com.heiheilianzai.app.model.cartoon.StroreCartoonLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
+import com.heiheilianzai.app.model.event.RefreshMine;
+import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
+import com.heiheilianzai.app.ui.activity.TaskCenterActivity;
 import com.heiheilianzai.app.ui.activity.TopNewActivity;
 import com.heiheilianzai.app.ui.activity.TopYearBookActivity;
 import com.heiheilianzai.app.ui.activity.TopYearComicActivity;
+import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
+import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
 import com.heiheilianzai.app.utils.HttpUtils;
@@ -669,9 +676,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         homeRecommendAdapter.setOnItemRecommendListener(new HomeRecommendAdapter.OnItemRecommendListener() {
             @Override
             public void onItemRecommendListener(HomeRecommendBean.RecommeListBean recommeListBean) {
-                int jump_type = Integer.valueOf(recommeListBean.getJump_type());//0跳转链接 1首页-推荐页   2首页完结页  3首页-榜单页  4VIP充值页   5活动中心
+                int jump_type = Integer.valueOf(recommeListBean.getJump_type());///1=>'首页-推荐页',2=>'首页-完结页',
+                //3=>'首页-榜单页',4=>'VIP充值页', 6=>'首页-分类',7=>'年度榜单（小说）',8=>'年度榜单（漫画）',
+                //9=>'分享页',10=>'作品详情页',11=>'活动页面',12=>'波音有声',13=>'熊猫游戏',14=>'福利中心'
                 String jump_url = recommeListBean.getJump_url();
-                int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//默认为0  1小说   2为漫画',3动漫
+                int recommend_type = Integer.valueOf(recommeListBean.getRecommend_type());//0=>'小说',1=>'漫画',2=>'动画视频'
                 int redirect_type = Integer.valueOf(recommeListBean.getRedirect_type());//默认为0  内置应用  1为内置浏览器   2为外部浏览器
                 int user_parame_need = Integer.valueOf(recommeListBean.getUser_parame_need());//用户参数是否需要拼接 1为不需要   2为强制需要拼接
                 Intent intent = new Intent(activity, BaseOptionActivity.class);
@@ -716,6 +725,27 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     activity.startActivity(new Intent(activity, TopYearComicActivity.class));
                 } else if (jump_type == 9) {
                     activity.startActivity(new Intent(activity, MyShareActivity.class));
+                } else if (jump_type == 10) {
+                    if (recommend_type == 0) {
+                        activity.startActivity(BookInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), recommeListBean.getBook_id()));
+                    } else if (recommend_type == 1) {
+                        activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), recommeListBean.getComic_id()));
+                    } else {
+                        activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), recommeListBean.getVideo_id()));
+                    }
+                } else if (jump_type == 12) {
+                    EventBus.getDefault().post(new SkipToBoYinEvent(""));
+                } else if (jump_type == 13) {
+                    String panda_game_link = recommeListBean.getPanda_game_link();
+                    if (!TextUtils.isEmpty(panda_game_link)) {
+                        activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
+                    }
+                } else if (jump_type == 14) {
+                    if (Utils.isLogin(activity)) {
+                        activity.startActivity(new Intent(activity, TaskCenterActivity.class));
+                    } else {
+                        MainHttpTask.getInstance().Gotologin(activity);
+                    }
                 }
             }
         });
@@ -736,6 +766,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshComicChapterList(BuyLoginSuccessEvent buyLoginSuccessEvent) {
         getHomeAds();
+    }
+
+    //登录重新获取新的广告
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(RefreshMine refreshMine) {
+       getHomeAds();
     }
 
     private void getHomeAds() {

@@ -5,7 +5,6 @@ import com.heiheilianzai.app.model.BaseAd;
 import java.util.List;
 
 public class BaseComicImage extends BaseAd {
-    public String comic_id;//": 26470, //漫画id
     public String chapter_id;//": 837923, //章节id
     public String image_id;//": 3576961, //图片id
     public String total_tucao;//"": 215, //图片吐槽数
@@ -15,9 +14,6 @@ public class BaseComicImage extends BaseAd {
     public String image;//图片地址
     public int ad;//0正常1 广告
     public List<Tucao> tucao;
-    private String ad_skip_url;
-    private int ad_url_type;
-    private int ad_type;
 
     public int getAd() {
         return ad;

@@ -150,6 +150,7 @@
         android:background="@color/white" />
 
     <LinearLayout
+        android:id="@+id/fragment_store_gridview1_label"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_36dp"
         android:layout_marginTop="@dimen/dimens_5dp"

@@ -70,11 +70,10 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
     @Override
     protected void getChannelDetailData() {
-        StroreComicLable stroreComicLable = listData.get(listData.size() - 1);
-        if (stroreComicLable.work_num_type == 2) {
+        if (listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
             getChannelDetailData(ComicConfig.COMIC_Detail_channel_no_limit, 2);
-        }else{
-             getChannelDetailData(ComicConfig.COMIC_Detail_channel, 2);
+        }else {
+            getChannelDetailData(ComicConfig.COMIC_Detail_channel, 2);
         }
     }
 

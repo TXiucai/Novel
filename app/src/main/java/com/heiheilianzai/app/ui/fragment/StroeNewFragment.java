@@ -40,6 +40,7 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.FloatMainBean;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
+import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.StoreEvent;
 import com.heiheilianzai.app.model.event.TaskRedPointEvent;
@@ -387,6 +388,11 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
             mRlOrder.setVisibility(View.GONE);
         }
     }
+    //登录重新获取新的广告
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(RefreshMine refreshMine) {
+       getFloat(activity,getProduct());
+    }
 
     private void getFloat(Activity activity, int product) {
         ReaderParams params = new ReaderParams(activity);
@@ -493,7 +499,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                     }
                 }
             }
-            //mVpChannel.setOffscreenPageLimit(channelBean.getList().size());
+            mVpChannel.setOffscreenPageLimit(channelBean.getList().size());
             mVpChannel.setAdapter(new FragmentPagerAdapter(fragmentManager) {
                 @NonNull
                 @Override

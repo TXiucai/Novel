@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class OptionBeen extends BaseAd {
-    public String book_id;//": 100,
-    public String comic_id;//": 10086, //漫画id
-    public String video_id;//": 10086, //漫画id
     public String name;//"": "乔乔的奇妙冒险", //漫画名称
     public String cover;//水平封面
     public String author;//"": "黎明C", //作者

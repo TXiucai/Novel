@@ -667,6 +667,12 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
         exitService();
     }
 
+    //登录重新获取新的广告
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(RefreshMine refreshMine) {
+        getAd();
+    }
+
     /**
      * bannen 点击切换有声fragment
      *

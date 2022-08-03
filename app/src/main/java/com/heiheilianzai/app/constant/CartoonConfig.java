@@ -11,6 +11,7 @@ public class CartoonConfig {
      * 动漫频道详情
      */
     public static final String CARTOON_Channel_Detail = "/video-channel-list/label";
+    public static final String CARTOON_Channel_Detail_no_limit = "/video-channel-list/video-style-no-limit";
     /**
      * 动画视频搜索
      */

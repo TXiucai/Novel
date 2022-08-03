@@ -8,8 +8,11 @@ import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
+import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.StoreBookEvent;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

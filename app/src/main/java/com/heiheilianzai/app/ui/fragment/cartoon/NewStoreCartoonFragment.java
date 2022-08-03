@@ -9,6 +9,7 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.cartoon.HomeStoreCartoonAdapter;
 import com.heiheilianzai.app.base.BaseHomeStoreFragment;
 import com.heiheilianzai.app.constant.CartoonConfig;
+import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.cartoon.StroreCartoonLable;
 
@@ -57,7 +58,11 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
 
     @Override
     protected void getChannelDetailData() {
-        getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail,3);
+        if (listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
+            getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail_no_limit, 3);
+        }else {
+            getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail,3);
+        }
     }
 
     @Override

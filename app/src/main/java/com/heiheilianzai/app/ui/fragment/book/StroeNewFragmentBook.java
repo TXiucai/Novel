@@ -2,6 +2,7 @@ package com.heiheilianzai.app.ui.fragment.book;
 
 import android.view.View;
 
+import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.StoreBookEvent;
 import com.heiheilianzai.app.model.event.TaskRedPointEvent;
 import com.heiheilianzai.app.ui.fragment.StroeNewFragment;
