@@ -116,10 +116,13 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
         MyContentLinearLayoutManager layoutManager = new MyContentLinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fragment_comicinfo_mulu_list.setLayoutManager(layoutManager);
-        comicChapterCatalogs = new ArrayList<>();
         Intent intent = getIntent();
         currentChapter_id = intent.getStringExtra("currentChapter_id");
         comic_id = intent.getStringExtra("comic_id");
+        comicChapterCatalogs = new ArrayList<>();
+        comicChapterCatalogAdapter = new ComicChapterCatalogAdapter(false, null, activity, currentChapter_id, comicChapterCatalogs, ImageUtil.dp2px(activity, 96));
+        fragment_comicinfo_mulu_list.setAdapter(comicChapterCatalogAdapter);
+        httpData(activity, comic_id);
         //添加滑动监听
         fragment_comicinfo_mulu_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -161,10 +164,6 @@ public class ComicinfoMuluActivity extends BaseButterKnifeActivity {
                 }
             }
         });
-        comicChapterCatalogs = new ArrayList<>();
-        comicChapterCatalogAdapter = new ComicChapterCatalogAdapter(false, null, activity, currentChapter_id, comicChapterCatalogs, ImageUtil.dp2px(activity, 96));
-        fragment_comicinfo_mulu_list.setAdapter(comicChapterCatalogAdapter);
-        httpData(activity, comic_id);
     }
 
     private void initChapterAd(String result) {

@@ -39,7 +39,6 @@ public class ComicReadHistory {
         public String chapter_title;
         public int chapter_index;
         public String description;
-        public String comic_id;//": 1,  // 漫画ID
         public String name;//": "女神的诱惑",    // 漫画名称
         public String vertical_cover;// 竖图
         public int total_chapters;//": 128,  // 总章节数

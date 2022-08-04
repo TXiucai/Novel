@@ -22,47 +22,53 @@
             android:textSize="18sp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimens_25dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="end"
                 android:text="@string/string_registe_name"
                 android:textColor="@color/color_AF8871"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tx_save_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_30dp"
+                android:layout_marginLeft="@dimen/dimens_20dp"
+                android:layout_weight="4"
                 android:textColor="@color/color_FFA46F"
                 android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_10"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="end"
                 android:text="@string/UserInfoActivity_password"
                 android:textColor="@color/color_AF8871"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tx_save_password"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimens_30dp"
+                android:layout_marginLeft="@dimen/dimens_20dp"
+                android:layout_weight="4"
                 android:textColor="@color/color_FFA46F"
                 android:textSize="14sp" />
         </LinearLayout>

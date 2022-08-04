@@ -85,7 +85,6 @@ public class ReadHistory {
         public String chapter_id;
         public String chapter_title;
         public int chapter_index;
-        public String book_id;
         public String name;
         public String cover;
         public String description;

@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimens_25dp"
         android:orientation="vertical">
 
         <include layout="@layout/common_titlebar" />
@@ -39,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimens_50dp"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dimens_25dp"
         android:layout_marginRight="@dimen/dimens_20dp"
         android:gravity="center"
         android:text="@string/string_edit"

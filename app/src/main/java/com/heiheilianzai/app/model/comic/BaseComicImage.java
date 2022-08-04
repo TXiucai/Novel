@@ -23,42 +23,6 @@ public class BaseComicImage extends BaseAd {
         this.ad = ad;
     }
 
-    public String getAd_skip_url() {
-        return ad_skip_url;
-    }
-
-    public void setAd_skip_url(String ad_skip_url) {
-        this.ad_skip_url = ad_skip_url;
-    }
-
-    public int getAd_url_type() {
-        return ad_url_type;
-    }
-
-    public void setAd_url_type(int ad_url_type) {
-        this.ad_url_type = ad_url_type;
-    }
-
-    public int getAd_type() {
-        return ad_type;
-    }
-
-    public void setAd_type(int ad_type) {
-        this.ad_type = ad_type;
-    }
-
-    public String getComic_id() {
-        return comic_id;
-    }
-
-    public void setComic_id(String comic_id) {
-        this.comic_id = comic_id;
-    }
-
-    public String getChapter_id() {
-        return chapter_id;
-    }
-
     public void setChapter_id(String chapter_id) {
         this.chapter_id = chapter_id;
     }

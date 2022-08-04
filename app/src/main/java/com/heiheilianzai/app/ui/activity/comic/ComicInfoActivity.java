@@ -648,7 +648,7 @@ public class ComicInfoActivity extends BaseWarmStartActivity {
                     for (JsonElement jsonElement : jsonElements) {
                         ComicChapter comicChapter1 = new Gson().fromJson(jsonElement, ComicChapter.class);
                         comicChapter1.setIs_limited_free(is_limited_free);
-                        if (comicChapter1.getBaseAd().getAd_image() == null) {
+                        if (comicChapter1.getBaseAd() == null) {
                             comicChapter.add(comicChapter1);
                         }
                     }

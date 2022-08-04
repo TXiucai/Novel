@@ -3,8 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/dimens_25dp"
     android:orientation="vertical">
+
     <include layout="@layout/common_titlebar" />
+
     <com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout
         android:id="@+id/store_comic_refresh_layout"
         android:layout_width="match_parent"

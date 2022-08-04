@@ -176,7 +176,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postHuanyihuan(stroreCartoonLable.recommend_id, stroreCartoonLable.style, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
+                    postHuanyihuan(stroreCartoonLable, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
                 }
             });
         } else {
@@ -210,7 +210,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int ItemHeigth = setItemData(stroreCartoonLable.recommend_id, stroreCartoonLable.style, cartoonList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
+        int ItemHeigth = setItemData(stroreCartoonLable, cartoonList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
         if (cartoonList.isEmpty()) {
             ItemHeigth = 0;
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
@@ -255,7 +255,9 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    private int setItemData(String recommend_id, int style, List<StroreCartoonLable.Cartoon> cartoonList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
+    private int setItemData(StroreCartoonLable stroreCartoonLable, List<StroreCartoonLable.Cartoon> cartoonList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
+        String recommend_id = stroreCartoonLable.recommend_id;
+        int style = stroreCartoonLable.style;
         fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -309,8 +311,14 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                 break;
             case COMIC_UI_STYLE_4:
                 if (cartoonList.size() > 0) {
+                    StoreCartoonAdapter storeComicAdapter3;
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
-                    StoreCartoonAdapter storeComicAdapter3 = new StoreCartoonAdapter(cartoonList, activity, WIDTH, WIDTH * 5 / 9);
+                    if (stroreCartoonLable.work_num_type != 2) {
+                        int i = Math.min(cartoonList.size(), 3);
+                        storeComicAdapter3 = new StoreCartoonAdapter(cartoonList.subList(0, i), activity, WIDTH, WIDTH * 5 / 9);
+                    } else {
+                        storeComicAdapter3 = new StoreCartoonAdapter(cartoonList, activity, WIDTH, WIDTH * 5 / 9);
+                    }
                     liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -340,7 +348,9 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
         fragment_store_gridview1_view1.setLayoutParams(layoutParams3);
     }
 
-    public void postHuanyihuan(String recommend_id, int style, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin type1) {
+    public void postHuanyihuan(StroreCartoonLable stroreCartoonLable, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin type1) {
+        String recommend_id = stroreCartoonLable.recommend_id;
+        int style = stroreCartoonLable.style;
         ReaderParams params = new ReaderParams(activity);
         params.putExtraParams("recommend_id", recommend_id + "");
         String json = params.generateParamsJson();
@@ -361,7 +371,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                             e.printStackTrace();
                         }
                         if (cartoonList != null && !cartoonList.isEmpty()) {
-                            setItemData(recommend_id, style, cartoonList, fragment_store_gridview1_gridview, type1);
+                            setItemData(stroreCartoonLable, cartoonList, fragment_store_gridview1_gridview, type1);
                             setChangeRecommendationEvent(recommend_id, style, cartoonList);
                         }
                     }

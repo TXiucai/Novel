@@ -323,9 +323,15 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size3), activity, style, width, height);
                 break;
             case COMIC_UI_STYLE_6:
+                StoreComicAdapter storeComicAdapter3;
                 if (comicList.size() > 0) {
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
-                    StoreComicAdapter storeComicAdapter3 = new StoreComicAdapter(comicList, activity, style, WIDTH, WIDTH * 5 / 9);
+                    if (stroreComicLable.work_num_type != 2) {
+                        int i = Math.min(comicList.size(), 3);
+                        storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, i), activity, style, WIDTH, WIDTH * 5 / 9);
+                    }else {
+                        storeComicAdapter3 = new StoreComicAdapter(comicList, activity, style, WIDTH, WIDTH * 5 / 9);
+                    }
                     liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override

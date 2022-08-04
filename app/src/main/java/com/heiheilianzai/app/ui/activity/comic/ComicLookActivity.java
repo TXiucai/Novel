@@ -65,8 +65,6 @@ import com.heiheilianzai.app.model.comic.ComicReadHistory;
 import com.heiheilianzai.app.model.event.BuyLoginSuccessEvent;
 import com.heiheilianzai.app.model.event.comic.ComicChapterEventbus;
 import com.heiheilianzai.app.model.event.comic.RefreshComic;
-import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
-import com.heiheilianzai.app.ui.activity.WebViewActivity;
 import com.heiheilianzai.app.ui.dialog.comic.LookComicSetDialog;
 import com.heiheilianzai.app.ui.dialog.comic.PurchaseDialog;
 import com.heiheilianzai.app.ui.fragment.comic.ComicinfoMuluFragment;
@@ -653,7 +651,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                 MenuSHOW = true;
                 activity_comiclook_head.setVisibility(View.VISIBLE);
                 activity_comiclook_foot.setVisibility(View.VISIBLE);
-                activity_comiclook_danmu_layout.setVisibility(View.VISIBLE);
+                //activity_comiclook_danmu_layout.setVisibility(View.VISIBLE);
                 fragment_comicinfo_mulu_dangqian_layout.setVisibility(View.VISIBLE);
                 showComicGuide();
             }
@@ -1290,7 +1288,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            mChapterBaseAd = gson.fromJson(result, BaseAd.class);
+                            mChapterBaseAd = gson.fromJson(result, BaseComicImage.class);
                             if (mChapterBaseAd == null) {
                                 mIsShowChapterAd = false;
                             } else {
@@ -1317,7 +1315,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     AdInfo adInfo = list.get(0);
                     if (App.isShowSdkAd(activity, adInfo.getMaterial().getShowType())) {
                         if (mChapterBaseAd == null) {
-                            mChapterBaseAd = new BaseAd();
+                            mChapterBaseAd = new BaseComicImage();
                         }
                         mIsShowChapterAd = true;
                         mChapterBaseAd.setRequestId(adInfo.getRequestId());

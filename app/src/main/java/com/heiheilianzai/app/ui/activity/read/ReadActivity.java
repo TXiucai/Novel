@@ -346,7 +346,6 @@ public class ReadActivity extends BaseReadActivity {
         super.onCreate(savedInstanceState);
         ReaderConfig.BANG_SCREEN = NotchScreen.hasNotchScreen(this);
         mReadStarTime = System.currentTimeMillis();
-        titlebar_down.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         int MHeight = ScreenSizeUtils.getInstance(this).getScreenHeight();
         //首次阅读 显示引导图
         if (ShareUitls.getString(ReadActivity.this, "FirstRead", "yes").equals("yes")) {

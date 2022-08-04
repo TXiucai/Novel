@@ -346,12 +346,12 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             fragment_store_gridview3_gridview_first.setNumColumns(2);
         } else if (style == BOOK_UI_STYLE_7) {
-            LableAdapterH lableAdapterH = new LableAdapterH(bookList, activity, WIDTHV, HEIGHTV);
+            LableAdapterH lableAdapterH = new LableAdapterH(bookList, activity, WIDTHV * 7 / 5, HEIGHTV * 7 / 5);
             MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             fragment_store_ry.setLayoutManager(linearLayoutManager);
             fragment_store_ry.setAdapter(lableAdapterH);
-            ItemHeigth = H100 + HEIGHT + H50;
+            ItemHeigth = H100 + HEIGHTV * 7 / 5 + H50;
             return ItemHeigth;
         }
         if (bookList.size() > 0) {

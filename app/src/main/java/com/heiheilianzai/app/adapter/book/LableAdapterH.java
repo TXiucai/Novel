@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.book.StroreBookcLable;
+import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
@@ -86,6 +87,8 @@ public class LableAdapterH extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         layoutParams.height = HEIGHT + height;
         lableHolder.mLlItem.setLayoutParams(layoutParams);
         lableHolder.itemView.setLayoutParams(layoutParams);
+        lableHolder.itemView.setOnClickListener(v ->
+                mContext.startActivity(BookInfoActivity.getMyIntent(mContext, "2", book.getBook_id())));
     }
 
     @Override
