@@ -49,6 +49,14 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
     }
 
     @Override
+    protected boolean isLabelNoLimit() {
+        if (listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     protected void setPosition() {
         setPosition(mPosition);
     }
@@ -70,9 +78,9 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
 
     @Override
     protected void getChannelDetailData() {
-        if (listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
-            getChannelDetailData(ComicConfig.COMIC_Detail_channel_no_limit, 2);
-        }else {
+        if (!mIsFresh && listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
+            getChannelDetailData(ComicConfig.COMIC_Detail_channel_no_limit, 2, listData.get(listData.size() - 1).getRecommend_id());
+        } else {
             getChannelDetailData(ComicConfig.COMIC_Detail_channel, 2);
         }
     }

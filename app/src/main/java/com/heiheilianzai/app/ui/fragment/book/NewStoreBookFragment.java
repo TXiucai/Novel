@@ -48,6 +48,11 @@ public class NewStoreBookFragment extends BaseHomeStoreFragment<StroreBookcLable
     }
 
     @Override
+    protected boolean isLabelNoLimit() {
+        return false;
+    }
+
+    @Override
     protected void setPosition() {
         setPosition(mPosition);
     }

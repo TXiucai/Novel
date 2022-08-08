@@ -2,6 +2,7 @@ package com.heiheilianzai.app.model.cartoon;
 
 import static cn.jpush.im.android.api.enums.ContentType.video;
 
+import com.google.gson.annotations.SerializedName;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 
@@ -15,6 +16,7 @@ public class StroreCartoonLable extends BaseAd {
     public String can_refresh;
     public int total;//": 15, //漫画数
     public List<Cartoon> list;
+    @SerializedName("works_num_type")
     public int work_num_type;
 
     public String getRecommend_id() {

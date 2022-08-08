@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.BaseReadHistoryAdapter;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 import com.heiheilianzai.app.model.cartoon.CartoonChapter;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -77,12 +78,7 @@ public class ReadHistoryRecycleViewCartoonAdapter extends BaseReadHistoryAdapter
             holder.list_ad_view_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setClass(activity, WebViewActivity.class);
-                    intent.putExtra("url", cartoonChapter.ad_skip_url);
-                    intent.putExtra("title", cartoonChapter.ad_title);
-                    intent.putExtra("advert_id", cartoonChapter.advert_id);
-                    activity.startActivity(intent);
+                    BaseAd.jumpADInfo(cartoonChapter, activity);
                 }
             });
         }

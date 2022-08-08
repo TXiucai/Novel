@@ -19,6 +19,7 @@ import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -144,13 +145,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
-                Intent intent = new Intent();
-                intent.setClass(activity, WebViewActivity.class);
-                intent.putExtra("url", stroreComicLable.ad_skip_url);
-                intent.putExtra("title", stroreComicLable.ad_title);
-                intent.putExtra("advert_id", stroreComicLable.advert_id);
-                intent.putExtra("ad_url_type", stroreComicLable.ad_url_type);
-                activity.startActivity(intent);
+                BaseAd.jumpADInfo(stroreComicLable,activity);
             }
         });
     }
@@ -202,7 +197,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
         //横一无限不需要更多以及换一换
         if (stroreComicLable.style == COMIC_UI_STYLE_6 && stroreComicLable.work_num_type == 2) {
-            holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
+            holder.lable.setVisibility(View.GONE);
         }
         if (comicList.isEmpty()) {
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
@@ -327,10 +322,11 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (comicList.size() > 0) {
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
                     if (stroreComicLable.work_num_type != 2) {
-                        int i = Math.min(comicList.size(), 3);
-                        storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, i), activity, style, WIDTH, WIDTH * 5 / 9);
+                        raw = Math.min(comicList.size(), 3);
+                        storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, raw), activity, style, WIDTH, WIDTH * 5 / 9);
                     }else {
                         storeComicAdapter3 = new StoreComicAdapter(comicList, activity, style, WIDTH, WIDTH * 5 / 9);
+                        raw = comicList.size();
                     }
                     liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -340,7 +336,6 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                     });
                     height = WIDTH * 5 / 9;
-                    raw = comicList.size();
                 }
                 break;
         }

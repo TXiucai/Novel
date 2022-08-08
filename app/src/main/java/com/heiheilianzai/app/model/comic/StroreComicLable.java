@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.model.comic;
 
+import com.google.gson.annotations.SerializedName;
 import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseTag;
 
@@ -13,6 +14,7 @@ public class StroreComicLable extends BaseAd {
     public String can_refresh;
     public int total;//": 15, //漫画数
     public List<Comic> list;
+    @SerializedName("works_num_type")
     public int work_num_type;//2为作品无限（仅横一样式）
     public String getRecommend_id() {
         return recommend_id;

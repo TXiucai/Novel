@@ -227,7 +227,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
                 fragment_mine_user_info_isvip.setVisibility(View.VISIBLE);
                 fragment_mine_user_info_isvip.setImageResource(R.mipmap.icon_novip);
             }
-            fragment_mine_user_info_isvip.setVisibility(BuildConfig.free_charge?View.GONE:View.VISIBLE);
+            fragment_mine_user_info_isvip.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
             if (mUserInfo.getAuto_sub() == 0) {
                 AppPrefs.putSharedBoolean(activity, ReaderConfig.AUTOBUY, false);
             } else {
@@ -328,18 +328,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     }
 
     private void JumpAd(BaseAd baseAd) {
-        Intent intent = new Intent();
-        intent.setClass(activity, WebViewActivity.class);
-        String user_parame_need = baseAd.user_parame_need;
-        String jump_url = baseAd.ad_skip_url;
-        if (Utils.isLogin(activity) && TextUtils.equals(user_parame_need, "2")) {
-            jump_url += "&uid=" + Utils.getUID(activity);
-        }
-        intent.putExtra("url", jump_url);
-        intent.putExtra("title", baseAd.ad_title);
-        intent.putExtra("advert_id", baseAd.advert_id);
-        intent.putExtra("ad_url_type", baseAd.ad_url_type);
-        activity.startActivity(intent);
+        BaseAd.jumpADInfo(baseAd, activity);
     }
 
     private void initAnounce() {

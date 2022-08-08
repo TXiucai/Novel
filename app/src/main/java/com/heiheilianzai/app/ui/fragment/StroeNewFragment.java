@@ -283,9 +283,13 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                                     EventBus.getDefault().post(new SkipToBoYinEvent(""));
                                     break;
                                 case 21:
-                                    String panda_game_link = mFloatMainBean.getPanda_game_link();
-                                    if (!TextUtils.isEmpty(panda_game_link)) {
-                                        activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
+                                    if (Utils.isLogin(activity)) {
+                                        String panda_game_link = mFloatMainBean.getPanda_game_link();
+                                        if (!TextUtils.isEmpty(panda_game_link)) {
+                                            activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
+                                        }
+                                    } else {
+                                        MainHttpTask.getInstance().Gotologin(activity);
                                     }
                                     break;
                             }

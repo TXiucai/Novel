@@ -33,6 +33,15 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
             mPosition = getArguments().getInt("position", 0);
         }
     }
+
+    @Override
+    protected boolean isLabelNoLimit() {
+        if (listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
+            return true;
+        }
+        return false;
+    }
+
     public static NewStoreCartoonFragment newInstance(ChannelBean.ListBean channelBean, int position) {
         NewStoreCartoonFragment newStoreComicFragment = new NewStoreCartoonFragment();
         Bundle args = new Bundle();
@@ -41,6 +50,7 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
         newStoreComicFragment.setArguments(args);
         return newStoreComicFragment;
     }
+
     @Override
     public int initContentView() {
         return R.layout.fragment_comic_store_new;
@@ -58,10 +68,10 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
 
     @Override
     protected void getChannelDetailData() {
-        if (listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
-            getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail_no_limit, 3);
-        }else {
-            getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail,3);
+        if (!mIsFresh && listData != null && listData.size() > 0 && listData.get(listData.size() - 1).work_num_type == 2) {
+            getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail_no_limit, 3, listData.get(listData.size() - 1).getRecommend_id());
+        } else {
+            getChannelDetailData(CartoonConfig.CARTOON_Channel_Detail, 3);
         }
     }
 
@@ -82,6 +92,10 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
             int sizeData = listData.size();
             for (int i = 0; i < sizeData; i++) {
                 listData.add(2 * i + 1, stroreCartoonLable);
+            }
+            //横一样式最后一个不需要广告
+            if (listData.get(listData.size() - 2).work_num_type == 2) {
+                listData.remove(listData.size() - 1);
             }
             adapter.notifyDataSetChanged();
         }
@@ -123,7 +137,8 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
 
     @Override
     protected void initWaterfall(String jsonObject) {
-        initWaterfall(jsonObject, new TypeToken<List<StroreCartoonLable>>() {}.getType());
+        initWaterfall(jsonObject, new TypeToken<List<StroreCartoonLable>>() {
+        }.getType());
     }
 
     @Override

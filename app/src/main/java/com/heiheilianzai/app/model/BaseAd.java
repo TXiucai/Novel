@@ -168,95 +168,103 @@ public class BaseAd extends BaseSdkAD {
     }
 
     public static void jumpADInfo(BaseAd baseAd, Activity context) {
-        int user_parame_need = Integer.valueOf(baseAd.getUser_parame_need());//用户参数是否需要拼接 1为不需要   2为强制需要拼接
-        Intent intent = new Intent(context, BaseOptionActivity.class);
-        int ad_url_type = baseAd.getAd_url_type();
-        int ad_action = baseAd.ad_action;
-        int recommendType = baseAd.book_id == null ? 0 : 1;
-        if (recommendType != 0) {
-            recommendType = baseAd.comic_id == null ? 0 : 2;
-        }
-        if (recommendType != 0) {
-            recommendType = baseAd.video_id == null ? 0 : 3;
-        }
-        intent.putExtra("PRODUCT", recommendType);
-        String jump_url = baseAd.getAd_skip_url();
-        if (Utils.isLogin(context) && user_parame_need == 2 && !jump_url.contains("&uid=")) {
-            jump_url += "&uid=" + Utils.getUID(context);
-        }
-        if (ad_url_type == 1) {
-            context.startActivity(new Intent(context, AboutActivity.class).
-                    putExtra("url", jump_url));
-        } else if (ad_url_type == 2) {
-            context.startActivity(new Intent(context, AboutActivity.class).
-                    putExtra("url", jump_url)
-                    .putExtra("style", "4"));
-        } else {
-            switch (ad_action) {
-                case 1:
-                    context.startActivity(BookInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.book_id));
-                    break;
-                case 2:
-                    context.startActivity(ComicInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.comic_id));
-                    break;
-                case 3:
-                    context.startActivity(CartoonInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.video_id));
-                    break;
-                case 4:
-                case 8:
-                    intent.putExtra("OPTION", MIANFEI);
-                    intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_xianmian));
-                    context.startActivity(intent);
-                    break;
-                case 5:
-                case 9:
-                    intent.putExtra("OPTION", WANBEN);
-                    intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_wanben));
-                    context.startActivity(intent);
-                    break;
-                case 6:
-                case 10:
-                    context.startActivity(new Intent(context, TopNewActivity.class).putExtra("PRODUCT", recommendType == 1));
-                    break;
-                case 7:
-                case 11:
-                    intent.putExtra("OPTION", SHUKU);
-                    intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_fenlei));
-                    context.startActivity(intent);
-                    break;
-                case 12:
-                    Intent myIntent = AcquireBaoyueActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_mine), 13);
-                    myIntent.putExtra("isvip", Utils.isLogin(context));
-                    context.startActivity(myIntent);
-                    break;
-                case 13:
-                    context.startActivity(new Intent(context, TopYearBookActivity.class));
-                    break;
-                case 14:
-                    context.startActivity(new Intent(context, TopYearComicActivity.class));
-                    break;
-                case 15:
-                    context.startActivity(new Intent(context, MyShareActivity.class));
-                    break;
-                case 16:
-                    break;
-                case 17:
-                    EventBus.getDefault().post(new SkipToBoYinEvent(""));
-                    break;
-                case 18:
-                    String panda_game_link = baseAd.getPanda_game_link();
-                    if (!TextUtils.isEmpty(panda_game_link)){
-                        context.startActivity(new Intent(context, AboutActivity.class).putExtra("url", panda_game_link));
-                    }
-                    break;
-                case 19:
-                    if (Utils.isLogin(context)) {
-                        context.startActivity(new Intent(context, TaskCenterActivity.class));
-                    } else {
-                        MainHttpTask.getInstance().Gotologin(context);
-                    }
-                    break;
+        try {
+            int user_parame_need = Integer.valueOf(baseAd.getUser_parame_need());//用户参数是否需要拼接 1为不需要   2为强制需要拼接
+            Intent intent = new Intent(context, BaseOptionActivity.class);
+            int ad_url_type = baseAd.getAd_url_type();
+            int ad_action = baseAd.ad_action;
+            int recommendType = baseAd.book_id == null ? 0 : 1;
+            if (recommendType != 0) {
+                recommendType = baseAd.comic_id == null ? 0 : 2;
             }
+            if (recommendType != 0) {
+                recommendType = baseAd.video_id == null ? 0 : 3;
+            }
+            intent.putExtra("PRODUCT", recommendType);
+            String jump_url = baseAd.getAd_skip_url();
+            if (Utils.isLogin(context) && user_parame_need == 2 && !jump_url.contains("&uid=")) {
+                jump_url += "&uid=" + Utils.getUID(context);
+            }
+            if (ad_url_type == 1) {
+                context.startActivity(new Intent(context, AboutActivity.class).
+                        putExtra("url", jump_url));
+            } else if (ad_url_type == 2) {
+                context.startActivity(new Intent(context, AboutActivity.class).
+                        putExtra("url", jump_url)
+                        .putExtra("style", "4"));
+            } else {
+                switch (ad_action) {
+                    case 1:
+                        context.startActivity(BookInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.book_id));
+                        break;
+                    case 2:
+                        context.startActivity(ComicInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.comic_id));
+                        break;
+                    case 3:
+                        context.startActivity(CartoonInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.video_id));
+                        break;
+                    case 4:
+                    case 8:
+                        intent.putExtra("OPTION", MIANFEI);
+                        intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_xianmian));
+                        context.startActivity(intent);
+                        break;
+                    case 5:
+                    case 9:
+                        intent.putExtra("OPTION", WANBEN);
+                        intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_wanben));
+                        context.startActivity(intent);
+                        break;
+                    case 6:
+                    case 10:
+                        context.startActivity(new Intent(context, TopNewActivity.class).putExtra("PRODUCT", recommendType == 1));
+                        break;
+                    case 7:
+                    case 11:
+                        intent.putExtra("OPTION", SHUKU);
+                        intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_fenlei));
+                        context.startActivity(intent);
+                        break;
+                    case 12:
+                        Intent myIntent = AcquireBaoyueActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_mine), 13);
+                        myIntent.putExtra("isvip", Utils.isLogin(context));
+                        context.startActivity(myIntent);
+                        break;
+                    case 13:
+                        context.startActivity(new Intent(context, TopYearBookActivity.class));
+                        break;
+                    case 14:
+                        context.startActivity(new Intent(context, TopYearComicActivity.class));
+                        break;
+                    case 15:
+                        context.startActivity(new Intent(context, MyShareActivity.class));
+                        break;
+                    case 16:
+                        break;
+                    case 17:
+                        EventBus.getDefault().post(new SkipToBoYinEvent(""));
+                        break;
+                    case 18:
+                        if (Utils.isLogin(context)) {
+                            String panda_game_link = baseAd.getPanda_game_link();
+                            if (!TextUtils.isEmpty(panda_game_link)) {
+                                context.startActivity(new Intent(context, AboutActivity.class).putExtra("url", panda_game_link));
+                            }
+                        } else {
+                            MainHttpTask.getInstance().Gotologin(context);
+                        }
+                        break;
+                    case 19:
+                        if (Utils.isLogin(context)) {
+                            context.startActivity(new Intent(context, TaskCenterActivity.class));
+                        } else {
+                            MainHttpTask.getInstance().Gotologin(context);
+                        }
+                        break;
+                }
+            }
+        } catch (Exception e) {
+
         }
     }
 }

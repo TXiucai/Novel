@@ -652,7 +652,7 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
             if (BuildConfig.free_charge) {
                 initViewPageChecked(home_novel_layout, 2, true);
             } else {
-                initViewPageChecked(home_novel_layout, 3, true);
+                initViewPageChecked(home_novel_layout, 2, true);
             }
         }
     }

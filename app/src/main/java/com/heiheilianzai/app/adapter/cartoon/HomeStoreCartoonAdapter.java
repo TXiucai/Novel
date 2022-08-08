@@ -26,6 +26,7 @@ import com.heiheilianzai.app.base.BaseOptionActivity;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.cartoon.StroreCartoonLable;
 import com.heiheilianzai.app.model.comic.StroreComicLable;
@@ -146,13 +147,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
-                Intent intent = new Intent();
-                intent.setClass(activity, WebViewActivity.class);
-                intent.putExtra("url", stroreCartoonLable.ad_skip_url);
-                intent.putExtra("title", stroreCartoonLable.ad_title);
-                intent.putExtra("advert_id", stroreCartoonLable.advert_id);
-                intent.putExtra("ad_url_type", stroreCartoonLable.ad_url_type);
-                activity.startActivity(intent);
+                BaseAd.jumpADInfo(stroreCartoonLable,activity);
             }
         });
     }
@@ -207,7 +202,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         //横一无限不需要更多以及换一换
         if (stroreCartoonLable.style == COMIC_UI_STYLE_4 && stroreCartoonLable.work_num_type == 2) {
-            holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
+            holder.lable.setVisibility(View.GONE);
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int ItemHeigth = setItemData(stroreCartoonLable, cartoonList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
@@ -314,20 +309,21 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                     StoreCartoonAdapter storeComicAdapter3;
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
                     if (stroreCartoonLable.work_num_type != 2) {
-                        int i = Math.min(cartoonList.size(), 3);
-                        storeComicAdapter3 = new StoreCartoonAdapter(cartoonList.subList(0, i), activity, WIDTH, WIDTH * 5 / 9);
+                        raw = Math.min(cartoonList.size(), 3);
+                        storeComicAdapter3 = new StoreCartoonAdapter(cartoonList.subList(0, raw), activity, WIDTH, WIDTH * 5 / 9);
                     } else {
                         storeComicAdapter3 = new StoreCartoonAdapter(cartoonList, activity, WIDTH, WIDTH * 5 / 9);
+                        raw = cartoonList.size();
                     }
                     liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(0).video_id));
+                            activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(0).video_id));
                         }
                     });
                     height = WIDTH * 5 / 9;
-                    raw = cartoonList.size();
+
                 }
                 break;
         }

@@ -117,7 +117,6 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
                         closeLoading();
                     }
                 }
-
         );
     }
 
@@ -142,7 +141,11 @@ public class CatalogInnerActivity extends BaseActivity implements ShowTitle {
             }
             if (mCurrentPage <= mTotalPage && size != 0) {
                 if (mCurrentPage == 1) {
-                    mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
+                    if (ChapterManager.getInstance(activity).mCurrentChapter!=null){
+                        mAdapter.current_chapter_id = ChapterManager.getInstance(activity).mCurrentChapter.getChapter_id();
+                    }else {
+                        mAdapter.current_chapter_id = mItemList.get(0).getChapter_id();
+                    }
                     mAdapter.setCoupon_pay_price(coupon_pay_price);
                     mSize = size;
                     mAdapter.notifyDataSetChanged();

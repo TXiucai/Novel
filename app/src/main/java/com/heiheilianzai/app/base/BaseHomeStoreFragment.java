@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +21,6 @@ import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.adapter.HomeRecommendAdapter;
 import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
-import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AppUpdate;
 import com.heiheilianzai.app.model.BannerItemStore;
@@ -116,6 +114,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     private String mChannelId = "";
     private String mTopChannelId = "";
     private int mPosition;
+    private boolean mIsFirstLoadNoLimit = true;//是否横一无限第一次上拉加载更多
+    public boolean mIsFresh = true;//是否刷新
 
     @Override
     protected void initView() {
@@ -197,10 +197,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         store_comic_refresh_layout.setOnRefreshListener(new SHSwipeRefreshLayout.SHSOnRefreshListener() {
             @Override
             public void onRefresh() {
+                setChannelId();
                 page = 1;
                 mFirstIndex = 0;
                 store_comic_refresh_layout.setLoadmoreEnable(true);
                 isLoadMore = true;
+                mIsFirstLoadNoLimit = true;
+                mIsFresh = true;
                 getChannelDetailData();
             }
 
@@ -208,6 +211,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onLoading() {
                 if (isLoadMore()) {
                     page += 1;
+                    if (mIsFirstLoadNoLimit && isLabelNoLimit()) {//栏目无限滑动新接口page
+                        page = 1;
+                        mIsFirstLoadNoLimit = false;
+                    }
+                    mIsFresh = false;
                     getChannelDetailData();
                 } else {
                     finishLoadmore();
@@ -261,7 +269,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     public void initWaterfall(String jsonObject, Type typeOfT) {
         if (!StringUtils.isEmpty(jsonObject)) {
-            if (page == 1) {
+            if (page == 1 && !isLabelNoLimit()) {
                 listData.clear();
             }
             listData.addAll(gson.fromJson(jsonObject, typeOfT));
@@ -279,6 +287,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getCacheBannerData();
         getCacheStockData();
     }
+
+    protected abstract boolean isLabelNoLimit();
 
     protected abstract void setPosition();
 
@@ -319,6 +329,11 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getChannelDetailData();
     }
 
+    protected void getChannelDetailData(String url, int type, String recommendId) {
+        mChannelId = recommendId;
+        getChannelDetailData(url, type);
+    }
+
     protected void getChannelDetailData(String url, int type) {
         if (TextUtils.isEmpty(mChannelId)) {
             listData.clear();
@@ -348,11 +363,10 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
             public void onResponse(String response) {
                 if (!StringUtils.isEmpty(response)) {
                     try {
-                        getSdkLableAd();//获取第三方广告
                         setIsLoadMore(response);
                         JSONObject jsonObject = new JSONObject(response);
                         String edit_time = jsonObject.getString("max_edit_time");//获取服务器修改时间戳
-                        if (page == 1) {//第一页保存修改时间戳，保存列表总条数
+                        if (page == 1 && !isLabelNoLimit()) {//第一页保存修改时间戳，保存列表总条数
                             max_edit_time = edit_time;
                             finishRefresh(true);
                         } else {
@@ -366,6 +380,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                             finishLoadmore(isLoadMore);
                         }
                         initInfo(response);
+                        getSdkLableAd();//获取第三方广告
                     } catch (Exception e) {
                         finishLoadmore();
                         e.printStackTrace();
@@ -475,11 +490,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                     @Override
                     public void onResponse(final String result) {
                         try {
-                            BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
                             if (recommendType == 1) {//小说
+                                BaseAd baseAd = new Gson().fromJson(result, StroreBookcLable.class);
                                 StroreBookcLable lableAd = (StroreBookcLable) baseAd;
                                 initLable(lableAd);
                             } else if (recommendType == 2) {//漫画
+                                BaseAd baseAd = new Gson().fromJson(result, StroreComicLable.class);
                                 StroreComicLable lableAd = (StroreComicLable) baseAd;
                                /* lableAd.setAd_image(baseAd.getAd_image());
                                 lableAd.setAd_title(baseAd.getAd_title());
@@ -488,6 +504,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                                 lableAd.setAd_skip_url(baseAd.getAd_skip_url());*/
                                 initLable(lableAd);
                             } else {
+                                BaseAd baseAd = new Gson().fromJson(result, StroreCartoonLable.class);
                                 StroreCartoonLable lableAd = (StroreCartoonLable) baseAd;
                                /* lableAd.setAd_image(baseAd.getAd_image());
                                 lableAd.setAd_title(baseAd.getAd_title());
@@ -736,9 +753,14 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 } else if (jump_type == 12) {
                     EventBus.getDefault().post(new SkipToBoYinEvent(""));
                 } else if (jump_type == 13) {
-                    String panda_game_link = recommeListBean.getPanda_game_link();
-                    if (!TextUtils.isEmpty(panda_game_link)) {
-                        activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
+
+                    if (Utils.isLogin(activity)) {
+                        String panda_game_link = recommeListBean.getPanda_game_link();
+                        if (!TextUtils.isEmpty(panda_game_link)) {
+                            activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
+                        }
+                    } else {
+                        MainHttpTask.getInstance().Gotologin(activity);
                     }
                 } else if (jump_type == 14) {
                     if (Utils.isLogin(activity)) {
@@ -771,7 +793,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
     //登录重新获取新的广告
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshMine refreshMine) {
-       getHomeAds();
+        getHomeAds();
     }
 
     private void getHomeAds() {
