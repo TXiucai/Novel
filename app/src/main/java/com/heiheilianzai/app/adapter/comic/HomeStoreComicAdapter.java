@@ -2,6 +2,7 @@ package com.heiheilianzai.app.adapter.comic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,7 +146,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
-                BaseAd.jumpADInfo(stroreComicLable,activity);
+                BaseAd.jumpADInfo(stroreComicLable, activity);
             }
         });
     }
@@ -164,41 +165,43 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void setComicViewHolder(ComicViewHolder holder, final int position, StroreComicLable stroreComicLable) {
         List<StroreComicLable.Comic> comicList = stroreComicLable.list;
-        holder.lable.setText(stroreComicLable.label);
-        if (stroreComicLable.can_refresh.equals("true")) {
-            holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    postHuanyihuan(stroreComicLable, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
-                }
-            });
-        } else {
-            holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
-        }
-        if (stroreComicLable.can_more.equals("true")) {
-            holder.fragment_store_gridview1_more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MyToash.Log("LOOKMORE", stroreComicLable.recommend_id);
-                    try {
-                        activity.startActivity(new Intent(activity, BaseOptionActivity.class)
-                                .putExtra("OPTION", LOOKMORE)
-                                .putExtra("PRODUCT", 2)
-                                .putExtra("IS_TOP_YEAR", isTopYear)
-                                .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
-                                .putExtra("recommend_id", stroreComicLable.recommend_id)
-                        );
-                    } catch (Exception E) {
-                    }
-                }
-            });
-        } else {
-            holder.fragment_store_gridview1_more.setVisibility(View.GONE);
-        }
         //横一无限不需要更多以及换一换
         if (stroreComicLable.style == COMIC_UI_STYLE_6 && stroreComicLable.work_num_type == 2) {
-            holder.lable.setVisibility(View.GONE);
+            holder.mLlBar.setVisibility(View.GONE);
+        } else {
+            holder.mLlBar.setVisibility(View.VISIBLE);
+            if (stroreComicLable.can_refresh.equals("true")) {
+                holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        postHuanyihuan(stroreComicLable, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
+                    }
+                });
+            } else {
+                holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
+            }
+            if (stroreComicLable.can_more.equals("true")) {
+                holder.fragment_store_gridview1_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MyToash.Log("LOOKMORE", stroreComicLable.recommend_id);
+                        try {
+                            activity.startActivity(new Intent(activity, BaseOptionActivity.class)
+                                    .putExtra("OPTION", LOOKMORE)
+                                    .putExtra("PRODUCT", 2)
+                                    .putExtra("IS_TOP_YEAR", isTopYear)
+                                    .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreComicLable.recommend_id)
+                                    .putExtra("recommend_id", stroreComicLable.recommend_id)
+                            );
+                        } catch (Exception E) {
+                        }
+                    }
+                });
+            } else {
+                holder.fragment_store_gridview1_more.setVisibility(View.GONE);
+            }
         }
+
         if (comicList.isEmpty()) {
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
         }
@@ -213,6 +216,13 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if (stroreComicLable.style == COMIC_UI_STYLE_3) {
                 params.height += H55 + WIDTH * 5 / 9;
             }
+        }
+        if (!TextUtils.isEmpty(stroreComicLable.label)) {
+            holder.lable.setText(stroreComicLable.label);
+            holder.mLlTitle.setVisibility(View.VISIBLE);
+        } else {
+            holder.mLlTitle.setVisibility(View.GONE);
+            params.height -= ImageUtil.dp2px(activity, 40);
         }
         if (!stroreComicLable.can_more.equals("true") && !stroreComicLable.can_refresh.equals("true")) {
             params.height -= H55;
@@ -241,6 +251,10 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         AdaptionGridViewNoMargin fragment_store_gridview1_gridview;
         @BindView(R.id.liem_store_comic_style1_style3)
         AdaptionGridViewNoMargin liem_store_comic_style1_style3;
+        @BindView(R.id.fragment_store_gridview1_huanmore)
+        LinearLayout mLlBar;
+        @BindView(R.id.ll_title_bar)
+        LinearLayout mLlTitle;
 
         public ComicViewHolder(View view) {
             super(view);
@@ -251,19 +265,6 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private int setItemData(StroreComicLable stroreComicLable, List<StroreComicLable.Comic> comicList, AdaptionGridViewNoMargin fragment_store_gridview1_gridview, AdaptionGridViewNoMargin liem_store_comic_style1_style3) {
         String recommend_id = stroreComicLable.recommend_id;
         int style = stroreComicLable.style;
-        fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String comic_id;
-                if (style != COMIC_UI_STYLE_3) {
-                    comic_id = comicList.get(position).comic_id;
-                } else {
-                    comic_id = comicList.get(position + 1).comic_id;
-                }
-                Intent intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comic_id);
-                activity.startActivity(intent);
-            }
-        });
         int width, height = 80, raw = 2;
         StoreComicAdapter storeComicAdapter = null;
         switch (style) {
@@ -273,6 +274,8 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size1 = Math.min(4, comicList.size());
                 raw = (int) (Math.ceil(size1 / 2d));
+                fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
+                liem_store_comic_style1_style3.setVisibility(View.GONE);
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size1), activity, style, width, height);
                 break;
             case COMIC_UI_STYLE_2:
@@ -281,11 +284,14 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 width = WIDTH / 3;
                 height = width * 4 / 3;
                 fragment_store_gridview1_gridview.setNumColumns(3);
+                fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
+                liem_store_comic_style1_style3.setVisibility(View.GONE);
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size), activity, style, width, height);
                 break;
             case COMIC_UI_STYLE_3:
                 if (!comicList.isEmpty()) {
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
+                    fragment_store_gridview1_gridview.setVisibility(View.GONE);
                     StoreComicAdapter storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, 1), activity, style, WIDTH, WIDTH * 5 / 9);
                     liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -307,6 +313,8 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size2 = Math.min(4, comicList.size());
                 raw = (int) (Math.ceil(size2 / 2d));
+                fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
+                liem_store_comic_style1_style3.setVisibility(View.GONE);
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size2), activity, style, width, height);
                 break;
             case COMIC_UI_STYLE_5:
@@ -315,16 +323,19 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size3 = Math.min(6, comicList.size());
                 raw = (int) (Math.ceil(size3 / 2d));
+                fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
+                liem_store_comic_style1_style3.setVisibility(View.GONE);
                 storeComicAdapter = new StoreComicAdapter(comicList.subList(0, (int) size3), activity, style, width, height);
                 break;
             case COMIC_UI_STYLE_6:
                 StoreComicAdapter storeComicAdapter3;
                 if (comicList.size() > 0) {
+                    fragment_store_gridview1_gridview.setVisibility(View.GONE);
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
                     if (stroreComicLable.work_num_type != 2) {
                         raw = Math.min(comicList.size(), 3);
                         storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, raw), activity, style, WIDTH, WIDTH * 5 / 9);
-                    }else {
+                    } else {
                         storeComicAdapter3 = new StoreComicAdapter(comicList, activity, style, WIDTH, WIDTH * 5 / 9);
                         raw = comicList.size();
                     }
@@ -332,13 +343,30 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comicList.get(0).comic_id));
+                            activity.startActivity(ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comicList.get(position).comic_id));
                         }
                     });
                     height = WIDTH * 5 / 9;
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) liem_store_comic_style1_style3.getLayoutParams();
+                    layoutParams.height = (height + H55) * raw;
+                    liem_store_comic_style1_style3.setLayoutParams(layoutParams);
+                    return layoutParams.height;
                 }
                 break;
         }
+        fragment_store_gridview1_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String comic_id;
+                if (style != COMIC_UI_STYLE_3) {
+                    comic_id = comicList.get(position).comic_id;
+                } else {
+                    comic_id = comicList.get(position + 1).comic_id;
+                }
+                Intent intent = ComicInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, comic_id);
+                activity.startActivity(intent);
+            }
+        });
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fragment_store_gridview1_gridview.getLayoutParams();
         fragment_store_gridview1_gridview.setAdapter(storeComicAdapter);
         layoutParams.height = (height + H55) * raw;

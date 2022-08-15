@@ -362,8 +362,6 @@ public class SplashActivity extends BaseAdvertisementActivity {
 
                 @Override
                 public void onClick() {
-                    skip = false;
-                    if (!skip) {
                         if (adInfo != null) {
                             XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                             handler.removeMessages(1);
@@ -371,7 +369,6 @@ public class SplashActivity extends BaseAdvertisementActivity {
                         }
                         AdvertisementActivity.adSkip(startpage, activity);
                     }
-                }
             });
         } else {
             handler.sendEmptyMessageDelayed(0, 500);

@@ -559,7 +559,6 @@ public class PageFactory {
 
     private View ADview2;
     public int Y;
-    int Insert_todayone2;
     boolean AD_SHOW, CANCLE_AD_SHOW;
     Map<String, String> bookpage_scroll_text_Map = new HashMap<>();
 
@@ -1491,10 +1490,12 @@ public class PageFactory {
             if (list_ad_view_img == null) {
                 list_ad_view_img = insert_todayone2.findViewById(R.id.list_ad_view_img);
                 ViewGroup.LayoutParams layoutParams = list_ad_view_img.getLayoutParams();
-                layoutParams.width = ScreenSizeUtils.getInstance(activity).getScreenWidth() - ImageUtil.dp2px(activity, 20);
+                layoutParams.width = mWidth;
                 layoutParams.height = layoutParams.width;
-                Insert_todayone2 = layoutParams.width;
-                list_ad_view_img.setLayoutParams(layoutParams);
+//                int top = (MHeight - mWidth) / 2;
+//                Rect mDestRect = new Rect(0, top, mWidth, top + mWidth);
+//                list_ad_view_img.setLayoutParams(layoutParams);
+//                insert_todayone2.setLayoutParams();
             }
             close_AD = false;
             insert_todayone2.setOnClickListener(new View.OnClickListener() {
@@ -1523,15 +1524,16 @@ public class PageFactory {
         } catch (Exception e) {
             c.drawBitmap(getBgBitmap2(), 0, 0, null);
         }
-        Rect mSrcRect = new Rect(0, 0, mWidth, Insert_todayone2);
+        Rect mSrcRect = new Rect(0, 0, mWidth, mWidth);
         Paint mBitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitPaint.setFilterBitmap(true);
         mBitPaint.setDither(true);
-        int top = (MHeight - Insert_todayone2) / 2;
-        Bitmap bitmapAD = ViewToBitmapUtil.convertViewToBitmap(insert_todayone2, top, Insert_todayone2);
+        int top = (ScreenSizeUtils.getInstance(mActivity).getScreenHeight() - ScreenSizeUtils.getInstance(mActivity).getScreenWidth()) / 2;
+        Bitmap bitmapAD = ViewToBitmapUtil.convertViewToBitmap(insert_todayone2, top, mWidth);
         MyToash.Log("ViewToBitmapUtil", (bitmapAD == null) + "  " + top);
-        Rect mDestRect = new Rect(0, top, mWidth, top + Insert_todayone2);
-        c.drawBitmap(bitmapAD, mSrcRect, mDestRect, mBitPaint);
+        Rect mDestRect = new Rect(0, top, ScreenSizeUtils.getInstance(mActivity).getScreenWidth(), top + ScreenSizeUtils.getInstance(mActivity).getScreenWidth());
+        //不需要明确画出
+        //c.drawBitmap(bitmapAD, mSrcRect, mDestRect, mBitPaint);
         //画进度及时间
         float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtil.getBookLen());//进度
         if (mPageEvent != null) {
@@ -1639,7 +1641,7 @@ public class PageFactory {
                 if (mDialogVip != null) {
                     mDialogVip.dismiss();
                 }
-                chapterItem.setIs_buy_status(true);
+                chapterItem.setIs_buy_status(isBuy);
                 updateRecord();
             }
         });

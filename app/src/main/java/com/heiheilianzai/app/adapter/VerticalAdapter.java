@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
 import com.heiheilianzai.app.BuildConfig;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.model.BaseTag;
@@ -19,6 +21,7 @@ import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.view.read.RoundRectImageView;
 
 import java.util.List;
 
@@ -158,7 +161,7 @@ public class VerticalAdapter extends BaseAdapter {
             layoutParams.height = HEIGHT + ImageUtil.dp2px(activity, 28);
             item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(activity, 10), ImageUtil.dp2px(activity, 14), ImageUtil.dp2px(activity, 18), ImageUtil.dp2px(activity, 14));
             item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
-            LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParamsIm = (ViewGroup.LayoutParams) imageView.getLayoutParams();
             layoutParamsIm.height = HEIGHT;
             layoutParamsIm.width = WIDTH;
             imageView.setLayoutParams(layoutParamsIm);

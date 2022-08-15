@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.piasy.biv.view.BigImageView;
 import com.github.piasy.biv.view.GlideImageViewFactory;
 import com.heiheilianzai.app.R;
+import com.heiheilianzai.app.model.BaseAd;
 import com.heiheilianzai.app.model.BaseSdkAD;
 import com.heiheilianzai.app.model.comic.BaseComicImage;
 import com.heiheilianzai.app.ui.activity.WebViewActivity;
@@ -209,9 +210,9 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 BaseComicImage comicImage = list.get(position);
                 AdInfo adInfo = BaseSdkAD.newAdInfo(comicImage);
                 if (adInfo != null) {
-                    MyPicasso.glideSdkAd(activity, adInfo, comicImage.getImage(), holderAd.ivAD);
+                    MyPicasso.glideSdkAd(activity, adInfo, comicImage.getAd_image(), holderAd.ivAD);
                 } else {
-                    MyPicasso.GlideImageNoSize(activity, comicImage.getImage(), holderAd.ivAD);
+                    MyPicasso.GlideImageNoSize(activity, comicImage.getAd_image(), holderAd.ivAD);
                 }
                 if (comicImage.getAd() == 1) {
                     holderAd.ivAD.setOnClickListener(new View.OnClickListener() {
@@ -220,11 +221,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                             if (adInfo != null) {
                                 XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                             }
-                            Intent intent = new Intent();
-                            intent.setClass(activity, WebViewActivity.class);
-                            intent.putExtra("url", comicImage.getAd_skip_url());
-                            intent.putExtra("ad_url_type", comicImage.getAd_url_type());
-                            activity.startActivity(intent);
+                            BaseAd.jumpADInfo(comicImage, activity);
                         }
                     });
                 }

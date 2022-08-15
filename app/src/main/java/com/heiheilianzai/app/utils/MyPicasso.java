@@ -15,6 +15,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.gif.GifOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -47,7 +48,19 @@ public class MyPicasso {
     public static void GlideImageNoSize(Activity activity, String url, ImageView imageView) {
         GlideImageNoSize(activity, url, imageView, R.mipmap.icon_comic_def);
     }
-
+    public static void GlideRoundCorner(Activity activity,String url,ImageView imageView,int def){
+        RequestOptions options = new RequestOptions()
+                .placeholder(def)    //加载成功之前占位图
+                .error(def)    //加载错误之后的错误图
+                .priority(Priority.LOW);
+        if (url == null || url.length() == 0) {
+            return;
+        } else {
+            if (activity != null && !activity.isFinishing()) {
+                Glide.with(activity).load(url).apply(options).into(imageView);
+            }
+        }
+    }
     public static void GlideImageNoSize(Activity activity, String url, ImageView imageView, int def) {
         imageView.setImageResource(def);
         if (url == null || url.length() == 0) {

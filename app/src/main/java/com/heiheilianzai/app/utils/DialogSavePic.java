@@ -89,7 +89,7 @@ public class DialogSavePic {
             name = "jk" + activity.getString(R.string.pic_name);
         }
         FileManager.saveBitmap(activity, ImageUtil.viewToBitmap(mLlPic), name);
-        MyToash.ToashSuccess(activity, "已保存二维码到相册");
+        MyToash.ToashSuccess(activity, "您的账号信息已保存至本地相册！");
     }
 
 

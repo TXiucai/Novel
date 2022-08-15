@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,7 @@ import com.heiheilianzai.app.model.UserInfoItem;
 import com.heiheilianzai.app.model.book.BaseBook;
 import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
+import com.heiheilianzai.app.model.event.FreshUrlEvent;
 import com.heiheilianzai.app.model.event.InviteCodeEvent;
 import com.heiheilianzai.app.model.event.LoginBoYinEvent;
 import com.heiheilianzai.app.model.event.RefreshMine;
@@ -43,6 +45,7 @@ import com.heiheilianzai.app.ui.activity.AddressActivity;
 import com.heiheilianzai.app.ui.activity.AnnounceActivity;
 import com.heiheilianzai.app.ui.activity.BookSelfActivity;
 import com.heiheilianzai.app.ui.activity.FeedBackActivity;
+import com.heiheilianzai.app.ui.activity.MainActivity;
 import com.heiheilianzai.app.ui.activity.MyShareActivity;
 import com.heiheilianzai.app.ui.activity.ReadTimeActivity;
 import com.heiheilianzai.app.ui.activity.RechargeActivity;
@@ -66,6 +69,7 @@ import com.heiheilianzai.app.view.MineAdBannerHolderView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -246,6 +250,7 @@ public class MineNewFragment extends BaseButterKnifeFragment {
             fragment_mine_user_info_id.setText("ID:  " + mUserInfo.getUid());
             fragment_mine_user_info_shuquan.setText(String.format(getString(R.string.golden_balance), mUserInfo.getSilverRemain()));
             loginBoYin();
+            getGameLink();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -482,6 +487,34 @@ public class MineNewFragment extends BaseButterKnifeFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshMine refreshMine) {
         refreshData();
+        Log.e("game_link", "获取到最新的地址：");
+        getGameLink();
+    }
+
+    /**
+     * 获取最新的游戏地址
+     */
+    private void getGameLink() {
+        ReaderParams params = new ReaderParams(activity);
+        String json = params.generateParamsJson();
+        HttpUtils.getInstance(activity).sendRequestRequestParams3(ReaderConfig.getBaseUrl() + ReaderConfig.GAME_LINK, json, false, new HttpUtils.ResponseListener() {
+                    @Override
+                    public void onResponse(final String result) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(result);
+                            String url = jsonObj.getString("game_link");
+                            ShareUitls.putString(activity, "game_link", url);
+                            EventBus.getDefault().post(new FreshUrlEvent(url));
+
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(String ex) {
+                    }
+                }
+        );
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

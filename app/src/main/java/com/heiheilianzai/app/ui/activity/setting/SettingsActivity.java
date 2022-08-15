@@ -356,12 +356,6 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         dialog.show();
     }
 
-    /**
-     * 根据是否免费调整UI变化
-     */
-    private void uiFreeCharge() {
-        uiFreeCharge(automation_buy_next, automation_buy_next_lv);
-    }
 
     /**
      * 版本相关ui初始化

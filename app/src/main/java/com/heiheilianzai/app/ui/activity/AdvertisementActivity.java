@@ -136,14 +136,11 @@ public class AdvertisementActivity extends BaseAdvertisementActivity {
 
                     @Override
                     public void onClick() {
-                        skip = false;
-                        if (!skip) {
-                            if (adInfo != null) {
-                                handler.removeMessages(1);
-                                handler.removeMessages(0);
-                                adSkip(startpage, activity);
-                            }
+                        if (adInfo != null) {
+                            handler.removeMessages(1);
+                            handler.removeMessages(0);
                         }
+                        adSkip(startpage, activity);
                     }
                 });
             } else {

@@ -14,9 +14,9 @@
         <RelativeLayout
             android:id="@+id/book_info_titlebar_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_70dp"
+            android:layout_height="@dimen/dimens_80dp"
             android:background="@color/black"
-            android:paddingTop="@dimen/dimens_30dp">
+            android:paddingTop="@dimen/dp_40">
 
             <LinearLayout
                 android:id="@+id/titlebar_back"

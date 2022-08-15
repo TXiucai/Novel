@@ -2,7 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/liem_store_comic_style1_layout"
@@ -14,14 +15,20 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/liem_store_comic_style1_img"
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="@dimen/dimens_5dp"
+                app:cardBackgroundColor="#ccc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/icon_comic_def" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/liem_store_comic_style1_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop" />
+
+            </androidx.cardview.widget.CardView>
+
 
             <ImageView
                 android:layout_width="@dimen/dimens_34dp"
@@ -47,7 +54,7 @@
             android:id="@+id/liem_store_comic_style1_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dimens_3dp"
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/black"

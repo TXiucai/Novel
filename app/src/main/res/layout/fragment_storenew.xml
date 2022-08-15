@@ -103,6 +103,7 @@
                 app:tabMode="scrollable"
                 app:tabPaddingEnd="@dimen/dimens_8dp"
                 app:tabPaddingStart="@dimen/dimens_8dp"
+                app:tabRippleColor="@color/transparent"
                 app:tabTextColor="@color/color_1a1a1a" />
 
             <ImageView

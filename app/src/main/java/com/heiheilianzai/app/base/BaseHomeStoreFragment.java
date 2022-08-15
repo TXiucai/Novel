@@ -2,6 +2,7 @@ package com.heiheilianzai.app.base;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         initViews();
     }
 
@@ -197,14 +199,13 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         store_comic_refresh_layout.setOnRefreshListener(new SHSwipeRefreshLayout.SHSOnRefreshListener() {
             @Override
             public void onRefresh() {
-                setChannelId();
                 page = 1;
                 mFirstIndex = 0;
                 store_comic_refresh_layout.setLoadmoreEnable(true);
                 isLoadMore = true;
                 mIsFirstLoadNoLimit = true;
                 mIsFresh = true;
-                getChannelDetailData();
+                setChannelId();
             }
 
             @Override
@@ -269,12 +270,12 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
 
     public void initWaterfall(String jsonObject, Type typeOfT) {
         if (!StringUtils.isEmpty(jsonObject)) {
-            if (page == 1 && !isLabelNoLimit()) {
+            if (page == 1 && mIsFresh) {
                 listData.clear();
             }
             listData.addAll(gson.fromJson(jsonObject, typeOfT));
             adapter.notifyDataSetChanged();
-            smartRecyclerAdapter.notifyDataSetChanged();
+            //smartRecyclerAdapter.notifyDataSetChanged();
         }
     }
 
@@ -366,7 +367,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                         setIsLoadMore(response);
                         JSONObject jsonObject = new JSONObject(response);
                         String edit_time = jsonObject.getString("max_edit_time");//获取服务器修改时间戳
-                        if (page == 1 && !isLabelNoLimit()) {//第一页保存修改时间戳，保存列表总条数
+                        if (page == 1 && mIsFresh) {//第一页保存修改时间戳，保存列表总条数
                             max_edit_time = edit_time;
                             finishRefresh(true);
                         } else {
@@ -597,6 +598,7 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         HttpUtils.getInstance(activity).sendRequestRequestParams3(App.getBaseUrl() + ReaderConfig.mHomeRecomment, json, false, new HttpUtils.ResponseListener() {
             @Override
             public void onResponse(String response) throws JSONException {
+                Log.e("icon  刷新", "response:" + response);
                 HomeRecommendBean homeRecommendBean = new Gson().fromJson(response, HomeRecommendBean.class);
                 List<HomeRecommendBean.RecommeListBean> recomme_list = homeRecommendBean.getRecomme_list();
                 boolean isCartoonIconSDK = false;
@@ -686,6 +688,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         if (recomme_list == null || recomme_list.size() == 0) {
             return;
         }
+        recyclerView.setAdapter(null);
+        Log.e("icon  刷新", "recome_list:" + recomme_list.toString());
         int spanCount = recomme_list.size() >= 5 ? 5 : recomme_list.size();
         recyclerView.setLayoutManager(new GridLayoutManager(activity, spanCount));
         HomeRecommendAdapter homeRecommendAdapter = new HomeRecommendAdapter(activity, recomme_list);
@@ -753,9 +757,8 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
                 } else if (jump_type == 12) {
                     EventBus.getDefault().post(new SkipToBoYinEvent(""));
                 } else if (jump_type == 13) {
-
                     if (Utils.isLogin(activity)) {
-                        String panda_game_link = recommeListBean.getPanda_game_link();
+                        String panda_game_link = ShareUitls.getString(activity, "game_link", "");
                         if (!TextUtils.isEmpty(panda_game_link)) {
                             activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
                         }
@@ -790,11 +793,6 @@ public abstract class BaseHomeStoreFragment<T> extends BaseButterKnifeFragment {
         getHomeAds();
     }
 
-    //登录重新获取新的广告
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(RefreshMine refreshMine) {
-        getHomeAds();
-    }
 
     private void getHomeAds() {
         getBannerData();

@@ -7,6 +7,7 @@ import static com.heiheilianzai.app.constant.sa.SaVarConfig.WORKS_TYPE_COMICS;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,7 +148,7 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (adInfo != null) {
                     XRequestManager.INSTANCE.requestEventClick(activity, adInfo);
                 }
-                BaseAd.jumpADInfo(stroreCartoonLable,activity);
+                BaseAd.jumpADInfo(stroreCartoonLable, activity);
             }
         });
     }
@@ -166,44 +167,46 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void setComicViewHolder(ComicViewHolder holder, final int position, StroreCartoonLable stroreCartoonLable) {
         List<StroreCartoonLable.Cartoon> cartoonList = stroreCartoonLable.list;
-        holder.lable.setText(stroreCartoonLable.label);
-        if (stroreCartoonLable.can_refresh.equals("true")) {
-            holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    postHuanyihuan(stroreCartoonLable, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
-                }
-            });
+        //横一无限不需要更多以及换一换
+        if (stroreCartoonLable.style == COMIC_UI_STYLE_4 && stroreCartoonLable.work_num_type == 2) {
+            holder.mLlBar.setVisibility(View.GONE);
         } else {
-            holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
-        }
-        if (stroreCartoonLable.can_more.equals("true")) {
-            holder.fragment_store_gridview1_more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MyToash.Log("LOOKMORE", stroreCartoonLable.recommend_id);
-                    try {
-                        activity.startActivity(new Intent(activity, BaseOptionActivity.class)
-                                .putExtra("OPTION", LOOKMORE)
-                                .putExtra("PRODUCT", 3)
-                                .putExtra("IS_TOP_YEAR", isTopYear)
-                                .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreCartoonLable.recommend_id)
-                                .putExtra("recommend_id", stroreCartoonLable.recommend_id)
-                        );
-                    } catch (Exception E) {
+            holder.mLlBar.setVisibility(View.VISIBLE);
+            if (stroreCartoonLable.can_refresh.equals("true")) {
+                holder.fragment_store_gridview_huanyihuan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        postHuanyihuan(stroreCartoonLable, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
                     }
-                }
-            });
-        } else {
-            holder.fragment_store_gridview1_more.setVisibility(View.GONE);
+                });
+            } else {
+                holder.fragment_store_gridview_huanyihuan.setVisibility(View.GONE);
+            }
+            if (stroreCartoonLable.can_more.equals("true")) {
+                holder.fragment_store_gridview1_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MyToash.Log("LOOKMORE", stroreCartoonLable.recommend_id);
+                        try {
+                            activity.startActivity(new Intent(activity, BaseOptionActivity.class)
+                                    .putExtra("OPTION", LOOKMORE)
+                                    .putExtra("PRODUCT", 3)
+                                    .putExtra("IS_TOP_YEAR", isTopYear)
+                                    .putExtra("title", LanguageUtil.getString(activity, R.string.refer_page_more) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + stroreCartoonLable.recommend_id)
+                                    .putExtra("recommend_id", stroreCartoonLable.recommend_id)
+                            );
+                        } catch (Exception E) {
+                        }
+                    }
+                });
+            } else {
+                holder.fragment_store_gridview1_more.setVisibility(View.GONE);
+            }
         }
         if (cartoonList.isEmpty()) {
             holder.fragment_store_gridview1_gridview.setVisibility(View.GONE);
         }
-        //横一无限不需要更多以及换一换
-        if (stroreCartoonLable.style == COMIC_UI_STYLE_4 && stroreCartoonLable.work_num_type == 2) {
-            holder.lable.setVisibility(View.GONE);
-        }
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int ItemHeigth = setItemData(stroreCartoonLable, cartoonList, holder.fragment_store_gridview1_gridview, holder.liem_store_comic_style1_style3);
         if (cartoonList.isEmpty()) {
@@ -215,6 +218,13 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (stroreCartoonLable.style == COMIC_UI_STYLE_3) {
                 params.height += H55 + WIDTH * 5 / 9;
             }
+        }
+        if (!TextUtils.isEmpty(stroreCartoonLable.label)) {
+            holder.lable.setText(stroreCartoonLable.label);
+            holder.mLlTitle.setVisibility(View.VISIBLE);
+        } else {
+            holder.mLlTitle.setVisibility(View.GONE);
+            params.height -= ImageUtil.dp2px(activity, 40);
         }
         if (!stroreCartoonLable.can_more.equals("true") && !stroreCartoonLable.can_refresh.equals("true")) {
             params.height -= H55;
@@ -243,6 +253,10 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
         AdaptionGridViewNoMargin fragment_store_gridview1_gridview;
         @BindView(R.id.liem_store_comic_style1_style3)
         AdaptionGridViewNoMargin liem_store_comic_style1_style3;
+        @BindView(R.id.fragment_store_gridview1_huanmore)
+        LinearLayout mLlBar;
+        @BindView(R.id.ll_title_bar)
+        LinearLayout mLlTitle;
 
         public ComicViewHolder(View view) {
             super(view);
@@ -275,6 +289,8 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size1 = Math.min(4, cartoonList.size());
                 raw = (int) (Math.ceil(size1 / 2d));
+                fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
+                liem_store_comic_style1_style3.setVisibility(View.GONE);
                 storeCartoonAdapter = new StoreCartoonAdapter(cartoonList.subList(0, (int) size1), activity, width, height);
                 break;
             case COMIC_UI_STYLE_2:
@@ -283,6 +299,8 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                 fragment_store_gridview1_gridview.setNumColumns(2);
                 double size2 = Math.min(6, cartoonList.size());
                 raw = (int) (Math.ceil(size2 / 2d));
+                fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
+                liem_store_comic_style1_style3.setVisibility(View.GONE);
                 storeCartoonAdapter = new StoreCartoonAdapter(cartoonList.subList(0, (int) size2), activity, width, height);
                 break;
             case COMIC_UI_STYLE_3:
@@ -301,12 +319,14 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                     double size3 = Math.min(4, cartoonList.size());
                     raw = (int) (Math.ceil(size3 / 2d));
                     fragment_store_gridview1_gridview.setNumColumns(2);
+                    fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
                     storeCartoonAdapter = new StoreCartoonAdapter(cartoonList.subList(1, Math.min(5, cartoonList.size())), activity, width, height);
                 }
                 break;
             case COMIC_UI_STYLE_4:
                 if (cartoonList.size() > 0) {
                     StoreCartoonAdapter storeComicAdapter3;
+                    fragment_store_gridview1_gridview.setVisibility(View.GONE);
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
                     if (stroreCartoonLable.work_num_type != 2) {
                         raw = Math.min(cartoonList.size(), 3);
@@ -319,11 +339,14 @@ public class HomeStoreCartoonAdapter extends RecyclerView.Adapter<RecyclerView.V
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(0).video_id));
+                            activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_column) + " " + LanguageUtil.getString(activity, R.string.refer_page_column_id) + recommend_id, cartoonList.get(position).video_id));
                         }
                     });
                     height = WIDTH * 5 / 9;
-
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) liem_store_comic_style1_style3.getLayoutParams();
+                    layoutParams.height = (height + H55) * raw;
+                    liem_store_comic_style1_style3.setLayoutParams(layoutParams);
+                    return layoutParams.height;
                 }
                 break;
         }

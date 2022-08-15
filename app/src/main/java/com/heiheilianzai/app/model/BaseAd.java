@@ -23,11 +23,14 @@ import com.heiheilianzai.app.ui.activity.cartoon.CartoonInfoActivity;
 import com.heiheilianzai.app.ui.activity.comic.ComicInfoActivity;
 import com.heiheilianzai.app.ui.activity.setting.AboutActivity;
 import com.heiheilianzai.app.utils.LanguageUtil;
+import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class BaseAd extends BaseSdkAD {
+import java.io.Serializable;
+
+public class BaseAd extends BaseSdkAD implements Serializable {
     public String advert_id;//
     public int ad_type;//": 1,   // 广告类型
     public String ad_title;//": "测试一下25",  // 标题
@@ -173,14 +176,6 @@ public class BaseAd extends BaseSdkAD {
             Intent intent = new Intent(context, BaseOptionActivity.class);
             int ad_url_type = baseAd.getAd_url_type();
             int ad_action = baseAd.ad_action;
-            int recommendType = baseAd.book_id == null ? 0 : 1;
-            if (recommendType != 0) {
-                recommendType = baseAd.comic_id == null ? 0 : 2;
-            }
-            if (recommendType != 0) {
-                recommendType = baseAd.video_id == null ? 0 : 3;
-            }
-            intent.putExtra("PRODUCT", recommendType);
             String jump_url = baseAd.getAd_skip_url();
             if (Utils.isLogin(context) && user_parame_need == 2 && !jump_url.contains("&uid=")) {
                 jump_url += "&uid=" + Utils.getUID(context);
@@ -204,23 +199,45 @@ public class BaseAd extends BaseSdkAD {
                         context.startActivity(CartoonInfoActivity.getMyIntent(context, LanguageUtil.getString(context, R.string.refer_page_home_ad), baseAd.video_id));
                         break;
                     case 4:
+                        intent.putExtra("PRODUCT", 1);
+                        intent.putExtra("OPTION", MIANFEI);
+                        intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_xianmian));
+                        context.startActivity(intent);
+                        break;
                     case 8:
+                        intent.putExtra("PRODUCT", 2);
                         intent.putExtra("OPTION", MIANFEI);
                         intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_xianmian));
                         context.startActivity(intent);
                         break;
                     case 5:
+                        intent.putExtra("PRODUCT", 1);
+                        intent.putExtra("OPTION", WANBEN);
+                        intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_wanben));
+                        context.startActivity(intent);
+                        break;
                     case 9:
+                        intent.putExtra("PRODUCT", 2);
                         intent.putExtra("OPTION", WANBEN);
                         intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_wanben));
                         context.startActivity(intent);
                         break;
                     case 6:
+                        intent.putExtra("PRODUCT", 1);
+                        context.startActivity(new Intent(context, TopNewActivity.class));
+                        break;
                     case 10:
-                        context.startActivity(new Intent(context, TopNewActivity.class).putExtra("PRODUCT", recommendType == 1));
+                        intent.putExtra("PRODUCT", 2);
+                        context.startActivity(new Intent(context, TopNewActivity.class));
                         break;
                     case 7:
+                        intent.putExtra("PRODUCT", 1);
+                        intent.putExtra("OPTION", SHUKU);
+                        intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_fenlei));
+                        context.startActivity(intent);
+                        break;
                     case 11:
+                        intent.putExtra("PRODUCT", 2);
                         intent.putExtra("OPTION", SHUKU);
                         intent.putExtra("title", LanguageUtil.getString(context, R.string.storeFragment_fenlei));
                         context.startActivity(intent);
@@ -246,7 +263,7 @@ public class BaseAd extends BaseSdkAD {
                         break;
                     case 18:
                         if (Utils.isLogin(context)) {
-                            String panda_game_link = baseAd.getPanda_game_link();
+                            String panda_game_link = ShareUitls.getString(context, "game_link", "");
                             if (!TextUtils.isEmpty(panda_game_link)) {
                                 context.startActivity(new Intent(context, AboutActivity.class).putExtra("url", panda_game_link));
                             }

@@ -40,7 +40,6 @@ import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.FloatMainBean;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
-import com.heiheilianzai.app.model.event.RefreshMine;
 import com.heiheilianzai.app.model.event.SkipToBoYinEvent;
 import com.heiheilianzai.app.model.event.StoreEvent;
 import com.heiheilianzai.app.model.event.TaskRedPointEvent;
@@ -153,6 +152,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         if (!BuildConfig.free_charge) {
             handler.removeMessages(0);
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -216,14 +216,6 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                                     .putExtra("style", "4"));
                         } else {
                             Intent intentFloat = new Intent(activity, BaseOptionActivity.class);
-                            int recommendType = mFloatMainBean.book_id == null ? 0 : 1;
-                            if (recommendType != 0) {
-                                recommendType = mFloatMainBean.comic_id == null ? 0 : 2;
-                            }
-                            if (recommendType != 0) {
-                                recommendType = mFloatMainBean.video_id == null ? 0 : 3;
-                            }
-                            intentFloat.putExtra("PRODUCT", recommendType);
                             switch (link_type) {
                                 case 3:
                                     if (Utils.isLogin(activity)) {
@@ -242,23 +234,45 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                                     activity.startActivity(CartoonInfoActivity.getMyIntent(activity, LanguageUtil.getString(activity, R.string.refer_page_home_ad), mFloatMainBean.video_id));
                                     break;
                                 case 7:
+                                    intentFloat.putExtra("PRODUCT", 1);
+                                    intentFloat.putExtra("OPTION", MIANFEI);
+                                    intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
+                                    activity.startActivity(intentFloat);
+                                    break;
                                 case 11:
+                                    intentFloat.putExtra("PRODUCT", 2);
                                     intentFloat.putExtra("OPTION", MIANFEI);
                                     intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_xianmian));
                                     activity.startActivity(intentFloat);
                                     break;
                                 case 8:
+                                    intentFloat.putExtra("PRODUCT", 1);
+                                    intentFloat.putExtra("OPTION", WANBEN);
+                                    intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_wanben));
+                                    activity.startActivity(intentFloat);
+                                    break;
                                 case 12:
+                                    intentFloat.putExtra("PRODUCT", 2);
                                     intentFloat.putExtra("OPTION", WANBEN);
                                     intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_wanben));
                                     activity.startActivity(intentFloat);
                                     break;
                                 case 9:
+                                    intentFloat.putExtra("PRODUCT", 1);
+                                    activity.startActivity(new Intent(activity, TopNewActivity.class));
+                                    break;
                                 case 13:
-                                    activity.startActivity(new Intent(activity, TopNewActivity.class).putExtra("PRODUCT", recommendType == 1));
+                                    intentFloat.putExtra("PRODUCT", 2);
+                                    activity.startActivity(new Intent(activity, TopNewActivity.class));
                                     break;
                                 case 10:
+                                    intentFloat.putExtra("PRODUCT", 1);
+                                    intentFloat.putExtra("OPTION", SHUKU);
+                                    intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
+                                    activity.startActivity(intentFloat);
+                                    break;
                                 case 14:
+                                    intentFloat.putExtra("PRODUCT", 2);
                                     intentFloat.putExtra("OPTION", SHUKU);
                                     intentFloat.putExtra("title", LanguageUtil.getString(activity, R.string.storeFragment_fenlei));
                                     activity.startActivity(intentFloat);
@@ -284,7 +298,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
                                     break;
                                 case 21:
                                     if (Utils.isLogin(activity)) {
-                                        String panda_game_link = mFloatMainBean.getPanda_game_link();
+                                        String panda_game_link = ShareUitls.getString(activity, "game_link", "");
                                         if (!TextUtils.isEmpty(panda_game_link)) {
                                             activity.startActivity(new Intent(activity, AboutActivity.class).putExtra("url", panda_game_link));
                                         }
@@ -352,6 +366,7 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mRlFili.setVisibility(BuildConfig.free_charge ? View.GONE : View.VISIBLE);
         mTbChannel.setSelectedTabIndicatorHeight(0);
         fragmentManager = getChildFragmentManager();
@@ -391,11 +406,6 @@ public abstract class StroeNewFragment extends BaseButterKnifeFragment {
         } else {
             mRlOrder.setVisibility(View.GONE);
         }
-    }
-    //登录重新获取新的广告
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(RefreshMine refreshMine) {
-       getFloat(activity,getProduct());
     }
 
     private void getFloat(Activity activity, int product) {

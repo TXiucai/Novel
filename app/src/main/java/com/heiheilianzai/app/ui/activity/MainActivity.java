@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -70,6 +71,7 @@ import com.heiheilianzai.app.model.comic.BaseComic;
 import com.heiheilianzai.app.model.event.AcceptMineFragment;
 import com.heiheilianzai.app.model.event.CreateVipPayOuderEvent;
 import com.heiheilianzai.app.model.event.ExitAppEvent;
+import com.heiheilianzai.app.model.event.FreshUrlEvent;
 import com.heiheilianzai.app.model.event.HomeShelfRefreshEvent;
 import com.heiheilianzai.app.model.event.LogoutEvent;
 import com.heiheilianzai.app.model.event.NoticeEvent;
@@ -665,12 +667,6 @@ public class MainActivity extends BaseButterKnifeTransparentActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void downComplete(BoyinInfoEvent boyinInfoEvent) {//退出APP监听
         exitService();
-    }
-
-    //登录重新获取新的广告
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(RefreshMine refreshMine) {
-        getAd();
     }
 
     /**

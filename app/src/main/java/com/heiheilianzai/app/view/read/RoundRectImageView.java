@@ -1,5 +1,6 @@
 package com.heiheilianzai.app.view.read;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -14,9 +15,12 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.heiheilianzai.app.utils.ImageUtil;
+
 /**
  * 圆角矩形
  */
+@SuppressLint("AppCompatCustomView")
 public class RoundRectImageView extends ImageView {
 
     private Paint paint;
@@ -34,27 +38,6 @@ public class RoundRectImageView extends ImageView {
         paint = new Paint();
     }
 
-    /**
-     * 绘制圆角矩形图片
-     *
-     * @author caizhiming
-     */
-    @Override
-    protected void onDraw(Canvas canvas) {
-
-        Drawable drawable = getDrawable();
-        if (null != drawable) {
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            Bitmap b = getRoundBitmap(bitmap, 20);
-            final Rect rectSrc = new Rect(0, 0, b.getWidth(), b.getHeight());
-            final Rect rectDest = new Rect(0, 0, getWidth(), getHeight());
-            paint.reset();
-            canvas.drawBitmap(b, rectSrc, rectDest, paint);
-
-        } else {
-            super.onDraw(canvas);
-        }
-    }
 
     /**
      * 获取圆角矩形图片方法

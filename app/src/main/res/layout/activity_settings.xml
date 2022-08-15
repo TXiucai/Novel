@@ -85,14 +85,16 @@
                 android:id="@+id/automation_buy_next_lv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimens_0_3dp"
-                android:background="@color/lightgray2" />
+                android:background="@color/lightgray2"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/automation_buy_next"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="@dimen/dimens_10dp">
+                android:padding="@dimen/dimens_10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

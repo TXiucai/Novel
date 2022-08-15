@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="6dp"
-    android:paddingRight="6dp">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/fragment_store_bar"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal">
@@ -118,6 +119,8 @@
     </LinearLayout>
 
     <com.heiheilianzai.app.view.AdaptionGridView
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:id="@+id/fragment_store_gridview3_gridview_fore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -127,6 +130,8 @@
         android:visibility="gone" />
 
     <com.heiheilianzai.app.view.AdaptionGridView
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:id="@+id/fragment_store_gridview3_gridview_first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -135,6 +140,8 @@
         android:numColumns="3" />
 
     <com.heiheilianzai.app.view.AdaptionGridView
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:id="@+id/fragment_store_gridview3_gridview_second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,10 +153,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_store_ry"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
         android:id="@+id/fragment_store_gridview1_label"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_36dp"
@@ -169,7 +177,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@drawable/shape_f6f6f6_20"
+            android:background="@drawable/shape_e6e6e6_20"
             android:orientation="horizontal">
 
             <View
@@ -191,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/storeFragment_more"
-                android:textColor="@color/color_c0c0c0"
+                android:textColor="@color/color_606060"
                 android:textSize="14sp" />
 
             <View
@@ -211,7 +219,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:background="@drawable/shape_f6f6f6_20"
+            android:background="@drawable/shape_e6e6e6_20"
             android:orientation="horizontal">
 
             <View
@@ -233,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/storeFragment_huanyihuan"
-                android:textColor="@color/color_c0c0c0"
+                android:textColor="@color/color_606060"
                 android:textSize="14sp" />
 
             <View

@@ -17,6 +17,7 @@ import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.view.read.RoundRectImageView;
 
 import org.w3c.dom.Text;
 
@@ -77,8 +78,10 @@ public class StoreComicAdapter extends BaseAdapter {
                 MyPicasso.GlideImageNoSize(activity, comic.horizontal_cover, viewHolder.liem_store_comic_style1_img, R.mipmap.comic_def_cross);
             else
                 MyPicasso.GlideImageNoSize(activity, comic.vertical_cover, viewHolder.liem_store_comic_style1_img, R.mipmap.comic_def_cross);
+
         } else {
             MyPicasso.GlideImageNoSize(activity, comic.vertical_cover, viewHolder.liem_store_comic_style1_img, R.mipmap.comic_def_v);
+
         }
         ViewGroup.LayoutParams layoutParams11 = viewHolder.liem_store_comic_style1_img.getLayoutParams();
         layoutParams11.height = HEIGHT;

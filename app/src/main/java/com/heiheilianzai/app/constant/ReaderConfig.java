@@ -532,6 +532,10 @@ public class ReaderConfig {
      * 用户订单记录
      */
     public static final String USER_ORDER_RECORD = "/user-order/order-history";
+    /**
+     * 游戏地址
+     */
+    public static final String GAME_LINK = "/game/link";
 
     /**
      * 通过第三方获取用户使用网络所在区域

@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentActivity;
 import com.heiheilianzai.app.BuildConfig;
 import com.umeng.analytics.MobclickAgent;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.Field;
 
 import butterknife.ButterKnife;

@@ -58,7 +58,7 @@ public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
             layoutParamss.width = WIDTH;
             layoutParamss.height = HEIGHT + H33;
             item_store_label_male_vertical_layout.setLayoutParams(layoutParamss);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.width = WIDTH;
             layoutParams.height = HEIGHT;
             imageView.setLayoutParams(layoutParams);
@@ -77,7 +77,7 @@ public class SearchVerticalAdapter extends ReaderBaseAdapter<SearchItem> {
             layoutParamss.height = CARTOON_HEIGHT + H20;
             item_store_label_male_vertical_layout.setLayoutParams(layoutParamss);
 
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) imageView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             layoutParams.width = CARTOON_WIDTH;
             layoutParams.height = CARTOON_HEIGHT;
             imageView.setLayoutParams(layoutParams);

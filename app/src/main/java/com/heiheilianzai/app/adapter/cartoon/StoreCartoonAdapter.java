@@ -18,6 +18,7 @@ import com.heiheilianzai.app.model.comic.StroreComicLable;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.view.read.RoundRectImageView;
 
 import java.util.List;
 
@@ -69,12 +70,11 @@ public class StoreCartoonAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         StroreCartoonLable.Cartoon cartoon = getItem(i);
-        viewHolder.liem_store_comic_style1_img.setImageResource(R.mipmap.cartoon_def_v);
-        MyPicasso.GlideImageNoSize(activity, cartoon.cover, viewHolder.liem_store_comic_style1_img, R.mipmap.cartoon_def_v);
         ViewGroup.LayoutParams layoutParams11 = viewHolder.liem_store_comic_style1_img.getLayoutParams();
         layoutParams11.height = HEIGHT;
         layoutParams11.width = WIDTH;
         viewHolder.liem_store_comic_style1_img.setLayoutParams(layoutParams11);
+        MyPicasso.GlideImageNoSize(activity, cartoon.cover, viewHolder.liem_store_comic_style1_img, R.mipmap.cartoon_def_v);
         //暂时隐藏更新到多少话的ui
         /*if (!TextUtils.isEmpty(comic.flag)) {
             viewHolder.liem_store_comic_style1_flag.setVisibility(View.VISIBLE);

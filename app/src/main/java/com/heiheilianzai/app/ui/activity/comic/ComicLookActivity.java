@@ -1657,6 +1657,7 @@ public class ComicLookActivity extends BaseButterKnifeActivity {
                     dialogVipPop.dismiss();
                 }
                 chapterItem.setIs_book_coupon_pay("0");
+                chapterItem.setIs_buy_status(isBuy);
                 updateRecord();
             }
         });

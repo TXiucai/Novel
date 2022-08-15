@@ -104,6 +104,14 @@ public class NewStoreComicFragment extends BaseHomeStoreFragment<StroreComicLabl
             for (int i = 0; i < sizeData; i++) {
                 listData.add(2 * i + 1, stroreBookcLable);
             }
+            //特殊处理横一无限，频道最后一个栏目不需要添加广告
+            for (int i = 0; i < listData.size(); i++) {
+                StroreComicLable stroreComicLable = listData.get(i);
+                if (stroreComicLable.getAd_type() != 1 && stroreComicLable.work_num_type == 2) {
+                    listData.remove(i + 1);
+                    break;
+                }
+            }
             //横一样式最后一个不需要广告
             if (listData.get(listData.size() - 2).work_num_type == 2) {
                 listData.remove(listData.size() - 1);

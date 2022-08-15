@@ -270,4 +270,5 @@
         <item name="android:windowEnterAnimation">@anim/in_bottom</item>
         <item name="android:windowExitAnimation">@anim/out_bottom</item>
     </style>
+
 </resources>

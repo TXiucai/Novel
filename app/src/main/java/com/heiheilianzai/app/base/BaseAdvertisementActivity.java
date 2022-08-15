@@ -59,7 +59,6 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
     public static Activity activity;
     protected Startpage startpage;
     protected UpdateApp updateApp;
-    protected boolean skip = false;
     protected int time = 5;
     protected boolean into;
     protected boolean paused = false;
@@ -103,7 +102,6 @@ public abstract class BaseAdvertisementActivity extends FragmentActivity {
                 @Override
                 public void onClick(View view) {
                     if (getString(R.string.splashactivity_skip).equals(activity_home_viewpager_sex_next.getText().toString())) {
-                        skip = true;
                         handler.sendEmptyMessageDelayed(0, 0);
                     }
                 }

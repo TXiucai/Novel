@@ -12,6 +12,7 @@ import com.heiheilianzai.app.constant.CartoonConfig;
 import com.heiheilianzai.app.constant.ComicConfig;
 import com.heiheilianzai.app.model.ChannelBean;
 import com.heiheilianzai.app.model.cartoon.StroreCartoonLable;
+import com.heiheilianzai.app.model.comic.StroreComicLable;
 
 import org.json.JSONObject;
 
@@ -92,6 +93,14 @@ public class NewStoreCartoonFragment extends BaseHomeStoreFragment<StroreCartoon
             int sizeData = listData.size();
             for (int i = 0; i < sizeData; i++) {
                 listData.add(2 * i + 1, stroreCartoonLable);
+            }
+            //特殊处理横一无限，频道最后一个栏目不需要添加广告
+            for (int i = 0; i < listData.size(); i++) {
+                StroreCartoonLable stroreCartoonLable1 = listData.get(i);
+                if (stroreCartoonLable1.getAd_type() != 1 &&  stroreCartoonLable1.work_num_type == 2) {
+                    listData.remove(i + 1);
+                    break;
+                }
             }
             //横一样式最后一个不需要广告
             if (listData.get(listData.size() - 2).work_num_type == 2) {

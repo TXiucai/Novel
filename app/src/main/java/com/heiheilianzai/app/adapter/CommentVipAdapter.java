@@ -62,7 +62,7 @@ public class CommentVipAdapter extends BaseAdapter {
         item_store_label_male_vertical_layout.setPadding(ImageUtil.dp2px(mActivity, 5), ImageUtil.dp2px(mActivity, 4), ImageUtil.dp2px(mActivity, 5), ImageUtil.dp2px(mActivity, 4));
         item_store_label_male_vertical_layout.setBackground(null);
         item_store_label_male_vertical_layout.setLayoutParams(layoutParams);
-        LinearLayout.LayoutParams layoutParamsIm = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParamsIm = (ViewGroup.LayoutParams) imageView.getLayoutParams();
         layoutParamsIm.height = HEIGHT;
         layoutParamsIm.width = WIDTH;
         imageView.setLayoutParams(layoutParamsIm);

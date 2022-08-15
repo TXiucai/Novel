@@ -381,7 +381,7 @@ public class ADHelper {
                         if (ReaderConfig.CHAPTER_COMIC_AD == null) {
                             ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
                         }
-                        BaseAd baseAd=new BaseAd();
+                        BaseAd baseAd = new BaseAd();
                         baseAd.setRequestId(adInfo.getRequestId());
                         baseAd.setAdPosId(adInfo.getAdPosId());
                         baseAd.setAdId(adInfo.getAdId());
@@ -416,10 +416,12 @@ public class ADHelper {
                     public void onResponse(final String result) {
                         try {
                             BaseAd baseAd = new Gson().fromJson(result, BaseAd.class);
-                            if (ReaderConfig.CHAPTER_COMIC_AD == null) {
-                                ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
+                            if (baseAd != null) {
+                                if (ReaderConfig.CHAPTER_COMIC_AD == null) {
+                                    ReaderConfig.CHAPTER_COMIC_AD = new ComicChapter();
+                                }
+                                ReaderConfig.CHAPTER_COMIC_AD.setBaseAd(baseAd);
                             }
-                            ReaderConfig.CHAPTER_COMIC_AD.setBaseAd(baseAd);
                         } catch (Exception e) {
 
                         }

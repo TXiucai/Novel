@@ -19,6 +19,7 @@ import com.heiheilianzai.app.ui.activity.BookInfoActivity;
 import com.heiheilianzai.app.utils.ImageUtil;
 import com.heiheilianzai.app.utils.MyPicasso;
 import com.heiheilianzai.app.utils.StringUtils;
+import com.heiheilianzai.app.view.read.RoundRectImageView;
 
 import java.util.List;
 

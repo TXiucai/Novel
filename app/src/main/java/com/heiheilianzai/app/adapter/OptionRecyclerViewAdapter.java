@@ -84,7 +84,7 @@ public class OptionRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             layoutParamss.height = CARTOON_HEIGHT + H50;
             viewHolderCartoon.liem_store_comic_style1_layout.setLayoutParams(layoutParamss);
 
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewHolderCartoon.liem_store_comic_style1_img.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams =  viewHolderCartoon.liem_store_comic_style1_img.getLayoutParams();
             layoutParams.width = CARTOON_WIDTH;
             layoutParams.height = CARTOON_HEIGHT;
             viewHolderCartoon.liem_store_comic_style1_img.setLayoutParams(layoutParams);

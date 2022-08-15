@@ -213,6 +213,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         params.height = ItemHeigth;
         if (stroreComicLable.style == BOOK_UI_STYLE_7) {
             holder.fragment_store_gridview1_label.setVisibility(View.GONE);
+        }else {
+            holder.fragment_store_gridview1_label.setVisibility(View.VISIBLE);
         }
         if ((!stroreComicLable.can_more && !stroreComicLable.can_refresh) || stroreComicLable.style == BOOK_UI_STYLE_7) {
             params.height = ItemHeigth - H50;
@@ -247,6 +249,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
         RecyclerView fragment_store_ry;
         @BindView(R.id.fragment_store_gridview1_label)
         LinearLayout fragment_store_gridview1_label;
+        @BindView(R.id.fragment_store_bar)
+        LinearLayout fragment_store_bar;
 
         public BookViewHolder(View view) {
             super(view);
@@ -274,10 +278,14 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
             fragment_store_gridview3_gridview_first.setNumColumns(3);
+            fragment_store_gridview3_gridview_first.setVisibility(View.VISIBLE);
+            fragment_store_ry.setVisibility(View.GONE);
         } else if (style == BOOK_UI_STYLE_2) {
             isHorizontal = false;
             minSize = Math.min(size, 6);
             fragment_store_gridview3_gridview_first.setNumColumns(3);
+            fragment_store_gridview3_gridview_first.setVisibility(View.VISIBLE);
+            fragment_store_ry.setVisibility(View.GONE);
             if (minSize > 3) {
                 raw = 2;
                 ItemHeigth = H100 + (HEIGHT + H50) * 2;
@@ -289,6 +297,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             isHorizontal = false;
             minSize = Math.min(size, 3);
             ItemHeigth = H100 + HEIGHT + H50;
+            fragment_store_gridview3_gridview_first.setVisibility(View.VISIBLE);
+            fragment_store_ry.setVisibility(View.GONE);
             fragment_store_gridview3_gridview_first.setNumColumns(3);
             if (size > 3) {
                 final List<StroreBookcLable.Book> secondList = bookList.subList(3, Math.min(size, 6));
@@ -310,7 +320,9 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             minSize = Math.min(size, 4);
             ItemHeigth = H100 + HEIGHT + H50 + (HEIGHTV + HorizontalSpacing + HorizontalHeight);
             fragment_store_gridview3_gridview_first.setNumColumns(3);
+            fragment_store_gridview3_gridview_first.setVisibility(View.VISIBLE);
             fragment_store_gridview3_gridview_fore.setVisibility(View.VISIBLE);
+            fragment_store_ry.setVisibility(View.GONE);
             if (bookList.size() > 0) {
                 final List<StroreBookcLable.Book> secondList = bookList.subList(0, 1);
                 VerticalAdapter horizontalAdapter = new VerticalAdapter(activity, secondList, WIDTHV, HEIGHTV, true);
@@ -333,6 +345,8 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ItemHeigth = H100 + (H50 + HHEIGHT) * 2;
             }
             isHorizontal = true;
+            fragment_store_gridview3_gridview_first.setVisibility(View.VISIBLE);
+            fragment_store_ry.setVisibility(View.GONE);
             fragment_store_gridview3_gridview_first.setNumColumns(2);
         } else if (style == BOOK_UI_STYLE_6) {
             isHorizontal = true;
@@ -344,8 +358,13 @@ public class HomeStoreBookAdapter extends RecyclerView.Adapter<RecyclerView.View
             } else {
                 ItemHeigth = H100 + (H50 + HHEIGHT) * 3;
             }
+            fragment_store_gridview3_gridview_first.setVisibility(View.VISIBLE);
+            fragment_store_ry.setVisibility(View.GONE);
             fragment_store_gridview3_gridview_first.setNumColumns(2);
         } else if (style == BOOK_UI_STYLE_7) {
+            fragment_store_gridview3_gridview_first.setVisibility(View.GONE);
+            fragment_store_ry.setVisibility(View.VISIBLE);
+            fragment_store_ry.setAdapter(null);
             LableAdapterH lableAdapterH = new LableAdapterH(bookList, activity, WIDTHV * 7 / 5, HEIGHTV * 7 / 5);
             MyContentLinearLayoutManager linearLayoutManager = new MyContentLinearLayoutManager(activity);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

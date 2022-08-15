@@ -14,7 +14,6 @@ public class StroeNewFragmentCartoon extends StroeNewFragment {
 
     @Override
     protected void initView() {
-        EventBus.getDefault().register(this);
         super.initView();
     }
 

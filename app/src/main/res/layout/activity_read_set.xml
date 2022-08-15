@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <include layout="@layout/common_titlebar" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimens_25dp">
+
+        <include layout="@layout/common_titlebar" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/rl_screen_time"
@@ -43,6 +50,7 @@
             android:layout_marginRight="@dimen/dimens_10dp"
             android:background="@mipmap/right_arrow" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_64dp"
@@ -83,10 +91,11 @@
             toggle:tbOffColor="@color/gray"
             toggle:tbOnColor="@color/mainColor" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/dimens_1dp"
         android:layout_height="@dimen/dimens_64dp"
+        android:layout_marginTop="@dimen/dimens_1dp"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -124,11 +133,12 @@
             toggle:tbOffColor="@color/gray"
             toggle:tbOnColor="@color/mainColor" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_auto_unlock"
-        android:layout_marginTop="@dimen/dimens_1dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_64dp"
+        android:layout_marginTop="@dimen/dimens_1dp"
         android:gravity="center_vertical">
 
         <LinearLayout

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,21 +11,30 @@
         android:id="@+id/item_store_label_male_vertical_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@mipmap/home_novel_13_red"
         android:layout_marginBottom="@dimen/dimens_10dp"
+        android:background="@mipmap/home_novel_13_red"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dimens_10dp"
         android:paddingTop="@dimen/dimens_14dp"
         android:paddingRight="@dimen/dimens_20dp"
         android:paddingBottom="@dimen/dimens_14dp">
 
-        <ImageView
-            android:id="@+id/item_store_label_male_horizontal_img"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher" />
+            app:cardBackgroundColor="#ccc"
+            app:cardCornerRadius="@dimen/dimens_5dp">
+
+            <ImageView
+                android:id="@+id/item_store_label_male_horizontal_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher" />
+
+
+        </androidx.cardview.widget.CardView>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -54,7 +64,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
-                    android:visibility="gone"
                     android:background="@drawable/shape_book_flag"
                     android:paddingLeft="3dp"
                     android:paddingTop="1dp"
@@ -62,7 +71,8 @@
                     android:paddingBottom="1dp"
                     android:text="免费"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/public_10_dp" />
+                    android:textSize="@dimen/public_10_dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -104,11 +114,11 @@
                     android:layout_height="@dimen/dimens_16dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:textColor="@color/white"
                     android:background="@drawable/shape_ff8350_20"
+                    android:gravity="center"
                     android:paddingLeft="@dimen/dimens_8dp"
                     android:paddingRight="@dimen/dimens_8dp"
+                    android:textColor="@color/white"
                     android:textSize="10sp" />
 
             </RelativeLayout>

@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -37,6 +38,8 @@ import com.heiheilianzai.app.component.http.ReaderParams;
 import com.heiheilianzai.app.component.task.MainHttpTask;
 import com.heiheilianzai.app.constant.ReaderConfig;
 import com.heiheilianzai.app.model.AcceptGiftHeadBean;
+import com.heiheilianzai.app.model.event.FreshUrlEvent;
+import com.heiheilianzai.app.model.event.comic.BoyinInfoEvent;
 import com.heiheilianzai.app.ui.activity.AcquireBaoyueActivity;
 import com.heiheilianzai.app.ui.activity.AddressActivity;
 import com.heiheilianzai.app.ui.activity.BindPhoneActivity;
@@ -49,6 +52,8 @@ import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ShareUitls;
 import com.heiheilianzai.app.utils.StringUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -155,6 +160,13 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
             mWebView.loadUrl(str);
         } catch (Exception e) {
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void freshUrl(FreshUrlEvent freshUrlEvent) {
+        String url = freshUrlEvent.getUrl();
+        Log.e("game_link","加载到最新的地址："+url);
+        mWebView.loadUrl(url);
     }
 
     class DemoWebViewClient extends WebViewClient {
@@ -352,6 +364,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
 
         /**
          * 打开一个新的游戏页面
+         *
          * @param s
          */
         @JavascriptInterface
@@ -369,6 +382,7 @@ public class AboutActivity extends BaseActivity implements ShowTitle {
 
         /**
          * 外部浏览器打开
+         *
          * @param s
          */
         @JavascriptInterface

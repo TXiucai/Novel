@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -377,8 +378,13 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // 发送广播，通知刷新图库的显示
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            String[] paths = new String[]{file.getAbsolutePath()};
+            MediaScannerConnection.scanFile(context, paths, null, null);
+        } else {
+            // 发送广播，通知刷新图库的显示
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
+        }
     }
 
     //漫画下载更目录
