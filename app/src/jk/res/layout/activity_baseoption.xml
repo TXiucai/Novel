@@ -17,7 +17,6 @@
             android:id="@+id/top_channel_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@mipmap/channel_bg"
             android:orientation="vertical">
 
             <include layout="@layout/channel_bar2" />

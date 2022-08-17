@@ -4,7 +4,7 @@
     android:layout_height="@dimen/dimens_80dp"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingTop="@dimen/dimens_30dp">
+    android:paddingTop="@dimen/dimens_25dp">
 
     <RelativeLayout
         android:id="@+id/book_info_titlebar_container"

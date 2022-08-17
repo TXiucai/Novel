@@ -197,27 +197,31 @@ public class GoldFragment extends BaseButterKnifeFragment {
                 }
                 mPayItems.add(item);
             }
-            mVipBaoyuePayAdapter = new VipBaoyuePayAdapter(getActivity(), mPayItems, 1);
-            activity_acquire_pay_gridview.setLayoutManager(new GridLayoutManager(activity, 3));
-            activity_acquire_pay_gridview.setAdapter(mVipBaoyuePayAdapter);
-            if (mSelectAcquirePayItem == null) {
-                mSelectAcquirePayItem = mPayItems.get(0);
-                mVipBaoyuePayAdapter.setSelectPosition(0);
-            } else {
-                wakeOrder(mGoodsId);
-            }
-            mVipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
-
-                @Override
-                public void onPayItemClick(AcquirePayItem item, int position) {
-                    mVipBaoyuePayAdapter.setSelectPosition(position);
-                    mSelectAcquirePayItem = item;
-                    initBottomPay(mSelectAcquirePayItem);
+            if (mPayItems.size() > 0) {
+                activity_acquire_pay_gridview.setVisibility(View.VISIBLE);
+                mVipBaoyuePayAdapter = new VipBaoyuePayAdapter(getActivity(), mPayItems, 1);
+                activity_acquire_pay_gridview.setLayoutManager(new GridLayoutManager(activity, 3));
+                activity_acquire_pay_gridview.setAdapter(mVipBaoyuePayAdapter);
+                if (mSelectAcquirePayItem == null) {
+                    mSelectAcquirePayItem = mPayItems.get(0);
+                    mVipBaoyuePayAdapter.setSelectPosition(0);
+                } else {
+                    wakeOrder(mGoodsId);
                 }
-            });
-            initBottomPay(mSelectAcquirePayItem);
+                mVipBaoyuePayAdapter.setOnPayItemClickListener(new VipBaoyuePayAdapter.OnPayItemClickListener() {
+
+                    @Override
+                    public void onPayItemClick(AcquirePayItem item, int position) {
+                        mVipBaoyuePayAdapter.setSelectPosition(position);
+                        mSelectAcquirePayItem = item;
+                        initBottomPay(mSelectAcquirePayItem);
+                    }
+                });
+                initBottomPay(mSelectAcquirePayItem);
+            } else {
+                activity_acquire_pay_gridview.setVisibility(View.GONE);
+            }
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

@@ -65,12 +65,12 @@ import com.heiheilianzai.app.utils.MyShare;
 import com.heiheilianzai.app.utils.MyToash;
 import com.heiheilianzai.app.utils.ScreenSizeUtils;
 import com.heiheilianzai.app.utils.SensorsDataHelper;
+import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.heiheilianzai.app.utils.StringUtils;
 import com.heiheilianzai.app.utils.Utils;
 import com.heiheilianzai.app.view.AndroidWorkaround;
 import com.heiheilianzai.app.view.BlurImageview;
 import com.heiheilianzai.app.view.UnderlinePageIndicatorHalf;
-import com.jaeger.library.StatusBarUtil;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
@@ -274,7 +274,7 @@ public class ComicActivity extends BaseWarmStartActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         }
         //侵染状态栏
-        StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setFullScreen(activity,true,true);
         setContentView(R.layout.activity_comici);
         ButterKnife.bind(this);
         if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {                                  //适配华为手机虚拟键遮挡tab的问题

@@ -3,6 +3,7 @@ package com.heiheilianzai.app.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -18,8 +19,8 @@ import com.heiheilianzai.app.ChannelAdapter;
 import com.heiheilianzai.app.R;
 import com.heiheilianzai.app.base.BaseWarmStartActivity;
 import com.heiheilianzai.app.model.ChannelBean;
+import com.heiheilianzai.app.utils.StatusBarUtil;
 import com.heiheilianzai.app.view.AndroidWorkaround;
-import com.jaeger.library.StatusBarUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +43,7 @@ public class ChannelActivity extends BaseWarmStartActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         }
         //侵染状态栏
-        StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setFullScreen(mActivity,true,true);
         setContentView(R.layout.activity_channel);
         ButterKnife.bind(this);
         if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {                                  //适配华为手机虚拟键遮挡tab的问题

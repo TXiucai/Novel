@@ -5,6 +5,7 @@
     android:id="@+id/activity_main_vitualkey"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ScrollView
@@ -56,30 +57,30 @@
 
             </LinearLayout>
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_170dp"
+                android:background="@color/color_f7f3f7"
+                android:orientation="vertical"
+                android:padding="@dimen/dimens_10dp">
+
+                <EditText
+                    android:id="@+id/activity_feedback_content"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_170dp"
-                    android:background="@color/color_f7f3f7"
-                    android:orientation="vertical"
-                    android:padding="@dimen/dimens_10dp">
+                    android:layout_height="@dimen/dimens_150dp"
+                    android:background="@drawable/shape_ffffff_5"
+                    android:gravity="left|top"
+                    android:hint="@string/FeedBackActivity_des"
+                    android:inputType="textMultiLine"
+                    android:maxLength="200"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/public_10_dp" />
 
-                    <EditText
-                        android:id="@+id/activity_feedback_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimens_150dp"
-                        android:background="@drawable/shape_ffffff_5"
-                        android:gravity="left|top"
-                        android:hint="@string/FeedBackActivity_des"
-                        android:inputType="textMultiLine"
-                        android:maxLength="200"
-                        android:textColorHint="@color/gray"
-                        android:textSize="@dimen/public_10_dp" />
-
-                    <ImageView
-                        android:id="@+id/iv"
-                        android:layout_width="@dimen/dimens_50dp"
-                        android:layout_height="@dimen/dimens_50dp" />
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/iv"
+                    android:layout_width="@dimen/dimens_50dp"
+                    android:layout_height="@dimen/dimens_50dp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,7 +125,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_65dp"
-        android:layout_gravity="bottom"
         android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">

@@ -217,15 +217,18 @@ public class AcquireBaoyueActivity extends BaseButterKnifeTransparentActivity im
     }
 
     private List<Fragment> mFragmentList = new ArrayList<>();
-
+    private  List<String> mTittlesList = new ArrayList<>();
     private void initFragment(String json) {
-        mVipFragment = VIPFragment.newInstance(json, mGoodsId, mOriginCode);
-        mFragmentList.add(mVipFragment);
-        mGoldFragment = GoldFragment.newInstance(mGoodsId, mOriginCode);
-        mFragmentList.add(mGoldFragment);
-        List<String> mTittlesList = new ArrayList<>();
-        mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title));
-        mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title_gold));
+        if (mVipFragment == null) {
+            mVipFragment = VIPFragment.newInstance(json, mGoodsId, mOriginCode);
+            mFragmentList.add(mVipFragment);
+            mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title));
+        }
+        if (mGoldFragment == null) {
+            mGoldFragment = GoldFragment.newInstance(mGoodsId, mOriginCode);
+            mFragmentList.add(mGoldFragment);
+            mTittlesList.add(getString(R.string.AcquireBaoyueActivity_title_gold));
+        }
         activity_acquire_vp.setOffscreenPageLimit(2);
         activity_acquire_vp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @NonNull
