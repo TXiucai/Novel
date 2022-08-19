@@ -291,7 +291,7 @@ public class HomeStoreComicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case COMIC_UI_STYLE_3:
                 if (!comicList.isEmpty()) {
                     liem_store_comic_style1_style3.setVisibility(View.VISIBLE);
-                    fragment_store_gridview1_gridview.setVisibility(View.GONE);
+                    fragment_store_gridview1_gridview.setVisibility(View.VISIBLE);
                     StoreComicAdapter storeComicAdapter3 = new StoreComicAdapter(comicList.subList(0, 1), activity, style, WIDTH, WIDTH * 5 / 9);
                     liem_store_comic_style1_style3.setAdapter(storeComicAdapter3);
                     liem_store_comic_style1_style3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
